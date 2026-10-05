@@ -138,6 +138,17 @@
     background: var(--bg); color: var(--muted); font-size: 13px; z-index: 10;
     transition: opacity .4s; 
   }
+  #loading.error {
+    color: var(--text); padding: 24px; text-align: left;
+    align-items: center; justify-content: center;
+  }
+  #loading.error .msg { max-width: 540px; }
+  #loading.error .msg b { display: block; font-size: 15px; margin-bottom: 8px; }
+  #loading.error .msg p { color: var(--muted); line-height: 1.55; margin: 0 0 10px; }
+  #loading.error .msg code {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+    padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text);
+  }
 </style>
 </head>
 <body>
@@ -181,6 +192,76 @@
     </div>
   </main>
 
+<!-- Startup guard: a classic script so it runs even when the ES module below
+     is blocked (e.g. opened with file:// or served without vendor/). -->
+<script>
+(function () {
+  var state = { loaded: false, failed: false, msg: null };
+  window.__viewerBoot = state;
+  var TIMEOUT_MS = 8000;
+
+  function serverCommand() {
+    return 'python3 -m http.server 8080 --directory viewer';
+  }
+  function showError(html) {
+    if (state.loaded || state.failed) return;
+    state.failed = true;
+    var el = document.getElementById('loading');
+    if (!el) return;
+    el.classList.add('error');
+    el.style.opacity = '1';
+    el.innerHTML = '<div class="msg">' + html + '</div>';
+  }
+
+  // (a) Opened straight from disk: browsers block the module imports, so the
+  //     module body never runs and its own handler can never fire. Detect it here.
+  if (location.protocol === 'file:') {
+    showError(
+      '<b>This page needs to be served, not opened from disk.</b>' +
+      '<p>The interactive viewer loads its 3D library and car data with requests that ' +
+      'browsers block on the file:// scheme, so opening this file directly can never work.</p>' +
+      '<p>From the project folder, run:<br><code>' + serverCommand() + '</code></p>' +
+      '<p>Then open <code>http://localhost:8080/</code> in this browser. ' +
+      'The recovered original-geometry viewer is at <code>http://localhost:8080/recovered.html</code>.</p>'
+    );
+    return;
+  }
+
+  // (b) Something threw before the page could initialise.
+  window.addEventListener('error', function () {
+    if (state.loaded) return;
+    showError(
+      '<b>The viewer could not start.</b>' +
+      '<p>A required file failed to load. Confirm the checkout contains ' +
+      '<code>viewer/vendor/</code> (the 3D library) and <code>viewer/public/cars.json</code>, ' +
+      'then serve the folder with:<br><code>' + serverCommand() + '</code></p>'
+    );
+  });
+  window.addEventListener('unhandledrejection', function () {
+    if (state.loaded) return;
+    showError(
+      '<b>The viewer could not start.</b>' +
+      '<p>A required file failed to load. Confirm the checkout contains ' +
+      '<code>viewer/vendor/</code> and <code>viewer/public/cars.json</code>, then serve the folder with:<br>' +
+      '<code>' + serverCommand() + '</code></p>'
+    );
+  });
+
+  // (c) Nothing threw, but nothing finished loading either (missing files,
+  //     hung request) — don't leave the visitor on an indefinite loading string.
+  window.setTimeout(function () {
+    if (state.loaded || state.failed) return;
+    showError(
+      '<b>The viewer is taking longer than expected.</b>' +
+      '<p>A required file may be missing or a request may have stalled. Check the browser ' +
+      'console for details, confirm <code>viewer/vendor/</code> and ' +
+      '<code>viewer/public/cars.json</code> exist, and serve the folder with:<br>' +
+      '<code>' + serverCommand() + '</code></p>'
+    );
+  }, TIMEOUT_MS);
+})();
+</script>
+
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.js" } }
 </script>
@@ -195,17 +276,41 @@ let CARS = [];
 let current = null;
 const groups = new Set();
 
+const boot = window.__viewerBoot || (window.__viewerBoot = { loaded: false, failed: false });
+const showBootError = (title, detail) => {
+  if (boot.loaded || boot.failed) return;
+  boot.failed = true;
+  const el = $('loading');
+  if (!el) return;
+  el.classList.add('error');
+  el.style.opacity = '1';
+  el.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'msg';
+  const b = document.createElement('b');
+  b.textContent = title;
+  const p = document.createElement('p');
+  p.textContent = detail;
+  wrap.append(b, p);
+  el.append(wrap);
+};
+
 fetch('./public/cars.json').then(r => r.json()).then(cars => {
   CARS = cars;
   cars.forEach(c => groups.add(c.group || 'OTHER'));
   buildFilters();
   buildList();
   select(cars.find(c => c.code === 'GRAN_TORINO') || cars[0]);
+  boot.loaded = true;
   $('loading').style.opacity = '0';
   setTimeout(() => $('loading').remove(), 450);
 }).catch(error => {
   console.error('Corpus load failed', error);
-  $('loading').textContent = 'Corpus load failed. Re-run tools/build_showcase.py and serve from viewer/.';
+  showBootError(
+    'The car list could not be loaded.',
+    'The vehicle data (viewer/public/cars.json) did not load. Confirm it exists in this ' +
+    'checkout, then serve the folder with: python3 -m http.server 8080 --directory viewer'
+  );
 });
 
 /* ---------- sidebar ---------- */
