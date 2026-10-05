@@ -35,7 +35,7 @@ def main():
         p.load(slot); time.sleep(3)
         time.sleep(1)
         rows[slot] = {a: p.r32(a) for a in CANDS}
-    print(f"\nslot (expected)  " + "  ".join(f"0x{a:06x}" for a in CANDS))
+    print("\nslot (expected)  " + "  ".join(f"0x{a:06x}" for a in CANDS))
     for slot in (102, 103, 104):
         print(f"  {slot} (h={EXPECT[slot]})        " + "  ".join(f"{rows[slot][a]:>8}" for a in CANDS))
     print("\n=== any candidate equal to (1,5,4)? ===")

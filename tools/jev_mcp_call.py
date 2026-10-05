@@ -1,41 +1,154 @@
 #!/usr/bin/env python3
 """Call the 12 Jev MCP tools (jev_screen ... jev_gate) over stdio and persist args+result receipts.
 
-Usage: jev_mcp_call.py TOOL ARGS.json OUT.json   (ARGS.json is the tool's argument object)
+Usage:
+  jev_mcp_call.py TOOL ARGS.json [OUT.json]   one call (ARGS.json is the tool's argument object, '-' for none)
+  jev_mcp_call.py --batch CALLS.json          several calls in ONE server process, run concurrently;
+                                              CALLS.json is [{"tool": ..., "args": {...}, "out": "path.json"}, ...]
+  jev_mcp_call.py --schema TOOL               arguments of one tool (name, type, required, description)
+  jev_mcp_call.py --schema-doc                markdown reference for every tool (docs/agents/jev-tools.md)
+  jev_mcp_call.py --list                      raw tools/list
+
 The credential is read by the child from ~/.config/jgrep/env; it is never printed or stored.
+Each process start pays for `npx` and the server, so prefer --batch (or `call_many`) over many single calls.
 """
-import json, os, subprocess, sys, shlex
+import json
+import os
+import subprocess
+import sys
+
+COMMAND = ['sh', '-c', 'set -a; . "$HOME/.config/jgrep/env"; exec npx -y @jkudish/jev-mcp']
+
+
+def _server():
+    env = dict(os.environ, JEV_MCP_MODEL='typesafe/jev-1.13', JEV_PROVIDER='openrouter')
+    return subprocess.Popen(COMMAND, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, env=env)
+
+
+def _send(p, message):
+    assert p.stdin
+    p.stdin.write(json.dumps(message) + '\n')
+    p.stdin.flush()
+
+
+def _close(p):
+    if p.stdin:
+        p.stdin.close()
+    p.terminate()
+
+
+def _collect(p, wanted):
+    """Read JSON-RPC responses until every id in `wanted` has answered; returns {id: message}."""
+    got = {}
+    assert p.stdout
+    while len(got) < len(wanted):
+        line = p.stdout.readline()
+        if not line:
+            raise RuntimeError('jev-mcp closed')
+        message = json.loads(line)
+        if message.get('id') in wanted:
+            got[message['id']] = message
+    return got
+
+
+def _handshake(p):
+    _send(p, {'jsonrpc': '2.0', 'id': 1, 'method': 'initialize', 'params': {'protocolVersion': '2024-11-05', 'capabilities': {}, 'clientInfo': {'name': 'carmodels', 'version': '1'}}})
+    _collect(p, {1})
+    _send(p, {'jsonrpc': '2.0', 'method': 'notifications/initialized'})
+
+
+def call_many(items, timeout=180):
+    """Run [(tool, args), ...] in one server process, all requests in flight at once; results keep input order.
+    `timeout` is accepted for older callers; the server answers or closes the pipe."""
+    p = _server()
+    try:
+        _handshake(p)
+        ids = {}
+        for k, (tool, args) in enumerate(items):
+            ids[k + 2] = k
+            _send(p, {'jsonrpc': '2.0', 'id': k + 2, 'method': 'tools/call', 'params': {'name': tool, 'arguments': args}})
+        got = _collect(p, set(ids))
+        return [got[i + 2] for i in range(len(items))]
+    finally:
+        _close(p)
+
 
 def call(tool, args, timeout=180):
-    cmd = ['sh', '-c', 'set -a; . "$HOME/.config/jgrep/env"; exec npx -y @jkudish/jev-mcp']
-    env = dict(os.environ, JEV_MCP_MODEL='typesafe/jev-1.13', JEV_PROVIDER='openrouter')
-    p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, env=env)
-    def send(m): p.stdin.write(json.dumps(m) + '\n'); p.stdin.flush()
-    def recv(i):
-        while True:
-            line = p.stdout.readline()
-            if not line: raise RuntimeError('jev-mcp closed')
-            m = json.loads(line)
-            if m.get('id') == i: return m
+    """One call; tool '--list' returns the raw tools/list message."""
+    if tool == '--list':
+        p = _server()
+        try:
+            _handshake(p)
+            _send(p, {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list'})
+            return _collect(p, {2})[2]
+        finally:
+            _close(p)
+    return call_many([(tool, args)], timeout)[0]
+
+
+def unwrap(message):
+    """The tool's JSON result from a tools/call message (falls back to the raw result)."""
+    res = message.get('result', message)
     try:
-        send({'jsonrpc':'2.0','id':1,'method':'initialize','params':{'protocolVersion':'2024-11-05','capabilities':{},'clientInfo':{'name':'carmodels','version':'1'}}})
-        recv(1)
-        send({'jsonrpc':'2.0','method':'notifications/initialized'})
-        if tool == '--list':
-            send({'jsonrpc':'2.0','id':2,'method':'tools/list'}); return recv(2)
-        send({'jsonrpc':'2.0','id':2,'method':'tools/call','params':{'name':tool,'arguments':args}})
-        return recv(2)
-    finally:
-        p.stdin.close(); p.terminate()
+        return json.loads(res['content'][0]['text'])
+    except Exception:
+        return res
+
+
+def tools():
+    return {t['name']: t for t in call('--list', {})['result']['tools']}
+
+
+def schema_rows(tool):
+    props = tool['inputSchema'].get('properties', {})
+    required = set(tool['inputSchema'].get('required', []))
+
+    def kind(spec):
+        if 'type' in spec:
+            return spec['type'] + ('[]' if spec['type'] == 'array' else '')
+        return ' | '.join(sorted({s.get('type', '?') for s in spec.get('anyOf', [])})) or '?'
+    return [(name, kind(spec), name in required, (spec.get('description') or '').replace('\n', ' ')) for name, spec in props.items()]
+
+
+def schema_doc(all_tools):
+    out = ['# Jev tool arguments', '',
+           'Generated by `python3 tools/jev_mcp_call.py --schema-doc`; regenerate it when the server changes. Unknown arguments are',
+           'rejected, so use these names exactly. The `jev` skill says when to use each tool; read its `reference/tools.md` first.', '']
+    for name in sorted(all_tools):
+        t = all_tools[name]
+        out += ['## `%s`' % name, '', (t.get('description') or '').split('. ')[0].rstrip('.')[:200] + '.', '', '| Argument | Type | Required | Meaning |', '| --- | --- | --- | --- |']
+        for arg, kind, required, text in schema_rows(t):
+            out.append('| `%s` | %s | %s | %s |' % (arg, kind, 'yes' if required else '', text[:160].replace('|', '/')))
+        out.append('')
+    return '\n'.join(out)
+
+
+def main(argv):
+    if argv[:1] == ['--schema-doc']:
+        print(schema_doc(tools()))
+        return 0
+    if argv[:1] == ['--schema']:
+        t = tools()[argv[1]]
+        for arg, kind, required, text in schema_rows(t):
+            print('%-14s %-10s %-9s %s' % (arg, kind, 'required' if required else '', text[:100]))
+        return 0
+    if argv[:1] == ['--batch']:
+        calls = json.load(open(argv[1]))
+        results = call_many([(c['tool'], c['args']) for c in calls])
+        for c, r in zip(calls, results):
+            res = unwrap(r)
+            if c.get('out'):
+                json.dump({'args': c['args'], 'result': res}, open(c['out'], 'w'), indent=2)
+            print(c['tool'], '->', c.get('out', '(not saved)'))
+        return 0
+    tool = argv[0]
+    args = json.load(open(argv[1])) if len(argv) > 1 and argv[1] != '-' else {}
+    res = unwrap(call(tool, args))
+    if tool != '--list' and len(argv) > 2:
+        json.dump({'args': args, 'result': res}, open(argv[2], 'w'), indent=2)
+    print(json.dumps(res, indent=1)[:6000])
+    return 0
+
 
 if __name__ == '__main__':
-    tool = sys.argv[1]
-    args = json.load(open(sys.argv[2])) if len(sys.argv) > 2 and sys.argv[2] != '-' else {}
-    r = call(tool, args)
-    res = r.get('result', r)
-    if tool != '--list' and 'content' in res:
-        try: res = json.loads(res['content'][0]['text'])
-        except Exception: res = res
-    out = {'args': args, 'result': res}
-    if len(sys.argv) > 3: json.dump(out, open(sys.argv[3], 'w'), indent=2)
-    print(json.dumps(res, indent=1)[:6000])
+    sys.exit(main(sys.argv[1:]))

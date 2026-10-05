@@ -22,7 +22,7 @@ def judgments(node):
         yield from judgments(parsed)
 
 def main():
-    rows=[];seen=set();errors=[]
+    rows=[];seen=set()
     for path in sorted((ROOT/'research/evidence').rglob('*.json')):
         if path.name=='jev-capability-coverage.json':continue
         try:node=json.loads(path.read_text())

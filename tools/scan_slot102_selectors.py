@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Scan slot102 EE image for livery-name tables, car label strings, and selector records.
 Read-only analysis; prints addresses and words. Uses hermes python3.14 (zstd not needed here)."""
-import struct, sys
+import struct
 
 EE = "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/linux/slot102-car1-ford49-eeMemory.bin"
 mem = open(EE, "rb").read()

@@ -554,7 +554,6 @@ def main() -> int:
     # Validate the supplied post-resume race state and one-frame GS dump.
     race_identity_path = args.race_state.parent.parent / "race94-state-identity.json"
     race_identity = json.loads(race_identity_path.read_text(encoding="utf-8"))
-    race_identity_sha = sha256(race_identity_path)
     race_dump_sha = sha256(args.race_dump)
     race_checks: dict[str, object] = {"state": {}, "texture_join": {}, "gs_dump": {}}
     expected_race_sha = race_identity["sha256"]
@@ -696,7 +695,6 @@ def main() -> int:
     # Decode the pinned PCSX2 GSDump container plus the standard GIFtag and
     # packed A+D encodings. Keep the raw tag bytes/digest so interpretation is
     # reviewable and repeatable without treating a screenshot as proof.
-    compressed_dump = args.race_dump.read_bytes()
     zstd = shutil.which("zstd") or "/opt/homebrew/bin/zstd"
     decompressed = subprocess.check_output([zstd, "-d", "-c", str(args.race_dump)])
     if len(decompressed) < 8 + 36:
@@ -933,7 +931,6 @@ def main() -> int:
             off = end
             if eop:
                 break
-    prim_counts: dict[str, int] = {}
     draw_signatures: dict[str, int] = {}
     for record in draw_records:
         sig = f"type{record['prim_type']}_tme{record['tme']}_abe{record['abe']}_nloop{record['nloop']}"

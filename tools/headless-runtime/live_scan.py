@@ -5,7 +5,7 @@ Method: snapshot a focused set of EE regions over PINE, send a key to move the m
 highlight via RFB (container's own Xvfb), snapshot again, and cancel animation by also
 diffing a no-input interval. Reads only; the only input is the emulator's own key.
 """
-import socket, struct, sys, time
+import socket, struct, time
 
 PINE = "/tmp/pcsx2.sock.28193"
 VNC = ("127.0.0.1", 5900)

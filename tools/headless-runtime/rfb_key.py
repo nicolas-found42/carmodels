@@ -31,7 +31,7 @@ def main():
         return bytes(b)
 
     # 1. protocol version
-    ver = recvn(12)
+    recvn(12)
     s.sendall(b"RFB 003.008\n")
     # 2. security types
     ntypes = recvn(1)[0]

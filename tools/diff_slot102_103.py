@@ -2,7 +2,6 @@
 """Diff slot102 (car1 selected) vs slot103 (car5 selected) EE images.
 Lists changed words, with focus on the six selector-record region
 0x233070..0x233070+8*0x114 and the six livery-list areas. Read-only."""
-import struct
 
 B = "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/linux/"
 a = open(B + "slot102-car1-ford49-eeMemory.bin", "rb").read()

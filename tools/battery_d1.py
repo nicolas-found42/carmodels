@@ -2,7 +2,7 @@
 """D1 battery: input-path + starting-slot decision for ordinary car-selection capture.
 Runs all 12 Jev tools via jev_mcp_call.call(); saves args+result receipts.
 Jev advises; code owns bytes, counts, hashes. Usage: battery_d1.py (runs all, prints summary)."""
-import json, os, sys, hashlib
+import json, os, sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
 from jev_mcp_call import call

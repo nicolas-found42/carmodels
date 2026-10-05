@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Snapshot and byte-check newer read-only decompilation resources for recovery."""
-from collections import Counter
 import difflib
 import hashlib
 import json

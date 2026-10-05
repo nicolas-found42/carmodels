@@ -7,9 +7,8 @@ A missing selector preserves the prior pointer, as the original instructions do.
 import copy
 import hashlib
 import json
-from pathlib import Path
 import struct
-from recover_car_rotation import ROOT, SOURCE, EXPORT, ELF
+from recover_car_rotation import ROOT, EXPORT, ELF
 
 
 def u32(data, at):
@@ -140,7 +139,7 @@ def main():
             car=next(c for c in cars if c['code']==joined['car']);contract=next(c for c in contracts if c['car']==joined['car']);instance=next(c for c in states['cars'] if c['car']==joined['car'])
             for join in joined['joins']:
                 for obj in join['objects']:
-                    lib=obj['address'];table=u32(memory,lib+244);pointers=u32(memory,lib+236);desc=instance['descriptor'];n=memory[desc+14];refs=u32(memory,desc+28);base=join['source_base']
+                    lib=obj['address'];table=u32(memory,lib+244);desc=instance['descriptor'];n=memory[desc+14];refs=u32(memory,desc+28);base=join['source_base']
                     for i,t in enumerate(car['textures']):
                         if (u32(memory,table+i*8),u32(memory,table+i*8+4))!=(t['flags'],base+t['descriptor_offset']):raise ValueError('runtime original flags/descriptor differs')
                     actual_refs=[u32(memory,refs+i*4) for i in range(n)]

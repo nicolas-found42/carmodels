@@ -5,7 +5,6 @@ The joins are content joins between two captures of the same paused race scene (
 separate GSDump).  They show that the dump's transfers carry exactly what these retained blocks request;
 they do not show that the retained buffer produced those transfers in this frame.
 """
-import hashlib
 import json
 import struct
 

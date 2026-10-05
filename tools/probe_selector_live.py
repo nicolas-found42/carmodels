@@ -17,7 +17,6 @@ Receipt: research/evidence/job-b-live/selector-live-findings.json
 """
 import hashlib
 import json
-import struct
 import sys
 from pathlib import Path
 

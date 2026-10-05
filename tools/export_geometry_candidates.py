@@ -130,7 +130,7 @@ def build(car, data):
     doc['extras']['sourceNameTables']=ownership['name_tables']
     doc['extras']['distanceThresholds']=ownership['records'][0]['thresholds']
     geometry_mesh={n['extras']['geometryRecord']:n['mesh'] for n in doc['nodes']}
-    assemblies=[]; stack=[]; current_root=None
+    assemblies=[]; stack=[]
     for row in parsed['later']['records'][0]['nodes_2c']:
         identifier,flags,*floats=struct.unpack_from('<2I6f',data,row['offset'])
         if any(floats[3:]):raise ValueError('nonzero node rotation is outside candidate assembly profile')
@@ -149,7 +149,7 @@ def build(car, data):
         ni=len(doc['nodes']);doc['nodes'].append(node)
         while len(stack)>depth:stack.pop()
         if depth==0:
-            current_root=ni;assemblies.append({'tree':len(assemblies),'rootNode':ni})
+            assemblies.append({'tree':len(assemblies),'rootNode':ni})
             doc['scenes'].append({'name':f'Candidate tree {len(assemblies)-1} — all states','nodes':[ni],
                                   'extras':{'status':'Serialized translation hierarchy; all alternative states retained.'}})
         else:

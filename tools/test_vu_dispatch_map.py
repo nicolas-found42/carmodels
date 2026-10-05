@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assert the VU1 dispatch-map derivation and its negative controls (deterministic; no model calls).
 
-Needs the sibling extraction checkout (see CONTRIBUTING.md). Run from the repo root:
+Needs the static inputs (see CONTRIBUTING.md, Static inputs). Run from the repo root:
     python3 tools/test_vu_dispatch_map.py
 """
 import importlib.util
