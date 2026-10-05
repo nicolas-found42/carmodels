@@ -1,0 +1,68 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.02kB 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B 0.0s done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/8] FROM docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+#5 resolve docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55 0.0s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 1.43kB 0.0s done
+#4 DONE 0.1s
+
+#6 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends     xvfb x11vnc novnc websockify ca-certificates python3 procps     libgl1 libegl1 libgl1-mesa-dri libasound2t64 libpulse0 libfontconfig1     libx11-6 libxcb1 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1     libxcb-image0 libxcb-render-util0 libxcb-randr0 libxcb-xinerama0     libxkbcommon-x11-0 libxcomposite1 libxrandr2 libxrender1 libxi6     libdbus-1-3 libnss3 libopengl0 libwayland-client0 libwayland-cursor0     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [3/8] COPY pcsx2-v2.8.2.AppImage /opt/pcsx2.AppImage
+#7 CACHED
+
+#8 [4/8] RUN apt-get update && apt-get install -y --no-install-recommends squashfs-tools && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [5/8] COPY extract_appimage.py /opt/extract_appimage.py
+#9 DONE 0.1s
+
+#10 [6/8] RUN python3 /opt/extract_appimage.py
+#10 3.475 {'appimage_sha256': '0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea', 'filesystem_offset': 944632, 'filesystem_bytes': 59174295}
+#10 3.809 Parallel unsquashfs: Using 10 processors
+#10 3.809 387 inodes (1694 blocks) to write
+#10 3.809 
+#10 3.809 [==========/                                                   ]  350/2081  16%[============/                                                 ]  438/2081  21%[=============-                                                ]  472/2081  22%[===============\                                              ]  513/2081  24%[===================/                                          ]  664/2081  31%[==========================-                                   ]  899/2081  43%[==============================================\               ] 1592/2081  76%[=============================================================|] 2081/2081 100%
+#10 5.602 
+#10 5.602 created 383 files
+#10 5.602 created 111 directories
+#10 5.602 created 4 symlinks
+#10 5.602 created 0 devices
+#10 5.602 created 0 fifos
+#10 5.602 created 0 sockets
+#10 5.602 created 0 hardlinks
+#10 DONE 8.0s
+
+#11 [7/8] COPY start.sh /opt/start.sh
+#11 DONE 0.2s
+
+#12 [8/8] RUN chmod +x /opt/start.sh
+#12 DONE 1.5s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 136.9s done
+#13 exporting manifest sha256:661f5bae6eb05d03fead8aaaf2557b7c4216ca5b80effa22f2aff1dfdf17232c 0.0s done
+#13 exporting config sha256:f55501b76c44fa04d560a5a014002bd06ce51520719b8737a8cb50fc67138135 0.0s done
+#13 exporting attestation manifest sha256:b86900bf8c823434288d6ff56b40a725103f37f98d6e0fc883851dcc196a4389
+#13 exporting attestation manifest sha256:b86900bf8c823434288d6ff56b40a725103f37f98d6e0fc883851dcc196a4389 0.0s done
+#13 exporting manifest list sha256:593b88e1846548ad7c33060bab233ca23827f0fa6d32b421695f1f03ef9b6c43 0.0s done
+#13 naming to docker.io/library/fr2-recovery-headless:2.8.2 0.0s done
+#13 DONE 137.2s

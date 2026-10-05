@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "Candidate file groups in the carmodels repo (Ford Racing 2 recovery), with sizes:\nG1 tools/validation-runtime 1.1G: Blender dmg + mounted Blender.app (third-party, re-downloadable). Scripts validate GLBs through Blender.\nG2 tools/headless-runtime AppImage 57M: PCSX2 v2.8.2 AppImage, pinned emulator dependency for the container.\nG3 research/evidence/continuation/runtime 960M: 40 savestates (.p2s ~11MB each) + unpacked EE/IOP/VU/hw-reg dumps + 13M F8 screenshots. Receipts record sha256 of these files.\nG4 research/evidence/job-b-live 704M: pairs/*-eeMemory.bin + members/ extracted dumps (experiment working sets, rebuilt by the probe tools).\nG5 viewer 57M: web viewer incl. vendor three.js + 35 recovered .glb files.\nG6 reference 65M: the per-car reference corpus (models, textures, sounds) \u2014 the deliverable.\nG7 recovered 972K: canonical index + per-car manifests.\nG8 receipts JSON (~5M total): validation receipts, Jev receipts, tickets, reports.\nG9 tools/*.py + batteries: all scripts.\nG10 869 .pyc / __pycache__: bytecode regenerable.\nContext: user cancelled a 2.6GB push; wants a lean repo. GitHub rejects files >100MB (only the Blender files exceed it). Tools read the unpacked runtime dumps at fixed paths (e.g. verify_selector_word reads RUNTIME eeMemory.bin); excluding them means a fresh clone cannot re-run those tools without re-capturing.",
+    "records": [
+      {
+        "id": "limit",
+        "request": "extract limit",
+        "value": "100MB"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "limit",
+        "value": "100MB",
+        "checks": {
+          "hallucinated": 0.02,
+          "off_target": 0.13,
+          "incomplete": 0.06,
+          "format": 0.07
+        },
+        "p_wrong": 0.13,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1103,
+      "output_tokens": 86
+    }
+  }
+}

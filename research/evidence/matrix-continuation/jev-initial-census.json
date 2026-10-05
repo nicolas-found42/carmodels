@@ -1,0 +1,18 @@
+{
+  "args": {
+    "claims": [
+      "The new MATRIX family contains136 archive-bound7744-byte indexed PTG files whose names exactly join the136 livery names in the existing per-car manifests.",
+      "All136 have six32x32 tiles covering90x64, with1024-byte CLUT at576 and6144 indexed bytes at1600..7744. Both palette interpretations have independently validated PNG outputs.",
+      "All184 cached thumbnail streams and catalog names are archive-bound; reconstructed previews use substitute JPEG tables and cannot prove exact original pixels."
+    ],
+    "evidence": "Actual console outputs: recover_matrix_ptg.py: assets_verified136 outputs544; negatives truncation,format,grid,edge_extent,palette_alpha rejected. Code requires six-tile90x64 header(6,3,2,32,32,90,64,1), len7744, all136 filenames set exactly sameas livery-manifest set, Baseline independently re-readsFILES.HDR/FILES.DAT and requires fileSHA/len equalarchive output. Palette576..1600, pixels1600..7744 exact. verify_png checkschunksCRC, decompressedRGBAexpected. recover_shipped_thumbnails.py: databases2 entries184 negativecount/truncation/record_size rejected; Baseline.load foreachThumbsDB archivalhash; catalog48LIVERY136MATRIX, allstreams preserved. Preview appendsVinetto substitutedJPEGtables and reconstructs4YMCAchannels, so notpixel/alphaproof. Freshsource0022acc8 parserafterdescriptors moves+12align16 toCLUT; format3 advances256ints(1024B), writesdescriptorpalettewrapper, eachtile pointeradvances32*32*8/8."
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 2,\n    \"contradicted\": 1,\n    \"unsupported\": 0,\n    \"needs_review\": 1\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The new MATRIX family contains136 archive-bound7744-byte indexed PTG files whose names exactly join the136 livery names in the existing per-car manifests.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"says_nothing\": 0,\n        \"supports\": 0.93,\n        \"contradicts\": 0.07\n      },\n      \"confidence\": 0.89,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.91\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"All136 have six32x32 tiles covering90x64, with1024-byte CLUT at576 and6144 indexed bytes at1600..7744. Both palette interpretations have independently validated PNG outputs.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"contradicts\": 0.6,\n        \"supports\": 0.39,\n        \"says_nothing\": 0.01\n      },\n      \"confidence\": 0.39,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.74\n    },\n    {\n      \"id\": \"claim2\",\n      \"claim\": \"All184 cached thumbnail streams and catalog names are archive-bound; reconstructed previews use substitute JPEG tables and cannot prove exact original pixels.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"says_nothing\": 0,\n        \"supports\": 0.91,\n        \"contradicts\": 0.09\n      },\n      \"confidence\": 0.85,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.91\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1535,\n    \"output_tokens\": 189\n  }\n}"
+      }
+    ]
+  }
+}

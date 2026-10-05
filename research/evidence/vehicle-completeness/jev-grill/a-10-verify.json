@@ -1,0 +1,102 @@
+{
+  "args": {
+    "claims": [
+      "build_reference sets base_bank['CAR_SND_CAR6'] = 'car6_snd' from the token CAR6_SOUND_FILE.",
+      "CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 to CAR1_SOUND_FILE..CAR8_SOUND_FILE.",
+      "The executable contains sounds\\car1_snd:0:0:5 through car8_snd:7:35:5 plus %s.msh / %s.msb templates.",
+      "49_COUPE's samples are named MASTER_SOUND_SAMPLE_CAR6_*.",
+      "The build_reference mapping is proven off by one."
+    ],
+    "evidence": "build_reference.py (line ~261) builds base_bank with a NAME-based rule: for each CAR_SND_CARn block in CARSOUND.DAT it reads :SOUNDBANK_TYPE CARn_SOUND_FILE and sets base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd', i.e. CAR_SND_CAR6 + CAR6_SOUND_FILE -> 'car6_snd' (the digit is taken from the bank file name, not from the CAR_SND_CARn number). CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 -> CAR1_SOUND_FILE..CAR8_SOUND_FILE (verified: 8 base blocks). The executable's static strings are 'sounds\\car1_snd:0:0:5' ... 'sounds\\car8_snd:7:35:5' (addresses 0x288e40..0x288f18) with templates '%s.msh' (0x28f508) and '%s.msb' (0x28f510); the trailing fields are base:offset:count with base 0..7, suggesting an index. Corroboration: 49_COUPE's sound type CAR_SND_49_COUPE inherits CAR_SND_CAR6 and its sample names are literally MASTER_SOUND_SAMPLE_CAR6_TICKOVER / ..._LOW_UNLOADED / ..._HIGH_LOADED, so the 'CAR6' identity appears in the sample data itself. All 35 cars resolve a chain; the 8 distinct inherit targets are CAR_SND_CAR1..CAR_SND_CAR8."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "build_reference sets base_bank['CAR_SND_CAR6'] = 'car6_snd' from the token CAR6_SOUND_FILE.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 0.98,
+          "contradicts": 0.02
+        },
+        "confidence": 0.97,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.83
+      },
+      {
+        "id": "claim1",
+        "claim": "CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 to CAR1_SOUND_FILE..CAR8_SOUND_FILE.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.82
+      },
+      {
+        "id": "claim2",
+        "claim": "The executable contains sounds\\car1_snd:0:0:5 through car8_snd:7:35:5 plus %s.msh / %s.msb templates.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.81
+      },
+      {
+        "id": "claim3",
+        "claim": "49_COUPE's samples are named MASTER_SOUND_SAMPLE_CAR6_*.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.76
+      },
+      {
+        "id": "claim4",
+        "claim": "The build_reference mapping is proven off by one.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0.05,
+          "supports": 0.19,
+          "contradicts": 0.76
+        },
+        "confidence": 0.64,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.36
+      }
+    ],
+    "usage": {
+      "input_tokens": 2112,
+      "output_tokens": 311
+    }
+  }
+}

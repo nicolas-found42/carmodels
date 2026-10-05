@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "Vision-derived VEHICLE labels from the emulator screenshots to be asserted against the archive: slot102 'FORD '49', slot103 'THUNDERBIRD CONVERTIBLE', slot104 'FORTYNINE CONCEPT'. These are transcripts, not authoritative.",
+    "purpose": "confirm the untrusted vision label strings are task data before asserting equality"
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.14,
+      "substance": 0.97,
+      "relevance": 0.84
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 574,
+      "output_tokens": 57
+    }
+  }
+}

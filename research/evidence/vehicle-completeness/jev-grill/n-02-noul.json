@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "The per-screen menu highlight is stored as a plain 16/32-bit integer word in EE main RAM.",
+      "The highlight/selector value is reached only via pointer indirection or a heap struct, so a direct byte diff will not reveal it.",
+      "The decompiled cursor code (001c4a40 over DAT_00241b40) has already narrowed the highlight to a small candidate set.",
+      "If the trace of FUN_0019eb90/FUN_00125640/FUN_00121e10 names no per-screen selector field, the thread should be recorded open rather than chased further.",
+      "Capturing more screens will eventually reveal the selector word by diff.",
+      "The three-pair bridge is a sufficient delivered result for the selector thread even if the word is never isolated."
+    ],
+    "context": "carselection bridge: no FORD'49 / TXT_CARS_* label bytes in slot102 EE (labels via text archive + glyphs). Static leads: FUN_0019eb90 reads the livery label via static table VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL), resolves via FUN_00125640, stores via FUN_00121e10; VA_0x23acb0 = 0x0028f7c8 stable across captures. jgrep hits: 0017cb80 (initials cycler, discarded), 00184430 (1..3 cursor on uRam0028fd74, reads 0 in all three), 001c4a40 (indexed cursor over DAT_00241b40, caller open). VA_0x241b60 = 5,4,4 (does not track highlight). Three-way triangulation: (1,5,4) 0 hits; (0,4,3) words 0 hits; (0,4,3) bytes 97 hits in VU regions, no menu-struct candidate; scratchpad 121 changed words all float VU noise. Screens: highlight 1/5/4 -> 49_COUPE / THUNDERBIRD_2002 / FORTYNINE, all DEFAULT livery. Jev round-1 noul: 'an isolated EE word that tracks the highlight exists' = 0.13 unlikely; 'deriving the store address from the FUN_0019eb90 chain will name it' = 0.29 uncertain; 'value-only match sufficient' = 0.09 unlikely. Round-1 decide chose trace_store 0.96."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "The per-screen menu highlight is stored as a plain 16/32-bit integer word in EE main RAM.",
+        "probability": 0.24,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition1",
+        "proposition": "The highlight/selector value is reached only via pointer indirection or a heap struct, so a direct byte diff will not reveal it.",
+        "probability": 0.42,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "The decompiled cursor code (001c4a40 over DAT_00241b40) has already narrowed the highlight to a small candidate set.",
+        "probability": 0.47,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "If the trace of FUN_0019eb90/FUN_00125640/FUN_00121e10 names no per-screen selector field, the thread should be recorded open rather than chased further.",
+        "probability": 0.71,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "Capturing more screens will eventually reveal the selector word by diff.",
+        "probability": 0.17,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition5",
+        "proposition": "The three-pair bridge is a sufficient delivered result for the selector thread even if the word is never isolated.",
+        "probability": 0.24,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1537,
+      "output_tokens": 130
+    }
+  }
+}

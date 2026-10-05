@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "rank candidate-selection criteria for the sweep",
+    "candidates": [
+      {
+        "id": "one_to_one",
+        "text": "The word's six values map 1:1 to the six highlight positions."
+      },
+      {
+        "id": "equals_pos",
+        "text": "The word literally equals the 1..6 position."
+      },
+      {
+        "id": "decomp_reach",
+        "text": "The word is decompilation-reachable (DAT_00241b40 record / menu struct)."
+      },
+      {
+        "id": "small_int",
+        "text": "The word is a small integer that changes with moves."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "rank candidate-selection criteria for the sweep",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "decomp_reach",
+        "relevance": 0.26,
+        "text": "The word is decompilation-reachable (DAT_00241b40 record / menu struct)."
+      },
+      {
+        "rank": 2,
+        "id": "one_to_one",
+        "relevance": 0.19,
+        "text": "The word's six values map 1:1 to the six highlight positions."
+      },
+      {
+        "rank": 3,
+        "id": "small_int",
+        "relevance": 0.18,
+        "text": "The word is a small integer that changes with moves."
+      },
+      {
+        "rank": 4,
+        "id": "equals_pos",
+        "relevance": 0.09,
+        "text": "The word literally equals the 1..6 position."
+      }
+    ],
+    "usage": {
+      "input_tokens": 612,
+      "output_tokens": 76
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "Which experiment should we run to find the mark number?",
+    "evidence": "Goal: find the mark number \u2014 the game's own id for the car highlighted on the car-selection menu. Exhausted so far (exhaustive, deterministic): across three savestates (highlight 1/5/4 -> cars 1/5/4), (a) no EE word at width 8/16/32 equals the highlight tuple (1,5,4) or (0,4,3); (b) no per-entity 'selected' flag exists where the highlighted car's field differs while the other five share one value (0 strong hits at width 1/2/4 across the 6 car entities, node+0x10); (c) no common address holds a pointer to the highlighted car's node/entity; (d) FUN_001de3d8 creates all cars, not the selection. Named/found: the live car-entity list is reachable read-only over PINE (static global 0x290278 -> manager 0x473d70 -> 6 entities; type byte at entity+0, linked by node+0xc); the livery store is a float at entity+0x64 (FUN_00121e10); FUN_001c4a40 runs per entity over DAT_00241b40 (the per-type table) and reads/writes a byte at entity+0x11. Web methods (scanmem value-scan with 'unknown initial value' -> narrow by changed/unchanged; Cheat Engine pointer scan; PINCE) all assume the value MOVES with a single live session. Constraint: headless only, no host focus; read-only preferred; the emulator is currently paused on a savestate.",
+    "priorities": "Headless, read-only preferred; a positive find is wanted but an honest open stays acceptable; prefer the experiment that can attribute a change to the highlight; the user explicitly wants the mark found.",
+    "candidates": [
+      {
+        "id": "same_session_adjacent",
+        "description": "Headless: load a menu state, one key to move the highlight, save two fresh savestates one car apart, diff them."
+      },
+      {
+        "id": "scanmem_unknown",
+        "description": "Headless unknown-initial-value scan narrowed by moving the highlight live."
+      },
+      {
+        "id": "live_breakpoint",
+        "description": "A read breakpoint on FUN_001c4a40's draw path (debugger feature)."
+      },
+      {
+        "id": "more_decomp",
+        "description": "Read the menu-input handler that changes the highlight."
+      }
+    ],
+    "requirements": [
+      "Runs headless",
+      "Attributes the change to the highlight",
+      "Read-only or a documented tool"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "same_session_adjacent",
+      "escaped": false,
+      "confidence": 0.84,
+      "probabilities": {
+        "none": 0.01,
+        "more_decomp": 0.06,
+        "scanmem_unknown": 0.01,
+        "same_session_adjacent": 0.86,
+        "ask_user": 0,
+        "investigate": 0.01,
+        "live_breakpoint": 0.05
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "same_session_adjacent",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "same_session_adjacent",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "same_session_adjacent",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "scanmem_unknown",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "scanmem_unknown",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "scanmem_unknown",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "live_breakpoint",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "live_breakpoint",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "live_breakpoint",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "more_decomp",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "more_decomp",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "more_decomp",
+        "requirement": 2,
+        "answer": "unknown"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2689,
+      "output_tokens": 602
+    }
+  }
+}

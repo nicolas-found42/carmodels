@@ -1,0 +1,23 @@
+[
+  {
+    "file": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-all-02/functions/00121950.c",
+    "start": 1,
+    "end": 50,
+    "p": 0.76,
+    "text": "\nint FUN_00121950(undefined8 param_1,undefined8 param_2)\n\n{\n  int iVar1;\n  int iVar2;\n  int iVar3;\n  long lVar4;\n  uint uVar5;\n  int iVar6;\n  int iVar7;\n  undefined1 in_vf0 [16];\n  undefined1 auVar8 [16];\n  undefined1 auVar9 [16];\n  undefined1 auVar10 [16];\n  \n  iVar7 = 0;\n  iVar1 = FUN_001213d8();\n  iVar2 = FUN_0021b6e0();\n  uVar5 = *(uint *)(iVar1 + 0x14);\n  if ((uVar5 >> 0x18 & 0x3f) != 0) {\n    iVar6 = 0;\n    auVar10 = _qmtc2(0);\n    do {\n      auVar8 = _lqc2(*(undefined1 (*) [16])param_2);\n      iVar3 = iVar6 + *(int *)(iVar1 + 0x38);\n      auVar9 = _lqc2(*(undefined1 (*) [16])(iVar3 + 0x20));\n      _vsub(auVar8,auVar9);\n      auVar8 = _vaddbc(in_vf0,auVar10);\n      auVar8 = _vmul(auVar8,auVar8);\n      auVar8 = _vaddbc(auVar8,auVar8);\n      auVar8 = _vaddbc(auVar8,auVar8);\n      auVar8 = _qmfc2(auVar8._0_4_);\n      if (auVar8._0_4_ < *(float *)(iVar3 + 0x60)) {\n        auVar10 = _sqc2(auVar10);\n        lVar4 = FUN_00121a60(param_2,*(int *)(iVar2 + 0x20) + *(int *)(iVar3 + 0x68) * 8);\n        auVar10 = _lqc2(auVar10);\n        if (lVar4 != 0) {\n          return *(int *)(iVar1 + 0x38) + iVar6;\n        }\n        uVar5 = *(uint *)(iVar1 + 0x14);\n      }\n      iVar7 = iVar7 + 1;\n      iVar6 = iVar6 + 0x70;\n    } while (iVar7 < (int)(uVar5 >> 0x18 & 0x3f));\n  }\n  return 0;\n}\n\n"
+  },
+  {
+    "file": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-all-02/functions/00121cd0.c",
+    "start": 17,
+    "end": 52,
+    "p": 0.77,
+    "text": "LAB_00121d8c:\n    iVar4 = bVar1 - 1;\n  }\n  else {\n    pfVar2 = (float *)(*(int *)(param_2 + 0x4c) + 4);\n    fVar5 = *pfVar2;\n    while (pfVar2 = pfVar2 + 1, fVar5 < param_1) {\n      iVar4 = iVar4 + 1;\n      if ((int)(uint)*(byte *)(param_2 + 0x12) <= iVar4) {\n        bVar1 = *(byte *)(param_2 + 0x11);\n        goto LAB_00121d8c;\n      }\n      fVar5 = *pfVar2;\n    }\n    bVar1 = *(byte *)(param_2 + 0x11);\n    iVar4 = iVar4 + iGpffff93c0 + -1;\n    iVar3 = bVar1 - 1;\n    if (iVar3 <= iVar4) {\n      iVar4 = bVar1 - 2;\n      if (bVar1 < 3) {\n        iVar4 = iVar3;\n      }\n      return iVar4;\n    }\n    if ((iVar4 < iGpffff93bc) && (iVar4 = iGpffff93bc, iVar3 <= iGpffff93bc)) {\n      iVar4 = bVar1 - 2;\n      if (bVar1 < 3) {\n        iVar4 = 0;\n      }\n      return iVar4;\n    }\n  }\n  return iVar4;\n}\n\n"
+  },
+  {
+    "file": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-all-02/functions/0012f3c0.c",
+    "start": 1,
+    "end": 60,
+    "p": 0.79,
+    "text": "\nundefined4 FUN_0012f3c0(undefined8 param_1)\n\n{\n  undefined4 uVar1;\n  long lVar2;\n  \n  lVar2 = FUN_0020deb4(param_1,0x28f288);\n  if (lVar2 == 0) {\n    uVar1 = 1;\n  }\n  else {\n    lVar2 = FUN_0020deb4(param_1,0x28f290);\n    if (lVar2 == 0) {\n      uVar1 = 2;\n    }\n    else {\n      lVar2 = FUN_0020e248(param_1,0x2535a0,10);\n      if (lVar2 == 0) {\n        uVar1 = 3;\n      }\n      else {\n        lVar2 = FUN_0020deb4(param_1,0x28f298);\n        if (lVar2 == 0) {\n          uVar1 = 4;\n        }\n        else {\n          lVar2 = FUN_0020deb4(param_1,0x2535b0);\n          if (lVar2 == 0) {\n            uVar1 = 5;\n          }\n          else {\n            lVar2 = FUN_0020e248(param_1,0x28f2a0,4);\n            if (lVar2 == 0) {\n              uVar1 = 6;\n            }\n            else {\n              lVar2 = FUN_0020deb4(param_1,0x2535c0);\n              if (lVar2 == 0) {\n                uVar1 = 7;\n              }\n              else {\n                lVar2 = FUN_0020deb4(param_1,0x2535d8);\n                if (lVar2 == 0) {\n                  uVar1 = 8;\n                }\n                else {\n                  lVar2 = FUN_0020deb4(param_1,0x28f2a8);\n                  uVar1 = 9;\n                  if (lVar2 != 0) {\n                    uVar1 = 0;\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }"
+  }
+]

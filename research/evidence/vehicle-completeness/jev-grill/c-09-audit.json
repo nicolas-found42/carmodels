@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "CONSOLIDATED PLAN for the next session on the Ford Racing 2 (SLES_517.05) car-model recovery, workspace R (projects/carmodels).\nORDER: A (sound index) -> B (selector) -> C (display names). Stop only when all three reach a definite outcome (stop condition 7b); C is required.\nA: RECORDED VERDICT. The executable binds :SOUNDBANK_TYPE by name: config-key table @0x24af68 (CAR1..CAR8_SOUND_FILE then CAR_GENERIC/UI_SOUNDS) and descriptor table @0x24afe8 (sounds\\car1_snd:0:0:5 .. car8_snd:7:35:5), same index 0..7; FUN_001d7950 resolves the token to car struct +0x40; FUN_00165b10 indexes carN_snd by +0x40; FUN_001408d8 loads carN_snd.msh/.msb from the literal stem; the first numeric field is a discarded bank ordinal. Verdict: build_reference.py's name-based rule is CONSISTENT, no off-by-one. Action: record this verdict in a sound-index reconciliation receipt; do NOT change the green T2 verifier.\nB: PROOF BAR = a decompilation-reachable address, never a value-only match (value triangulation already returned 0 word hits and 97 noisy byte hits). METHOD: trace FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10. The livery-label selector is named: FUN_00125640 returns a packed selector (low-16 resource-list ordinal) from record base 0x233070+type*0x114 (count +0xbc, list +0x90); FUN_00121e10 stores it at entity+0x64; the chain hangs off the dynamic gameflow pointers outer+4 -> +0x14c -> +0x174. DO: read entity+0x64 via the chain in the three existing EE images (slots 102/103/104), expected the same DEFAULT value in all three (non-distinguishing by construction at DEFAULT livery). Then ONE time-boxed indirection pass for the per-screen CAR highlight cursor (FUN_001c4a40 over DAT_00241b40, caller open). 'B resolved' = a DEFINITE OUTCOME: the named livery store read AND recorded, plus the car-highlight cursor recorded open if the indirection pass names nothing. FALLBACK: broaden_indirect once before recording open.\nC: extend tools/resolve_display_names.py to the full car-keyed TXT_CARS_* set (~35-39 rows), delivered as its own receipt under vehicle-completeness/; the three-pair T3 claim stays intact and separate. The '136-entry display-name table' is a misnomer (136 is livery rows; display names are keyed by car).\nCEILING: render_fidelity_complete stays false on every artifact; partial claims only; no completion gate passes; a Jev gate escalate is an acceptable recorded outcome. CONSTRAINTS: never print credentials; new files in R not S; close tickets only on real tool output.",
+    "records": [
+      {
+        "id": "verdict",
+        "request": "extract verdict",
+        "value": "CONSISTENT, no off-by-one"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "verdict",
+        "value": "CONSISTENT, no off-by-one",
+        "checks": {
+          "hallucinated": 0.03,
+          "off_target": 0.06,
+          "incomplete": 0.24,
+          "format": 0.11
+        },
+        "p_wrong": 0.24,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1480,
+      "output_tokens": 86
+    }
+  }
+}

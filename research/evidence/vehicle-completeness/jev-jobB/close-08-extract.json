@@ -1,0 +1,95 @@
+{
+  "args": {
+    "document": "{\n  \"summary\": \"Headless read-only PINE reaches the live car-entity chain, but the per-screen highlight is not stored as a readable EE integer or pointer in any of the three savestates; Job B stays a recorded-open definite outcome.\",\n  \"live_chain\": {\n    \"slot102\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot103\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot104\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    }\n  },\n  \"live_chain_resolves\": true,\n  \"named_store\": {\n    \"offset\": \"entity+0x64 (node+0x10+0x64)\",\n    \"type\": \"float (FUN_00121e10)\",\n    \"entity_floats_car1_6\": [\n      \"0x3f7f8382\",\n      \"0x3f7ffed3\",\n      \"0x3f55bdc1\",\n      \"0x3f800000\",\n      \"0x3f6d40bf\",\n      \"0x3f712801\"\n    ]\n  },\n  \"exhaustive_tuple_scan\": {\n    \"u32\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 0\n    },\n    \"u16\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 2\n    },\n    \"u8\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 97\n    }\n  },\n  \"ee_image_sha256\": {\n    \"slot102\": \"c8167b6ec2c4f43ad7c3ff968249fbb4b3802011a3b2d72feac7d1ffef34239f\",\n    \"slot103\": \"8e5af5b2605d708d8c78d51e4168c30e6961f234527482964ca09c2303a5adcc\",\n    \"slot104\": \"26cdd8fef7f7b3ccf76ccc8b7a2cc1814c8921c65b9f9137765b99668c14eba2\"\n  },\n  \"control_tuple154_zero_all_widths\": true,\n  \"control_tuple043_only_byte_noise\": true,\n  \"control_live_chain_resolves\": true,\n  \"control_store_is_float\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"three captured savestates (live-loaded) + exhaustive EE tuple scan; read-only\",\n  \"result\": \"VERIFY OK\"\n}\n",
+    "fields": [
+      {
+        "id": "u32_154",
+        "pattern": "\"tuple_154_hits\": [0-9]+",
+        "description": "u32 (1,5,4) hit count"
+      },
+      {
+        "id": "u32_043",
+        "pattern": "\"tuple_043_hits\": [0-9]+",
+        "description": "u32 (0,4,3) hit count"
+      },
+      {
+        "id": "store",
+        "pattern": "entity\\+0x64",
+        "description": "the named store offset"
+      },
+      {
+        "id": "manager",
+        "pattern": "0x473d70",
+        "description": "the live manager address"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 2,
+      "auto": 1,
+      "review": 2,
+      "not_found": 1,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "u32_154",
+        "value": "\"tuple_154_hits\": 0",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.15,
+        "top_probability": 0.57,
+        "margin": 0.13999999999999996,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "u32_043",
+        "value": "\"tuple_043_hits\": 0",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.88,
+        "top_probability": 0.91,
+        "margin": 0.8200000000000001,
+        "candidates_considered": 3,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "store",
+        "value": null,
+        "status": "review",
+        "reason": "none_matched_ambiguous",
+        "confidence": 0.07,
+        "top_probability": 0.54,
+        "margin": 0.08000000000000002,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "manager",
+        "value": null,
+        "status": "not_found",
+        "reason": "no_regex_matches",
+        "candidates_considered": 0,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1646,
+      "output_tokens": 123
+    }
+  }
+}

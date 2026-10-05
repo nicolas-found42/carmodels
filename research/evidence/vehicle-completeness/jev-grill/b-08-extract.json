@@ -1,0 +1,95 @@
+{
+  "args": {
+    "document": "carselection-2026-10-05/bridge-three-screens.json ee_findings: no FORD'49 / ROUTE 50 / TXT_CARS_* label bytes exist in the slot102 EE image (labels arrive via the text archive + glyph path). Static leads: FUN_0019eb90 reads the gameflow livery label via a static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...) and resolves it via FUN_00125640, storing via FUN_00121e10; VA_0x23acb0 holds 0x0028f7c8 stable across all three captures. jgrep highlight hits: 0017cb80 (initials-entry cycler, discarded), 00184430 (1..3 bounded cursor on uRam0028fd74, reads 0 in all three, not the car cursor), 001c4a40 (indexed cursor over DAT_00241b40 table, caller context open). VA_0x241b60 is 5,4,4 across slots 102/103/104 (does not track highlight; open). Three-way triangulation for highlight tuples: one-based (1,5,4) 0 hits; zero-based (0,4,3) words 0 hits; byte-level (0,4,3) 97 hits clustered in VU-packet regions (0x21xxxx, 0x81xxxx-0x84xxxx) with no menu-struct candidate; scratchpad 121 changed words all float-scale VU noise (0x352c-0x354c 102==104!=103, not a small-int cursor). Screens pair highlight positions 1/5/4 to cars 49_COUPE / THUNDERBIRD_2002 / FORTYNINE at DEFAULT livery.",
+    "fields": [
+      {
+        "id": "chain",
+        "pattern": "FUN_0019eb90 reads[^.]*FUN_00125640",
+        "description": "the label read/resolve chain"
+      },
+      {
+        "id": "va_table",
+        "pattern": "VA 0x23acb0",
+        "description": "the static label table address"
+      },
+      {
+        "id": "word_hits",
+        "pattern": "words [0-9]+ hits",
+        "description": "word-level hit count"
+      },
+      {
+        "id": "byte_hits",
+        "pattern": "byte-level \\(0,4,3\\) [0-9]+ hits",
+        "description": "byte-level hit count"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 3,
+      "auto": 3,
+      "review": 0,
+      "not_found": 1,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "chain",
+        "value": null,
+        "status": "not_found",
+        "reason": "no_regex_matches",
+        "candidates_considered": 0,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "va_table",
+        "value": "VA 0x23acb0",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.94,
+        "top_probability": 0.97,
+        "margin": 0.94,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "word_hits",
+        "value": "words 0 hits",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.9,
+        "top_probability": 0.95,
+        "margin": 0.8999999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "byte_hits",
+        "value": "byte-level (0,4,3) 97 hits",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.82,
+        "top_probability": 0.91,
+        "margin": 0.8200000000000001,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1187,
+      "output_tokens": 105
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "args": {
+    "claims": [
+      "Slot102 shows thumbnail 1 with VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS.",
+      "Slot103 shows thumbnail 5 with VEHICLE: THUNDERBIRD CONVERTIBLE, TRACK: DEER CREEK, TYPE: DRAFTING.",
+      "Slot104 shows thumbnail 4 with VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE.",
+      "The six 12-name EE livery tables are unchanged between slot102 and slot103.",
+      "No isolated highlight-index word was found by three-way triangulation."
+    ],
+    "evidence": "Screens:\n- Ground-truth emulator screenshot slot102: Living Legends, thumbnail 1 highlighted (pale green Ford), VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS, STATUS UNLOCKED, ROOKIE 0%, BACK/OK prompts.\n- Ground-truth emulator screenshot slot103: Living Legends, thumbnail 5 highlighted (white car), VEHICLE: THUNDERBIRD CONVERTIBLE, TRACK: DEER CREEK, TYPE: DRAFTING, STATUS UNLOCKED.\n- Ground-truth emulator screenshot slot104 (vision transcript, model-generated): Living Legends, thumbnail 4 highlighted, VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE, STATUS UNLOCKED.\nEE:\nEE scans (code-measured): six static 12-name livery tables present in slot102 at 0x0143b736,0x0157e365,0x016b7934,0x017ec5aa,0x0192f915,0x01a5856e; record bases 0x233070+type*0x114 with count 12 for types 2..7, all words unchanged between slot102 and slot103. No FORD'49/ROUTE 50/label strings in EE (labels come from text archive + glyphs). Three-way word triangulation for highlight tuples (0,4,3)/(1,5,4): 0 hits. Byte-level (0,4,3): 97 hits, clustered in VU-packet regions; (1,5,4): 0 hits. Scratchpad diffs are float-scale VU noise. L key moved highlight leftward (5->4 single step; 1->5 via wrap under hold), contrary to the assumed L=Right mapping.\nCaptures: slot102 sha 6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7, slot103 sha b5e569fcc561fa3a5408f6eb0a7a6497594e52bdb26f5cdb2dbfeed31dc56c3e, slot104 sha 74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694. 19 key presses used of 30 budget. Slot 100 untouched; slot 101 backs up the pre-experiment live state."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 5,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "Slot102 shows thumbnail 1 with VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "says_nothing": 0,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim1",
+        "claim": "Slot103 shows thumbnail 5 with VEHICLE: THUNDERBIRD CONVERTIBLE, TRACK: DEER CREEK, TYPE: DRAFTING.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "says_nothing": 0,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.96
+      },
+      {
+        "id": "claim2",
+        "claim": "Slot104 shows thumbnail 4 with VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.99,
+          "says_nothing": 0,
+          "contradicts": 0.01
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.94
+      },
+      {
+        "id": "claim3",
+        "claim": "The six 12-name EE livery tables are unchanged between slot102 and slot103.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "says_nothing": 0,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim4",
+        "claim": "No isolated highlight-index word was found by three-way triangulation.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.98,
+          "says_nothing": 0,
+          "contradicts": 0.02
+        },
+        "confidence": 0.96,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      }
+    ],
+    "usage": {
+      "input_tokens": 2438,
+      "output_tokens": 309
+    }
+  }
+}

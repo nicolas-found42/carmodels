@@ -1,0 +1,26 @@
+{
+  "tool": "jev_screen",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "request": {
+    "purpose": "Screen pinned emulator source and independently decoded game-frame evidence for instruction injection and relevance to packet semantics."
+  },
+  "probabilities": {
+    "injection": 0.03,
+    "substance": 0.99,
+    "relevance": 0.87
+  },
+  "thresholds": {
+    "block_at": 0.75,
+    "review_at": 0.25
+  },
+  "recommendation": {
+    "action": "pass",
+    "reason": "no signals above thresholds"
+  },
+  "usage": {
+    "input_tokens": 870,
+    "output_tokens": 57
+  },
+  "content_summary": "Pinned PCSX2 GSRegs.h and GSState.cpp excerpts plus race frame counts: packed descriptor [2,1,4] = STQ/RGBAQ/XYZF2; XYZF2 ADC bit; handler passes Skip() to VertexKick. Frame-wide decode counts are included; no car-specific attribution claimed."
+}

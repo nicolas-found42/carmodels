@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "Doing the sound-index reconciliation before the selector work is the right ordering.",
+      "Requiring decompilation-reachability is a stronger and more appropriate proof bar for the selector word than a value match.",
+      "Keeping render_fidelity_complete false on every artifact is the correct standing policy for this project.",
+      "A decompilation-first approach is more likely to isolate the selector word than capturing more screens.",
+      "The project can reach a fully closed state within the next one or two sessions.",
+      "The display-name table is the highest-value of the three open threads."
+    ],
+    "context": "Adopted plan: (1) ordering = do the sound-index reconciliation (A) first, then the EE selector word (B), with the display-name table (C) optional. (2) proof bar for the selector word = an isolated EE word that tracks the highlight AND is reachable from the decompiled menu/label draw path (not a bare value match, because value-only triangulation already produced 97 noisy byte hits and 0 word hits). (3) claim ceiling = render_fidelity_complete stays false on every artifact, partial claims only, no completion gate passes. (4) method for the selector = decompilation-first: read the FUN_0019eb90 -> FUN_00125640 -> store chain to derive the exact struct offset, then read that address in the three existing EE images. Standing constraints: never print credentials; new files in R not S; close tickets only on real tool output; a Jev gate escalate is an acceptable recorded outcome.\n\nbuild_reference.py (line ~261) builds base_bank with a NAME-based rule: for each CAR_SND_CARn block in CARSOUND.DAT it reads :SOUNDBANK_TYPE CARn_SOUND_FILE and sets base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd', i.e. CAR_SND_CAR6 + CAR6_SOUND_FILE -> 'car6_snd' (the digit is taken from the bank file name, not from the CAR_SND_CARn number). CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 -> CAR1_SOUND_FILE..CAR8_SOUND_FILE (verified: 8 base blocks). The executable's static strings are 'sounds\\car1_snd:0:0:5' ... 'sounds\\car8_snd:7:35:5' (addresses 0x288e40..0x288f18) with templates '%s.msh' (0x28f508) and '%s.msb' (0x28f510); the trailing fields are base:offset:count with base 0..7, suggesting an index. Corroboration: 49_COUPE's sound type CAR_SND_49_COUPE inherits CAR_SND_CAR6 and its sample names are literally MASTER_SOUND_SAMPLE_CAR6_TICKOVER / ..._LOW_UNLOADED / ..._HIGH_LOADED, so the 'CAR6' identity appears in the sample data itself. All 35 cars resolve a chain; the 8 distinct inherit targets are CAR_SND_CAR1..CAR_SND_CAR8.\n\ncarselection-2026-10-05/bridge-three-screens.json ee_findings: no FORD'49 / ROUTE 50 / TXT_CARS_* label bytes exist in the slot102 EE image (labels arrive via the text archive + glyph path). Static leads: FUN_0019eb90 reads the gameflow livery label via a static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...) and resolves it via FUN_00125640, storing via FUN_00121e10; VA_0x23acb0 holds 0x0028f7c8 stable across all three captures. jgrep highlight hits: 0017cb80 (initials-entry cycler, discarded), 00184430 (1..3 bounded cursor on uRam0028fd74, reads 0 in all three, not the car cursor), 001c4a40 (indexed cursor over DAT_00241b40 table, caller context open). VA_0x241b60 is 5,4,4 across slots 102/103/104 (does not track highlight; open). Three-way triangulation for highlight tuples: one-based (1,5,4) 0 hits; zero-based (0,4,3) words 0 hits; byte-level (0,4,3) 97 hits clustered in VU-packet regions (0x21xxxx, 0x81xxxx-0x84xxxx) with no menu-struct candidate; scratchpad 121 changed words all float-scale VU noise (0x352c-0x354c 102==104!=103, not a small-int cursor). Screens pair highlight positions 1/5/4 to cars 49_COUPE / THUNDERBIRD_2002 / FORTYNINE at DEFAULT livery."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "Doing the sound-index reconciliation before the selector work is the right ordering.",
+        "probability": 0.91,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Requiring decompilation-reachability is a stronger and more appropriate proof bar for the selector word than a value match.",
+        "probability": 0.92,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "Keeping render_fidelity_complete false on every artifact is the correct standing policy for this project.",
+        "probability": 0.9,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "A decompilation-first approach is more likely to isolate the selector word than capturing more screens.",
+        "probability": 0.85,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "The project can reach a fully closed state within the next one or two sessions.",
+        "probability": 0.14,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition5",
+        "proposition": "The display-name table is the highest-value of the three open threads.",
+        "probability": 0.13,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 2033,
+      "output_tokens": 130
+    }
+  }
+}

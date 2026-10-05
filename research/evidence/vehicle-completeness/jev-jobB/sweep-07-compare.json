@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Two known positions (A=3, B=5): a word must read (3,5)-consistent values.",
+    "passage_b": "Six known positions: a word must map 1:1 to 1..6.",
+    "aspects": [
+      "attribution strength",
+      "cost",
+      "false-positive risk"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0.02,
+        "different_facts": 0.89,
+        "contradicts": 0.09
+      },
+      "confidence": 0.84,
+      "margin": 0.8,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "attribution strength",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.02,
+          "different_facts": 0.97,
+          "contradicts": 0.01
+        },
+        "confidence": 0.96,
+        "margin": 0.95,
+        "decision": "auto"
+      },
+      {
+        "aspect": "cost",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.01,
+          "different_facts": 0.99,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "decision": "auto"
+      },
+      {
+        "aspect": "false-positive risk",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.01,
+          "different_facts": 0.98,
+          "contradicts": 0.01
+        },
+        "confidence": 0.98,
+        "margin": 0.97,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 825,
+      "output_tokens": 177
+    }
+  }
+}

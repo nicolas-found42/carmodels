@@ -1,0 +1,80 @@
+{
+  "tool": "jev_compare",
+  "provider": "openrouter",
+  "model": "typesafe/jev-1.13",
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "same_fact",
+      "probabilities": {
+        "contradicts": 0.04,
+        "different_facts": 0.3,
+        "same_fact": 0.66
+      },
+      "confidence": 0.49,
+      "margin": 0.36000000000000004,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "File size and exact section boundaries",
+        "relation": "same_fact",
+        "probabilities": {
+          "contradicts": 0.01,
+          "different_facts": 0.1,
+          "same_fact": 0.89
+        },
+        "confidence": 0.83,
+        "margin": 0.79,
+        "decision": "auto"
+      },
+      {
+        "aspect": "Meaning of bytes in the tile data spans",
+        "relation": "same_fact",
+        "probabilities": {
+          "contradicts": 0.01,
+          "different_facts": 0.1,
+          "same_fact": 0.89
+        },
+        "confidence": 0.83,
+        "margin": 0.79,
+        "decision": "auto"
+      },
+      {
+        "aspect": "Whether a complete faithful image decoder is established",
+        "relation": "same_fact",
+        "probabilities": {
+          "contradicts": 0.02,
+          "different_facts": 0.02,
+          "same_fact": 0.96
+        },
+        "confidence": 0.93,
+        "margin": 0.94,
+        "decision": "auto"
+      },
+      {
+        "aspect": "Whether the primary executable consumer is traced to these disc files",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0,
+          "different_facts": 0.97,
+          "same_fact": 0.03
+        },
+        "confidence": 0.96,
+        "margin": 0.94,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 1289,
+      "output_tokens": 217
+    }
+  }
+}
+

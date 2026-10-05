@@ -1,0 +1,99 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "cross_session",
+        "text": "Diff three savestates captured in different sessions (confounded by animation)."
+      },
+      {
+        "id": "same_session",
+        "text": "Diff two savestates captured moments apart in one session."
+      },
+      {
+        "id": "live_read",
+        "text": "Read the value live from the running emulator."
+      }
+    ],
+    "classes": [
+      {
+        "id": "high_confidence",
+        "description": "Removes the confound, so the result is attributable to the highlight. Example: a same-session adjacent diff."
+      },
+      {
+        "id": "confounded",
+        "description": "Cannot separate the highlight from other differing state."
+      },
+      {
+        "id": "needs_tool",
+        "description": "Requires a tool class not yet used (debugger/scan)."
+      }
+    ],
+    "purpose": "separate clean experiments from confounded ones",
+    "context": "Mark-number search."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 3,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "confounded": 1,
+        "high_confidence": 1,
+        "needs_tool": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "cross_session",
+        "classification": "confounded",
+        "probabilities": {
+          "high_confidence": 0,
+          "confounded": 1,
+          "needs_tool": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "same_session",
+        "classification": "high_confidence",
+        "probabilities": {
+          "high_confidence": 0.94,
+          "confounded": 0.05,
+          "needs_tool": 0.01
+        },
+        "confidence": 0.92,
+        "margin": 0.8899999999999999,
+        "top_probability": 0.94,
+        "decision": "auto"
+      },
+      {
+        "id": "live_read",
+        "classification": "needs_tool",
+        "probabilities": {
+          "high_confidence": 0.02,
+          "confounded": 0.13,
+          "needs_tool": 0.85
+        },
+        "confidence": 0.77,
+        "margin": 0.72,
+        "top_probability": 0.85,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 633,
+      "output_tokens": 123
+    }
+  }
+}

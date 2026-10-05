@@ -1,0 +1,207 @@
+{
+  "scope": "Persisted parent Jev outputs only; community-agent calls are documented separately. No cost estimate inferred.",
+  "calls": 21,
+  "by_tool": {
+    "jev_decide": 2,
+    "jev_verify": 9,
+    "jev_gate": 1,
+    "jev_noul": 1,
+    "jev_rerank": 4,
+    "jev_screen": 4
+  },
+  "usage": {
+    "input_tokens": 181093,
+    "output_tokens": 11013
+  },
+  "receipts": [
+    {
+      "file": "assembly-decision.json",
+      "tool": "jev_decide",
+      "usage": {
+        "input_tokens": 1642,
+        "output_tokens": 332
+      },
+      "action": null
+    },
+    {
+      "file": "controls-container-code.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 6327,
+        "output_tokens": 762
+      },
+      "action": null
+    },
+    {
+      "file": "controls-fresh-export.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 3847,
+        "output_tokens": 760
+      },
+      "action": null
+    },
+    {
+      "file": "controls-geometry-layout.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 4799,
+        "output_tokens": 766
+      },
+      "action": null
+    },
+    {
+      "file": "controls-index-code.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 5150,
+        "output_tokens": 764
+      },
+      "action": null
+    },
+    {
+      "file": "controls-ptg-census.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 3746,
+        "output_tokens": 764
+      },
+      "action": null
+    },
+    {
+      "file": "controls-vif-order.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 5502,
+        "output_tokens": 762
+      },
+      "action": null
+    },
+    {
+      "file": "controls-vu-consumer.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 5298,
+        "output_tokens": 760
+      },
+      "action": null
+    },
+    {
+      "file": "final-gate.json",
+      "tool": "jev_gate",
+      "usage": {
+        "input_tokens": 37880,
+        "output_tokens": 1040
+      },
+      "action": "escalate"
+    },
+    {
+      "file": "hypothesis-noul.json",
+      "tool": "jev_noul",
+      "usage": {
+        "input_tokens": 1925,
+        "output_tokens": 258
+      },
+      "action": null
+    },
+    {
+      "file": "initial_jev.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 949,
+        "output_tokens": 128
+      },
+      "action": null
+    },
+    {
+      "file": "new-geometry-claims.json",
+      "tool": "jev_verify",
+      "usage": {
+        "input_tokens": 5428,
+        "output_tokens": 500
+      },
+      "action": null
+    },
+    {
+      "file": "next-geometry-experiment.json",
+      "tool": "jev_decide",
+      "usage": {
+        "input_tokens": 2057,
+        "output_tokens": 431
+      },
+      "action": null
+    },
+    {
+      "file": "retrieval-0.json",
+      "tool": "jev_rerank",
+      "usage": {
+        "input_tokens": 24997,
+        "output_tokens": 906
+      },
+      "action": null
+    },
+    {
+      "file": "retrieval-1.json",
+      "tool": "jev_rerank",
+      "usage": {
+        "input_tokens": 24370,
+        "output_tokens": 906
+      },
+      "action": null
+    },
+    {
+      "file": "retrieval-2.json",
+      "tool": "jev_rerank",
+      "usage": {
+        "input_tokens": 22812,
+        "output_tokens": 906
+      },
+      "action": null
+    },
+    {
+      "file": "retrieval-3.json",
+      "tool": "jev_rerank",
+      "usage": {
+        "input_tokens": 1273,
+        "output_tokens": 40
+      },
+      "action": null
+    },
+    {
+      "file": "screen_typesafe-citation.json",
+      "tool": "jev_screen",
+      "usage": {
+        "input_tokens": 5006,
+        "output_tokens": 57
+      },
+      "action": "pass"
+    },
+    {
+      "file": "screen_typesafe-confidence.json",
+      "tool": "jev_screen",
+      "usage": {
+        "input_tokens": 7308,
+        "output_tokens": 57
+      },
+      "action": "review"
+    },
+    {
+      "file": "screen_typesafe-questions.json",
+      "tool": "jev_screen",
+      "usage": {
+        "input_tokens": 9337,
+        "output_tokens": 57
+      },
+      "action": "review"
+    },
+    {
+      "file": "screen_typesafe-sdk.json",
+      "tool": "jev_screen",
+      "usage": {
+        "input_tokens": 1440,
+        "output_tokens": 57
+      },
+      "action": "review"
+    }
+  ]
+}

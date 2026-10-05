@@ -1,0 +1,62 @@
+{
+  "args": {
+    "propositions": [
+      "An isolated EE word that tracks the menu highlight exists.",
+      "Deriving the selector store address from the FUN_0019eb90 / FUN_00125640 chain will name the address to read.",
+      "A value-only match across three screens would be sufficient proof of the selector word.",
+      "The 97 byte-level hits contain the selector as a byte.",
+      "VA_0x241b60 (5,4,4) is the per-screen selector."
+    ],
+    "context": "carselection-2026-10-05/bridge-three-screens.json ee_findings: no FORD'49 / ROUTE 50 / TXT_CARS_* label bytes exist in the slot102 EE image (labels arrive via the text archive + glyph path). Static leads: FUN_0019eb90 reads the gameflow livery label via a static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...) and resolves it via FUN_00125640, storing via FUN_00121e10; VA_0x23acb0 holds 0x0028f7c8 stable across all three captures. jgrep highlight hits: 0017cb80 (initials-entry cycler, discarded), 00184430 (1..3 bounded cursor on uRam0028fd74, reads 0 in all three, not the car cursor), 001c4a40 (indexed cursor over DAT_00241b40 table, caller context open). VA_0x241b60 is 5,4,4 across slots 102/103/104 (does not track highlight; open). Three-way triangulation for highlight tuples: one-based (1,5,4) 0 hits; zero-based (0,4,3) words 0 hits; byte-level (0,4,3) 97 hits clustered in VU-packet regions (0x21xxxx, 0x81xxxx-0x84xxxx) with no menu-struct candidate; scratchpad 121 changed words all float-scale VU noise (0x352c-0x354c 102==104!=103, not a small-int cursor). Screens pair highlight positions 1/5/4 to cars 49_COUPE / THUNDERBIRD_2002 / FORTYNINE at DEFAULT livery."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "An isolated EE word that tracks the menu highlight exists.",
+        "probability": 0.13,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Deriving the selector store address from the FUN_0019eb90 / FUN_00125640 chain will name the address to read.",
+        "probability": 0.29,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "A value-only match across three screens would be sufficient proof of the selector word.",
+        "probability": 0.09,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The 97 byte-level hits contain the selector as a byte.",
+        "probability": 0.11,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "VA_0x241b60 (5,4,4) is the per-screen selector.",
+        "probability": 0.04,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1349,
+      "output_tokens": 109
+    }
+  }
+}

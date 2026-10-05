@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "any decision still silently assumed in the complete plan",
+    "candidates": [
+      {
+        "id": "rooting",
+        "text": "Rooting is specified: bootstrap global primary, sig_scan fallback, in one bounded pass."
+      },
+      {
+        "id": "closure",
+        "text": "Closure is specified: receipt + jev_gate per thread plus a completion report."
+      },
+      {
+        "id": "c_all35",
+        "text": "C asserts all 35 cars with controls."
+      },
+      {
+        "id": "hidden",
+        "text": "A branch nothing in the plan decides."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "any decision still silently assumed in the complete plan",
+    "exists": 0.91,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "hidden",
+        "probability": 0.98,
+        "text": "A branch nothing in the plan decides."
+      },
+      {
+        "id": "c_all35",
+        "probability": 0.02,
+        "text": "C asserts all 35 cars with controls."
+      },
+      {
+        "id": "rooting",
+        "probability": 0,
+        "text": "Rooting is specified: bootstrap global primary, sig_scan fallback, in one bounded pass."
+      },
+      {
+        "id": "closure",
+        "probability": 0,
+        "text": "Closure is specified: receipt + jev_gate per thread plus a completion report."
+      }
+    ],
+    "usage": {
+      "input_tokens": 520,
+      "output_tokens": 66
+    }
+  }
+}

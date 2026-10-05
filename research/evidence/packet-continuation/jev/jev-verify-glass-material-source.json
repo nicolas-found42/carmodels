@@ -1,0 +1,82 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "input_evidence": "Deterministic measurements: race94-trace.json source_packet_match_summary.unmatched_seven_vertex_blended_material_join has transfer_index 5906, seven vertices all rgba8 [0,0,0,102], source_header_candidates 149 and 261, each flags 0xc01a/count 7/base word 0x66000000, identical position_plane_sha256, max source-to-screen XY fit residual 0.18601268136990257; PRIM raw 0x4c means type 4/TME 0/ABE 1; ALPHA raw 0x44 decodes A=Cs,B=Cd,C=As,D=Cd. Raw 0021bc64/6c/70 instruction records are PEXTLB/PEXTLH/PEXEWs, 0021bc8c is vmulx.xyz, and 0021bcb4 is vmulx.w. c01a bit0 is clear. Runtime source branch join: node record 0x60039 with source range 0x15308ec..0x1531700 exactly matches COBRA source loaded base plus parsed geometry header bounds; bit0x10000 clear; first source header c018; scratchpad DAT_70003560=1.0 and queue count 0. The GSDump is a separate capture from the paused savestate. Static typed source checks: 00128e88 emits PRIM 0x4c for null texture pointer and 0x5c otherwise; 0021bb48 selects 0x4c only if effective flag bit2 set and adds TME independently if texture pointer nonzero; 0021bf28 maps header bits0/2/3/4 to effective bits0x20/1/0x40/0x80, not directly header bit1 to ABE; 0021c3e0 passes ALPHA 0x44 by default if effective bit0x20 clear to 0021ba50, whose PRIM is fixed 0x4c.",
+  "summary": {
+    "verified": 5,
+    "contradicted": 2,
+    "unsupported": 1,
+    "needs_review": 3
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "GS transfer 5906 is an untextured ABE-enabled triangle-strip packet with seven vertices whose RGBA values are all black with alpha 102 and whose ALPHA equation is (Cs-Cd)*As+Cd.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.91, "says_nothing": 0.0, "contradicts": 0.09},
+      "confidence": 0.87,
+      "action": "auto"
+    },
+    {
+      "id": "claim1",
+      "claim": "The packet's seven-vertex position and base-color data are strongly associated with two duplicate COBRA source headers (149 and 261), but the exact header ID and semantic part name remain unresolved.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.93, "says_nothing": 0.01, "contradicts": 0.06},
+      "confidence": 0.90,
+      "action": "auto"
+    },
+    {
+      "id": "claim2",
+      "claim": "Raw VU instructions show that source header flags 0xc01a select a W-only color scale branch, not a full RGBA scale; the dynamic multiplier is not known.",
+      "verdict": "contradicted",
+      "probabilities": {"supports": 0.29, "says_nothing": 0.04, "contradicts": 0.67},
+      "confidence": 0.51,
+      "action": "review",
+      "note": "The claim mislabeled raw 0021bc18 EE instruction records as VU instructions. The report now calls these raw EE vector instructions; the deterministic inventory mnemonic checks still show the bit-0-clear vmulx.w arm and bit-0-set vmulx.xyz arm. This receipt is retained and not overwritten."
+    },
+    {
+      "id": "claim3",
+      "claim": "The race94 source node range exactly matches the COBRA header table, its node bit 0x10000 is clear, and the paused scratchpad renderer count is zero; because the GSDump is separate, this does not prove that the node emitted transfer 5906.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.97, "says_nothing": 0.0, "contradicts": 0.03},
+      "confidence": 0.96,
+      "action": "auto"
+    },
+    {
+      "id": "claim4",
+      "claim": "Source 00128e88 sets PRIM 0x4c for a null texture pointer, while 0021bb48 ties PRIM ABE to effective flag bit 0x2 and TME independently to a nonzero texture pointer.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.90, "says_nothing": 0.0, "contradicts": 0.10},
+      "confidence": 0.85,
+      "action": "auto"
+    },
+    {
+      "id": "claim5",
+      "claim": "Source header bit 1 in 0021bf28 directly sets the ABE effective flag.",
+      "verdict": "contradicted",
+      "probabilities": {"supports": 0.0, "says_nothing": 0.0, "contradicts": 1.0},
+      "confidence": 0.99,
+      "action": "auto"
+    },
+    {
+      "id": "claim6",
+      "claim": "Given source-bound c01a flags, node flag, first-call param_3=0 and race94 DAT_70003560=1.0, the direct 0021c3e0/0021ba50 path is compatible with PRIM 0x4c and ALPHA 0x44 if the header is actually dispatched with no texture.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.75, "says_nothing": 0.01, "contradicts": 0.24},
+      "confidence": 0.62,
+      "action": "review"
+    },
+    {
+      "id": "claim7",
+      "claim": "Transfer 5906 is proven to depict the windshield or another specifically named glass component.",
+      "verdict": "unsupported",
+      "probabilities": {"supports": 0.0, "says_nothing": 0.83, "contradicts": 0.17},
+      "confidence": 0.75,
+      "action": "review"
+    }
+  ],
+  "usage": {"input_tokens": 3289, "output_tokens": 500},
+  "limitations": "Jev is an evidence-sensitive advisory judgment, not the source of the raw code or packet measurements. The contradictory 'VU instructions' phrasing is retained for auditability; the revised deterministic source statement uses raw EE vector instruction terminology. No repeated favorable verification was requested."
+}

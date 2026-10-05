@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "any remaining assumption in the plan that is not backed by evidence",
+    "candidates": [
+      {
+        "id": "sound",
+        "text": "The sound mapping is consistent, backed by two executable tables and the loader chain."
+      },
+      {
+        "id": "store",
+        "text": "The livery selector store at entity+0x64 is backed by FUN_00121e10."
+      },
+      {
+        "id": "cursor",
+        "text": "The per-screen car-highlight cursor is reachable by one indirection pass."
+      },
+      {
+        "id": "c_rows",
+        "text": "The car-keyed display-name set is ~35-39 rows; not 136."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "any remaining assumption in the plan that is not backed by evidence",
+    "exists": 0.68,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "cursor",
+        "probability": 0.47,
+        "text": "The per-screen car-highlight cursor is reachable by one indirection pass."
+      },
+      {
+        "id": "c_rows",
+        "probability": 0.47,
+        "text": "The car-keyed display-name set is ~35-39 rows; not 136."
+      },
+      {
+        "id": "store",
+        "probability": 0.04,
+        "text": "The livery selector store at entity+0x64 is backed by FUN_00121e10."
+      },
+      {
+        "id": "sound",
+        "probability": 0.02,
+        "text": "The sound mapping is consistent, backed by two executable tables and the loader chain."
+      }
+    ],
+    "usage": {
+      "input_tokens": 551,
+      "output_tokens": 63
+    }
+  }
+}

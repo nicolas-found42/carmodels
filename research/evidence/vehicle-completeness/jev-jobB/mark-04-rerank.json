@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "rank the experiments by likely payoff",
+    "candidates": [
+      {
+        "id": "same_session_adjacent",
+        "text": "Two fresh savestates one highlight apart, same session, diffed."
+      },
+      {
+        "id": "scanmem_unknown",
+        "text": "Unknown-initial-value scan narrowed live."
+      },
+      {
+        "id": "live_breakpoint",
+        "text": "Read breakpoint on the draw path."
+      },
+      {
+        "id": "more_decomp",
+        "text": "Read the input handler."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "rank the experiments by likely payoff",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "scanmem_unknown",
+        "relevance": 0.26,
+        "text": "Unknown-initial-value scan narrowed live."
+      },
+      {
+        "rank": 2,
+        "id": "live_breakpoint",
+        "relevance": 0.24,
+        "text": "Read breakpoint on the draw path."
+      },
+      {
+        "rank": 3,
+        "id": "same_session_adjacent",
+        "relevance": 0.19,
+        "text": "Two fresh savestates one highlight apart, same session, diffed."
+      },
+      {
+        "rank": 4,
+        "id": "more_decomp",
+        "relevance": 0.06,
+        "text": "Read the input handler."
+      }
+    ],
+    "usage": {
+      "input_tokens": 582,
+      "output_tokens": 76
+    }
+  }
+}

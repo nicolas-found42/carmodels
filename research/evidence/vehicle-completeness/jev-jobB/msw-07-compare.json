@@ -1,0 +1,60 @@
+{
+  "args": {
+    "passage_a": "TEST 1: no word equals position across six verified slots.",
+    "passage_b": "The mark is stored as a small integer in EE.",
+    "aspects": [
+      "evidence",
+      "which stands"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "contradicts": 0,
+        "different_facts": 1,
+        "same_fact": 0
+      },
+      "confidence": 0.99,
+      "margin": 1,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "evidence",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.01,
+          "different_facts": 0.98,
+          "same_fact": 0.01
+        },
+        "confidence": 0.98,
+        "margin": 0.97,
+        "decision": "auto"
+      },
+      {
+        "aspect": "which stands",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.02,
+          "different_facts": 0.96,
+          "same_fact": 0.02
+        },
+        "confidence": 0.95,
+        "margin": 0.94,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 677,
+      "output_tokens": 133
+    }
+  }
+}

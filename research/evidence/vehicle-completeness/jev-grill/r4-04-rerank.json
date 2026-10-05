@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "correct shape for C (the display-name deliverable)",
+    "candidates": [
+      {
+        "id": "car_keys",
+        "text": "Extend resolve_display_names.py to all TXT_CARS_* car-name keys (~35-39), new receipt; do not call it a 136-entry table."
+      },
+      {
+        "id": "force_136",
+        "text": "Force a 136-row table over the livery rows."
+      },
+      {
+        "id": "new_t4",
+        "text": "Build a separate tool and ticket T4 for C."
+      },
+      {
+        "id": "skip",
+        "text": "Skip C."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "correct shape for C (the display-name deliverable)",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "car_keys",
+        "relevance": 0.62,
+        "text": "Extend resolve_display_names.py to all TXT_CARS_* car-name keys (~35-39), new receipt; do not call it a 136-entry table."
+      },
+      {
+        "rank": 2,
+        "id": "skip",
+        "relevance": 0.21,
+        "text": "Skip C."
+      },
+      {
+        "rank": 3,
+        "id": "new_t4",
+        "relevance": 0.2,
+        "text": "Build a separate tool and ticket T4 for C."
+      },
+      {
+        "rank": 4,
+        "id": "force_136",
+        "relevance": 0.12,
+        "text": "Force a 136-row table over the livery rows."
+      }
+    ],
+    "usage": {
+      "input_tokens": 617,
+      "output_tokens": 76
+    }
+  }
+}

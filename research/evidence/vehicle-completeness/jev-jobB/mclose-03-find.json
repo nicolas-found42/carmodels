@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the only remaining way to isolate the mark number",
+    "candidates": [
+      {
+        "id": "live_breakpoint",
+        "text": "A PCSX2 read/write breakpoint on the menu draw path in the headless instance (a debugger feature)."
+      },
+      {
+        "id": "live_scan",
+        "text": "A live value scan (scanmem-style) narrowed by moving the highlight."
+      },
+      {
+        "id": "ps2dev",
+        "text": "ps2dev PS2 homebrew tooling."
+      },
+      {
+        "id": "stop",
+        "text": "Record open; no further option."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the only remaining way to isolate the mark number",
+    "exists": 0.77,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "live_scan",
+        "probability": 0.73,
+        "text": "A live value scan (scanmem-style) narrowed by moving the highlight."
+      },
+      {
+        "id": "live_breakpoint",
+        "probability": 0.24,
+        "text": "A PCSX2 read/write breakpoint on the menu draw path in the headless instance (a debugger feature)."
+      },
+      {
+        "id": "stop",
+        "probability": 0.03,
+        "text": "Record open; no further option."
+      },
+      {
+        "id": "ps2dev",
+        "probability": 0,
+        "text": "ps2dev PS2 homebrew tooling."
+      }
+    ],
+    "usage": {
+      "input_tokens": 529,
+      "output_tokens": 70
+    }
+  }
+}

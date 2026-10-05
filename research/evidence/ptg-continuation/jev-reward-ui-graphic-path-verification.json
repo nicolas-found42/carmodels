@@ -1,0 +1,62 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "arguments": {
+    "claims": [
+      "The archived REWRD.UI file proves GLOW is a UI_TYPE_GRAPHIC node with a static CARGLOW.PSD texture and BUTTON1/BUTTON2 are UI_TYPE_BUTTON nodes.",
+      "UI class renderers for classes 1, 3, and 4 can converge on FUN_0015e2e0 and the generic base-image sprite uploader.",
+      "FUN_00220fe0 reads base pixel data from descriptor +0x28 and does not read descriptor +0x2c or +0x35.",
+      "The executable contains a reward CARS\\%s.PSD texture template and the async callback dynamically passes a returned handle to a class-indexed setter.",
+      "The available static evidence proves that the CARS request is attached to the archived GLOW, BUTTON1, or BUTTON2 node and drawn by that node's renderer."
+    ],
+    "evidence_receipt": "reward-ui-graphic-path-trace.json"
+  },
+  "summary": {
+    "verified": 4,
+    "contradicted": 0,
+    "unsupported": 1,
+    "needs_review": 2
+  },
+  "results": [
+    {
+      "claim": "The archived REWRD.UI file proves GLOW is a UI_TYPE_GRAPHIC node with a static CARGLOW.PSD texture and BUTTON1/BUTTON2 are UI_TYPE_BUTTON nodes.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0.01, "supports": 0.84, "contradicts": 0.15},
+      "confidence": 0.76,
+      "action": "review"
+    },
+    {
+      "claim": "UI class renderers for classes 1, 3, and 4 can converge on FUN_0015e2e0 and the generic base-image sprite uploader.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0.01, "supports": 0.96, "contradicts": 0.03},
+      "confidence": 0.95,
+      "action": "auto"
+    },
+    {
+      "claim": "FUN_00220fe0 reads base pixel data from descriptor +0x28 and does not read descriptor +0x2c or +0x35.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 1,
+      "action": "auto"
+    },
+    {
+      "claim": "The executable contains a reward CARS\\%s.PSD texture template and the async callback dynamically passes a returned handle to a class-indexed setter.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 0.99,
+      "action": "auto"
+    },
+    {
+      "claim": "The available static evidence proves that the CARS request is attached to the archived GLOW, BUTTON1, or BUTTON2 node and drawn by that node's renderer.",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "probabilities": {"says_nothing": 0.32, "supports": 0, "contradicts": 0.68},
+      "confidence": 0.51,
+      "action": "review"
+    }
+  ],
+  "usage": {"input_tokens": 2767, "output_tokens": 311},
+  "disposition": "Use the path-level findings as corroborating judgment only. Preserve the CARS request-to-UI-node join as unresolved; Jev's result does not establish the object mapping."
+}

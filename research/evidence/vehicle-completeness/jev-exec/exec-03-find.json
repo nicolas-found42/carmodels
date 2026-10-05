@@ -1,0 +1,49 @@
+{
+  "args": {
+    "query": "which thread produced the strongest definite outcome",
+    "candidates": [
+      {
+        "id": "A",
+        "text": "Sound mapping equal to the executable across two tables and 35 cars; 3 controls rejected."
+      },
+      {
+        "id": "B",
+        "text": "Livery store named at entity+0x64; cursor recorded open; 0 sig-scan candidates, 0 exact-base pointers."
+      },
+      {
+        "id": "C",
+        "text": "35/35 cars resolve with unknown-key and apostrophe controls; 3-pair regression preserved."
+      }
+    ],
+    "top_k": 3
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "which thread produced the strongest definite outcome",
+    "exists": 0.35,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "C",
+        "probability": 0.65,
+        "text": "35/35 cars resolve with unknown-key and apostrophe controls; 3-pair regression preserved."
+      },
+      {
+        "id": "A",
+        "probability": 0.24,
+        "text": "Sound mapping equal to the executable across two tables and 35 cars; 3 controls rejected."
+      },
+      {
+        "id": "B",
+        "probability": 0.11,
+        "text": "Livery store named at entity+0x64; cursor recorded open; 0 sig-scan candidates, 0 exact-base pointers."
+      }
+    ],
+    "usage": {
+      "input_tokens": 501,
+      "output_tokens": 55
+    }
+  }
+}

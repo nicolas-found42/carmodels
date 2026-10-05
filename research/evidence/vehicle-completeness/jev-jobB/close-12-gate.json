@@ -1,0 +1,150 @@
+{
+  "args": {
+    "request": "Gate Job B: recorded-open definite outcome via headless read-only live PINE.",
+    "diff": "{\n \"live_chain\": \"read-only\",\n \"store\": \"entity+0x64 float\",\n \"highlight\": \"recorded open\",\n \"tuple_154_hits\": 0\n}",
+    "claims": [
+      "Headless read-only PINE reached the live car-entity chain.",
+      "The (1,5,4) highlight tuple has 0 hits at all widths; (0,4,3) is u8 noise only.",
+      "The per-screen selector word was NOT isolated; the outcome is recorded open.",
+      "render_fidelity_complete stays false."
+    ],
+    "evidence": "Job B headless execution, read-only: extended the PINE helper with read opcodes (MsgRead8/16/32/64, no writes); loaded each existing savestate (102/103/104) live in the headless container; traversed the live entity chain via PINE (static global 0x290278 -> manager 0x473d70 -> 6 car entities at node+0x10); confirmed the named livery store is a float at entity+0x64; then exhaustively scanned all three 32 MiB EE images for the highlight tuples. RESULT: (1,5,4) has 0 hits at width 8/16/32; (0,4,3) has 0 u32 hits and 97 u8 noise hits. The per-screen highlight is NOT stored as a readable EE integer or pointer. Job B stays a recorded-open definite outcome. The live chain and store are decompilation-reachable and named.\n\n{\n  \"summary\": \"Headless read-only PINE reaches the live car-entity chain, but the per-screen highlight is not stored as a readable EE integer or pointer in any of the three savestates; Job B stays a recorded-open definite outcome.\",\n  \"live_chain\": {\n    \"slot102\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot103\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot104\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    }\n  },\n  \"live_chain_resolves\": true,\n  \"named_store\": {\n    \"offset\": \"entity+0x64 (node+0x10+0x64)\",\n    \"type\": \"float (FUN_00121e10)\",\n    \"entity_floats_car1_6\": [\n      \"0x3f7f8382\",\n      \"0x3f7ffed3\",\n      \"0x3f55bdc1\",\n      \"0x3f800000\",\n      \"0x3f6d40bf\",\n      \"0x3f712801\"\n    ]\n  },\n  \"exhaustive_tuple_scan\": {\n    \"u32\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 0\n    },\n    \"u16\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 2\n    },\n    \"u8\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 97\n    }\n  },\n  \"ee_image_sha256\": {\n    \"slot102\": \"c8167b6ec2c4f43ad7c3ff968249fbb4b3802011a3b2d72feac7d1ffef34239f\",\n    \"slot103\": \"8e5af5b2605d708d8c78d51e4168c30e6961f234527482964ca09c2303a5adcc\",\n    \"slot104\": \"26cdd8fef7f7b3ccf76ccc8b7a2cc1814c8921c65b9f9137765b99668c14eba2\"\n  },\n  \"control_tuple154_zero_all_widths\": true,\n  \"control_tuple043_only_byte_noise\": true,\n  \"control_live_chain_resolves\": true,\n  \"control_store_is_float\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"three captured savestates (live-loaded) + exhaustive EE tuple scan; read-only\",\n  \"result\": \"VERIFY OK\"\n}\n"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.44,
+      "scores": {
+        "correctness": {
+          "score": 1.84,
+          "confidence": 0.75,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.06,
+            "2": 0.89
+          }
+        },
+        "spec_match": {
+          "score": 1.81,
+          "confidence": 0.72,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.14,
+            "2": 0.84
+          }
+        },
+        "test_gap": {
+          "score": 0.23,
+          "confidence": 0.65,
+          "probabilities": {
+            "0": 0.83,
+            "1": 0.1,
+            "2": 0.07
+          }
+        },
+        "blast_radius": {
+          "score": 0.49,
+          "confidence": 0.26,
+          "probabilities": {
+            "0": 0.64,
+            "1": 0.22,
+            "2": 0.14
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.8855000000000001,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 4,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "Headless read-only PINE reached the live car-entity chain.",
+          "verdict": "verified",
+          "confidence": 1,
+          "probabilities": {
+            "contradicted": 0,
+            "verified": 1,
+            "unsupported": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The (1,5,4) highlight tuple has 0 hits at all widths; (0,4,3) is u8 noise only.",
+          "verdict": "verified",
+          "confidence": 0.87,
+          "probabilities": {
+            "contradicted": 0.08,
+            "verified": 0.91,
+            "unsupported": 0.01
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The per-screen selector word was NOT isolated; the outcome is recorded open.",
+          "verdict": "verified",
+          "confidence": 0.94,
+          "probabilities": {
+            "contradicted": 0.01,
+            "verified": 0.96,
+            "unsupported": 0.03
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "render_fidelity_complete stays false.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "contradicted": 0,
+            "verified": 1,
+            "unsupported": 0
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2710,
+      "output_tokens": 238
+    }
+  }
+}

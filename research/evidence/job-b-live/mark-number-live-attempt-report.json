@@ -1,0 +1,59 @@
+{
+  "job": "B \u2014 mark number (the game's id for the highlighted car)",
+  "verdict": "NOT a stored per-car integer (confirmed live); the live method itself works",
+  "what_was_done": [
+    "Built a stdlib RFB (VNC) key injector to the container's own Xvfb (:99) - headless unpause/keys, no host focus, no image change.",
+    "Unpaused the container (Space toggled PINE status 1->0).",
+    "Live PINE diff (before/after arrow key) found words that respond to input: 0x241b60, 0x241e00.",
+    "DECISIVE TEST: loaded slots 102/103/104 (known highlights car1/car5/car4 = positions 1/5/4) live and read them."
+  ],
+  "decisive_result": {
+    "0x241b60": "(5,4,4) across the three loads",
+    "0x241e00": "(5,4,4)",
+    "meaning": "car4 and car5 both read 4 -> not a per-car highlight id; the responsive words are animation/another cursor"
+  },
+  "gaps": [
+    {
+      "id": "G1",
+      "gap": "mark not in any savestate",
+      "solution": "live read (done) - and it is not a stored per-car integer"
+    },
+    {
+      "id": "G2",
+      "gap": "PINE has no pause/resume",
+      "solution": "RFB key injector to :99 (done, works)"
+    },
+    {
+      "id": "G3",
+      "gap": "no X tools in container",
+      "solution": "stdlib RFB client - no image change needed (done)"
+    },
+    {
+      "id": "G4",
+      "gap": "debugger has no headless API",
+      "solution": "hkmodd/PCSX2-MCP DebugServer (Windows-only) or xdotool+GUI; not needed to reach the live method"
+    }
+  ],
+  "conclusion": "The menu highlight is not stored as a readable per-car integer in EE. The one path left to the actual value is a WRITE breakpoint on the draw code's read of it (or the DebugServer build) - a debugger feature excluded by the read-only rule.",
+  "jev": {
+    "calls_this_round": 12,
+    "gate": "escalate, 3/3 verified, 0 contradicted",
+    "key": "live method works; candidates disproven; no per-car 1/5/4 integer"
+  },
+  "receipts": [
+    "research/evidence/vehicle-completeness/job-b-gap-solutions.md",
+    "research/evidence/job-b-live/mark-number-exhaustive-search.json",
+    "tools/headless-runtime/rfb_key.py",
+    "tools/headless-runtime/live_scan.py",
+    "tools/headless-runtime/decisive_mark_test.py",
+    "research/evidence/vehicle-completeness/jev-jobB/ (mfinal-*)"
+  ],
+  "state": {
+    "container": "paused (status 1)",
+    "save_states": "101/102/103/104 intact",
+    "host_focus": "never touched",
+    "guest_writes": "none (read-only PINE + emulator keys)",
+    "image": "unchanged"
+  },
+  "render_fidelity_complete": false
+}

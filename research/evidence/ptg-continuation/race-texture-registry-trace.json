@@ -1,0 +1,71 @@
+{
+  "purpose": "Determine whether the generic texture upload call at FUN_00228ed8 is statically connected to parsed CARS PTG descriptors.",
+  "source": {
+    "executable": "reverse-engineering/games/ford-racing-2/extracted/SLES_517.05",
+    "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+    "address_mapping": "ELF .text VA to file offset is VA - 0xff000; referenced resource keys were read at their VA-derived data offsets.",
+    "saved_decompilation": "reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions",
+    "decompilation_hashes": {
+      "001d3468.c": "622a9060e8690503c8b1b24863f1cb7d0547c05a7b2c4543450eb72526ab010c",
+      "001250b8.c": "1f45e19a6b6256cbb911fc8925675c24371046d606471506a3b82dec0b3a4435",
+      "00228df0.c": "eb1296a6403aa481661f5f06caf053fe88360800b68a05d8d9374d5318a01dfe",
+      "00228ed8.c": "10f72a3dc9a2dbb95ea14438cc45a557bcaf27bae39680b5a7e2006dd1defa51"
+    }
+  },
+  "static_facts": [
+    {
+      "address": "0x001d3468",
+      "detail": "The saved function resolves texture resource keys SMOKEANDDUST, TYRE_SKID, TYRE_DENT, SUN_FLARE, SPECULAR_SPRITE, CAMERA_FLARE, HEADLIGHT_FLARE, REARLIGHT_FLARE, TYRE_SMOKE, BLACK_SMOKE, EXHAUST, GRASS, SPARK, SPRAY, and FIRE. It registers returned resource pointers in slots 0 through 7 through FUN_00228df0. Several slots select between alternative keys based on resource availability."
+    },
+    {
+      "address": "0x001250b8",
+      "detail": "The saved lookup function hashes the provided NUL-terminated name, searches a registry bucket, compares the candidate name, and returns the matching registry object's resource pointer or zero."
+    },
+    {
+      "address": "0x00228df0",
+      "detail": "The saved function records the returned object in the indexed table and adds it to the unique active pointer list when not already present."
+    },
+    {
+      "address": "0x00228ed8",
+      "detail": "The saved function iterates the active pointer list, conditionally calls FUN_00222a38 based on the descriptor format, and calls FUN_00222358 for every listed descriptor."
+    }
+  ],
+  "interpretation": "This establishes a producer-to-upload path for a resource set whose names denote smoke, tyre, flare, exhaust, grass, spark, spray, and fire effects. It does not show that the CARS PTG parser populates this list, that any named object came from a car icon/livery PTG, or that a car selection screen uses this list. The CARS .PSD-to-.ptg;1-to-FUN_0022acc8 parser chain has no connected edge to these callers in the examined saved call graphs.",
+  "jev": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "usage": {
+      "input_tokens": 2229,
+      "output_tokens": 383
+    },
+    "summary": {
+      "verified": 2,
+      "unsupported": 1,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "claim": "FUN_001d3468 registers the listed resources into the registry consumed by FUN_00228ed8.",
+        "verdict": "verified",
+        "confidence": 0.87,
+        "action": "auto"
+      },
+      {
+        "claim": "The resource list proves CARS PTG descriptors reach this upload path.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "confidence": 0.96,
+        "action": "review"
+      },
+      {
+        "claim": "FUN_00228ed8 calls FUN_00222358 for every active registry pointer, and that consumer emits texture upload packets.",
+        "verdict": "verified",
+        "confidence": 0.98,
+        "action": "auto"
+      }
+    ],
+    "receipt_note": "Tool returned the complete structured response to the calling run; this durable summary omits no material verdict. Jev evaluated supplied decompilation/evidence text and is not an independent binary execution."
+  },
+  "conclusion": "Generic descriptor-to-upload behavior is executable and mapped for this named effect-resource list. Car icon/livery PTG-to-upload and displayed-pixel linkage remains unproven."
+}

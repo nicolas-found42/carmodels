@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "How should the sound-index question be settled?",
+    "evidence": "build_reference.py (line ~261) builds base_bank with a NAME-based rule: for each CAR_SND_CARn block in CARSOUND.DAT it reads :SOUNDBANK_TYPE CARn_SOUND_FILE and sets base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd', i.e. CAR_SND_CAR6 + CAR6_SOUND_FILE -> 'car6_snd' (the digit is taken from the bank file name, not from the CAR_SND_CARn number). CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 -> CAR1_SOUND_FILE..CAR8_SOUND_FILE (verified: 8 base blocks). The executable's static strings are 'sounds\\car1_snd:0:0:5' ... 'sounds\\car8_snd:7:35:5' (addresses 0x288e40..0x288f18) with templates '%s.msh' (0x28f508) and '%s.msb' (0x28f510); the trailing fields are base:offset:count with base 0..7, suggesting an index. Corroboration: 49_COUPE's sound type CAR_SND_49_COUPE inherits CAR_SND_CAR6 and its sample names are literally MASTER_SOUND_SAMPLE_CAR6_TICKOVER / ..._LOW_UNLOADED / ..._HIGH_LOADED, so the 'CAR6' identity appears in the sample data itself. All 35 cars resolve a chain; the 8 distinct inherit targets are CAR_SND_CAR1..CAR_SND_CAR8.",
+    "priorities": "Do not change a verified T2 unless the executable proves a disagreement; prefer a definite verdict from the decompilation; keep the corpus building.",
+    "candidates": [
+      {
+        "id": "read_then_decide",
+        "description": "Read the soundman consumer to state what the base field indexes, then fix or confirm."
+      },
+      {
+        "id": "change_preemptively",
+        "description": "Switch build_reference to an index rule now."
+      },
+      {
+        "id": "declare_name_based",
+        "description": "Record the mapping as name-based and add the sample-name corroboration as evidence."
+      }
+    ],
+    "requirements": [
+      "Rest on executable evidence",
+      "Avoid changing a green verifier without proof",
+      "Leave a definite recorded verdict"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "declare_name_based",
+      "escaped": false,
+      "confidence": 0.43,
+      "probabilities": {
+        "read_then_decide": 0.46,
+        "investigate": 0.01,
+        "none": 0,
+        "ask_user": 0,
+        "change_preemptively": 0,
+        "declare_name_based": 0.53
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "read_then_decide",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "read_then_decide",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "read_then_decide",
+        "requirement": 2,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "change_preemptively",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "change_preemptively",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "change_preemptively",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "declare_name_based",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "declare_name_based",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "declare_name_based",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2188,
+      "output_tokens": 461
+    }
+  }
+}

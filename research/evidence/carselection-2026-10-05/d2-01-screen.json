@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "Ground-truth emulator screenshot slot104 (vision transcript, model-generated): Living Legends, thumbnail 4 highlighted, VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE, STATUS UNLOCKED.",
+    "purpose": "bridge label transcription for livery-selector join"
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.03,
+      "substance": 0.96,
+      "relevance": 0.92
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 553,
+      "output_tokens": 57
+    }
+  }
+}

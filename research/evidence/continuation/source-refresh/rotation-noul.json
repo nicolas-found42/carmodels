@@ -1,0 +1,22 @@
+{
+  "args": {
+    "context": "Bytechecked refreshed inventory5454/285006 instructions, pseudocode5454 hashes. Fixed hierarchy rotation span00229780..00229898 has integer shuffle and COP2 VCALLMS4d→VUbyte268 plusFPUmatrixstores. Host interpreter using pinned VU polynomial yields R_y(angle0)*R_x(angle1)*R_z(angle2) columns:1005probes,maxabsoluteerror1.1831240868814819e-6;5controls pass. All2246serializedrotationszero. Race94/95 sixcars378nodejoins havezero mutableangles. A new headless race advanced using ordinaryaccelerator, paused after lap1:53.86; source-state capture97 queued, noresultsparsed yet. Independent tests and runtimejoin absentfornonzero rotation so far.",
+    "propositions": [
+      "The source fixed-node rotation order is consistent with R_y(angle0)*R_x(angle1)*R_z(angle2) in the original axes.",
+      "The source fixed-node rotation order is inconsistent with R_y(angle0)*R_x(angle1)*R_z(angle2) in the original axes.",
+      "The new advanced race capture is likely to contain nonzero mutable rotation inputs.",
+      "The new advanced race capture is likely to contain only zero mutable rotation inputs.",
+      "A rest assembly omits no serialized node rotations because all2246 source node rotation inputs are zero.",
+      "A rest assembly omits nonzero serialized node rotations despite the all2246 zero-input census."
+    ],
+    "auto_accept": 0.85
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_noul\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"status\": \"ok\",\n  \"results\": [\n    {\n      \"id\": \"proposition0\",\n      \"proposition\": \"The source fixed-node rotation order is consistent with R_y(angle0)*R_x(angle1)*R_z(angle2) in the original axes.\",\n      \"probability\": 0.77,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition1\",\n      \"proposition\": \"The source fixed-node rotation order is inconsistent with R_y(angle0)*R_x(angle1)*R_z(angle2) in the original axes.\",\n      \"probability\": 0.14,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition2\",\n      \"proposition\": \"The new advanced race capture is likely to contain nonzero mutable rotation inputs.\",\n      \"probability\": 0.18,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition3\",\n      \"proposition\": \"The new advanced race capture is likely to contain only zero mutable rotation inputs.\",\n      \"probability\": 0.71,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition4\",\n      \"proposition\": \"A rest assembly omits no serialized node rotations because all2246 source node rotation inputs are zero.\",\n      \"probability\": 0.65,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition5\",\n      \"proposition\": \"A rest assembly omits nonzero serialized node rotations despite the all2246 zero-input census.\",\n      \"probability\": 0.12,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    }\n  ],\n  \"thresholds\": {\n    \"auto_accept\": 0.85\n  },\n  \"usage\": {\n    \"input_tokens\": 1249,\n    \"output_tokens\": 130\n  }\n}"
+      }
+    ]
+  }
+}

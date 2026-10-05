@@ -1,0 +1,103 @@
+{
+  "purpose": "Trace the CARS resource handle from the reward-screen callback into UI state and determine whether a sprite consumer can avoid the sentinel mip fields.",
+  "executable": {
+    "path": "reverse-engineering/games/ford-racing-2/extracted/SLES_517.05",
+    "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+    "text_va_to_file_offset": "VA - 0xff000"
+  },
+  "source_identities": {
+    "callback_listing": {
+      "path": "reverse-engineering/.scratch/mesh/codex-root/recomp-fixed-01/sub_001820F0_0x1820f0.cpp",
+      "sha256": "69cb0f1520568553e62d8c6c39f9a4749ab47f38f599872b06f2292fb2ed7b0b"
+    },
+    "decompilation_root": "reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions",
+    "decompilation_hashes": {
+      "00181f38.c": "a12ceca223b5f42d6c33c088fc25819898e50feca73eb07ade748a0b8804ddcb",
+      "0014d728.c": "377e24796f223c1addcba17c5a9ff54d207667e6043861c9ac6e00a7b84ef8d4",
+      "0014d568.c": "b87ef283d86acdb2a0d03316c80686464ba2a0c4eaf1ca068de7fac789a7220e",
+      "0014b188.c": "52e23db55a17b73b178a3a9815aa5d31cc9a2d9ff5cc63032ec77e983ece6046",
+      "002209a0.c": "a2fd1a79b220877559d69d0c12b85cd26409a85bc92efb7c0d18dd2243d3a7b3",
+      "00220678.c": "588899f7ea9ad5124f5f25fd500d5a97de19f2e1501270a0e34768af530a205f",
+      "0021fd50.c": "eb1d14347ad30f2cdf2723c454a4a303817c9a8e475f16d8deadcf7ed7fac6e7",
+      "00220fe0.c": "b06e228a10d18ed582e1ccbbafd03da1723cce3a605e8ca35b3d42676980561b",
+      "002209d8.c": "f4f062f7b951398de1c78238297d0c45a0c38b375302a9c87b72134a3193f019",
+      "00220d60.c": "d52a461e90003244e9952fb5d30ace1a49e23c2efdb364fcbdceb31e8d76d1ed"
+    }
+  },
+  "static_trace": [
+    {
+      "step": 1,
+      "address": "0x25d0e0 / 0x25d1c0",
+      "evidence": "Raw executable data at 0x25d0e0 contains UIREWRD.UI and UI-field tokens BUTTON%d, GLOW, NAME, DESCRIPTION, CONGRATS. It includes the template GRAPHICS\\GAME\\CARS\\%s.PSD and other reward graphics templates MATRIX, TROPHY2, MODEICON, TRACKS2. A nearby embedded source path is ../fr2/source/ui/ui_scrns/ui_rewrd.c. The CARS callback itself is supplied to this resource parser by FUN_00181f38 at inferred callback entry 0x1820f0."
+    },
+    {
+      "step": 2,
+      "address": "0x1826b0-0x1826bc",
+      "evidence": "The recovered callback sets s1 = gp-0x6018+s7 before calling FUN_0022a910. On return, v0 is stored to *(s1) in the conditional branch delay slot at 0x1826bc. Thus the resource handle is saved in the current callback-field slot."
+    },
+    {
+      "step": 3,
+      "address": "0x1826d8-0x182704",
+      "evidence": "The callback sets s0=gp-0x5370+s7, loads the current config/UI object from that slot, reloads the resource handle from s1, reads the object's class id from its first word, indexes the setter table DAT_00239a20 by class id, and invokes that setter with the object and returned resource handle. The class id is data-driven and is not determined for the CARS row by the recovered static excerpt."
+    },
+    {
+      "step": 4,
+      "address": "0x001485f0, 0x0014d568, 0x0014d728",
+      "evidence": "The UI setter initialization calls FUN_0014d568(1); FUN_0014d568(1) calls FUN_0014d5c0(1), which installs FUN_0014d728 at DAT_00239a20+4. For class id 1, FUN_0014d728 stores the passed resource handle at object[1]+0x154. If the handle's state +0x4c is 4 and the UI object's sizing flag is set, it calls FUN_0014b188 to update layout. FUN_0014b188 obtains texture width/height by calling FUN_002209a0, which reads handle +0x14 and +0x18. This class-1 interpretation is conditional; the CARS row's actual class id is not statically proven."
+    },
+    {
+      "step": 5,
+      "address": "0x00220678 -> 0x0021fd50 -> 0x00220fe0",
+      "evidence": "The generic sprite wrapper FUN_00220678 delegates to FUN_0021fd50. Its per-cell loop calls FUN_00220fe0 on the texture descriptor referenced by each sprite-cell entry. FUN_00220fe0 invokes FUN_002209d8 for texture cache/residency; submits the base image through FUN_00222110 using descriptor data pointer +0x28, format +0x34 and dimensions from +0x38; then FUN_00220d60 writes texture register state. In its saved function body it does not read descriptor +0x2c or +0x35. FUN_00222358 is a separate mip-aware upload entrypoint."
+    }
+  ],
+  "jev": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "usage": {
+      "input_tokens": 3313,
+      "output_tokens": 676
+    },
+    "summary": {
+      "verified": 4,
+      "unsupported": 1,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "claim": "The callback stores and forwards the same resource handle to a type-indexed setter.",
+        "verdict": "verified",
+        "confidence": 0.97,
+        "action": "auto"
+      },
+      {
+        "claim": "For class id 1, the setter stores the handle at object+0x154 and may recalculate layout from its header dimensions.",
+        "verdict": "verified",
+        "confidence": 0.9,
+        "action": "auto"
+      },
+      {
+        "claim": "The static record is UIREWRD.UI with CARS PSD template and ui_rewrd.c source path.",
+        "verdict": "verified",
+        "confidence": 0.93,
+        "action": "auto"
+      },
+      {
+        "claim": "Static callback evidence proves CARS row class id 1 and draw through FUN_00220678.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "confidence": 0.79,
+        "action": "review"
+      },
+      {
+        "claim": "FUN_00220fe0's base sprite upload uses +0x28 data and does not directly read +0x2c/+0x35.",
+        "verdict": "verified",
+        "confidence": 0.99,
+        "action": "auto"
+      }
+    ],
+    "receipt_note": "The CARS UI element class and actual drawn state remain unresolved. Jev assessed supplied static excerpts rather than running game code."
+  },
+  "conclusion": "The CARS PTG request is data-bound to the reward-screen resource table. Its returned resource handle is stored and passed into a dynamic UI-field setter. A generic sprite upload route uses only base pixel data and ignores the +0x2c/+0x35 fields, so sentinel mip metadata would not block that route. Static evidence does not prove that the reward-screen CARS row selects the corresponding class or that its handle reaches this sprite draw function, and it does not identify the selected-car screen or livery consumer. Runtime state linkage/draw capture remains needed."
+}

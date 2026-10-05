@@ -1,0 +1,71 @@
+{
+  "args": {
+    "claims": [
+      "PCSX2's PINE protocol defines guest memory read opcodes MsgRead8=0, MsgRead16=1, MsgRead32=2, MsgRead64=3 in pcsx2/PINE.cpp.",
+      "The headless PINE helper currently exposes only identity/save/load, not memory reads.",
+      "PINE can read guest EE memory without writing any guest state."
+    ],
+    "evidence": "pcsx2/PINE.cpp enum IPCCommand: MsgRead8=0, MsgRead16=1, MsgRead32=2, MsgRead64=3, MsgWrite8=4, MsgWrite16=5, MsgWrite32=6, MsgWrite64=7; then Version=8, SaveState=9, LoadState=10, Title=11, Id=12, UUID=13, GameVersion=14, Status=15. The read handler replies with the value in a little-endian span. The headless helper tools/headless-runtime/pine_control.py implements only identity (text 8/11/12/13/14 + status 15) and save/load (9/10)."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 3,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "PCSX2's PINE protocol defines guest memory read opcodes MsgRead8=0, MsgRead16=1, MsgRead32=2, MsgRead64=3 in pcsx2/PINE.cpp.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.91
+      },
+      {
+        "id": "claim1",
+        "claim": "The headless PINE helper currently exposes only identity/save/load, not memory reads.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.86
+      },
+      {
+        "id": "claim2",
+        "claim": "PINE can read guest EE memory without writing any guest state.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.12,
+          "contradicts": 0.01,
+          "supports": 0.87
+        },
+        "confidence": 0.81,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.43
+      }
+    ],
+    "usage": {
+      "input_tokens": 1357,
+      "output_tokens": 187
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "next concrete headless action to reach the selector word",
+    "candidates": [
+      {
+        "id": "pine_read32",
+        "text": "Add read32/read64/read_range to the PINE helper and read the entity-list global + candidate chain words in the live state."
+      },
+      {
+        "id": "pine_poll",
+        "text": "Unpause via PINE/keys and poll candidate words across three car selections."
+      },
+      {
+        "id": "bp",
+        "text": "Arm a read breakpoint on the highlight draw path in the headless instance."
+      },
+      {
+        "id": "more_decomp",
+        "text": "Trace FUN_001de3d8 to find the exact static root before any live read."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "next concrete headless action to reach the selector word",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "pine_read32",
+        "relevance": 0.52,
+        "text": "Add read32/read64/read_range to the PINE helper and read the entity-list global + candidate chain words in the live state."
+      },
+      {
+        "rank": 2,
+        "id": "pine_poll",
+        "relevance": 0.4,
+        "text": "Unpause via PINE/keys and poll candidate words across three car selections."
+      },
+      {
+        "rank": 3,
+        "id": "more_decomp",
+        "relevance": 0.35,
+        "text": "Trace FUN_001de3d8 to find the exact static root before any live read."
+      },
+      {
+        "rank": 4,
+        "id": "bp",
+        "relevance": 0.31,
+        "text": "Arm a read breakpoint on the highlight draw path in the headless instance."
+      }
+    ],
+    "usage": {
+      "input_tokens": 635,
+      "output_tokens": 76
+    }
+  }
+}

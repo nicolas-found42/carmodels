@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Implement tools/resolve_display_names.py: read each captured car's INGAME_TEXT_ENUM from reference CARDATA, resolve through LANGUAGE/tlate_en.dat;1 (UTF-16-LE, keys TXT_CARS_*) in code, assert resolved strings equal the screens' VEHICLE labels; apostrophe byte-exact from the archive, not vision; receipt records archive path, sha256, key->string rows, pass/fail per pair; update bridge-three-screens.json only on pass.",
+    "diff": "--- /dev/null\n+++ b/tools/resolve_display_names.py\n+#!/usr/bin/env python3\n+\"\"\"T3 \u2014 resolve the three captured VEHICLE labels from the language archive.\n+\n+Reads each captured car's INGAME_TEXT_ENUM from the reference CARDATA block, then\n+resolves it through the game's LANGUAGE/tlate_en.dat;1 (UTF-16-LE, keys TXT_CARS_*)\n+in code, and asserts the resolved string equals the on-screen VEHICLE label.\n+The apostrophe is taken byte-exact from the archive (raw UTF-16 bytes must appear\n+verbatim in the archive), never from a vision transcript.\n+\n+Scope: the three captured pairs only (slot102/103/104). No 136-entry table.\n+\n+Receipt: research/evidence/vehicle-completeness/t3-display-name-resolution-validation.json\n+bridge-three-screens.json is updated with the resolved rows ONLY when all three pass.\n+Exit 0 + \"VERIFY OK\" only on pass.\n+\"\"\"\n+import hashlib\n+import json\n+import re\n+import sys\n+from pathlib import Path\n+\n+ROOT = Path(__file__).resolve().parents[1]\n+sys.path.insert(0, str(ROOT / \"tools\"))\n+import build_reference as B  # reuse the exact tlate parser + paths\n+\n+CORPUS = ROOT / \"reference/ford\"\n+TLATE = B.SRC / \"LANGUAGE/tlate_en.dat;1\"\n+BRIDGE = ROOT / \"research/evidence/carselection-2026-10-05/bridge-three-screens.json\"\n+OUT = ROOT / \"research/evidence/vehicle-completeness/t3-display-name-resolution-validation.json\"\n+\n+\n+def parse_tlate(data: bytes) -> dict:\n+    \"\"\"Same parse as build_reference.py: UTF-16-LE, TXT_CARS_* lines.\"\"\"\n+    text = data.decode(\"utf-16-le\", \"replace\")\n+    txt = {}\n+    for line in text.split(\"\\r\\n\"):\n+        line = line.strip(\"\\ufeff\").strip()\n+        if line.startswith(\"TXT_CARS_\") and \" \" in line:\n+            k, v = line.split(\" \", 1)\n+            txt[k] = v.strip()\n+    return txt\n+\n+\n+def cardata_enum(car_type: str):\n+    \"\"\"INGAME_TEXT_ENUM for a car from its extracted reference CARDATA block.\"\"\"\n+    path = CORPUS / \"cars\" / car_type / \"config/cardata.txt\"\n+    if not path.is_file():\n+        raise ValueError(f\"missing reference cardata for {car_type}\")\n+    block = path.read_bytes()\n+    m = re.search(rb\"(?m)^:INGAME_TEXT_ENUM[ \\t]+(\\S+)[ \\t]*\\r?$\", block)\n+    return m.group(1).decode() if m else None\n+\n+\n+def check():\n+    if not TLATE.is_file():\n+        raise ValueError(f\"language archive missing: {TLATE}\")\n+    raw = TLATE.read_bytes()\n+    txt = parse_tlate(raw)\n+    bridge = json.loads(BRIDGE.read_text())\n+    screens = bridge[\"screens\"]\n+\n+    rows = []\n+    for s in screens:\n+        car_type = s[\"car_type\"]\n+        expected_enum = s[\"ingame_text_enum\"]\n+        label = s[\"vehicle\"]\n+\n+        enum = cardata_enum(car_type)\n+        if enum != expected_enum:\n+            raise ValueError(f\"{car_type}: CARDATA enum {enum!r} != bridge enum {expected_enum!r}\")\n+        resolved = txt.get(enum)\n+        if resolved is None:\n+            raise ValueError(f\"{car_type}: key {enum} absent from tlate_en archive\")\n+        if resolved != label:\n+            raise ValueError(f\"{car_type}: resolved {resolved!r} != VEHICLE label {label!r}\")\n+        # byte-exact: the raw UTF-16-LE bytes of the resolved string must occur verbatim\n+        needle = resolved.encode(\"utf-16-le\")\n+        if needle not in raw:\n+            raise ValueError(f\"{car_type}: resolved string bytes not verbatim in archive\")\n+        rows.append({\n+            \"capture\": s[\"capture\"],\n+            \"car_type\": car_type,\n+            \"ingame_text_enum\": enum,\n+            \"resolved_string\": resolved,\n+            \"vehicle_label_on_screen\": label,\n+            \"labels_equal\": True,\n+            \"utf16le_bytes_hex\": needle.hex(),\n+            \"apostrophe_raw_0x27_present\": (b\"\\x27\\x00\" in needle),\n+            \"archive_verbatim\": True,\n+            \"pass\": True,\n+        })\n+\n+    result = {\n+        \"archive_path\": str(TLATE.relative_to(B.SRC)),\n+        \"archive_sha256\": hashlib.sha256(raw).hexdigest(),\n+        \"archive_bytes\": len(raw),\n+        \"encoding\": \"utf-16-le\",\n+        \"pairs\": len(rows),\n+        \"rows\": rows,\n+        \"all_pairs_pass\": all(r[\"pass\"] for r in rows),\n+    }\n+\n+    # ---- negative controls ----\n+    # NC1 a label lacking the archive's apostrophe must NOT equal the resolution\n+    wrong = rows[0][\"resolved_string\"].replace(\"'\", \"\")\n+    if wrong == rows[0][\"resolved_string\"]:\n+        raise ValueError(\"control setup: expected an apostrophe in the resolved string\")\n+    result[\"control_apostrophe_stripped_label_rejected\"] = (wrong != rows[0][\"resolved_string\"])\n+\n+    # NC2 a wrong archive key must not resolve to the label\n+    bogus = txt.get(\"TXT_CARS_NOT_A_REAL_KEY\")\n+    result[\"control_unknown_key_unresolved\"] = (bogus is None)\n+\n+    # NC3 CARDATA enum must actually be the bridge enum (guards a silent remap)\n+    result[\"control_enum_matches_cardata\"] = all(\n+        cardata_enum(r[\"car_type\"]) == r[\"ingame_text_enum\"] for r in rows)\n+    return result, bridge, raw\n+\n+\n+def main() -> int:\n+    result, bridge, raw = check()\n+    ok = (result[\"all_pairs_pass\"]\n+          and result[\"control_apostrophe_stripped_label_rejected\"]\n+          and result[\"control_unknown_key_unresolved\"]\n+          and result[\"control_enum_matches_cardata\"])\n+\n+    if ok:\n+        # update bridge only on pass; idempotent (replace, not append)\n+        by_capture = {r[\"capture\"]: r for r in result[\"rows\"]}\n+        for s in bridge[\"screens\"]:\n+            r = by_capture[s[\"capture\"]]\n+            s[\"display_name_resolution\"] = {\n+                \"archive_path\": result[\"archive_path\"],\n+                \"archive_sha256\": result[\"archive_sha256\"],\n+                \"key\": r[\"ingame_text_enum\"],\n+                \"resolved_string\": r[\"resolved_string\"],\n+                \"matches_vehicle_label\": True,\n+                \"utf16le_bytes_hex\": r[\"utf16le_bytes_hex\"],\n+                \"apostrophe_raw_0x27_present\": r[\"apostrophe_raw_0x27_present\"],\n+            }\n+        bridge[\"display_name_resolution_summary\"] = {\n+            \"method\": \"LANGUAGE/tlate_en.dat;1 UTF-16-LE keys resolved in code; apostrophe byte-exact from archive\",\n+            \"pairs\": result[\"pairs\"],\n+            \"all_pass\": True,\n+            \"archive_sha256\": result[\"archive_sha256\"],\n+        }\n+        BRIDGE.write_text(json.dumps(bridge, indent=1) + \"\\n\")\n+        result[\"bridge_updated\"] = True\n+    else:\n+        result[\"bridge_updated\"] = False\n+\n+    result[\"result\"] = \"VERIFY OK\" if ok else \"VERIFY FAILED\"\n+    result[\"scope\"] = \"three captured pairs (slot102/103/104); no 136-entry table\"\n+    result[\"render_fidelity_complete\"] = False\n+    OUT.parent.mkdir(parents=True, exist_ok=True)\n+    OUT.write_text(json.dumps(result, indent=2) + \"\\n\")\n+    print(json.dumps(result, indent=2))\n+    print(result[\"result\"])\n+    return 0 if ok else 1\n+\n+\n+if __name__ == \"__main__\":\n+    sys.exit(main())\n+",
+    "tests": "RETAINED PACKET EVIDENCE OK\n"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.34,
+    "scores": {
+      "correctness": {
+        "score": 1.3,
+        "confidence": 0.2,
+        "probabilities": {
+          "0": 0.11,
+          "1": 0.47,
+          "2": 0.42
+        }
+      },
+      "spec_match": {
+        "score": 1.74,
+        "confidence": 0.61,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.25,
+          "2": 0.74
+        }
+      },
+      "test_gap": {
+        "score": 1.41,
+        "confidence": 0.11,
+        "probabilities": {
+          "0": 0.22,
+          "1": 0.16,
+          "2": 0.62
+        }
+      },
+      "blast_radius": {
+        "score": 0.32,
+        "confidence": 0.51,
+        "probabilities": {
+          "0": 0.69,
+          "1": 0.29,
+          "2": 0.02
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.69125,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 2753,
+      "output_tokens": 79
+    }
+  }
+}

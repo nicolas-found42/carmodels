@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "B is specified: read entity+0x64 via the chain outer+4 -> +0x14c -> +0x174.",
+    "passage_b": "B omits how to locate 'outer' in a raw EE savestate.",
+    "aspects": [
+      "completeness",
+      "what is assumed",
+      "what remains"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0.35,
+        "different_facts": 0.63,
+        "contradicts": 0.02
+      },
+      "confidence": 0.45,
+      "margin": 0.28,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "completeness",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.27,
+          "different_facts": 0.66,
+          "contradicts": 0.07
+        },
+        "confidence": 0.48,
+        "margin": 0.39,
+        "decision": "review"
+      },
+      {
+        "aspect": "what is assumed",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.34,
+          "different_facts": 0.62,
+          "contradicts": 0.04
+        },
+        "confidence": 0.43,
+        "margin": 0.27999999999999997,
+        "decision": "review"
+      },
+      {
+        "aspect": "what remains",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.22,
+          "different_facts": 0.77,
+          "contradicts": 0.01
+        },
+        "confidence": 0.65,
+        "margin": 0.55,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 833,
+      "output_tokens": 177
+    }
+  }
+}

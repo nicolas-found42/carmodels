@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "which next step could still isolate a per-screen selector",
+    "candidates": [
+      {
+        "id": "live_breakpoint",
+        "text": "A PCSX2 read breakpoint on the highlight draw path (FUN_001c4a40) in the headless instance."
+      },
+      {
+        "id": "keys_poll",
+        "text": "Headless key delivery to move the highlight, polling candidate words live."
+      },
+      {
+        "id": "menu_struct",
+        "text": "Trace FUN_001c4a40's param_5 byte (puVar9 = entity+0x11) live across selections."
+      },
+      {
+        "id": "stop",
+        "text": "Stop; record open with the chain and store named."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "which next step could still isolate a per-screen selector",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "menu_struct",
+        "relevance": 0.61,
+        "text": "Trace FUN_001c4a40's param_5 byte (puVar9 = entity+0x11) live across selections."
+      },
+      {
+        "rank": 2,
+        "id": "live_breakpoint",
+        "relevance": 0.46,
+        "text": "A PCSX2 read breakpoint on the highlight draw path (FUN_001c4a40) in the headless instance."
+      },
+      {
+        "rank": 3,
+        "id": "keys_poll",
+        "relevance": 0.21,
+        "text": "Headless key delivery to move the highlight, polling candidate words live."
+      },
+      {
+        "rank": 4,
+        "id": "stop",
+        "relevance": 0.11,
+        "text": "Stop; record open with the chain and store named."
+      }
+    ],
+    "usage": {
+      "input_tokens": 639,
+      "output_tokens": 76
+    }
+  }
+}

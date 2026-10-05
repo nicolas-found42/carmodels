@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "TXT_CARS_COUPE_1949 resolves to FORD '49 through tlate_en.dat;1.",
+      "TXT_CARS_THUNDERBIRD_2002 resolves to THUNDERBIRD CONVERTIBLE.",
+      "TXT_CARS_FORTYNINE resolves to FORTYNINE CONCEPT.",
+      "The apostrophe in FORD '49 is byte-exact (0x27) from the archive rather than from a vision transcript.",
+      "Each captured car's INGAME_TEXT_ENUM in the reference CARDATA equals the bridge enum.",
+      "T3 resolves the full 136-entry display-name table."
+    ],
+    "context": "Ticket T3 acceptance: Implement tools/resolve_display_names.py: read each captured car's INGAME_TEXT_ENUM from reference CARDATA, resolve through LANGUAGE/tlate_en.dat;1 (UTF-16-LE, keys TXT_CARS_*) in code, assert resolved strings equal the screens' VEHICLE labels; apostrophe byte-exact from the archive, not vision; receipt records archive path, sha256, key->string rows, pass/fail per pair; update bridge-three-screens.json only on pass.\n\nVerifier run log:\n{\n  \"archive_path\": \"LANGUAGE/tlate_en.dat;1\",\n  \"archive_sha256\": \"469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3\",\n  \"archive_bytes\": 109940,\n  \"encoding\": \"utf-16-le\",\n  \"pairs\": 3,\n  \"rows\": [\n    {\n      \"capture\": \"slot102\",\n      \"car_type\": \"49_COUPE\",\n      \"ingame_text_enum\": \"TXT_CARS_COUPE_1949\",\n      \"resolved_string\": \"FORD '49\",\n      \"vehicle_label_on_screen\": \"FORD '49\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f00520044002000270034003900\",\n      \"apostrophe_raw_0x27_present\": true,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot103\",\n      \"car_type\": \"THUNDERBIRD_2002\",\n      \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_2002\",\n      \"resolved_string\": \"THUNDERBIRD CONVERTIBLE\",\n      \"vehicle_label_on_screen\": \"THUNDERBIRD CONVERTIBLE\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"5400480055004e004400450052004200490052004400200043004f004e005600450052005400490042004c004500\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot104\",\n      \"car_type\": \"FORTYNINE\",\n      \"ingame_text_enum\": \"TXT_CARS_FORTYNINE\",\n      \"resolved_string\": \"FORTYNINE CONCEPT\",\n      \"vehicle_label_on_screen\": \"FORTYNINE CONCEPT\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f005200540059004e0049004e004500200043004f004e004300450050005400\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    }\n  ],\n  \"all_pairs_pass\": true,\n  \"control_apostrophe_stripped_label_rejected\": true,\n  \"control_unknown_key_unresolved\": true,\n  \"control_enum_matches_cardata\": true,\n  \"bridge_updated\": true,\n  \"result\": \"VERIFY OK\",\n  \"scope\": \"three captured pairs (slot102/103/104); no 136-entry table\",\n  \"render_fidelity_complete\": false\n}\nVERIFY OK\n\n\nRegression log:\nRETAINED PACKET EVIDENCE OK\n\n\nLabels come from the archive (UTF-16-LE bytes), not from vision transcripts; scope is the three captured pairs only, no 136-entry table. render_fidelity_complete stays false."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "TXT_CARS_COUPE_1949 resolves to FORD '49 through tlate_en.dat;1.",
+        "probability": 0.98,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "TXT_CARS_THUNDERBIRD_2002 resolves to THUNDERBIRD CONVERTIBLE.",
+        "probability": 0.98,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "TXT_CARS_FORTYNINE resolves to FORTYNINE CONCEPT.",
+        "probability": 0.98,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The apostrophe in FORD '49 is byte-exact (0x27) from the archive rather than from a vision transcript.",
+        "probability": 0.98,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "Each captured car's INGAME_TEXT_ENUM in the reference CARDATA equals the bridge enum.",
+        "probability": 0.87,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition5",
+        "proposition": "T3 resolves the full 136-entry display-name table.",
+        "probability": 0.02,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1975,
+      "output_tokens": 130
+    }
+  }
+}

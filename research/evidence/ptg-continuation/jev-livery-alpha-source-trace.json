@@ -1,0 +1,30 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "arguments": {
+    "claims": [
+      "FUN_0021fd50 sets texture state selectors 10 and 11 to 1 when its param_13 is zero, and to 2 otherwise.",
+      "FUN_00220d60 emits GS register address 0x3f with a value constructed from the two selector==2 booleans, then emits texture state registers for direct formats; this function itself does not write an ALPHA_1 register.",
+      "FUN_0021fd50 halves each component of its param_12 vertex-color value using integer round-up before it emits sprite color data.",
+      "FUN_0021fd50's PRIM-like state uses base value 0x114 or 0x116 and adds bit 0x40 only when param_9==1.",
+      "FUN_00220678 derives param_9 from the low 16 bits of its original second argument, but the evidence does not identify that argument as an alpha byte or prove the reward button sets it to one.",
+      "FUN_00173938 passes the LIVERY format-string address 0x25a1d0 to FUN_0015b280, whose recovered body does not demonstrate a texture load; this evidence does not prove the LIVERY PTGs share the CARS asynchronous loader.",
+      "Because the ALPHA_1/blend state and runtime draw parameters are not fully closed, this source excerpt alone cannot establish the final on-screen RGBA/alpha compositing behavior of recovered PTGs."
+    ],
+    "evidence_ids": ["ELF-table-and-function-identities", "selector-helper", "GS-state-emission", "sprite-vertex-alpha", "LIVERY-callsite"]
+  },
+  "summary": {"verified": 7, "contradicted": 0, "unsupported": 0, "needs_review": 2},
+  "results": [
+    {"id":"claim0","verdict":"verified","probabilities":{"contradicts":0.01,"supports":0.99,"says_nothing":0},"confidence":0.98,"action":"auto","supporting_evidence":"selector-helper","same_subject":0.89},
+    {"id":"claim1","verdict":"verified","probabilities":{"contradicts":0,"supports":1,"says_nothing":0},"confidence":1,"action":"auto","supporting_evidence":"GS-state-emission","same_subject":0.88},
+    {"id":"claim2","verdict":"verified","probabilities":{"contradicts":0.14,"supports":0.86,"says_nothing":0},"confidence":0.79,"action":"review","supporting_evidence":"sprite-vertex-alpha","same_subject":0.83},
+    {"id":"claim3","verdict":"verified","probabilities":{"contradicts":0.13,"supports":0.87,"says_nothing":0},"confidence":0.8,"action":"auto","supporting_evidence":"sprite-vertex-alpha","same_subject":0.8},
+    {"id":"claim4","verdict":"verified","probabilities":{"contradicts":0.01,"supports":0.95,"says_nothing":0.04},"confidence":0.92,"action":"auto","supporting_evidence":"sprite-vertex-alpha","same_subject":0.62},
+    {"id":"claim5","verdict":"verified","probabilities":{"contradicts":0,"supports":1,"says_nothing":0},"confidence":1,"action":"auto","supporting_evidence":"LIVERY-callsite","same_subject":0.81},
+    {"id":"claim6","verdict":"verified","probabilities":{"contradicts":0,"supports":0.86,"says_nothing":0.14},"confidence":0.79,"action":"review","supporting_evidence":null,"same_subject":0.23}
+  ],
+  "usage": {"input_tokens":4288,"output_tokens":989}
+}

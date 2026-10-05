@@ -1,0 +1,42 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {"verified": 3, "contradicted": 0, "unsupported": 0, "needs_review": 0},
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "In the refreshed FUN_00128218 pseudocode, its first call to FUN_0021c3e0 adds mask 0x2 to the masked flags, while its second call adds mask 0x2a, which includes bit mask 0x8.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "00128218",
+      "same_subject": 0.95
+    },
+    {
+      "id": "claim1",
+      "claim": "In FUN_0021c3e0, parameter 5 having bit mask 0x8 set selects code that emits a VIF MPG command using parameter 3 as the source address.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 0.99,
+      "action": "auto",
+      "supporting_evidence": "0021c3e0",
+      "same_subject": 0.85
+    },
+    {
+      "id": "claim2",
+      "claim": "The typed pseudocode's inferred parameter mappings do not prove which runtime MPG bytes are loaded, or that they correspond to the saved overlay-5/overlay-6 images or race94's paused VU program counter.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0.06, "supports": 0.94, "contradicts": 0},
+      "confidence": 0.9,
+      "action": "auto",
+      "supporting_evidence": "export_identity",
+      "same_subject": 0.44
+    }
+  ],
+  "usage": {"input_tokens": 2081, "output_tokens": 378},
+  "handling": "Corrected after deterministic bitmask inspection caught that 0x2a includes 0x8; see the separately preserved initial-misread receipt. Typed pseudocode was not used to claim a runtime buffer or overlay identity."
+}

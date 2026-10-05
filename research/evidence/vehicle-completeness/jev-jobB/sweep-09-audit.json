@@ -1,0 +1,9 @@
+{
+  "args": {
+    "source": "Breakthrough: headless F8 screenshots work (PCSX2 writes PNGs to /data/snaps). Current screen verified by vision: 6 thumbnails, 3rd highlighted, VEHICLE '55 Thunderbird. Paused-pair method: pause via RFB Space, save pair (pause-control = 0 differing words), unpause, one L key, re-pause, save pair. A=pos3, B=pos5 (screenshot-verified Thunderbird Convertible). Diff A->B re-finds the DAT-table candidates: 0x241b60 4->5, 0x241e00 4->3, 0x2420a0 4->5. But 0x241b60 reads 5,4,4 across slots 102/103/104 (highlights 1/5/4), so it is NOT the per-car id by value. FUN_001c4a40 indexes DAT_00241b40 by the per-entity type byte with stride 0x150, so these words are fields inside per-type menu records. Proposed: a 6-position sweep - move the highlight to each of the 6 thumbnails with a screenshot + paused savestate pair at each; the true mark word must equal (or map 1:1 to) the 1..6 position across all six samples. All headless, read-only + savestate saves.",
+    "records": []
+  },
+  "result": {
+    "parse_error": "Expecting value: line 1 column 1 (char 0)"
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "G1",
+        "text": "Blender dmg + mounted app 1.1G, third-party, re-downloadable, exceeds GitHub 100MB limit."
+      },
+      {
+        "id": "G2",
+        "text": "PCSX2 AppImage 57M, pinned emulator dependency for the container."
+      },
+      {
+        "id": "G3",
+        "text": "Savestates + unpacked EE/IOP/VU dumps 960M, regenerable by re-capture; tools read them at fixed paths."
+      },
+      {
+        "id": "G4",
+        "text": "job-b-live pairs/members 704M, rebuilt by probe tools."
+      },
+      {
+        "id": "G5",
+        "text": "Viewer 57M incl. vendor three.js + recovered GLBs."
+      },
+      {
+        "id": "G6",
+        "text": "Reference corpus 65M, the deliverable."
+      },
+      {
+        "id": "G10",
+        "text": "869 .pyc bytecode files, regenerable."
+      }
+    ],
+    "classes": [
+      {
+        "id": "keep",
+        "description": "Belongs in git: deliverable, proof, or a pinned dependency under size limits. Example: the reference corpus."
+      },
+      {
+        "id": "ignore",
+        "description": "Belongs in .gitignore: regenerable, re-downloadable, over host limits, or machine-local. Example: bytecode caches."
+      }
+    ],
+    "purpose": "decide keep vs ignore per file group",
+    "context": "Lean repo after a cancelled 2.6GB push; GitHub 100MB file limit."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 7,
+      "auto": 6,
+      "review": 1,
+      "invalid_response": 0,
+      "by_class": {
+        "ignore": 5,
+        "keep": 2
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "G1",
+        "classification": "ignore",
+        "probabilities": {
+          "keep": 0,
+          "ignore": 1
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "G2",
+        "classification": "keep",
+        "probabilities": {
+          "keep": 0.99,
+          "ignore": 0.01
+        },
+        "confidence": 0.97,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "G3",
+        "classification": "ignore",
+        "probabilities": {
+          "keep": 0,
+          "ignore": 1
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "G4",
+        "classification": "ignore",
+        "probabilities": {
+          "keep": 0.01,
+          "ignore": 0.99
+        },
+        "confidence": 0.98,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "G5",
+        "classification": "ignore",
+        "probabilities": {
+          "keep": 0.5,
+          "ignore": 0.5
+        },
+        "confidence": 0.01,
+        "margin": 0,
+        "top_probability": 0.5,
+        "decision": "review"
+      },
+      {
+        "id": "G6",
+        "classification": "keep",
+        "probabilities": {
+          "keep": 1,
+          "ignore": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "G10",
+        "classification": "ignore",
+        "probabilities": {
+          "keep": 0,
+          "ignore": 1
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 976,
+      "output_tokens": 227
+    }
+  }
+}

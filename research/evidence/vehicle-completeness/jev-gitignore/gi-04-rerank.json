@@ -1,0 +1,93 @@
+{
+  "args": {
+    "query": "rank groups by value of keeping in git versus size cost",
+    "candidates": [
+      {
+        "id": "tools_receipts",
+        "text": "Scripts + receipts + tickets + reports (small, the proof)."
+      },
+      {
+        "id": "corpus",
+        "text": "Reference corpus + recovered index (66M, the deliverable)."
+      },
+      {
+        "id": "viewer",
+        "text": "Viewer incl. vendor three.js + GLBs (57M)."
+      },
+      {
+        "id": "appimage",
+        "text": "PCSX2 AppImage (57M pinned dependency)."
+      },
+      {
+        "id": "screenshots",
+        "text": "F8 ground-truth screenshots (13M)."
+      },
+      {
+        "id": "dumps",
+        "text": "Savestates + unpacked dumps + working sets (1.6G, regenerable)."
+      },
+      {
+        "id": "blender",
+        "text": "Blender vendor files (1.1G, re-downloadable, over GitHub limits)."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "rank groups by value of keeping in git versus size cost",
+    "summary": {
+      "candidates": 7,
+      "returned": 7
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "blender",
+        "relevance": 0.8,
+        "text": "Blender vendor files (1.1G, re-downloadable, over GitHub limits)."
+      },
+      {
+        "rank": 2,
+        "id": "dumps",
+        "relevance": 0.67,
+        "text": "Savestates + unpacked dumps + working sets (1.6G, regenerable)."
+      },
+      {
+        "rank": 3,
+        "id": "viewer",
+        "relevance": 0.58,
+        "text": "Viewer incl. vendor three.js + GLBs (57M)."
+      },
+      {
+        "rank": 4,
+        "id": "tools_receipts",
+        "relevance": 0.5,
+        "text": "Scripts + receipts + tickets + reports (small, the proof)."
+      },
+      {
+        "rank": 5,
+        "id": "appimage",
+        "relevance": 0.36,
+        "text": "PCSX2 AppImage (57M pinned dependency)."
+      },
+      {
+        "rank": 6,
+        "id": "screenshots",
+        "relevance": 0.3,
+        "text": "F8 ground-truth screenshots (13M)."
+      },
+      {
+        "rank": 7,
+        "id": "corpus",
+        "relevance": 0.28,
+        "text": "Reference corpus + recovered index (66M, the deliverable)."
+      }
+    ],
+    "usage": {
+      "input_tokens": 867,
+      "output_tokens": 130
+    }
+  }
+}

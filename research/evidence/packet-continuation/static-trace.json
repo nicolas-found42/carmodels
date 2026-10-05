@@ -1,0 +1,1233 @@
+{
+  "schema": "fr2-packet-continuation-static-trace/v1",
+  "scope": "Read-only source-hash and literal-anchor validation. No original routine, VIF, VU, GIF, GS, DMA, or emulator execution.",
+  "inputs": {
+    "001288b0.c": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/001288b0.c",
+      "expected_sha256": "9e7d1c5ae7b1660549e3625a206eeee600268ce3b9c1e54ba72b73db27ed8764",
+      "actual_sha256": "9e7d1c5ae7b1660549e3625a206eeee600268ce3b9c1e54ba72b73db27ed8764"
+    },
+    "0021bc18.c": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0021bc18.c",
+      "expected_sha256": "d5573d86b5ee41ed717d7e8532360ef6d05f8d4f810c392d16f03c1d3cc6071d",
+      "actual_sha256": "d5573d86b5ee41ed717d7e8532360ef6d05f8d4f810c392d16f03c1d3cc6071d"
+    },
+    "00129428.c": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00129428.c",
+      "expected_sha256": "5663afade6ed05882a6096911877ac45eb56c70ecfc08438fd5cc240c12700e0",
+      "actual_sha256": "5663afade6ed05882a6096911877ac45eb56c70ecfc08438fd5cc240c12700e0"
+    },
+    "001297b8.c": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/001297b8.c",
+      "expected_sha256": "77acbbc5c52ab64cff11113541c6423d99ad2eec578b3fc616311d4bdf071ea4",
+      "actual_sha256": "77acbbc5c52ab64cff11113541c6423d99ad2eec578b3fc616311d4bdf071ea4"
+    },
+    "00128e88.c": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00128e88.c",
+      "expected_sha256": "db45fd58871c3e44f227855cae71c6b3e9715e394c923d830c6a0520bdb3aae6",
+      "actual_sha256": "db45fd58871c3e44f227855cae71c6b3e9715e394c923d830c6a0520bdb3aae6"
+    },
+    "overlay-5.s": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-5.s",
+      "expected_sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5",
+      "actual_sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5"
+    },
+    "overlay-6.s": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-6.s",
+      "expected_sha256": "c19e1aff3bffba716e30e59e117a6266a4049d20f3c03781d6adc0b972745940",
+      "actual_sha256": "c19e1aff3bffba716e30e59e117a6266a4049d20f3c03781d6adc0b972745940"
+    },
+    "overlay-0.s": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-0.s",
+      "expected_sha256": "f5ade691d5c7de71be42e79adb5981f6b6441b451dc9ca9a181f1e1bda798fec",
+      "actual_sha256": "f5ade691d5c7de71be42e79adb5981f6b6441b451dc9ca9a181f1e1bda798fec"
+    },
+    "overlay-1.s": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-1.s",
+      "expected_sha256": "b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a",
+      "actual_sha256": "b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a"
+    },
+    "overlay-5.bin": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-5.bin",
+      "expected_sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c",
+      "actual_sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c"
+    }
+  },
+  "checks": [
+    {
+      "source": "001288b0.c",
+      "required_source_literals": [
+        "FUN_00129428(0xffffffffff000000)",
+        "FUN_00128e88(uVar1,uVar9,uVar7,uVar8"
+      ],
+      "missing": [],
+      "result": "pass"
+    },
+    {
+      "source": "0021bc18.c",
+      "required_source_literals": [
+        "param_2[2] != 0xffff",
+        "(uint)param_2[2] * 4 + *(int *)(param_1 + 0xec)"
+      ],
+      "missing": [],
+      "result": "pass"
+    },
+    {
+      "source": "00129428.c",
+      "required_source_literals": [
+        "0x5000000c",
+        "0x100000000000800b",
+        "0x4c",
+        "0x4e"
+      ],
+      "missing": [],
+      "result": "pass"
+    },
+    {
+      "source": "001297b8.c",
+      "required_source_literals": [
+        "0x50000000",
+        "0x1000000000008000",
+        "puVar7[1] = 0x42",
+        "*puVar7 = 0x60",
+        "puVar7[1] = 0x14",
+        "puVar7[1] = 0x3f"
+      ],
+      "missing": [],
+      "result": "pass"
+    },
+    {
+      "source": "00128e88.c",
+      "required_source_literals": [
+        "0x6c058000",
+        "0x69000000",
+        "0x6e000000",
+        "0x65000000",
+        "0x44400000",
+        "0x45c00000"
+      ],
+      "missing": [],
+      "result": "pass"
+    },
+    {
+      "source": "overlay-5.s",
+      "required_source_literals": [
+        "xtop vi01",
+        "ilw.z vi03,3(vi01)z",
+        "lq.xyzw vf15xyzw,0(vi03)",
+        "ilw.w vi06,1(vi03)w"
+      ],
+      "missing": [],
+      "result": "pass"
+    },
+    {
+      "source": "overlay-6.s",
+      "required_source_literals": [
+        "ftoi4.xyz vf16xyz,vf17xyz",
+        "sqi.xyzw vf12xyzw,(vi07++)",
+        "sqi.xyzw vf30xyzw,(vi07++)",
+        "sqi.xyzw vf16xyzw,(vi07++)",
+        "xgkick vi11"
+      ],
+      "missing": [],
+      "result": "pass"
+    }
+  ],
+  "semantic_decode": {
+    "cpu_vif_normal_bias_candidate": {
+      "function": "FUN_0021c3e0",
+      "typed_export_inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+      "refresh_identity_executable_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+      "typed_decompilation_sha256": "618edec8f6437d909769be78b61ac3abc1db5aff05a3e9350c6ef670a066bee3",
+      "raw_cpu_instruction_checks": {
+        "0021c538": {
+          "expected_text": "andi v0,t8,0x8",
+          "actual": {
+            "address": "0021c538",
+            "text": "andi v0,t8,0x8",
+            "bytes": "08000233",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c53c": {
+          "expected_text": "beq v0,zero,0x0021c5a8",
+          "actual": {
+            "address": "0021c53c",
+            "text": "beq v0,zero,0x0021c5a8",
+            "bytes": "1a004010",
+            "references": [
+              {
+                "to": "0021c5a8",
+                "type": "CONDITIONAL_JUMP",
+                "function": "0021c3e0"
+              }
+            ]
+          },
+          "pass": true
+        },
+        "0021c5c0": {
+          "expected_text": "lui v1,0x6e00",
+          "actual": {
+            "address": "0021c5c0",
+            "text": "lui v1,0x6e00",
+            "bytes": "006e033c",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c5c8": {
+          "expected_text": "lui a3,0x47c0",
+          "actual": {
+            "address": "0021c5c8",
+            "text": "lui a3,0x47c0",
+            "bytes": "c047073c",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c5d8": {
+          "expected_text": "lui at,0x3000",
+          "actual": {
+            "address": "0021c5d8",
+            "text": "lui at,0x3000",
+            "bytes": "0030013c",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c5dc": {
+          "expected_text": "addu t0,at,t0",
+          "actual": {
+            "address": "0021c5dc",
+            "text": "addu t0,at,t0",
+            "bytes": "21402800",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c600": {
+          "expected_text": "sw a3,0x14(v0)",
+          "actual": {
+            "address": "0021c600",
+            "text": "sw a3,0x14(v0)",
+            "bytes": "140047ac",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c618": {
+          "expected_text": "sw a3,0xc(v0)",
+          "actual": {
+            "address": "0021c618",
+            "text": "sw a3,0xc(v0)",
+            "bytes": "0c0047ac",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021c61c": {
+          "expected_text": "sw a3,0x10(v0)",
+          "actual": {
+            "address": "0021c61c",
+            "text": "sw a3,0x10(v0)",
+            "bytes": "100047ac",
+            "references": []
+          },
+          "pass": true
+        }
+      },
+      "raw_0021bc18_material_lane_checks": {
+        "0021bc64": {
+          "expected_text": "pextlb v1,zero,a2",
+          "actual": {
+            "address": "0021bc64",
+            "text": "pextlb v1,zero,a2",
+            "bytes": "881e0670",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021bc6c": {
+          "expected_text": "pextlh v1,zero,v1",
+          "actual": {
+            "address": "0021bc6c",
+            "text": "pextlh v1,zero,v1",
+            "bytes": "881d0370",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021bc70": {
+          "expected_text": "pexew v1,v1",
+          "actual": {
+            "address": "0021bc70",
+            "text": "pexew v1,v1",
+            "bytes": "891f0370",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021bc8c": {
+          "expected_text": "vmulx.xyz vf2,vf2,vf3",
+          "actual": {
+            "address": "0021bc8c",
+            "text": "vmulx.xyz vf2,vf2,vf3",
+            "bytes": "9810c34b",
+            "references": []
+          },
+          "pass": true
+        },
+        "0021bcb4": {
+          "expected_text": "vmulx.w vf2,vf2,vf3",
+          "actual": {
+            "address": "0021bcb4",
+            "text": "vmulx.w vf2,vf2,vf3",
+            "bytes": "9810234a",
+            "references": []
+          },
+          "pass": true
+        }
+      },
+      "0021bc18_material_lane_interpretation": {
+        "source_word_byte_order": "EE PEXT/PEXEW instructions at 0x0021bc64/6c/70 permute the base-color word into vector lanes; the 0x66000000 source word decodes to RGBA [0,0,0,102].",
+        "scale_mask": "The typed _vmulbc rendering hides the destination mask. Raw EE vector instructions show vmulx.xyz at 0x0021bc8c on the header-bit-0-set arm and vmulx.w at 0x0021bcb4 on the bit-0-clear arm. Thus c01a selects W-only scaling; do not infer an all-four-lane scale.",
+        "dynamic_limit": "The bit-0-clear arm multiplies W by DAT_70003560*FLOAT_0028f1e8. Their runtime values and producer-to-packet call are not joined, so this pins lane selection but not the numerical opacity factor."
+      },
+      "decompilation_literal_checks": {
+        "puVar2[3] = 0x30000000;": true,
+        "puVar2[10] = 0x5000001;": true,
+        "puVar2[6] = 0x47c00000;": true,
+        "puVar2[8] = iVar13 + 0x30000000;": true,
+        "puVar2[0xb] = uVar16 + 1 | uVar15 | 0x6e000000;": true,
+        "puVar2[4] = 0x47c00000;": true,
+        "puVar2[5] = 0x47c00000;": true
+      },
+      "path_condition": "param_5 & 8 == 0; the alternate bit-8-set branch emits the V4-8 REF before writing STROW and does not establish this normalization.",
+      "static_command_order": [
+        "STROW command 0x30000000",
+        "STROW row words 0x47c00000, 0x47c00000, 0x47c00000, 0",
+        "V3-16 REF command",
+        "STMOD command 0x05000001 (mode 1)",
+        "V4-8 REF command 0x6e000000 | (count << 16) | (selected_ADDR + 1); count occupies bits 16+, so USN bit 14 is clear"
+      ],
+      "pcsx2_vif_source": {
+        "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/github-raw-Vif_Unpack.cpp",
+        "sha256": "de6aea582900ca5316ff8ecc85be93938613d09e4eacf9bcbf62f7f4485930a1",
+        "literal_checks": {
+          "case 1:  dest = data + vif.MaskRow._u32[offnum]; break;": true,
+          "const int usn    = !!vif.usn;": true,
+          "UnpackFuncSet( V4, idx, mode, s, 0 )": true,
+          "UnpackFuncSet( V4, idx, mode, u, 0 )": true
+        },
+        "semantic_lines": {
+          "mode_1_row_add": "writeXYZW mode 1 computes dest = data + vif.MaskRow._u32[offnum]",
+          "signed_v4_unpack": "UNPACK_V4 routes to signed 8-bit input when USN is clear and the V4-8 unpack code is selected"
+        }
+      },
+      "exact_numeric_identity": {
+        "expression": "float32(bitcast_u32(0x47c00000 + signed_byte)) - 98304.0 == signed_byte / 128.0",
+        "signed_byte_values_checked": 256,
+        "minimum_result": -1.0,
+        "maximum_result": 0.9921875,
+        "all_exact": true
+      },
+      "call_path_branch_evidence": {
+        "typed_decompilation_sha256_by_function": {
+          "00127fa8": "39faa4d66bcc51abf278d44bf293596ed7ebb0d4d0c22c2efb5300f6803f6f55",
+          "0021d180": "b01176ae0015ac81a915b28debc2e4b2dd2da24da8583e55b19743c4b27274a8",
+          "0021bf28": "8dba1e04bbc99aabff2acdd1300e2e13779c4c513a098fa75120c307911a83e4",
+          "00128218": "ae456853954b38247aada69f3aa6f0a4ce7c617d2bcc9f1d1a528b0b5a001464"
+        },
+        "typed_decompilation_literal_checks": {
+          "00127fa8": {
+            "FUN_0021d180(puVar6[-4],1,0,iVar1 + 0x1c,puVar6[1]);": true,
+            "FUN_0021d180(puVar6[-4],0,0,iVar1 + 0x1c,puVar6[1]);": true
+          },
+          "0021d180": {
+            "uVar7 = 0x100;": true,
+            "if (param_2 == 0) {\n    uVar7 = 0;": true,
+            "if ((*param_4 & 0x10000) == 0) {\n    FUN_0021bdf8();": true,
+            "uVar7 = uVar7 | 8;": true,
+            "FUN_0021bf28(uVar4,uVar3,puVar5,uVar2,param_5);": true
+          },
+          "0021bf28": {
+            "if (((uVar5 & 8) == 0) || ((uVar2 & 0x10) == 0)) {\n    FUN_0021c3e0(uVar3);": true,
+            "FUN_00128218(uVar3);": true
+          },
+          "00128218": {
+            "param_5 = param_5 & 0x100;": true,
+            "FUN_0021c3e0(param_1,param_2,uStack_80,param_4,param_5 | 2);": true,
+            "FUN_0021cc88(0x89,0xffffffffff000000,param_1,param_4,auVar3._0_8_,uRam0028f180,param_5);": true,
+            "FUN_0021c3e0(param_1,param_2,uStack_80,param_4,param_5 | 0x2a);": true
+          }
+        },
+        "raw_instruction_records": {
+          "00127fa8": {
+            "001280c8": {
+              "address": "001280c8",
+              "text": "jal 0x0021d180",
+              "bytes": "6074080c",
+              "references": [
+                {
+                  "to": "0021d180",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021d180"
+                }
+              ]
+            },
+            "001281c4": {
+              "address": "001281c4",
+              "text": "jal 0x0021d180",
+              "bytes": "6074080c",
+              "references": [
+                {
+                  "to": "0021d180",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021d180"
+                }
+              ]
+            }
+          },
+          "0021d180": {
+            "0021d1a0": {
+              "address": "0021d1a0",
+              "text": "li s3,0x100",
+              "bytes": "00011324",
+              "references": []
+            },
+            "0021d1a8": {
+              "address": "0021d1a8",
+              "text": "movz s3,zero,s0",
+              "bytes": "0a981000",
+              "references": []
+            },
+            "0021d1cc": {
+              "address": "0021d1cc",
+              "text": "and v0,v0,v1",
+              "bytes": "24104300",
+              "references": []
+            },
+            "0021d1dc": {
+              "address": "0021d1dc",
+              "text": "_ori s3,s3,0x8",
+              "bytes": "08007336",
+              "references": []
+            },
+            "0021d254": {
+              "address": "0021d254",
+              "text": "jal 0x0021bf28",
+              "bytes": "ca6f080c",
+              "references": [
+                {
+                  "to": "0021bf28",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021bf28"
+                }
+              ]
+            }
+          },
+          "0021bf28": {
+            "0021c080": {
+              "address": "0021c080",
+              "text": "beq s0,zero,0x0021c0a8",
+              "bytes": "09000012",
+              "references": [
+                {
+                  "to": "0021c0a8",
+                  "type": "CONDITIONAL_JUMP",
+                  "function": "0021bf28"
+                }
+              ]
+            },
+            "0021c084": {
+              "address": "0021c084",
+              "text": "_andi v0,t1,0x10",
+              "bytes": "10002231",
+              "references": []
+            },
+            "0021c098": {
+              "address": "0021c098",
+              "text": "jal 0x00128218",
+              "bytes": "86a0040c",
+              "references": [
+                {
+                  "to": "00128218",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "00128218"
+                }
+              ]
+            },
+            "0021c0b4": {
+              "address": "0021c0b4",
+              "text": "jal 0x0021c3e0",
+              "bytes": "f870080c",
+              "references": [
+                {
+                  "to": "0021c3e0",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021c3e0"
+                }
+              ]
+            },
+            "0021c0c8": {
+              "address": "0021c0c8",
+              "text": "andi v0,v0,0x8",
+              "bytes": "08004230",
+              "references": []
+            }
+          },
+          "00128218": {
+            "00128358": {
+              "address": "00128358",
+              "text": "jal 0x0021c3e0",
+              "bytes": "f870080c",
+              "references": [
+                {
+                  "to": "0021c3e0",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021c3e0"
+                }
+              ]
+            },
+            "00128378": {
+              "address": "00128378",
+              "text": "jal 0x0021cc88",
+              "bytes": "2273080c",
+              "references": [
+                {
+                  "to": "0021cc88",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021cc88"
+                }
+              ]
+            },
+            "00128398": {
+              "address": "00128398",
+              "text": "jal 0x0021c3e0",
+              "bytes": "f870080c",
+              "references": [
+                {
+                  "to": "0021c3e0",
+                  "type": "UNCONDITIONAL_CALL",
+                  "function": "0021c3e0"
+                }
+              ]
+            },
+            "0012839c": {
+              "address": "0012839c",
+              "text": "_ori t0,s7,0x2a",
+              "bytes": "2a00e836",
+              "references": []
+            }
+          }
+        },
+        "static_flow": [
+          "FUN_00127fa8 calls FUN_0021d180 with param_2=1 for the first loop and param_2=0 for the second; this seeds flag bit 0x100 in the first call only.",
+          "FUN_0021d180 sets flag bit 0x8 when its node record word at param_4 has bit 0x10000; it then calls FUN_0021bf28 with that flag set.",
+          "FUN_0021bf28 selects FUN_00128218 when bit 0x8 and source header bit 0x10 are both set; otherwise it directly calls FUN_0021c3e0.",
+          "FUN_00128218 masks incoming flags to 0x100, calls FUN_0021c3e0 first with flags|0x2 (bit 0x8 clear), calls FUN_0021cc88 with selector 0x89, calls FUN_0021d090, then calls FUN_0021c3e0 with flags|0x2a (bit 0x8 set). Thus the first helper call follows the normalized STROW-before-V4-8 branch; the second follows the alternate V4-8-before-STROW branch."
+        ],
+        "claim_limit": "This pins a static caller/argument path and the two distinct helper phases. The race94 wrapper pointer and node/header flags are joined separately below; the paused state's renderer count is zero and the GSDump is a separate capture, so no live call or packet identity is claimed."
+      },
+      "claim_limit": "This proves a source-supported CPU-to-VIF normalization candidate for the bit-8-clear branch and the exact signed-byte/128 arithmetic under the pinned PCSX2 mode-1 semantics. It does not prove this helper branch or overlay-1 ran for the captured COBRA interval, nor that its four-byte plane is the one paired to the sampled packet RGB values."
+    },
+    "untextured_material_prim_alpha_path": {
+      "source_functions": {
+        "0021ba50": {
+          "decompilation_sha256": "9540f9c09b7a0ca39a3b45b14021888d9bc36739ce26c8c0347c38db9d2e25b3",
+          "literal_checks": {
+            "puVar1[3] = 0x4c;": true,
+            "puVar1[4] = param_2;": true
+          }
+        },
+        "0021bb48": {
+          "decompilation_sha256": "dec310a312e813da9dd4ba4f39332180e26838c09d44580ddcb29f9659bb0271",
+          "literal_checks": {
+            "uVar2 = 0xc;": true,
+            "if ((param_5 & 2) != 0) {\n    uVar2 = 0x4c;": true,
+            "if (param_7 != 0) {\n    uVar2 = uVar2 | 0x10;": true
+          }
+        },
+        "0021c3e0": {
+          "decompilation_sha256": "618edec8f6437d909769be78b61ac3abc1db5aff05a3e9350c6ef670a066bee3",
+          "literal_checks": {
+            "if ((param_5 & 0x10) == 0) {": true,
+            "if ((param_5 & 0x20) == 0) {\n          uVar12 = 0x44;": true,
+            "FUN_0021ba50(piVar5,uVar12,3,1,0xffffffffff000000);": true
+          }
+        },
+        "0021bf28": {
+          "decompilation_sha256": "8dba1e04bbc99aabff2acdd1300e2e13779c4c513a098fa75120c307911a83e4",
+          "literal_checks": {
+            "param_1 = (uVar2 & 1) << 5 | param_1;": true,
+            "if ((uVar2 & 4) != 0) {\n    param_1 = param_1 | 1;": true,
+            "if ((DAT_70003560 != 1.0) && (uVar5 = param_1 | 2, iRam0028f1d8 != 0))": true
+          }
+        },
+        "0021d180": {
+          "decompilation_sha256": "b01176ae0015ac81a915b28debc2e4b2dd2da24da8583e55b19743c4b27274a8",
+          "literal_checks": {
+            "FUN_0021bf28(uVar4,uVar3,puVar5,uVar2,param_5);": true
+          }
+        },
+        "00128e88": {
+          "decompilation_sha256": "4074c1727d9a0089f915616f6fea0a235046c29930ab36d09c4550458eabbf92",
+          "literal_checks": {
+            "lVar12 = 0x4c;\n  if (param_7 != 0) {\n    lVar12 = 0x5c;": true
+          }
+        }
+      },
+      "00128e88_source_prim": "Its constructed PRIM literal is 0x4c when its texture pointer param_7 is null and 0x5c otherwise; both have ABE=1, while only 0x5c has TME=1. This construction does not depend on source header bit 1 or the dynamic opacity global.",
+      "0021bb48_source_prim": "This separate packet setup path starts with 0x0c and switches to 0x4c when effective param_5 bit 1 is set; it independently adds TME bit 0x10 when texture-object param_7 is nonzero.",
+      "0021bf28_source_flag_map": "Source header bit 0 maps to effective flag 0x20; bit 2 maps to 0x1; bit 3 to 0x40; bit 4 to 0x80. Header bit 1 is not directly mapped to effective ABE flag 0x2 in this helper. Effective bit 0x2 can instead be introduced when DAT_70003560 != 1.0, or by the caller's param_3 path in 0021d180.",
+      "0021c3e0_source_alpha": "For the direct untextured setup (effective bit 0x10 clear, texture object null), alpha argument defaults to 0x44 when effective bit 0x20 is clear; it is passed to 0021ba50, which writes its own fixed PRIM 0x4c and supplied alpha value.",
+      "bounded_race94_condition": "The COBRA node record bit 0x10000 is clear, first 0021d180 call has param_3=0, race94 DAT_70003560 is 1.0, and c01a header bit 0 is clear; if this direct 0021c3e0 branch is reached with no texture pointer, these source conditions predict the 0021ba50 setup's PRIM 0x4c and ALPHA 0x44. The paused state has a zero renderer count and the GSDump is a separate capture, so this is a source-compatible candidate, not an executed producer join.",
+      "claim_limit": "The raw source has two distinct PRIM construction paths. 00128e88 sets untextured ABE unconditionally; 0021bb48 ties ABE to effective bit 1 and TME to the independent texture pointer. The runtime-bound c01a flags do not by themselves establish that 0021bb48 bit, while the 0021ba50 direct setup has a static 0x4c PRIM. No claim that any one path emitted transfer 5906 is made."
+    },
+    "texture_index_lookup": {
+      "header_field": "ushort param_2[2] (byte offset +4 from header pointer)",
+      "sentinel": "0xffff means no table lookup; otherwise pointer = *(u32 *)(car_object+0xec+4*index)",
+      "consumer": "FUN_001288b0 passes selected pointer uGpffff940c and ALPHA value 0x48 into FUN_001297b8 for the second geometry group.",
+      "claim_limit": "This proves a per-object texture-table index/pointer path, not the mapping from that pointer to a named texture-library record or serialized texture record ID."
+    },
+    "gif_tag": {
+      "gif_primitive_control": {
+        "untextured_selector": {
+          "raw": "0x4c",
+          "type": 4,
+          "iip": 1,
+          "tme": 0,
+          "fge": 0,
+          "abe": 1,
+          "aa1": 0,
+          "fst": 0,
+          "ctxt": 0,
+          "fix": 0
+        },
+        "textured_pointer_selector": {
+          "raw": "0x5c",
+          "type": 4,
+          "iip": 1,
+          "tme": 1,
+          "fge": 0,
+          "abe": 1,
+          "aa1": 0,
+          "fst": 0,
+          "ctxt": 0,
+          "fix": 0
+        },
+        "decode": "Both are triangle strips (PRIM type 4), IIP=1, ABE=1; TME is 0 when param_7==0 and 1 when param_7!=0. Other listed PRIM controls are 0."
+      },
+      "gif_register_descriptor": {
+        "raw": "0x412",
+        "nreg": 3,
+        "descriptor_nibbles_low_to_high": [
+          2,
+          1,
+          4
+        ],
+        "definitions": [
+          "ST",
+          "RGBAQ",
+          "XYZF2"
+        ],
+        "output_qword_order": [
+          "vf13",
+          "vf14",
+          "vf12"
+        ],
+        "order_join": "not inferred here; needs exact XGKICK/GIF descriptor-order consumer validation against runtime output"
+      },
+      "source": "The GIFtag is built from count|EOP, PRIM<<47, and NREG=3; the next 64-bit word is the register descriptor 0x412."
+    },
+    "gs_context_values": {
+      "alpha_selector_definitions": {
+        "a_b": {
+          "0": "Cs",
+          "1": "Cd",
+          "2": "0"
+        },
+        "c": {
+          "0": "As",
+          "1": "Ad",
+          "2": "FIX"
+        },
+        "d": {
+          "0": "Cs",
+          "1": "Cd",
+          "2": "0"
+        },
+        "formula": "(A-B)*C+D",
+        "abe": 1
+      },
+      "first_group": {
+        "alpha_1_raw": "0x2a",
+        "a": 2,
+        "b": 2,
+        "c": 2,
+        "d": 0,
+        "fix_alpha": 0,
+        "rgb_equation": "(0-0)*FIX+Cs = Cs (FIX field is 0)",
+        "draw_caller": "FUN_001297b8(0,0x2a)"
+      },
+      "second_group": {
+        "alpha_1_raw": "0x48",
+        "a": 0,
+        "b": 2,
+        "c": 0,
+        "d": 1,
+        "fix_alpha": 0,
+        "rgb_equation": "(Cs-0)*As+Cd = Cs*As+Cd",
+        "draw_caller": "FUN_001297b8(uGpffff940c,0x48)"
+      },
+      "textured_pointer_nonzero": {
+        "tex0_1": "dynamic value assembled from selected texture-object fields",
+        "tex1_1_raw": "0x60",
+        "tex1_1_fields": {
+          "lcm": 0,
+          "mxl": 0,
+          "mmag": 1,
+          "mmin": 1,
+          "mtba": 0,
+          "l": 0,
+          "k": 0
+        },
+        "mmag_meaning": "linear",
+        "mmin_meaning": "linear (filter selector 1)",
+        "mxl_meaning": "0",
+        "texflush_raw": "0x0"
+      },
+      "interpretation_limit": "These are exact constructed context writes in FUN_001297b8. Other calls or later context changes and original runtime execution are outside this trace."
+    }
+  },
+  "overlay5_source_input_accesses": {
+    "source": "Pinned overlay-5.s",
+    "sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5",
+    "all_lines_referencing_vi03_data_memory": [
+      {
+        "line": 140,
+        "text": "nop \tlq.xyzw vf10xyzw,0(vi03)"
+      },
+      {
+        "line": 141,
+        "text": "nop \tlq.xyzw vf20xyzw,3(vi03)"
+      },
+      {
+        "line": 142,
+        "text": "nop \tlq.xyzw vf13xyzw,2(vi03)"
+      },
+      {
+        "line": 143,
+        "text": "nop \tlq.xyzw vf23xyzw,5(vi03)"
+      },
+      {
+        "line": 144,
+        "text": "mulax.xyzw accxyzw,vf01xyzw,vf10x \tsq.xyzw vf19xyzw,1(vi03)"
+      },
+      {
+        "line": 145,
+        "text": "madday.xyzw accxyzw,vf02xyzw,vf10y \tsq.xyzw vf19xyzw,4(vi03)"
+      },
+      {
+        "line": 230,
+        "text": "nop \tlq.xyzw vf15xyzw,0(vi03)"
+      },
+      {
+        "line": 231,
+        "text": "nop \tlq.xyzw vf12xyzw,2(vi03)"
+      },
+      {
+        "line": 239,
+        "text": "muly.xyz vf10xyz,vf09xyz,vf15y \tilw.w vi06,1(vi03)w"
+      }
+    ],
+    "counts": {
+      "explicit_vi03_memory_references": 9,
+      "vector_loads_from_plus_one": 0,
+      "integer_W_reads_from_plus_one": 1,
+      "vector_stores_to_plus_one": 1
+    },
+    "interpretation_limit": "This lists explicit assembly references to the per-vertex vi03 base in overlay-5, not all indirect register dataflow or other microprograms. At the inspected vertex loop, source +0/+2 are vector-loaded, source +1.w is integer-loaded, and source +1 is also a vector-store destination elsewhere; this is not evidence of a program-wide absence of all normal processing."
+  },
+  "preceding_overlay_input_accesses": {
+    "scope": "Hash-pinned overlay-0 and overlay-1 assembly; explicit references to vi03 and the adjacent qwords. These listings alone do not identify which overlay ran for the captured car tags or establish a runtime join from a particular source header to this path.",
+    "overlays": {
+      "0": {
+        "source": "overlay-0.s",
+        "sha256": "f5ade691d5c7de71be42e79adb5981f6b6441b451dc9ca9a181f1e1bda798fec",
+        "vi03_data_memory_lines": [
+          {
+            "line": 82,
+            "text": "nop \tlq.xyzw vf13xyzw,0(vi03)"
+          },
+          {
+            "line": 83,
+            "text": "nop \tlq.xyzw vf18xyzw,3(vi03)"
+          },
+          {
+            "line": 84,
+            "text": "nop \tlq.xyzw vf23xyzw,6(vi03)"
+          },
+          {
+            "line": 85,
+            "text": "nop \tlq.xyzw vf28xyzw,9(vi03)"
+          },
+          {
+            "line": 99,
+            "text": "mul.xyz vf10xyz,vf10xyz,vf08xyz \tlq.xyzw vf13xyzw,12(vi03)"
+          },
+          {
+            "line": 100,
+            "text": "mul.xyz vf15xyz,vf15xyz,vf08xyz \tlq.xyzw vf18xyzw,15(vi03)"
+          },
+          {
+            "line": 101,
+            "text": "mul.xyz vf20xyz,vf20xyz,vf08xyz \tlq.xyzw vf23xyzw,18(vi03)"
+          },
+          {
+            "line": 102,
+            "text": "mul.xyz vf25xyz,vf25xyz,vf08xyz \tlq.xyzw vf28xyzw,21(vi03)"
+          },
+          {
+            "line": 103,
+            "text": "mulaw.xyzw accxyzw,vf04xyzw,vf00w \tsq.xyzw vf10xyzw,0(vi03)"
+          },
+          {
+            "line": 104,
+            "text": "madday.xyzw accxyzw,vf02xyzw,vf10y \tsq.xyzw vf15xyzw,3(vi03)"
+          },
+          {
+            "line": 105,
+            "text": "maddaz.xyzw accxyzw,vf03xyzw,vf10z \tsq.xyzw vf20xyzw,6(vi03)"
+          },
+          {
+            "line": 106,
+            "text": "maddx.xyzw vf10xyzw,vf01xyzw,vf10x \tsq.xyzw vf25xyzw,9(vi03)"
+          },
+          {
+            "line": 107,
+            "text": "mulaw.xyzw accxyzw,vf04xyzw,vf00w \tlq.xyzw vf12xyzw,2(vi03)"
+          },
+          {
+            "line": 109,
+            "text": "maddaz.xyzw accxyzw,vf03xyzw,vf15z \tlq.xyzw vf17xyzw,5(vi03)"
+          },
+          {
+            "line": 111,
+            "text": "mulaw.xyzw accxyzw,vf04xyzw,vf00w \tlq.xyzw vf22xyzw,8(vi03)"
+          },
+          {
+            "line": 113,
+            "text": "maddaz.xyzw accxyzw,vf03xyzw,vf20z \tlq.xyzw vf27xyzw,11(vi03)"
+          },
+          {
+            "line": 115,
+            "text": "mulaw.xyzw accxyzw,vf04xyzw,vf00w \tilw.w vi06,1(vi03)w"
+          },
+          {
+            "line": 123,
+            "text": "subi.xy vf12xy,vf12xy,i \tilw.w vi06,4(vi03)w"
+          },
+          {
+            "line": 131,
+            "text": "mulq.xyz vf15xyz,vf15xyz,q \tlq.xyzw vf11xyzw,1(vi03)"
+          },
+          {
+            "line": 132,
+            "text": "mulq.xyzw vf19xyzw,vf00xyzw,q \tlq.xyzw vf16xyzw,4(vi03)"
+          },
+          {
+            "line": 133,
+            "text": "nop \tlq.xyzw vf21xyzw,7(vi03)"
+          },
+          {
+            "line": 134,
+            "text": "nop \tlq.xyzw vf26xyzw,10(vi03)"
+          },
+          {
+            "line": 135,
+            "text": "ftoi0.w vf11w,vf05w \tilw.w vi06,7(vi03)w"
+          },
+          {
+            "line": 143,
+            "text": "nop \tilw.w vi06,10(vi03)w"
+          },
+          {
+            "line": 183,
+            "text": "nop \tlq.xyzw vf10xyzw,0(vi03)"
+          },
+          {
+            "line": 184,
+            "text": "nop \tlq.xyzw vf15xyzw,3(vi03)"
+          },
+          {
+            "line": 185,
+            "text": "nop \tlq.xyzw vf20xyzw,6(vi03)"
+          },
+          {
+            "line": 186,
+            "text": "nop \tlq.xyzw vf25xyzw,9(vi03)"
+          },
+          {
+            "line": 196,
+            "text": "sub.xyz vf14xyz,vf06xyz,vf10xyz \tsq.xyzw vf10xyzw,0(vi03)"
+          },
+          {
+            "line": 197,
+            "text": "sub.xyz vf19xyz,vf06xyz,vf15xyz \tsq.xyzw vf15xyzw,3(vi03)"
+          },
+          {
+            "line": 198,
+            "text": "sub.xyz vf24xyz,vf06xyz,vf20xyz \tsq.xyzw vf20xyzw,6(vi03)"
+          },
+          {
+            "line": 199,
+            "text": "sub.xyz vf29xyz,vf06xyz,vf25xyz \tsq.xyzw vf25xyzw,9(vi03)"
+          },
+          {
+            "line": 233,
+            "text": "nop \tilw.w vi06,1(vi03)w"
+          },
+          {
+            "line": 234,
+            "text": "nop \tilw.w vi08,4(vi03)w"
+          }
+        ]
+      },
+      "1": {
+        "source": "overlay-1.s",
+        "sha256": "b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a",
+        "vi03_data_memory_lines": [
+          {
+            "line": 21,
+            "text": "nop \tilw.w vi06,7(vi03)w"
+          },
+          {
+            "line": 22,
+            "text": "nop \tilw.w vi08,10(vi03)w"
+          },
+          {
+            "line": 33,
+            "text": "ftoi4.xyz vf10xyz,vf10xyz \tlq.xyzw vf11xyzw,1(vi03)"
+          },
+          {
+            "line": 34,
+            "text": "ftoi4.xyz vf15xyz,vf15xyz \tlq.xyzw vf16xyzw,4(vi03)"
+          },
+          {
+            "line": 35,
+            "text": "ftoi4.xyz vf20xyz,vf20xyz \tlq.xyzw vf21xyzw,7(vi03)"
+          },
+          {
+            "line": 36,
+            "text": "ftoi4.xyz vf25xyz,vf25xyz \tlq.xyzw vf26xyzw,10(vi03)"
+          },
+          {
+            "line": 45,
+            "text": "subi.xyz vf11xyz,vf11xyz,i \tlq.xyzw vf12xyzw,2(vi03)"
+          },
+          {
+            "line": 46,
+            "text": "subi.xyz vf16xyz,vf16xyz,i \tlq.xyzw vf17xyzw,5(vi03)"
+          },
+          {
+            "line": 47,
+            "text": "subi.xyz vf21xyz,vf21xyz,i \tlq.xyzw vf22xyzw,8(vi03)"
+          },
+          {
+            "line": 48,
+            "text": "subi.xyz vf26xyz,vf26xyz,i \tlq.xyzw vf27xyzw,11(vi03)"
+          },
+          {
+            "line": 66,
+            "text": "mulz.xy vf10xy,vf12xy,vf10z \tsq.xyzw vf11xyzw,1(vi03)"
+          },
+          {
+            "line": 67,
+            "text": "mulz.xy vf15xy,vf17xy,vf15z \tsq.xyzw vf16xyzw,4(vi03)"
+          },
+          {
+            "line": 68,
+            "text": "mulz.xy vf20xy,vf22xy,vf20z \tsq.xyzw vf21xyzw,7(vi03)"
+          },
+          {
+            "line": 69,
+            "text": "mulz.xy vf25xy,vf27xy,vf25z \tsq.xyzw vf26xyzw,10(vi03)"
+          },
+          {
+            "line": 76,
+            "text": "ftoi0.xyzw vf10xyzw,vf05xyzw \tlq.xyzw vf11xyzw,0(vi03)"
+          },
+          {
+            "line": 77,
+            "text": "ftoi0.xyzw vf15xyzw,vf05xyzw \tlq.xyzw vf16xyzw,3(vi03)"
+          },
+          {
+            "line": 78,
+            "text": "ftoi0.xyzw vf20xyzw,vf05xyzw \tlq.xyzw vf21xyzw,6(vi03)"
+          },
+          {
+            "line": 79,
+            "text": "ftoi0.xyzw vf25xyzw,vf05xyzw \tlq.xyzw vf26xyzw,9(vi03)"
+          },
+          {
+            "line": 98,
+            "text": "ftoi0.xyzw vf10xyzw,vf10xyzw \tlq.xyzw vf11xyzw,0(vi03)"
+          },
+          {
+            "line": 99,
+            "text": "ftoi0.xyzw vf15xyzw,vf15xyzw \tlq.xyzw vf16xyzw,3(vi03)"
+          },
+          {
+            "line": 100,
+            "text": "ftoi0.xyzw vf20xyzw,vf20xyzw \tlq.xyzw vf21xyzw,6(vi03)"
+          },
+          {
+            "line": 101,
+            "text": "ftoi0.xyzw vf25xyzw,vf25xyzw \tlq.xyzw vf26xyzw,9(vi03)"
+          },
+          {
+            "line": 107,
+            "text": "nop \tsq.xyzw vf11xyzw,0(vi03)"
+          },
+          {
+            "line": 108,
+            "text": "nop \tsq.xyzw vf16xyzw,3(vi03)"
+          },
+          {
+            "line": 109,
+            "text": "nop \tsq.xyzw vf21xyzw,6(vi03)"
+          },
+          {
+            "line": 110,
+            "text": "nop \tsq.xyzw vf26xyzw,9(vi03)"
+          },
+          {
+            "line": 113,
+            "text": "nop \tlq.xyzw vf12xyzw,2(vi03)"
+          },
+          {
+            "line": 114,
+            "text": "nop \tlq.xyzw vf17xyzw,5(vi03)"
+          },
+          {
+            "line": 115,
+            "text": "nop \tlq.xyzw vf22xyzw,8(vi03)"
+          },
+          {
+            "line": 116,
+            "text": "nop \tlq.xyzw vf27xyzw,11(vi03)"
+          },
+          {
+            "line": 182,
+            "text": "nop \tlq.xyzw vf12xyzw,2(vi03)"
+          },
+          {
+            "line": 183,
+            "text": "nop \tlq.xyzw vf17xyzw,5(vi03)"
+          },
+          {
+            "line": 184,
+            "text": "nop \tlq.xyzw vf22xyzw,8(vi03)"
+          },
+          {
+            "line": 185,
+            "text": "nop \tlq.xyzw vf27xyzw,11(vi03)"
+          },
+          {
+            "line": 230,
+            "text": "add.xyz vf26xyz,vf08xyz,vf08xyz \tlq.xyzw vf17xyzw,4(vi03)"
+          },
+          {
+            "line": 231,
+            "text": "nop \tlq.xyzw vf22xyzw,7(vi03)"
+          },
+          {
+            "line": 232,
+            "text": "nop \tlq.xyzw vf12xyzw,1(vi03)"
+          },
+          {
+            "line": 233,
+            "text": "nop \tlq.xyzw vf27xyzw,10(vi03)"
+          },
+          {
+            "line": 234,
+            "text": "addx.y vf11y,vf00y,vf17x \tlq.xyzw vf10xyzw,0(vi03)"
+          },
+          {
+            "line": 235,
+            "text": "addy.z vf16z,vf00z,vf22y \tlq.xyzw vf15xyzw,3(vi03)"
+          },
+          {
+            "line": 236,
+            "text": "addz.x vf21x,vf00x,vf12z \tlq.xyzw vf20xyzw,6(vi03)"
+          },
+          {
+            "line": 237,
+            "text": "nop \tlq.xyzw vf25xyzw,9(vi03)"
+          }
+        ]
+      }
+    },
+    "interpretation_limit": "Overlay-0's inspected copy path leaves qword+1 XYZ unchanged and overwrites W. Overlay-1's separate lit block first subtracts LOI 98304 from input qword+1 XYZ, conditionally BALs vi15,+459 when vi14!=0 (target/effect unresolved), and runs lighting only when vi09!=0. It uses DM[6].xyz for the dot direction, clamps at zero, scales by DM[5].xyz, adds DM[4].xyz after reloading vf08 from that ambient slot, multiplies by vf05.xyz, FTOI0 converts, and output is stored at qword vi04+1. These are source-static facts; the saved snapshots prove byte residency only, not overlay dispatch/execution for the COBRA packets, and do not bind qword input or dynamic VU constants to captured GS colors.",
+    "overlay1_colorflow_static_arithmetic": {
+      "overlay_sha256": "b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a",
+      "branch_context": [
+        {
+          "line": 54,
+          "text": "nop \tibeq vi14,vi00,3"
+        },
+        {
+          "line": 74,
+          "text": "nop \tibeq vi09,vi00,7"
+        }
+      ],
+      "instructions": [
+        {
+          "line": 42,
+          "text": "nop[i] \tloi 98304"
+        },
+        {
+          "line": 45,
+          "text": "subi.xyz vf11xyz,vf11xyz,i \tlq.xyzw vf12xyzw,2(vi03)"
+        },
+        {
+          "line": 50,
+          "text": "subi.xy vf12xy,vf12xy,i \tlq.xyzw vf08xyzw,6(vi00)"
+        },
+        {
+          "line": 54,
+          "text": "nop \tibeq vi14,vi00,3"
+        },
+        {
+          "line": 56,
+          "text": "nop \tbal vi15,459"
+        },
+        {
+          "line": 58,
+          "text": "mul.xyz vf13xyz,vf08xyz,vf11xyz \tnop"
+        },
+        {
+          "line": 61,
+          "text": "mul.xyz vf28xyz,vf08xyz,vf26xyz \tnop"
+        },
+        {
+          "line": 62,
+          "text": "addy.x vf13x,vf13x,vf13y \tlq.xyzw vf10xyzw,0(vi04)"
+        },
+        {
+          "line": 74,
+          "text": "nop \tibeq vi09,vi00,7"
+        },
+        {
+          "line": 82,
+          "text": "maxx.x vf13x,vf13x,vf00x \tlq.xyzw vf07xyzw,5(vi00)"
+        },
+        {
+          "line": 86,
+          "text": "mulx.xyz vf10xyz,vf07xyz,vf13x \tlq.xyzw vf08xyzw,4(vi00)"
+        },
+        {
+          "line": 90,
+          "text": "add.xyz vf10xyz,vf10xyz,vf08xyz \tmove.w vf15w,vf05w"
+        },
+        {
+          "line": 94,
+          "text": "mul.xyz vf10xyz,vf10xyz,vf05xyz \tnop"
+        },
+        {
+          "line": 98,
+          "text": "ftoi0.xyzw vf10xyzw,vf10xyzw \tlq.xyzw vf11xyzw,0(vi03)"
+        },
+        {
+          "line": 103,
+          "text": "mul.w vf11w,vf14w,vf00w \tsq.xyzw vf10xyzw,1(vi04)"
+        }
+      ],
+      "bounded_formula": "For each four-record batch, the VU subtracts LOI 98304 from input qword vi03+1 XYZ; if vi14!=0, it additionally BALs vi15,+459 before the dot product (the target is outside this pinned overlay-1 listing and its effect is not asserted). The lit block runs only when vi09!=0. It forms d=dot(DM[6].xyz,n'), clamps d=max(d,0), then computes color=(DM[5].xyz*d+DM[4].xyz)*vf05.xyz, converts via FTOI0 and stores the result at output qword vi04+1. DM[6] supplies the direction used for the dot; vf08 is reloaded from DM[4] before the ambient add, so those values are distinct. The branch-control values and dynamic register contents are not captured.",
+      "vif_input_format": "The separate FUN_0021c3e0 path has a bit-8-clear branch that writes STROW 0x47c00000 xyz, STMOD 1, then V4-8 with USN clear. Pinned PCSX2 VIF source implements mode 1 as signed integer plus row word; subtracting the VU LOI 98304 exactly yields signed_byte/128 for all 256 byte values. This is a plausible normalization path, but no source call or live packet join ties it to the COBRA interval. FUN_00128e88's own four-byte V4-8 REF is followed by its STROW writes, so that function alone does not establish this /128 scaling.",
+      "limitations": [
+        "No live PC/dispatch link selects overlay-1 for the COBRA packet interval.",
+        "No captured VU input qword is joined to a particular source header and packet output vertex.",
+        "Conditional BAL vi15,+459's target/effect is outside the inspected listing.",
+        "The static arithmetic does not prove the lit branch was taken in the captured frame or identify the runtime values in DM[4], DM[5], DM[6] or vf05."
+      ]
+    }
+  },
+  "trace": {
+    "cpu_packet_builder": {
+      "function": "FUN_001288b0",
+      "prior_direct_packet_call": "FUN_00129428(0xffffffffff000000)",
+      "geometry_groups": "Per group the saved C calls FUN_00128e88 with count, six-byte plane pointer, four-byte plane pointer, optional plane pointer, bbox-like qword input, another qword input, selector, and byte value."
+    },
+    "geometry_packet_writer": {
+      "function": "FUN_00128e88",
+      "inline_header_command": "0x6c058000",
+      "header": "V4-32 NUM=5, TOPS-relative, command address 0; five payload qwords are appended before the CNT QWC patch.",
+      "selected_unpack_destination": {
+        "selector_zero": "0x208",
+        "selector_nonzero": "0x2c8",
+        "destination_expression": "V3-16 ADDR=uVar14; V4-8 ADDR=uVar14+1; optional V2-16 ADDR=uVar14+2",
+        "correction": "These are UNPACK command ADDR values. The five-qword V4-32 header's payload lanes are copied from param_5 and param_8; uVar14 is not qword-3.Z."
+      },
+      "refs": [
+        {
+          "format": "V4-8",
+          "destination": "selected_base+1",
+          "source": "param_3"
+        },
+        {
+          "format": "V3-16",
+          "destination": "selected_base",
+          "source": "param_2"
+        },
+        {
+          "format": "V2-16",
+          "destination": "selected_base+2",
+          "source": "param_4",
+          "condition": "param_4 != 0"
+        }
+      ],
+      "row_mode_words": [
+        "STROW 0x44400000 before V3-16",
+        "STMOD 0x05000000",
+        "optional STROW 0x45c00000 before V2-16"
+      ]
+    },
+    "vu_instruction_path": {
+      "overlay5": [
+        "XTOP captures TOP in vi01.",
+        "ILW reads TOP+3.z into vi03.",
+        "LQ reads vi03+0 and vi03+2; ILW also reads vi03+1.w.",
+        "The xyz pipeline uses vector operations and FTOI4 conversion in the resumed sequence."
+      ],
+      "overlay6": [
+        "FTOI4.xyz converts vf17 to vf16.",
+        "The code stores vf12, vf30, and vf16 as three consecutive qwords.",
+        "A later instruction executes XGKICK vi11."
+      ],
+      "conditionality": "The TOP-relative input-plane linkage remains conditional on the actual VIF TOPS/MODE/CYCLE and execution path; the GS-visible meaning of output lanes has not been proven."
+    },
+    "direct_gif_gs": {
+      "packet_builders": [
+        "FUN_00129428",
+        "FUN_001297b8"
+      ],
+      "bounded_conclusion": "These functions append DIRECT packets with GIF-tag/A+D-shaped data, but this trace does not decode per-part texture binding or establish the final draw state after all intervening packets."
+    }
+  },
+  "semantic_status": {
+    "texture_index_and_part_binding": "unresolved",
+    "UV_encoding_and_texture_linkage": "unresolved",
+    "normal_encoding_and_transform": "unresolved",
+    "primitive_order_and_winding": "unresolved",
+    "ADC_restart_and_strip_boundaries": "unresolved",
+    "final_blend_and_filter_state": "unresolved",
+    "runtime_DMA_VIF_VU_GIF_GS_execution": "unobserved"
+  },
+  "validation": {
+    "result": "pass",
+    "pin_mismatches": []
+  }
+}

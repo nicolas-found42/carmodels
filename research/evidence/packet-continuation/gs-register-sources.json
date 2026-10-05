@@ -1,0 +1,263 @@
+{
+  "schema": "fr2-packet-continuation-gs-register-source-pins/v1",
+  "scope": "Selected field/register/filter definitions only; source code values and hashes are pinned to public source revisions.",
+  "sources": [
+    {
+      "name": "gif_tags.h",
+      "url": "https://github.com/ps2dev/ps2sdk/blob/ac92a9f657d2e531dd8f060250b07f2a5ac6dea5/common/include/gif_tags.h",
+      "sha256": "ebb22d20e27d7ee2f822e343358dc8644042b3fde9f39ddd2f13b317ab84169f",
+      "line_excerpts": [
+        {
+          "line": 28,
+          "text": "#define GIF_PRIM_TRIANGLE_STRIP 0x04"
+        },
+        {
+          "line": 44,
+          "text": "#define GIF_REG_RGBAQ   0x01"
+        },
+        {
+          "line": 46,
+          "text": "#define GIF_REG_ST      0x02"
+        },
+        {
+          "line": 50,
+          "text": "#define GIF_REG_XYZF2   0x04"
+        },
+        {
+          "line": 85,
+          "text": "#define GIF_SET_PRIM(PRIM, IIP, TME, FGE, ABE, AA1, FST, CTXT, FIX)    \\"
+        }
+      ]
+    },
+    {
+      "name": "libgs.h",
+      "url": "https://github.com/ps2dev/ps2sdk/blob/ac92a9f657d2e531dd8f060250b07f2a5ac6dea5/ee/libgs/include/libgs.h",
+      "sha256": "8c6cd527a666504b00acda8aba312bf2d333f9506554a966e7588a33db2ff65e",
+      "line_excerpts": [
+        {
+          "line": 232,
+          "text": "#define gs_g_tex0_1\t\t0x06"
+        },
+        {
+          "line": 245,
+          "text": "#define gs_g_tex1_1\t\t0x14"
+        },
+        {
+          "line": 275,
+          "text": "#define gs_g_texflush\t0x3f"
+        },
+        {
+          "line": 281,
+          "text": "#define gs_g_alpha_1\t0x42"
+        },
+        {
+          "line": 662,
+          "text": "\tu64 mmag\t\t\t:1;"
+        },
+        {
+          "line": 663,
+          "text": "\tu64 mmin\t\t\t:3;"
+        },
+        {
+          "line": 664,
+          "text": "\tu64 mtba\t\t\t:1;"
+        },
+        {
+          "line": 665,
+          "text": "\tu64 pad2\t\t\t:9;"
+        },
+        {
+          "line": 666,
+          "text": "\tu64 l\t\t\t\t:2;"
+        },
+        {
+          "line": 667,
+          "text": "\tu64 pad3\t\t\t:11;"
+        },
+        {
+          "line": 668,
+          "text": "\tu64 k\t\t\t\t:12;"
+        },
+        {
+          "line": 669,
+          "text": "\tu64 pad4\t\t\t:20;"
+        },
+        {
+          "line": 670,
+          "text": "}GS_TEX1;"
+        },
+        {
+          "line": 774,
+          "text": "\tu64 b\t\t:2;"
+        },
+        {
+          "line": 775,
+          "text": "\tu64 c\t\t:2;"
+        },
+        {
+          "line": 776,
+          "text": "\tu64 d\t\t:2;"
+        },
+        {
+          "line": 777,
+          "text": "\tu64 pad0\t:24;"
+        },
+        {
+          "line": 778,
+          "text": "\tu64 alpha\t:8;"
+        },
+        {
+          "line": 779,
+          "text": "\tu64 pad1\t:24;"
+        },
+        {
+          "line": 780,
+          "text": "}GS_ALPHA;"
+        }
+      ]
+    },
+    {
+      "name": "GSRegs.h",
+      "url": "https://github.com/PCSX2/pcsx2/blob/81526d4dc7cc70e4ae75abb35a789417456c6d43/pcsx2/GS/GSRegs.h",
+      "sha256": "b9d73e6f5a8caf8ab12ab470de1ba8fdc407b5eb58c5bafa80e178adb57d730c",
+      "line_excerpts": [
+        {
+          "line": 52,
+          "text": "\tGIF_REG_STQ     = 0x02,"
+        },
+        {
+          "line": 53,
+          "text": "\tGIF_REG_UV      = 0x03,"
+        },
+        {
+          "line": 54,
+          "text": "\tGIF_REG_XYZF2   = 0x04,"
+        },
+        {
+          "line": 55,
+          "text": "\tGIF_REG_XYZ2    = 0x05,"
+        },
+        {
+          "line": 56,
+          "text": "\tGIF_REG_TEX0_1  = 0x06,"
+        },
+        {
+          "line": 57,
+          "text": "\tGIF_REG_TEX0_2  = 0x07,"
+        },
+        {
+          "line": 58,
+          "text": "\tGIF_REG_CLAMP_1 = 0x08,"
+        },
+        {
+          "line": 59,
+          "text": "\tGIF_REG_CLAMP_2 = 0x09,"
+        },
+        {
+          "line": 60,
+          "text": "\tGIF_REG_FOG     = 0x0a,"
+        },
+        {
+          "line": 61,
+          "text": "\tGIF_REG_INVALID = 0x0b,"
+        },
+        {
+          "line": 62,
+          "text": "\tGIF_REG_XYZF3   = 0x0c,"
+        },
+        {
+          "line": 63,
+          "text": "\tGIF_REG_XYZ3    = 0x0d,"
+        },
+        {
+          "line": 64,
+          "text": "\tGIF_REG_A_D     = 0x0e,"
+        },
+        {
+          "line": 65,
+          "text": "\tGIF_REG_NOP     = 0x0f,"
+        },
+        {
+          "line": 66,
+          "text": "};"
+        },
+        {
+          "line": 67,
+          "text": ""
+        },
+        {
+          "line": 68,
+          "text": "enum GIF_REG_COMPLEX"
+        },
+        {
+          "line": 69,
+          "text": "{"
+        },
+        {
+          "line": 70,
+          "text": "\tGIF_REG_STQRGBAXYZF2 = 0x00,"
+        },
+        {
+          "line": 71,
+          "text": "\tGIF_REG_STQRGBAXYZ2 = 0x01,"
+        },
+        {
+          "line": 74,
+          "text": "enum GIF_A_D_REG"
+        },
+        {
+          "line": 90,
+          "text": "\tGIF_A_D_REG_TEX1_1     = 0x14,"
+        },
+        {
+          "line": 106,
+          "text": "\tGIF_A_D_REG_TEXFLUSH   = 0x3f,"
+        },
+        {
+          "line": 109,
+          "text": "\tGIF_A_D_REG_ALPHA_1    = 0x42,"
+        },
+        {
+          "line": 200,
+          "text": "\tAFAIL_ZB_ONLY  = 2,"
+        },
+        {
+          "line": 213,
+          "text": "enum class GS_MIN_FILTER : uint8_t"
+        },
+        {
+          "line": 214,
+          "text": "{"
+        },
+        {
+          "line": 215,
+          "text": "\tNearest                = 0,"
+        },
+        {
+          "line": 216,
+          "text": "\tLinear                 = 1,"
+        },
+        {
+          "line": 217,
+          "text": "\tNearest_Mipmap_Nearest = 2,"
+        },
+        {
+          "line": 218,
+          "text": "\tNearest_Mipmap_Linear  = 3,"
+        },
+        {
+          "line": 219,
+          "text": "\tLinear_Mipmap_Nearest  = 4,"
+        },
+        {
+          "line": 220,
+          "text": "\tLinear_Mipmap_Linear   = 5,"
+        },
+        {
+          "line": 221,
+          "text": "};"
+        }
+      ]
+    }
+  ]
+}

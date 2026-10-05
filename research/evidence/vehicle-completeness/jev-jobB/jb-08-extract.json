@@ -1,0 +1,98 @@
+{
+  "args": {
+    "document": "Job B (per-screen selector) is blocked because a PAUSED savestate carries no live pointers (arXiv 2503.15065; 2307.12060). Named: the livery store is entity+0x64 via FUN_00121e10; resolver FUN_00125640 over record base 0x233070+type*0x114; chain outer+4 -> +0x14c -> +0x174 = entity. New decompilation fact: FUN_0019c310 writes the gameflow pointer at outer+4 -> +0x14c, and its caller FUN_001de3d8 originates it. FUN_001c4540 iterates the car-entity list from a STATIC global (iRam00290278, EE ~0x290278; +8 = list head, +0xc = next). The cursor fn FUN_001c4a40 indexes DAT_00241b40 by a per-entity type byte. So at least one stable EE address (0x290278) can be read live. PCSX2 has: (a) in-emulator read/write BREAKPOINTS (CBreakPoints, BREAKPOINT_EE/IOP; iR5900.cpp dynarecMemcheck) - a debugger feature; (b) PINE IPC live guest memory read/write (PINE.cpp MsgRead8..64) exposed by the headless container helper (currently identity/save/load at slot 28193). Constraint: run EVERYTHING headless (Docker + Xvfb, fr2-recovery-headless); the user is using the host - no focus stealing on the Mac. Prior constraint from handoff: ordinary controller input + read-only/capture APIs only, no guest-memory writes/cheats/patches.",
+    "fields": [
+      {
+        "id": "store",
+        "pattern": "entity\\+0x64",
+        "description": "the selector store offset"
+      },
+      {
+        "id": "chain",
+        "pattern": "outer\\+4 -> \\+0x14c -> \\+0x174",
+        "description": "the gameflow pointer chain"
+      },
+      {
+        "id": "global",
+        "pattern": "0x290278",
+        "description": "the static entity-list global"
+      },
+      {
+        "id": "slot",
+        "pattern": "slot 28193",
+        "description": "the PINE slot"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 4,
+      "auto": 4,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "store",
+        "value": "entity+0x64",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.97,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "chain",
+        "value": "outer+4 -> +0x14c -> +0x174",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.98,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "global",
+        "value": "0x290278",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "slot",
+        "value": "slot 28193",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1319,
+      "output_tokens": 139
+    }
+  }
+}

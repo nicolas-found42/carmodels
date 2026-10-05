@@ -1,0 +1,107 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "pointer_root",
+        "text": "Rooting the gameflow chain in a raw EE savestate to read entity+0x64."
+      },
+      {
+        "id": "c_rows",
+        "text": "C: assert all 35 cars resolve with negative controls."
+      },
+      {
+        "id": "closure",
+        "text": "One receipt + jev_gate per thread plus a completion report."
+      },
+      {
+        "id": "done",
+        "text": "The plan is ready as written."
+      }
+    ],
+    "classes": [
+      {
+        "id": "needs_a_decision",
+        "description": "A genuine design choice that would change what gets built. Example: the pointer-root method."
+      },
+      {
+        "id": "implementation_detail",
+        "description": "Mechanical, decided by the code, no design choice. Example: the exact regex."
+      }
+    ],
+    "purpose": "confirm which residual branches actually need the user",
+    "context": "Round-5 residual branches."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 2,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "needs_a_decision": 2,
+        "implementation_detail": 2
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "pointer_root",
+        "classification": "needs_a_decision",
+        "probabilities": {
+          "needs_a_decision": 0.91,
+          "implementation_detail": 0.09
+        },
+        "confidence": 0.83,
+        "margin": 0.8200000000000001,
+        "top_probability": 0.91,
+        "decision": "auto"
+      },
+      {
+        "id": "c_rows",
+        "classification": "implementation_detail",
+        "probabilities": {
+          "needs_a_decision": 0.17,
+          "implementation_detail": 0.83
+        },
+        "confidence": 0.66,
+        "margin": 0.6599999999999999,
+        "top_probability": 0.83,
+        "decision": "review"
+      },
+      {
+        "id": "closure",
+        "classification": "needs_a_decision",
+        "probabilities": {
+          "needs_a_decision": 0.54,
+          "implementation_detail": 0.46
+        },
+        "confidence": 0.07,
+        "margin": 0.08000000000000002,
+        "top_probability": 0.54,
+        "decision": "review"
+      },
+      {
+        "id": "done",
+        "classification": "implementation_detail",
+        "probabilities": {
+          "needs_a_decision": 0.15,
+          "implementation_detail": 0.85
+        },
+        "confidence": 0.7,
+        "margin": 0.7,
+        "top_probability": 0.85,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 664,
+      "output_tokens": 131
+    }
+  }
+}

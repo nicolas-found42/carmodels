@@ -1,0 +1,14 @@
+{
+  "schema": "fr2-vu-clip-branch-excerpt/v1",
+  "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-5.s",
+  "source_sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5",
+  "expected_source_sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5",
+  "source_hash_matches_expected": true,
+  "excerpt_line_numbers_one_based": [
+    31,
+    83
+  ],
+  "excerpt": "31: nop \tmove.zw vf22zw,vf30zw\n32: nop \tmove.zw vf23zw,vf30zw\n33: nop \tmove.zw vf24zw,vf30zw\n34: clipw.xyz vf21xyz,vf12w \tnop\n35: clipw.xyz vf22xyz,vf12w \tnop\n36: clipw.xyz vf23xyz,vf12w \tnop\n37: clipw.xyz vf24xyz,vf12w \tnop\n38: nop[i] \tloi 4095\n39: muli.xyzw vf12xyzw,vf00xyzw,i \tnop\n40: nop \tnop\n41: nop \tfcand vi01,0x28a28a\n42: nop \tibne vi01,vi00,37\n43: nop \tnop\n44: clipw.xyz vf21xyz,vf12w \tnop\n45: clipw.xyz vf22xyz,vf12w \tnop\n46: clipw.xyz vf23xyz,vf12w \tnop\n47: clipw.xyz vf24xyz,vf12w \tnop\n48: nop \tnop\n49: nop \tnop\n50: nop \tnop\n51: nop \tfcand vi01,0x145145\n52: nop \tibne vi01,vi00,27\n53: nop \tnop\n54: nop \tiaddiu vi05,vi00,4\n55: nop \tsq.xyzw vf31xyzw,0(vi11)\n56: nop \tmtir vi09,vf31x\n57: nop \tior vi09,vi09,vi05\n58: nop \tiswr.x vi09,(vi11)x\n59: ftoi0.xyzw vf18xyzw,vf14xyzw \tiaddiu vi07,vi11,1\n60: ftoi4.xyzw vf19xyzw,vf21xyzw \tnop\n61: nop \tsqi.xyzw vf25xyzw,(vi07++)\n62: nop \tsqi.xyzw vf18xyzw,(vi07++)\n63: nop \tsqi.xyzw vf19xyzw,(vi07++)\n64: ftoi4.xyzw vf19xyzw,vf22xyzw \tnop\n65: nop \tsqi.xyzw vf26xyzw,(vi07++)\n66: nop \tsqi.xyzw vf18xyzw,(vi07++)\n67: nop \tsqi.xyzw vf19xyzw,(vi07++)\n68: ftoi4.xyzw vf19xyzw,vf23xyzw \tnop\n69: nop \tsqi.xyzw vf27xyzw,(vi07++)\n70: nop \tsqi.xyzw vf18xyzw,(vi07++)\n71: nop \tsqi.xyzw vf19xyzw,(vi07++)\n72: ftoi4.xyzw vf19xyzw,vf24xyzw \tnop\n73: nop \tsqi.xyzw vf28xyzw,(vi07++)\n74: nop \tsqi.xyzw vf18xyzw,(vi07++)\n75: nop \tsqi.xyzw vf19xyzw,(vi07++)\n76: nop \txgkick vi11\n77: nop \tiadd vi09,vi11,vi00\n78: nop \tiadd vi11,vi12,vi00\n79: nop \tiadd vi12,vi09,vi00\n80: nop \tibne vi02,vi00,-109\n81: nop \tnop\n82: nop[e] \tnop\n83: nop \tnop",
+  "bounded_static_observation": "Four clipw operations precede FCAND masks 0x28a28a and 0x145145. The encoded IBNE displacements are +37 and +27. With VU branch target convention PC+1+immediate and the source listing as one VU instruction pair per row, both target the loop-test row after the nearby packet stores and XGKICK. No claim is made about which clip-mask bit means what or whether this gate accounts for the ADC/screen-area correlation.",
+  "semantic_limit": "Pinned disassembly establishes instruction sequence and branch offsets. It does not establish runtime branch taken/not-taken on this capture, mask meaning, or a backface-cull policy."
+}

@@ -1,0 +1,23 @@
+{
+  "args": {
+    "context": "Fixed controls: the serialized pair is (5,5); in FUN_00123758 pair[0] is the name-table index and pair[1] the direct child index, whose child has offset 312. WHEEL_MOVING and WHEEL_STATIC are distinct source names. Every GLB in a 35-file set passed Khronos validation with zero errors and zero warnings. No observed runtime geometry comparison is yet provided.",
+    "propositions": [
+      "The pair's first word is the name-table index.",
+      "The pair's first word names a table entry.",
+      "The name lookup consumes the first pair word.",
+      "The pair's second word is the name-table index.",
+      "The second pair word names a table entry.",
+      "The name lookup consumes the second pair word.",
+      "The 35 GLBs have passed Khronos format checks.",
+      "The 35 GLBs are proven to reproduce original runtime shading."
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_noul\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"status\": \"ok\",\n  \"results\": [\n    {\n      \"id\": \"proposition0\",\n      \"proposition\": \"The pair's first word is the name-table index.\",\n      \"probability\": 0.97,\n      \"label\": \"likely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition1\",\n      \"proposition\": \"The pair's first word names a table entry.\",\n      \"probability\": 0.61,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition2\",\n      \"proposition\": \"The name lookup consumes the first pair word.\",\n      \"probability\": 0.89,\n      \"label\": \"likely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition3\",\n      \"proposition\": \"The pair's second word is the name-table index.\",\n      \"probability\": 0.02,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition4\",\n      \"proposition\": \"The second pair word names a table entry.\",\n      \"probability\": 0.2,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition5\",\n      \"proposition\": \"The name lookup consumes the second pair word.\",\n      \"probability\": 0.04,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition6\",\n      \"proposition\": \"The 35 GLBs have passed Khronos format checks.\",\n      \"probability\": 0.97,\n      \"label\": \"likely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition7\",\n      \"proposition\": \"The 35 GLBs are proven to reproduce original runtime shading.\",\n      \"probability\": 0.04,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    }\n  ],\n  \"thresholds\": {\n    \"auto_accept\": 0.85\n  },\n  \"usage\": {\n    \"input_tokens\": 1182,\n    \"output_tokens\": 172\n  }\n}"
+      }
+    ]
+  }
+}

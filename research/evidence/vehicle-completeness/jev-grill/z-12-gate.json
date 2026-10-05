@@ -1,0 +1,139 @@
+{
+  "args": {
+    "request": "Adopt the complete plan: A recorded verdict, B rooted definite outcome, C all-35 extension, closure per thread; render_fidelity_complete false.",
+    "diff": "{\n \"order\": [\n  \"A\",\n  \"B\",\n  \"C\"\n ],\n \"A\": \"record consistent verdict\",\n \"B\": \"root bootstrap global + fallback; read entity+0x64; bounded pass\",\n \"C\": \"one tool: 3-pair + all 35 cars + controls\",\n \"closure\": \"receipt+gate per thread + report\",\n \"ceiling\": \"render_fidelity_complete false\"\n}",
+    "claims": [
+      "The plan specifies rooting and closure, leaving no silently-assumed branch.",
+      "B is deliverable as a definite outcome.",
+      "render_fidelity_complete stays false on every artifact."
+    ],
+    "evidence": "COMPLETE PLAN \u2014 Ford Racing 2 (SLES_517.05) car-model recovery, workspace R. Every decision Q1-Q13 is now fixed; the residual branches are closed.\nORDER A -> B -> C. Stop only when all three reach a definite outcome (7b); C required. Claim ceiling: render_fidelity_complete false on every artifact; partial claims only; no completion gate passes; a Jev gate escalate is an acceptable recorded outcome.\nA \u2014 RECORDED VERDICT (no code change): the executable binds :SOUNDBANK_TYPE by name (config-key table @0x24af68, descriptor table @0x24afe8, same index 0..7 CAR1..CAR8; FUN_001d7950 -> car struct +0x40; FUN_00165b10 -> carN_snd; FUN_001408d8 loads carN_snd.msh/.msb; the first numeric field is a discarded bank ordinal). build_reference.py's name-based CAR_SND_CARn -> carN_snd rule is CONSISTENT, no off-by-one. Record in a sound-index reconciliation receipt; do NOT change the green T2 verifier.\nB \u2014 SELECTOR: proof bar = a decompilation-reachable address, never a value-only match. Trace FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10. Named: the livery-label selector is stored at entity+0x64 (FUN_00121e10), from the packed selector FUN_00125640 returns out of record base 0x233070+type*0x114 (count +0xbc, list +0x90). ROOTING (Q12a): find the bootstrap global that stores the gameflow pointer via decompilation (primary), read it in each of slots 102/103/104, and follow outer+4 -> +0x14c -> +0x174 to entity; if the global is not cleanly identified, fall back INSIDE the same bounded pass to scanning for the entity struct via its flags 0x1cd0 at +0x60; then read entity+0x64 (expected the same DEFAULT value, non-distinguishing). Then the BOUNDED INDIRECTION PASS (Q10a): ONE bounded read of the DAT_00241b40 indexed cursor and ONE walk of the FUN_001c4a40 caller chain; if the cursor's selected-index field is not identified, record the per-screen CAR highlight cursor OPEN and move to C. B resolved = a DEFINITE OUTCOME: entity+0x64 read and recorded, plus the cursor recorded open if the pass names nothing.\nC \u2014 DISPLAY NAMES (Q11a + default): extend tools/resolve_display_names.py keeping BOTH assertions in ONE tool and receipt: the existing 3-pair check (T3 regression, preserved) AND a full car-keyed table asserting ALL 35 cars resolve (not just TXT_CARS_* keys), with negative controls (unknown key unresolved; apostrophe byte-exact from the archive) and a jev_gate. '136-entry display-name table' is a misnomer.\nCLOSURE (Q13a): one receipt + jev_gate per thread (escalate acceptable) plus a single session completion report listing the three definite outcomes. CONSTRAINTS: never print credentials; new files in R not S; close tickets only on real tool output.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"ready\", \"escaped\": false, \"confidence\": 0.77, \"probabilities\": {\"gather_more\": 0.02, \"still_open\": 0.16, \"ask_user\": 0, \"investigate\": 0.01, \"none\": 0, \"ready\": 0.81}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"ready\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"ready\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"ready\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"still_open\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"still_open\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"still_open\", \"requirement\": 2, \"answer\": \"unknown\"}, {\"candidate\": \"gather_more\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"gather_more\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"gather_more\", \"requirement\": 2, \"answer\": \"unknown\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2565, \"output_tokens\": 464}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.27,
+      "scores": {
+        "correctness": {
+          "score": 1.64,
+          "confidence": 0.46,
+          "probabilities": {
+            "0": 0.08,
+            "1": 0.19,
+            "2": 0.73
+          }
+        },
+        "spec_match": {
+          "score": 1.84,
+          "confidence": 0.76,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.11,
+            "2": 0.86
+          }
+        },
+        "test_gap": {
+          "score": 1.39,
+          "confidence": 0.08,
+          "probabilities": {
+            "0": 0.28,
+            "1": 0.06,
+            "2": 0.66
+          }
+        },
+        "blast_radius": {
+          "score": 1.55,
+          "confidence": 0.33,
+          "probabilities": {
+            "0": 0.08,
+            "1": 0.29,
+            "2": 0.63
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.6835,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    "verification": {
+      "action": "review",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The plan specifies rooting and closure, leaving no silently-assumed branch.",
+          "verdict": "verified",
+          "confidence": 0.69,
+          "probabilities": {
+            "verified": 0.79,
+            "contradicted": 0.12,
+            "unsupported": 0.09
+          },
+          "action": "review"
+        },
+        {
+          "claim": "B is deliverable as a definite outcome.",
+          "verdict": "verified",
+          "confidence": 0.9,
+          "probabilities": {
+            "verified": 0.9299999999999999,
+            "contradicted": 0.02,
+            "unsupported": 0.05
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "render_fidelity_complete stays false on every artifact.",
+          "verdict": "verified",
+          "confidence": 0.85,
+          "probabilities": {
+            "verified": 0.9,
+            "contradicted": 0.01,
+            "unsupported": 0.09
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2673,
+      "output_tokens": 198
+    }
+  }
+}

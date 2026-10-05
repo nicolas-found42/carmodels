@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "6-position screenshot-verified sweep results (slots 140-145, heap base identical 0x473d70, pause-control 0 diffs within pairs). Verified positions: 140=pos1 FORD'49, 141=pos2 '68 MUSTANG, 142=pos3 '55 Thunderbird, 143=pos6 FORD GT, 144=pos6 FORD GT, 145=pos5 Thunderbird Convertible. DECISIVE TEST 1: NO word anywhere in the 32 MiB EE image equals its slot's position in all 6 slots (0 hits at u32/u16/u8). TEST 2: the DAT-table small words do not track position: 0x241b60 reads 5,5,5,4,3,3 across pos1,2,3,6,6,5; 0x241e00 reads 5,5,5,5,4,4. Notably 143 vs 144 (BOTH pos6) differ at 0x241b60 (4 vs 3), so these words track something else (animation/other cursor), not the highlight. Combined with the earlier exhaustive result (no tuple, no flag, no pointer in ANY savestate member), the mark is definitively NOT a stored integer. Remaining possibilities: recomputed per frame, or an encoding not tested (float/bitfield). All headless, read-only + savestate saves; container left paused.",
+    "records": [
+      {
+        "id": "heap",
+        "request": "extract heap",
+        "value": "0x473d70"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "heap",
+        "value": "0x473d70",
+        "checks": {
+          "hallucinated": 0.01,
+          "off_target": 0.05,
+          "incomplete": 0.04,
+          "format": 0.04
+        },
+        "p_wrong": 0.05,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1068,
+      "output_tokens": 86
+    }
+  }
+}

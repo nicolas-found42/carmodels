@@ -1,0 +1,14 @@
+{
+  "args": {
+    "purpose": "Select official Linux x86-64 PCSX2 v2.8.2 application image for an isolated headless Xvfb runtime; preserve game and source identity and avoid every macOS game window.",
+    "text": "{\n  \"tag\": \"v2.8.2\",\n  \"assets\": [\n    {\n      \"name\": \"pcsx2-v2.8.2-linux-appimage-x64-Qt.AppImage\",\n      \"size\": 60119544,\n      \"download\": \"https://github.com/PCSX2/pcsx2/releases/download/v2.8.2/pcsx2-v2.8.2-linux-appimage-x64-Qt.AppImage\",\n      \"digest\": \"sha256:0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea\"\n    },\n    {\n      \"name\": \"pcsx2-v2.8.2-linux-flatpak-x64-Qt.flatpak\",\n      \"size\": 28120408,\n      \"download\": \"https://github.com/PCSX2/pcsx2/releases/download/v2.8.2/pcsx2-v2.8.2-linux-flatpak-x64-Qt.flatpak\",\n      \"digest\": \"sha256:eff40824ccd3383ef12cbb76ee334683172879d2f666e4086ba51440003b6cf8\"\n    },\n    {\n      \"name\": \"pcsx2-v2.8.2-macos-Qt.tar.xz\",\n      \"size\": 24377200,\n      \"download\": \"https://github.com/PCSX2/pcsx2/releases/download/v2.8.2/pcsx2-v2.8.2-macos-Qt.tar.xz\",\n      \"digest\": \"sha256:3ed9eb40a33eae67134142c24255a079be444f0616ca29575a04a37981f7d426\"\n    },\n    {\n      \"name\": \"pcsx2-v2.8.2-windows-x64-installer.exe\",\n      \"size\": 46714216,\n      \"download\": \"https://github.com/PCSX2/pcsx2/releases/download/v2.8.2/pcsx2-v2.8.2-windows-x64-installer.exe\",\n      \"digest\": \"sha256:3422f3705ccc641b7e4fdf3f280d635d05c3c8b53a56c3af55d9df115bdcf768\"\n    },\n    {\n      \"name\": \"pcsx2-v2.8.2-windows-x64-Qt-symbols.7z\",\n      \"size\": 20962364,\n      \"download\": \"https://github.com/PCSX2/pcsx2/releases/download/v2.8.2/pcsx2-v2.8.2-windows-x64-Qt-symbols.7z\",\n      \"digest\": \"sha256:b7736262b4d0228c72a2afc07dab7636af5c8a3d4fdb416058e2b070c370e26b\"\n    },\n    {\n      \"name\": \"pcsx2-v2.8.2-windows-x64-Qt.7z\",\n      \"size\": 25670075,\n      \"download\": \"https://github.com/PCSX2/pcsx2/releases/download/v2.8.2/pcsx2-v2.8.2-windows-x64-Qt.7z\",\n      \"digest\": \"sha256:7dfc829ca1994cc1045ac49f05e39b6cf968b72e6a374c40e05c2a2b4ac200b4\"\n    }\n  ]\n}\n"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.05,\n    \"substance\": 0.97,\n    \"relevance\": 0.97\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"pass\",\n    \"reason\": \"no signals above thresholds\"\n  },\n  \"usage\": {\n    \"input_tokens\": 1545,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

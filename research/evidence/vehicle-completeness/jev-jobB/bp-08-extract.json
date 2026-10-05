@@ -1,0 +1,95 @@
+{
+  "args": {
+    "document": "Breakpoint-road feasibility findings (all verified in the headless container): PCSX2 v2.8.2 AppImage binary contains ZERO gdb strings: no GDB stub. The debugger GUI has no remote/IPC API (only a forum request exists upstream). hkmodd/PCSX2-MCP DebugServer patch is Windows-only (pcsx2-qt.exe/MSVC); Linux needs a full PCSX2 source build + patch (hours, GBs, risky inside the running container). Driving the debugger GUI blind via RFB keys is infeasible: F8 screenshots capture only the emulated game screen, never the Qt debugger window, so there is zero visibility into debugger state. What REMAINS feasible headlessly: (a) static analysis of the menu INPUT handler in the decompilation - find which variable the d-pad handler increments when moving the highlight (read-only, headless, no new tool); then verify the variable live via read-only PINE across the six screenshot-verified slots; (b) full PCSX2 source build + DebugServer patch; (c) stop and record open. NOTE: the sweep proved no EE word equals position 1..6, so the handler more likely writes an index into a table, a pointer, or a per-frame recomputation - the variable may still be found and read even if it is not position-valued.",
+    "fields": [
+      {
+        "id": "nogdb",
+        "pattern": "ZERO gdb strings|no GDB stub",
+        "description": "the GDB finding"
+      },
+      {
+        "id": "f8",
+        "pattern": "F8 screenshots capture only the emulated game screen",
+        "description": "the visibility limit"
+      },
+      {
+        "id": "winonly",
+        "pattern": "Windows-only",
+        "description": "the DebugServer limit"
+      },
+      {
+        "id": "path",
+        "pattern": "input handler.*PINE|PINE.*input handler",
+        "description": "the feasible path"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 3,
+      "auto": 2,
+      "review": 1,
+      "not_found": 1,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "nogdb",
+        "value": "ZERO gdb strings",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.45,
+        "top_probability": 0.64,
+        "margin": 0.35000000000000003,
+        "candidates_considered": 2,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "f8",
+        "value": "F8 screenshots capture only the emulated game screen",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.72,
+        "top_probability": 0.86,
+        "margin": 0.72,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "winonly",
+        "value": "Windows-only",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.98,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "path",
+        "value": null,
+        "status": "not_found",
+        "reason": "no_regex_matches",
+        "candidates_considered": 0,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1018,
+      "output_tokens": 113
+    }
+  }
+}

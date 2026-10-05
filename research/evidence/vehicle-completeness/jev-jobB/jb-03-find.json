@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the remedy most likely to isolate the per-screen selector headlessly and read-only",
+    "candidates": [
+      {
+        "id": "pine_live",
+        "text": "Extend the headless PINE helper with read-only reads and read the static entity-list global plus the chain live."
+      },
+      {
+        "id": "breakpoint",
+        "text": "Use a PCSX2 read/write breakpoint in the headless instance to catch the writing instruction."
+      },
+      {
+        "id": "pointer_scan",
+        "text": "Pointer-scan the guest memory (PINCE/libptrscan)."
+      },
+      {
+        "id": "stop",
+        "text": "Record Job B open and stop."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the remedy most likely to isolate the per-screen selector headlessly and read-only",
+    "exists": 0.86,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "pine_live",
+        "probability": 0.94,
+        "text": "Extend the headless PINE helper with read-only reads and read the static entity-list global plus the chain live."
+      },
+      {
+        "id": "pointer_scan",
+        "probability": 0.04,
+        "text": "Pointer-scan the guest memory (PINCE/libptrscan)."
+      },
+      {
+        "id": "breakpoint",
+        "probability": 0.01,
+        "text": "Use a PCSX2 read/write breakpoint in the headless instance to catch the writing instruction."
+      },
+      {
+        "id": "stop",
+        "probability": 0.01,
+        "text": "Record Job B open and stop."
+      }
+    ],
+    "usage": {
+      "input_tokens": 558,
+      "output_tokens": 68
+    }
+  }
+}

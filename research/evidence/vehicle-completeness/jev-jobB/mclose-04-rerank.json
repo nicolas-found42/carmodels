@@ -1,0 +1,53 @@
+{
+  "args": {
+    "query": "residual confidence that the mark is stored somewhere still unsearched",
+    "candidates": [
+      {
+        "id": "registers",
+        "text": "CPU registers / live PC state not captured in the savestate members listed."
+      },
+      {
+        "id": "dynamic",
+        "text": "The mark is recomputed from input each frame and never stored."
+      },
+      {
+        "id": "nothing",
+        "text": "Nothing remains; the search was complete."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "residual confidence that the mark is stored somewhere still unsearched",
+    "summary": {
+      "candidates": 3,
+      "returned": 3
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "dynamic",
+        "relevance": 0.88,
+        "text": "The mark is recomputed from input each frame and never stored."
+      },
+      {
+        "rank": 2,
+        "id": "nothing",
+        "relevance": 0.86,
+        "text": "Nothing remains; the search was complete."
+      },
+      {
+        "rank": 3,
+        "id": "registers",
+        "relevance": 0.71,
+        "text": "CPU registers / live PC state not captured in the savestate members listed."
+      }
+    ],
+    "usage": {
+      "input_tokens": 524,
+      "output_tokens": 58
+    }
+  }
+}

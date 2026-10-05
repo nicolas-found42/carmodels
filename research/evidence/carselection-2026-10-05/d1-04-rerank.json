@@ -1,0 +1,73 @@
+{
+  "args": {
+    "query": "first input action after loading slot 98, to reach an ordinary car or livery selection screen",
+    "candidates": [
+      {
+        "id": "cross_thumb",
+        "text": "Unpause, press M twice (Cross on/off) on the highlighted red thumbnail, observe, pause."
+      },
+      {
+        "id": "move_then_cross",
+        "text": "Unpause, press J/L twice (Left/Right) to move highlight, then M twice, observe, pause."
+      },
+      {
+        "id": "start_button",
+        "text": "Unpause, press O twice (Start button), observe, pause."
+      },
+      {
+        "id": "circle_back",
+        "text": "Unpause, press N twice (Circle/BACK), observe, pause."
+      },
+      {
+        "id": "save_first",
+        "text": "Save a new slot 101 copy of the live state before any load, preserving slot 100 untouched."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "first input action after loading slot 98, to reach an ordinary car or livery selection screen",
+    "summary": {
+      "candidates": 5,
+      "returned": 5
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "move_then_cross",
+        "relevance": 0.52,
+        "text": "Unpause, press J/L twice (Left/Right) to move highlight, then M twice, observe, pause."
+      },
+      {
+        "rank": 2,
+        "id": "circle_back",
+        "relevance": 0.5,
+        "text": "Unpause, press N twice (Circle/BACK), observe, pause."
+      },
+      {
+        "rank": 3,
+        "id": "start_button",
+        "relevance": 0.37,
+        "text": "Unpause, press O twice (Start button), observe, pause."
+      },
+      {
+        "rank": 4,
+        "id": "cross_thumb",
+        "relevance": 0.18,
+        "text": "Unpause, press M twice (Cross on/off) on the highlighted red thumbnail, observe, pause."
+      },
+      {
+        "rank": 5,
+        "id": "save_first",
+        "relevance": 0.04,
+        "text": "Save a new slot 101 copy of the live state before any load, preserving slot 100 untouched."
+      }
+    ],
+    "usage": {
+      "input_tokens": 733,
+      "output_tokens": 94
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "args": {
+    "query": "how well the final plan answers the capstone warning that a decision was silently assumed",
+    "candidates": [
+      {
+        "id": "q10_closes",
+        "text": "Q10a defines the indirection pass, closing the B method branch."
+      },
+      {
+        "id": "q11_closes",
+        "text": "Q11a defines C's shape, closing the C deliverable branch."
+      },
+      {
+        "id": "still_open",
+        "text": "Some branch is still unspecified."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "how well the final plan answers the capstone warning that a decision was silently assumed",
+    "summary": {
+      "candidates": 3,
+      "returned": 3
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "still_open",
+        "relevance": 0.73,
+        "text": "Some branch is still unspecified."
+      },
+      {
+        "rank": 2,
+        "id": "q10_closes",
+        "relevance": 0.25,
+        "text": "Q10a defines the indirection pass, closing the B method branch."
+      },
+      {
+        "rank": 3,
+        "id": "q11_closes",
+        "relevance": 0.18,
+        "text": "Q11a defines C's shape, closing the C deliverable branch."
+      }
+    ],
+    "usage": {
+      "input_tokens": 529,
+      "output_tokens": 58
+    }
+  }
+}

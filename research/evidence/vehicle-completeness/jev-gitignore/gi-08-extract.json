@@ -1,0 +1,81 @@
+{
+  "args": {
+    "document": "Candidate file groups in the carmodels repo (Ford Racing 2 recovery), with sizes:\nG1 tools/validation-runtime 1.1G: Blender dmg + mounted Blender.app (third-party, re-downloadable). Scripts validate GLBs through Blender.\nG2 tools/headless-runtime AppImage 57M: PCSX2 v2.8.2 AppImage, pinned emulator dependency for the container.\nG3 research/evidence/continuation/runtime 960M: 40 savestates (.p2s ~11MB each) + unpacked EE/IOP/VU/hw-reg dumps + 13M F8 screenshots. Receipts record sha256 of these files.\nG4 research/evidence/job-b-live 704M: pairs/*-eeMemory.bin + members/ extracted dumps (experiment working sets, rebuilt by the probe tools).\nG5 viewer 57M: web viewer incl. vendor three.js + 35 recovered .glb files.\nG6 reference 65M: the per-car reference corpus (models, textures, sounds) \u2014 the deliverable.\nG7 recovered 972K: canonical index + per-car manifests.\nG8 receipts JSON (~5M total): validation receipts, Jev receipts, tickets, reports.\nG9 tools/*.py + batteries: all scripts.\nG10 869 .pyc / __pycache__: bytecode regenerable.\nContext: user cancelled a 2.6GB push; wants a lean repo. GitHub rejects files >100MB (only the Blender files exceed it). Tools read the unpacked runtime dumps at fixed paths (e.g. verify_selector_word reads RUNTIME eeMemory.bin); excluding them means a fresh clone cannot re-run those tools without re-capturing.",
+    "fields": [
+      {
+        "id": "g1",
+        "pattern": "1\\.1G",
+        "description": "Blender vendor size"
+      },
+      {
+        "id": "g3",
+        "pattern": "960M",
+        "description": "runtime dumps size"
+      },
+      {
+        "id": "limit",
+        "pattern": "100MB",
+        "description": "the GitHub file limit"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 3,
+      "extracted": 3,
+      "auto": 3,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "g1",
+        "value": "1.1G",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.93,
+        "top_probability": 0.96,
+        "margin": 0.9199999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "g3",
+        "value": "960M",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.93,
+        "top_probability": 0.97,
+        "margin": 0.94,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "limit",
+        "value": "100MB",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.99,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1075,
+      "output_tokens": 105
+    }
+  }
+}

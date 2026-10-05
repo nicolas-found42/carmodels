@@ -1,0 +1,80 @@
+{
+  "schema": "fr2-ptg-async-bridge-static-evidence/v1",
+  "executable": {
+    "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/extracted/SLES_517.05",
+    "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+    "size_bytes": 1662804,
+    "va_to_file_offset": "VA - 0xFF000 for the executable text section"
+  },
+  "cars_callback_call": {
+    "template_va": "0x0025d1c0",
+    "callsite_va": "0x001826b0",
+    "instructions": [
+      {"va": "0x001826a0", "bytes_le": "2d20a003", "text": "move a0,s5 (path)"},
+      {"va": "0x001826a4", "bytes_le": "01000524", "text": "addiu a1,zero,1"},
+      {"va": "0x001826b0", "bytes_le": "44aa080c", "text": "jal 0x0022a910"},
+      {"va": "0x001826b4", "bytes_le": "02000624", "text": "addiu a2,zero,2 in the JAL delay slot"}
+    ],
+    "argument_effect": "The callback passes resource flags 1 and resource type 2 to FUN_0022a910."
+  },
+  "resource_constructor": {
+    "decompilation": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-all-02/functions/0022a910.c",
+    "sha256": "ce235c72a8566fd77985dcff4c0ca173e5e46696157c3acf7430041b5e2ce024",
+    "relevant_stores": [
+      "*(undefined4 *)(object + 0x34) = param_3",
+      "*(uint *)(object + 0x30) = param_2"
+    ],
+    "async_enqueue": "The constructor calls FUN_0022abf8(object) when the resource is registered and the async flag condition is met."
+  },
+  "async_start_and_queue_gate": {
+    "startup_gate_bytes": [
+      {"va": "0x0022aa70", "bytes_le": "8491828f", "text": "load global async gate"},
+      {"va": "0x0022aa78", "bytes_le": "07004010", "text": "skip immediate async dispatch when gate is zero"},
+      {"va": "0x0022aa80", "bytes_le": "8091828f", "text": "load active request mask"},
+      {"va": "0x0022aa84", "bytes_le": "24106202", "text": "AND caller flags with active mask"},
+      {"va": "0x0022aa88", "bytes_le": "04004050", "text": "skip immediate dispatch when no flags overlap"},
+      {"va": "0x0022aa90", "bytes_le": "feaa080c", "text": "JAL FUN_0022abf8"}
+    ],
+    "dispatcher_type_gate_bytes": [
+      {"va": "0x0022ac10", "bytes_le": "4c00038e", "text": "load object state +0x4c"},
+      {"va": "0x0022ac14", "bytes_le": "28006254", "text": "require initial state 1"},
+      {"va": "0x0022ac1c", "bytes_le": "3400118e", "text": "load resource type +0x34"},
+      {"va": "0x0022ac20", "bytes_le": "09002312", "text": "dispatch type 1"},
+      {"va": "0x0022ac28", "bytes_le": "15002212", "text": "dispatch type 2 to async queue branch"},
+      {"va": "0x0022aca4", "bytes_le": "2015040c", "text": "JAL FUN_00105480 async read queue"},
+      {"va": "0x0022acac", "bytes_le": "4c0011ae", "text": "store pending state 2"},
+      {"va": "0x0022acb0", "bytes_le": "480002ae", "text": "store async handle at +0x48"}
+    ],
+    "event_loop": "Static export lists FUN_0015fbe0 as a caller of FUN_00111cd0. The caller chain reaches FUN_0015fbe0 through FUN_0015ff58, which tail-jumps at 0x0015ff64 (bytes f8 7e 05 08); FUN_0015e580 calls that wrapper at 0x0015e698 (bytes d6 7f 05 0c). Jev startup-gates receipt contains the complete static export hash and conditional reachability check."
+  },
+  "async_completion_branch": {
+    "decompilation": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-candidates-01/functions/00111cd0.c",
+    "decompilation_sha256": "22f79aff85772cbe05f630be665cd8d86a4a9a4214e22a4b799a82c9080c25c4",
+    "manifest": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-root/decompile-candidates-01/manifest.json",
+    "manifest_status": "completed; generated; body_bytes=360",
+    "resource_type_branch": [
+      {"va": "0x00111d8c", "bytes_le": "02001324", "text": "addiu s3,zero,2"},
+      {"va": "0x00111d90", "bytes_le": "3400228e", "text": "lw v0,0x34(s1)"},
+      {"va": "0x00111d98", "bytes_le": "1f005354", "text": "bnel v0,s3,0x00111e18; loop to next resource unless type is 2"}
+    ],
+    "type_2_path_in_order": [
+      {"va": "0x00111de0", "bytes_le": "a81d040c", "text": "jal 0x001076a0; get compressed file size from path"},
+      {"va": "0x00111df0", "bytes_le": "a405040c", "text": "jal 0x00101690; decompress input buffer at object +0x40"},
+      {"va": "0x00111dfc", "bytes_le": "4034040c", "text": "jal 0x0010d100; free the compressed input buffer"},
+      {"va": "0x00111e04", "bytes_le": "400030ae", "text": "sw s0,0x40(s1); store decompressed output pointer"},
+      {"va": "0x00111e08", "bytes_le": "32ab080c", "text": "jal 0x0022acc8; parse the decompressed PTG buffer"},
+      {"va": "0x00111e10", "bytes_le": "4c0032ae", "text": "sw s2,0x4c(s1); advance resource state to 4"}
+    ]
+  },
+  "finding": "The CARS callback's type-2 resource is enqueued, selected by FUN_00111cd0's +0x34 == 2 branch, decompressed, and passed to FUN_0022acc8. The contradictory statement that this branch bypasses FUN_0022acc8 is incorrect. This closes the CARS PTG file-to-parser path, but does not prove the parsed PTG descriptors are passed to FUN_00222358 or displayed unchanged.",
+  "reachability_conditions": [
+    "FUN_0022a910 starts the async request only when its initial state is 1, the global async gate is nonzero, and the resource flags overlap the active request mask.",
+    "FUN_00111cd0 processes a type-2 resource only when its flags overlap the active mask, its state is not already 4, its request handle is nonzero, and the request completion poll succeeds.",
+    "The static caller chain shows FUN_0015fbe0 invokes FUN_00111cd0; this establishes a reachable dispatch path when the stated gates and completion condition hold, not that those global values held in every captured runtime state."
+  ],
+  "limits": [
+    "The callback function boundary at 0x001820f0 was reconstructed from a registered callback and is generated analysis, not a saved original function boundary.",
+    "JAL target and callback argument instructions are raw pinned executable bytes; high-level call semantics also use the saved Ghidra decompilations.",
+    "No runtime PTG-menu consumer or rendered icon/livery pixel validation is established by this bridge."
+  ]
+}

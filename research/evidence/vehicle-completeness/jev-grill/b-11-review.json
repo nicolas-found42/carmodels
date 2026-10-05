@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Isolate the per-screen car/livery selector word by decompilation-first reading of the label/store chain.",
+    "diff": "+ read FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10, extract the store address\n+ read that word in the three existing EE images (slots 102/103/104)\n+ require the value to track positions 1/5/4 and be decompilation-reachable\n+ do not count a value-only match as proof",
+    "tests": "three captures already unpacked: slot102 sha 6e3971..., slot103 sha b5e569..., slot104 sha 74acb5..."
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.19,
+    "scores": {
+      "correctness": {
+        "score": 1.19,
+        "confidence": 0.62,
+        "probabilities": {
+          "0": 0.03,
+          "1": 0.75,
+          "2": 0.22
+        }
+      },
+      "spec_match": {
+        "score": 1.64,
+        "confidence": 0.46,
+        "probabilities": {
+          "0": 0.06,
+          "1": 0.25,
+          "2": 0.69
+        }
+      },
+      "test_gap": {
+        "score": 1.57,
+        "confidence": 0.35,
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.13,
+          "2": 0.72
+        }
+      },
+      "blast_radius": {
+        "score": 0.39,
+        "confidence": 0.42,
+        "probabilities": {
+          "0": 0.69,
+          "1": 0.23,
+          "2": 0.08
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.637,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 880,
+      "output_tokens": 79
+    }
+  }
+}

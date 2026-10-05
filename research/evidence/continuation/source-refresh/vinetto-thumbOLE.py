@@ -1,0 +1,885 @@
+# -*- coding: UTF-8 -*-
+"""
+module thumbOLE.py
+-----------------------------------------------------------------------------
+
+ Vinetto : a forensics tool to examine Thumb Database files
+ Copyright (C) 2005, 2006 by Michel Roukine
+ Copyright (C) 2019-2026 by Keven L. Ates
+
+This file is part of Vinetto.
+
+ Vinetto is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as published
+ by the Free Software Foundation; either version 2 of the License, or (at
+ your option) any later version.
+
+ Vinetto is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+
+ You should have received a copy of the GNU General Public License along
+ with the vinetto package; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+-----------------------------------------------------------------------------
+"""
+
+
+file_major = "0"
+file_minor = "2"
+file_micro = "0"
+
+# Built-in...
+import os
+import sys
+from io import BytesIO
+from struct import unpack
+from binascii import hexlify
+from importlib.resources import files, as_file
+
+# Local...
+import vinetto.config as config
+import vinetto.tdb_catalog as tdb_catalog
+import vinetto.tdb_streams as tdb_streams
+import vinetto.utils as utils
+import vinetto.error as verror
+
+
+def preparePILOutput() :
+    if (config.ARGS.outdir == None) :
+        if (config.ARGS.verbose > 0) :
+            sys.stderr.write(" Info: No output directory for PIL exports...unused.\n")
+        return
+
+    #
+    # Initialize processing for output...
+    #
+
+    # If already attempted to load PIL...
+    if (config.THUMBS_TYPE_OLE_PIL == False) :
+        return
+
+    # Initializing PIL library for Type 1 image extraction...
+    config.THUMBS_TYPE_OLE_PIL = False  # ...attempting to load PIL
+    try :
+        from PIL import Image # ...third-party Pillow
+        config.THUMBS_TYPE_OLE_PIL = True  # ...loaded PIL
+        if (config.ARGS.verbose > 0):
+            sys.stderr.write(" Info: Imported PIL for possible Type 1 exports.\n")
+    except ImportError :
+        if (config.ARGS.verbose >= 0):
+            sys.stderr.write(" Warning: Cannot find PIL Package Image module.\n" +
+                                "          Vinetto will only extract Type 2 thumbnails.\n")
+    if (config.THUMBS_TYPE_OLE_PIL == True) :
+        try :
+            ref = files('vinetto') / 'data/header'
+            with as_file(ref) as pathHeader :
+                config.THUMBS_TYPE_OLE_PIL_TYPE1_HEADER   = open(pathHeader, "rb").read()
+            ref = files('vinetto') / 'data/quantization'
+            with as_file(ref) as pathQuant :
+                config.THUMBS_TYPE_OLE_PIL_TYPE1_QUANTIZE = open(pathQuant, "rb").read()
+            ref = files('vinetto') / 'data/huffman'
+            with as_file(ref) as pathHuffman :
+                config.THUMBS_TYPE_OLE_PIL_TYPE1_HUFFMAN  = open(pathHuffman, "rb").read()
+        except :
+            # Hard Error!  The header, quantization, and huffman data files are installed
+            #    locally with Vinetto, so missing missing files are bad!
+            raise verror.InstallError(" Error: Cannot load PIL support data files!")
+
+
+def nextBlock(fileTDB, listSAT, iCurrentSector, cEndian) :
+    # Return next block
+    iSATIndex = iCurrentSector // 128  # ...SAT index for search sector
+    iSATOffset = iCurrentSector % 128  # ...Sector offset within search sector
+    iFileOffset = 512 + listSAT[iSATIndex] * 512 + iSATOffset * 4
+    fileTDB.seek(iFileOffset)
+    return unpack(cEndian+"L", fileTDB.read(4))[0]
+
+
+def printHead(strCLSID, iRevisionNo, iVersionNo, cEndian,
+                 iSectorSize, iSectorSizeMini, iSAT_TotalSec, iDir1stSec,
+                 iStreamSizeMini, iMSAT_1stSec, iMSAT_TotalSec,
+                 iDISAT_1stSec, iDISAT_TotalSec):
+    print("     Signature: %s" % config.THUMBS_FILE_TYPES[config.THUMBS_TYPE_OLE])
+    print("      Class ID: %s" % strCLSID)
+    print("      Revision: %d" % iRevisionNo)
+    print("       Version: %d" % iVersionNo)
+    if (config.ARGS.verbose > 0):
+        print("        Endian: %s" % ("Little" if (cEndian == "<") else "Big"))
+        print("       DB Info:")
+        if iSectorSize     == config.OLE_LAST_BLOCK: iSectorSize     = None
+        if iSectorSizeMini == config.OLE_LAST_BLOCK: iSectorSizeMini = None
+        if iSAT_TotalSec   == config.OLE_LAST_BLOCK: iSAT_TotalSec   = None
+        if iDir1stSec      == config.OLE_LAST_BLOCK: iDir1stSec      = None
+        if iStreamSizeMini == config.OLE_LAST_BLOCK: iStreamSizeMini = None
+        if iMSAT_1stSec    == config.OLE_LAST_BLOCK: iMSAT_1stSec    = None
+        if iMSAT_TotalSec  == config.OLE_LAST_BLOCK: iMSAT_TotalSec  = None
+        if iDISAT_1stSec   == config.OLE_LAST_BLOCK: iDISAT_1stSec   = None
+        if iDISAT_TotalSec == config.OLE_LAST_BLOCK: iDISAT_TotalSec = None
+        print("    SAT  Sec Size: %s" % str(iSectorSize))
+        print("   MSAT  Sec Size: %s" % str(iSectorSizeMini))
+        print("    SAT Total Sec: %s" % str(iSAT_TotalSec))
+        print("    SAT  1st  Sec: %s" % str(iDir1stSec))
+        print("      Stream Size: %s" % str(iStreamSizeMini))
+        print("   MSAT  1st  Sec: %s" % str(iMSAT_1stSec))
+        print("   MSAT Total Sec: %s" % str(iMSAT_TotalSec))
+        print(" DirSAT  1st  Sec: %s" % str(iDISAT_1stSec))
+        print(" DirSAT Total Sec: %s" % str(iDISAT_TotalSec))
+
+
+def printCache(strName, dictOLECache) :
+    print("          Name: %s" % strName)
+    print("          Type: %d (%s)" % (dictOLECache["type"], config.OLE_BLOCK_TYPES[dictOLECache["type"]]))
+    if (config.ARGS.verbose > 0) :
+        print("         Color: %d (%s)" % (dictOLECache["color"], "Black" if dictOLECache["color"] else "Red"))
+        print("   Prev Dir ID: %s" % ("None" if (dictOLECache["PDID"] == config.OLE_NONE_BLOCK) else str(dictOLECache["PDID"])))
+        print("   Next Dir ID: %s" % ("None" if (dictOLECache["NDID"] == config.OLE_NONE_BLOCK) else str(dictOLECache["NDID"])))
+        print("   Sub  Dir ID: %s" % ("None" if (dictOLECache["SDID"] == config.OLE_NONE_BLOCK) else str(dictOLECache["SDID"])))
+        print("      Class ID: " + dictOLECache["CID"])
+        print("    User Flags: " + dictOLECache["userflags"])
+        print("        Create: " + utils.getFormattedWinToPyTimeUTC(dictOLECache["create"]))
+        print("        Modify: " + utils.getFormattedWinToPyTimeUTC(dictOLECache["modify"]))
+        print("       1st Sec: %d" % dictOLECache["SID_firstSecDir"])
+        print("          Size: %d" % dictOLECache["SID_sizeDir"])
+        if (config.ARGS.edbfile != None) :
+            config.ESEDB.printInfo()
+
+
+def process(infile, fileThumbsDB, iThumbsDBSize) :
+    preparePILOutput()
+    if (config.THUMBS_TYPE_OLE_PIL == True) :
+        from PIL import Image # ...third-party Pillow
+
+    if (config.ARGS.verbose >= 0) :
+        if (iThumbsDBSize % 512 ) != 0 :
+            sys.stderr.write(" Warning: Length of %s == %d not multiple 512\n" % (infile, iThumbsDBSize))
+
+    # Structure:
+    # --------------------
+    # The CFBF file consists of a 512-Byte header record followed by a number of
+    # sectors whose size is defined in the header. The literature defines Sectors
+    # to be either 512 or 4096 bytes in length, although the format is potentially
+    # capable of supporting sectors ranging in size from 128-Bytes upwards in
+    # powers of 2 (128, 256, 512, 1024, etc.). The lower limit of 128 is the
+    # minimum required to fit a single directory entry in a Directory Sector.
+    #
+    # There are several types of sector that may be present in a CFBF:
+    #
+    # * Sector Allocation Table (FAT) Sector - contains chains of sector indices
+    #     much as a FAT does in the FAT/FAT32 filesystems
+    # * MiniSAT Sectors - similar to the SAT but storing chains of mini-sectors
+    #     within the Mini-Stream
+    # * Double-Indirect SAT (DISAT) Sector - contains chains of SAT sector indices
+    # * Directory Sector – contains directory entries
+    # * Stream Sector – contains arbitrary file data
+    # * Range Lock Sector – contains the byte-range locking area of a large file
+
+    tDB_endian = "<" # Little Endian
+
+    fileThumbsDB.seek(8)  # ...skip magic bytes                              # File Signature: 0xD0CF11E0A1B11AE1 for current version
+    tDB_CLSID             = str(hexlify( fileThumbsDB.read(16) ))[2:-1]      # CLSID
+    tDB_revisionNo        = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Minor Version
+    tDB_versionNo         = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Version
+
+    tDB_endianOrder       = fileThumbsDB.read(2)  # 0xFFFE OR 0xFEFF         # Byte Order, 0xFFFE (Intel)
+    if (tDB_endianOrder == bytearray(config.BIG_ENDIAN)):
+        tDB_endian = ">"  # Big Endian
+    # Otherwise, it's Little Endian:
+    #     (tDB_endianOrder == bytearray(config.LIL_ENDIAN))
+    # which was initialized above.
+
+    tDB_SectorSize         = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Sector Shift
+    tDB_SectorSizeMini     = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Mini Sector Shift
+    reserved01             = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # short int reserved
+    reserved02             = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # int reserved
+    reserved03             = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count for Directory Chain (4 KB Sectors)
+    tDB_SID_SAT_TotalSec   = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count for SAT Chain (512 B Sectors)
+    tDB_SID_SAT_FirstSec   = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Root Directory: 1st Sector in Directory Chain
+    reserved04             = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Signature for transactions (0, not implemented)
+    tDB_StreamSize         = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Stream Max Size (typically 4 KB)
+    tDB_SID_MSAT_FirstSec  = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # First Sector in the MiniSAT chain
+    tDB_SID_MSAT_TotalSec  = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count in the MiniSAT chain
+    tDB_SID_DISAT_FirstSec = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # First Sector in the DISAT chain
+    tDB_SID_DISAT_TotalSec = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count in the DISAT chain
+    iOffset = 76
+
+    if (config.ARGS.verbose >= 0):
+        print(" Header\n --------------------")
+        printHead(tDB_CLSID, tDB_revisionNo, tDB_versionNo, tDB_endian,
+                     tDB_SectorSize, tDB_SectorSizeMini, tDB_SID_SAT_TotalSec, tDB_SID_SAT_FirstSec,
+                     tDB_StreamSize, tDB_SID_MSAT_FirstSec, tDB_SID_MSAT_TotalSec,
+                     tDB_SID_DISAT_FirstSec, tDB_SID_DISAT_TotalSec)
+        print(config.STR_SEP)
+
+    # Load Sector Allocation Table (SAT) list...
+    listSAT = []
+    for iCurrentSector in range(tDB_SID_SAT_TotalSec):
+        listSAT.append(unpack(tDB_endian+"L", fileThumbsDB.read(4))[0])
+        iOffset += 4
+
+    # Load Mini Sector Allocation Table (MiniSAT) list...
+    iCurrentSector = tDB_SID_MSAT_FirstSec
+    listMiniSAT = []
+    while (iCurrentSector != config.OLE_LAST_BLOCK):
+        listMiniSAT.append(iCurrentSector)
+        iCurrentSector = nextBlock(fileThumbsDB, listSAT, iCurrentSector, tDB_endian)
+
+    # Load Mini SAT Streams list...
+    iCurrentSector = tDB_SID_SAT_FirstSec  # First Entry (Root)
+    iOffset = 512 + iCurrentSector * 512   # First Entry Offset (to Root)
+    fileThumbsDB.seek(iOffset + 116)           # First Entry Offset + First Sec Offset (always Mini @ Root)
+    iStream = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # First Mini SAT Entry (usually Mini's Catalog or OLE_LAST_BLOCK)
+    listMiniSATStreams = []
+    while (iStream != config.OLE_LAST_BLOCK):
+        listMiniSATStreams.append(iStream)
+        iStream = nextBlock(fileThumbsDB, listSAT, iStream, tDB_endian)
+
+    # =============================================================
+    # Process Entries...
+    # =============================================================
+
+    tdbStreams = tdb_streams.TDB_Streams()
+    tdbCatalog = tdb_catalog.TDB_Catalog()
+
+    iStreamCounter = 1
+    while (iCurrentSector != config.OLE_LAST_BLOCK):
+        iOffset = 512 + iCurrentSector * 512
+        for iSeekOffset in range(iOffset, iOffset + 512, 128):  # 4 Entries per Block: 128 * 4 = 512
+            fileThumbsDB.seek(iSeekOffset)
+            dictOLECache = {}
+            dictOLECache["nameDir"]         = fileThumbsDB.read(64)
+            dictOLECache["nameDirSize"]     = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]
+            dictOLECache["type"]            = unpack("B",            fileThumbsDB.read(1))[0]
+            dictOLECache["color"]           = unpack("?",            fileThumbsDB.read(1))[0]
+            dictOLECache["PDID"]            = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["NDID"]            = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["SDID"]            = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["CID"]             = str(hexlify( fileThumbsDB.read(16) ))[2:-1]
+            dictOLECache["userflags"]       = str(hexlify( fileThumbsDB.read( 4) ))[2:-1]
+            dictOLECache["create"]          = unpack(tDB_endian+"Q", fileThumbsDB.read(8))[0]
+            dictOLECache["modify"]          = unpack(tDB_endian+"Q", fileThumbsDB.read(8))[0]
+            dictOLECache["SID_firstSecDir"] = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["SID_sizeDir"]     = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+
+            # Convert encoded bytes to unicode string:
+            #   a unicode string length is half the bytes length minus 1 (terminal null)
+            strRawName = utils.decodeBytes(dictOLECache["nameDir"])[0:(dictOLECache["nameDirSize"] // 2 - 1)]
+
+            # Empty Entry processing...
+            # =============================================================
+            if (dictOLECache["type"] == 0):
+                if (config.ARGS.verbose >= 0):
+                    print(" Empty Entry %d\n --------------------" % iStreamCounter)
+                    printCache(strRawName, dictOLECache)
+                    print(config.STR_SEP)
+
+            # Storage Entry processing...
+            # =============================================================
+            elif (dictOLECache["type"] == 1):
+                if (config.ARGS.verbose >= 0):
+                    print(" Storage Entry %d\n --------------------" % iStreamCounter)
+                    printCache(strRawName, dictOLECache)
+                    print(config.STR_SEP)
+
+            # Stream Entry processing...
+            # =============================================================
+            elif (dictOLECache["type"] == 2):
+                bRegularBlock = (dictOLECache["SID_sizeDir"] >= 4096)
+
+                if (config.ARGS.verbose >= 0):
+                    print((" Stream Entry %d (" % iStreamCounter) +
+                          ("Standard" if bRegularBlock else "Mini") + ")\n" +
+                          " --------------------")
+                    printCache(strRawName, dictOLECache)
+
+                # Set default Stream Name key to add to Thumb DB Streams (tdbStreams) dict...
+                #   Key may be str or int
+                keyStreamName = utils.cleanFileName(strRawName)
+
+                # Check Stream Name for older Thumbs DB name convention...
+                strStreamID = strRawName[::-1]  # ...reverse the raw name
+                bOldNameID = False  # ...set up older name convention (default is no)
+                iStreamID = -1  # ...set up older index name convention...
+                if (len(strStreamID) < 4):  # index names are limited to 0 - 999
+                    try:
+                        iStreamID = int(strStreamID)
+                    except ValueError:
+                        iStreamID = -1
+                if (iStreamID >= 0): # ...valid index name
+                    bOldNameID = True  # ...older name convention
+                    keyStreamName = iStreamID  # Set older Stream Name key
+
+                # Set entry's first stream sector...
+                iCurrentStreamSector = dictOLECache["SID_firstSecDir"]
+                # Set entry's read data size...
+                iBytesToRead = dictOLECache["SID_sizeDir"]
+                # Set entry's read storage...
+                bstrStreamData = bytearray(b"")
+
+                # Set entry's regular SAT read support values...
+                iReadSize = 512
+                listOfNext = listSAT
+                if (not bRegularBlock):  # ...stream located in the MiniSAT...
+                    # Set entry's MiniSAT read support values...
+                    iReadSize = 64
+                    listOfNext = listMiniSAT
+
+                # Read data from stream sectors...
+                while (iCurrentStreamSector != config.OLE_LAST_BLOCK):
+                    # Get stream offset...
+                    if (bRegularBlock):  # ...stream located in the SAT...
+                            iStreamOffset = 512 + iCurrentStreamSector * 512
+                    else:  # ...stream located in the MiniSAT...
+                            # Compute offset of the miniBlock to copy...
+                            # 1 : Which block of the MiniSAT stream?
+                            iIndexMini = iCurrentStreamSector // 8
+                            # 2 : Where is this block?
+                            iSectorMini = listMiniSATStreams[iIndexMini]
+                            # 3 : Which offset from the start of block?
+                            iOffsetMini = (iCurrentStreamSector % 8) * iReadSize
+
+                            iStreamOffset = 512 + iSectorMini * 512 + iOffsetMini
+
+                    # Set read location...
+                    fileThumbsDB.seek(iStreamOffset)
+
+                    # Read data...
+                    if (iBytesToRead >= iReadSize):
+                        bstrStreamData = bstrStreamData + fileThumbsDB.read(iReadSize)
+                    else:
+                        bstrStreamData = bstrStreamData + fileThumbsDB.read(iBytesToRead)
+                    iBytesToRead = iBytesToRead - iReadSize
+
+                    # Get entry's next stream sector...
+                    iCurrentStreamSector = nextBlock(fileThumbsDB, listOfNext, iCurrentStreamSector, tDB_endian)
+
+                iStreamDataLen = len(bstrStreamData)
+
+                # Catalog Stream processing...
+                # -------------------------------------------------------------
+                #  Catalogs are related to the older Thumbs DB index name convention
+                if (strRawName == "Catalog") :
+                    bGood = True
+                    iCatOffset      = 0
+                    iCatVersion     = 0
+                    iCatThumbCount  = 0
+                    iCatThumbWidth  = 0
+                    iCatThumbHeight = 0
+
+                    if (config.ARGS.verbose >= 0) :
+                        print("       Entries: ---------------------------------------")
+
+                    # Process catalog header...
+                    #  The catalog header MUST be at least 16 bytes long.
+                    if (iStreamDataLen < 16) :
+                        sys.stderr.write(" Error: Invalid catalog header--too short (%d < 16)!\n" % (iStreamDataLen))
+                        bGood = False
+                    if (iStreamDataLen >= 2) :
+                        iCatOffset      = unpack(tDB_endian+"H", bstrStreamData[ 0: 2])[0]
+                        if (iCatOffset < 16) :
+                            sys.stderr.write(" Error: Invalid catalog offset--too short (%d < 16)!\n" % (iCatOffset))
+                            bGood = False
+                    if (iStreamDataLen >= 4) :
+                        iCatVersion     = unpack(tDB_endian+"H", bstrStreamData[ 2: 4])[0]
+                    if (iStreamDataLen >= 8) :
+                        iCatThumbCount  = unpack(tDB_endian+"L", bstrStreamData[ 4: 8])[0]
+                    if (iStreamDataLen >= 12) :
+                        iCatThumbWidth  = unpack(tDB_endian+"L", bstrStreamData[ 8:12])[0]
+                    if (iStreamDataLen >= 16) :
+                        iCatThumbHeight = unpack(tDB_endian+"L", bstrStreamData[12:16])[0]
+
+                    if ( not bGood ) :
+                        raise verror.EntryError(" Error (Catalog): Malformed Header in stream entry " + str(iStreamCounter))
+
+                    # Process catalog entries...
+                    #  Each catalog entry has a Length (4), Index ID (4), Timestamp (8), original file name (0+), and
+                    #  4 null bytes
+                    #  Then, each entry MUST be at least 20 bytes long (4+4+8+0+4).
+                    strLogError = " Error: Invalid catalog entry "
+                    while (bGood and iCatOffset < iStreamDataLen):
+                        #
+                        # Preamble...
+                        #
+                        iCatEntryLen       = 0
+                        iCatEntryID        = 0
+                        iCatEntryTimestamp = 0
+                        strCatEntryID        = "NONE"
+                        strCatEntryTimeStamp = "NONE"
+                        strCatEntryName      = "NONE"
+
+                        if (iCatOffset + 20 > iStreamDataLen) :
+                            bGood = False
+                            sys.stderr.write(strLogError + "- stream too short (Offset %d > Stream %d)!\n" % (iCatOffset + 20, iStreamDataLen))
+                        if (iCatOffset + 4 <= iStreamDataLen) :
+                            iCatEntryLen = unpack(tDB_endian+"L", bstrStreamData[iCatOffset      :iCatOffset +  4])[0]
+                            if (iCatEntryLen < 20): # ...allow for 0 length filename
+                                bGood = False
+                                sys.stderr.write(strLogError + "length (%d < 20)\n" % (iCatEntryLen))
+                        if (iCatOffset + 8 <= iStreamDataLen) :
+                            iCatEntryID = unpack(tDB_endian+"L", bstrStreamData[iCatOffset +  4 :iCatOffset +  8])[0]
+                            strCatEntryID = "%d" % (iCatEntryID)
+                        if (iCatOffset + 16 <= iStreamDataLen) :
+                            iCatEntryTimestamp = unpack(tDB_endian+"Q", bstrStreamData[iCatOffset +  8 :iCatOffset + 16])[0]
+                            strCatEntryTimeStamp = utils.getFormattedWinToPyTimeUTC(iCatEntryTimestamp)
+                        if ( not bGood ) :
+                            sys.stderr.write("        " + ("% 4s" % strCatEntryID) + ":  " + ("%19s" % strCatEntryTimeStamp) + "  " + strCatEntryName)
+                            break
+
+                        # The Catalog Entry Name:
+                        # 1. starts after the preamable (16)
+                        # 2. end with 4 null bytes (4)
+                        # Therefore, the start of the name string is at the end of the preamble and the end of the name
+                        #  string is at the end of the entry minus 4.
+                        # Then, a valid, non-empty string means a catalog entry length MUST be > 20 (16+4).
+                        bstrCatEntryName = b''
+                        iCatEntryEnd = iCatOffset + iCatEntryLen
+                        if (iCatEntryEnd > iStreamDataLen) :
+                            bGood = False
+                            sys.stderr.write(strLogError + "filename length (End %d > Stream %d)\n" % (iCatEntryEnd, iStreamDataLen))
+                            sys.stderr.write("        " + ("% 4s" % strCatEntryID) + ":  " + ("%19s" % strCatEntryTimeStamp) + "  " + strCatEntryName)
+                            break
+                        if (iCatEntryLen > 20) :
+                            bstrCatEntryName = bstrStreamData[iCatOffset + 16: iCatEntryEnd - 4]
+
+                        strRawCatEntryName = ""
+                        strCatEntryName = "__Empty_Filename__"
+                        if ( len(bstrCatEntryName) ) :
+                            strRawCatEntryName = utils.decodeBytes(bstrCatEntryName)
+                            strCatEntryName      = utils.cleanFileName(strRawCatEntryName)
+                        if (config.ARGS.symlinks):  # ...implies config.ARGS.outdir
+                            strTarget = utils.getTargetPath(config.THUMBS_SUBDIR, strCatEntryID + os.extsep + "jpg")
+                            strLink = utils.getOutputPath(strCatEntryName)
+                            utils.setSymlink(strTarget, strLink)
+                            utils.appendSymLog(strTarget, strRawCatEntryName)
+
+                        if (config.ARGS.verbose >= 0):
+                            print("          " + ("% 4s" % strCatEntryID) + ":  " + ("%19s" % strCatEntryTimeStamp) + "  " + strRawCatEntryName)
+
+                        # Add a "catalog" entry...
+                        tdbCatalog[iCatEntryID] = (strCatEntryTimeStamp, strRawCatEntryName)
+
+                        # Next catalog entry...
+                        iCatOffset = iCatOffset + iCatEntryLen
+
+                    if ( not bGood ) :
+                        sys.stderr.write("        Cannot continue at Offset %d of %d (%d bytes remain)\n" % (iCatOffset, iStreamDataLen, iStreamDataLen - iCatOffset))
+                        raise verror.EntryError(" Error (Catalog): Malformed Entryin stream entry " + str(iStreamCounter))
+                        break
+
+                # Image Stream processing...
+                # -------------------------------------------------------------
+                else:
+                    # Is End Of Image (EOI) at end of stream?
+                    if (bstrStreamData[iStreamDataLen - 2: iStreamDataLen] != bytearray(config.JPEG_EOI)):  # ...Not End Of Image (EOI)
+                        raise verror.EntryError(" Error (Entry): Missing End of Image (EOI) marker in stream entry " + str(iStreamCounter))
+
+                    # --- Header 1: Get file offset...
+                    headOffset   = unpack(tDB_endian+"L", bstrStreamData[ 0: 4])[0]
+                    headRevision = unpack(tDB_endian+"L", bstrStreamData[ 4: 8])[0]
+
+                    # Is length OK?
+                    if (unpack(tDB_endian+"H", bstrStreamData[ 8:10])[0] != (iStreamDataLen - headOffset)):
+                        raise verror.EntryError(" Error (Entry): Header 1 length mismatch in stream entry " + str(iStreamCounter))
+
+                    strExt = "jpg"
+                    if (not bOldNameID):
+                        strFileName = None
+                        if (config.ARGS.edbfile != None):
+                            # ESEDB Search...
+                            isESEDBRecFound = config.ESEDB.search(strRawName[strRawName.find("_") + 1: ])  # Raw Name is structured SIZE_THUMBCACHEID
+                            if (isESEDBRecFound):
+                                strCatEntryTimeStamp = utils.getFormattedWinToPyTimeUTC(config.ESEDB.dictRecord["DATEM"])
+                                if (config.ESEDB.dictRecord["IURL"] != None):
+                                    strFileName = config.ESEDB.dictRecord["IURL"].split("/")[-1].split("?")[0]
+
+                        if (strFileName != None):
+                            if (config.ARGS.symlinks):  # ...implies config.ARGS.outdir
+                                strTarget = utils.getOutputPath( os.path.join(config.THUMBS_SUBDIR, strRawName + os.extsep + strExt) )
+                                strLink = utils.getOutputPath(strFileName)
+                                utils.setSymlink(strTarget, strLink)
+                                utils.appendSymLog(strTarget, strFileName)
+
+                            # Add a "catalog" entry...
+                            tdbCatalog[strRawName] = (strCatEntryTimeStamp, strFileName)
+
+                            if (config.ARGS.verbose >= 0):
+                                print("  CATALOG " + strRawName + ":  " + ("%19s" % strCatEntryTimeStamp) + "  " + strFileName)
+
+                    # --- Header 2: Type 2 Thumbnail Image (Full JPEG)...
+                    if (bstrStreamData[headOffset: headOffset + 4] == bytearray(config.JPEG_SOI + config.JPEG_APP0)):
+                        if (config.ARGS.outdir != None):
+                            strFileName = tdbStreams.getFileName(keyStreamName, strExt)
+                            strFilePath = utils.getOutputPath(strFileName)
+                            fileImg = open(strFilePath, "wb")
+                            fileImg.write(bstrStreamData[headOffset:])
+                            fileImg.close()
+
+                            if (config.ARGS.verbose > 0):
+                                print("     File Info: ---------------------------------------")
+                                print("          Type: 2 (Full JPEG)")
+                                print("          Name: %s" % strFileName)
+
+                        else:  # Not extracting...
+                            tdbStreams[keyStreamName] = config.LIST_PLACEHOLDER
+
+                    # --- Header 2: Type 1 Thumbnail Image (JPEG Frame)...
+                    elif (unpack(tDB_endian+"L", bstrStreamData[headOffset: headOffset + 4])[0] == 1):
+                        # Is second header OK?
+                        if (unpack(tDB_endian+"H", bstrStreamData[headOffset + 4: headOffset + 6])[0] != (iStreamDataLen - headOffset - 16)):
+                            raise verror.EntryError(" Error (Entry): Header 2 length mismatch in stream entry " + str(iStreamCounter))
+
+                        if (config.ARGS.outdir != None and config.THUMBS_TYPE_OLE_PIL):
+                            strFileName = tdbStreams.getFileName(keyStreamName, strExt)
+                            # DEBUG
+                            #strBinFileName = strFileName + os.extsep + "bin"
+                            #strFilePath = utils.getOutputPath(strBinFileName)
+                            #imageRaw = open(strFilePath, "wb")
+                            #imageRaw.write(bstrStreamData)
+                            #imageRaw.close()
+
+                            # --------------------------------------------------------------------------------
+                            # Construct thumbnail image from standard JPEG blocks...
+                            # --------------------------------------------------------------------------------
+                            #
+                            # [ 0: 8] Marker [0C 00 00 00 : 01 00 00 00]
+                            # [ 8:12] Size of File 1 (SF1) from [12] to End Of File (little-endian)
+                            # [12:16] Marker [01 00 00 00]
+                            # [16:20] Size of File 2 (SF2) from [28] to End Of File (little-endian)
+                            # [20:24] Frame Samples per Line (little-endian)
+                            # [24:28] Frame Line Count (little-endian)
+                            # [28:30] Start Of Image (SOI) [FF D8]
+                            # [30:32] Start Of Frame (SOF) [FF C0] (8 + 3*FCC Bytes)
+                            #   [32:34] Frame Length (FL) [20]
+                            #   [34]    Frame Precision [8]
+                            #   [35:37] Frame Line Count [96]
+                            #   [37:39] Frame Samples per Line [96]
+                            #   [39]    Frame Component Count (FCC: 3 Bytes Each) [4]
+                            #     [40]    FC1: Component ID [R]
+                            #     [41H]   FC1: Horiz Sample Factor: (bstrStreamData[41] >> 4) & 15 [1]
+                            #     [41L]   FC1: Vert  Sample Factor:  bstrStreamData[41]       & 15 [1]
+                            #     [42]    FC1: Quantization Table Selector [0]
+                            #     [43]    FC2: Component ID [G]
+                            #     [44H]   FC2: Horiz Sample Factor: (bstrStreamData[44] >> 4) & 15 [1]
+                            #     [44L]   FC2: Vert  Sample Factor:  bstrStreamData[44]       & 15 [1]
+                            #     [45]    FC2: Quantization Table Selector [0]
+                            #     [46]    FC3: Component ID [B]
+                            #     [47H]   FC3: Horiz Sample Factor: (bstrStreamData[47] >> 4) & 15 [1]
+                            #     [47L]   FC3: Vert  Sample Factor:  bstrStreamData[47]       & 15 [1]
+                            #     [48]    FC3: Quantization Table Selector [0]
+                            #     [49]    FC4: Component ID [A]
+                            #     [50H]   FC4: Horiz Sample Factor: (bstrStreamData[50] >> 4) & 15 [1]
+                            #     [50L]   FC4: Vert  Sample Factor:  bstrStreamData[50]       & 15 [1]
+                            #     [51]    FC4: Quantization Table Selector [0]
+                            # [52:54] Start Of Scan (SOS) [FF DA]
+                            # [54:12+SF1-2] ...Image Data...
+                            # [12+SF1-2:12+SF1] End Of Image (EOI) [FF D9]
+                            #
+                            # As seem above, the JPEG data is a partial JPEG representation.  A full JPEG
+                            # should have the following data blocks:
+                            #   [FF D8]: Start of Image                      Bytes [28:30]
+                            #   [FF E0]: Application Header        (MISSING)
+                            #   [FF DB]: Define Quantization Table (MISSING)
+                            #   [FF C0]: Start Of Frame                      Bytes [30:52]
+                            #   [FF C4]: Define Huffman Table      (MISSING)
+                            #   [FF DA]: Start Of Scan                       Bytes [52:...]
+                            #   [FF D9]: End Of Image                        Bytes [Last-1:Last+1]
+                            # Also, image elements are not as expected:
+                            #   1. Image is flipped from top to bottom
+                            #   2. For the 4 Frame Component channels (or bands):
+                            #      a. the channels Component IDs are marked as RGBA (Red, Green, Blue, Alpha) channels
+                            #      b. the channels are actually stored as YMCA (Yellow, Magenta, Cyan, Alpha) channels
+                            #      c. The A channel must be converted to a K (Key) channel for output
+
+                            #
+                            # Extract the JPEG data from the stream...
+                            #
+                            iFileSize1 = int.from_bytes(bstrStreamData[ 8:12], 'little')
+                            iFileSize2 = int.from_bytes(bstrStreamData[16:20], 'little')
+                            iFileDiff = iFileSize1 - iFileSize2
+                            iSIIndex = 0
+                            while True:
+                                if (bstrStreamData[iSIIndex : iSIIndex + 2] == bytearray(config.JPEG_SOI)):
+                                    break
+                                iSIIndex = iSIIndex + 1
+                            iImageIndex = iSIIndex # Start of Image
+                            iFrameIndex = iImageIndex + 2 # Start of Frame
+                            iFrameSize = int.from_bytes(bstrStreamData[32:34], 'big')
+                            iFramePrec = int(bstrStreamData[34])
+                            iFrameLCnt = int.from_bytes(bstrStreamData[35:37], 'big')
+                            iFrameSPL  = int.from_bytes(bstrStreamData[37:39], 'big')
+                            iFrameCCnt = int(bstrStreamData[39])
+                            iFrameCompID = [0 for i in range(iFrameCCnt)]
+                            iFrameCompHF = [0 for i in range(iFrameCCnt)]
+                            iFrameCompVF = [0 for i in range(iFrameCCnt)]
+                            iFrameCompQT = [0 for i in range(iFrameCCnt)]
+                            for iFCCIndex in range(iFrameCCnt):
+                                iIndex = 40 + iFCCIndex * 3
+                                iFrameCompID[iFCCIndex] = bstrStreamData[iIndex]
+                                iFrameCompHF[iFCCIndex] = int((bstrStreamData[iIndex + 1] >> 4) & 0x0F)
+                                iFrameCompVF[iFCCIndex] = int((bstrStreamData[iIndex + 1]) & 0x0F)
+                                iFrameCompQT[iFCCIndex] = int(bstrStreamData[iIndex + 2])
+
+                            iScanIndex = iFrameIndex + 2 + iFrameSize # Start Of Scan
+
+                            #
+                            # Construct a proper JPEG file from the extracted stream data...
+                            #
+                            bstrImage = (
+                                config.THUMBS_TYPE_OLE_PIL_TYPE1_HEADER[:20] + # Generic JPEG Header
+                                config.THUMBS_TYPE_OLE_PIL_TYPE1_QUANTIZE +    # Generic JPEG Quantization Table
+                                bstrStreamData[iFrameIndex:iScanIndex] +       # Frame Info
+                                config.THUMBS_TYPE_OLE_PIL_TYPE1_HUFFMAN  +    # Generic JPEG Huffman Tables
+                                bstrStreamData[iScanIndex:] )                  # Image Info
+                            imageIn = Image.open( BytesIO( bstrImage ), 'r', ["JPEG"] )
+
+                            #
+                            # Get the channels (bands) from the input image...
+                            #
+                            # NOTE: The image data is stored as YMCA (Yellow, Magenta, Cyan, Alpha) but PIL retrieves
+                            #   the JPEG as RGBA (Red, Green, Blue, Alpha) based on the Component IDs. The channels are
+                            #   named here as per the stored data, YMCA.
+
+                            iBands = len( imageIn.getbands() )
+                            if iBands < 1 or iBands > 4:
+                                raise verror.EntryError(
+                                    " Error (Entry): Invalid Type 1 Image band count ({iBands}) in stream entry " +
+                                    str(iStreamCounter)
+                                )
+                            channelsYMCA = imageIn.split()
+                            iChannels = len(channelsYMCA)
+                            if ( iBands != iChannels ) :
+                                raise verror.EntryError(
+                                    " Error (Entry): Invalid Type 1 Image channel mismatch (bands {iBands} != channels{iChannels}) in stream entry " +
+                                    str(iStreamCounter)
+                                )
+                            astrChannelNames = []
+                            channelY = None
+                            channelM = None
+                            channelC = None
+                            channelA = None
+                            channelK = None
+                            if   iChannels == 4: channelY, channelM, channelC, channelA = channelsYMCA
+                            elif iChannels == 3: channelY, channelM, channelC = channelsYMCA
+                            elif iChannels == 2: channelY, channelM = channelsYMCA
+                            elif iChannels == 1: channelY = channelsYMCA
+
+                            # NOTE: The CMY channels are proper but the output image requires a K (Key) channel
+                            #   calculated from the A (Alpha) channel size.
+                            #       Image.new(mode, size, color)
+                            #           mode  = L (8-bit pixels, grayscale)
+                            #           size  = channelA.size
+                            #           color = 0 (black)
+                            #       See https://pillow.readthedocs.io/en/stable/handbook/concepts.html
+                            astrChannelNames.append( "Channel 0: " + ("Y (Created)" if channelY == None else imageIn.getbands()[0]) )
+                            if (channelY == None) : channelY = Image.new('L', imageIn.size, 0)
+                            astrChannelNames.append( "Channel 1: " + ("M (Created)" if channelM == None else imageIn.getbands()[1]) )
+                            if (channelM == None) : channelM = Image.new('L', imageIn.size, 0)
+                            astrChannelNames.append( "Channel 2: " + ("C (Created)" if channelC == None else imageIn.getbands()[2]) )
+                            if (channelC == None) : channelC = Image.new('L', imageIn.size, 0)
+                            astrChannelNames.append( "Channel 3: " + ("A (Created K)" if channelA == None else imageIn.getbands()[3]) )
+                            if (channelA == None) :  channelA = Image.new('L', imageIn.size, 0) # ...transparent
+
+                            # Check all channels for type...
+                            if not isinstance(channelY, Image.Image) :
+                                astrChannelNames[0] += f" ... Invalid type {type(channelY)}, recreated"
+                                channelY = Image.new('L', imageIn.size, 0)
+                            if not isinstance(channelM, Image.Image) :
+                                astrChannelNames[1] += f" ... Invalid type {type(channelM)}, recreated"
+                                channelM = Image.new('L', imageIn.size, 0)
+                            if not isinstance(channelC, Image.Image) :
+                                astrChannelNames[2] += f" ... Invalid type {type(channelC)}, recreated"
+                                channelC = Image.new('L', imageIn.size, 0)
+                            if not isinstance(channelA, Image.Image) :
+                                astrChannelNames[3] += f" ... Invalid type {type(channelA)}, recreated"
+                                channelA = Image.new('L', imageIn.size, 0)
+
+                            # Check all channels for mode...
+                            if not hasattr(channelY, 'mode') :
+                                astrChannelNames[0] += f" ... Missing mode {type(channelY)}, recreated"
+                                channelY = Image.new('L', imageIn.size, 0)
+                            if not hasattr(channelM, 'mode') :
+                                astrChannelNames[1] += f" ... Missing mode {type(channelM)}, recreated"
+                                channelM = Image.new('L', imageIn.size, 0)
+                            if not hasattr(channelC, 'mode') :
+                                astrChannelNames[2] += f" ... Missing mode {type(channelC)}, recreated"
+                                channelC = Image.new('L', imageIn.size, 0)
+                            if not hasattr(channelA, 'mode') :
+                                astrChannelNames[3] += f" ... Missing mode {type(channelA)}, recreated"
+                                channelA = Image.new('L', imageIn.size, 0)
+
+                            # Check all channels for single color...
+                            if channelY.mode != 'L' :
+                                astrChannelNames[0] += f" ... Expected mode 'L', got '{channelY.mode}', flattened"
+                                channelY = channelY.convert("L")
+                            if channelM.mode != 'L' :
+                                astrChannelNames[1] += f" ... Expected mode 'L', got '{channelM.mode}', flattened"
+                                channelM = channelM.convert("L")
+                            if channelC.mode != 'L' :
+                                astrChannelNames[2] += f" ... Expected mode 'L', got '{channelC.mode}', flattened"
+                                channelC = channelC.convert("L")
+                            if channelA.mode != 'L' :
+                                astrChannelNames[3] += f" ... Expected mode 'L', got '{channelA.mode}', flattened"
+                                channelA = channelA.convert("L")
+
+                            channelK = Image.new('L', channelA.size, 0) # ...transparent
+
+                            # Check if dimensions match target image size...
+                            if imageIn.size :
+                                if channelY.size != imageIn.size :
+                                    astrChannelNames[0] += f" ... Size mismatch: got {channelY.size}, expected {imageIn.size}"
+                                    channelY = channelY.resize(imageIn.size)
+                                if channelM.size != imageIn.size :
+                                    astrChannelNames[1] += f" ... Size mismatch: got {channelM.size}, expected {imageIn.size}"
+                                    channelM = channelM.resize(imageIn.size)
+                                if channelC.size != imageIn.size :
+                                    astrChannelNames[2] += f" ... Size mismatch: got {channelC.size}, expected {imageIn.size}"
+                                    channelC = channelC.resize(imageIn.size)
+                                if channelA.size != imageIn.size :
+                                    astrChannelNames[3] += f" ... Size mismatch: got {channelA.size}, expected {imageIn.size}"
+                                    channelA = channelA.resize(imageIn.size)
+                                if channelK.size != imageIn.size :
+                                    channelK = Image.new('L', imageIn.size, 0)
+
+                                #
+                                # Process the output image as a proper CMYK JPEG...
+                                #
+                                imageOut = Image.merge( "CMYK", (channelC, channelM, channelY, channelK) )
+                                imageOut = imageOut.transpose(Image.FLIP_TOP_BOTTOM)
+                                strFilePath = utils.getOutputPath(strFileName)
+                                imageOut.save(strFilePath, "JPEG", quality=100)
+
+                            else :
+                                print("     * MALFORMED JPEG: Image size == 0" )
+                                if (config.ARGS.verbose < 2):
+                                    print("     *   Use -vvv for verbose information")
+
+                            #
+                            # Report image info for the extracted thumbnail image...
+                            #
+                            if (iChannels != iFrameCCnt):
+                                print("     * MALFORMED JPEG: Channels (%d) != Components (%d)" % (iChannels, iFrameCCnt))
+                                if (config.ARGS.verbose < 2):
+                                    print("     *   Use -vvv for verbose information")
+                            if (config.ARGS.verbose > 0):
+                                print("     File Info: ---------------------------------------")
+                                print("          Type: 1 (JPEG Fragment)")
+                                print("          Name: %s" % strFileName)
+                                if (config.ARGS.verbose > 1):
+                                    print("        Size 1: %d Bytes" % iFileSize1)
+                                    print("        Size 2: %d Bytes" % iFileSize2)
+                                    print(" 16 Byte Diff?: %d Bytes, %s" % (iFileDiff, (iFileDiff == 16)))
+                                    print("Start of Image: Byte# %d" % iImageIndex)
+                                    print("Start of Frame: Byte# %d" % iFrameIndex)
+                                    if (config.ARGS.verbose > 2):
+                                        print("         Frame: --------------------")
+                                        print("              :        Size: %d" % iFrameSize)
+                                        print("              :   Precision: %d" % iFramePrec)
+                                        print("              :  Line Count: %d" % iFrameLCnt)
+                                        print("              : Sample/Line: %d" % iFrameSPL)
+                                        print("              :  Components: %d" % iFrameCCnt)
+                                        for iFCCIndex in range(iFrameCCnt):
+                                            print("              : Entry -----: %d" % (iFCCIndex + 1))
+                                            print("              :          ID: %c" % iFrameCompID[iFCCIndex])
+                                            print("              :    H Factor: %d" % iFrameCompHF[iFCCIndex])
+                                            print("              :    V Factor: %d" % iFrameCompVF[iFCCIndex])
+                                            print("              : Quant Table: %d" % iFrameCompQT[iFCCIndex])
+                                        print("              :  Channels: %d" % iChannels)
+                                        for strChannelName in astrChannelNames:
+                                            print("              :   " + strChannelName)
+                                    print(" Start of Scan: Byte# %d (...Image Data...)" % iScanIndex)
+
+                        else:  # Cannot extract (PIL not found) or not extracting...
+                            tdbStreams[keyStreamName] = config.LIST_PLACEHOLDER
+
+                    # --- Header 2: Something else...
+                    else:
+                        raise verror.EntryError(" Error (Entry): Header 2 not recognized in stream entry " + str(iStreamCounter))
+
+                if (config.ARGS.verbose >= 0):
+                    print(config.STR_SEP)
+
+            # Lock Bytes Entry processing...
+            # =============================================================
+            elif (dictOLECache["type"] == 3):
+                if (config.ARGS.verbose >= 0):
+                    print(" Lock Bytes Entry %d\n --------------------" % iStreamCounter)
+                    printCache(strRawName, dictOLECache)
+                    print(config.STR_SEP)
+
+            # Property Entry processing...
+            # =============================================================
+            elif (dictOLECache["type"] == 4):
+                if (config.ARGS.verbose >= 0):
+                    print(" Property Entry %d\n --------------------" % iStreamCounter)
+                    printCache(strRawName, dictOLECache)
+                    print(config.STR_SEP)
+
+            # Root Entry processing...
+            # =============================================================
+            elif (dictOLECache["type"] == 5):  # ...ROOT should always be first entry
+                if (config.ARGS.verbose >= 0):
+                    print(" Root Entry %d\n --------------------" % iStreamCounter)
+                    printCache(strRawName, dictOLECache)
+                    print(config.STR_SEP)
+
+                if (config.ARGS.htmlrep):  # ...implies config.ARGS.outdir
+                    # Set the OLE Head for the HTTP report using the Root Entry info...
+                    config.HTTP_REPORT.setOLE(dictOLECache)
+
+            iStreamCounter += 1
+
+        iCurrentSector = nextBlock(fileThumbsDB, listSAT, iCurrentSector, tDB_endian)
+
+    # Process end of file...
+    # -----------------------------------------------------------------
+    if (config.ARGS.verbose > 0):
+        if (tdbCatalog.isOutOfSequence()):
+            sys.stderr.write(" Info: %s - Catalog index number out of usual sequence\n" % infile)
+
+    if (config.ARGS.verbose > 0):
+        if (tdbStreams.isOutOfSequence()):
+            sys.stderr.write(" Info: %s - Stream index number out of usual sequence\n" % infile)
+
+    astrStats = tdbStreams.extractStats()
+
+    if (config.ARGS.verbose >= 0):
+        print(" Summary:")
+        if (astrStats != None):
+            for strStat in astrStats:
+                print("   " + strStat)
+        else:
+            print("   No Stats!")
+
+    if (config.ARGS.htmlrep):  # ...implies config.ARGS.outdir
+        strSubDir = os.path.join( os.path.relpath( os.getcwd() ), config.ARGS.outdir )
+        if (config.ARGS.symlinks):  # ...implies config.ARGS.outdir
+          strSubDir = os.path.join( strSubDir, config.THUMBS_SUBDIR )
+        config.HTTP_REPORT.flush(astrStats, strSubDir, tdbStreams, tdbCatalog)
+
+    # If output is allowed...
+    if (config.ARGS.verbose >= 0):
+        # If catalog entries exist...
+        if (len(tdbCatalog) > 0):
+            if (tdbCatalog.getCount() != tdbStreams.getCount()):
+                sys.stderr.write(" Warning: %s - Counts (Catalog != Extracted)\n" % infile)
+            else:
+                if (config.ARGS.verbose > 0):
+                    sys.stderr.write(" Info: %s - Counts (Catalog == Extracted)\n" % infile)
+        else:
+            if (config.ARGS.verbose > 0):
+                sys.stderr.write(" Info: %s - No Catalog\n" % infile)
+
+    # Otherwise (output is quiet), if no HTML report exists and catalog entries exist...
+    #   NOTE: No output has catured the related catalog entries for extracted image files!
+    elif (not config.ARGS.htmlrep and len(tdbCatalog) > 0):
+        # At a minimum, output the catalog entries...
+        print("Catalog Entries for %s" % infile)
+        for key in tdbCatalog:
+            strKey = ("% 4d" % key) if isinstance(key, int) else key
+            listCat = tdbCatalog[key]
+            for (strTimeStamp, strEntryName) in listCat:
+                print("  " + ("% 4s" % strKey) + ":  " + ("%19s" % strTimeStamp) + "  " + strEntryName)
+
+    # Otherwise, some other output has reported or will report the catalog entries or no catalog entries exist.

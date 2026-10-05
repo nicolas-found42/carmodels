@@ -1,0 +1,23 @@
+{
+  "source": "https://raw.githubusercontent.com/PCSX2/pcsx2/v2.8.2/pcsx2/MMI.cpp",
+  "excerpt": "void PEXTUW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[3];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[3];\n}",
+  "game_calls": [
+    {
+      "address": "0x00229100",
+      "instruction": "pextuw v1,zero,v0",
+      "bytes": "a81c0270"
+    },
+    {
+      "address": "0x00229494",
+      "instruction": "pextuw v1,zero,v0",
+      "bytes": "a81c0270"
+    },
+    {
+      "address": "0x00229620",
+      "instruction": "pextuw v1,zero,v0",
+      "bytes": "a81c0270"
+    }
+  ],
+  "result": "All three selector calls pass entity camera-relative vector lane Z (+0x58), not W (+0x5c). mtc1 uses low32 output=Rt.UL[2].",
+  "correction": "Any prior working inference that the selector consumed W is withdrawn. The scalar selector decoder itself receives an explicit scalar and is unchanged."
+}

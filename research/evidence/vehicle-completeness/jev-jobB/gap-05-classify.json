@@ -1,0 +1,116 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "g3_xdotool",
+        "text": "Install xdotool in the container; send keys to :99."
+      },
+      {
+        "id": "g4_debugserver",
+        "text": "hkmodd/PCSX2-MCP DebugServer patch; Windows prebuilt, Linux needs a source build."
+      },
+      {
+        "id": "g2_pine",
+        "text": "PINE pause/resume."
+      },
+      {
+        "id": "existing_vnc",
+        "text": "The hidden Playwright->noVNC browser."
+      }
+    ],
+    "classes": [
+      {
+        "id": "viable_solution",
+        "description": "A known, working approach for this Linux/headless setup. Example: xdotool + Xvfb."
+      },
+      {
+        "id": "unavailable",
+        "description": "Does not apply to this platform or does not exist. Example: PINE pause, Windows-only release."
+      },
+      {
+        "id": "heavy_solution",
+        "description": "Works but needs a large build or fork."
+      }
+    ],
+    "purpose": "sort the gap solutions by viability",
+    "context": "Mark-number gap closure."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 3,
+      "review": 1,
+      "invalid_response": 0,
+      "by_class": {
+        "viable_solution": 1,
+        "heavy_solution": 2,
+        "unavailable": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "g3_xdotool",
+        "classification": "viable_solution",
+        "probabilities": {
+          "viable_solution": 1,
+          "unavailable": 0,
+          "heavy_solution": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "g4_debugserver",
+        "classification": "heavy_solution",
+        "probabilities": {
+          "viable_solution": 0,
+          "unavailable": 0.02,
+          "heavy_solution": 0.98
+        },
+        "confidence": 0.97,
+        "margin": 0.96,
+        "top_probability": 0.98,
+        "decision": "auto"
+      },
+      {
+        "id": "g2_pine",
+        "classification": "unavailable",
+        "probabilities": {
+          "viable_solution": 0,
+          "unavailable": 1,
+          "heavy_solution": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "existing_vnc",
+        "classification": "heavy_solution",
+        "probabilities": {
+          "viable_solution": 0.31,
+          "unavailable": 0.31,
+          "heavy_solution": 0.38
+        },
+        "confidence": 0.08,
+        "margin": 0.07,
+        "top_probability": 0.38,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 725,
+      "output_tokens": 163
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "args": {
+    "passage_a": "GP prior names: iGpffff937c, iGpffff93c0, iGpffff93bc. ELFgp0x295d70. Offsets are signed16: 0xffff937c=-0x6c84, 0xffff93c0=-0x6c40, 0xffff93bc=-0x6c44.",
+    "passage_b": "GP resolved names in byte-identical FUN00121cd0: iRam0028f0ec camera pointer, iRam0028f130 selector bias, iRam0028f12c selector minimum.",
+    "purpose": "Prior compare camera globals went to review; independently code-owned address additions resolve spelling changes:0x295d70-0x6c84=0x28f0ec;0x295d70-0x6c40=0x28f130;0x295d70-0x6c44=0x28f12c. This supplemental address evidence is not a rerun of the earlier comparison.",
+    "aspects": [
+      "The prior signedoffsets and resolved names identify the same three storage addresses."
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_compare\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"overall\": {\n    \"relation\": \"same_fact\",\n    \"probabilities\": {\n      \"same_fact\": 0.97,\n      \"contradicts\": 0,\n      \"different_facts\": 0.03\n    },\n    \"confidence\": 0.95,\n    \"margin\": 0.94,\n    \"decision\": \"auto\"\n  },\n  \"aspects\": [\n    {\n      \"aspect\": \"The prior signedoffsets and resolved names identify the same three storage addresses.\",\n      \"relation\": \"same_fact\",\n      \"probabilities\": {\n        \"same_fact\": 0.99,\n        \"contradicts\": 0,\n        \"different_facts\": 0.01\n      },\n      \"confidence\": 0.97,\n      \"margin\": 0.98,\n      \"decision\": \"auto\"\n    }\n  ],\n  \"thresholds\": {\n    \"auto_accept\": 0.85,\n    \"minimum_margin\": 0.5\n  },\n  \"usage\": {\n    \"input_tokens\": 800,\n    \"output_tokens\": 87\n  }\n}"
+      }
+    ]
+  }
+}

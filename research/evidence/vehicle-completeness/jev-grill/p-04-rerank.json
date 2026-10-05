@@ -1,0 +1,73 @@
+{
+  "args": {
+    "query": "best next action for the coming session",
+    "candidates": [
+      {
+        "id": "reconcile_sound_index",
+        "text": "Read the soundman table consumption in the decompilation and decide consistent/off-by-one; fix T2 if needed."
+      },
+      {
+        "id": "trace_label_chain",
+        "text": "Read FUN_0019eb90/FUN_00125640/FUN_00121e10 and read the derived store address in the three EE images."
+      },
+      {
+        "id": "build_display_table",
+        "text": "Build the full display-name table from tlate_en.dat."
+      },
+      {
+        "id": "more_screens",
+        "text": "Capture more car-selection screens and diff again."
+      },
+      {
+        "id": "stop_report",
+        "text": "Stop and report the three closed tickets as the delivered state."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best next action for the coming session",
+    "summary": {
+      "candidates": 5,
+      "returned": 5
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "reconcile_sound_index",
+        "relevance": 0.6,
+        "text": "Read the soundman table consumption in the decompilation and decide consistent/off-by-one; fix T2 if needed."
+      },
+      {
+        "rank": 2,
+        "id": "stop_report",
+        "relevance": 0.57,
+        "text": "Stop and report the three closed tickets as the delivered state."
+      },
+      {
+        "rank": 3,
+        "id": "more_screens",
+        "relevance": 0.5,
+        "text": "Capture more car-selection screens and diff again."
+      },
+      {
+        "rank": 4,
+        "id": "trace_label_chain",
+        "relevance": 0.39,
+        "text": "Read FUN_0019eb90/FUN_00125640/FUN_00121e10 and read the derived store address in the three EE images."
+      },
+      {
+        "rank": 5,
+        "id": "build_display_table",
+        "relevance": 0.37,
+        "text": "Build the full display-name table from tlate_en.dat."
+      }
+    ],
+    "usage": {
+      "input_tokens": 720,
+      "output_tokens": 94
+    }
+  }
+}

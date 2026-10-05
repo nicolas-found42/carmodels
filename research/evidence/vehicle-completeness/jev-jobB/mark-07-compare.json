@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Cross-session diff of three savestates (the method that found nothing).",
+    "passage_b": "Same-session adjacent diff of two fresh savestates.",
+    "aspects": [
+      "confound control",
+      "attribution to highlight",
+      "cost"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "contradicts": 0.03,
+        "different_facts": 0.96,
+        "same_fact": 0.01
+      },
+      "confidence": 0.94,
+      "margin": 0.9299999999999999,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "confound control",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.1,
+          "same_fact": 0.03,
+          "different_facts": 0.87
+        },
+        "confidence": 0.81,
+        "margin": 0.77,
+        "decision": "auto"
+      },
+      {
+        "aspect": "attribution to highlight",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.12,
+          "different_facts": 0.84,
+          "same_fact": 0.04
+        },
+        "confidence": 0.75,
+        "margin": 0.72,
+        "decision": "review"
+      },
+      {
+        "aspect": "cost",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0,
+          "different_facts": 1,
+          "same_fact": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 811,
+      "output_tokens": 177
+    }
+  }
+}

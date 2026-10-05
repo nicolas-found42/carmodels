@@ -1,0 +1,130 @@
++{
+  "schema": "jev-receipt/v1",
+  "provider": "OpenRouter via TypeSafe Jev",
+  "model": "typesafe/jev-1.13",
+  "tool": "jev_verify",
+  "arguments": {
+    "claims": [
+      "The CARS callback at VA 0x001826b0 calls FUN_0022a910 with a1=1 and a2=2; the a2 value is set in the JAL delay slot.",
+      "FUN_0022a910 stores the caller's type argument in object +0x34 and its flags argument in object +0x30, then starts async work only if the async gate is nonzero and flags overlap the active request mask.",
+      "FUN_00111cd0 selects objects whose type field +0x34 is 2 and, when the active mask, state, request-handle, and completion checks pass, calls FUN_00101690, stores its result at +0x40, then calls FUN_0022acc8.",
+      "The CARS type-2 path bypasses FUN_0022acc8 unconditionally.",
+      "The conditional static CARS path reaches the PTG structured parser, but no evidence here establishes a path from those parsed descriptors to FUN_00222358 or proves in-game menu composition."
+    ],
+    "evidence": [
+      {
+        "id": "pinned-executable",
+        "text": "Executable SLES_517.05 SHA256 216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95; .text VA-to-file offset is VA-0xff000."
+      },
+      {
+        "id": "cars-call-bytes",
+        "text": "At VA 0x1826a0 bytes 2d 20 a0 03 move a0,s5; at 0x1826a4 bytes 01 00 05 24 set a1=1; at 0x1826b0 bytes 44 aa 08 0c jal 0x0022a910; delay slot at 0x1826b4 bytes 02 00 06 24 sets a2=2."
+      },
+      {
+        "id": "resource-constructor",
+        "text": "Saved decompilation `/.../decompile-all-02/functions/0022a910.c`, SHA256 ce235c72a8566fd77985dcff4c0ca173e5e46696157c3acf7430041b5e2ce024: writes param_3 to object+0x34 and param_2 to object+0x30. It starts async work only when iGpffff9184 != 0 and (param_2 & uGpffff9180) != 0."
+      },
+      {
+        "id": "completion-callsite-bytes",
+        "text": "Saved decompilation `FUN_00111cd0.c` is generated, completed, 360 body bytes, SHA256 22f79aff85772cbe05f630be665cd8d86a4a9a4214e22a4b799a82c9080c25c4. Raw code: at 0x111d8c `02 00 13 24` (set s3=2), 0x111d90 `34 00 22 8e` (load object+0x34), 0x111d98 `1f 00 53 54` (branch if type differs); 0x111da0 loads flags +0x30, 0x111da8 ANDs active mask, 0x111dac branches if zero; 0x111db4 loads state +0x4c, 0x111db8 skips state 4; 0x111dc0 loads handle +0x48, 0x111dc4 skips null; 0x111dcc calls completion poll 00105660; 0x111dd4 branches if incomplete; 0x111de0 calls size 001076a0; 0x111df0 calls inflate 00101690; 0x111dfc calls free 0010d100; 0x111e04 stores return pointer at +0x40; 0x111e08 calls parser 0022acc8; 0x111e10 sets state 4."
+      },
+      {
+        "id": "static-caller-chain",
+        "text": "Static call graph export states FUN_0015fbe0 calls FUN_00111cd0. This only establishes a dispatch opportunity with async/active-mask/state/handle/completion conditions satisfied; the global runtime values are not proven here."
+      },
+      {
+        "id": "remaining-upload-gap",
+        "text": "Serialized descriptors have +0x2c=0xDDDDDDDD and +0x35=0xDD; FUN_00222358 uses runtime +0x2c/+0x35 as extra mip-list pointer/count. No static evidence supplied connects these parsed PTG descriptors to FUN_00222358 or a menu draw."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 1,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The CARS callback at VA 0x001826b0 calls FUN_0022a910 with a1=1 and a2=2; the a2 value is set in the JAL delay slot.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.01,
+          "says_nothing": 0,
+          "supports": 0.99
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": "cars-call-bytes",
+        "same_subject": 0.89
+      },
+      {
+        "id": "claim1",
+        "claim": "FUN_0022a910 stores the caller's type argument in object +0x34 and its flags argument in object +0x30, then starts async work only if the async gate is nonzero and flags overlap the active request mask.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "says_nothing": 0,
+          "supports": 1
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": "resource-constructor",
+        "same_subject": 0.72
+      },
+      {
+        "id": "claim2",
+        "claim": "FUN_00111cd0 selects objects whose type field +0x34 is 2 and, when the active mask, state, request-handle, and completion checks pass, calls FUN_00101690, stores its result at +0x40, then calls FUN_0022acc8.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.13,
+          "says_nothing": 0,
+          "supports": 0.87
+        },
+        "confidence": 0.8,
+        "action": "auto",
+        "supporting_evidence": "completion-callsite-bytes",
+        "same_subject": 0.69
+      },
+      {
+        "id": "claim3",
+        "claim": "The CARS type-2 path bypasses FUN_0022acc8 unconditionally.",
+        "verdict": "contradicted",
+        "probabilities": {
+          "contradicts": 0.98,
+          "says_nothing": 0.02,
+          "supports": 0
+        },
+        "confidence": 0.97,
+        "action": "auto",
+        "supporting_evidence": "completion-callsite-bytes",
+        "same_subject": 0.52
+      },
+      {
+        "id": "claim4",
+        "claim": "The conditional static CARS path reaches the PTG structured parser, but no evidence here establishes a path from those parsed descriptors to FUN_00222358 or proves in-game menu composition.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.01,
+          "says_nothing": 0.02,
+          "supports": 0.97
+        },
+        "confidence": 0.96,
+        "action": "auto",
+        "supporting_evidence": "remaining-upload-gap",
+        "same_subject": 0.49
+      }
+    ],
+    "usage": {
+      "input_tokens": 3543,
+      "output_tokens": 757
+    }
+  }
+}

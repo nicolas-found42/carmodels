@@ -1,0 +1,93 @@
+{
+ "scope": "Status of the retained display-list and menu98 PTG continuation; not a whole-recovery completion gate.",
+ "render_fidelity_complete": false,
+ "source_checkout": {
+  "head": "6519c568cbd39d46aa17a7a0a89764b51fb39441",
+  "dirty_paths_unchanged_from_handoff": [
+   "M tools/ghidra/experimental/CreateEeCandidateV5.java",
+   " M tools/ghidra/experimental/pipeline/check_batch_config_root.py",
+   " M tools/ghidra/experimental/pipeline/make_batch_config.py",
+   " M tools/ghidra/experimental/pipeline/seedlib.py",
+   " M tools/test_batch_switch_config.py",
+   " M tools/test_pipeline_walker.py",
+   "?? notes/evidence/fr2-progress-audit/"
+  ],
+  "typed_inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+  "edited_by_this_continuation": false
+ },
+ "canonical_index_sha256": "9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe",
+ "runtime": {
+  "container": "3f7463603fbf Up 2 hours",
+  "pine_identity": "{\"version\": \"PCSX2 v2.8.2\", \"title\": \"Ford Racing 2\", \"id\": \"SLES-51705\", \"uuid\": \"37f695cd\", \"game_version\": \"1.00\", \"status\": 1}",
+  "port": "6080/tcp -> 127.0.0.1:54239",
+  "actions_this_continuation": "ordinary car-selection capture: hidden-browser key delivery proven (Space toggled PINE status 1->0), slot 98 loaded, Cross opened VEHICLE detail panel, 3 labeled screens saved to slots 102/103/104 with unpacked members; slot 100 untouched, live race restored from slot 101 and left paused; ~21 observed key presses"
+ },
+ "receipts": {
+  "research/evidence/packet-continuation/retained-packet-blocks.json": "243e020d6efe4916e0a20a2011070425e6fba8e2608b541c51ad3346e60f2a60",
+  "research/evidence/packet-continuation/retained-blocks-gsdump-join.json": "341bd057723da7dd508afcd9754a76cb47e075e9d06f263fbe1f4f7070c68e74",
+  "research/evidence/packet-continuation/retained-ring-gsdump-alignment.json": "b37f7a1aff15ea7adba1d692e1375c1c422c05e0fbab681658dc3fe8d8cb31eb",
+  "research/evidence/packet-continuation/adc-cull-rule-test.json": "5bb8d3702c902fd578567b01f7987d3651083d1470bf61746bfeeff0e83c30f1",
+  "research/evidence/packet-continuation/retained-material-alpha-join.json": "aff80394f102c010a4fac688f62edac4ed34d815cac8fc19227cd052ed9d9a57",
+  "research/evidence/ptg-continuation/menu98-sprite-ptg-join.json": "c5ecbfcbaa6e0cdac9dd81d5a1327c63e0d2a9b05dc9ded1244f9c0d6381f8e1",
+  "research/evidence/carselection-2026-10-05/bridge-three-screens.json": "a2d9a6a1cf4e7e157c7eccd9778d7edc46246810e07873f178b8959b109d4843",
+  "research/evidence/continuation/runtime/linux/slot101-live-backup-state-identity.json": "890e91cfa02e3909d82693e336eecad42ce43cbc413b1375f61e5cb771bdc5be",
+  "research/evidence/continuation/runtime/linux/slot102-car1-ford49-state-identity.json": "0e20bfa1d3588b1324f62e812958d090225dc3e081323e08c51edeebcc50094d",
+  "research/evidence/continuation/runtime/linux/slot103-car5-tbirdconv-state-identity.json": "3f3095672ca67db20bb8493726807b18c766ba699fd606e77f9f1bb340dcbd76",
+  "research/evidence/continuation/runtime/linux/slot104-car4-fortyninec-state-identity.json": "d1d35e80e54a7930add12b5dd0eff59eeed0a33f9a666baf280c29fe8a70b4b8"
+ },
+ "tools": {
+  "tools/gsdump.py": "1901de58deff0b5881350568458db10d9f127d52077b6d7b38526171e9930857",
+  "tools/validate_retained_packet_blocks.py": "ad2d199248af4dd7be6e5a05505ba01e2657691ad8d7f9f58330f4f363acc7c3",
+  "tools/join_retained_blocks_to_gsdump.py": "0708c41b5ad93d5cbbdb53fc09d544dd68d97f8fbd3a55f2849f108dbe519e34",
+  "tools/trace_retained_ring_to_gsdump.py": "d3445e823ff1d8ea1ad029f1f54515bee8cf88fefeb233302b76a97c14acf549",
+  "tools/analyze_adc_cull_rule.py": "36646e211b101e3e7cb0359008d3fb047a88295ee7a9bf93363ab76ec61c5791",
+  "tools/trace_retained_material_alpha.py": "641324f462f1e6f6a9585653c5f373b45a48ca844c16d2faf82caf1ff1ec855b",
+  "tools/join_menu98_sprites_to_ptg.py": "72a308ab789fdfd7520d3d7d4994e11e592adec4377cdf2cf58e333cde94271b",
+  "tools/test_retained_packet_evidence.py": "c780391be2ad55038d20c82c5fb898ffd1abe54027f6ff04b8af625fa2c81335",
+  "tools/jev_mcp_call.py": "14c131d6e773de74bdfec88c77127d2c4514d5ee6639a33d982fb4fc3209e155",
+  "tools/run_jev_retained_review.py": "27eab41830fbe3a118316c93ca7ba39b72246764524f3462b00a0ae74da20b78",
+  "tools/write_continuation_status.py": "2f9a8407616bddbed8bfb1006ed42b2267d86e3e9132c8d83edcd5ffb990f54c",
+  "tools/unpack_runtime_state.py": "16b704cee1b448578f74188123c2c8f046583d082a9c0659b9c67b614f43a045",
+  "tools/battery_d1.py": "cafcfe05c54bec893bb3f6495ac5307c1ea0d3600b6d7198eb27652e16c927b5",
+  "tools/battery_d1_fix.py": "d545a09a888c22b3a6180c5f92f33e4200dbd16df3b1ff6ac1d86f665aeb6aa6",
+  "tools/battery_d2.py": "399600fab32620e37471309be040ce490130a68ee3515add1d8af7fd66aaf18b",
+  "tools/scan_slot102_selectors.py": "07b53b7cea07022ca374922a7821f6b0f1b004b48ca321c57e4fcf9da44d5cc0",
+  "tools/diff_slot102_103.py": "55fa53284b7dee3936453227ba7e1f0fc5e3a00fecf573df58b4610fbd69d6ce",
+  "tools/triangulate_highlight.py": "2154f29a4175e3861c0edbb15a7d751977db89bbbfa3e7eee7ae840938393270"
+ },
+ "jev_receipts": {
+  "01-screen-typesafe-jaggedness.json": "2aaf672492bad7866979e69e125f6fccb6076e530944c8351c5b8a60c950cf67",
+  "02-noul-0021ba50-constants.json": "4e80522ff9ccf26abf06dfd84993114cb93faffa314cffd86c8a3a0e67b1fff6",
+  "03-compare-0021ba50-prose.json": "9434ccf1fef4aface5cad661a1666699ba1b76f8dc640eaebb38e8c3f1a83dc5",
+  "04-find-ad-packet-emitter.json": "6322664e76edc9ba1b27a20beb0ba6413a7effdf30eeee4ef9c1fbc1dec5a4b4",
+  "05-rerank-next-evidence.json": "de85f0bc7486f5223af9f039076352b1d3fa1f9baf3840055d3d8b3e7f4b3958",
+  "06-classify-evidence-strength.json": "6e50a51f2b9a5f69fcbfcc5b735adf7b93f836b83b7a6fe6b8aa5d5e75a2c5aa",
+  "07-decide-next-step.json": "078747dfce5a844a88275b1aa6ceeee3f0187af454e9c36a4fab41d993482d67",
+  "08-verify-continuation-claims.json": "6b0430127b7df019f56b0528e676ac5fbf7de49a85a136fb0055226dc201d410",
+  "09-extract-digest-fields.json": "b373214bd779e0e722181f6406cc60bbf14ec69f53445161ca5013c35e7da8e8",
+  "09b-extract-digest-fields-tight-patterns.json": "7208fa93b804505ecf5c2dcc4db2685217cb76be5020d09c0361d2ee9e533a9f",
+  "10-audit-extracted-values.json": "0b73d794711ebd344d46c0b0902ea2181b58e449ef9bc049b9b75e7068720417",
+  "10b-audit-extracted-values-tight-patterns.json": "a9368ded65e73122a844d0b3d1e139ce90d510635ed0c5e4c6c3ee0907e45a2c",
+  "11-review-analysis-scripts.json": "cab9fde7457ab194a9f3d3aec13af065391278dcbd66cadb07f1d286de0753f4",
+  "12-gate-packet-validators.json": "dad00b61217150c6239ddaa683d2db13a7ec4bec4c60770244036b6f0f3fe11f",
+  "jgrep-gsdump-parser-prior-art.json": "d15b73a6925851d4bdb33d2524da04e8130d301e11c51e13d98879dc8f53d4b6"
+ },
+ "handoff_lead_dispositions": {
+  "ten aligned 0x6c058000 markers in five paired copies": "reproduced at the same addresses; strict parse, pinned hashes, unique byte and positional joins, controls",
+  "counts 63/62/64/41/37, headers 320-324, param8 0xa4 x4 and 0x60, third 0xffff x4 and 20": "reproduced",
+  "eight 0x6c048003 blocks": "reproduced at the same addresses; they are FUN_0021ba50 A+D packets",
+  "A+D fields PRIM 0x4c / ALPHA 0x44": "partly wrong: 0x4c is the A+D address of FRAME_1; ALPHA_1 data is 0x44; PRIM is not written by 0021ba50",
+  "no GS-transfer join for the 0x6c048003 blocks": "content join established: eight dump A+D triples with identical FRAME_1/ALPHA_1/TEST_1 data; not an execution proof",
+  "unsaved Jev retained_candidate 0.95/0.96": "not reproducible (request not persisted); superseded by deterministic receipts",
+  "00128e88 -> 0021ba50 direct chain": "still unsupported: 00128e88 is called by 001288b0; 0021ba50 by 0021c3e0, which is called by 0021bf28 and 00128218"
+ },
+ "open": [
+  "execution trace of CPU/DMA/VIF/VU1 for the dumped frame",
+  "VU1 microprogram branch for culling and RGB of passes 4-5",
+  "glass part naming and whether header 261 is drawn in other states",
+  "numeric selector to human livery label bridge (partial: 3 ordinary-capture label pairs at DEFAULT; isolated per-screen selector word still open)",
+  "ordinary car/livery selection capture (partial: cars 1/5/4 labeled screens in slots 102/103/104; livery-variant cycling not attempted)",
+  "ChallGlo blend model",
+  "158 unmatched retained descriptors and descriptors outside the six loaded cars"
+ ]
+}

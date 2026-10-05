@@ -1,0 +1,100 @@
+{
+  "schema": "fr2-menu98-ptg-gs-scan/v1",
+  "state": {
+    "savestate": "research/evidence/continuation/runtime/linux/sstates/SLES-51705 (37F695CD).98.p2s",
+    "sha256": "9210c85d622619ea101a00d30798e8408d4377515b746619",
+    "identity": "research/evidence/continuation/runtime/linux/menu98-state-identity.json",
+    "identity_sha256": "a8325ad33d1e5b0cdb656270809858c40510fa3e0bed5a363c38b57859ce93ef",
+    "screenshot": "research/evidence/continuation/runtime/linux/menu98-Screenshot.png",
+    "screenshot_sha256": "30c6c73f1815f9aff40469934a4109d6e504406ed152ab577d9f33acd91da63a",
+    "screen": "Ford Racing 2 Select a Challenge Theme / Living Legends; six visible car thumbnails"
+  },
+  "gs_dump": {
+    "path": "research/evidence/continuation/runtime/linux/snaps/Ford Racing 2_SLES-51705_20261005010217.gs.zst",
+    "compressed_sha256": "126c9a909501d157d5bab5359a66c63cbb6966bf70504e3f671a9ede5ee01ae9",
+    "zstd_test": "pass",
+    "uncompressed_bytes": 16023665,
+    "uncompressed_sha256": "d5ea85248626d60508d16010cd922ced83787cf425994b8f47797acf35a43f70"
+  },
+  "serialized_gs_state": {
+    "path": "research/evidence/continuation/runtime/linux/menu98-GS.bin",
+    "bytes": 4194813,
+    "sha256": "993548959905290d485caaca268b81d19fe3a15e479e4a84fb593f62b59e8f46",
+    "vram_offset_hex": "0x1a9",
+    "vram_bytes": 4194304,
+    "vram_region_sha256": "7e87509b76e858c2777786c2aba598edffe05c14658cc7be7f5aa739fb325a7a"
+  },
+  "source_mapping": {
+    "pcsx2_release": "v2.8.2",
+    "references": [
+      "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSState.cpp#L29-L87",
+      "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSState.cpp#L3321-L3407",
+      "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSLocalMemory.h#L440-L453",
+      "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSLocalMemory.h#L204-L242",
+      "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSTables.cpp#L18-L82",
+      "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSTables.cpp#L234-L245"
+    ],
+    "derivation": "Freeze stores 4 MiB m_vm8 then 4*(GIFPath tag+reg) and m_q. With GS.bin length 4,194,813, preceding serialized fields total 4,194,813 - 4,194,304 - 84 = 425 (0x1a9). PSMCT32 selects swizzle32; PCSX2 block and column tables provide per-pixel offsets."
+  },
+  "scan": {
+    "source_inputs": 171,
+    "unique_tile_bodies": 3136,
+    "psmct32_base_block_hypotheses": 16384,
+    "corner_signature_candidate_pairs": 0,
+    "exact_4096_byte_tiles": 0,
+    "raw_gs_dump_exact_tile_matches": 0,
+    "raw_gs_dump_prefix64_hits": 3,
+    "raw_gs_state_exact_tile_matches": 0,
+    "raw_gs_state_prefix64_hits": 0,
+    "prefix_hits": [
+      {
+        "source": "GRAPHICS/GAME/LIVERY/f350c.ptg;1",
+        "role": "livery",
+        "tile": 12,
+        "dump_offset": 9875329,
+        "exact_offset": -1,
+        "prefix_sha256": "a97c6da0e2fb720082fc5803aa7ad50f0af77df282f75fc912ea872acbc9f8e9"
+      },
+      {
+        "source": "GRAPHICS/GAME/LIVERY/fordgtc.ptg;1",
+        "role": "livery",
+        "tile": 10,
+        "dump_offset": 9875457,
+        "exact_offset": -1,
+        "prefix_sha256": "e8705c0e8c28a354630380258790c992cd2002986a87ba64339662ff2e45ca62"
+      },
+      {
+        "source": "GRAPHICS/GAME/LIVERY/fordgtc.ptg;1",
+        "role": "livery",
+        "tile": 11,
+        "dump_offset": 9875457,
+        "exact_offset": -1,
+        "prefix_sha256": "e8705c0e8c28a354630380258790c992cd2002986a87ba64339662ff2e45ca62"
+      }
+    ],
+    "method": "Archive-bound source decoder yields 3,136 unique tile bodies. Raw scanner searches the decompressed GSDump and raw GS state. PSMCT32 scanner extracts VRAM at 0x1a9, then compares unchanged source RGBA tile bytes at 16,384 aligned GS base-block hypotheses using PCSX2 v2.8.2 blockTable32/columnTable32; corner-signature filter precedes full 4,096-byte comparison."
+  },
+  "limits": [
+    "No GS texture is joined to a particular menu icon or source PTG descriptor.",
+    "The PSMCT32 test covers unchanged source texels at aligned block origins only; it does not cover alpha/color conversion, non-origin transfer coordinates, or alternate upload pitch.",
+    "The 3 raw prefix hits have no exact 4,096-byte continuation; they are not tile identifications.",
+    "No exact match under these tests does not establish that an asset was not loaded, drawn, or transformed."
+  ],
+  "gif_transfer_trace": {
+    "path": "research/evidence/ptg-continuation/menu98-gif-transfer-trace.json",
+    "sha256": "e08213337aa6fc0a7dadd40f971fe3b67a2fefe4ccc30ab42c46a6777f70e1f6",
+    "transfer_events": 10747,
+    "image_tags": 1562,
+    "32x32_psmct32_uploads": 150,
+    "target_event_header_offset": 9873483,
+    "target_image_payload_offset": 9873505,
+    "target_DBP_hex": "0x29dd",
+    "target_image_bytes": 4096,
+    "claim": "GS packet semantics/destination only; not joined to a source PTG or visible icon",
+    "transformed_prefix_candidate_matches": 66,
+    "crop_continuations_matched": 0,
+    "all_150_tile_prefix_candidates": 14220,
+    "all_150_source_origin_crop_matches": 0,
+    "all_150_upload_payloads_with_prefix_candidates": 44
+  }
+}

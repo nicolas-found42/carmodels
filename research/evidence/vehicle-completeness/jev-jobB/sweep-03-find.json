@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the best next step to identify the mark word",
+    "candidates": [
+      {
+        "id": "six_sweep",
+        "text": "Screenshot + savestate pair at each of the 6 highlight positions; the mark must map 1:1 to position."
+      },
+      {
+        "id": "chase_241b60",
+        "text": "Assume 0x241b60-family words and verify by repeated moves."
+      },
+      {
+        "id": "breakpoint",
+        "text": "A PCSX2 read breakpoint on the draw path."
+      },
+      {
+        "id": "stop",
+        "text": "Record open; stop."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the best next step to identify the mark word",
+    "exists": 0.93,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "six_sweep",
+        "probability": 0.61,
+        "text": "Screenshot + savestate pair at each of the 6 highlight positions; the mark must map 1:1 to position."
+      },
+      {
+        "id": "breakpoint",
+        "probability": 0.32,
+        "text": "A PCSX2 read breakpoint on the draw path."
+      },
+      {
+        "id": "chase_241b60",
+        "probability": 0.06,
+        "text": "Assume 0x241b60-family words and verify by repeated moves."
+      },
+      {
+        "id": "stop",
+        "probability": 0.01,
+        "text": "Record open; stop."
+      }
+    ],
+    "usage": {
+      "input_tokens": 547,
+      "output_tokens": 79
+    }
+  }
+}

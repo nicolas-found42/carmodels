@@ -1,0 +1,75 @@
+{
+  "args": {
+    "request": "Verify full-vehicle extraction end to end: run the independent verifier, gate the result, write tracer tickets for any real gaps.",
+    "diff": "+ ran tools/verify_recovered_asset_index.py (roster/index/disk equality, per-car record equality, all hashes, 4 negative-control families)\n+ census: per-car corpus holds config x11, model, icon, 4 liveries, data DAT; sound in _shared with chains\n+ canonical index covers model/textures/mips/liveries/matrix/GLB only; config/data/sound uncovered\n+ no new extraction performed; no fidelity claims"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.37,
+    "scores": {
+      "correctness": {
+        "score": 0.98,
+        "confidence": 0.67,
+        "probabilities": {
+          "0": 0.12,
+          "1": 0.78,
+          "2": 0.1
+        }
+      },
+      "spec_match": {
+        "score": 1.05,
+        "confidence": 0.85,
+        "probabilities": {
+          "0": 0.03,
+          "1": 0.9,
+          "2": 0.07
+        }
+      },
+      "test_gap": {
+        "score": 1.45,
+        "confidence": 0.18,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.39,
+          "2": 0.53
+        }
+      },
+      "blast_radius": {
+        "score": 0.48,
+        "confidence": 0.29,
+        "probabilities": {
+          "0": 0.64,
+          "1": 0.23,
+          "2": 0.13
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.50875,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 843,
+      "output_tokens": 79
+    }
+  }
+}

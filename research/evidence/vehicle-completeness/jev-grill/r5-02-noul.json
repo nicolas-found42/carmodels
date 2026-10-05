@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "How to locate the gameflow root in a raw EE savestate is a genuine open branch, not an implementation detail.",
+      "The bootstrap-global approach (find the global that stores the gameflow pointer) is the decompilation-reachable way to root the chain.",
+      "A signature scan for the entity struct (flags 0x1cd0 at +0x60) can locate the chain without a named global.",
+      "C must assert all 35 cars resolve, not just the three captured pairs.",
+      "One receipt plus a jev_gate per thread is the right closure artifact for 7b.",
+      "The plan is ready to act on as written."
+    ],
+    "context": "Residual open branches after the final plan (Jev f-06b: still_open 0.81; 'ready' contradicted on 'leaves no decision silently assumed'):\n(1) POINTER ROOT: B says read entity+0x64 via the dynamic gameflow chain outer+4 -> +0x14c -> +0x174, but the plan never says how to locate the gameflow root 'outer' inside a raw EE savestate. The decompilation FUN_0019eb90:19 reads ((param_1+4)+0x14c)+0x174 and :37 sets flags at entity+0x60 = (...|0x1cd0); FUN_00121e10 stores the selector at entity+0x64. The prior tools scanned values/tables, never walked a pointer chain from a root. Options: (a) find the bootstrap global that stores the gameflow pointer (decompilation-first), then read that global in the savestate; (b) signature-scan the EE image for the entity struct (e.g. flags 0x...1cd0 at +0x60) and follow back-pointers; (c) accept a paused savestate may not expose a stable chain and record B's store read as 'attempted; pointer root unresolved' -> recorded open.\n(2) C ROW SET + CONTROLS: C extends resolve_display_names.py to the car-keyed set (~35-39). Unspecified: exact row set (all 35 CARDATA INGAME_TEXT_ENUM values vs only TXT_CARS_* keys present), what happens for cars whose enum is missing from tlate_en, whether en-only or multi-locale, and what negative controls / gate apply. Options: (a) assert all 35 cars resolve, negative controls (unknown key unresolved; apostrophe byte-exact), jev_gate; (b) 35 cars, no new controls; (c) TXT_CARS_* keys only.\n(3) CLOSURE ARTIFACT: stop condition 7b requires all three threads to reach a definite outcome, but the plan never says what artifact proves each is 'resolved'. Options: (a) one receipt + jev_gate per thread (escalate acceptable), plus a single session completion report listing the three definite outcomes; (b) three new tickets T4/T5/T6; (c) record in the continuation status only."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "How to locate the gameflow root in a raw EE savestate is a genuine open branch, not an implementation detail.",
+        "probability": 0.93,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "The bootstrap-global approach (find the global that stores the gameflow pointer) is the decompilation-reachable way to root the chain.",
+        "probability": 0.76,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "A signature scan for the entity struct (flags 0x1cd0 at +0x60) can locate the chain without a named global.",
+        "probability": 0.7,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "C must assert all 35 cars resolve, not just the three captured pairs.",
+        "probability": 0.56,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "One receipt plus a jev_gate per thread is the right closure artifact for 7b.",
+        "probability": 0.64,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition5",
+        "proposition": "The plan is ready to act on as written.",
+        "probability": 0.02,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1556,
+      "output_tokens": 130
+    }
+  }
+}

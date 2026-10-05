@@ -1,0 +1,98 @@
+{
+  "args": {
+    "document": "build_reference.py (line ~261) builds base_bank with a NAME-based rule: for each CAR_SND_CARn block in CARSOUND.DAT it reads :SOUNDBANK_TYPE CARn_SOUND_FILE and sets base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd', i.e. CAR_SND_CAR6 + CAR6_SOUND_FILE -> 'car6_snd' (the digit is taken from the bank file name, not from the CAR_SND_CARn number). CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 -> CAR1_SOUND_FILE..CAR8_SOUND_FILE (verified: 8 base blocks). The executable's static strings are 'sounds\\car1_snd:0:0:5' ... 'sounds\\car8_snd:7:35:5' (addresses 0x288e40..0x288f18) with templates '%s.msh' (0x28f508) and '%s.msb' (0x28f510); the trailing fields are base:offset:count with base 0..7, suggesting an index. Corroboration: 49_COUPE's sound type CAR_SND_49_COUPE inherits CAR_SND_CAR6 and its sample names are literally MASTER_SOUND_SAMPLE_CAR6_TICKOVER / ..._LOW_UNLOADED / ..._HIGH_LOADED, so the 'CAR6' identity appears in the sample data itself. All 35 cars resolve a chain; the 8 distinct inherit targets are CAR_SND_CAR1..CAR_SND_CAR8.",
+    "fields": [
+      {
+        "id": "rule_code",
+        "pattern": "'car' \\+ SOUNDBANK_TYPE\\[3\\] \\+ '_snd'",
+        "description": "the build_reference mapping expression"
+      },
+      {
+        "id": "exe_first",
+        "pattern": "car1_snd:[0-9]+:[0-9]+:[0-9]+",
+        "description": "first executable bank descriptor"
+      },
+      {
+        "id": "exe_last",
+        "pattern": "car8_snd:[0-9]+:[0-9]+:[0-9]+",
+        "description": "last executable bank descriptor"
+      },
+      {
+        "id": "inherit",
+        "pattern": "inherits CAR_SND_CAR[0-9]",
+        "description": "an inheritance target"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 4,
+      "auto": 4,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "rule_code",
+        "value": "'car' + SOUNDBANK_TYPE[3] + '_snd'",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.97,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "exe_first",
+        "value": "car1_snd:0:0:5",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.95,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "exe_last",
+        "value": "car8_snd:7:35:5",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "inherit",
+        "value": "inherits CAR_SND_CAR6",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.9,
+        "top_probability": 0.95,
+        "margin": 0.8999999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1263,
+      "output_tokens": 139
+    }
+  }
+}

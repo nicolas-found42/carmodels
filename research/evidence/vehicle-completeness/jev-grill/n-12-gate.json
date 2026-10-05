@@ -1,0 +1,140 @@
+{
+  "args": {
+    "request": "Adopt the selector plan with a named-address-or-recorded-open fallback.",
+    "diff": "+ trace the store; if unnamed, broaden to indirection or record open\n+ bridge remains the floor; no value-only proof",
+    "claims": [
+      "The plan's floor is the three-pair bridge.",
+      "The plan does not rely on value-only matching.",
+      "The plan produces either a named address or a recorded open outcome."
+    ],
+    "evidence": "carselection bridge: no FORD'49 / TXT_CARS_* label bytes in slot102 EE (labels via text archive + glyphs). Static leads: FUN_0019eb90 reads the livery label via static table VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL), resolves via FUN_00125640, stores via FUN_00121e10; VA_0x23acb0 = 0x0028f7c8 stable across captures. jgrep hits: 0017cb80 (initials cycler, discarded), 00184430 (1..3 cursor on uRam0028fd74, reads 0 in all three), 001c4a40 (indexed cursor over DAT_00241b40, caller open). VA_0x241b60 = 5,4,4 (does not track highlight). Three-way triangulation: (1,5,4) 0 hits; (0,4,3) words 0 hits; (0,4,3) bytes 97 hits in VU regions, no menu-struct candidate; scratchpad 121 changed words all float VU noise. Screens: highlight 1/5/4 -> 49_COUPE / THUNDERBIRD_2002 / FORTYNINE, all DEFAULT livery. Jev round-1 noul: 'an isolated EE word that tracks the highlight exists' = 0.13 unlikely; 'deriving the store address from the FUN_0019eb90 chain will name it' = 0.29 uncertain; 'value-only match sufficient' = 0.09 unlikely. Round-1 decide chose trace_store 0.96.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"record_open\", \"escaped\": false, \"confidence\": 0.47, \"probabilities\": {\"broaden_indirect\": 0.44, \"record_open\": 0.56, \"investigate\": 0, \"ask_user\": 0, \"drop\": 0, \"none\": 0, \"more_screens\": 0}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"broaden_indirect\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"broaden_indirect\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"broaden_indirect\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"record_open\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"record_open\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"record_open\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"more_screens\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"more_screens\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"more_screens\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"drop\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"drop\", \"requirement\": 1, \"answer\": \"unknown\"}, {\"candidate\": \"drop\", \"requirement\": 2, \"answer\": \"contradicted\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2679, \"output_tokens\": 602}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_unsupported",
+      "claim_confidence_low"
+    ],
+    "review": {
+      "safe_to_apply": 0.2,
+      "scores": {
+        "correctness": {
+          "score": 1.47,
+          "confidence": 0.21,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.43,
+            "2": 0.52
+          }
+        },
+        "spec_match": {
+          "score": 1.68,
+          "confidence": 0.52,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.28,
+            "2": 0.7
+          }
+        },
+        "test_gap": {
+          "score": 1.68,
+          "confidence": 0.52,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.05,
+            "2": 0.8099999999999999
+          }
+        },
+        "blast_radius": {
+          "score": 0.99,
+          "confidence": 0.04,
+          "probabilities": {
+            "0": 0.33,
+            "1": 0.36,
+            "2": 0.31
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.64575,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 1,
+        "contradicted": 0,
+        "unsupported": 2,
+        "needs_review": 2,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The plan's floor is the three-pair bridge.",
+          "verdict": "unsupported",
+          "confidence": 0.27,
+          "probabilities": {
+            "unsupported": 0.51,
+            "verified": 0.45,
+            "contradicted": 0.04
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "The plan does not rely on value-only matching.",
+          "verdict": "verified",
+          "confidence": 0.93,
+          "probabilities": {
+            "unsupported": 0.04,
+            "verified": 0.96,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The plan produces either a named address or a recorded open outcome.",
+          "verdict": "unsupported",
+          "confidence": 0.33,
+          "probabilities": {
+            "unsupported": 0.55,
+            "verified": 0.38,
+            "contradicted": 0.07
+          },
+          "action": "escalate"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2292,
+      "output_tokens": 198
+    }
+  }
+}

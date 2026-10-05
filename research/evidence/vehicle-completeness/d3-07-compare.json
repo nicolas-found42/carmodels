@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Canonical index counts: 35 models, 35 GLBs, 136 liveries, 136 matrix sets. Status: integrity checked, fidelity not asserted.",
+    "passage_b": "Per-car corpus adds config txt, data DAT and shared sound chains with manifests, outside the canonical index.",
+    "aspects": [
+      "covered content",
+      "uncovered content",
+      "fidelity claims"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "contradicts": 0,
+        "different_facts": 1,
+        "same_fact": 0
+      },
+      "confidence": 0.99,
+      "margin": 1,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "covered content",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.01,
+          "different_facts": 0.84,
+          "same_fact": 0.15
+        },
+        "confidence": 0.76,
+        "margin": 0.69,
+        "decision": "review"
+      },
+      {
+        "aspect": "uncovered content",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.01,
+          "different_facts": 0.84,
+          "same_fact": 0.15
+        },
+        "confidence": 0.75,
+        "margin": 0.69,
+        "decision": "review"
+      },
+      {
+        "aspect": "fidelity claims",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0,
+          "different_facts": 1,
+          "same_fact": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 848,
+      "output_tokens": 177
+    }
+  }
+}

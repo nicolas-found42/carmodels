@@ -1,0 +1,116 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "sound_verdict",
+        "text": "build_reference mapping consistent with the executable; first numeric field is a discarded ordinal."
+      },
+      {
+        "id": "livery_store",
+        "text": "selector stored at entity+0x64 via dynamic chain; same value expected across three DEFAULT captures."
+      },
+      {
+        "id": "car_cursor",
+        "text": "FUN_001c4a40 indexed cursor over DAT_00241b40, caller open."
+      },
+      {
+        "id": "c_136",
+        "text": "'136-entry display-name table': 136 is livery rows; display names keyed by car (~35-39)."
+      }
+    ],
+    "classes": [
+      {
+        "id": "definite_named",
+        "description": "A concrete, decompilation-reachable address or a proven verdict. Example: entity+0x64; the consistent sound mapping."
+      },
+      {
+        "id": "non_distinguishing",
+        "description": "Named but the same value across the three captures, so it cannot separate screens. Example: the DEFAULT livery selector."
+      },
+      {
+        "id": "still_open",
+        "description": "Not yet resolved; caller or definition unknown. Example: the car-highlight cursor; the 136-row table."
+      }
+    ],
+    "purpose": "sort the round-4 items by resolution status",
+    "context": "Round-4 reframe."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 2,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "definite_named": 1,
+        "non_distinguishing": 1,
+        "still_open": 2
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "sound_verdict",
+        "classification": "definite_named",
+        "probabilities": {
+          "definite_named": 0.94,
+          "non_distinguishing": 0.01,
+          "still_open": 0.05
+        },
+        "confidence": 0.91,
+        "margin": 0.8899999999999999,
+        "top_probability": 0.94,
+        "decision": "auto"
+      },
+      {
+        "id": "livery_store",
+        "classification": "non_distinguishing",
+        "probabilities": {
+          "definite_named": 0.45,
+          "non_distinguishing": 0.54,
+          "still_open": 0.01
+        },
+        "confidence": 0.31,
+        "margin": 0.09000000000000002,
+        "top_probability": 0.54,
+        "decision": "review"
+      },
+      {
+        "id": "car_cursor",
+        "classification": "still_open",
+        "probabilities": {
+          "definite_named": 0.36,
+          "non_distinguishing": 0.01,
+          "still_open": 0.63
+        },
+        "confidence": 0.44,
+        "margin": 0.27,
+        "top_probability": 0.63,
+        "decision": "review"
+      },
+      {
+        "id": "c_136",
+        "classification": "still_open",
+        "probabilities": {
+          "definite_named": 0.1,
+          "non_distinguishing": 0.02,
+          "still_open": 0.88
+        },
+        "confidence": 0.82,
+        "margin": 0.78,
+        "top_probability": 0.88,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 791,
+      "output_tokens": 163
+    }
+  }
+}

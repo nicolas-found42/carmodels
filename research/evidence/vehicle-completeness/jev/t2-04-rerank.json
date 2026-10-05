@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "next step after the T2 config/data/sound verifier is green",
+    "candidates": [
+      {
+        "id": "close_t2",
+        "text": "Gate the verifier and close T2."
+      },
+      {
+        "id": "widen",
+        "text": "Extend parity to _shared gameplay files and shared config contents."
+      },
+      {
+        "id": "runtime",
+        "text": "Prove the runtime loads the same bytes as the corpus."
+      },
+      {
+        "id": "stop",
+        "text": "Stop; record T2 as verified parity only."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "next step after the T2 config/data/sound verifier is green",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "close_t2",
+        "relevance": 0.82,
+        "text": "Gate the verifier and close T2."
+      },
+      {
+        "rank": 2,
+        "id": "stop",
+        "relevance": 0.64,
+        "text": "Stop; record T2 as verified parity only."
+      },
+      {
+        "rank": 3,
+        "id": "runtime",
+        "relevance": 0.56,
+        "text": "Prove the runtime loads the same bytes as the corpus."
+      },
+      {
+        "rank": 4,
+        "id": "widen",
+        "relevance": 0.26,
+        "text": "Extend parity to _shared gameplay files and shared config contents."
+      }
+    ],
+    "usage": {
+      "input_tokens": 596,
+      "output_tokens": 76
+    }
+  }
+}

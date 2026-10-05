@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "Under stop-condition 7b, 'B resolved' must mean a definite outcome (named address OR evidenced open), not necessarily a positive find.",
+      "If B requires a positive find, the session can be blocked indefinitely given the selector's low likelihood.",
+      "C (the display-name table) deserves its own new ticket and tool rather than reopening the closed T3.",
+      "The order A -> B -> C is better than A -> C -> B.",
+      "All three threads can be brought to a definite outcome within one session.",
+      "Reopening T3 is the cleanest way to deliver C."
+    ],
+    "context": "Settled for the next session: order A (sound index) -> B (selector) -> C (display-name table). B proof bar = a decompilation-reachable address, not a value match. Claim ceiling = render_fidelity_complete false on every artifact, partial claims only. B method = decompilation-first trace of FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10, then ONE time-boxed indirection pass before recording the thread open. A method = settle with a definite verdict (consistent | off_by_one | undecidable) from the soundman consumer. Stop condition 7b = do NOT stop until all three threads are resolved (C now required, not optional).\n\nTension: Jev rounds 1-2 put 'an isolated EE word that tracks the highlight exists' at 0.13 likely-false and contradicted 'the highlight is stored as a plain integer word in EE main RAM' (0.88); the fallback allows recording the selector thread open. But stop-condition 7b says do not stop until all three threads are resolved. If B yields no positive find, 'resolved' must mean a definite outcome (named address OR evidenced open) or the session cannot end.\n\nC target: Jev round-1 classify labeled C breadth_only, auto. The '136' figure refers either to the 35 cars or to the 136 liveries (exact meaning pending a fact check). LANGUAGE/tlate_en.dat;1 holds TXT_CARS_* keys that build_reference.py already parses; T3 already resolved three pairs (COUPE_1949/THUNDERBIRD_2002/FORTYNINE)."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "Under stop-condition 7b, 'B resolved' must mean a definite outcome (named address OR evidenced open), not necessarily a positive find.",
+        "probability": 0.92,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "If B requires a positive find, the session can be blocked indefinitely given the selector's low likelihood.",
+        "probability": 0.85,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "C (the display-name table) deserves its own new ticket and tool rather than reopening the closed T3.",
+        "probability": 0.36,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The order A -> B -> C is better than A -> C -> B.",
+        "probability": 0.73,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "All three threads can be brought to a definite outcome within one session.",
+        "probability": 0.46,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition5",
+        "proposition": "Reopening T3 is the cleanest way to deliver C.",
+        "probability": 0.41,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1371,
+      "output_tokens": 130
+    }
+  }
+}

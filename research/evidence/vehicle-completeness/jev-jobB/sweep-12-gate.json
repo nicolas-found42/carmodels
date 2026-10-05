@@ -1,0 +1,141 @@
+{
+  "args": {
+    "request": "Approve the sweep as the mark-identification experiment.",
+    "diff": "{\"sweep\": \"6 positions x screenshot + pair\", \"criterion\": \"1:1 map to position\"}",
+    "claims": [
+      "Screenshots plus paused pairs give attributable ground truth.",
+      "A 1:1 position mapping identifies the mark word.",
+      "The sweep runs headless with read-only PINE plus savestate saves."
+    ],
+    "evidence": "Breakthrough: headless F8 screenshots work (PCSX2 writes PNGs to /data/snaps). Current screen verified by vision: 6 thumbnails, 3rd highlighted, VEHICLE '55 Thunderbird. Paused-pair method: pause via RFB Space, save pair (pause-control = 0 differing words), unpause, one L key, re-pause, save pair. A=pos3, B=pos5 (screenshot-verified Thunderbird Convertible). Diff A->B re-finds the DAT-table candidates: 0x241b60 4->5, 0x241e00 4->3, 0x2420a0 4->5. But 0x241b60 reads 5,4,4 across slots 102/103/104 (highlights 1/5/4), so it is NOT the per-car id by value. FUN_001c4a40 indexes DAT_00241b40 by the per-entity type byte with stride 0x150, so these words are fields inside per-type menu records. Proposed: a 6-position sweep - move the highlight to each of the 6 thumbnails with a screenshot + paused savestate pair at each; the true mark word must equal (or map 1:1 to) the 1..6 position across all six samples. All headless, read-only + savestate saves."
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_unsupported",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.23,
+      "scores": {
+        "correctness": {
+          "score": 1.37,
+          "confidence": 0.3,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.53,
+            "2": 0.42
+          }
+        },
+        "spec_match": {
+          "score": 1.63,
+          "confidence": 0.45,
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.25,
+            "2": 0.69
+          }
+        },
+        "test_gap": {
+          "score": 1.61,
+          "confidence": 0.42,
+          "probabilities": {
+            "0": 0.15,
+            "1": 0.09,
+            "2": 0.76
+          }
+        },
+        "blast_radius": {
+          "score": 0.38,
+          "confidence": 0.43,
+          "probabilities": {
+            "0": 0.69,
+            "1": 0.24,
+            "2": 0.07
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.6692499999999999,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "correctness"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 1,
+        "needs_review": 2,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "Screenshots plus paused pairs give attributable ground truth.",
+          "verdict": "verified",
+          "confidence": 0.5,
+          "probabilities": {
+            "unsupported": 0.28,
+            "contradicted": 0.06,
+            "verified": 0.66
+          },
+          "action": "review"
+        },
+        {
+          "claim": "A 1:1 position mapping identifies the mark word.",
+          "verdict": "unsupported",
+          "confidence": 0.31,
+          "probabilities": {
+            "unsupported": 0.54,
+            "contradicted": 0.08,
+            "verified": 0.38
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "The sweep runs headless with read-only PINE plus savestate saves.",
+          "verdict": "verified",
+          "confidence": 0.9,
+          "probabilities": {
+            "unsupported": 0.06,
+            "contradicted": 0.01,
+            "verified": 0.93
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 1756,
+      "output_tokens": 198
+    }
+  }
+}

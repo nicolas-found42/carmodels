@@ -1,0 +1,78 @@
+{
+  "args": {
+    "request": "Settle whether build_reference's CAR_SND_CARn -> carN_snd sound mapping agrees with the executable.",
+    "diff": "+ read the executable soundman consumer of sounds\\carN_snd:B:O:C and state what B indexes\n+ corroborate with MASTER_SOUND_SAMPLE_CAR6_* sample names\n+ record verdict: consistent | off_by_one | undecidable\n+ change build_reference only if the verdict is off_by_one",
+    "tests": "tools/verify_config_data_sound.py VERIFY OK (35/35 sound chains)"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.33,
+    "scores": {
+      "correctness": {
+        "score": 1.28,
+        "confidence": 0.35,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.56,
+          "2": 0.36
+        }
+      },
+      "spec_match": {
+        "score": 1.33,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.17,
+          "1": 0.33,
+          "2": 0.5
+        }
+      },
+      "test_gap": {
+        "score": 0.85,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.48,
+          "1": 0.19,
+          "2": 0.33
+        }
+      },
+      "blast_radius": {
+        "score": 0.67,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.52,
+          "1": 0.28,
+          "2": 0.2
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.6415,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "spec_match",
+      "test_gap",
+      "blast_radius"
+    ],
+    "usage": {
+      "input_tokens": 825,
+      "output_tokens": 79
+    }
+  }
+}

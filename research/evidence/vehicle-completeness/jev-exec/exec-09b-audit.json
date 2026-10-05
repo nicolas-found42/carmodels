@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "Thread A: verdict consistent; mappings_equal true; descriptor ordinals 0..7. Thread B: outcome named_store_confirmed; per-screen_highlight_cursor_recorded_open; entity+0x64 via FUN_00121e10; 0 exact-base pointers; 0 entity-flag candidates. Thread C: rows 35; all_35_pass true; result VERIFY OK.",
+    "records": [
+      {
+        "id": "b_outcome",
+        "request": "the recorded outcome of thread B",
+        "value": "named_store_confirmed; per-screen_highlight_cursor_recorded_open"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "b_outcome",
+        "value": "named_store_confirmed; per-screen_highlight_cursor_recorded_open",
+        "checks": {
+          "hallucinated": 0.04,
+          "off_target": 0.09,
+          "incomplete": 0.44,
+          "format": 0.19
+        },
+        "p_wrong": 0.44,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 817,
+      "output_tokens": 86
+    }
+  }
+}

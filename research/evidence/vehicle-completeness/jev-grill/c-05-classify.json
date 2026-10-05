@@ -1,0 +1,99 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "A",
+        "text": "Record the sound verdict: consistent, no off-by-one, first numeric field discarded."
+      },
+      {
+        "id": "B",
+        "text": "Read the named livery store entity+0x64; record the car cursor open if unnamed."
+      },
+      {
+        "id": "C",
+        "text": "Extend the resolver to car-keyed display names (~35-39)."
+      }
+    ],
+    "classes": [
+      {
+        "id": "evidence_backed",
+        "description": "The plan step rests on named decompilation or measured evidence. Example: the two sound tables."
+      },
+      {
+        "id": "bounded_probe",
+        "description": "A bounded runtime read whose result is recorded whether or not it is positive. Example: reading entity+0x64."
+      },
+      {
+        "id": "unsupported",
+        "description": "Asserts a result the evidence does not yet support."
+      }
+    ],
+    "purpose": "confirm each plan step is evidence-backed or a bounded probe",
+    "context": "Capstone."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 1,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "evidence_backed": 1,
+        "bounded_probe": 1,
+        "unsupported": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "A",
+        "classification": "evidence_backed",
+        "probabilities": {
+          "evidence_backed": 0.47,
+          "bounded_probe": 0.15,
+          "unsupported": 0.38
+        },
+        "confidence": 0.21,
+        "margin": 0.08999999999999997,
+        "top_probability": 0.47,
+        "decision": "review"
+      },
+      {
+        "id": "B",
+        "classification": "bounded_probe",
+        "probabilities": {
+          "evidence_backed": 0,
+          "bounded_probe": 1,
+          "unsupported": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "C",
+        "classification": "unsupported",
+        "probabilities": {
+          "evidence_backed": 0.05,
+          "bounded_probe": 0.17,
+          "unsupported": 0.78
+        },
+        "confidence": 0.68,
+        "margin": 0.61,
+        "top_probability": 0.78,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 662,
+      "output_tokens": 123
+    }
+  }
+}

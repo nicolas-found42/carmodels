@@ -1,0 +1,73 @@
+{
+  "args": {
+    "query": "order of follow-up work after the verifier run",
+    "candidates": [
+      {
+        "id": "gate",
+        "text": "Run jev_gate over the verifier log before claiming anything."
+      },
+      {
+        "id": "config_data_sound_ticket",
+        "text": "Write tracer ticket: config/data/sound parity per car (outside canonical index)."
+      },
+      {
+        "id": "more_extraction",
+        "text": "Extract additional per-car assets beyond the corpus."
+      },
+      {
+        "id": "render_fidelity",
+        "text": "Pursue final render-fidelity completion."
+      },
+      {
+        "id": "stop",
+        "text": "Stop; index counts alone are sufficient evidence."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "order of follow-up work after the verifier run",
+    "summary": {
+      "candidates": 5,
+      "returned": 5
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "gate",
+        "relevance": 0.76,
+        "text": "Run jev_gate over the verifier log before claiming anything."
+      },
+      {
+        "rank": 2,
+        "id": "config_data_sound_ticket",
+        "relevance": 0.54,
+        "text": "Write tracer ticket: config/data/sound parity per car (outside canonical index)."
+      },
+      {
+        "rank": 3,
+        "id": "stop",
+        "relevance": 0.23,
+        "text": "Stop; index counts alone are sufficient evidence."
+      },
+      {
+        "rank": 4,
+        "id": "more_extraction",
+        "relevance": 0.22,
+        "text": "Extract additional per-car assets beyond the corpus."
+      },
+      {
+        "rank": 5,
+        "id": "render_fidelity",
+        "relevance": 0.22,
+        "text": "Pursue final render-fidelity completion."
+      }
+    ],
+    "usage": {
+      "input_tokens": 675,
+      "output_tokens": 94
+    }
+  }
+}

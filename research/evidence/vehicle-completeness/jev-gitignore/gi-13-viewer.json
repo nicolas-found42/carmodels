@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "Keep or ignore the viewer/ directory (57M: 35 GLBs + three.js vendor)?",
+    "evidence": "viewer/public 55M holds the 35 recovered .glb files plus recovered assets; viewer/vendor 2M is three.js (re-downloadable). GLBs are built from the reference corpus by the repo's own tools, but the build needs Blender, which is itself excluded as a 1.1G vendor dependency. So on a fresh clone WITHOUT Blender, the GLBs cannot be rebuilt. With Blender re-downloaded, they can. The GLBs are also the visible showcase of the recovery. 57M is far under GitHub limits.",
+    "priorities": "Lean repo; keep what a fresh clone cannot rebuild; vendor JS is re-downloadable but tiny next to the GLBs.",
+    "candidates": [
+      {
+        "id": "keep_all",
+        "description": "Keep all of viewer/ (GLBs + vendor): 57M, the showcase survives without Blender."
+      },
+      {
+        "id": "keep_glb_only",
+        "description": "Keep the GLBs, ignore viewer/vendor (re-download three.js)."
+      },
+      {
+        "id": "ignore_all",
+        "description": "Ignore all of viewer/; rebuild GLBs after re-downloading Blender."
+      }
+    ],
+    "requirements": [
+      "Survives without Blender",
+      "Stays lean",
+      "Keeps the visible showcase"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "keep_glb_only",
+      "escaped": false,
+      "confidence": 0.86,
+      "probabilities": {
+        "keep_all": 0.12,
+        "ask_user": 0,
+        "none": 0,
+        "investigate": 0,
+        "keep_glb_only": 0.88,
+        "ignore_all": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "keep_all",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_all",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "keep_all",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_glb_only",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_glb_only",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_glb_only",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "ignore_all",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "ignore_all",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "ignore_all",
+        "requirement": 2,
+        "answer": "contradicted"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 1963,
+      "output_tokens": 461
+    }
+  }
+}

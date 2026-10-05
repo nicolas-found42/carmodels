@@ -1,0 +1,2987 @@
+{
+  "schema_version": 1,
+  "run_id": "20261004T203944Z-f8b8101687f140d0a6260de71e695722",
+  "check": "geometry-bounds:corpus",
+  "command": [
+    "/Users/Nicolas/Documents/github/hermes/reverse-engineering/tools/verify_geometry_bounds.py",
+    "corpus",
+    "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2",
+    "--output",
+    "research/evidence/original-recovery/full-geometry-check"
+  ],
+  "tools": {
+    "python": "3.14.7",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O"
+  },
+  "inputs": {},
+  "status": "pass",
+  "diagnostics": [],
+  "details": {
+    "provenance": {
+      "profile": "fr2-pal-sles-517.05",
+      "sources": {
+        "ford-racing-2.bin": {
+          "bytes": 678667248,
+          "sha256": "ae8d5a32c9d832f34a08fad6f0e97ce6e89e6b040597011f6362d886145b9d3d"
+        },
+        "ford-racing-2.cue": {
+          "bytes": 79,
+          "sha256": "c2e0aaf75a43150567f4ffe02ac863c8d1bda8f2fdf744012361436ec582edb6"
+        },
+        "extracted/SLES_517.05": {
+          "bytes": 1662804,
+          "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95"
+        },
+        "extracted/FILES.HDR": {
+          "bytes": 29428,
+          "sha256": "f4e4a4f91cd89bcaa8c2772e6cba2a839d92fbe222290c8c751777a81963731d"
+        },
+        "extracted/FILES.DAT": {
+          "bytes": 334641152,
+          "sha256": "357fc371f47e366bf507b721e26eed9f1205516c19b793e0316ccecc2175a722"
+        }
+      },
+      "corpus_id": "e69a2afbd6db606d166e40bae32c436691e134722ad153200859961a5f517dab"
+    },
+    "models_expected": 56,
+    "models_checked": 56,
+    "models_exact_eof": 56,
+    "profile_counts": {
+      "loader68": 54,
+      "measured_legacy60": 2
+    },
+    "records_checked": 16074,
+    "words_checked": 96444,
+    "nonfinite_words": 0,
+    "inverted_pairs": 0,
+    "all_zero_records": 56,
+    "file_results": [
+      {
+        "path": "3DDATA/debug.ps2;1",
+        "sha256": "7c9698fbaa6cdfe68ec642fdfaf4fbce94f2bfb0f833e9e127be820e988c024e",
+        "bytes": 17264,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 5860,
+          "count": 8,
+          "stride": 52,
+          "size": 416,
+          "end": 6276
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 8,
+        "words_checked": 48,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0,
+          0.0,
+          -1.0,
+          0.0,
+          -0.9510565400123596,
+          0.0
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/misc.ps2;1",
+        "sha256": "c3744239c76712de783d2a9dc3981eca0bf18eead6be41b1c75a04ea1b78ee69",
+        "bytes": 236944,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 154484,
+          "count": 24,
+          "stride": 52,
+          "size": 1248,
+          "end": 155732
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 24,
+        "words_checked": 144,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -7.999999523162842,
+          0.0,
+          -182.71339416503906,
+          0.0,
+          -6.027324199676514,
+          -1.8893131017684937
+        ],
+        "finite_word_maxima": [
+          0.0,
+          203.2222137451172,
+          0.02441299706697464,
+          14.087187767028809,
+          0.0,
+          12.568500518798828
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/49COUPE.PS2;1",
+        "sha256": "62e3de6688791e6af88d65bebe7156ee2d1f1ec83911316cafddf3173259f381",
+        "bytes": 1146656,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 933940,
+          "count": 39,
+          "stride": 52,
+          "size": 2028,
+          "end": 935968
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 39,
+        "words_checked": 234,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9382553100585938,
+          0.0,
+          -0.34918105602264404,
+          0.0,
+          -2.554779052734375,
+          -2.3452255725860596
+        ],
+        "finite_word_maxima": [
+          0.0,
+          0.9382553100585938,
+          0.7042754888534546,
+          1.5905665159225464,
+          0.0,
+          2.488006591796875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/49MOVIE.PS2;1",
+        "sha256": "b5717d0b1c80398d3f36cd586a925219fdf2ead7a52e84eed7bbcdaf10c46b8e",
+        "bytes": 487712,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 135844,
+          "count": 35,
+          "stride": 52,
+          "size": 1820,
+          "end": 137664
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 35,
+        "words_checked": 210,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0063552856445312,
+          0.0,
+          -0.31343841552734375,
+          0.0,
+          -2.7050018310546875,
+          -2.26690411567688
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.0063552856445312,
+          0.44096478819847107,
+          1.499314308166504,
+          0.0,
+          2.551544189453125
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/COBRA.PS2;1",
+        "sha256": "751fb754d2510c9d5d7fce725c13f5bed5e9e2edc0d670644dbb688d488e6912",
+        "bytes": 1247200,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 1001924,
+          "count": 50,
+          "stride": 52,
+          "size": 2600,
+          "end": 1004524
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 50,
+        "words_checked": 300,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0138537883758545,
+          -0.0653274655342102,
+          -0.3198862373828888,
+          0.0,
+          -2.583277940750122,
+          -2.194887399673462
+        ],
+        "finite_word_maxima": [
+          0.0653274655342102,
+          1.013853669166565,
+          0.692628026008606,
+          1.3336529731750488,
+          0.0,
+          2.482156753540039
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/CROWNV.PS2;1",
+        "sha256": "2fe9a2429091cdfb9022e55098f3df486eabb21da74812854c24e149d1d29d0c",
+        "bytes": 1234880,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 968820,
+          "count": 68,
+          "stride": 52,
+          "size": 3536,
+          "end": 972356
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 68,
+        "words_checked": 408,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.115234613418579,
+          0.0,
+          -0.3591439127922058,
+          0.0,
+          -2.6455838680267334,
+          -2.504270315170288
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.115234613418579,
+          0.7297080159187317,
+          1.501708984375,
+          0.0,
+          2.683713674545288
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/EX.PS2;1",
+        "sha256": "10735c9e97db9cb79a3e9ea9e91f59e18bb9312eac33f0618dacfb2656fcda55",
+        "bytes": 1339040,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 1000036,
+          "count": 62,
+          "stride": 52,
+          "size": 3224,
+          "end": 1003260
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 62,
+        "words_checked": 372,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0875167846679688,
+          -0.1100616455078125,
+          -0.37957829236984253,
+          0.0,
+          -1.91912841796875,
+          -1.672515869140625
+        ],
+        "finite_word_maxima": [
+          0.1100616455078125,
+          1.0875167846679688,
+          0.869598388671875,
+          1.60638427734375,
+          0.0,
+          1.7730255126953125
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/EXPLORER.PS2;1",
+        "sha256": "e09982cb4441149e5c5b3b7eec173ba508d51bd0afe56bda036fa31422b3e2e0",
+        "bytes": 1325152,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 998884,
+          "count": 50,
+          "stride": 52,
+          "size": 2600,
+          "end": 1001484
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 50,
+        "words_checked": 300,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.1262391805648804,
+          -0.011045947670936584,
+          -0.4143165946006775,
+          0.0,
+          -2.8700039386749268,
+          -0.9561587572097778
+        ],
+        "finite_word_maxima": [
+          0.011045947670936584,
+          1.1262391805648804,
+          1.1580418348312378,
+          1.901658058166504,
+          0.0,
+          2.8805155754089355
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/F100_56.PS2;1",
+        "sha256": "0ec391fc96f572d0ca3d445feddad97a8ac35919a540fea91338bc8292240a23",
+        "bytes": 1165920,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 904980,
+          "count": 42,
+          "stride": 52,
+          "size": 2184,
+          "end": 907164
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 42,
+        "words_checked": 252,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0277252197265625,
+          -0.7169656753540039,
+          -0.34993770718574524,
+          0.0,
+          -2.3570556640625,
+          -2.252039909362793
+        ],
+        "finite_word_maxima": [
+          0.7169656753540039,
+          1.0277175903320312,
+          1.0404216051101685,
+          1.8828344345092773,
+          1.199309229850769,
+          2.3617522716522217
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/F100_65.PS2;1",
+        "sha256": "1a9e92a8a109aaae4688f1c77269cf20d44842bc3e5d28b0cdace3c09460314a",
+        "bytes": 1190992,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 927652,
+          "count": 36,
+          "stride": 52,
+          "size": 1872,
+          "end": 929524
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 36,
+        "words_checked": 216,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0146052837371826,
+          0.0,
+          -0.29974475502967834,
+          0.0,
+          -2.51885986328125,
+          -2.2787868976593018
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.0146052837371826,
+          0.6710876822471619,
+          1.6665267944335938,
+          0.0,
+          2.5442609786987305
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/F150.PS2;1",
+        "sha256": "60f7ef5b1ee6edf106f3f71b905a1100feea683079c4a6ab4e8053051a6a0d1c",
+        "bytes": 1340032,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 1044836,
+          "count": 52,
+          "stride": 52,
+          "size": 2704,
+          "end": 1047540
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 52,
+        "words_checked": 312,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.1209259033203125,
+          -0.2553267478942871,
+          -0.39437389373779297,
+          0.0,
+          -2.8892364501953125,
+          -2.771021604537964
+        ],
+        "finite_word_maxima": [
+          0.2553272247314453,
+          1.12091064453125,
+          1.0219570398330688,
+          1.9456775188446045,
+          0.0,
+          2.9025774002075195
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/F150_04.PS2;1",
+        "sha256": "e1ee009ce3bc04b24e04a761b1eae2d8c74f896d95f2fc87ffca103932a4faee",
+        "bytes": 1305072,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 999988,
+          "count": 46,
+          "stride": 52,
+          "size": 2392,
+          "end": 1002380
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 46,
+        "words_checked": 276,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.2038590908050537,
+          0.0,
+          -0.38064420223236084,
+          0.0,
+          -2.8892364501953125,
+          -0.5554212331771851
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.2038590908050537,
+          0.9830204248428345,
+          1.868019700050354,
+          0.0,
+          2.8193020820617676
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/F350.PS2;1",
+        "sha256": "48b4c87e18b095efe5bca98079546cd3cb47ac8e4954cb00eca4dd990e8c0a71",
+        "bytes": 1299312,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 993636,
+          "count": 49,
+          "stride": 52,
+          "size": 2548,
+          "end": 996184
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 49,
+        "words_checked": 294,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.3893356323242188,
+          -0.045235633850097656,
+          -0.39437729120254517,
+          0.0,
+          -3.201509952545166,
+          -0.4178635776042938
+        ],
+        "finite_word_maxima": [
+          0.04523587226867676,
+          1.3893203735351562,
+          0.9553491473197937,
+          2.0346007347106934,
+          0.0,
+          3.2188122272491455
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/FOCUSSVT.PS2;1",
+        "sha256": "be8e5a6454771fb20dab61c7c1c6017cba504a9b9726bff1f5bc7cd5656e5380",
+        "bytes": 1253392,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 992676,
+          "count": 58,
+          "stride": 52,
+          "size": 3016,
+          "end": 995692
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 58,
+        "words_checked": 348,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9296731352806091,
+          -0.05244634672999382,
+          -0.29935768246650696,
+          0.0,
+          -2.1279585361480713,
+          -1.662341594696045
+        ],
+        "finite_word_maxima": [
+          0.052446283400058746,
+          0.9296731352806091,
+          1.0702438354492188,
+          1.4321273565292358,
+          0.049141786992549896,
+          2.130317211151123
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/FOCUSWRC.PS2;1",
+        "sha256": "20da6f3b5791fae8d7a579dc7892339207017fd4c6beea8396486d3fac7cd95a",
+        "bytes": 1046624,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 780820,
+          "count": 66,
+          "stride": 52,
+          "size": 3432,
+          "end": 784252
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 66,
+        "words_checked": 396,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.96331787109375,
+          -0.08753013610839844,
+          -0.3275774121284485,
+          0.0,
+          -2.0840718746185303,
+          -1.9172800779342651
+        ],
+        "finite_word_maxima": [
+          0.6064049005508423,
+          0.96331787109375,
+          1.1205419301986694,
+          1.4452552795410156,
+          0.11770212650299072,
+          2.127847909927368
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/FORDGT.PS2;1",
+        "sha256": "463b30ac918bca9676903639c1198faa8c314efcb0e112f05527d49b7a8d9d28",
+        "bytes": 1322048,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 1001220,
+          "count": 74,
+          "stride": 52,
+          "size": 3848,
+          "end": 1005068
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 74,
+        "words_checked": 444,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0621565580368042,
+          0.0,
+          -0.3549196720123291,
+          0.0,
+          -2.309615135192871,
+          -2.251171827316284
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.0621565580368042,
+          0.6052879691123962,
+          1.1042819023132324,
+          0.0,
+          2.48577880859375
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/FORTYNIN.PS2;1",
+        "sha256": "60af4baccd375773999d89364628c45926dc16583e05d089510981656bc5c2e9",
+        "bytes": 1022256,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 755604,
+          "count": 41,
+          "stride": 52,
+          "size": 2132,
+          "end": 757736
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 41,
+        "words_checked": 246,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9841161966323853,
+          -0.14461159706115723,
+          -0.35139793157577515,
+          0.0,
+          -2.459343671798706,
+          -2.3101019859313965
+        ],
+        "finite_word_maxima": [
+          0.0,
+          0.9841161966323853,
+          0.7141461968421936,
+          1.3375186920166016,
+          0.0,
+          2.461536169052124
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/FR200.PS2;1",
+        "sha256": "aecdb24d4d4070f27c8283b976c8429881ebb4e075a40b72a6bb9a7e5815b8a1",
+        "bytes": 1283408,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 993828,
+          "count": 66,
+          "stride": 52,
+          "size": 3432,
+          "end": 997260
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 66,
+        "words_checked": 396,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0168380737304688,
+          -0.23504900932312012,
+          -0.30073440074920654,
+          0.0,
+          -2.1338248252868652,
+          -1.885763168334961
+        ],
+        "finite_word_maxima": [
+          0.05268752574920654,
+          1.0168380737304688,
+          1.0107625722885132,
+          1.4590340852737427,
+          0.04936778545379639,
+          2.151763677597046
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/FR500.PS2;1",
+        "sha256": "f602fbbaf0b523b1c581a324c54515499813d32bd0204e3252b9f140a10fd674",
+        "bytes": 1283984,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 987492,
+          "count": 54,
+          "stride": 52,
+          "size": 2808,
+          "end": 990300
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 54,
+        "words_checked": 324,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0138537883758545,
+          -0.02901327610015869,
+          -0.3200167417526245,
+          0.0,
+          -2.3760204315185547,
+          -2.195054054260254
+        ],
+        "finite_word_maxima": [
+          0.02901327610015869,
+          1.0138537883758545,
+          0.6906830072402954,
+          1.3336529731750488,
+          0.0,
+          2.252474308013916
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/G_TORINO.PS2;1",
+        "sha256": "d3234f605e98e4dadf46633f4de3271f937bd8fe46dfdbcf1904de4aaf734909",
+        "bytes": 501072,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 256644,
+          "count": 43,
+          "stride": 52,
+          "size": 2236,
+          "end": 258880
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 43,
+        "words_checked": 258,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0027832984924316,
+          0.0,
+          -0.3371191918849945,
+          0.0,
+          -2.7380058765411377,
+          -2.5361475944519043
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.0027832984924316,
+          0.70830899477005,
+          1.4306319952011108,
+          0.0,
+          2.74302339553833
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/GT90.PS2;1",
+        "sha256": "5330ef43f70432f4429494df7977d54ea3205257b7bb4172c0c96e1be05ad999",
+        "bytes": 1264560,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 997012,
+          "count": 73,
+          "stride": 52,
+          "size": 3796,
+          "end": 1000808
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 73,
+        "words_checked": 438,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0038681030273438,
+          -0.038698434829711914,
+          -0.31865647435188293,
+          0.0,
+          -2.563323974609375,
+          -2.028829336166382
+        ],
+        "finite_word_maxima": [
+          0.038698434829711914,
+          1.0038681030273438,
+          0.594529926776886,
+          1.1157766580581665,
+          0.0,
+          2.4875030517578125
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/INDIGO.PS2;1",
+        "sha256": "63fc16e9d44d2ecf72709779c021b46987c73bd129cd6e2d038a0002ea2bc7f2",
+        "bytes": 1319520,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 1007828,
+          "count": 96,
+          "stride": 52,
+          "size": 4992,
+          "end": 1012820
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 96,
+        "words_checked": 576,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.1147384643554688,
+          -0.09677040576934814,
+          -0.3034569323062897,
+          0.0,
+          -2.2234649658203125,
+          -1.5357513427734375
+        ],
+        "finite_word_maxima": [
+          0.09677040576934814,
+          1.1147384643554688,
+          0.733428955078125,
+          0.993316650390625,
+          0.10760188102722168,
+          2.2270660400390625
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/LIGHTNIN.PS2;1",
+        "sha256": "60e3ecd7bd4a34dea60efa943c976a60577d9b57cb72e39e60c2d6fdabbf7f48",
+        "bytes": 1325536,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 983348,
+          "count": 58,
+          "stride": 52,
+          "size": 3016,
+          "end": 986364
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 58,
+        "words_checked": 348,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.1130493879318237,
+          -0.05325961112976074,
+          -0.3661808669567108,
+          0.0,
+          -2.6414999961853027,
+          -0.29265403747558594
+        ],
+        "finite_word_maxima": [
+          0.05325961112976074,
+          1.1139159202575684,
+          0.8362922668457031,
+          1.8009999990463257,
+          0.07574403285980225,
+          2.6414999961853027
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/MACH1A.PS2;1",
+        "sha256": "8b2c548d23f1ea831c8cdc54fabf4a623d9a7b51379e4f406e02821e7be66c40",
+        "bytes": 441344,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 247348,
+          "count": 29,
+          "stride": 52,
+          "size": 1508,
+          "end": 248856
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 29,
+        "words_checked": 174,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9532170295715332,
+          0.0,
+          -0.3125000298023224,
+          0.0,
+          -2.4750442504882812,
+          -2.3590216636657715
+        ],
+        "finite_word_maxima": [
+          0.0,
+          0.9532170295715332,
+          0.6689708232879639,
+          1.2843719720840454,
+          0.0,
+          2.439894199371338
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/MACH1S.PS2;1",
+        "sha256": "0ccf798cb857dcfcff41ab76a23a56aad9e43119164540831b301293715a2021",
+        "bytes": 438624,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 246308,
+          "count": 29,
+          "stride": 52,
+          "size": 1508,
+          "end": 247816
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 29,
+        "words_checked": 174,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9532170295715332,
+          0.0,
+          -0.3125000298023224,
+          0.0,
+          -2.48795485496521,
+          -2.3590216636657715
+        ],
+        "finite_word_maxima": [
+          0.0,
+          0.9532170295715332,
+          0.6689708232879639,
+          1.2843719720840454,
+          0.0,
+          2.4948551654815674
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/MACH3.PS2;1",
+        "sha256": "162befcf68782a0c70795252b39213f4864f95238a786b127c08c0e27b515c83",
+        "bytes": 1215488,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 972900,
+          "count": 60,
+          "stride": 52,
+          "size": 3120,
+          "end": 976020
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 60,
+        "words_checked": 360,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9780420660972595,
+          -0.004966259002685547,
+          -0.33900484442710876,
+          0.0,
+          -2.495595932006836,
+          -2.123344659805298
+        ],
+        "finite_word_maxima": [
+          0.004966259002685547,
+          0.9780420660972595,
+          0.7425647974014282,
+          1.2899720668792725,
+          0.0,
+          2.514249801635742
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/MUST68.PS2;1",
+        "sha256": "d56ae2c9537ae4461c697dc4169cb9ce8683b36553e351abd3c9926f9c3736a6",
+        "bytes": 1224320,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 970916,
+          "count": 60,
+          "stride": 52,
+          "size": 3120,
+          "end": 974036
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 60,
+        "words_checked": 360,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9018718004226685,
+          -0.21766315400600433,
+          -0.342181921005249,
+          0.0,
+          -2.3894472122192383,
+          -2.2932732105255127
+        ],
+        "finite_word_maxima": [
+          0.05760085582733154,
+          0.8916664123535156,
+          1.030370831489563,
+          1.4188467264175415,
+          0.0,
+          2.3875677585601807
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/MUST68B.PS2;1",
+        "sha256": "04c2298b2d87ef3d150f45fe4a099fdd5603f405dad53b937c3af16957123383",
+        "bytes": 508832,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 254548,
+          "count": 61,
+          "stride": 52,
+          "size": 3172,
+          "end": 257720
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 61,
+        "words_checked": 366,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9018718004226685,
+          -0.21766315400600433,
+          -0.34220001101493835,
+          0.0,
+          -2.3894472122192383,
+          -2.2932732105255127
+        ],
+        "finite_word_maxima": [
+          0.01487421989440918,
+          0.8916664123535156,
+          1.030370831489563,
+          1.4188467264175415,
+          2.0664823055267334,
+          2.3875677585601807
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/MUSTCON.PS2;1",
+        "sha256": "4d78397759d0d4bba1877db4a68308ef05213baa0dcabd183d9882f33e3711fd",
+        "bytes": 1262000,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 977076,
+          "count": 50,
+          "stride": 52,
+          "size": 2600,
+          "end": 979676
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 50,
+        "words_checked": 300,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0318832397460938,
+          0.0,
+          -0.33992406725883484,
+          0.0,
+          -2.35888671875,
+          -2.1634411811828613
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.0318832397460938,
+          0.6956435441970825,
+          1.331982135772705,
+          0.12079250812530518,
+          2.3373990058898926
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/POWERST.PS2;1",
+        "sha256": "bf1bd43dad4cc65b76eed40770c92882c85991cb976ca33a0ec475691f575c1b",
+        "bytes": 1231872,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 923556,
+          "count": 41,
+          "stride": 52,
+          "size": 2132,
+          "end": 925688
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 41,
+        "words_checked": 246,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.3575687408447266,
+          0.0,
+          -0.4080449342727661,
+          0.0,
+          -2.8872499465942383,
+          -2.797152519226074
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1.3575687408447266,
+          0.8004465699195862,
+          1.8090488910675049,
+          0.0,
+          2.88749361038208
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TAURUSA.PS2;1",
+        "sha256": "9aa6264a7eb3185480a36ca2ac317e37c3015c86576afdbc5e4e345905cafe97",
+        "bytes": 3126096,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2883476,
+          "count": 53,
+          "stride": 52,
+          "size": 2756,
+          "end": 2886232
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 53,
+        "words_checked": 318,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9756088256835938,
+          -0.001541435718536377,
+          -0.3296482264995575,
+          0.0,
+          -2.568450927734375,
+          0.0
+        ],
+        "finite_word_maxima": [
+          0.001541435718536377,
+          0.9756088256835938,
+          0.06704873591661453,
+          1.272140383720398,
+          0.0,
+          2.77996826171875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TAURUSB.PS2;1",
+        "sha256": "35338e4c3276052cef7a44d0a199a9355638aa74e01e8b8c985be458518d91a8",
+        "bytes": 3125120,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2882436,
+          "count": 53,
+          "stride": 52,
+          "size": 2756,
+          "end": 2885192
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 53,
+        "words_checked": 318,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9756088256835938,
+          -0.001541435718536377,
+          -0.3296482264995575,
+          0.0,
+          -2.568450927734375,
+          0.0
+        ],
+        "finite_word_maxima": [
+          0.001541435718536377,
+          0.9756088256835938,
+          0.06704873591661453,
+          1.272140383720398,
+          0.0,
+          2.77996826171875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TAURUSC.PS2;1",
+        "sha256": "7e72ae77f5091f19a4b9344ce4578c91011d9ec9c1cafd5cfa4562f9be658c6c",
+        "bytes": 3124032,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2881412,
+          "count": 53,
+          "stride": 52,
+          "size": 2756,
+          "end": 2884168
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 53,
+        "words_checked": 318,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9756088256835938,
+          -0.001541435718536377,
+          -0.3296482264995575,
+          0.0,
+          -2.568450927734375,
+          0.0
+        ],
+        "finite_word_maxima": [
+          0.001541435718536377,
+          0.9756088256835938,
+          0.06704873591661453,
+          1.272140383720398,
+          0.0,
+          2.77996826171875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TAURUSD.PS2;1",
+        "sha256": "377514d73fa238f79afc5c45097673feec90e8ddb111539f51e6c757331f6779",
+        "bytes": 3122992,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2880372,
+          "count": 53,
+          "stride": 52,
+          "size": 2756,
+          "end": 2883128
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 53,
+        "words_checked": 318,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.9756088256835938,
+          -0.001541435718536377,
+          -0.3296482264995575,
+          0.0,
+          -2.568450927734375,
+          0.0
+        ],
+        "finite_word_maxima": [
+          0.001541435718536377,
+          0.9756088256835938,
+          0.06704873591661453,
+          1.272140383720398,
+          0.0,
+          2.77996826171875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TBIRD.PS2;1",
+        "sha256": "dd4aea15895268d220775448415f7561e3d1cf7ecc15a95a34d59b5a1abb9401",
+        "bytes": 1200304,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 900804,
+          "count": 38,
+          "stride": 52,
+          "size": 1976,
+          "end": 902780
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 38,
+        "words_checked": 228,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -0.8795318603515625,
+          0.0,
+          -0.3306984305381775,
+          0.0,
+          -2.217296838760376,
+          -2.089811325073242
+        ],
+        "finite_word_maxima": [
+          0.0,
+          0.8795318603515625,
+          0.6396539211273193,
+          1.3645254373550415,
+          0.0,
+          2.2916436195373535
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TBIRD2.PS2;1",
+        "sha256": "c3d03b36ec5d2eb89d4d26f3b8b31e11db6b852a60ca37366b62820e0f16e415",
+        "bytes": 1249232,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 969876,
+          "count": 67,
+          "stride": 52,
+          "size": 3484,
+          "end": 973360
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 67,
+        "words_checked": 402,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0204706192016602,
+          -0.0093611478805542,
+          -0.3581526279449463,
+          0.0,
+          -2.3447344303131104,
+          -2.0933735370635986
+        ],
+        "finite_word_maxima": [
+          0.0093611478805542,
+          1.0204706192016602,
+          0.7127821445465088,
+          1.3710113763809204,
+          0.0,
+          2.3719749450683594
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/CARS/TBIRDM.PS2;1",
+        "sha256": "32579b498e35973ef5ad6ab48617688b901320e13faeb539c1a7bd09e0a59aa4",
+        "bytes": 514016,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 251460,
+          "count": 67,
+          "stride": 52,
+          "size": 3484,
+          "end": 254944
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 67,
+        "words_checked": 402,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1.0204704999923706,
+          -0.0093611478805542,
+          -0.3581526279449463,
+          0.0,
+          -2.3447344303131104,
+          -2.0933735370635986
+        ],
+        "finite_word_maxima": [
+          0.0093611478805542,
+          1.0204704999923706,
+          0.7507822513580322,
+          1.3906577825546265,
+          0.0,
+          2.3623709678649902
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/BayA.PS2;1",
+        "sha256": "514f676ab040374ae36c447ea506f9773d3328a3e09b0b6333d3c0778fe23580",
+        "bytes": 4421968,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2480420,
+          "count": 563,
+          "stride": 52,
+          "size": 29276,
+          "end": 2509696
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 563,
+        "words_checked": 3378,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1975.19091796875,
+          -31.63323974609375,
+          -2000.0,
+          -3.747086524963379,
+          -1998.0504150390625,
+          -29.873291015625
+        ],
+        "finite_word_maxima": [
+          31.874603271484375,
+          1975.1912841796875,
+          0.06534881889820099,
+          2000.0,
+          31.8524169921875,
+          1998.0506591796875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/BayB.PS2;1",
+        "sha256": "dc0fd9e8763893c5ce140cdc49a61680555b07856213ce32f014c632b92256c5",
+        "bytes": 6053744,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2708612,
+          "count": 1358,
+          "stride": 52,
+          "size": 70616,
+          "end": 2779228
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 1358,
+        "words_checked": 8148,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1991.9703369140625,
+          -31.567977905273438,
+          -2000.0,
+          0.0,
+          -1991.970703125,
+          -30.3135986328125
+        ],
+        "finite_word_maxima": [
+          29.84698486328125,
+          1991.970947265625,
+          0.06534881889820099,
+          2000.0,
+          31.764617919921875,
+          1991.9705810546875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/BayC.PS2;1",
+        "sha256": "0026ec56d1e71705a9fc7095e7021d0e83cb9de6b9d2b7f77b9e9a283343f375",
+        "bytes": 5466192,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2372548,
+          "count": 818,
+          "stride": 52,
+          "size": 42536,
+          "end": 2415084
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 818,
+        "words_checked": 4908,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1999.9852294921875,
+          -31.1788330078125,
+          -2000.0,
+          0.0,
+          -1999.9844970703125,
+          -30.875640869140625
+        ],
+        "finite_word_maxima": [
+          90.61328125,
+          1999.984375,
+          7.500001430511475,
+          2000.0,
+          30.831298828125,
+          1999.984619140625
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/Brands.PS2;1",
+        "sha256": "0b6235f545e870c7237a256952f4ab1ee261528ab466b2d403e9fb393b31fbb8",
+        "bytes": 5449792,
+        "exact_eof": true,
+        "later_profile": "measured_legacy60",
+        "table": {
+          "offset": 2957396,
+          "count": 772,
+          "stride": 52,
+          "size": 40144,
+          "end": 2997540
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 772,
+        "words_checked": 4632,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1500.0,
+          -30.1805419921875,
+          -909.602783203125,
+          0.0,
+          -1500.0,
+          -28.665679931640625
+        ],
+        "finite_word_maxima": [
+          31.178985595703125,
+          1500.0,
+          43.3847541809082,
+          909.602783203125,
+          18.63427734375,
+          1500.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/Canyon.PS2;1",
+        "sha256": "bf689b86a426489f84e24a250a5fb26ea1655bcaba907f17769ba4d601ed5f48",
+        "bytes": 4249888,
+        "exact_eof": true,
+        "later_profile": "measured_legacy60",
+        "table": {
+          "offset": 2067620,
+          "count": 281,
+          "stride": 52,
+          "size": 14612,
+          "end": 2082232
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 281,
+        "words_checked": 1686,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -2000.0,
+          -29.927902221679688,
+          -2000.0,
+          -55.01496887207031,
+          -1999.9993896484375,
+          -30.23876953125
+        ],
+        "finite_word_maxima": [
+          30.184246063232422,
+          1999.9996337890625,
+          0.0,
+          2000.0,
+          31.71331787109375,
+          2000.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/DesA.PS2;1",
+        "sha256": "f40c874fa21d86113af7ab74464bf6d1be5085aceafdf73193645e8247638dbb",
+        "bytes": 4524544,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2136772,
+          "count": 720,
+          "stride": 52,
+          "size": 37440,
+          "end": 2174212
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 720,
+        "words_checked": 4320,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1975.98095703125,
+          -28.010986328125,
+          -1999.9998779296875,
+          0.0,
+          -1975.980712890625,
+          -31.257080078125
+        ],
+        "finite_word_maxima": [
+          30.533340454101562,
+          1975.980224609375,
+          0.06534881889820099,
+          1999.9998779296875,
+          30.402198791503906,
+          1975.980224609375
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/DesB.PS2;1",
+        "sha256": "f4c93d821d486ebddf51303c8db55cfd81c81f197d88c451ef1a14064e890e1a",
+        "bytes": 4536224,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2286628,
+          "count": 516,
+          "stride": 52,
+          "size": 26832,
+          "end": 2313460
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 516,
+        "words_checked": 3096,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -2000.0,
+          -27.94720458984375,
+          -2000.0,
+          0.0,
+          -1999.9993896484375,
+          -31.257080078125
+        ],
+        "finite_word_maxima": [
+          134.8358917236328,
+          1999.99951171875,
+          0.06534881889820099,
+          2000.0,
+          30.311904907226562,
+          2000.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/DesC.PS2;1",
+        "sha256": "e746a307d073cae9904765828b01c0fa161ff6b9645e493ba0e1801936fc38c3",
+        "bytes": 4479808,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2258676,
+          "count": 586,
+          "stride": 52,
+          "size": 30472,
+          "end": 2289148
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 586,
+        "words_checked": 3516,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1991.8316650390625,
+          -31.065185546875,
+          -2000.0,
+          -25.505186080932617,
+          -1991.832275390625,
+          -31.848838806152344
+        ],
+        "finite_word_maxima": [
+          31.5899658203125,
+          1991.83251953125,
+          1.7448397874832153,
+          2000.0,
+          31.289398193359375,
+          1991.8319091796875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/FlorA.PS2;1",
+        "sha256": "aaa4ac7e555271b8db6a7a8fcf4a3bea97999cfc1aae33812368604d35707264",
+        "bytes": 5146528,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2669380,
+          "count": 673,
+          "stride": 52,
+          "size": 34996,
+          "end": 2704376
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 673,
+        "words_checked": 4038,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1975.6593017578125,
+          -1008.6943969726562,
+          -2000.0,
+          -8.394353866577148,
+          -1975.658935546875,
+          -31.42138671875
+        ],
+        "finite_word_maxima": [
+          31.7806396484375,
+          1975.65966796875,
+          0.06534881889820099,
+          2000.0,
+          31.85235595703125,
+          1975.6590576171875
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/FlorB.PS2;1",
+        "sha256": "ab25bc00528ff8230e89cc05bc7ef8ea806602f1f020c026b69bc01b76210f08",
+        "bytes": 7016160,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2686420,
+          "count": 910,
+          "stride": 52,
+          "size": 47320,
+          "end": 2733740
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 910,
+        "words_checked": 5460,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1996.62060546875,
+          -31.2032470703125,
+          -2000.0,
+          0.0,
+          -1996.6209716796875,
+          -31.42138671875
+        ],
+        "finite_word_maxima": [
+          31.289432525634766,
+          1996.6207275390625,
+          33.597251892089844,
+          2000.0,
+          30.416976928710938,
+          1996.6207275390625
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/FlorC.PS2;1",
+        "sha256": "2f587d1b26196ff802167581089ee16d8bf61f646e81c9018cae8a0b89b3a161",
+        "bytes": 6132704,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2778852,
+          "count": 838,
+          "stride": 52,
+          "size": 43576,
+          "end": 2822428
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 838,
+        "words_checked": 5028,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1993.90869140625,
+          -30.851547241210938,
+          -1999.9998779296875,
+          0.0,
+          -1993.908447265625,
+          -31.072336196899414
+        ],
+        "finite_word_maxima": [
+          31.2886962890625,
+          1993.9080810546875,
+          0.3953852951526642,
+          1999.999755859375,
+          30.8184814453125,
+          1993.90869140625
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/Fukuoka.PS2;1",
+        "sha256": "3dae1e8ff73ec00a97a88136d3a96976cd4db005d9326cc83972962a960428ec",
+        "bytes": 5554160,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2661044,
+          "count": 1700,
+          "stride": 52,
+          "size": 88400,
+          "end": 2749444
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 1700,
+        "words_checked": 10200,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1500.0,
+          -517.157958984375,
+          -909.602783203125,
+          -0.18826362490653992,
+          -1500.0,
+          -456.72369384765625
+        ],
+        "finite_word_maxima": [
+          57.1787223815918,
+          1767.8226318359375,
+          0.4538602828979492,
+          909.602783203125,
+          31.5277099609375,
+          1500.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/JungA.PS2;1",
+        "sha256": "2d89dab6c141fd2cad35e113f18b0b1e62474082696815fa3059eedadf47b8f4",
+        "bytes": 3282768,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2172548,
+          "count": 391,
+          "stride": 52,
+          "size": 20332,
+          "end": 2192880
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 391,
+        "words_checked": 2346,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -2000.0,
+          -26.6182861328125,
+          -2000.0,
+          0.0,
+          -1999.9993896484375,
+          -31.21142578125
+        ],
+        "finite_word_maxima": [
+          30.5015869140625,
+          1999.99951171875,
+          0.06534881889820099,
+          2000.0,
+          30.37127685546875,
+          2000.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/JungB.PS2;1",
+        "sha256": "09ffd3219ea7f97abccb8c029c17f1b5863643ae96fde6b61a8ed8ba77bd202b",
+        "bytes": 3810112,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2335940,
+          "count": 743,
+          "stride": 52,
+          "size": 38636,
+          "end": 2374576
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 743,
+        "words_checked": 4458,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -2000.0,
+          -26.756134033203125,
+          -2000.0,
+          0.0,
+          -1999.9993896484375,
+          -30.804046630859375
+        ],
+        "finite_word_maxima": [
+          31.0911865234375,
+          1999.99951171875,
+          0.06534881889820099,
+          2000.0,
+          26.66827392578125,
+          2000.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/JungC.PS2;1",
+        "sha256": "512736c4a73f282fb58bbc6ed8ee5951cd49d4a98210667b5c1210fa7a31ac20",
+        "bytes": 3749184,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2283556,
+          "count": 570,
+          "stride": 52,
+          "size": 29640,
+          "end": 2313196
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 570,
+        "words_checked": 3420,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1973.22412109375,
+          -30.3548583984375,
+          -2000.0,
+          0.0,
+          -1973.224365234375,
+          -30.184417724609375
+        ],
+        "finite_word_maxima": [
+          28.539794921875,
+          1973.223876953125,
+          0.06534881889820099,
+          2000.0,
+          30.38702392578125,
+          1973.2236328125
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/oval2.PS2;1",
+        "sha256": "fc940669f565fd6b1b015a9b511a23836e15f550a926b7f23d19185bf6f1043d",
+        "bytes": 3930992,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2547892,
+          "count": 859,
+          "stride": 52,
+          "size": 44668,
+          "end": 2592560
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 859,
+        "words_checked": 5154,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -2000.0,
+          -24.7598876953125,
+          -2000.0,
+          -113.71307373046875,
+          -1999.9993896484375,
+          -20.60601806640625
+        ],
+        "finite_word_maxima": [
+          0.0,
+          1999.99951171875,
+          2.1790401935577393,
+          2000.0,
+          26.88665771484375,
+          2000.0
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/oval3.PS2;1",
+        "sha256": "a0e7b23e2cf4c72f61532c9e350317f4c4f71bf8d157bef1b5ebb423cc30b646",
+        "bytes": 3053136,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 1808852,
+          "count": 689,
+          "stride": 52,
+          "size": 35828,
+          "end": 1844680
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 689,
+        "words_checked": 4134,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1641.9544677734375,
+          -23.1556396484375,
+          -909.602783203125,
+          0.0,
+          -1641.95458984375,
+          -31.617431640625
+        ],
+        "finite_word_maxima": [
+          23.57867431640625,
+          1641.95458984375,
+          10.480259895324707,
+          1180.2222900390625,
+          27.99920654296875,
+          1641.95458984375
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/Spring.PS2;1",
+        "sha256": "2388e3664d5bd47c8542898cae58aea79ad2d5fb5325a9e52b6cbc14e1397998",
+        "bytes": 5175232,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2331620,
+          "count": 593,
+          "stride": 52,
+          "size": 30836,
+          "end": 2362456
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 593,
+        "words_checked": 3558,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1996.400390625,
+          -19.329620361328125,
+          -2000.0,
+          0.0,
+          -1996.4002685546875,
+          -39.712677001953125
+        ],
+        "finite_word_maxima": [
+          31.449951171875,
+          1996.4005126953125,
+          0.8797367215156555,
+          2000.0,
+          29.3114013671875,
+          1996.400634765625
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      },
+      {
+        "path": "3DDATA/TRACKS/Spring2.PS2;1",
+        "sha256": "9346140f93cd5417c39a0bb18d53b0d8f3930c3aea43bc18aa9402891e15378f",
+        "bytes": 4977664,
+        "exact_eof": true,
+        "later_profile": "loader68",
+        "table": {
+          "offset": 2338388,
+          "count": 590,
+          "stride": 52,
+          "size": 30680,
+          "end": 2369068
+        },
+        "source_pairs": [
+          [
+            4,
+            8
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            20,
+            24
+          ]
+        ],
+        "records_checked": 590,
+        "words_checked": 3540,
+        "nonfinite_words": 0,
+        "inverted_pairs": 0,
+        "all_zero_records": 1,
+        "finite_word_minima": [
+          -1996.400390625,
+          -21.93143081665039,
+          -2000.0,
+          0.0,
+          -1996.4002685546875,
+          -39.712677001953125
+        ],
+        "finite_word_maxima": [
+          31.449951171875,
+          1996.4005126953125,
+          0.8797367215156555,
+          2000.0,
+          29.3114013671875,
+          1996.400634765625
+        ],
+        "anomaly_preview": [],
+        "anomaly_preview_truncated": false,
+        "failures": []
+      }
+    ],
+    "failures": [],
+    "unsupported": [],
+    "claim_limits": [
+      "Checks three source endpoint pairs only. Coordinate axes, units, vertex containment, planes and renderer semantics remain unproved.",
+      "ID zero is rejected by the observed record resolver, but every serialized row is measured, including the first row.",
+      "Input finiteness and ordered pairs do not prove finite transformed corners or VU equivalence.",
+      "Two SHA-bound legacy profiles are measured structural interpretations, not proven current-loader compatibility."
+    ]
+  },
+  "artifacts": {
+    "report.md": {
+      "bytes": 65808,
+      "sha256": "4161e4cb5dae776ca6dcac65e62310711e9a0c3d4b86198590bceca282ebad16"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "Breakpoint-road feasibility findings (all verified in the headless container): PCSX2 v2.8.2 AppImage binary contains ZERO gdb strings: no GDB stub. The debugger GUI has no remote/IPC API (only a forum request exists upstream). hkmodd/PCSX2-MCP DebugServer patch is Windows-only (pcsx2-qt.exe/MSVC); Linux needs a full PCSX2 source build + patch (hours, GBs, risky inside the running container). Driving the debugger GUI blind via RFB keys is infeasible: F8 screenshots capture only the emulated game screen, never the Qt debugger window, so there is zero visibility into debugger state. What REMAINS feasible headlessly: (a) static analysis of the menu INPUT handler in the decompilation - find which variable the d-pad handler increments when moving the highlight (read-only, headless, no new tool); then verify the variable live via read-only PINE across the six screenshot-verified slots; (b) full PCSX2 source build + DebugServer patch; (c) stop and record open. NOTE: the sweep proved no EE word equals position 1..6, so the handler more likely writes an index into a table, a pointer, or a per-frame recomputation - the variable may still be found and read even if it is not position-valued.",
+    "records": [
+      {
+        "id": "nogdb",
+        "request": "extract nogdb",
+        "value": "no GDB stub"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "nogdb",
+        "value": "no GDB stub",
+        "checks": {
+          "hallucinated": 0.02,
+          "off_target": 0.06,
+          "incomplete": 0.1,
+          "format": 0.13
+        },
+        "p_wrong": 0.13,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1010,
+      "output_tokens": 86
+    }
+  }
+}

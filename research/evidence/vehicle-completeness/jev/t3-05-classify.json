@@ -1,0 +1,104 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "slot102",
+        "text": "car 49_COUPE enum TXT_CARS_COUPE_1949 resolved 'FORD '49' == screen label 'FORD '49'"
+      },
+      {
+        "id": "slot103",
+        "text": "car THUNDERBIRD_2002 enum TXT_CARS_THUNDERBIRD_2002 resolved 'THUNDERBIRD CONVERTIBLE' == label"
+      },
+      {
+        "id": "slot104",
+        "text": "car FORTYNINE enum TXT_CARS_FORTYNINE resolved 'FORTYNINE CONCEPT' == label"
+      }
+    ],
+    "classes": [
+      {
+        "id": "resolved_match",
+        "description": "The archive key resolved and the string equals the screen VEHICLE label. Example: TXT_CARS_FORTYNINE -> FORTYNINE CONCEPT."
+      },
+      {
+        "id": "resolved_mismatch",
+        "description": "The key resolved to a different string than the screen label."
+      },
+      {
+        "id": "unresolved",
+        "description": "The key was absent from the archive, so no string resolved."
+      },
+      {
+        "id": "manual_review",
+        "description": "Ambiguous; needs a human check."
+      }
+    ],
+    "purpose": "confirm each captured pair is a resolved match",
+    "context": "Three captured pairs only; classes are mutually exclusive."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 3,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "resolved_match": 3
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "slot102",
+        "classification": "resolved_match",
+        "probabilities": {
+          "resolved_match": 0.96,
+          "resolved_mismatch": 0.03,
+          "unresolved": 0,
+          "manual_review": 0.01
+        },
+        "confidence": 0.94,
+        "margin": 0.9299999999999999,
+        "top_probability": 0.96,
+        "decision": "auto"
+      },
+      {
+        "id": "slot103",
+        "classification": "resolved_match",
+        "probabilities": {
+          "resolved_match": 0.96,
+          "resolved_mismatch": 0.04,
+          "unresolved": 0,
+          "manual_review": 0
+        },
+        "confidence": 0.94,
+        "margin": 0.9199999999999999,
+        "top_probability": 0.96,
+        "decision": "auto"
+      },
+      {
+        "id": "slot104",
+        "classification": "resolved_match",
+        "probabilities": {
+          "resolved_match": 1,
+          "resolved_mismatch": 0,
+          "unresolved": 0,
+          "manual_review": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 758,
+      "output_tokens": 147
+    }
+  }
+}

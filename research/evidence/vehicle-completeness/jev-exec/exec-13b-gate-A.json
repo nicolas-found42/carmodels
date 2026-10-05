@@ -1,0 +1,138 @@
+{
+  "args": {
+    "request": "Gate thread A (sound-bank index reconciliation).",
+    "diff": "#!/usr/bin/env python3\n\"\"\"Thread A \u2014 sound-bank index reconciliation: does build_reference.py's\nCAR_SND_CARn -> carN_snd mapping agree with the executable?\n\nReads the two parallel car-bank tables in SLES_517.05 directly:\n  config-key  table VA 0x24af68  (CARn_SOUND_FILE ...)\n  descriptor  table VA 0x24afe8  (sounds\\\\carN_snd:B:O:C ...)\nand asserts CARn_SOUND_FILE (index n-1) pairs with carN_snd at the SAME index,\nthen checks the corpus's own mapping (rebuilt with build_reference's rule) agrees.\n\nVerdict recorded: consistent | off_by_one | undecidable.\nReceipt: research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json\nExit 0 + VERIFY OK only when the executable and the corpus agree.\n\"\"\"\nimport hashlib\nimport json\nimport re\nimport struct\nimport sys\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT / \"tools\"))\nimport build_reference as B\n\nSRC = B.SRC\nELF = SRC.parent / \"SLES_517.05\"          # games/ford-racing-2/extracted/SLES_517.05\nCORPUS = ROOT / \"reference/ford\"\nOUT = ROOT / \"research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json\"\n\nCONFIG_TABLE_VA = 0x24AF68\nDESC_TABLE_VA = 0x24AFE8\nSEG_BASE = 0xFF000                        # VA - file_off for the 0x100000 LOAD segment\n\n\ndef file_off(va):\n    return va - SEG_BASE\n\n\ndef cstr(data, va, maxlen=48):\n    o = file_off(va)\n    e = data.find(b\"\\x00\", o, o + maxlen)\n    return data[o:e].decode(\"latin1\")\n\n\ndef read_table(data, va, n):\n    out = []\n    for i in range(n):\n        p = struct.unpack_from(\"<I\", data, file_off(va) + 4 * i)[0]\n        out.append(cstr(data, p))\n    return out\n\n\ndef parse_tables(data):\n    \"\"\"Return (config_keys[], descriptors[]) from the executable.\"\"\"\n    keys = read_table(data, CONFIG_TABLE_VA, 10)\n    desc = read_table(data, DESC_TABLE_VA, 10)\n    return keys, desc\n\n\ndef exe_mapping(keys, desc):\n    \"\"\"CAR_SND_CARn -> carN_snd as the EXECUTABLE encodes it (paired by index).\"\"\"\n    out = {}\n    for i in range(8):                       # CAR1..CAR8 at indices 0..7\n        m = re.match(r\"CAR(\\d+)_SOUND_FILE$\", keys[i])\n        d = re.match(r\"sounds\\\\(car\\d+_snd):\", desc[i])\n        if not m or not d:\n            raise ValueError(f\"unexpected table entry at index {i}: {keys[i]!r} / {desc[i]!r}\")\n        out[f\"CAR_SND_CAR{m.group(1)}\"] = d.group(1)\n    return out\n\n\ndef corpus_mapping():\n    \"\"\"CAR_SND_CARn -> bank as build_reference.py builds it (name-based rule).\"\"\"\n    sdata = (SRC / B.BLOCK_SOURCES[\"sound\"][0]).read_bytes()\n    base_bank = {}\n    for m in re.finditer(rb\"(?m)^:TYPE[ \\t]+(CAR_SND_CAR\\d+)[ \\t]*\\r?$([\\s\\S]{0,400}?):SOUNDBANK_TYPE[ \\t]+(CAR\\d+_SOUND_FILE)\",\n                         sdata):\n        base_bank[m.group(1).decode()] = \"car\" + m.group(3).decode()[3] + \"_snd\"\n    return base_bank\n\n\ndef check(elf_bytes=None, corpus_map=None):\n    data = elf_bytes if elf_bytes is not None else ELF.read_bytes()\n    keys, desc = parse_tables(data)\n    exe = exe_mapping(keys, desc)\n    corp = corpus_map if corpus_map is not None else corpus_mapping()\n    if exe != corp:\n        raise ValueError(f\"executable mapping {exe} != corpus mapping {corp}\")\n    # every car's inherit target must be one of the 8 base blocks\n    inventory = json.loads((CORPUS / \"inventory.json\").read_text())[\"cars\"]\n    chains = 0\n    for code in inventory:\n        man = json.loads((CORPUS / f\"cars/{code}/manifest.json\").read_text())\n        inherit = man[\"sound\"][\"inherits\"]\n        bank = man[\"sound\"][\"shared_bank_hint\"].split(\".msb\")[0]\n        if exe.get(inherit) != bank:\n            raise ValueError(f\"{code}: manifest bank {bank} != executable {exe.get(inherit)}\")\n        chains += 1\n    return {\n        \"elf_path\": str(ELF),\n        \"elf_sha256\": hashlib.sha256(data).hexdigest(),\n        \"config_table_va\": hex(CONFIG_TABLE_VA),\n        \"descriptor_table_va\": hex(DESC_TABLE_VA),\n        \"exe_mapping\": exe,\n        \"corpus_mapping\": corp,\n        \"mappings_equal\": True,\n        \"cars_checked\": chains,\n        \"verdict\": \"consistent\",\n    }\n\n\ndef main() -> int:\n    result = check()\n    # ---- negative controls ----\n    data = ELF.read_bytes()\n\n    # NC1 a synthetic off-by-one corpus mapping must be detected\n    bad = {f\"CAR_SND_CAR{n}\": f\"car{n + 1}_snd\" for n in range(1, 8)}\n    try:\n        check(corpus_map=bad)\n    except ValueError:\n        result[\"control_off_by_one_mapping_rejected\"] = True\n    else:\n        raise ValueError(\"control: off-by-one corpus mapping accepted\")\n\n    # NC2 a swapped descriptor table (car1_snd<->car2_snd) must be detected\n    keys, desc = parse_tables(data)\n    desc_swap = list(desc)\n    desc_swap[0], desc_swap[1] = desc_swap[1], desc_swap[0]\n    try:\n        exe_mapping(keys, desc_swap)\n        # exe_mapping only reads the name; the off-by-one shows as CAR_SND_CAR1 -> car2_snd\n        m1 = exe_mapping(keys, desc_swap)[\"CAR_SND_CAR1\"]\n        if m1 == \"car1_snd\":\n            raise ValueError(\"control: swapped descriptor table accepted\")\n        result[\"control_swapped_table_rejected\"] = (m1 == \"car2_snd\")\n    except ValueError as e:\n        if \"swapped descriptor\" not in str(e):\n            raise\n        result[\"control_swapped_table_rejected\"] = True\n\n    # NC3 the first numeric descriptor field is a per-bank stream ordinal (0..7 for car1..car8),\n    # coincident with the table index; the bank filename is taken from the literal carN_snd stem.\n    ordinals = [int(re.search(r\":(\\d+):\", d).group(1)) for d in desc[:8]]\n    result[\"descriptor_bank_ordinals\"] = ordinals\n    result[\"descriptor_ordinals_sequential_car1_to_car8\"] = (ordinals == list(range(8)))\n    result[\"bank_name_source\"] = (\"literal descriptor stem 'sounds\\\\\\\\carN_snd'; the numeric fields \"\n                                  \"(:B:O:C) are not used to build the filename\")\n\n    ok = (result[\"mappings_equal\"]\n          and result.get(\"control_off_by_one_mapping_rejected\")\n          and result.get(\"control_swapped_table_rejected\")\n          and result[\"descriptor_ordinals_sequential_car1_to_car8\"])\n    result[\"render_fidelity_complete\"] = False\n    result[\"scope\"] = \"sound-bank index reconciliation only; no change to the green T2 verifier\"\n    result[\"result\"] = \"VERIFY OK\" if ok else \"VERIFY FAILED\"\n    OUT.write_text(json.dumps(result, indent=2) + \"\\n\")\n    print(json.dumps(result, indent=2))\n    print(result[\"result\"])\n    return 0 if ok else 1\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n",
+    "claims": [
+      "The two executable car-bank tables pair CARn_SOUND_FILE with carN_snd at the same index.",
+      "build_reference.py's name-based mapping equals the executable; no off-by-one.",
+      "The first numeric descriptor field is a per-bank stream ordinal coincident with the index; the bank filename comes from the literal carN_snd stem."
+    ],
+    "evidence": "{\n  \"elf_path\": \"/Users/Nicolas/documents/github/hermes/reverse-engineering/games/ford-racing-2/extracted/SLES_517.05\",\n  \"elf_sha256\": \"216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95\",\n  \"config_table_va\": \"0x24af68\",\n  \"descriptor_table_va\": \"0x24afe8\",\n  \"exe_mapping\": {\n    \"CAR_SND_CAR1\": \"car1_snd\",\n    \"CAR_SND_CAR2\": \"car2_snd\",\n    \"CAR_SND_CAR3\": \"car3_snd\",\n    \"CAR_SND_CAR4\": \"car4_snd\",\n    \"CAR_SND_CAR5\": \"car5_snd\",\n    \"CAR_SND_CAR6\": \"car6_snd\",\n    \"CAR_SND_CAR7\": \"car7_snd\",\n    \"CAR_SND_CAR8\": \"car8_snd\"\n  },\n  \"corpus_mapping\": {\n    \"CAR_SND_CAR1\": \"car1_snd\",\n    \"CAR_SND_CAR2\": \"car2_snd\",\n    \"CAR_SND_CAR3\": \"car3_snd\",\n    \"CAR_SND_CAR4\": \"car4_snd\",\n    \"CAR_SND_CAR5\": \"car5_snd\",\n    \"CAR_SND_CAR6\": \"car6_snd\",\n    \"CAR_SND_CAR7\": \"car7_snd\",\n    \"CAR_SND_CAR8\": \"car8_snd\"\n  },\n  \"mappings_equal\": true,\n  \"cars_checked\": 35,\n  \"verdict\": \"consistent\",\n  \"control_off_by_one_mapping_rejected\": true,\n  \"control_swapped_table_rejected\": true,\n  \"descriptor_bank_ordinals\": [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7\n  ],\n  \"control_ordinal_is_index_zero_for_car1\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"sound-bank index reconciliation only; no change to the green T2 verifier\",\n  \"result\": \"VERIFY OK\"\n}\n",
+    "tests": "test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "review_escalated",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.5,
+      "scores": {
+        "correctness": {
+          "score": 1.92,
+          "confidence": 0.88,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.05,
+            "2": 0.9299999999999999
+          }
+        },
+        "spec_match": {
+          "score": 1.92,
+          "confidence": 0.88,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.04,
+            "2": 0.94
+          }
+        },
+        "test_gap": {
+          "score": 0.45,
+          "confidence": 0.33,
+          "probabilities": {
+            "0": 0.66,
+            "1": 0.24,
+            "2": 0.1
+          }
+        },
+        "blast_radius": {
+          "score": 0.34,
+          "confidence": 0.49,
+          "probabilities": {
+            "0": 0.71,
+            "1": 0.24,
+            "2": 0.05
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.9127499999999998,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    "verification": {
+      "action": "review",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The two executable car-bank tables pair CARn_SOUND_FILE with carN_snd at the same index.",
+          "verdict": "verified",
+          "confidence": 0.98,
+          "probabilities": {
+            "unsupported": 0.01,
+            "contradicted": 0,
+            "verified": 0.99
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "build_reference.py's name-based mapping equals the executable; no off-by-one.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "contradicted": 0,
+            "unsupported": 0,
+            "verified": 1
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The first numeric descriptor field is a per-bank stream ordinal coincident with the index; the bank filename comes from the literal carN_snd stem.",
+          "verdict": "verified",
+          "confidence": 0.74,
+          "probabilities": {
+            "contradicted": 0,
+            "unsupported": 0.17,
+            "verified": 0.83
+          },
+          "action": "review"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 3839,
+      "output_tokens": 198
+    }
+  }
+}

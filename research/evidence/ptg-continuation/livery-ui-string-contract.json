@@ -1,0 +1,86 @@
+{
+  "purpose": "Corrected raw-ABI trace of the LIVERY template call through the generic type-1 UI object factory. It establishes this call as text-object initialization and a negative PTG-load route; it does not identify the actual consumer of all LIVERY PTGs.",
+  "source_identities": {
+    "elf": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/extracted/SLES_517.05",
+      "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+      "text_va_to_file_offset": "VA - 0xff000"
+    },
+    "fresh_export": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po",
+      "inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b"
+    }
+  },
+  "raw_callsite": {
+    "function": "FUN_0015b280",
+    "incoming_argument": "a0; caller 00173938 passes VA 0x25a1d0 (GRAPHICS\\\\GAME\\\\LIVERY\\\\%s.PSD) at 0x174370",
+    "instructions": [
+      {
+        "va": "0x15b294",
+        "file_offset": "0x5c294",
+        "word_le_hex": "afa40170",
+        "assembly": "sw a0,0x170(sp)"
+      },
+      {
+        "va": "0x15b4d8",
+        "file_offset": "0x5c4d8",
+        "word_le_hex": "8fa20170",
+        "assembly": "lw v0,0x170(sp)"
+      },
+      {
+        "va": "0x15b4e4",
+        "file_offset": "0x5c4e4",
+        "word_le_hex": "240f006d",
+        "assembly": "addiu t7,zero,0x6d"
+      },
+      {
+        "va": "0x15b4e8",
+        "file_offset": "0x5c4e8",
+        "word_le_hex": "afa20098",
+        "assembly": "sw v0,0x98(sp)"
+      },
+      {
+        "va": "0x15b5e8",
+        "file_offset": "0x5c5e8",
+        "word_le_hex": "0c05211a",
+        "assembly": "jal 0x148468"
+      },
+      {
+        "va": "0x15b5ec",
+        "file_offset": "0x5c5ec",
+        "word_le_hex": "afa30138",
+        "assembly": "delay slot sw v1,0x138(sp); v1 previously set to 0x18 terminator"
+      }
+    ],
+    "interpretation": "Argument a0 is copied to the value slot following property key 0x6d in the outgoing UI-object property list. It is not unused, and the decompiler prototype under-reports the raw argument packing."
+  },
+  "factory_and_property_route": {
+    "type1_registration": "FUN_001485f0 calls FUN_0014d568(1); FUN_0014d568 calls FUN_0014be98(1), which assigns DAT_00236d20[1] = FUN_0014bed0.",
+    "constructor": "FUN_00148468 allocates an object and dispatches (object,type,&property_list) through DAT_00236d20[type].",
+    "parser": "FUN_0014bed0 initializes the type-1 object then calls FUN_00145b08(object,property_list). Case 0x6d dispatches to DAT_00239070[type].",
+    "setter": "FUN_0014d568(1) calls FUN_0014ddc8(1); this assigns DAT_00239070[1] = FUN_0014e298.",
+    "string_storage": "FUN_0014e298 obtains string length, allocates length+1 units in type-1 object field +0x140, and copies the string via FUN_001017e8. This is the text/string buffer path."
+  },
+  "conclusion": {
+    "status": "negative route proven; actual 136-file LIVERY loader/draw consumer unresolved",
+    "claim": "The 0x25a1d0 LIVERY template call initializes a type-1 UI object string field. Its source path does not open, parse, or upload a LIVERY PTG.",
+    "limit": "This excludes only the observed FUN_00173938 \u2192 FUN_0015b280 route. It does not prove no other LIVERY PTG consumer exists elsewhere."
+  },
+  "jev_typesafe": {
+    "receipt": "jev-livery-ui-string-contract.json",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "usage_tokens": {
+      "input": 1975,
+      "output": 313
+    },
+    "results": {
+      "incoming_a0_stack_copy": "verified, confidence 1.0",
+      "type1_factory_to_attribute_parser": "supports but below confidence threshold, confidence 0.73; retain direct source/raw control flow as evidence",
+      "copied_string_used_as_PTg_pathname_by_parser": "unsupported, confidence 0.97"
+    },
+    "route_verification_receipt": "jev-livery-ui-string-route-verification.json",
+    "route_check_summary": "Four claims verified; raw key/value pairing confidence 0.85, table dispatch 0.99, +0x140 string copy 1.0. Combined path conclusion confidence 0.73 is retained for review, not as Jev-auto."
+  },
+  "provenance_note": "Generated pseudocode supports control/data-flow explanations; addresses, instruction words, executable hash, table assignments, and field-copy behavior are the primary evidence. Jev is a verification aid only."
+}

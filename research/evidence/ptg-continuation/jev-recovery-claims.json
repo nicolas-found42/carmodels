@@ -1,0 +1,110 @@
+{
+  "tool": "jev_verify",
+  "provider": "openrouter",
+  "model": "typesafe/jev-1.13",
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 0,
+      "unsupported": 2,
+      "needs_review": 3
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The recovery script independently confirmed all 171 manifest-bound car icon/livery PTGs match the pinned archive bytes, and all passed the checked header, tile-record, descriptor-padding, and exact-span guards.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.01,
+          "supports": 0.88,
+          "contradicts": 0.11
+        },
+        "confidence": 0.81,
+        "action": "auto",
+        "supporting_evidence": "recovery_receipt",
+        "same_subject": 0.83
+      },
+      {
+        "id": "claim1",
+        "claim": "For each measured car PTG, bytes 2000 through 100303 are exactly 24 consecutive 4096-byte spans.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.37,
+          "supports": 0.62,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.43,
+        "action": "review",
+        "supporting_evidence": "exporter_source",
+        "same_subject": 0.76
+      },
+      {
+        "id": "claim2",
+        "claim": "The exported Gran Torino icon uses a row-major 24-tile assembly and is validated by checking that the generated PNG expands to the expected unscaled RGBA bytes.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.02,
+          "supports": 0.96,
+          "says_nothing": 0.02
+        },
+        "confidence": 0.95,
+        "action": "auto",
+        "supporting_evidence": "exporter_source",
+        "same_subject": 0.84
+      },
+      {
+        "id": "claim3",
+        "claim": "The primary SLES executable's CARS path formatter proves the .PSD asset request resolves to the disc archive's .ptg;1 objects.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0.11,
+          "supports": 0.01,
+          "contradicts": 0.88
+        },
+        "confidence": 0.81,
+        "action": "review",
+        "supporting_evidence": "loader_trace",
+        "same_subject": 0.33
+      },
+      {
+        "id": "claim4",
+        "claim": "The decompiled FUN_00222358 passes object field +0x28 to FUN_00222110 along with derived texture dimensions.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "supports": 0.99,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.97,
+        "action": "auto",
+        "supporting_evidence": "function_222358",
+        "same_subject": 0.89
+      },
+      {
+        "id": "claim5",
+        "claim": "The supplied evidence proves FUN_00222358 consumes the exact 64-byte PTG descriptor blocks.",
+        "verdict": "unsupported",
+        "probabilities": {
+          "says_nothing": 0.8,
+          "supports": 0.04,
+          "contradicts": 0.16
+        },
+        "confidence": 0.71,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.13
+      }
+    ],
+    "usage": {
+      "input_tokens": 3285,
+      "output_tokens": 789
+    }
+  }
+}
+

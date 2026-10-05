@@ -1,0 +1,136 @@
+{
+ "bridge_test": "ordinary-capture label to numeric-selector joins, 2026-10-05",
+ "claim_limits": [
+  "Three observed (highlighted car, VEHICLE label, TRACK, TYPE) pairs with ground-truth emulator screenshots and savestate hashes.",
+  "Position-to-car joins are code-measured: prior sprite PTG join x-order plus CARDATA VALID_LIVERY basenames.",
+  "All three shown cars are at their DEFAULT livery (no livery cycling performed); numeric side is selector id 0 by construction, NOT by an isolated EE read.",
+  "No isolated per-screen highlight/selector word is claimed. The 136-entry table is not claimed. render_fidelity_complete stays false."
+ ],
+ "ee_findings": {
+  "livery_name_tables_slot102": [
+   "0x0143b736",
+   "0x0157e365",
+   "0x016b7934",
+   "0x017ec5aa",
+   "0x0192f915",
+   "0x01a5856e"
+  ],
+  "note_tables_static": "record bases 0x233070+type*0x114 (types 2..7, count 12) word-identical between slot102 and slot103; list pointers shifted vs race95 by +0x20, strings by +0x9D",
+  "label_strings_absent_from_EE": "no FORD'49 / ROUTE 50 / DRIVING SKILLS / TXT_CARS_* / LIVING LEGENDS bytes in slot102 EE; labels arrive via text archive + glyph path",
+  "static_leads": {
+   "FUN_0019eb90": "reads gameflow livery label via static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...), resolves via FUN_00125640, stores via FUN_00121e10",
+   "VA_0x23acb0_value": "0x0028f7c8 (stable across all three captures)",
+   "jgrep_highlight_hits": [
+    "0017cb80: initials-entry cycler (discarded)",
+    "00184430: 1..3 bounded cursor on uRam0028fd74 (read 0 in all three; not the car cursor)",
+    "001c4a40: indexed cursor over DAT_00241b40 table; caller context still open"
+   ],
+   "VA_0x241b60": "5,4,4 across 102/103/104 (does not track highlight; open)"
+  },
+  "triangulation": {
+   "highlight_tuples_tested": {
+    "one_based_(1,5,4)": 0,
+    "zero_based_(0,4,3)_words": 0
+   },
+   "byte_level_(0,4,3)": 97,
+   "byte_assessment": "hits cluster in VU-packet regions (0x21xxxx structured packet data, 0x81xxxx-0x84xxxx); no menu-struct candidate isolated",
+   "scratchpad": "121 changed words, all float-scale VU noise; 0x352c-0x354c show 102==104!=103 float equality, not a small-int cursor"
+  }
+ },
+ "input_notes": {
+  "L_direction_observed": "L moves highlight leftward: 5->4 single step; 1->5 via wrap under ~4 s hold. Assumed L=Right mapping contradicted by observation.",
+  "VNC_staleness": "paused emulator presents no new frames (identical screenshot hashes while paused); one stale-canvas frame observed after slot101 load (menu frame shown while race was live); resolved by re-screenshot after unpause",
+  "delivery_proof": "Space toggled PINE status 1->0; M/L/Space presses all executed with observed screen changes; 21 presses used of 30 budget"
+ },
+ "jev": {
+  "d1_decide": "browser_keys 0.85 with warning: game-input requirement unknown until proven; proof delivered after (status toggle + screen changes)",
+  "d1_gate": "escalate (ordinary-input claim contradicted pre-proof; not re-gated post-proof in this session)",
+  "d2_decide": "partial_pairs 0.97, no contradicted requirements",
+  "d2_verify": "5/5 verified",
+  "d2_classify": "3/3 labeled_vehicle auto",
+  "d2_gate": "escalate (2 needs_review); no completion gate passes",
+  "d2_noul_thumbnail_to_cartype": "0.30-0.39 uncertain on bare claim; chain evidence (x-order + basenames) recorded here instead"
+ },
+ "prior_state": {
+  "slot100": "untouched (sha f4ded6478dcf1f88314f06a8c4a2b23df44ce02b819439d1ee2cd62936671201)",
+  "slot101": "pre-experiment live-race backup, unpacked ok (7 members, 0 CRC); live state restored from 101 and left paused (status 1)",
+  "slot99_boot_default": "untouched"
+ },
+ "screens": [
+  {
+   "capture": "slot102",
+   "savestate_sha256": "6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7",
+   "highlight_position_1based": 1,
+   "vehicle": "FORD '49",
+   "track": "ROUTE 50",
+   "type": "DRIVING SKILLS",
+   "status": "UNLOCKED",
+   "thumbnail_ptg": "GRAPHICS/GAME/MATRIX/49couped.ptg;1",
+   "car_type": "49_COUPE",
+   "cardata_livery_basename_default": "49COUPED",
+   "ingame_text_enum": "TXT_CARS_COUPE_1949",
+   "ground_truth_screenshot": "research/evidence/continuation/runtime/linux/slot102-car1-ford49-Screenshot.png",
+   "display_name_resolution": {
+    "archive_path": "LANGUAGE/tlate_en.dat;1",
+    "archive_sha256": "469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3",
+    "key": "TXT_CARS_COUPE_1949",
+    "resolved_string": "FORD '49",
+    "matches_vehicle_label": true,
+    "utf16le_bytes_hex": "46004f00520044002000270034003900",
+    "apostrophe_raw_0x27_present": true
+   }
+  },
+  {
+   "capture": "slot103",
+   "savestate_sha256": "b5e569fcc561fa3a5408f6eb0a7a6497594e52bdb26f5cdb2dbfeed31dc56c3e",
+   "highlight_position_1based": 5,
+   "status": "UNLOCKED",
+   "thumbnail_ptg": "GRAPHICS/GAME/MATRIX/tbird22d.ptg;1",
+   "car_type": "THUNDERBIRD_2002",
+   "cardata_livery_basename_default": "TBIRD22D",
+   "ingame_text_enum": "TXT_CARS_THUNDERBIRD_2002",
+   "ground_truth_screenshot": "research/evidence/continuation/runtime/linux/slot103-car5-tbirdconv-Screenshot.png",
+   "track": "DEER CREEK",
+   "type": "DRAFTING",
+   "vehicle": "THUNDERBIRD CONVERTIBLE",
+   "display_name_resolution": {
+    "archive_path": "LANGUAGE/tlate_en.dat;1",
+    "archive_sha256": "469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3",
+    "key": "TXT_CARS_THUNDERBIRD_2002",
+    "resolved_string": "THUNDERBIRD CONVERTIBLE",
+    "matches_vehicle_label": true,
+    "utf16le_bytes_hex": "5400480055004e004400450052004200490052004400200043004f004e005600450052005400490042004c004500",
+    "apostrophe_raw_0x27_present": false
+   }
+  },
+  {
+   "capture": "slot104",
+   "savestate_sha256": "74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694",
+   "highlight_position_1based": 4,
+   "status": "UNLOCKED",
+   "thumbnail_ptg": "GRAPHICS/GAME/MATRIX/fortyd.ptg;1",
+   "car_type": "FORTYNINE",
+   "cardata_livery_basename_default": "FORTYD",
+   "ingame_text_enum": "TXT_CARS_FORTYNINE",
+   "ground_truth_screenshot": "research/evidence/continuation/runtime/linux/slot104-car4-fortyninec-Screenshot.png",
+   "track": "PORT SIDE",
+   "type": "RACING LINE",
+   "vehicle": "FORTYNINE CONCEPT",
+   "display_name_resolution": {
+    "archive_path": "LANGUAGE/tlate_en.dat;1",
+    "archive_sha256": "469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3",
+    "key": "TXT_CARS_FORTYNINE",
+    "resolved_string": "FORTYNINE CONCEPT",
+    "matches_vehicle_label": true,
+    "utf16le_bytes_hex": "46004f005200540059004e0049004e004500200043004f004e004300450050005400",
+    "apostrophe_raw_0x27_present": false
+   }
+  }
+ ],
+ "display_name_resolution_summary": {
+  "method": "LANGUAGE/tlate_en.dat;1 UTF-16-LE keys resolved in code; apostrophe byte-exact from archive",
+  "pairs": 3,
+  "all_pass": true,
+  "archive_sha256": "469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3"
+ }
+}

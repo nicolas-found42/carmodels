@@ -1,0 +1,1436 @@
+05/10/2026 01:57:39 passing arg to libvncserver: -rfbport
+05/10/2026 01:57:39 passing arg to libvncserver: 5900
+05/10/2026 01:57:40 x11vnc version: 0.9.16 lastmod: 2019-01-05  pid: 12
+05/10/2026 01:57:40 Using X display :99
+05/10/2026 01:57:40 rootwin: 0x21f reswin: 0x200001 dpy: 0x55930d10
+05/10/2026 01:57:40 
+05/10/2026 01:57:40 ------------------ USEFUL INFORMATION ------------------
+05/10/2026 01:57:40 X DAMAGE available on display, using it for polling hints.
+05/10/2026 01:57:40   To disable this behavior use: '-noxdamage'
+05/10/2026 01:57:40 
+05/10/2026 01:57:40   Most compositing window managers like 'compiz' or 'beryl'
+05/10/2026 01:57:40   cause X DAMAGE to fail, and so you may not see any screen
+05/10/2026 01:57:40   updates via VNC.  Either disable 'compiz' (recommended) or
+05/10/2026 01:57:40   supply the x11vnc '-noxdamage' command line option.
+05/10/2026 01:57:40 
+05/10/2026 01:57:40 Wireframing: -wireframe mode is in effect for window moves.
+05/10/2026 01:57:40   If this yields undesired behavior (poor response, painting
+05/10/2026 01:57:40   errors, etc) it may be disabled:
+05/10/2026 01:57:40    - use '-nowf' to disable wireframing completely.
+05/10/2026 01:57:40    - use '-nowcr' to disable the Copy Rectangle after the
+05/10/2026 01:57:40      moved window is released in the new position.
+05/10/2026 01:57:40   Also see the -help entry for tuning parameters.
+05/10/2026 01:57:40   You can press 3 Alt_L's (Left "Alt" key) in a row to 
+05/10/2026 01:57:40   repaint the screen, also see the -fixscreen option for
+05/10/2026 01:57:40   periodic repaints.
+05/10/2026 01:57:40 
+05/10/2026 01:57:40 XFIXES available on display, resetting cursor mode
+05/10/2026 01:57:40   to: '-cursor most'.
+05/10/2026 01:57:40   to disable this behavior use: '-cursor arrow'
+05/10/2026 01:57:40   or '-noxfixes'.
+05/10/2026 01:57:40 using XFIXES for cursor drawing.
+05/10/2026 01:57:40 GrabServer control via XTEST.
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 Scroll Detection: -scrollcopyrect mode is in effect to
+05/10/2026 01:57:41   use RECORD extension to try to detect scrolling windows
+05/10/2026 01:57:41   (induced by either user keystroke or mouse input).
+05/10/2026 01:57:41   If this yields undesired behavior (poor response, painting
+05/10/2026 01:57:41   errors, etc) it may be disabled via: '-noscr'
+05/10/2026 01:57:41   Also see the -help entry for tuning parameters.
+05/10/2026 01:57:41   You can press 3 Alt_L's (Left "Alt" key) in a row to 
+05/10/2026 01:57:41   repaint the screen, also see the -fixscreen option for
+05/10/2026 01:57:41   periodic repaints.
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 XKEYBOARD: number of keysyms per keycode 7 is greater
+05/10/2026 01:57:41   than 4 and 51 keysyms are mapped above 4.
+05/10/2026 01:57:41   Automatically switching to -xkb mode.
+05/10/2026 01:57:41   If this makes the key mapping worse you can
+05/10/2026 01:57:41   disable it with the "-noxkb" option.
+05/10/2026 01:57:41   Also, remember "-remap DEAD" for accenting characters.
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 X FBPM extension not supported.
+Xlib:  extension "DPMS" missing on display ":99".
+05/10/2026 01:57:41 X display is not capable of DPMS.
+05/10/2026 01:57:41 --------------------------------------------------------
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 Default visual ID: 0x21
+05/10/2026 01:57:41 Read initial data from X display into framebuffer.
+05/10/2026 01:57:41 initialize_screen: fb_depth/fb_bpp/fb_Bpl 24/32/4096
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 X display :99 is 32bpp depth=24 true color
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 Listening for VNC connections on TCP port 5900
+05/10/2026 01:57:41 Listening for VNC connections on TCP6 port 5900
+05/10/2026 01:57:41 listen6: bind: Address already in use
+05/10/2026 01:57:41 Not listening on IPv6 interface.
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 Xinerama is present and active (e.g. multi-head).
+05/10/2026 01:57:41 Xinerama: number of sub-screens: 1
+05/10/2026 01:57:41 Xinerama: no blackouts needed (only one sub-screen)
+05/10/2026 01:57:41 
+05/10/2026 01:57:41 fb read rate: 134 MB/sec
+05/10/2026 01:57:41 fast read: reset -wait  ms to: 10
+05/10/2026 01:57:41 fast read: reset -defer ms to: 10
+05/10/2026 01:57:41 The X server says there are 10 mouse buttons.
+05/10/2026 01:57:41 screen setup finished.
+05/10/2026 01:57:41 
+
+The VNC desktop is:      localhost:0
+PORT=5900
+
+******************************************************************************
+Have you tried the x11vnc '-ncache' VNC client-side pixel caching feature yet?
+
+The scheme stores pixel data offscreen on the VNC viewer side for faster
+retrieval.  It should work with any VNC viewer.  Try it by running:
+
+    x11vnc -ncache 10 ...
+
+One can also add -ncache_cr for smooth 'copyrect' window motion.
+More info: http://www.karlrunge.com/x11vnc/faq.html#faq-client-caching
+
+05/10/2026 01:57:52 Got connection from client 127.0.0.1
+05/10/2026 01:57:52   0 other clients
+05/10/2026 01:57:52 Normal socket connection
+05/10/2026 01:57:52 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 01:57:52 Disabled X server key autorepeat.
+05/10/2026 01:57:52   to force back on run: 'xset r on' (3 times)
+05/10/2026 01:57:52 incr accepted_client=1 for 127.0.0.1:33076  sock=16
+05/10/2026 01:57:52 Client Protocol Version 3.8
+05/10/2026 01:57:52 Protocol version sent 3.8, using 3.8
+05/10/2026 01:57:52 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 01:57:52 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 01:57:52 copy_tiles: allocating first_line at size 33
+05/10/2026 01:57:52 Pixel format for client 127.0.0.1:
+05/10/2026 01:57:52   32 bpp, depth 24, little endian
+05/10/2026 01:57:52   true colour: max r 255 g 255 b 255, shift r 0 g 8 b 16
+05/10/2026 01:57:52 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+05/10/2026 01:57:52 Using image quality level 6 for client 127.0.0.1
+05/10/2026 01:57:52 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+05/10/2026 01:57:52 Using compression level 2 for client 127.0.0.1
+05/10/2026 01:57:52 Enabling NewFBSize protocol extension for client 127.0.0.1
+05/10/2026 01:57:52 Enabling LastRect protocol extension for client 127.0.0.1
+05/10/2026 01:57:52 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+05/10/2026 01:57:52 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+05/10/2026 01:57:52 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+05/10/2026 01:57:52 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+05/10/2026 01:57:52 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFECD)
+05/10/2026 01:57:52 Enabling ExtendedClipboard extension for client 127.0.0.1
+05/10/2026 01:57:52 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0x574D5664)
+05/10/2026 01:57:52 Enabling full-color cursor updates for client 127.0.0.1
+05/10/2026 01:57:52 Using tight encoding for client 127.0.0.1
+05/10/2026 01:57:52 Sending rfbEncodingExtDesktopSize for size (1024x768) 
+05/10/2026 01:57:52 client 1 network rate 159.7 KB/sec (33033.8 eff KB/sec)
+05/10/2026 01:57:52 client 1 latency:  12.4 ms
+05/10/2026 01:57:52 dt1: 0.0679, dt2: 0.0336 dt3: 0.0124 bytes: 15215
+05/10/2026 01:57:52 link_rate: LR_UNKNOWN - 12 ms, 159 KB/s
+05/10/2026 01:57:52 client_set_net: 127.0.0.1  0.0040
+05/10/2026 01:57:52 created   xdamage object: 0x200024
+05/10/2026 01:58:01 created selwin: 0x200025
+05/10/2026 01:58:01 called initialize_xfixes()
+05/10/2026 02:04:02 idle keyboard:   turning X autorepeat back on.
+05/10/2026 02:06:46 active keyboard: turning X autorepeat off.
+05/10/2026 02:11:49 idle keyboard:   turning X autorepeat back on.
+05/10/2026 03:10:07 Got connection from client 127.0.0.1
+05/10/2026 03:10:07   1 other clients
+05/10/2026 03:10:07 Normal socket connection
+05/10/2026 03:10:07 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 03:10:07 incr accepted_client=2 for 127.0.0.1:34446  sock=17
+05/10/2026 03:10:07 Client Protocol Version 3.8
+05/10/2026 03:10:07 Protocol version sent 3.8, using 3.8
+05/10/2026 03:10:07 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 03:10:07 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 03:10:08 Pixel format for client 127.0.0.1:
+05/10/2026 03:10:08   32 bpp, depth 24, little endian
+05/10/2026 03:10:08   true colour: max r 255 g 255 b 255, shift r 0 g 8 b 16
+05/10/2026 03:10:08 rfbProcessClientNormalMessage: ignoring unsupported encoding type tightPng
+05/10/2026 03:10:08 Using image quality level 6 for client 127.0.0.1
+05/10/2026 03:10:08 Using JPEG subsampling 0, Q79 for client 127.0.0.1
+05/10/2026 03:10:08 Using compression level 2 for client 127.0.0.1
+05/10/2026 03:10:08 Enabling NewFBSize protocol extension for client 127.0.0.1
+05/10/2026 03:10:08 Enabling LastRect protocol extension for client 127.0.0.1
+05/10/2026 03:10:08 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEFE)
+05/10/2026 03:10:08 Enabling ExtDesktopSize protocol extension for client 127.0.0.1
+05/10/2026 03:10:08 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC8)
+05/10/2026 03:10:08 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFEC7)
+05/10/2026 03:10:08 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0xFFFFFECD)
+05/10/2026 03:10:08 Enabling ExtendedClipboard extension for client 127.0.0.1
+05/10/2026 03:10:08 rfbProcessClientNormalMessage: ignoring unsupported encoding type Enc(0x574D5664)
+05/10/2026 03:10:08 Enabling full-color cursor updates for client 127.0.0.1
+05/10/2026 03:10:08 Using tight encoding for client 127.0.0.1
+05/10/2026 03:10:08 Sending rfbEncodingExtDesktopSize for size (1024x768) 
+05/10/2026 03:10:10 client_set_net: 127.0.0.1  0.0014
+05/10/2026 03:10:10 active keyboard: turning X autorepeat off.
+05/10/2026 03:14:07 client 2 network rate 7972.8 KB/sec (129150.7 eff KB/sec)
+05/10/2026 03:14:07 client 2 latency:  1.1 ms
+05/10/2026 03:14:07 dt1: 0.0074, dt2: 0.0025 dt3: 0.0011 bytes: 74349
+05/10/2026 03:14:07 link_rate: LR_UNKNOWN - 12 ms, 159 KB/s
+05/10/2026 03:24:25 client_count: 1
+05/10/2026 03:24:25 Client 127.0.0.1 gone
+05/10/2026 03:24:25 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 03:24:25  ServerCutText       :      1 |        16/       16 (  0.0%)
+05/10/2026 03:24:25  FramebufferUpdate   :   3762 |         0/        0 (  0.0%)
+05/10/2026 03:24:25  LastRect            :   3753 |     45036/    45036 (  0.0%)
+05/10/2026 03:24:25  tight               :  45039 | 315265779/254833332 (-23.7%)
+05/10/2026 03:24:25  RichCursor          :      1 |       696/      696 (  0.0%)
+05/10/2026 03:24:25  ExtendedDesktopSize :      1 |        32/       32 (  0.0%)
+05/10/2026 03:24:25  TOTALS              :  52557 | 315311559/254879112 (-23.7%)
+05/10/2026 03:24:25 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 03:24:25  KeyEvent            :     36 |       288/      288 (  0.0%)
+05/10/2026 03:24:25  PointerEvent        :      3 |        18/       18 (  0.0%)
+05/10/2026 03:24:25  ClientCutText       :      1 |        16/       16 (  0.0%)
+05/10/2026 03:24:25  FramebufferUpdate   :   3764 |     37640/    37640 (  0.0%)
+05/10/2026 03:24:25  SetEncodings        :      1 |        80/       80 (  0.0%)
+05/10/2026 03:24:25  SetPixelFormat      :      1 |        20/       20 (  0.0%)
+05/10/2026 03:24:25  TOTALS              :   3806 |     38062/    38062 (  0.0%)
+05/10/2026 03:27:20 idle keyboard:   turning X autorepeat back on.
+05/10/2026 04:41:10 Got connection from client 127.0.0.1
+05/10/2026 04:41:10   1 other clients
+05/10/2026 04:41:11 Normal socket connection
+05/10/2026 04:41:11 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:11 incr accepted_client=3 for 127.0.0.1:37834  sock=17
+05/10/2026 04:41:11 Client Protocol Version 3.8
+05/10/2026 04:41:11 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:11 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:11 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:11 client_count: 1
+05/10/2026 04:41:11 Client 127.0.0.1 gone
+05/10/2026 04:41:11 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:11  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:11 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:11  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:11  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:15 active keyboard: turning X autorepeat off.
+05/10/2026 04:41:31 Got connection from client 127.0.0.1
+05/10/2026 04:41:31   1 other clients
+05/10/2026 04:41:32 Normal socket connection
+05/10/2026 04:41:32 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:32 incr accepted_client=4 for 127.0.0.1:47556  sock=17
+05/10/2026 04:41:32 Client Protocol Version 3.8
+05/10/2026 04:41:32 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:32 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:32 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:32 client_count: 1
+05/10/2026 04:41:32 Client 127.0.0.1 gone
+05/10/2026 04:41:32 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:32  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:32 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:32  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:32  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:55 Got connection from client 127.0.0.1
+05/10/2026 04:41:55   1 other clients
+05/10/2026 04:41:55 Normal socket connection
+05/10/2026 04:41:55 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:55 incr accepted_client=5 for 127.0.0.1:53074  sock=17
+05/10/2026 04:41:55 Client Protocol Version 3.8
+05/10/2026 04:41:55 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:55 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:55 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:55 client_count: 1
+05/10/2026 04:41:55 Client 127.0.0.1 gone
+05/10/2026 04:41:55 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:55  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:55 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:55  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:55  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:56 Got connection from client 127.0.0.1
+05/10/2026 04:41:56   1 other clients
+05/10/2026 04:41:56 Normal socket connection
+05/10/2026 04:41:56 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:56 incr accepted_client=6 for 127.0.0.1:53082  sock=17
+05/10/2026 04:41:56 Client Protocol Version 3.8
+05/10/2026 04:41:56 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:56 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:56 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:56 client_count: 1
+05/10/2026 04:41:56 Client 127.0.0.1 gone
+05/10/2026 04:41:56 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:56  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:56 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:56  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:56  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:57 Got connection from client 127.0.0.1
+05/10/2026 04:41:57   1 other clients
+05/10/2026 04:41:57 Normal socket connection
+05/10/2026 04:41:57 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:57 incr accepted_client=7 for 127.0.0.1:53094  sock=17
+05/10/2026 04:41:57 Client Protocol Version 3.8
+05/10/2026 04:41:57 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:57 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:57 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:57 client_count: 1
+05/10/2026 04:41:57 Client 127.0.0.1 gone
+05/10/2026 04:41:57 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:57  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:57 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:57  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:57  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:58 Got connection from client 127.0.0.1
+05/10/2026 04:41:58   1 other clients
+05/10/2026 04:41:58 Normal socket connection
+05/10/2026 04:41:58 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:58 incr accepted_client=8 for 127.0.0.1:50612  sock=17
+05/10/2026 04:41:58 Client Protocol Version 3.8
+05/10/2026 04:41:58 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:58 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:58 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:58 client_count: 1
+05/10/2026 04:41:58 Client 127.0.0.1 gone
+05/10/2026 04:41:58 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:58  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:58 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:58  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:58  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:59 Got connection from client 127.0.0.1
+05/10/2026 04:41:59   1 other clients
+05/10/2026 04:41:59 Normal socket connection
+05/10/2026 04:41:59 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:41:59 incr accepted_client=9 for 127.0.0.1:50616  sock=17
+05/10/2026 04:41:59 Client Protocol Version 3.8
+05/10/2026 04:41:59 Protocol version sent 3.8, using 3.8
+05/10/2026 04:41:59 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:41:59 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:41:59 client_count: 1
+05/10/2026 04:41:59 Client 127.0.0.1 gone
+05/10/2026 04:41:59 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:41:59  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:41:59 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:41:59  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:41:59  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:00 Got connection from client 127.0.0.1
+05/10/2026 04:42:00   1 other clients
+05/10/2026 04:42:00 Normal socket connection
+05/10/2026 04:42:00 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:00 incr accepted_client=10 for 127.0.0.1:50626  sock=17
+05/10/2026 04:42:00 Client Protocol Version 3.8
+05/10/2026 04:42:00 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:00 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:00 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:01 client_count: 1
+05/10/2026 04:42:01 Client 127.0.0.1 gone
+05/10/2026 04:42:01 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:01  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:01 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:01  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:01  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:22 Got connection from client 127.0.0.1
+05/10/2026 04:42:22   1 other clients
+05/10/2026 04:42:22 Normal socket connection
+05/10/2026 04:42:22 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:22 incr accepted_client=11 for 127.0.0.1:60152  sock=17
+05/10/2026 04:42:22 Client Protocol Version 3.8
+05/10/2026 04:42:22 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:22 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:22 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:22 client_count: 1
+05/10/2026 04:42:22 Client 127.0.0.1 gone
+05/10/2026 04:42:22 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:22  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:22 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:22  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:22  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:23 Got connection from client 127.0.0.1
+05/10/2026 04:42:23   1 other clients
+05/10/2026 04:42:23 Normal socket connection
+05/10/2026 04:42:23 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:23 incr accepted_client=12 for 127.0.0.1:60160  sock=17
+05/10/2026 04:42:23 Client Protocol Version 3.8
+05/10/2026 04:42:23 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:23 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:23 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:23 client_count: 1
+05/10/2026 04:42:23 Client 127.0.0.1 gone
+05/10/2026 04:42:23 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:23  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:23 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:23  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:23  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:24 Got connection from client 127.0.0.1
+05/10/2026 04:42:24   1 other clients
+05/10/2026 04:42:24 Normal socket connection
+05/10/2026 04:42:24 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:24 incr accepted_client=13 for 127.0.0.1:60164  sock=17
+05/10/2026 04:42:24 Client Protocol Version 3.8
+05/10/2026 04:42:24 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:24 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:24 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:24 client_count: 1
+05/10/2026 04:42:24 Client 127.0.0.1 gone
+05/10/2026 04:42:24 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:24  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:24 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:24  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:24  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:25 Got connection from client 127.0.0.1
+05/10/2026 04:42:25   1 other clients
+05/10/2026 04:42:25 Normal socket connection
+05/10/2026 04:42:25 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:25 incr accepted_client=14 for 127.0.0.1:60172  sock=17
+05/10/2026 04:42:25 Client Protocol Version 3.8
+05/10/2026 04:42:25 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:25 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:25 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:25 client_count: 1
+05/10/2026 04:42:25 Client 127.0.0.1 gone
+05/10/2026 04:42:25 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:25  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:25 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:25  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:25  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:26 Got connection from client 127.0.0.1
+05/10/2026 04:42:26   1 other clients
+05/10/2026 04:42:26 Normal socket connection
+05/10/2026 04:42:26 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:26 incr accepted_client=15 for 127.0.0.1:60182  sock=17
+05/10/2026 04:42:26 Client Protocol Version 3.8
+05/10/2026 04:42:26 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:26 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:26 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:27 client_count: 1
+05/10/2026 04:42:27 Client 127.0.0.1 gone
+05/10/2026 04:42:27 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:27  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:27 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:27  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:27  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:27 Got connection from client 127.0.0.1
+05/10/2026 04:42:27   1 other clients
+05/10/2026 04:42:28 Normal socket connection
+05/10/2026 04:42:28 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:28 incr accepted_client=16 for 127.0.0.1:50756  sock=17
+05/10/2026 04:42:28 Client Protocol Version 3.8
+05/10/2026 04:42:28 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:28 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:28 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:28 client_count: 1
+05/10/2026 04:42:28 Client 127.0.0.1 gone
+05/10/2026 04:42:28 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:28  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:28 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:28  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:28  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:29 Got connection from client 127.0.0.1
+05/10/2026 04:42:29   1 other clients
+05/10/2026 04:42:29 Normal socket connection
+05/10/2026 04:42:29 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:29 incr accepted_client=17 for 127.0.0.1:50768  sock=17
+05/10/2026 04:42:29 Client Protocol Version 3.8
+05/10/2026 04:42:29 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:29 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:29 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:29 client_count: 1
+05/10/2026 04:42:29 Client 127.0.0.1 gone
+05/10/2026 04:42:29 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:29  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:29 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:29  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:29  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:30 Got connection from client 127.0.0.1
+05/10/2026 04:42:30   1 other clients
+05/10/2026 04:42:30 Normal socket connection
+05/10/2026 04:42:30 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:30 incr accepted_client=18 for 127.0.0.1:50774  sock=17
+05/10/2026 04:42:30 Client Protocol Version 3.8
+05/10/2026 04:42:30 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:30 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:30 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:30 client_count: 1
+05/10/2026 04:42:30 Client 127.0.0.1 gone
+05/10/2026 04:42:30 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:30  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:30 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:30  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:30  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:31 Got connection from client 127.0.0.1
+05/10/2026 04:42:31   1 other clients
+05/10/2026 04:42:31 Normal socket connection
+05/10/2026 04:42:31 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:42:31 incr accepted_client=19 for 127.0.0.1:50776  sock=17
+05/10/2026 04:42:31 Client Protocol Version 3.8
+05/10/2026 04:42:31 Protocol version sent 3.8, using 3.8
+05/10/2026 04:42:31 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:42:31 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:42:31 client_count: 1
+05/10/2026 04:42:31 Client 127.0.0.1 gone
+05/10/2026 04:42:31 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:42:31  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:42:31 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:42:31  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:42:31  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:43:37 Got connection from client 127.0.0.1
+05/10/2026 04:43:37   1 other clients
+05/10/2026 04:43:37 Normal socket connection
+05/10/2026 04:43:37 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:43:37 incr accepted_client=20 for 127.0.0.1:34088  sock=17
+05/10/2026 04:43:37 Client Protocol Version 3.8
+05/10/2026 04:43:37 Protocol version sent 3.8, using 3.8
+05/10/2026 04:43:37 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:43:37 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:43:38 client_count: 1
+05/10/2026 04:43:38 Client 127.0.0.1 gone
+05/10/2026 04:43:38 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:43:38  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:43:38 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:43:38  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:43:38  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:48:25 Got connection from client 127.0.0.1
+05/10/2026 04:48:25   1 other clients
+05/10/2026 04:48:25 Normal socket connection
+05/10/2026 04:48:25 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:48:25 incr accepted_client=21 for 127.0.0.1:42610  sock=17
+05/10/2026 04:48:25 Client Protocol Version 3.8
+05/10/2026 04:48:25 Protocol version sent 3.8, using 3.8
+05/10/2026 04:48:25 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:48:25 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:48:26 client_count: 1
+05/10/2026 04:48:26 Client 127.0.0.1 gone
+05/10/2026 04:48:26 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:48:26  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:48:26 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:48:26  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:48:26  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:48:33 Got connection from client 127.0.0.1
+05/10/2026 04:48:33   1 other clients
+05/10/2026 04:48:33 Normal socket connection
+05/10/2026 04:48:33 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:48:33 incr accepted_client=22 for 127.0.0.1:49486  sock=17
+05/10/2026 04:48:34 Client Protocol Version 3.8
+05/10/2026 04:48:34 Protocol version sent 3.8, using 3.8
+05/10/2026 04:48:34 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:48:34 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:48:35 client_count: 1
+05/10/2026 04:48:35 Client 127.0.0.1 gone
+05/10/2026 04:48:35 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:48:35  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:48:35 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:48:35  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:48:35  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:14 Got connection from client 127.0.0.1
+05/10/2026 04:52:14   1 other clients
+05/10/2026 04:52:14 Normal socket connection
+05/10/2026 04:52:14 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:52:14 incr accepted_client=23 for 127.0.0.1:38844  sock=17
+05/10/2026 04:52:14 Client Protocol Version 3.8
+05/10/2026 04:52:14 Protocol version sent 3.8, using 3.8
+05/10/2026 04:52:14 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:52:14 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:52:14 client_count: 1
+05/10/2026 04:52:14 Client 127.0.0.1 gone
+05/10/2026 04:52:14 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:52:14  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:52:14 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:52:14  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:14  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:20 Got connection from client 127.0.0.1
+05/10/2026 04:52:20   1 other clients
+05/10/2026 04:52:20 Normal socket connection
+05/10/2026 04:52:20 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:52:20 incr accepted_client=24 for 127.0.0.1:46836  sock=17
+05/10/2026 04:52:20 Client Protocol Version 3.8
+05/10/2026 04:52:20 Protocol version sent 3.8, using 3.8
+05/10/2026 04:52:20 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:52:20 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:52:20 client_count: 1
+05/10/2026 04:52:20 Client 127.0.0.1 gone
+05/10/2026 04:52:20 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:52:20  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:52:20 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:52:20  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:20  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:21 Got connection from client 127.0.0.1
+05/10/2026 04:52:21   1 other clients
+05/10/2026 04:52:21 Normal socket connection
+05/10/2026 04:52:21 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:52:21 incr accepted_client=25 for 127.0.0.1:46852  sock=17
+05/10/2026 04:52:21 Client Protocol Version 3.8
+05/10/2026 04:52:21 Protocol version sent 3.8, using 3.8
+05/10/2026 04:52:21 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:52:21 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:52:21 client_count: 1
+05/10/2026 04:52:21 Client 127.0.0.1 gone
+05/10/2026 04:52:21 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:52:21  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:52:21 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:52:21  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:21  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:24 Got connection from client 127.0.0.1
+05/10/2026 04:52:24   1 other clients
+05/10/2026 04:52:24 Normal socket connection
+05/10/2026 04:52:24 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:52:24 incr accepted_client=26 for 127.0.0.1:46864  sock=17
+05/10/2026 04:52:24 Client Protocol Version 3.8
+05/10/2026 04:52:24 Protocol version sent 3.8, using 3.8
+05/10/2026 04:52:24 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:52:24 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:52:24 client_count: 1
+05/10/2026 04:52:24 Client 127.0.0.1 gone
+05/10/2026 04:52:24 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:52:24  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:52:24 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:52:24  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:24  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:53 Got connection from client 127.0.0.1
+05/10/2026 04:52:53   1 other clients
+05/10/2026 04:52:53 Normal socket connection
+05/10/2026 04:52:53 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:52:53 incr accepted_client=27 for 127.0.0.1:51250  sock=17
+05/10/2026 04:52:53 Client Protocol Version 3.8
+05/10/2026 04:52:53 Protocol version sent 3.8, using 3.8
+05/10/2026 04:52:53 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:52:53 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:52:53 client_count: 1
+05/10/2026 04:52:53 Client 127.0.0.1 gone
+05/10/2026 04:52:53 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:52:53  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:52:53 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:52:53  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:52:53  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:53:07 Got connection from client 127.0.0.1
+05/10/2026 04:53:07   1 other clients
+05/10/2026 04:53:07 Normal socket connection
+05/10/2026 04:53:07 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:53:07 incr accepted_client=28 for 127.0.0.1:36310  sock=17
+05/10/2026 04:53:08 Client Protocol Version 3.8
+05/10/2026 04:53:08 Protocol version sent 3.8, using 3.8
+05/10/2026 04:53:08 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:53:08 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:53:08 client_count: 1
+05/10/2026 04:53:08 Client 127.0.0.1 gone
+05/10/2026 04:53:08 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:53:08  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:53:08 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:53:08  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:53:08  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:53:11 Got connection from client 127.0.0.1
+05/10/2026 04:53:11   1 other clients
+05/10/2026 04:53:11 Normal socket connection
+05/10/2026 04:53:11 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:53:11 incr accepted_client=29 for 127.0.0.1:36316  sock=17
+05/10/2026 04:53:11 Client Protocol Version 3.8
+05/10/2026 04:53:11 Protocol version sent 3.8, using 3.8
+05/10/2026 04:53:11 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:53:11 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:53:12 client_count: 1
+05/10/2026 04:53:12 Client 127.0.0.1 gone
+05/10/2026 04:53:12 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:53:12  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:53:12 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:53:12  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:53:12  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:00 Got connection from client 127.0.0.1
+05/10/2026 04:54:00   1 other clients
+05/10/2026 04:54:00 Normal socket connection
+05/10/2026 04:54:00 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:00 incr accepted_client=30 for 127.0.0.1:55510  sock=17
+05/10/2026 04:54:00 Client Protocol Version 3.8
+05/10/2026 04:54:00 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:00 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:00 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:00 client_count: 1
+05/10/2026 04:54:00 Client 127.0.0.1 gone
+05/10/2026 04:54:00 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:00  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:00 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:00  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:00  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:06 Got connection from client 127.0.0.1
+05/10/2026 04:54:06   1 other clients
+05/10/2026 04:54:06 Normal socket connection
+05/10/2026 04:54:06 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:06 incr accepted_client=31 for 127.0.0.1:55520  sock=17
+05/10/2026 04:54:06 Client Protocol Version 3.8
+05/10/2026 04:54:06 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:06 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:06 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:06 client_count: 1
+05/10/2026 04:54:06 Client 127.0.0.1 gone
+05/10/2026 04:54:06 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:06  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:06 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:06  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:06  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:07 Got connection from client 127.0.0.1
+05/10/2026 04:54:07   1 other clients
+05/10/2026 04:54:07 Normal socket connection
+05/10/2026 04:54:07 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:07 incr accepted_client=32 for 127.0.0.1:44958  sock=17
+05/10/2026 04:54:07 Client Protocol Version 3.8
+05/10/2026 04:54:07 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:07 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:07 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:07 client_count: 1
+05/10/2026 04:54:07 Client 127.0.0.1 gone
+05/10/2026 04:54:07 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:07  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:07 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:07  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:07  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:10 Got connection from client 127.0.0.1
+05/10/2026 04:54:10   1 other clients
+05/10/2026 04:54:10 Normal socket connection
+05/10/2026 04:54:10 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:10 incr accepted_client=33 for 127.0.0.1:44972  sock=17
+05/10/2026 04:54:10 Client Protocol Version 3.8
+05/10/2026 04:54:10 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:10 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:10 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:11 client_count: 1
+05/10/2026 04:54:11 Client 127.0.0.1 gone
+05/10/2026 04:54:11 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:11  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:11 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:11  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:11  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:19 Got connection from client 127.0.0.1
+05/10/2026 04:54:19   1 other clients
+05/10/2026 04:54:19 Normal socket connection
+05/10/2026 04:54:19 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:19 incr accepted_client=34 for 127.0.0.1:55508  sock=17
+05/10/2026 04:54:19 Client Protocol Version 3.8
+05/10/2026 04:54:19 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:19 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:19 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:20 client_count: 1
+05/10/2026 04:54:20 Client 127.0.0.1 gone
+05/10/2026 04:54:20 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:20  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:20 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:20  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:20  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:22 Got connection from client 127.0.0.1
+05/10/2026 04:54:22   1 other clients
+05/10/2026 04:54:22 Normal socket connection
+05/10/2026 04:54:22 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:22 incr accepted_client=35 for 127.0.0.1:55512  sock=17
+05/10/2026 04:54:22 Client Protocol Version 3.8
+05/10/2026 04:54:22 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:22 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:22 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:22 client_count: 1
+05/10/2026 04:54:22 Client 127.0.0.1 gone
+05/10/2026 04:54:22 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:22  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:22 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:22  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:22  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:24 Got connection from client 127.0.0.1
+05/10/2026 04:54:24   1 other clients
+05/10/2026 04:54:25 Normal socket connection
+05/10/2026 04:54:25 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:54:25 incr accepted_client=36 for 127.0.0.1:55524  sock=17
+05/10/2026 04:54:25 Client Protocol Version 3.8
+05/10/2026 04:54:25 Protocol version sent 3.8, using 3.8
+05/10/2026 04:54:25 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:54:25 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:54:25 client_count: 1
+05/10/2026 04:54:25 Client 127.0.0.1 gone
+05/10/2026 04:54:25 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:54:25  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:54:25 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:54:25  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:54:25  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:39 Got connection from client 127.0.0.1
+05/10/2026 04:55:39   1 other clients
+05/10/2026 04:55:39 Normal socket connection
+05/10/2026 04:55:39 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:39 incr accepted_client=37 for 127.0.0.1:41002  sock=17
+05/10/2026 04:55:39 Client Protocol Version 3.8
+05/10/2026 04:55:39 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:40 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:40 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:40 client_count: 1
+05/10/2026 04:55:40 Client 127.0.0.1 gone
+05/10/2026 04:55:40 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:40  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:40 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:40  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:40  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:42 Got connection from client 127.0.0.1
+05/10/2026 04:55:42   1 other clients
+05/10/2026 04:55:42 Normal socket connection
+05/10/2026 04:55:42 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:42 incr accepted_client=38 for 127.0.0.1:41008  sock=17
+05/10/2026 04:55:43 Client Protocol Version 3.8
+05/10/2026 04:55:43 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:43 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:43 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:43 client_count: 1
+05/10/2026 04:55:43 Client 127.0.0.1 gone
+05/10/2026 04:55:43 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:43  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:43 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:43  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:43  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:45 Got connection from client 127.0.0.1
+05/10/2026 04:55:45   1 other clients
+05/10/2026 04:55:45 Normal socket connection
+05/10/2026 04:55:45 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:45 incr accepted_client=39 for 127.0.0.1:41012  sock=17
+05/10/2026 04:55:45 Client Protocol Version 3.8
+05/10/2026 04:55:45 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:45 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:45 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:46 client_count: 1
+05/10/2026 04:55:46 Client 127.0.0.1 gone
+05/10/2026 04:55:46 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:46  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:46 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:46  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:46  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:48 Got connection from client 127.0.0.1
+05/10/2026 04:55:48   1 other clients
+05/10/2026 04:55:48 Normal socket connection
+05/10/2026 04:55:48 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:48 incr accepted_client=40 for 127.0.0.1:60802  sock=17
+05/10/2026 04:55:49 Client Protocol Version 3.8
+05/10/2026 04:55:49 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:49 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:49 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:49 client_count: 1
+05/10/2026 04:55:49 Client 127.0.0.1 gone
+05/10/2026 04:55:49 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:49  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:49 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:49  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:49  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:51 Got connection from client 127.0.0.1
+05/10/2026 04:55:51   1 other clients
+05/10/2026 04:55:51 Normal socket connection
+05/10/2026 04:55:51 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:51 incr accepted_client=41 for 127.0.0.1:60814  sock=17
+05/10/2026 04:55:51 Client Protocol Version 3.8
+05/10/2026 04:55:51 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:51 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:51 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:51 client_count: 1
+05/10/2026 04:55:51 Client 127.0.0.1 gone
+05/10/2026 04:55:51 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:51  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:51 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:51  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:51  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:54 Got connection from client 127.0.0.1
+05/10/2026 04:55:54   1 other clients
+05/10/2026 04:55:55 Normal socket connection
+05/10/2026 04:55:55 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:55 incr accepted_client=42 for 127.0.0.1:60824  sock=17
+05/10/2026 04:55:55 Client Protocol Version 3.8
+05/10/2026 04:55:55 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:55 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:55 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:55 client_count: 1
+05/10/2026 04:55:55 Client 127.0.0.1 gone
+05/10/2026 04:55:55 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:55  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:55 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:55  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:55  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:56 Got connection from client 127.0.0.1
+05/10/2026 04:55:56   1 other clients
+05/10/2026 04:55:56 Normal socket connection
+05/10/2026 04:55:56 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:56 incr accepted_client=43 for 127.0.0.1:60830  sock=17
+05/10/2026 04:55:56 Client Protocol Version 3.8
+05/10/2026 04:55:56 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:56 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:56 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:56 client_count: 1
+05/10/2026 04:55:56 Client 127.0.0.1 gone
+05/10/2026 04:55:56 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:56  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:56 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:56  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:56  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:59 Got connection from client 127.0.0.1
+05/10/2026 04:55:59   1 other clients
+05/10/2026 04:55:59 Normal socket connection
+05/10/2026 04:55:59 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:55:59 incr accepted_client=44 for 127.0.0.1:49520  sock=17
+05/10/2026 04:55:59 Client Protocol Version 3.8
+05/10/2026 04:55:59 Protocol version sent 3.8, using 3.8
+05/10/2026 04:55:59 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:55:59 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:55:59 client_count: 1
+05/10/2026 04:55:59 Client 127.0.0.1 gone
+05/10/2026 04:55:59 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:55:59  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:55:59 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:55:59  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:55:59  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:01 Got connection from client 127.0.0.1
+05/10/2026 04:56:01   1 other clients
+05/10/2026 04:56:01 Normal socket connection
+05/10/2026 04:56:01 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:01 incr accepted_client=45 for 127.0.0.1:49536  sock=17
+05/10/2026 04:56:01 Client Protocol Version 3.8
+05/10/2026 04:56:01 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:01 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:01 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:01 client_count: 1
+05/10/2026 04:56:01 Client 127.0.0.1 gone
+05/10/2026 04:56:01 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:01  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:01 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:01  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:01  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:04 Got connection from client 127.0.0.1
+05/10/2026 04:56:04   1 other clients
+05/10/2026 04:56:04 Normal socket connection
+05/10/2026 04:56:04 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:04 incr accepted_client=46 for 127.0.0.1:49552  sock=17
+05/10/2026 04:56:04 Client Protocol Version 3.8
+05/10/2026 04:56:04 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:04 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:04 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:05 client_count: 1
+05/10/2026 04:56:05 Client 127.0.0.1 gone
+05/10/2026 04:56:05 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:05  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:05 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:05  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:05  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:06 Got connection from client 127.0.0.1
+05/10/2026 04:56:06   1 other clients
+05/10/2026 04:56:06 Normal socket connection
+05/10/2026 04:56:06 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:06 incr accepted_client=47 for 127.0.0.1:49562  sock=17
+05/10/2026 04:56:06 Client Protocol Version 3.8
+05/10/2026 04:56:06 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:06 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:06 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:06 client_count: 1
+05/10/2026 04:56:06 Client 127.0.0.1 gone
+05/10/2026 04:56:06 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:06  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:06 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:06  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:06  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:08 Got connection from client 127.0.0.1
+05/10/2026 04:56:08   1 other clients
+05/10/2026 04:56:09 Normal socket connection
+05/10/2026 04:56:09 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:09 incr accepted_client=48 for 127.0.0.1:57150  sock=17
+05/10/2026 04:56:09 Client Protocol Version 3.8
+05/10/2026 04:56:09 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:09 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:09 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:09 client_count: 1
+05/10/2026 04:56:09 Client 127.0.0.1 gone
+05/10/2026 04:56:09 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:09  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:09 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:09  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:09  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:10 Got connection from client 127.0.0.1
+05/10/2026 04:56:10   1 other clients
+05/10/2026 04:56:11 Normal socket connection
+05/10/2026 04:56:11 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:11 incr accepted_client=49 for 127.0.0.1:57158  sock=17
+05/10/2026 04:56:11 Client Protocol Version 3.8
+05/10/2026 04:56:11 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:11 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:11 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:11 client_count: 1
+05/10/2026 04:56:11 Client 127.0.0.1 gone
+05/10/2026 04:56:11 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:11  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:11 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:11  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:11  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:14 Got connection from client 127.0.0.1
+05/10/2026 04:56:14   1 other clients
+05/10/2026 04:56:14 Normal socket connection
+05/10/2026 04:56:14 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:14 incr accepted_client=50 for 127.0.0.1:57170  sock=17
+05/10/2026 04:56:14 Client Protocol Version 3.8
+05/10/2026 04:56:14 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:14 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:14 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:14 client_count: 1
+05/10/2026 04:56:14 Client 127.0.0.1 gone
+05/10/2026 04:56:14 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:14  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:14 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:14  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:14  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:16 Got connection from client 127.0.0.1
+05/10/2026 04:56:16   1 other clients
+05/10/2026 04:56:16 Normal socket connection
+05/10/2026 04:56:16 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:16 incr accepted_client=51 for 127.0.0.1:57184  sock=17
+05/10/2026 04:56:16 Client Protocol Version 3.8
+05/10/2026 04:56:16 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:16 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:16 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:16 client_count: 1
+05/10/2026 04:56:16 Client 127.0.0.1 gone
+05/10/2026 04:56:16 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:16  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:16 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:16  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:16  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:18 Got connection from client 127.0.0.1
+05/10/2026 04:56:18   1 other clients
+05/10/2026 04:56:18 Normal socket connection
+05/10/2026 04:56:18 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:18 incr accepted_client=52 for 127.0.0.1:52480  sock=17
+05/10/2026 04:56:18 Client Protocol Version 3.8
+05/10/2026 04:56:18 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:18 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:18 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:18 client_count: 1
+05/10/2026 04:56:18 Client 127.0.0.1 gone
+05/10/2026 04:56:18 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:18  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:18 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:18  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:18  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:20 Got connection from client 127.0.0.1
+05/10/2026 04:56:20   1 other clients
+05/10/2026 04:56:20 Normal socket connection
+05/10/2026 04:56:20 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:20 incr accepted_client=53 for 127.0.0.1:52482  sock=17
+05/10/2026 04:56:20 Client Protocol Version 3.8
+05/10/2026 04:56:20 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:20 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:20 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:20 client_count: 1
+05/10/2026 04:56:20 Client 127.0.0.1 gone
+05/10/2026 04:56:20 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:20  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:20 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:20  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:20  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:24 Got connection from client 127.0.0.1
+05/10/2026 04:56:24   1 other clients
+05/10/2026 04:56:24 Normal socket connection
+05/10/2026 04:56:24 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:24 incr accepted_client=54 for 127.0.0.1:52498  sock=17
+05/10/2026 04:56:24 Client Protocol Version 3.8
+05/10/2026 04:56:24 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:24 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:24 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:24 client_count: 1
+05/10/2026 04:56:24 Client 127.0.0.1 gone
+05/10/2026 04:56:24 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:24  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:24 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:24  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:24  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:25 Got connection from client 127.0.0.1
+05/10/2026 04:56:25   1 other clients
+05/10/2026 04:56:25 Normal socket connection
+05/10/2026 04:56:25 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:25 incr accepted_client=55 for 127.0.0.1:52508  sock=17
+05/10/2026 04:56:25 Client Protocol Version 3.8
+05/10/2026 04:56:25 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:25 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:25 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:25 client_count: 1
+05/10/2026 04:56:25 Client 127.0.0.1 gone
+05/10/2026 04:56:25 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:25  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:25 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:25  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:25  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:28 Got connection from client 127.0.0.1
+05/10/2026 04:56:28   1 other clients
+05/10/2026 04:56:28 Normal socket connection
+05/10/2026 04:56:28 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:28 incr accepted_client=56 for 127.0.0.1:37094  sock=17
+05/10/2026 04:56:28 Client Protocol Version 3.8
+05/10/2026 04:56:28 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:28 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:28 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:28 client_count: 1
+05/10/2026 04:56:28 Client 127.0.0.1 gone
+05/10/2026 04:56:28 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:28  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:28 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:28  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:28  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:30 Got connection from client 127.0.0.1
+05/10/2026 04:56:30   1 other clients
+05/10/2026 04:56:30 Normal socket connection
+05/10/2026 04:56:30 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:56:30 incr accepted_client=57 for 127.0.0.1:37110  sock=17
+05/10/2026 04:56:30 Client Protocol Version 3.8
+05/10/2026 04:56:30 Protocol version sent 3.8, using 3.8
+05/10/2026 04:56:30 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:56:30 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:56:30 client_count: 1
+05/10/2026 04:56:30 Client 127.0.0.1 gone
+05/10/2026 04:56:30 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:56:30  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:56:30 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:56:30  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:56:30  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:15 Got connection from client 127.0.0.1
+05/10/2026 04:58:15   1 other clients
+05/10/2026 04:58:16 Normal socket connection
+05/10/2026 04:58:16 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:16 incr accepted_client=58 for 127.0.0.1:54026  sock=17
+05/10/2026 04:58:16 Client Protocol Version 3.8
+05/10/2026 04:58:16 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:16 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:16 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:16 client_count: 1
+05/10/2026 04:58:16 Client 127.0.0.1 gone
+05/10/2026 04:58:16 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:16  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:16 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:16  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:16  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:19 Got connection from client 127.0.0.1
+05/10/2026 04:58:19   1 other clients
+05/10/2026 04:58:19 Normal socket connection
+05/10/2026 04:58:19 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:19 incr accepted_client=59 for 127.0.0.1:49554  sock=17
+05/10/2026 04:58:19 Client Protocol Version 3.8
+05/10/2026 04:58:19 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:20 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:20 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:20 client_count: 1
+05/10/2026 04:58:20 Client 127.0.0.1 gone
+05/10/2026 04:58:20 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:20  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:20 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:20  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:20  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:22 Got connection from client 127.0.0.1
+05/10/2026 04:58:22   1 other clients
+05/10/2026 04:58:22 Normal socket connection
+05/10/2026 04:58:22 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:22 incr accepted_client=60 for 127.0.0.1:49570  sock=17
+05/10/2026 04:58:23 Client Protocol Version 3.8
+05/10/2026 04:58:23 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:23 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:23 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:24 client_count: 1
+05/10/2026 04:58:24 Client 127.0.0.1 gone
+05/10/2026 04:58:24 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:24  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:24 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:24  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:24  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:25 Got connection from client 127.0.0.1
+05/10/2026 04:58:25   1 other clients
+05/10/2026 04:58:25 Normal socket connection
+05/10/2026 04:58:25 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:25 incr accepted_client=61 for 127.0.0.1:49586  sock=17
+05/10/2026 04:58:25 Client Protocol Version 3.8
+05/10/2026 04:58:25 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:25 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:25 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:25 client_count: 1
+05/10/2026 04:58:25 Client 127.0.0.1 gone
+05/10/2026 04:58:25 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:25  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:25 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:25  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:25  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:28 Got connection from client 127.0.0.1
+05/10/2026 04:58:28   1 other clients
+05/10/2026 04:58:28 Normal socket connection
+05/10/2026 04:58:28 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:28 incr accepted_client=62 for 127.0.0.1:33920  sock=17
+05/10/2026 04:58:28 Client Protocol Version 3.8
+05/10/2026 04:58:28 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:28 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:28 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:29 client_count: 1
+05/10/2026 04:58:29 Client 127.0.0.1 gone
+05/10/2026 04:58:29 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:29  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:29 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:29  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:29  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:31 Got connection from client 127.0.0.1
+05/10/2026 04:58:31   1 other clients
+05/10/2026 04:58:31 Normal socket connection
+05/10/2026 04:58:31 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:31 incr accepted_client=63 for 127.0.0.1:33922  sock=17
+05/10/2026 04:58:31 Client Protocol Version 3.8
+05/10/2026 04:58:31 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:31 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:31 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:32 client_count: 1
+05/10/2026 04:58:32 Client 127.0.0.1 gone
+05/10/2026 04:58:32 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:32  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:32 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:32  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:32  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:34 Got connection from client 127.0.0.1
+05/10/2026 04:58:34   1 other clients
+05/10/2026 04:58:34 Normal socket connection
+05/10/2026 04:58:34 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:34 incr accepted_client=64 for 127.0.0.1:33926  sock=17
+05/10/2026 04:58:34 Client Protocol Version 3.8
+05/10/2026 04:58:34 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:34 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:34 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:34 client_count: 1
+05/10/2026 04:58:34 Client 127.0.0.1 gone
+05/10/2026 04:58:34 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:34  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:34 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:34  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:34  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:58 Got connection from client 127.0.0.1
+05/10/2026 04:58:58   1 other clients
+05/10/2026 04:58:58 Normal socket connection
+05/10/2026 04:58:58 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:58:58 incr accepted_client=65 for 127.0.0.1:37532  sock=17
+05/10/2026 04:58:58 Client Protocol Version 3.8
+05/10/2026 04:58:58 Protocol version sent 3.8, using 3.8
+05/10/2026 04:58:58 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:58:58 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:58:59 client_count: 1
+05/10/2026 04:58:59 Client 127.0.0.1 gone
+05/10/2026 04:58:59 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:58:59  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:58:59 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:58:59  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:58:59  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:01 Got connection from client 127.0.0.1
+05/10/2026 04:59:01   1 other clients
+05/10/2026 04:59:01 Normal socket connection
+05/10/2026 04:59:01 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:01 incr accepted_client=66 for 127.0.0.1:37540  sock=17
+05/10/2026 04:59:01 Client Protocol Version 3.8
+05/10/2026 04:59:01 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:01 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:01 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:01 client_count: 1
+05/10/2026 04:59:01 Client 127.0.0.1 gone
+05/10/2026 04:59:01 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:01  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:01 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:01  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:01  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:03 Got connection from client 127.0.0.1
+05/10/2026 04:59:03   1 other clients
+05/10/2026 04:59:04 Normal socket connection
+05/10/2026 04:59:04 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:04 incr accepted_client=67 for 127.0.0.1:37542  sock=17
+05/10/2026 04:59:04 Client Protocol Version 3.8
+05/10/2026 04:59:04 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:04 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:04 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:04 client_count: 1
+05/10/2026 04:59:04 Client 127.0.0.1 gone
+05/10/2026 04:59:04 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:04  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:04 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:04  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:04  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:06 Got connection from client 127.0.0.1
+05/10/2026 04:59:06   1 other clients
+05/10/2026 04:59:06 Normal socket connection
+05/10/2026 04:59:06 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:06 incr accepted_client=68 for 127.0.0.1:37550  sock=17
+05/10/2026 04:59:06 Client Protocol Version 3.8
+05/10/2026 04:59:06 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:06 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:06 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:06 client_count: 1
+05/10/2026 04:59:06 Client 127.0.0.1 gone
+05/10/2026 04:59:06 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:06  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:06 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:06  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:06  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:09 Got connection from client 127.0.0.1
+05/10/2026 04:59:09   1 other clients
+05/10/2026 04:59:09 Normal socket connection
+05/10/2026 04:59:09 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:09 incr accepted_client=69 for 127.0.0.1:47152  sock=17
+05/10/2026 04:59:09 Client Protocol Version 3.8
+05/10/2026 04:59:09 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:09 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:09 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:09 client_count: 1
+05/10/2026 04:59:09 Client 127.0.0.1 gone
+05/10/2026 04:59:09 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:09  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:09 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:09  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:09  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:12 Got connection from client 127.0.0.1
+05/10/2026 04:59:12   1 other clients
+05/10/2026 04:59:12 Normal socket connection
+05/10/2026 04:59:12 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:12 incr accepted_client=70 for 127.0.0.1:47162  sock=17
+05/10/2026 04:59:12 Client Protocol Version 3.8
+05/10/2026 04:59:12 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:12 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:12 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:12 client_count: 1
+05/10/2026 04:59:12 Client 127.0.0.1 gone
+05/10/2026 04:59:12 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:12  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:12 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:12  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:12  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:14 Got connection from client 127.0.0.1
+05/10/2026 04:59:14   1 other clients
+05/10/2026 04:59:14 Normal socket connection
+05/10/2026 04:59:14 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:14 incr accepted_client=71 for 127.0.0.1:47170  sock=17
+05/10/2026 04:59:14 Client Protocol Version 3.8
+05/10/2026 04:59:14 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:14 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:14 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:14 client_count: 1
+05/10/2026 04:59:14 Client 127.0.0.1 gone
+05/10/2026 04:59:14 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:14  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:14 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:14  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:14  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:16 Got connection from client 127.0.0.1
+05/10/2026 04:59:16   1 other clients
+05/10/2026 04:59:16 Normal socket connection
+05/10/2026 04:59:16 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:16 incr accepted_client=72 for 127.0.0.1:47174  sock=17
+05/10/2026 04:59:16 Client Protocol Version 3.8
+05/10/2026 04:59:16 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:16 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:16 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:16 client_count: 1
+05/10/2026 04:59:16 Client 127.0.0.1 gone
+05/10/2026 04:59:16 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:16  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:16 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:16  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:16  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:20 Got connection from client 127.0.0.1
+05/10/2026 04:59:20   1 other clients
+05/10/2026 04:59:20 Normal socket connection
+05/10/2026 04:59:20 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:20 incr accepted_client=73 for 127.0.0.1:47840  sock=17
+05/10/2026 04:59:20 Client Protocol Version 3.8
+05/10/2026 04:59:20 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:20 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:20 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:20 client_count: 1
+05/10/2026 04:59:20 Client 127.0.0.1 gone
+05/10/2026 04:59:20 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:20  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:20 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:20  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:20  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:22 Got connection from client 127.0.0.1
+05/10/2026 04:59:22   1 other clients
+05/10/2026 04:59:22 Normal socket connection
+05/10/2026 04:59:22 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:22 incr accepted_client=74 for 127.0.0.1:47842  sock=17
+05/10/2026 04:59:22 Client Protocol Version 3.8
+05/10/2026 04:59:22 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:22 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:22 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:22 client_count: 1
+05/10/2026 04:59:22 Client 127.0.0.1 gone
+05/10/2026 04:59:22 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:22  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:22 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:22  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:22  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:25 Got connection from client 127.0.0.1
+05/10/2026 04:59:25   1 other clients
+05/10/2026 04:59:25 Normal socket connection
+05/10/2026 04:59:25 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:25 incr accepted_client=75 for 127.0.0.1:47848  sock=17
+05/10/2026 04:59:25 Client Protocol Version 3.8
+05/10/2026 04:59:25 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:25 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:25 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:25 client_count: 1
+05/10/2026 04:59:25 Client 127.0.0.1 gone
+05/10/2026 04:59:25 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:25  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:25 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:25  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:25  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:27 Got connection from client 127.0.0.1
+05/10/2026 04:59:27   1 other clients
+05/10/2026 04:59:27 Normal socket connection
+05/10/2026 04:59:27 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:27 incr accepted_client=76 for 127.0.0.1:49590  sock=17
+05/10/2026 04:59:27 Client Protocol Version 3.8
+05/10/2026 04:59:27 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:27 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:27 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:27 client_count: 1
+05/10/2026 04:59:27 Client 127.0.0.1 gone
+05/10/2026 04:59:27 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:27  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:27 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:27  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:27  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:30 Got connection from client 127.0.0.1
+05/10/2026 04:59:30   1 other clients
+05/10/2026 04:59:30 Normal socket connection
+05/10/2026 04:59:30 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:30 incr accepted_client=77 for 127.0.0.1:49594  sock=17
+05/10/2026 04:59:30 Client Protocol Version 3.8
+05/10/2026 04:59:30 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:30 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:30 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:30 client_count: 1
+05/10/2026 04:59:30 Client 127.0.0.1 gone
+05/10/2026 04:59:30 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:30  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:30 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:30  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:30  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:33 Got connection from client 127.0.0.1
+05/10/2026 04:59:33   1 other clients
+05/10/2026 04:59:33 Normal socket connection
+05/10/2026 04:59:33 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:33 incr accepted_client=78 for 127.0.0.1:49604  sock=17
+05/10/2026 04:59:33 Client Protocol Version 3.8
+05/10/2026 04:59:33 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:33 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:33 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:33 client_count: 1
+05/10/2026 04:59:33 Client 127.0.0.1 gone
+05/10/2026 04:59:33 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:33  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:33 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:33  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:33  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:36 Got connection from client 127.0.0.1
+05/10/2026 04:59:36   1 other clients
+05/10/2026 04:59:36 Normal socket connection
+05/10/2026 04:59:36 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:36 incr accepted_client=79 for 127.0.0.1:49608  sock=17
+05/10/2026 04:59:36 Client Protocol Version 3.8
+05/10/2026 04:59:36 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:36 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:36 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:36 client_count: 1
+05/10/2026 04:59:36 Client 127.0.0.1 gone
+05/10/2026 04:59:36 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:36  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:36 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:36  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:36  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:38 Got connection from client 127.0.0.1
+05/10/2026 04:59:38   1 other clients
+05/10/2026 04:59:38 Normal socket connection
+05/10/2026 04:59:38 check_access: client 127.0.0.1 matches host 127.0.0.1
+05/10/2026 04:59:38 incr accepted_client=80 for 127.0.0.1:40610  sock=17
+05/10/2026 04:59:38 Client Protocol Version 3.8
+05/10/2026 04:59:38 Protocol version sent 3.8, using 3.8
+05/10/2026 04:59:38 rfbProcessClientSecurityType: executing handler for type 1
+05/10/2026 04:59:38 rfbProcessClientSecurityType: returning securityResult for client rfb version >= 3.8
+05/10/2026 04:59:38 client_count: 1
+05/10/2026 04:59:38 Client 127.0.0.1 gone
+05/10/2026 04:59:38 Statistics             events    Transmit/ RawEquiv ( saved)
+05/10/2026 04:59:38  TOTALS              :      0 |         0/        0 (  0.0%)
+05/10/2026 04:59:38 Statistics             events    Received/ RawEquiv ( saved)
+05/10/2026 04:59:38  KeyEvent            :      2 |        16/       16 (  0.0%)
+05/10/2026 04:59:38  TOTALS              :      2 |        16/       16 (  0.0%)
+05/10/2026 05:04:39 idle keyboard:   turning X autorepeat back on.

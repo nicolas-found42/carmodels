@@ -1,0 +1,115 @@
+{
+  "args": {
+    "document": "Canonical index (recovered/index.json) counts: original_model 35, glb 35, model textures 700 display + 700 raw, mip planes 94 + stored-alpha 94, original_icon 35 + raw/display 35 each, original_livery 136 + raw/display 136 each, original_matrix 136 + csm0-swap raw/display 136 each. Status: 'Asset/index integrity checked. Rendering-fidelity completion not asserted.' Independent verifier tools/verify_recovered_asset_index.py checks roster/index/disk set equality, per-car producer-record equality, every asset hash/size, plus negative controls (corrupt manifest hash, cross-car model swap, schema/fidelity/status/limits mutations). Reference corpus per car (spot-checked 49_COUPE, THUNDERBIRD_2002, FORTYNINE): config/ (11 txt: cardata, body, engine, gearbox, tyres_front/back, brake, control, overlay, setup, sound), model/*.PS2;1, graphics/icon + 4 liveries, data/*.DAT;1; sound banks in reference/ford/_shared/sounds with per-car inheritance chains in manifests. The canonical index does NOT cover config txt, data DAT, or sound chains. Known open lists (unchanged): 158 unmatched retained descriptors, glass naming, ChallGlo blend, passes 4-5 RGB.",
+    "fields": [
+      {
+        "id": "n_models",
+        "pattern": "original_model 35",
+        "description": "count of original models in the index"
+      },
+      {
+        "id": "n_liveries",
+        "pattern": "original_livery 136",
+        "description": "count of original liveries in the index"
+      },
+      {
+        "id": "n_glb",
+        "pattern": "glb 35",
+        "description": "count of GLBs in the index"
+      },
+      {
+        "id": "verifier",
+        "pattern": "verify_recovered_asset_index\\.py",
+        "description": "filename of the independent verifier"
+      },
+      {
+        "id": "status_line",
+        "pattern": "Rendering-fidelity completion not asserted",
+        "description": "fidelity disclaimer in index status"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 5,
+      "extracted": 5,
+      "auto": 5,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "n_models",
+        "value": "original_model 35",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.77,
+        "top_probability": 0.88,
+        "margin": 0.76,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "n_liveries",
+        "value": "original_livery 136",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.82,
+        "top_probability": 0.91,
+        "margin": 0.8200000000000001,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "n_glb",
+        "value": "glb 35",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.9,
+        "top_probability": 0.95,
+        "margin": 0.8999999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "verifier",
+        "value": "verify_recovered_asset_index.py",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "status_line",
+        "value": "Rendering-fidelity completion not asserted",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.83,
+        "top_probability": 0.91,
+        "margin": 0.8200000000000001,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1328,
+      "output_tokens": 173
+    }
+  }
+}

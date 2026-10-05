@@ -1,0 +1,26 @@
+{
+  "args": {
+    "document": "# gp context for the EE executable\n\nBefore this change Ghidra had no gp value at any of the 5,454 saved-function entries, so every gp-relative global printed as an offset name (`uGpffff9118`, `&gp0xffffa920`): **13,609 tokens in 1,871 functions**. The earlier quality counter matched only the `gp0x` spelling and reported 241 tokens in 85 functions; `tools/verify_decompilation_quality.py` now matches both spellings (test added).\n\n## What was done\n\nOne guarded transaction, `tools/ghidra/experimental/SetGpContextV1.java`, sets gp = `0x295d70` over every initialized executable block. The value rests on three static facts: the ELF `.reginfo` gp_value, the entry routine's only gp write (`move gp,a0`, a0 = `0x295d70`, which the guard recomputes from the `lui`/`addiu` pair), and the offset map below. The guard rolls back unless function snapshots (entry, body, name, comment, instruction count) and the instruction, data, symbol and function counts are unchanged and gp reads back as the pinned value at every function entry. Driver: `pipeline/do_gp.sh`. Check: `tools/gp_context_check.py` (8 tests).\n\nJev chose this approach over per-function context, post-processing the text and more investigation (`jev_decide` 0.91; see `jev-receipts.json`).\n\n## Result (reconciliation 6 of 6)\n\n- Gp names: 13,609 → 0.\n- Listing unchanged for all 5,454 functions; the 3,583 functions without gp names have identical pseudocode.\n- 1,870 of 1,871 functions show every predicted address. The one other function (`00107588`) reads a byte of a 4-byte variable (`DAT_00290618._2_1_` for `0x29061a`), which is a correct resolution that the exact-address check does not match.\n- Independent test: all 2,171 distinct offsets land inside `.sdata` (10,576 tokens), `.lit4` (1,085) or `.sbss` (1,948) when gp is `0x295d70`. None land elsewhere.\n\n## What got worse\n\nWarnings rose 757 → 768 (`Globals starting with '_' overlap smaller symbols` 89 → 101) and undefined-type tokens rose 23,229 → 23,279. Resolved accesses now meet real symbols at other widths. Fixing that needs data types for the small-data globals, which this change does not do. Call-arity counts are unchanged.\n\n## Not established\n\nWhether every thread uses gp `0x295d70`: only the main thread's setup was seen, and thread parameter structures were not examined. The single value is consistent with every gp-relative operand found, which is evidence for it but not proof. Types of the globals and their names are unrecovered.\n\n## Review record\n\n`jev_gate` on the final change returned **escalate** (safe_to_apply 0.17; limiting rubrics blast radius and test gap). Five of its six claim checks verified; the sixth (the 6-of-6 reconciliation) verified at 0.83 with 0.15 contradicted, below the auto threshold. The cause named was a test gap: the Java guard has no unit test, only a real run. Two things were added in response, and the escalation stands as recorded:\n\n- The first strengthened guard rejected the correct entry routine because `lui` and `addiu` name sub-registers differently (`a0`, `a0_lo`). That rejection is a real guard decision on a real program and was fixed with `getBaseRegister()`.\n- `negative-control-wrong-pin.json`: the same guard compiled with a wrong pin (`0x295d71`) on a fresh project copy rejects with `.reginfo gp_value 00295d70 differs from the pinned gp`.\n\nThe drift checks (function snapshot, counts, gp read-back) have no deliberate failing run. They are exercised only on the passing path.\n",
+    "fields": [
+      {
+        "id": "gp_pin",
+        "description": "The value of gp set by the guarded transaction over initialized executable blocks.",
+        "pattern": "0x[0-9a-fA-F]+"
+      },
+      {
+        "id": "function_inventory",
+        "description": "The saved function inventory whose entries receive the gp value, before the transaction.",
+        "pattern": "5,454|3,583|1,871|1,870"
+      }
+    ],
+    "purpose": "Recover exact recorded gp value and inventory scope of the newer source export for comparison with original byte pins."
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_extract\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"summary\": {\n    \"fields\": 2,\n    \"extracted\": 2,\n    \"auto\": 2,\n    \"review\": 0,\n    \"not_found\": 0,\n    \"invalid\": 0\n  },\n  \"thresholds\": {\n    \"auto_accept\": 0.85,\n    \"minimum_margin\": 0.5\n  },\n  \"results\": [\n    {\n      \"id\": \"gp_pin\",\n      \"value\": \"0x295d70\",\n      \"status\": \"auto\",\n      \"reason\": null,\n      \"confidence\": 1,\n      \"top_probability\": 1,\n      \"margin\": 1,\n      \"candidates_considered\": 4,\n      \"candidates_truncated\": false,\n      \"matches_skipped_too_long\": 0\n    },\n    {\n      \"id\": \"function_inventory\",\n      \"value\": \"5,454\",\n      \"status\": \"auto\",\n      \"reason\": null,\n      \"confidence\": 0.94,\n      \"top_probability\": 0.96,\n      \"margin\": 0.9299999999999999,\n      \"candidates_considered\": 4,\n      \"candidates_truncated\": false,\n      \"matches_skipped_too_long\": 0\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1763,\n    \"output_tokens\": 119\n  }\n}"
+      }
+    ]
+  }
+}

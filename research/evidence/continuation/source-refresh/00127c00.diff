@@ -1,0 +1,41 @@
+--- historical/00127c00.c
++++ typed/00127c00.c
+@@ -24,15 +24,15 @@
+   undefined4 uStack_58;
+   undefined4 uStack_54;
+   
+-  fVar4 = *(float *)(iGpffff937c + 0x3c) - *(float *)(iGpffff937c + 0x34);
+-  fVar5 = *(float *)(iGpffff937c + 0x40) - *(float *)(iGpffff937c + 0x38);
+-  fVar6 = (*(float *)(iGpffff937c + 0x34) - (float)(int)DAT_002324fc * 0.5) + 2048.0;
+-  fVar7 = (*(float *)(iGpffff937c + 0x38) - (float)(int)DAT_002324fe * 0.5) + 2048.0;
++  fVar4 = *(float *)(iRam0028f0ec + 0x3c) - *(float *)(iRam0028f0ec + 0x34);
++  fVar5 = *(float *)(iRam0028f0ec + 0x40) - *(float *)(iRam0028f0ec + 0x38);
++  fVar6 = (*(float *)(iRam0028f0ec + 0x34) - (float)(int)DAT_002324fc * 0.5) + 2048.0;
++  fVar7 = (*(float *)(iRam0028f0ec + 0x38) - (float)(int)DAT_002324fe * 0.5) + 2048.0;
+   if (param_1 == 0) {
+     FUN_001154d0(0x700030e0);
+   }
+   else {
+-    FUN_00114098(0x700030e0,uGpffff9380);
++    FUN_00114098(0x700030e0,uRam0028f0f0);
+     auVar8 = _lqc2(_DAT_700030e0);
+     auVar9 = _lqc2(_DAT_700030f0);
+     auVar10 = _vsub(auVar9,auVar9);
+@@ -84,14 +84,14 @@
+     FUN_00115560(0x70003160,0x70003160,auStack_90);
+   }
+   else {
+-    FUN_00128518(fVar4,fVar5,*(undefined4 *)(iGpffff937c + 8),*(undefined4 *)(iGpffff937c + 0xc),
++    FUN_00128518(fVar4,fVar5,*(undefined4 *)(iRam0028f0ec + 8),*(undefined4 *)(iRam0028f0ec + 0xc),
+                  fVar4 * 0.5 + fVar6,fVar5 * 0.5 + fVar7,0x3f800000,0x47800000,0x70003160,0x700031e0
+                  ,0x70003220);
+   }
+   auVar2 = _pextlw(0x42800000,0x42fe0000);
+   auVar1 = _pextlw(0x42800000,0x43000000);
+-  auVar3 = _pextlw(0x43000000,(long)(int)((float)bGpffffaa60 * 0.5));
+-  auVar11 = _pextlw((long)(int)((float)bGpffffaa61 * 0.5),(long)(int)((float)bGpffffaa62 * 0.5));
++  auVar3 = _pextlw(0x43000000,(long)(int)((float)bRam002907d0 * 0.5));
++  auVar11 = _pextlw((long)(int)((float)bRam002907d1 * 0.5),(long)(int)((float)bRam002907d2 * 0.5));
+   auVar10 = _pextlw(0x42fe0000,0x42fe0000);
+   auVar9 = _pextlw(0x43000000,0x43000000);
+   auVar9 = _pcpyld(auVar9,auVar9);

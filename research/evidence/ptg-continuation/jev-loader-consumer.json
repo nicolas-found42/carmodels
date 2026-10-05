@@ -1,0 +1,69 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+    "verified": 3,
+    "contradicted": 0,
+    "unsupported": 2,
+    "needs_review": 3
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "The saved PAL executable's FUN_0022a910 validates the filename extension and allocates a 0x50-byte texture resource object, and its type=1 path calls FUN_00107ce0 then FUN_0022acc8.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.01, "says_nothing": 0.0, "supports": 0.99},
+      "confidence": 0.98,
+      "action": "auto",
+      "supporting_evidence": "primary_pseudocode_0022a910",
+      "same_subject": 0.8
+    },
+    {
+      "id": "claim1",
+      "claim": "FUN_0022acc8 uses a loaded buffer whose word 0 is tile count, advances 0x50 bytes past the buffer plus count*16 bytes to find serialized 64-byte tile descriptors, and advances by 0x40 per descriptor.",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "probabilities": {"contradicts": 0.67, "says_nothing": 0.01, "supports": 0.32},
+      "confidence": 0.51,
+      "action": "review",
+      "supporting_evidence": "primary_pseudocode_0022acc8",
+      "same_subject": 0.43
+    },
+    {
+      "id": "claim2",
+      "claim": "FUN_0022acc8 places a runtime body pointer at descriptor offset +0x28 and uses descriptor byte +0x34 to select special handling; for value 3 it prepends an aligned 0x100-byte palette block.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.19, "says_nothing": 0.01, "supports": 0.8},
+      "confidence": 0.7,
+      "action": "review",
+      "supporting_evidence": "primary_pseudocode_0022acc8",
+      "same_subject": 0.56
+    },
+    {
+      "id": "claim3",
+      "claim": "FUN_00222358 consumes runtime fields +0x28, +0x30, +0x34, +0x35, +0x38 and calls FUN_00222110, which emits GS/GIF packet data.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.01, "says_nothing": 0.01, "supports": 0.98},
+      "confidence": 0.98,
+      "action": "auto",
+      "supporting_evidence": "primary_pseudocode_00222358",
+      "same_subject": 0.66
+    },
+    {
+      "id": "claim4",
+      "claim": "The executable evidence proves that GRAPHICS\\\\GAME\\\\CARS\\\\%s.PSD resolves to the extracted .ptg;1 files.",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "probabilities": {"contradicts": 1.0, "says_nothing": 0.0, "supports": 0.0},
+      "confidence": 1.0,
+      "action": "review",
+      "supporting_evidence": "source_path_xrefs",
+      "same_subject": 0.31
+    }
+  ],
+  "usage": {"input_tokens": 3280, "output_tokens": 942},
+  "notes": "Jev marked the descriptor arithmetic as review despite the cited pseudocode's explicit word arithmetic. Retain this disagreement as a negative control; the byte map and source code are the auditable evidence."
+}

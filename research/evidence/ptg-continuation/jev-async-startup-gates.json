@@ -1,0 +1,41 @@
+{
+  "schema": "jev-receipt/v1",
+  "provider": "OpenRouter via TypeSafe Jev",
+  "model": "typesafe/jev-1.13",
+  "tool": "jev_verify",
+  "arguments": {
+    "claims": [
+      "FUN_0022a910 immediately calls FUN_0022abf8 only when its global async/startup flag is nonzero and the caller's request flags overlap the active mask.",
+      "FUN_0022abf8 accepts only initial state 1, dispatches type 1 to FUN_00107ce0 plus FUN_0022acc8, and dispatches type 2 to a FUN_00105480 queue with state 2 and a handle at +0x48.",
+      "FUN_00111cd0 later handles type-2 entries only when flags are active, state is not 4, the handle is nonzero, and FUN_00105660 reports completion; it calls FUN_00101690, replaces +0x40, calls FUN_0022acc8, then sets state 4.",
+      "The CARS callback's type-2 entry can reach FUN_00111cd0's completion call when the startup, mask, and completion conditions hold, because it is listed and FUN_0015fbe0 repeatedly calls FUN_00111cd0.",
+      "FUN_0015e580 calls wrapper FUN_0015ff58 by JAL at 0x15e698; the wrapper tail-jumps to FUN_0015fbe0 at 0x15ff64, and that instruction is J, not JAL."
+    ],
+    "evidence": [
+      {
+        "id": "pal-elf",
+        "text": "PAL SLES_517.05 SHA256 216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95; .text VA 0x100000 -> file offset 0x1000, so fileoff=VA-0xff000. FUN_0022a910 startup gate: 0x22aa70 84 91 82 8f loads async flag; 0x22aa78 07 00 40 10 skips if zero (delay 0x22aa7c 30 00 33 ae stores flags +0x30); 0x22aa80 80 91 82 8f loads active mask; 0x22aa84 24 10 62 02 ANDs; 0x22aa88 04 00 40 50 skips if no overlap; 0x22aa90 fe aa 08 0c calls 0022abf8 (delay 0x22aa94 2d 20 20 02 sets a0=object). FUN_0022abf8 state/type: 0x22ac10 4c 00 03 8e loads +0x4c; 0x22ac14 28 00 62 54 rejects non-state-1; 0x22ac1c 34 00 11 8e loads +0x34; 0x22ac20 09 00 23 12 branches type1; 0x22ac28 15 00 22 12 branches type2. Type1 calls 00107ce0 at 0x22ac60 38 1f 04 0c and 0022acc8 at 0x22ac6c 32 ab 08 0c. Type2 queues 00105480 at 0x22aca4 20 15 04 0c; sets state 2 at 0x22acac 4c 00 11 ae, handle +0x48 at 0x22acb0 48 00 02 ae. FUN_00111cd0: type test 0x111d98 1f 00 53 54; flags/mask 0x111da0 30 00 22 8e, 0x111da8 24 10 43 00, skip inactive 0x111dac 19 00 40 10; state test 0x111db4 4c 00 22 8e, skip state4 0x111db8 17 00 52 50; handle test 0x111dc0 48 00 22 8e and 0x111dc4 13 00 40 10; poll 00105660 call 0x111dcc 98 15 04 0c and skip incomplete 0x111dd4 10 00 40 50; 00101690 call 0x111df0 a4 05 04 0c; replace +0x40 0x111e04 40 00 30 ae; acc8 call 0x111e08 32 ab 08 0c; state4 0x111e10 4c 00 32 ae. CARS callback call 0022a910(path,1,2) at 0x1826b0 44 aa 08 0c; callback function boundary is reconstructed analysis output."
+      },
+      {
+        "id": "static-export",
+        "text": "Static export /tmp/ptg-loader-static-export.json SHA256 129e0551bce44df27c321c31b8952ce36b34d01ea643dd07830dd4bec8a8c14b lists 00111cd0 caller 0015fbe0 and callees including 00101690/0022acc8; 0015fbe0 is called from 0015ff58 and calls 00111cd0 in its repeated loop. 0015e580 JALs to wrapper 0015ff58 at 0x15e698 bytes d6 7f 05 0c; 0015ff58 tail-jumps to 0015fbe0 at 0x15ff64 bytes f8 7e 05 08 (J)."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {"verified":5,"contradicted":0,"unsupported":0,"needs_review":0},
+    "results": [
+      {"id":"claim0","claim":"FUN_0022a910 immediately calls FUN_0022abf8 only when its global async/startup flag is nonzero and the caller's request flags overlap the active mask.","verdict":"verified","probabilities":{"contradicts":0,"says_nothing":0,"supports":1},"confidence":1,"action":"auto","supporting_evidence":"pal-elf","same_subject":0.74},
+      {"id":"claim1","claim":"FUN_0022abf8 accepts only initial state 1, dispatches type 1 to FUN_00107ce0 plus FUN_0022acc8, and dispatches type 2 to a FUN_00105480 queue with state 2 and a handle at +0x48.","verdict":"verified","probabilities":{"contradicts":0,"says_nothing":0,"supports":1},"confidence":1,"action":"auto","supporting_evidence":"pal-elf","same_subject":0.59},
+      {"id":"claim2","claim":"FUN_00111cd0 later handles type-2 entries only when flags are active, state is not 4, the handle is nonzero, and FUN_00105660 reports completion; it calls FUN_00101690, replaces +0x40, calls FUN_0022acc8, then sets state 4.","verdict":"verified","probabilities":{"contradicts":0,"says_nothing":0,"supports":1},"confidence":1,"action":"auto","supporting_evidence":"pal-elf","same_subject":0.46},
+      {"id":"claim3","claim":"The CARS callback's type-2 entry can reach FUN_00111cd0's completion call when the startup, mask, and completion conditions hold, because it is listed and FUN_0015fbe0 repeatedly calls FUN_00111cd0.","verdict":"verified","probabilities":{"contradicts":0.06,"says_nothing":0.01,"supports":0.93},"confidence":0.9,"action":"auto","supporting_evidence":"static-export","same_subject":0.42},
+      {"id":"claim4","claim":"FUN_0015e580 calls wrapper FUN_0015ff58 by JAL at 0x15e698; the wrapper tail-jumps to FUN_0015fbe0 at 0x15ff64, and that instruction is J, not JAL.","verdict":"verified","probabilities":{"contradicts":0,"says_nothing":0,"supports":1},"confidence":1,"action":"auto","supporting_evidence":"static-export","same_subject":0.89}
+    ],
+    "usage": {"input_tokens":4116,"output_tokens":568}
+  }
+}

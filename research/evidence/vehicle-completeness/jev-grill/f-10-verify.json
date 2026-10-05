@@ -1,0 +1,102 @@
+{
+  "args": {
+    "claims": [
+      "The final plan defines the indirection pass as one bounded read plus one caller walk.",
+      "C is delivered by one tool holding both the 3-pair assertion and the full car-keyed table.",
+      "B resolved is a definite outcome; a positive car-highlight cursor is not required.",
+      "The final plan keeps render_fidelity_complete false on every artifact.",
+      "The final plan has no silently-assumed branch remaining."
+    ],
+    "evidence": "FINAL PLAN \u2014 Ford Racing 2 (SLES_517.05) car-model recovery, workspace R.\nORDER: A -> B -> C. Stop only when all three reach a definite outcome (7b); C required.\nA \u2014 RECORDED VERDICT: the executable binds :SOUNDBANK_TYPE by name (config-key table @0x24af68, descriptor table @0x24afe8, same index 0..7 CAR1..CAR8; FUN_001d7950 -> car struct +0x40; FUN_00165b10 -> carN_snd; FUN_001408d8 loads carN_snd.msh/.msb; first numeric field is a discarded ordinal). build_reference.py's name-based CAR_SND_CARn -> carN_snd rule is CONSISTENT, no off-by-one. Record in a sound-index reconciliation receipt; do NOT change the green T2 verifier.\nB \u2014 SELECTOR: proof bar = a decompilation-reachable address, never a value-only match. Trace FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10. The livery-label selector is named: FUN_00125640 returns a packed selector (low-16 resource-list ordinal) from record base 0x233070+type*0x114 (count +0xbc, list +0x90); FUN_00121e10 stores it at entity+0x64; the chain hangs off dynamic gameflow pointers outer+4 -> +0x14c -> +0x174. DO: read entity+0x64 via the chain in slots 102/103/104 (expected the same DEFAULT value, non-distinguishing). THEN the BOUNDED INDIRECTION PASS (Q10a): ONE bounded read of the DAT_00241b40 indexed cursor and one walk of the FUN_001c4a40 caller chain; if the cursor's selected-index field is not identified, record the per-screen CAR highlight cursor OPEN and move to C \u2014 no further chasing. B resolved = a DEFINITE OUTCOME: entity+0x64 read and recorded, plus the cursor recorded open if the pass names nothing (broaden_indirect once before recording open).\nC \u2014 DISPLAY NAMES (Q11a): extend tools/resolve_display_names.py keeping BOTH assertions in ONE tool and receipt: the existing 3-pair check (T3 regression, preserved) AND the full car-keyed TXT_CARS_* table (~35-39 rows). The three-pair T3 claim survives as a check, not superseded. The '136-entry display-name table' is a misnomer (136 is livery rows; display names are keyed by car).\nCEILING: render_fidelity_complete false on every artifact; partial claims only; no completion gate passes; a Jev gate escalate is an acceptable recorded outcome. CONSTRAINTS: never print credentials; new files in R not S; close tickets only on real tool output."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 2
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The final plan defines the indirection pass as one bounded read plus one caller walk.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.67
+      },
+      {
+        "id": "claim1",
+        "claim": "C is delivered by one tool holding both the 3-pair assertion and the full car-keyed table.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.25
+      },
+      {
+        "id": "claim2",
+        "claim": "B resolved is a definite outcome; a positive car-highlight cursor is not required.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0.19,
+          "supports": 0.81
+        },
+        "confidence": 0.71,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.33
+      },
+      {
+        "id": "claim3",
+        "claim": "The final plan keeps render_fidelity_complete false on every artifact.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0.01,
+          "supports": 0.99
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.35
+      },
+      {
+        "id": "claim4",
+        "claim": "The final plan has no silently-assumed branch remaining.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0.31,
+          "contradicts": 0.45,
+          "supports": 0.24
+        },
+        "confidence": 0.19,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.2
+      }
+    ],
+    "usage": {
+      "input_tokens": 2408,
+      "output_tokens": 311
+    }
+  }
+}

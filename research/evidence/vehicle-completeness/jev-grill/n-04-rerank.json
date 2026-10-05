@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "next concrete act after tracing the label chain",
+    "candidates": [
+      {
+        "id": "read_store",
+        "text": "Read the store address from FUN_00121e10 in the three EE images."
+      },
+      {
+        "id": "resolve_caller",
+        "text": "Resolve the 001c4a40 caller and read DAT_00241b40's selected index."
+      },
+      {
+        "id": "menu_struct",
+        "text": "Locate the menu cursor struct from the highlight-draw code."
+      },
+      {
+        "id": "record_open",
+        "text": "Record the thread open and stop."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "next concrete act after tracing the label chain",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "resolve_caller",
+        "relevance": 0.64,
+        "text": "Resolve the 001c4a40 caller and read DAT_00241b40's selected index."
+      },
+      {
+        "rank": 2,
+        "id": "read_store",
+        "relevance": 0.31,
+        "text": "Read the store address from FUN_00121e10 in the three EE images."
+      },
+      {
+        "rank": 3,
+        "id": "menu_struct",
+        "relevance": 0.28,
+        "text": "Locate the menu cursor struct from the highlight-draw code."
+      },
+      {
+        "rank": 4,
+        "id": "record_open",
+        "relevance": 0.23,
+        "text": "Record the thread open and stop."
+      }
+    ],
+    "usage": {
+      "input_tokens": 617,
+      "output_tokens": 76
+    }
+  }
+}

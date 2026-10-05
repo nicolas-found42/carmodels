@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Adopt round-4: record the sound verdict; define B resolved as a definite outcome; shape C as car-keyed.",
+    "diff": "+ record sound verdict: consistent (no off-by-one), evidence-backed\n+ B resolved := read entity+0x64 via chain + record car cursor open\n+ C := car-keyed display names (~35-39), not a 136-entry table\n+ render_fidelity_complete stays false",
+    "tests": "verify_config_data_sound VERIFY OK; resolve_display_names VERIFY OK; test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.31,
+    "scores": {
+      "correctness": {
+        "score": 1.62,
+        "confidence": 0.43,
+        "probabilities": {
+          "0": 0.05,
+          "1": 0.29,
+          "2": 0.66
+        }
+      },
+      "spec_match": {
+        "score": 1.85,
+        "confidence": 0.77,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.14,
+          "2": 0.85
+        }
+      },
+      "test_gap": {
+        "score": 0.8,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.41,
+          "1": 0.38,
+          "2": 0.21
+        }
+      },
+      "blast_radius": {
+        "score": 1.09,
+        "confidence": 0.53,
+        "probabilities": {
+          "0": 0.11,
+          "1": 0.69,
+          "2": 0.2
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.7597500000000001,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 831,
+      "output_tokens": 79
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Adopt the complete plan for the next session.",
+    "diff": "+ A: record consistent sound verdict; no verifier change\n+ B: root via bootstrap global (fallback sig_scan); read entity+0x64; one bounded pass; definite outcome\n+ C: one tool, 3-pair regression + all 35 cars + controls + gate\n+ closure: receipt + jev_gate per thread + completion report; render_fidelity_complete false",
+    "tests": "verify_config_data_sound VERIFY OK; resolve_display_names VERIFY OK; test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.22,
+    "scores": {
+      "correctness": {
+        "score": 1.05,
+        "confidence": 0.54,
+        "probabilities": {
+          "0": 0.13,
+          "1": 0.69,
+          "2": 0.18
+        }
+      },
+      "spec_match": {
+        "score": 1.16,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.29,
+          "1": 0.25,
+          "2": 0.46
+        }
+      },
+      "test_gap": {
+        "score": 1.47,
+        "confidence": 0.2,
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.22,
+          "2": 0.63
+        }
+      },
+      "blast_radius": {
+        "score": 1.76,
+        "confidence": 0.65,
+        "probabilities": {
+          "0": 0.04,
+          "1": 0.15,
+          "2": 0.81
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.44175000000000003,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "spec_match"
+    ],
+    "usage": {
+      "input_tokens": 828,
+      "output_tokens": 79
+    }
+  }
+}

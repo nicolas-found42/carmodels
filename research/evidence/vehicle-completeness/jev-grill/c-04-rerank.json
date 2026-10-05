@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "rank the plan's work items by how well each is backed by existing evidence",
+    "candidates": [
+      {
+        "id": "A_record",
+        "text": "Record the sound-index consistent verdict."
+      },
+      {
+        "id": "B_read_store",
+        "text": "Read entity+0x64 via the chain in the three EE images."
+      },
+      {
+        "id": "B_cursor",
+        "text": "One indirection pass for the car-highlight cursor."
+      },
+      {
+        "id": "C_extend",
+        "text": "Extend the resolver to the car-keyed display names."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "rank the plan's work items by how well each is backed by existing evidence",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "B_cursor",
+        "relevance": 0.41,
+        "text": "One indirection pass for the car-highlight cursor."
+      },
+      {
+        "rank": 2,
+        "id": "C_extend",
+        "relevance": 0.3,
+        "text": "Extend the resolver to the car-keyed display names."
+      },
+      {
+        "rank": 3,
+        "id": "B_read_store",
+        "relevance": 0.21,
+        "text": "Read entity+0x64 via the chain in the three EE images."
+      },
+      {
+        "rank": 4,
+        "id": "A_record",
+        "relevance": 0.09,
+        "text": "Record the sound-index consistent verdict."
+      }
+    ],
+    "usage": {
+      "input_tokens": 603,
+      "output_tokens": 76
+    }
+  }
+}

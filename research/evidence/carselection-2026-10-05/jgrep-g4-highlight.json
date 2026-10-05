@@ -1,0 +1,9 @@
+[
+  {
+    "file": "001c4a40.c",
+    "start": 1,
+    "end": 60,
+    "p": 0.73,
+    "text": "\nvoid FUN_001c4a40(undefined8 param_1,uint *param_2,float *param_3,float *param_4,char *param_5,\n                 float *param_6,float *param_7)\n\n{\n  int iVar1;\n  int iVar2;\n  uint uVar3;\n  int iVar4;\n  int iVar5;\n  long lVar6;\n  undefined8 uVar7;\n  char cVar8;\n  undefined *puVar9;\n  int iVar10;\n  int *piVar11;\n  float fVar12;\n  float fVar13;\n  uint uVar14;\n  float fVar15;\n  undefined1 auVar16 [16];\n  undefined1 auVar17 [16];\n  \n  piVar11 = (int *)param_1;\n  cVar8 = *(char *)*piVar11;\n  if (cVar8 < '\\0') {\n    puVar9 = (undefined *)0x0;\n    iVar4 = iRam000000c4;\n  }\n  else {\n    iVar4 = (cVar8 * 0x14 + (int)cVar8) * 0x10;\n    puVar9 = &DAT_00241b40 + iVar4;\n    iVar4 = *(int *)(&DAT_00241c04 + iVar4);\n  }\n  iVar5 = *(int *)(puVar9 + 0xb4);\n  iVar1 = *(int *)(puVar9 + 200);\n  iVar2 = *(int *)(puVar9 + 0xbc);\n  if (*(char *)((int)piVar11 + 0x12) == '\\0') {\n    if ((*param_2 & 0x80) == 0) {\n      if ((*param_2 & 0x100) == 0) {\n        cVar8 = *param_5;\n      }\n      else {\n        *param_5 = *param_5 + -1;\n        lVar6 = FUN_001ca508(param_1);\n        if (lVar6 == 0) {\n          cVar8 = *param_5;\n        }\n        else {\n          cVar8 = *param_5;\n          if (cVar8 == '\\0') {\n            cVar8 = -1;\n            goto LAB_001c4b54;\n          }\n        }\n      }\n    }\n    else {\n      *param_5 = *param_5 + '\\x01';\n      lVar6 = FUN_001ca508(param_1);"
+  }
+]

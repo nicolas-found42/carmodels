@@ -1,0 +1,138 @@
+{
+  "args": {
+    "request": "Gate the sweep close-out.",
+    "diff": "{\n \"test1_hits\": 0,\n \"dat_tracks\": false,\n \"verdict\": \"not a stored integer\"\n}",
+    "claims": [
+      "No EE word equals the highlight position across the six slots.",
+      "The DAT-table words do not track the highlight.",
+      "The stored-integer hypothesis is closed as negative."
+    ],
+    "evidence": "6-position screenshot-verified sweep results (slots 140-145, heap base identical 0x473d70, pause-control 0 diffs within pairs). Verified positions: 140=pos1 FORD'49, 141=pos2 '68 MUSTANG, 142=pos3 '55 Thunderbird, 143=pos6 FORD GT, 144=pos6 FORD GT, 145=pos5 Thunderbird Convertible. DECISIVE TEST 1: NO word anywhere in the 32 MiB EE image equals its slot's position in all 6 slots (0 hits at u32/u16/u8). TEST 2: the DAT-table small words do not track position: 0x241b60 reads 5,5,5,4,3,3 across pos1,2,3,6,6,5; 0x241e00 reads 5,5,5,5,4,4. Notably 143 vs 144 (BOTH pos6) differ at 0x241b60 (4 vs 3), so these words track something else (animation/other cursor), not the highlight. Combined with the earlier exhaustive result (no tuple, no flag, no pointer in ANY savestate member), the mark is definitively NOT a stored integer. Remaining possibilities: recomputed per frame, or an encoding not tested (float/bitfield). All headless, read-only + savestate saves; container left paused.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"closed_negative\", \"escaped\": false, \"confidence\": 0.86, \"probabilities\": {\"breakpoint\": 0, \"investigate\": 0, \"closed_negative\": 0.89, \"ask_user\": 0, \"none\": 0, \"float_scan\": 0.11}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"closed_negative\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"closed_negative\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"closed_negative\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"float_scan\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"float_scan\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"float_scan\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"breakpoint\", \"requirement\": 0, \"answer\": \"unknown\"}, {\"candidate\": \"breakpoint\", \"requirement\": 1, \"answer\": \"unknown\"}, {\"candidate\": \"breakpoint\", \"requirement\": 2, \"answer\": \"supported\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2159, \"output_tokens\": 452}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.46,
+      "scores": {
+        "correctness": {
+          "score": 1.42,
+          "confidence": 0.13,
+          "probabilities": {
+            "0": 0.17,
+            "1": 0.24,
+            "2": 0.59
+          }
+        },
+        "spec_match": {
+          "score": 1.58,
+          "confidence": 0.37,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.14,
+            "2": 0.72
+          }
+        },
+        "test_gap": {
+          "score": 0.47,
+          "confidence": 0.29,
+          "probabilities": {
+            "0": 0.71,
+            "1": 0.1,
+            "2": 0.19
+          }
+        },
+        "blast_radius": {
+          "score": 0.33,
+          "confidence": 0.51,
+          "probabilities": {
+            "0": 0.8,
+            "1": 0.08,
+            "2": 0.12
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7609999999999999,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "correctness"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "No EE word equals the highlight position across the six slots.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "unsupported": 0,
+            "verified": 1,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The DAT-table words do not track the highlight.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "unsupported": 0,
+            "verified": 1,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The stored-integer hypothesis is closed as negative.",
+          "verdict": "verified",
+          "confidence": 1,
+          "probabilities": {
+            "unsupported": 0,
+            "verified": 1,
+            "contradicted": 0
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2122,
+      "output_tokens": 198
+    }
+  }
+}

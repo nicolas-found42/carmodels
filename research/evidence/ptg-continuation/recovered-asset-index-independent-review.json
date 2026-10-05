@@ -1,0 +1,80 @@
+{
+  "schema": "fr2-asset-index-independent-review/v1",
+  "review_date": "2026-10-04",
+  "scope": [
+    "tools/build_recovered_asset_index.py",
+    "tools/verify_recovered_asset_index.py",
+    "recovered/index.json"
+  ],
+  "sha256": {
+    "build_recovered_asset_index.py": "ea2ce34247c7d58270fadb64b5757b4a82153a4b3b1eb42c95e117edea0ffdbb",
+    "verify_recovered_asset_index.py": "c4af1a0b17a841acab9f89b6ddfb1cc3862d3ff3984d5aea991993c94d742164",
+    "recovered/index.json": "cead5615a975dab8fc78d061acee467efa27728ef22e11b3338d8f9ece26a35c",
+    "recovered-asset-index-validation.json": "065d926e535e49dbe07872a20c6fefa07c22c25046171b5b17f715fe502e7538"
+  },
+  "observed_validation": {
+    "command": "python3 tools/verify_recovered_asset_index.py",
+    "result": "VERIFY OK",
+    "cars": 35,
+    "assets": 2579,
+    "producer_receipt_set_equality": true,
+    "changed_manifest_hash_rejected": true,
+    "category_counts": {
+      "original_model": 35,
+      "glb": 35,
+      "model_texture_display": 700,
+      "model_texture_raw": 700,
+      "mip_plane": 94,
+      "mip_stored_alpha": 94,
+      "original_icon": 35,
+      "icon_raw_alpha_png": 35,
+      "icon_display_png": 35,
+      "original_livery": 136,
+      "livery_raw_alpha_png": 136,
+      "livery_display_png": 136,
+      "original_matrix": 136,
+      "matrix_csm0-swap-raw": 136,
+      "matrix_csm0-swap-display": 136
+    }
+  },
+  "finding": {
+    "severity": "moderate validator coverage gap",
+    "title": "Per-car manifest ownership is not independently checked",
+    "evidence": "verify_recovered_asset_index.check validates each row/document car name, asset counts, file bytes and hashes, path uniqueness, category totals, and equality between the global manifest path set and a global producer-receipt path set. It does not verify that each manifest's assets are the ones assigned to that car by producer receipts.",
+    "adversarial_reproduction": "In a disposable temporary overlay, swapped the original_model asset records between 49_COUPE and F100_1956 manifests while preserving each manifest's size and category counts, recalculated those two manifest hashes in a copied index, and ran the unchanged check(index). It returned cars=35, assets=2579, producer_receipt_set_equality=true. The asset hashes and global path set stayed valid, while both per-car model associations became wrong.",
+    "impact": "The committed/current output is verified against current bytes and its builder appears to assign paths from the producer records. However, the validator can accept internally rehashed per-car manifests that exchange same-kind assets across cars, so it does not independently validate the advertised car-to-asset association. The current negative control exercises only manifest-hash corruption.",
+    "recommended_fix": "Derive expected asset records per car from the producer receipts (including expected paths and source hashes where present) and compare each manifest's complete path-to-kind/metadata mapping with that per-car set. Add the demonstrated cross-car swap as a negative control."
+  },
+  "jev_typesafe": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "usage_tokens": 2064,
+    "results": [
+      {
+        "claim": "The verifier checks each asset's per-car ownership against producer receipts.",
+        "verdict": "contradicted",
+        "probabilities": {"contradicts": 0.99, "supports": 0.01, "says_nothing": 0.0},
+        "confidence": 0.99
+      },
+      {
+        "claim": "The current index has 35 cars and 2,579 individually hash-verified assets, and the verifier reports producer_receipt_set_equality=true.",
+        "verdict": "verified",
+        "probabilities": {"contradicts": 0.0, "supports": 1.0, "says_nothing": 0.0},
+        "confidence": 0.99
+      },
+      {
+        "claim": "The existing negative test rejects a changed manifest hash but does not test cross-car ownership swaps.",
+        "verdict": "verified",
+        "probabilities": {"contradicts": 0.0, "supports": 1.0, "says_nothing": 0.0},
+        "confidence": 1.0
+      }
+    ],
+    "interpretation": "Jev confirmed the code-coverage statements. Deterministic source inspection and the disposable adversarial execution establish the defect; the model judgment is corroboration, not the basis of the finding."
+  },
+  "limitations": [
+    "The validation command rewrites research/evidence/continuation/source-refresh/recovered-asset-index-validation.json; its observed hash is recorded above.",
+    "This audit did not modify either reviewed tool or any recovered manifest/index.",
+    "This review does not certify final in-game render equivalence or independently validate all producer parsers."
+  ]
+}

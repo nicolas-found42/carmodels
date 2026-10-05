@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "rank the headless solutions by cost and reliability",
+    "candidates": [
+      {
+        "id": "xdotool_debugger",
+        "text": "apt install xdotool + drive the debugger UI on :99 (small image change)."
+      },
+      {
+        "id": "build_debugserver",
+        "text": "Full PCSX2 Linux build + DebugServer patch (hours; heavy)."
+      },
+      {
+        "id": "pince_scan",
+        "text": "Value scan against the process (no breakpoint; may not resolve a computed value)."
+      },
+      {
+        "id": "playwright_vnc",
+        "text": "Existing hidden Playwright->noVNC browser (works for keys, awkward for the debugger UI)."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "rank the headless solutions by cost and reliability",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "playwright_vnc",
+        "relevance": 0.45,
+        "text": "Existing hidden Playwright->noVNC browser (works for keys, awkward for the debugger UI)."
+      },
+      {
+        "rank": 2,
+        "id": "xdotool_debugger",
+        "relevance": 0.16,
+        "text": "apt install xdotool + drive the debugger UI on :99 (small image change)."
+      },
+      {
+        "rank": 3,
+        "id": "build_debugserver",
+        "relevance": 0.09,
+        "text": "Full PCSX2 Linux build + DebugServer patch (hours; heavy)."
+      },
+      {
+        "rank": 4,
+        "id": "pince_scan",
+        "relevance": 0.05,
+        "text": "Value scan against the process (no breakpoint; may not resolve a computed value)."
+      }
+    ],
+    "usage": {
+      "input_tokens": 624,
+      "output_tokens": 76
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema": "fr2-packet-continuation-jev-colorflow-verify/v1",
+  "task": "Verify the bounded static overlay-1 lighting sequence and the source-plane/RGB correspondence, while testing whether the combined evidence proves execution.",
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "input_tokens": 2736,
+  "output_tokens": 491,
+  "evidence_sha256": {
+    "static_trace": "source-pinned hashes listed in research/evidence/packet-continuation/static-trace.json; overlay-1.s sha256 b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a",
+    "race_trace": "research/evidence/packet-continuation/race94-trace.json produced by python3 tools/trace_car_packets.py in this run"
+  },
+  "claims": [
+    "The pinned overlay-1 listing contains a static conditional lit path that forms a dot product from qword +1 XYZ and vf08.xyz, clamps it to nonnegative, scales vf07.xyz, adds vf08.xyz, multiplies vf05.xyz, converts with FTOI0, and stores the result to output qword +1.",
+    "All 45 repeated-UV source-header candidate groups in the bounded interval have byte-identical four-byte planes, permitting 5,908 source-byte / packed-RGB vertex pairs across 105 exact-UV-matched tags.",
+    "On those 5,908 diagnostic pairs, a global per-channel affine fit of signed8 source XYZ to packet RGB has R² about 0.862, 0.863, and 0.861 for R/G/B, exceeding the unsigned8 lane control R² about 0.105, 0.105, and 0.106.",
+    "The measurements prove that overlay-1 executed this lit branch to generate all 5,915 packet RGB lanes in the captured COBRA interval."
+  ],
+  "result": {
+    "summary": {
+      "verified": 3,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 1
+    },
+    "verdicts": [
+      {
+        "id": "claim0",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 0.91,
+          "contradicts": 0.09
+        },
+        "confidence": 0.86,
+        "action": "auto",
+        "supporting_evidence": "source-assembly"
+      },
+      {
+        "id": "claim1",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 0.99,
+          "contradicts": 0.01
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": "race94-measurements"
+      },
+      {
+        "id": "claim2",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "race94-measurements"
+      },
+      {
+        "id": "claim3",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0.08,
+          "supports": 0.01,
+          "contradicts": 0.91
+        },
+        "confidence": 0.87,
+        "action": "review",
+        "supporting_evidence": "race94-measurements"
+      }
+    ],
+    "limitations": "Jev is advisory. The unsupported execution claim remains rejected because runtime VU dispatch/register-value linkage is still absent; the receipt does not replace the deterministic parser and source/hash checks."
+  }
+}

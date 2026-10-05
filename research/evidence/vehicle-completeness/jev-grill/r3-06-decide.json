@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "Under stop-condition 7b, what does 'B (selector) resolved' mean?",
+    "evidence": "Settled for the next session: order A (sound index) -> B (selector) -> C (display-name table). B proof bar = a decompilation-reachable address, not a value match. Claim ceiling = render_fidelity_complete false on every artifact, partial claims only. B method = decompilation-first trace of FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10, then ONE time-boxed indirection pass before recording the thread open. A method = settle with a definite verdict (consistent | off_by_one | undecidable) from the soundman consumer. Stop condition 7b = do NOT stop until all three threads are resolved (C now required, not optional).\n\nTension: Jev rounds 1-2 put 'an isolated EE word that tracks the highlight exists' at 0.13 likely-false and contradicted 'the highlight is stored as a plain integer word in EE main RAM' (0.88); the fallback allows recording the selector thread open. But stop-condition 7b says do not stop until all three threads are resolved. If B yields no positive find, 'resolved' must mean a definite outcome (named address OR evidenced open) or the session cannot end.\n\nC target: Jev round-1 classify labeled C breadth_only, auto. The '136' figure refers either to the 35 cars or to the 136 liveries (exact meaning pending a fact check). LANGUAGE/tlate_en.dat;1 holds TXT_CARS_* keys that build_reference.py already parses; T3 already resolved three pairs (COUPE_1949/THUNDERBIRD_2002/FORTYNINE).",
+    "priorities": "Keep partial-claims-only and render_fidelity_complete false; never assert a find that evidence does not support; allow the session to end on a definite recorded outcome; a Jev gate escalate is acceptable.",
+    "candidates": [
+      {
+        "id": "definite_outcome",
+        "description": "'Resolved' = a named decompilation-reachable address, OR an evidenced recorded-open outcome after the time-boxed indirection pass."
+      },
+      {
+        "id": "positive_find",
+        "description": "'Resolved' = the selector word was positively isolated; block otherwise."
+      },
+      {
+        "id": "escalate_if_no_find",
+        "description": "If no positive find, stop the session and escalate the open to the human."
+      }
+    ],
+    "requirements": [
+      "Lets the session end on a definite recorded outcome",
+      "Does not assert an unsupported find",
+      "Keeps render_fidelity_complete false"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "definite_outcome",
+      "escaped": false,
+      "confidence": 0.99,
+      "probabilities": {
+        "definite_outcome": 1,
+        "none": 0,
+        "escalate_if_no_find": 0,
+        "investigate": 0,
+        "positive_find": 0,
+        "ask_user": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "definite_outcome",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "definite_outcome",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "definite_outcome",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "positive_find",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "positive_find",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "positive_find",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "escalate_if_no_find",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "escalate_if_no_find",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "escalate_if_no_find",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2267,
+      "output_tokens": 458
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "args": {
+    "request": "Decide the input path and starting slot for the ordinary car-selection capture.",
+    "diff": "{\n \"decision\": \"d1-input-path-and-start\",\n \"selected_input_path\": \"browser_keys\",\n \"starting_slot\": \"98\",\n \"preserve_slot\": \"100 untouched; new saves to 101+\"\n}",
+    "claims": [
+      "The selected input path keeps PCSX2 headless with no desktop focus theft.",
+      "The selected input path uses only ordinary controller input plus read-only/capture APIs.",
+      "Slot 98 is the chosen starting state; slot 100 stays untouched."
+    ],
+    "evidence": "VNC status: Connected (unencrypted) to 3f7463603fbf:99.\nLive screenshot transcript: VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable.\nSlot 98 screenshot transcript: 'Select a Challenge Theme' screen from Ford Racing 2 over a racetrack scene. Seven circular theme icons across upper middle: star (selected, gold), movie camera, SVT logo, trophy, paint palette, wrench, checkered flag. Title 'LIVING LEGENDS'. Six car thumbnails in a row below, each with a padlock badge (pale green, tan, light blue, brown, white, red cars); sixth red car highlighted with yellow border. Lower left 'ROOKIE 0%', lower right 'BACK' (triangle) and 'OK' (X) prompts. Visible text: SELECT A CHALLENGE THEME, FORD RACING 2, SVT, LIVING LEGENDS, ROOKIE 0%, BACK, OK. No car names or livery names readable.\nPINE identity: PCSX2 v2.8.2, Ford Racing 2, SLES-51705, uuid 37f695cd, game 1.00, status 1 (paused).\nContainer facts: no xdotool/xte, no python-Xlib, DISPLAY=:99 under Xvfb; hidden jev-browser session connected via trusted evaluate click on noVNC_connect_button; prior session found frame-step navigation unreliable with lagging screenshots; input indicators enabled in ini. Slot 100 is the live paused race to preserve; new saves go to 101+.\nDecide result: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"browser_keys\", \"escaped\": false, \"confidence\": 0.81, \"probabilities\": {\"static_only\": 0.06999999999999999, \"container_xlib\": 0, \"browser_keys\": 0.85, \"investigate\": 0.03, \"ask_user\": 0, \"none\": 0.05, \"jev_act_clicks\": 0}, \"contradicted_requirements\": [1]}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"browser_keys\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"browser_keys\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"browser_keys\", \"requirement\": 2, \"answer\": \"unknown\"}, {\"candidate\": \"jev_act_clicks\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"jev_act_clicks\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"jev_act_clicks\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"container_xlib\", \"requirement\": 0, \"answer\": \"unknown\"}, {\"candidate\": \"container_xlib\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"container_xlib\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"static_only\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"static_only\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"static_only\", \"requirement\": 2, \"answer\": \"contradicted\"}], \"warnings\": [\"Requirement 2 contradicted by the recommended candidate; inspect before acting\"], \"usage\": {\"input_tokens\": 2954, \"output_tokens\": 608}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_contradicted",
+      "claims_unsupported",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.1,
+      "scores": {
+        "correctness": {
+          "score": 0.82,
+          "confidence": 0.38,
+          "probabilities": {
+            "0": 0.3,
+            "1": 0.58,
+            "2": 0.12
+          }
+        },
+        "spec_match": {
+          "score": 1.73,
+          "confidence": 0.59,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.22,
+            "2": 0.75
+          }
+        },
+        "test_gap": {
+          "score": 1.89,
+          "confidence": 0.84,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.04,
+            "2": 0.92
+          }
+        },
+        "blast_radius": {
+          "score": 0.56,
+          "confidence": 0.15,
+          "probabilities": {
+            "0": 0.54,
+            "1": 0.35,
+            "2": 0.11
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.53975,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 1,
+        "contradicted": 1,
+        "unsupported": 1,
+        "needs_review": 2,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The selected input path keeps PCSX2 headless with no desktop focus theft.",
+          "verdict": "unsupported",
+          "confidence": 0.33,
+          "probabilities": {
+            "contradicted": 0.41,
+            "verified": 0.04,
+            "unsupported": 0.55
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "The selected input path uses only ordinary controller input plus read-only/capture APIs.",
+          "verdict": "contradicted",
+          "confidence": 0.75,
+          "probabilities": {
+            "contradicted": 0.83,
+            "verified": 0.01,
+            "unsupported": 0.16
+          },
+          "action": "review"
+        },
+        {
+          "claim": "Slot 98 is the chosen starting state; slot 100 stays untouched.",
+          "verdict": "verified",
+          "confidence": 0.9,
+          "probabilities": {
+            "contradicted": 0.01,
+            "verified": 0.93,
+            "unsupported": 0.06
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2451,
+      "output_tokens": 201
+    }
+  }
+}

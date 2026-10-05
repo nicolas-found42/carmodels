@@ -1,0 +1,83 @@
+{
+  "summary": "Headless read-only PINE reaches the live car-entity chain, but the per-screen highlight is not stored as a readable EE integer or pointer in any of the three savestates; Job B stays a recorded-open definite outcome.",
+  "live_chain": {
+    "slot102": {
+      "status_after": 1,
+      "manager_global": 4668784,
+      "nodes": 6,
+      "type_bytes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "slot103": {
+      "status_after": 1,
+      "manager_global": 4668784,
+      "nodes": 6,
+      "type_bytes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "slot104": {
+      "status_after": 1,
+      "manager_global": 4668784,
+      "nodes": 6,
+      "type_bytes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  },
+  "live_chain_resolves": true,
+  "named_store": {
+    "offset": "entity+0x64 (node+0x10+0x64)",
+    "type": "float (FUN_00121e10)",
+    "entity_floats_car1_6": [
+      "0x3f7f8382",
+      "0x3f7ffed3",
+      "0x3f55bdc1",
+      "0x3f800000",
+      "0x3f6d40bf",
+      "0x3f712801"
+    ]
+  },
+  "exhaustive_tuple_scan": {
+    "u32": {
+      "tuple_154_hits": 0,
+      "tuple_043_hits": 0
+    },
+    "u16": {
+      "tuple_154_hits": 0,
+      "tuple_043_hits": 2
+    },
+    "u8": {
+      "tuple_154_hits": 0,
+      "tuple_043_hits": 97
+    }
+  },
+  "ee_image_sha256": {
+    "slot102": "c8167b6ec2c4f43ad7c3ff968249fbb4b3802011a3b2d72feac7d1ffef34239f",
+    "slot103": "8e5af5b2605d708d8c78d51e4168c30e6961f234527482964ca09c2303a5adcc",
+    "slot104": "26cdd8fef7f7b3ccf76ccc8b7a2cc1814c8921c65b9f9137765b99668c14eba2"
+  },
+  "control_tuple154_zero_all_widths": true,
+  "control_tuple043_only_byte_noise": true,
+  "control_live_chain_resolves": true,
+  "control_store_is_float": true,
+  "render_fidelity_complete": false,
+  "scope": "three captured savestates (live-loaded) + exhaustive EE tuple scan; read-only",
+  "result": "VERIFY OK"
+}

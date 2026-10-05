@@ -1,0 +1,57 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+    "verified": 4,
+    "contradicted": 0,
+    "unsupported": 0,
+    "needs_review": 0
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "For the bounded race94 COBRA texture-index-0 lifetime, the decoded stream contains 106 geometry tags and 5,915 packed RGBAQ records; the observed register payload is per-vertex data and does not by itself establish how the game computes its color values.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 0.99, "contradicts": 0.01},
+      "confidence": 0.98,
+      "action": "auto",
+      "supporting_evidence": "race94-decoded-packet",
+      "same_subject": 0.95
+    },
+    {
+      "id": "claim1",
+      "claim": "The saved overlay-5 assembly uses FCAND tests with masks 0x28a28a and 0x145145 after CLIPW operations and has branches that skip the nearby packet-store/XGKICK block; this does not prove that these branches explain the observed ADC mismatch pattern.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0.02, "supports": 0.98, "contradicts": 0},
+      "confidence": 0.97,
+      "action": "auto",
+      "supporting_evidence": "overlay5",
+      "same_subject": 0.91
+    },
+    {
+      "id": "claim2",
+      "claim": "The saved overlay-6 assembly stores vf12, vf30, and vf16 before XGKICK; those register names and stores do not alone identify the output lanes as STQ, color, and position.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 0.99,
+      "action": "auto",
+      "supporting_evidence": "overlay6",
+      "same_subject": 0.94
+    },
+    {
+      "id": "claim3",
+      "claim": "The parent source-geometry audit reports 11,196 positive, 4 negative, and 4,857 source-suppressed COBRA triangles for source file hash 751fb754d2510c9d5d7fce725c13f5bed5e9e2edc0d670644dbb688d488e6912, while explicitly declining to prove the packed signed8 XYZ values are final shading normals.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "source-geometry-audit",
+      "same_subject": 0.97
+    }
+  ],
+  "usage": {"input_tokens": 3031, "output_tokens": 565},
+  "handling": "Advisory evidence check only. Deterministic dump decode, pinned source, source hashes, and parent audit control the reported facts."
+}

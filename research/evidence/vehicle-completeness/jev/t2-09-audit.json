@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n",
+    "records": [
+      {
+        "id": "result",
+        "request": "extract result",
+        "value": "VERIFY OK"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "result",
+        "value": "VERIFY OK",
+        "checks": {
+          "hallucinated": 0.02,
+          "off_target": 0.09,
+          "incomplete": 0.04,
+          "format": 0.04
+        },
+        "p_wrong": 0.09,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 982,
+      "output_tokens": 86
+    }
+  }
+}

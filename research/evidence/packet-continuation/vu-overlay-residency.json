@@ -1,0 +1,309 @@
+{
+  "schema": "fr2-vu-overlay-residency-audit/v1",
+  "method": "byte-exact source overlay search at 8-byte-aligned offsets in 16KiB VU1 micro-memory snapshots; hashes and sizes are recorded for each pinned source binary",
+  "snapshots": [
+    {
+      "snapshot": "loading baseline",
+      "micro_memory_bytes": 16384,
+      "alignment_bytes": 8,
+      "overlays": [
+        {
+          "overlay": 0,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-0.bin",
+          "size": 2048,
+          "sha256": "44dc920cd4ae5ca3acfb27d75abf5e97977f12671d95782396bb9736e4656f78",
+          "aligned_exact_offsets": [
+            "0x0000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 1,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-1.bin",
+          "size": 2048,
+          "sha256": "0f538b0e4eb49ed1111b083b5723c6c19dd664db2d8a119bd8b77259fb5c0f3d",
+          "aligned_exact_offsets": [
+            "0x0800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 2,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-2.bin",
+          "size": 2048,
+          "sha256": "afbaaa5303b7b41f32cf58c4c83fa3610a13dc89f66bd056361bd9ff98fc0326",
+          "aligned_exact_offsets": [
+            "0x1000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 3,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-3.bin",
+          "size": 2048,
+          "sha256": "555e44d8172793c545f91864b1f868e6568517e727c281a7788560c5b205326b",
+          "aligned_exact_offsets": [
+            "0x1800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 4,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-4.bin",
+          "size": 2048,
+          "sha256": "1a3f4ad92125a228e8edc0de1307c2cc1d670388fa2ae50a8228d1e446795f97",
+          "aligned_exact_offsets": [
+            "0x2000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 5,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-5.bin",
+          "size": 2048,
+          "sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c",
+          "aligned_exact_offsets": [
+            "0x2800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 6,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-6.bin",
+          "size": 176,
+          "sha256": "8fa890c10982c4f03092aea57a77a5f31e140497c5747027c56a67a9daf155d8",
+          "aligned_exact_offsets": [
+            "0x3000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 7,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-7.bin",
+          "size": 1120,
+          "sha256": "2093b6946baea64312037ec6a6dce16a7451b7729f4cf7e88042ac90895422e1",
+          "aligned_exact_offsets": [],
+          "exact_resident": false
+        }
+      ],
+      "resident_overlay_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "nonresident_exact_window_indices": [
+        7
+      ],
+      "claim_limit": "Exact aligned byte residency only; it does not identify the active VU PC, program dispatch, or which overlay generated a packet.",
+      "path": "research/evidence/continuation/runtime/loading-vu1MicroMem.bin",
+      "sha256": "02167bdc98b303a93fb8ac87b8d641b3fdf922155b6b7f7596e928e2f012ce41"
+    },
+    {
+      "snapshot": "race94 paused state",
+      "micro_memory_bytes": 16384,
+      "alignment_bytes": 8,
+      "overlays": [
+        {
+          "overlay": 0,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-0.bin",
+          "size": 2048,
+          "sha256": "44dc920cd4ae5ca3acfb27d75abf5e97977f12671d95782396bb9736e4656f78",
+          "aligned_exact_offsets": [
+            "0x0000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 1,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-1.bin",
+          "size": 2048,
+          "sha256": "0f538b0e4eb49ed1111b083b5723c6c19dd664db2d8a119bd8b77259fb5c0f3d",
+          "aligned_exact_offsets": [
+            "0x0800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 2,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-2.bin",
+          "size": 2048,
+          "sha256": "afbaaa5303b7b41f32cf58c4c83fa3610a13dc89f66bd056361bd9ff98fc0326",
+          "aligned_exact_offsets": [
+            "0x1000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 3,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-3.bin",
+          "size": 2048,
+          "sha256": "555e44d8172793c545f91864b1f868e6568517e727c281a7788560c5b205326b",
+          "aligned_exact_offsets": [
+            "0x1800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 4,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-4.bin",
+          "size": 2048,
+          "sha256": "1a3f4ad92125a228e8edc0de1307c2cc1d670388fa2ae50a8228d1e446795f97",
+          "aligned_exact_offsets": [
+            "0x2000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 5,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-5.bin",
+          "size": 2048,
+          "sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c",
+          "aligned_exact_offsets": [
+            "0x2800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 6,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-6.bin",
+          "size": 176,
+          "sha256": "8fa890c10982c4f03092aea57a77a5f31e140497c5747027c56a67a9daf155d8",
+          "aligned_exact_offsets": [
+            "0x3000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 7,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-7.bin",
+          "size": 1120,
+          "sha256": "2093b6946baea64312037ec6a6dce16a7451b7729f4cf7e88042ac90895422e1",
+          "aligned_exact_offsets": [],
+          "exact_resident": false
+        }
+      ],
+      "resident_overlay_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "nonresident_exact_window_indices": [
+        7
+      ],
+      "claim_limit": "Exact aligned byte residency only; it does not identify the active VU PC, program dispatch, or which overlay generated a packet.",
+      "path": "research/evidence/continuation/runtime/race94-vu1MicroMem.bin",
+      "sha256": "02167bdc98b303a93fb8ac87b8d641b3fdf922155b6b7f7596e928e2f012ce41"
+    }
+  ],
+  "race97": {
+    "path": "research/evidence/continuation/runtime/linux/race97-vu1MicroMem.bin",
+    "sha256": "02167bdc98b303a93fb8ac87b8d641b3fdf922155b6b7f7596e928e2f012ce41",
+    "audit": {
+      "snapshot": "race97 advanced state",
+      "micro_memory_bytes": 16384,
+      "alignment_bytes": 8,
+      "overlays": [
+        {
+          "overlay": 0,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-0.bin",
+          "size": 2048,
+          "sha256": "44dc920cd4ae5ca3acfb27d75abf5e97977f12671d95782396bb9736e4656f78",
+          "aligned_exact_offsets": [
+            "0x0000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 1,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-1.bin",
+          "size": 2048,
+          "sha256": "0f538b0e4eb49ed1111b083b5723c6c19dd664db2d8a119bd8b77259fb5c0f3d",
+          "aligned_exact_offsets": [
+            "0x0800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 2,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-2.bin",
+          "size": 2048,
+          "sha256": "afbaaa5303b7b41f32cf58c4c83fa3610a13dc89f66bd056361bd9ff98fc0326",
+          "aligned_exact_offsets": [
+            "0x1000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 3,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-3.bin",
+          "size": 2048,
+          "sha256": "555e44d8172793c545f91864b1f868e6568517e727c281a7788560c5b205326b",
+          "aligned_exact_offsets": [
+            "0x1800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 4,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-4.bin",
+          "size": 2048,
+          "sha256": "1a3f4ad92125a228e8edc0de1307c2cc1d670388fa2ae50a8228d1e446795f97",
+          "aligned_exact_offsets": [
+            "0x2000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 5,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-5.bin",
+          "size": 2048,
+          "sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c",
+          "aligned_exact_offsets": [
+            "0x2800"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 6,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-6.bin",
+          "size": 176,
+          "sha256": "8fa890c10982c4f03092aea57a77a5f31e140497c5747027c56a67a9daf155d8",
+          "aligned_exact_offsets": [
+            "0x3000"
+          ],
+          "exact_resident": true
+        },
+        {
+          "overlay": 7,
+          "source_path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310/overlay-7.bin",
+          "size": 1120,
+          "sha256": "2093b6946baea64312037ec6a6dce16a7451b7729f4cf7e88042ac90895422e1",
+          "aligned_exact_offsets": [],
+          "exact_resident": false
+        }
+      ],
+      "resident_overlay_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "nonresident_exact_window_indices": [
+        7
+      ],
+      "claim_limit": "Exact aligned byte residency only; it does not identify the active VU PC, program dispatch, or which overlay generated a packet."
+    }
+  },
+  "semantic_boundary": "Residency is not execution. These comparisons do not capture the active VU PC or prove which overlay emitted a particular GIF tag."
+}

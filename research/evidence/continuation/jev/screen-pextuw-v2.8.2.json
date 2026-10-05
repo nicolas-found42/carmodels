@@ -1,0 +1,14 @@
+{
+  "args": {
+    "purpose": "Interpret which source vector component the PS2 PEXTUW zero,vector instruction places in the low 32-bit output passed to the car distance selector.",
+    "text": "void PEXTUW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[3];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[3];\n}\n"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.02,\n    \"substance\": 0.94,\n    \"relevance\": 0.88\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"pass\",\n    \"reason\": \"no signals above thresholds\"\n  },\n  \"usage\": {\n    \"input_tokens\": 679,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

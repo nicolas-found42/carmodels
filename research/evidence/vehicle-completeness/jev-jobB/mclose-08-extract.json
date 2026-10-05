@@ -1,0 +1,81 @@
+{
+  "args": {
+    "document": "{\n  \"summary\": \"Exhaustive across all savestate members: the per-screen highlight tuple is not stored as a readable integer at any width; no per-entity 'selected' flag exists.\",\n  \"members_scanned\": [\n    \"eeMemory.bin\",\n    \"iopMemory.bin\",\n    \"vu0Memory.bin\",\n    \"vu0MicroMem.bin\",\n    \"eeHwRegs.bin\",\n    \"iopHwRegs.bin\",\n    \"PAD.bin\",\n    \"Scratchpad.bin\"\n  ],\n  \"highlight_tuples\": {\n    \"1_based\": [\n      1,\n      5,\n      4\n    ],\n    \"0_based\": [\n      0,\n      4,\n      3\n    ]\n  },\n  \"tuple_scan\": {\n    \"eeMemory.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 97\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 2\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"iopMemory.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"vu0Memory.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"vu0MicroMem.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"eeHwRegs.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"iopHwRegs.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"PAD.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    },\n    \"Scratchpad.bin\": {\n      \"u8\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u16\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      },\n      \"u32\": {\n        \"tuple_154\": 0,\n        \"tuple_043\": 0\n      }\n    }\n  },\n  \"tuple_154_total_hits\": 0,\n  \"tuple_043_total_hits\": 99,\n  \"per_entity_flag_hits\": 0,\n  \"state_sha256\": {\n    \"102\": \"6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7\",\n    \"103\": \"b5e569fcc561fa3a5408f6eb0a7a6497594e52bdb26f5cdb2dbfeed31dc56c3e\",\n    \"104\": \"74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694\"\n  },\n  \"conclusion\": \"The mark is not stored in any savestate member as a readable integer or pointer; isolating it needs a live tool (read/write breakpoint or live value scan).\",\n  \"ps2dev_check\": \"ps2dev org is the PS2 homebrew toolchain (ps2sdk/ps2gl/ps2client/ps2link/ps2gdb); build tools only, no memory-search or pointer tool for a retail game.\",\n  \"control_ee_tuple154_zero\": true,\n  \"control_all_members_tuple154_zero\": true,\n  \"control_no_entity_flag\": true,\n  \"render_fidelity_complete\": false,\n  \"result\": \"VERIFY OK\"\n}\n",
+    "fields": [
+      {
+        "id": "total154",
+        "pattern": "\"tuple_154_total_hits\": [0-9]+",
+        "description": "total (1,5,4) hits"
+      },
+      {
+        "id": "flag",
+        "pattern": "\"per_entity_flag_hits\": [0-9]+",
+        "description": "per-entity flag hits"
+      },
+      {
+        "id": "result",
+        "pattern": "\"result\": \"[A-Z ]+\"",
+        "description": "final result token"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 3,
+      "extracted": 2,
+      "auto": 0,
+      "review": 3,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "total154",
+        "value": "\"tuple_154_total_hits\": 0",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.5,
+        "top_probability": 0.75,
+        "margin": 0.5,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "flag",
+        "value": "\"per_entity_flag_hits\": 0",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.49,
+        "top_probability": 0.75,
+        "margin": 0.5,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "result",
+        "value": null,
+        "status": "review",
+        "reason": "none_matched_ambiguous",
+        "confidence": 0.14,
+        "top_probability": 0.57,
+        "margin": 0.13999999999999996,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 2109,
+      "output_tokens": 107
+    }
+  }
+}

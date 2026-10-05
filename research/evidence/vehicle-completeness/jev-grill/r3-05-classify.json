@@ -1,0 +1,115 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "definite_outcome",
+        "text": "'Resolved' = named address OR evidenced open for the selector thread."
+      },
+      {
+        "id": "positive_find",
+        "text": "'Resolved' = the selector word positively isolated."
+      },
+      {
+        "id": "new_t4",
+        "text": "C delivered as a new tool + ticket T4."
+      },
+      {
+        "id": "extend_t3",
+        "text": "C delivered by extending the T3 tool."
+      }
+    ],
+    "classes": [
+      {
+        "id": "fits_partial_claims",
+        "description": "Consistent with the project's partial-claims-only, render-fidelity-false policy. Example: recording an evidenced open."
+      },
+      {
+        "id": "overclaims_or_blocks",
+        "description": "Either asserts a positive result that may not exist or blocks the session on it."
+      },
+      {
+        "id": "neutral",
+        "description": "Consistent with both."
+      }
+    ],
+    "purpose": "test the round-3 options against the claim ceiling",
+    "context": "Round-3 decisions under 7b."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 1,
+      "review": 3,
+      "invalid_response": 0,
+      "by_class": {
+        "fits_partial_claims": 1,
+        "overclaims_or_blocks": 3
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "definite_outcome",
+        "classification": "fits_partial_claims",
+        "probabilities": {
+          "fits_partial_claims": 0.58,
+          "overclaims_or_blocks": 0.24,
+          "neutral": 0.18
+        },
+        "confidence": 0.37,
+        "margin": 0.33999999999999997,
+        "top_probability": 0.58,
+        "decision": "review"
+      },
+      {
+        "id": "positive_find",
+        "classification": "overclaims_or_blocks",
+        "probabilities": {
+          "fits_partial_claims": 0.01,
+          "overclaims_or_blocks": 0.98,
+          "neutral": 0.01
+        },
+        "confidence": 0.97,
+        "margin": 0.97,
+        "top_probability": 0.98,
+        "decision": "auto"
+      },
+      {
+        "id": "new_t4",
+        "classification": "overclaims_or_blocks",
+        "probabilities": {
+          "fits_partial_claims": 0.14,
+          "overclaims_or_blocks": 0.72,
+          "neutral": 0.14
+        },
+        "confidence": 0.59,
+        "margin": 0.58,
+        "top_probability": 0.72,
+        "decision": "review"
+      },
+      {
+        "id": "extend_t3",
+        "classification": "overclaims_or_blocks",
+        "probabilities": {
+          "fits_partial_claims": 0.13,
+          "overclaims_or_blocks": 0.69,
+          "neutral": 0.18
+        },
+        "confidence": 0.53,
+        "margin": 0.51,
+        "top_probability": 0.69,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 717,
+      "output_tokens": 163
+    }
+  }
+}

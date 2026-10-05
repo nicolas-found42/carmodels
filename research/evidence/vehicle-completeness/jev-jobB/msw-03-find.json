@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the strongest single evidence that the mark is not a stored integer",
+    "candidates": [
+      {
+        "id": "test1",
+        "text": "TEST 1: zero words equal position across all 6 slots at any width."
+      },
+      {
+        "id": "tuple",
+        "text": "Exhaustive tuple scan: 0 hits for (1,5,4) at every width in every member."
+      },
+      {
+        "id": "flag",
+        "text": "Per-entity selected-flag test: 0 strong hits."
+      },
+      {
+        "id": "dat",
+        "text": "DAT words 0x241b60/0x241e00 do not track position."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the strongest single evidence that the mark is not a stored integer",
+    "exists": 0.69,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "tuple",
+        "probability": 0.51,
+        "text": "Exhaustive tuple scan: 0 hits for (1,5,4) at every width in every member."
+      },
+      {
+        "id": "dat",
+        "probability": 0.26,
+        "text": "DAT words 0x241b60/0x241e00 do not track position."
+      },
+      {
+        "id": "test1",
+        "probability": 0.18,
+        "text": "TEST 1: zero words equal position across all 6 slots at any width."
+      },
+      {
+        "id": "flag",
+        "probability": 0.05,
+        "text": "Per-entity selected-flag test: 0 strong hits."
+      }
+    ],
+    "usage": {
+      "input_tokens": 550,
+      "output_tokens": 63
+    }
+  }
+}

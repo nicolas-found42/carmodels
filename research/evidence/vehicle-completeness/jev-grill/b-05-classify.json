@@ -1,0 +1,99 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "fun121e10",
+        "text": "FUN_00121e10 stores the resolved livery label."
+      },
+      {
+        "id": "fun1c4a40",
+        "text": "001c4a40 indexed cursor over a table, caller unknown."
+      },
+      {
+        "id": "va241b60",
+        "text": "VA_0x241b60 holds 5,4,4 that does not track the highlight."
+      }
+    ],
+    "classes": [
+      {
+        "id": "reads_or_writes_selection",
+        "description": "Code that plausibly reads or writes the selected car/livery for the menu. Example: the store of the resolved label."
+      },
+      {
+        "id": "indexed_table_cursor",
+        "description": "A cursor walking an indexed table whose caller is unknown; could be the selector."
+      },
+      {
+        "id": "disqualified",
+        "description": "Already shown not to track the highlight."
+      }
+    ],
+    "purpose": "sort the selector leads by role",
+    "context": "Decompilation-first selector hunt."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 3,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "reads_or_writes_selection": 1,
+        "indexed_table_cursor": 1,
+        "disqualified": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "fun121e10",
+        "classification": "reads_or_writes_selection",
+        "probabilities": {
+          "reads_or_writes_selection": 1,
+          "indexed_table_cursor": 0,
+          "disqualified": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "fun1c4a40",
+        "classification": "indexed_table_cursor",
+        "probabilities": {
+          "reads_or_writes_selection": 0,
+          "indexed_table_cursor": 1,
+          "disqualified": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "va241b60",
+        "classification": "disqualified",
+        "probabilities": {
+          "reads_or_writes_selection": 0,
+          "indexed_table_cursor": 0,
+          "disqualified": 1
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 658,
+      "output_tokens": 123
+    }
+  }
+}

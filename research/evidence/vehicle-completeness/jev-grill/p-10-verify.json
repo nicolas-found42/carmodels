@@ -1,0 +1,86 @@
+{
+  "args": {
+    "claims": [
+      "The adopted plan orders the sound-index reconciliation before the selector word.",
+      "The proof bar for the selector word requires decompilation-reachability, not a value match.",
+      "The claim ceiling keeps render_fidelity_complete false on every artifact.",
+      "Value-only triangulation already produced 97 byte hits and 0 word hits, so a value match is not discriminating."
+    ],
+    "evidence": "Adopted plan: (1) ordering = do the sound-index reconciliation (A) first, then the EE selector word (B), with the display-name table (C) optional. (2) proof bar for the selector word = an isolated EE word that tracks the highlight AND is reachable from the decompiled menu/label draw path (not a bare value match, because value-only triangulation already produced 97 noisy byte hits and 0 word hits). (3) claim ceiling = render_fidelity_complete stays false on every artifact, partial claims only, no completion gate passes. (4) method for the selector = decompilation-first: read the FUN_0019eb90 -> FUN_00125640 -> store chain to derive the exact struct offset, then read that address in the three existing EE images. Standing constraints: never print credentials; new files in R not S; close tickets only on real tool output; a Jev gate escalate is an acceptable recorded outcome.\n\ncarselection-2026-10-05/bridge-three-screens.json ee_findings: no FORD'49 / ROUTE 50 / TXT_CARS_* label bytes exist in the slot102 EE image (labels arrive via the text archive + glyph path). Static leads: FUN_0019eb90 reads the gameflow livery label via a static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...) and resolves it via FUN_00125640, storing via FUN_00121e10; VA_0x23acb0 holds 0x0028f7c8 stable across all three captures. jgrep highlight hits: 0017cb80 (initials-entry cycler, discarded), 00184430 (1..3 bounded cursor on uRam0028fd74, reads 0 in all three, not the car cursor), 001c4a40 (indexed cursor over DAT_00241b40 table, caller context open). VA_0x241b60 is 5,4,4 across slots 102/103/104 (does not track highlight; open). Three-way triangulation for highlight tuples: one-based (1,5,4) 0 hits; zero-based (0,4,3) words 0 hits; byte-level (0,4,3) 97 hits clustered in VU-packet regions (0x21xxxx, 0x81xxxx-0x84xxxx) with no menu-struct candidate; scratchpad 121 changed words all float-scale VU noise (0x352c-0x354c 102==104!=103, not a small-int cursor). Screens pair highlight positions 1/5/4 to cars 49_COUPE / THUNDERBIRD_2002 / FORTYNINE at DEFAULT livery."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The adopted plan orders the sound-index reconciliation before the selector word.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.78
+      },
+      {
+        "id": "claim1",
+        "claim": "The proof bar for the selector word requires decompilation-reachability, not a value match.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "says_nothing": 0,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.58
+      },
+      {
+        "id": "claim2",
+        "claim": "The claim ceiling keeps render_fidelity_complete false on every artifact.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.99,
+          "says_nothing": 0.01,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.53
+      },
+      {
+        "id": "claim3",
+        "claim": "Value-only triangulation already produced 97 byte hits and 0 word hits, so a value match is not discriminating.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "says_nothing": 0,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.96
+      }
+    ],
+    "usage": {
+      "input_tokens": 2118,
+      "output_tokens": 248
+    }
+  }
+}

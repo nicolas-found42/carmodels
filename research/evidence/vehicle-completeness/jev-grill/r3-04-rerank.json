@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "best deliverable shape for C (the full display-name table)",
+    "candidates": [
+      {
+        "id": "new_tool_t4",
+        "text": "A new tool resolve_all_display_names.py and a new ticket T4, mirroring T2/T3, with its own receipt and negative controls."
+      },
+      {
+        "id": "extend_t3",
+        "text": "Extend the existing resolve_display_names.py to the full table."
+      },
+      {
+        "id": "reopen_t3",
+        "text": "Reopen the closed T3 ticket and widen its scope."
+      },
+      {
+        "id": "skip_c",
+        "text": "Do not build C; keep the three-pair result."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best deliverable shape for C (the full display-name table)",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "extend_t3",
+        "relevance": 0.69,
+        "text": "Extend the existing resolve_display_names.py to the full table."
+      },
+      {
+        "rank": 2,
+        "id": "skip_c",
+        "relevance": 0.65,
+        "text": "Do not build C; keep the three-pair result."
+      },
+      {
+        "rank": 3,
+        "id": "new_tool_t4",
+        "relevance": 0.2,
+        "text": "A new tool resolve_all_display_names.py and a new ticket T4, mirroring T2/T3, with its own receipt and negative controls."
+      },
+      {
+        "rank": 4,
+        "id": "reopen_t3",
+        "relevance": 0.08,
+        "text": "Reopen the closed T3 ticket and widen its scope."
+      }
+    ],
+    "usage": {
+      "input_tokens": 622,
+      "output_tokens": 76
+    }
+  }
+}

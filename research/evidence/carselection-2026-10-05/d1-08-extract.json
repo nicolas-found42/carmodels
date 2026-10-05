@@ -1,0 +1,166 @@
+{
+  "args": {
+    "document": "Controller macros bound to keys: M=Cross, N=Circle, I=Up, K=Down, J=Left, L=Right, O=Start, P=R2, B=Triangle. A press toggles the button on and a second press toggles it off, so every action needs two key presses with observation between them. Space toggles emulator pause; F7 frame-advance; F8 screenshot; Shift+F8 single-frame GSDump. Starting states under sstates: slot 99 = main menu (boot default), slot 98 = 'Select a Challenge Theme / Living Legends' car-selection strip, slots 93/95/96/97 = in-race/other, slot 100 = paused Quick Race at zero MPH position 6/6 (current live state).",
+    "fields": [
+      {
+        "id": "cross",
+        "pattern": "M=Cross",
+        "description": "key bound to the Cross button"
+      },
+      {
+        "id": "circle",
+        "pattern": "N=Circle",
+        "description": "key bound to the Circle button"
+      },
+      {
+        "id": "up",
+        "pattern": "I=Up",
+        "description": "key bound to d-pad Up"
+      },
+      {
+        "id": "start",
+        "pattern": "O=Start",
+        "description": "key bound to the Start button"
+      },
+      {
+        "id": "triangle",
+        "pattern": "B=Triangle",
+        "description": "key bound to the Triangle button"
+      },
+      {
+        "id": "pause",
+        "pattern": "Space toggles emulator pause",
+        "description": "key that toggles emulator pause"
+      },
+      {
+        "id": "slot98",
+        "pattern": "slot 98",
+        "description": "savestate slot holding the theme/car-strip screen"
+      },
+      {
+        "id": "slot100",
+        "pattern": "slot 100",
+        "description": "savestate slot of the live paused race to preserve"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 8,
+      "extracted": 8,
+      "auto": 7,
+      "review": 1,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "cross",
+        "value": "M=Cross",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.6,
+        "top_probability": 0.8,
+        "margin": 0.6000000000000001,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "circle",
+        "value": "N=Circle",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.8,
+        "top_probability": 0.9,
+        "margin": 0.8,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "up",
+        "value": "I=Up",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.8,
+        "top_probability": 0.9,
+        "margin": 0.8,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "start",
+        "value": "O=Start",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.89,
+        "top_probability": 0.94,
+        "margin": 0.8799999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "triangle",
+        "value": "B=Triangle",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.78,
+        "top_probability": 0.89,
+        "margin": 0.78,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "pause",
+        "value": "Space toggles emulator pause",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.91,
+        "top_probability": 0.96,
+        "margin": 0.9199999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "slot98",
+        "value": "slot 98",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.95,
+        "top_probability": 0.97,
+        "margin": 0.94,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "slot100",
+        "value": "slot 100",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1581,
+      "output_tokens": 275
+    }
+  }
+}

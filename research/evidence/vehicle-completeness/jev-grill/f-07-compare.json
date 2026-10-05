@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Capstone warning: requirement 'leaves no decision silently assumed' was contradicted.",
+    "passage_b": "Q10a/Q11a now define the indirection pass and C's shape.",
+    "aspects": [
+      "whether the earlier gap is closed",
+      "remaining assumptions",
+      "readiness"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0.03,
+        "different_facts": 0.79,
+        "contradicts": 0.18
+      },
+      "confidence": 0.67,
+      "margin": 0.6100000000000001,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "whether the earlier gap is closed",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0.05,
+          "different_facts": 0.35,
+          "contradicts": 0.6
+        },
+        "confidence": 0.41,
+        "margin": 0.25,
+        "decision": "review"
+      },
+      {
+        "aspect": "remaining assumptions",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.54,
+          "same_fact": 0.04,
+          "contradicts": 0.42
+        },
+        "confidence": 0.3,
+        "margin": 0.12000000000000005,
+        "decision": "review"
+      },
+      {
+        "aspect": "readiness",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.02,
+          "different_facts": 0.71,
+          "contradicts": 0.27
+        },
+        "confidence": 0.57,
+        "margin": 0.43999999999999995,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 827,
+      "output_tokens": 177
+    }
+  }
+}

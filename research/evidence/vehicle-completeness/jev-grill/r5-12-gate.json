@@ -1,0 +1,141 @@
+{
+  "args": {
+    "request": "Adopt the residual-branch closures.",
+    "diff": "{\n \"pointer_root\": \"bootstrap global + chain\",\n \"c\": \"35 cars + controls + gate\",\n \"closure\": \"receipt+gate per thread + completion report\"\n}",
+    "claims": [
+      "Rooting the chain via a named bootstrap global is decompilation-reachable.",
+      "C asserting all 35 cars with controls is stronger than the three-pair result.",
+      "One receipt + jev_gate per thread satisfies 7b's closure requirement."
+    ],
+    "evidence": "Residual open branches after the final plan (Jev f-06b: still_open 0.81; 'ready' contradicted on 'leaves no decision silently assumed'):\n(1) POINTER ROOT: B says read entity+0x64 via the dynamic gameflow chain outer+4 -> +0x14c -> +0x174, but the plan never says how to locate the gameflow root 'outer' inside a raw EE savestate. The decompilation FUN_0019eb90:19 reads ((param_1+4)+0x14c)+0x174 and :37 sets flags at entity+0x60 = (...|0x1cd0); FUN_00121e10 stores the selector at entity+0x64. The prior tools scanned values/tables, never walked a pointer chain from a root. Options: (a) find the bootstrap global that stores the gameflow pointer (decompilation-first), then read that global in the savestate; (b) signature-scan the EE image for the entity struct (e.g. flags 0x...1cd0 at +0x60) and follow back-pointers; (c) accept a paused savestate may not expose a stable chain and record B's store read as 'attempted; pointer root unresolved' -> recorded open.\n(2) C ROW SET + CONTROLS: C extends resolve_display_names.py to the car-keyed set (~35-39). Unspecified: exact row set (all 35 CARDATA INGAME_TEXT_ENUM values vs only TXT_CARS_* keys present), what happens for cars whose enum is missing from tlate_en, whether en-only or multi-locale, and what negative controls / gate apply. Options: (a) assert all 35 cars resolve, negative controls (unknown key unresolved; apostrophe byte-exact), jev_gate; (b) 35 cars, no new controls; (c) TXT_CARS_* keys only.\n(3) CLOSURE ARTIFACT: stop condition 7b requires all three threads to reach a definite outcome, but the plan never says what artifact proves each is 'resolved'. Options: (a) one receipt + jev_gate per thread (escalate acceptable), plus a single session completion report listing the three definite outcomes; (b) three new tickets T4/T5/T6; (c) record in the continuation status only.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"boot_global\", \"escaped\": false, \"confidence\": 0.88, \"probabilities\": {\"ask_user\": 0, \"investigate\": 0, \"none\": 0, \"boot_global\": 0.91, \"record_open\": 0.09, \"sig_scan\": 0}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"boot_global\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"boot_global\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"boot_global\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"sig_scan\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"sig_scan\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"sig_scan\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"record_open\", \"requirement\": 0, \"answer\": \"unknown\"}, {\"candidate\": \"record_open\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"record_open\", \"requirement\": 2, \"answer\": \"supported\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2430, \"output_tokens\": 464}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_unsupported",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.14,
+      "scores": {
+        "correctness": {
+          "score": 1.15,
+          "confidence": 0.59,
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.73,
+            "2": 0.21
+          }
+        },
+        "spec_match": {
+          "score": 1.37,
+          "confidence": 0.06,
+          "probabilities": {
+            "0": 0.09,
+            "1": 0.44,
+            "2": 0.47000000000000003
+          }
+        },
+        "test_gap": {
+          "score": 1.85,
+          "confidence": 0.77,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.06,
+            "2": 0.89
+          }
+        },
+        "blast_radius": {
+          "score": 1.56,
+          "confidence": 0.33,
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.32,
+            "2": 0.62
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.47974999999999995,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "spec_match"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 1,
+        "needs_review": 3,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "Rooting the chain via a named bootstrap global is decompilation-reachable.",
+          "verdict": "verified",
+          "confidence": 0.37,
+          "probabilities": {
+            "verified": 0.58,
+            "unsupported": 0.38,
+            "contradicted": 0.04
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "C asserting all 35 cars with controls is stronger than the three-pair result.",
+          "verdict": "unsupported",
+          "confidence": 0.75,
+          "probabilities": {
+            "verified": 0.02,
+            "unsupported": 0.84,
+            "contradicted": 0.14
+          },
+          "action": "review"
+        },
+        {
+          "claim": "One receipt + jev_gate per thread satisfies 7b's closure requirement.",
+          "verdict": "verified",
+          "confidence": 0.59,
+          "probabilities": {
+            "verified": 0.72,
+            "unsupported": 0.26,
+            "contradicted": 0.02
+          },
+          "action": "review"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2340,
+      "output_tokens": 198
+    }
+  }
+}

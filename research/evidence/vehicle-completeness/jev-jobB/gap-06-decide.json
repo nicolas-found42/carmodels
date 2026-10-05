@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "What is the recommended headless path to the mark number, given the gaps?",
+    "evidence": "GAPS blocking access to the mark number, and the solutions found by research:\nG1 (fundamental): the mark is NOT stored in any savestate as a readable integer (exhaustive: every member, every width, 0 hits). => it is computed, not stored; the only way is a debugger breakpoint on the draw/input code, or a live value scan.\nG2 (control): PINE has NO pause/resume opcode (only read/write/save/load/status); the container boots into a PAUSED savestate. => need a headless way to unpause. Solution: xdotool sends the emulator's ESC key to the container's own Xvfb display (:99) - headless, no host focus.\nG3 (headless input): the container image has no X tools (no xdotool/xte/wmctrl). => install xdotool in the container (apt) and drive :99; this is the standard Xvfb+xdotool Docker pattern. The proven existing path is the hidden Playwright->noVNC browser, but it cannot drive the debugger UI reliably.\nG4 (headless debugger): PCSX2's built-in debugger (breakpoints/watchpoints) has no IPC/remote API. Solutions: (a) pcsx2's DebugServer patch from hkmodd/PCSX2-MCP - a ~1-file GPL patch giving a TCP debug API (breakpoints, registers, memory diff); the prebuilt release is WINDOWS-ONLY (pcsx2-qt.exe/MSVC), so on Linux it needs a PCSX2 source build + the patch; (b) drive the built-in debugger GUI headlessly with xdotool; (c) a live value scan (PINCE/scanmem) against the emulator process.\nNo native PCSX2 GDB stub exists (forum request only).\nConstraint: headless only, no host focus; read-only preferred; a container image change and a debugger feature are both policy changes that need user approval.",
+    "priorities": "Headless, no host focus; smallest change first; read-only preferred; a debugger feature and a container image change both need user approval; an honest open is acceptable.",
+    "candidates": [
+      {
+        "id": "xdotool_debugger",
+        "description": "Approve a container image change (xdotool) and a debugger pass: install xdotool, unpause via ESC on :99, arm a read/write watchpoint in PCSX2's debugger on the highlight path, read the value."
+      },
+      {
+        "id": "build_debugserver",
+        "description": "Build PCSX2 + DebugServer for a headless TCP debug API."
+      },
+      {
+        "id": "pince_scan",
+        "description": "Live value scan only (no breakpoint)."
+      },
+      {
+        "id": "stop",
+        "description": "Record the mark open; no change."
+      }
+    ],
+    "requirements": [
+      "Runs headless",
+      "Small and reversible",
+      "Needs at most one approval"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "pince_scan",
+      "escaped": false,
+      "confidence": 0.37,
+      "probabilities": {
+        "pince_scan": 0.46,
+        "none": 0.02,
+        "ask_user": 0.14,
+        "investigate": 0.01,
+        "build_debugserver": 0,
+        "stop": 0.08,
+        "xdotool_debugger": 0.29
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "xdotool_debugger",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "xdotool_debugger",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "xdotool_debugger",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "build_debugserver",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "build_debugserver",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "build_debugserver",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "pince_scan",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "pince_scan",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "pince_scan",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2762,
+      "output_tokens": 599
+    }
+  }
+}

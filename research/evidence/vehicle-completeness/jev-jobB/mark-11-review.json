@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Choose the decisive experiment for the mark number.",
+    "diff": "+ exhausted: cross-session tuple/flag/pointer scans (all negative)\n+ proposed: headless same-session adjacent diff of two fresh savestates one highlight apart\n+ read-only; no host focus",
+    "tests": "container headless; PINE read + savestate ops only"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.48,
+    "scores": {
+      "correctness": {
+        "score": 1.27,
+        "confidence": 0.37,
+        "probabilities": {
+          "0": 0.07,
+          "1": 0.59,
+          "2": 0.34
+        }
+      },
+      "spec_match": {
+        "score": 1.57,
+        "confidence": 0.36,
+        "probabilities": {
+          "0": 0.12,
+          "1": 0.19,
+          "2": 0.69
+        }
+      },
+      "test_gap": {
+        "score": 1.38,
+        "confidence": 0.08,
+        "probabilities": {
+          "0": 0.13,
+          "1": 0.35,
+          "2": 0.52
+        }
+      },
+      "blast_radius": {
+        "score": 0.38,
+        "confidence": 0.43,
+        "probabilities": {
+          "0": 0.6799999999999999,
+          "1": 0.25,
+          "2": 0.07
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.6575,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 781,
+      "output_tokens": 79
+    }
+  }
+}

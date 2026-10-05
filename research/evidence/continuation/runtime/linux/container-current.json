@@ -1,0 +1,293 @@
+[
+    {
+        "Id": "3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413",
+        "Created": "2026-10-04T22:58:07.51298784Z",
+        "Path": "/opt/start.sh",
+        "Args": [
+            "-statefile",
+            "/race94.p2s",
+            "/game.bin"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 1108,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-05T00:28:30.316528928Z",
+            "FinishedAt": "2026-10-05T00:28:30.158421053Z"
+        },
+        "Image": "sha256:593b88e1846548ad7c33060bab233ca23827f0fa6d32b421695f1f03ef9b6c43",
+        "ResolvConfPath": "/var/lib/docker/containers/3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413/hostname",
+        "HostsPath": "/var/lib/docker/containers/3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413/hosts",
+        "LogPath": "/var/lib/docker/containers/3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413/3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413-json.log",
+        "Name": "/fr2-recovery-headless",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "bridge",
+            "PortBindings": {
+                "6080/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": ""
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 536870912,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 4294967296,
+            "NanoCpus": 4000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 8589934592,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/linux",
+                    "Target": "/data"
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/Users/Nicolas/Library/Application Support/PCSX2/bios/ps2-0160a-20020207.bin",
+                    "Target": "/data/bios/ps2-0160a-20020207.bin",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/ford-racing-2.bin",
+                    "Target": "/game.bin",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/sstates/SLES-51705 (37F695CD).94.p2s",
+                    "Target": "/race94.p2s",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/sstates/SLES-51705 (37F695CD).93.p2s",
+                    "Target": "/menu93.p2s",
+                    "ReadOnly": true
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/sstates/SLES-51705 (37F695CD).94.p2s",
+                "Destination": "/race94.p2s",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/linux",
+                "Destination": "/data",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/Users/Nicolas/Library/Application Support/PCSX2/bios/ps2-0160a-20020207.bin",
+                "Destination": "/data/bios/ps2-0160a-20020207.bin",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/ford-racing-2.bin",
+                "Destination": "/game.bin",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/sstates/SLES-51705 (37F695CD).93.p2s",
+                "Destination": "/menu93.p2s",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "3f7463603fbf",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "6080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "DEBIAN_FRONTEND=noninteractive",
+                "DISPLAY=:99",
+                "QT_QPA_PLATFORM=xcb",
+                "LIBGL_ALWAYS_SOFTWARE=1"
+            ],
+            "Cmd": [
+                "-statefile",
+                "/race94.p2s",
+                "/game.bin"
+            ],
+            "Image": "fr2-recovery-headless:2.8.2",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/opt/start.sh"
+            ],
+            "Labels": {
+                "org.opencontainers.image.version": "24.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "189e8b179d1ace2fe486629604269457e96a8caa61de15a4d964b23a2f004aa2",
+            "SandboxKey": "/var/run/docker/netns/189e8b179d1a",
+            "Ports": {
+                "6080/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "50421"
+                    }
+                ]
+            },
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "b1a32d2a18cfc2d858533442ab13063035e51fa8a9cec0450e763746781bed67",
+                    "EndpointID": "b3eae2462df9b91ecce6f60c8313b07762d0c36e82ed22cccb14218b71c543fe",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "MacAddress": "2a:57:bf:1f:9f:cd",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:661f5bae6eb05d03fead8aaaf2557b7c4216ca5b80effa22f2aff1dfdf17232c",
+            "size": 1817,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

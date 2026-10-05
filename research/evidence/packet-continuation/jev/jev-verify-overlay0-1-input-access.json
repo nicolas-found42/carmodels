@@ -1,0 +1,21 @@
+{
+  "tool":"jev_verify","model":"typesafe/jev-1.13","provider":"openrouter","auto_accept":0.8,"subject_at":0.5,
+  "request_claims":[
+    "Overlay-0 assembly explicitly loads qwords at vi03 offsets +1,+4,+7,+10 and stores corresponding vf11/vf16/vf21/vf26 records to vi04 offsets +1,+4,+7,+10.",
+    "Overlay-1 assembly explicitly loads qwords at vi03 offsets +1,+4,+7,+10 and stores corresponding vf11/vf16/vf21/vf26 back to vi03 at those offsets.",
+    "The static access listings and resident overlay byte copies do not prove overlay-0 or overlay-1 executed for race94 car geometry, nor do they identify the source four-byte plane as a rendered normal or color value."
+  ],
+  "evidence":[
+    {"id":"overlay0-source","text":"SHA-256 f5ade691d5c7de71be42e79adb5981f6b6441b451dc9ca9a181f1e1bda798fec, overlay-0.s. Lines 131-134: lq vf11,1(vi03), lq vf16,4(vi03), lq vf21,7(vi03), lq vf26,10(vi03). Lines 146-155 show arithmetic on vf10/vf15/vf20/vf25, and matching sq vf11,1(vi04), etc. Line 135 converts vf11.w from vf05.w; other following lines convert vf16/vf21/vf26 w lanes. Full explicit vi03 references are retained in static-trace.json."},
+    {"id":"overlay1-source","text":"SHA-256 b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a, overlay-1.s. Lines 33-36 load qwords at vi03+1,+4,+7,+10 into vf11/vf16/vf21/vf26. Lines 66-69 store vf11/vf16/vf21/vf26 back at vi03+1,+4,+7,+10 while separate XY arithmetic affects vf10/vf15/vf20/vf25. Full explicit vi03 references are retained in static-trace.json."},
+    {"id":"interpretation-boundary","text":"VU1 snapshots contain exact copies of overlays 0..6, but do not record the executing VU PC or link an overlay execution to a captured packet. Source overlay V4-8 writes a four-byte plane at input qword +1, but there is no proven live overlay selection and byte-to-register-to-packet color/normal join."}
+  ],
+  "summary":{"verified":3,"contradicted":0,"unsupported":0,"needs_review":0},
+  "results":[
+    {"id":"claim0","verdict":"verified","probabilities":{"says_nothing":0,"contradicts":0,"supports":1},"confidence":1,"action":"auto","supporting_evidence":"overlay0-source","same_subject":0.91},
+    {"id":"claim1","verdict":"verified","probabilities":{"says_nothing":0,"contradicts":0,"supports":1},"confidence":1,"action":"auto","supporting_evidence":"overlay1-source","same_subject":0.88},
+    {"id":"claim2","verdict":"verified","probabilities":{"says_nothing":0,"contradicts":0,"supports":1},"confidence":0.99,"action":"auto","supporting_evidence":"interpretation-boundary","same_subject":0.76}
+  ],
+  "usage":{"input_tokens":2072,"output_tokens":354},
+  "handling":"Advisory verification; source hashes and instruction listings are deterministic, while runtime selection/shading semantics remain unresolved."
+}

@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "What is the first concrete read to perform for the selector word?",
+    "evidence": "carselection-2026-10-05/bridge-three-screens.json ee_findings: no FORD'49 / ROUTE 50 / TXT_CARS_* label bytes exist in the slot102 EE image (labels arrive via the text archive + glyph path). Static leads: FUN_0019eb90 reads the gameflow livery label via a static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...) and resolves it via FUN_00125640, storing via FUN_00121e10; VA_0x23acb0 holds 0x0028f7c8 stable across all three captures. jgrep highlight hits: 0017cb80 (initials-entry cycler, discarded), 00184430 (1..3 bounded cursor on uRam0028fd74, reads 0 in all three, not the car cursor), 001c4a40 (indexed cursor over DAT_00241b40 table, caller context open). VA_0x241b60 is 5,4,4 across slots 102/103/104 (does not track highlight; open). Three-way triangulation for highlight tuples: one-based (1,5,4) 0 hits; zero-based (0,4,3) words 0 hits; byte-level (0,4,3) 97 hits clustered in VU-packet regions (0x21xxxx, 0x81xxxx-0x84xxxx) with no menu-struct candidate; scratchpad 121 changed words all float-scale VU noise (0x352c-0x354c 102==104!=103, not a small-int cursor). Screens pair highlight positions 1/5/4 to cars 49_COUPE / THUNDERBIRD_2002 / FORTYNINE at DEFAULT livery.",
+    "priorities": "Prefer a named address derived from the decompilation over another value diff; keep the deliverable a named field; do not re-run value-only triangulation.",
+    "candidates": [
+      {
+        "id": "trace_store",
+        "description": "Read FUN_0019eb90/FUN_00125640/FUN_00121e10, extract the store address, read that word in slots 102/103/104."
+      },
+      {
+        "id": "open_caller",
+        "description": "Resolve the 001c4a40 caller context first, then read its table index."
+      },
+      {
+        "id": "capture_more",
+        "description": "Capture more screens and diff again."
+      },
+      {
+        "id": "stop",
+        "description": "Stop the selector thread; keep the three-pair bridge."
+      }
+    ],
+    "requirements": [
+      "Produces a named address",
+      "Uses existing evidence",
+      "Avoids value-only matching"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "trace_store",
+      "escaped": false,
+      "confidence": 0.95,
+      "probabilities": {
+        "ask_user": 0,
+        "none": 0,
+        "stop": 0,
+        "open_caller": 0.04,
+        "investigate": 0,
+        "trace_store": 0.96,
+        "capture_more": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "trace_store",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "trace_store",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "trace_store",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "open_caller",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "open_caller",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "open_caller",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "capture_more",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "capture_more",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "capture_more",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 2,
+        "answer": "unknown"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2814,
+      "output_tokens": 602
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "args": {
+    "document": "GAPS blocking access to the mark number, and the solutions found by research:\nG1 (fundamental): the mark is NOT stored in any savestate as a readable integer (exhaustive: every member, every width, 0 hits). => it is computed, not stored; the only way is a debugger breakpoint on the draw/input code, or a live value scan.\nG2 (control): PINE has NO pause/resume opcode (only read/write/save/load/status); the container boots into a PAUSED savestate. => need a headless way to unpause. Solution: xdotool sends the emulator's ESC key to the container's own Xvfb display (:99) - headless, no host focus.\nG3 (headless input): the container image has no X tools (no xdotool/xte/wmctrl). => install xdotool in the container (apt) and drive :99; this is the standard Xvfb+xdotool Docker pattern. The proven existing path is the hidden Playwright->noVNC browser, but it cannot drive the debugger UI reliably.\nG4 (headless debugger): PCSX2's built-in debugger (breakpoints/watchpoints) has no IPC/remote API. Solutions: (a) pcsx2's DebugServer patch from hkmodd/PCSX2-MCP - a ~1-file GPL patch giving a TCP debug API (breakpoints, registers, memory diff); the prebuilt release is WINDOWS-ONLY (pcsx2-qt.exe/MSVC), so on Linux it needs a PCSX2 source build + the patch; (b) drive the built-in debugger GUI headlessly with xdotool; (c) a live value scan (PINCE/scanmem) against the emulator process.\nNo native PCSX2 GDB stub exists (forum request only).\nConstraint: headless only, no host focus; read-only preferred; a container image change and a debugger feature are both policy changes that need user approval.",
+    "fields": [
+      {
+        "id": "pine_pause",
+        "pattern": "PINE has NO pause/resume opcode",
+        "description": "the PINE pause gap"
+      },
+      {
+        "id": "xdotool",
+        "pattern": "install xdotool in the container",
+        "description": "the xdotool solution"
+      },
+      {
+        "id": "debugserver",
+        "pattern": "hkmodd/PCSX2-MCP",
+        "description": "the DebugServer project"
+      },
+      {
+        "id": "windows",
+        "pattern": "WINDOWS-ONLY",
+        "description": "the platform limit"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 4,
+      "auto": 4,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "pine_pause",
+        "value": "PINE has NO pause/resume opcode",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "xdotool",
+        "value": "install xdotool in the container",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "debugserver",
+        "value": "hkmodd/PCSX2-MCP",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.98,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "windows",
+        "value": "WINDOWS-ONLY",
+        "status": "auto",
+        "reason": null,
+        "confidence": 1,
+        "top_probability": 1,
+        "margin": 1,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1287,
+      "output_tokens": 139
+    }
+  }
+}

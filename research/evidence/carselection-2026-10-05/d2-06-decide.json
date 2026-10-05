@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "What does the three-screen evidence establish for the numeric-selector to human-label bridge?",
+    "evidence": "Screens:\n- Ground-truth emulator screenshot slot102: Living Legends, thumbnail 1 highlighted (pale green Ford), VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS, STATUS UNLOCKED, ROOKIE 0%, BACK/OK prompts.\n- Ground-truth emulator screenshot slot103: Living Legends, thumbnail 5 highlighted (white car), VEHICLE: THUNDERBIRD CONVERTIBLE, TRACK: DEER CREEK, TYPE: DRAFTING, STATUS UNLOCKED.\n- Ground-truth emulator screenshot slot104 (vision transcript, model-generated): Living Legends, thumbnail 4 highlighted, VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE, STATUS UNLOCKED.\nEE:\nEE scans (code-measured): six static 12-name livery tables present in slot102 at 0x0143b736,0x0157e365,0x016b7934,0x017ec5aa,0x0192f915,0x01a5856e; record bases 0x233070+type*0x114 with count 12 for types 2..7, all words unchanged between slot102 and slot103. No FORD'49/ROUTE 50/label strings in EE (labels come from text archive + glyphs). Three-way word triangulation for highlight tuples (0,4,3)/(1,5,4): 0 hits. Byte-level (0,4,3): 97 hits, clustered in VU-packet regions; (1,5,4): 0 hits. Scratchpad diffs are float-scale VU noise. L key moved highlight leftward (5->4 single step; 1->5 via wrap under hold), contrary to the assumed L=Right mapping.\nCaptures: slot102 sha 6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7, slot103 sha b5e569fcc561fa3a5408f6eb0a7a6497594e52bdb26f5cdb2dbfeed31dc56c3e, slot104 sha 74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694. 19 key presses used of 30 budget. Slot 100 untouched; slot 101 backs up the pre-experiment live state.",
+    "priorities": "Claim only what two-to-three screens support; never a 136-entry table. Keep render_fidelity_complete false. Counts, hashes and addresses come from code, not from judgments. Preserve negative results (failed triangulation, contradicted mapping).",
+    "candidates": [
+      {
+        "id": "partial_pairs",
+        "description": "Three observed (highlighted car, VEHICLE label, track/type) pairs plus static-table presence form a real but partial bridge; the isolated per-screen selector word is still open."
+      },
+      {
+        "id": "closed",
+        "description": "The bridge is closed: labels fully joined to numeric selector words per screen."
+      },
+      {
+        "id": "no_bridge",
+        "description": "No bridge: the screens contribute nothing beyond what static analysis already had."
+      },
+      {
+        "id": "need_selector_word",
+        "description": "Do not write the bridge yet; first read the FUN_0019eb90 selector-store address in all three images."
+      }
+    ],
+    "requirements": [
+      "Stays within what three observed screens can support",
+      "Does not invent EE addresses or selector-word values",
+      "Keeps negative results (failed isolation) visible"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "partial_pairs",
+      "escaped": false,
+      "confidence": 0.96,
+      "probabilities": {
+        "none": 0,
+        "closed": 0,
+        "partial_pairs": 0.97,
+        "ask_user": 0,
+        "need_selector_word": 0.02,
+        "no_bridge": 0.01,
+        "investigate": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "partial_pairs",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "partial_pairs",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "partial_pairs",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "closed",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "closed",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "closed",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "no_bridge",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "no_bridge",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "no_bridge",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "need_selector_word",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "need_selector_word",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "need_selector_word",
+        "requirement": 2,
+        "answer": "unknown"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 3054,
+      "output_tokens": 596
+    }
+  }
+}

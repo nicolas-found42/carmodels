@@ -1,0 +1,98 @@
+{
+  "args": {
+    "document": "Adopted plan: (1) ordering = do the sound-index reconciliation (A) first, then the EE selector word (B), with the display-name table (C) optional. (2) proof bar for the selector word = an isolated EE word that tracks the highlight AND is reachable from the decompiled menu/label draw path (not a bare value match, because value-only triangulation already produced 97 noisy byte hits and 0 word hits). (3) claim ceiling = render_fidelity_complete stays false on every artifact, partial claims only, no completion gate passes. (4) method for the selector = decompilation-first: read the FUN_0019eb90 -> FUN_00125640 -> store chain to derive the exact struct offset, then read that address in the three existing EE images. Standing constraints: never print credentials; new files in R not S; close tickets only on real tool output; a Jev gate escalate is an acceptable recorded outcome. carselection-2026-10-05/bridge-three-screens.json ee_findings: no FORD'49 / ROUTE 50 / TXT_CARS_* label bytes exist in the slot102 EE image (labels arrive via the text archive + glyph path). Static leads: FUN_0019eb90 reads the gameflow livery label via a static table at VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL/...) and resolves it via FUN_00125640, storing via FUN_00121e10; VA_0x23acb0 holds 0x0028f7c8 stable across all three captures. jgrep highlight hits: 0017cb80 (initials-entry cycler, discarded), 00184430 (1..3 bounded cursor on uRam0028fd74, reads 0 in all three, not the car cursor), 001c4a40 (indexed cursor over DAT_00241b40 table, caller context open). VA_0x241b60 is 5,4,4 across slots 102/103/104 (does not track highlight; open). Three-way triangulation for highlight tuples: one-based (1,5,4) 0 hits; zero-based (0,4,3) words 0 hits; byte-level (0,4,3) 97 hits clustered in VU-packet regions (0x21xxxx, 0x81xxxx-0x84xxxx) with no menu-struct candidate; scratchpad 121 changed words all float-scale VU noise (0x352c-0x354c 102==104!=103, not a small-int cursor). Screens pair highlight positions 1/5/4 to cars 49_COUPE / THUNDERBIRD_2002 / FORTYNINE at DEFAULT livery.",
+    "fields": [
+      {
+        "id": "label_chain",
+        "pattern": "FUN_0019eb90 -> FUN_00125640 -> [A-Za-z0-9_]+",
+        "description": "the decompiled label-resolution chain"
+      },
+      {
+        "id": "byte_hits",
+        "pattern": "byte-level \\(0,4,3\\) [0-9]+ hits",
+        "description": "byte-level triangulation hit count"
+      },
+      {
+        "id": "word_hits",
+        "pattern": "zero-based \\(0,4,3\\) words [0-9]+ hits",
+        "description": "word-level triangulation hit count"
+      },
+      {
+        "id": "va",
+        "pattern": "VA 0x[0-9a-f]+",
+        "description": "a virtual address named in the evidence"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 4,
+      "auto": 4,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "label_chain",
+        "value": "FUN_0019eb90 -> FUN_00125640 -> store",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.72,
+        "top_probability": 0.86,
+        "margin": 0.72,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "byte_hits",
+        "value": "byte-level (0,4,3) 97 hits",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.92,
+        "top_probability": 0.96,
+        "margin": 0.9199999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "word_hits",
+        "value": "zero-based (0,4,3) words 0 hits",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.81,
+        "top_probability": 0.91,
+        "margin": 0.8200000000000001,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "va",
+        "value": "VA 0x23acb0",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.97,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1625,
+      "output_tokens": 139
+    }
+  }
+}

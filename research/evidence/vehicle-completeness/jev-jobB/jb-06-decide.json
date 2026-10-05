@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "Which remedy should the headless Job B execution lead with?",
+    "evidence": "Job B (per-screen selector) is blocked because a PAUSED savestate carries no live pointers (arXiv 2503.15065; 2307.12060). Named: the livery store is entity+0x64 via FUN_00121e10; resolver FUN_00125640 over record base 0x233070+type*0x114; chain outer+4 -> +0x14c -> +0x174 = entity. New decompilation fact: FUN_0019c310 writes the gameflow pointer at outer+4 -> +0x14c, and its caller FUN_001de3d8 originates it. FUN_001c4540 iterates the car-entity list from a STATIC global (iRam00290278, EE ~0x290278; +8 = list head, +0xc = next). The cursor fn FUN_001c4a40 indexes DAT_00241b40 by a per-entity type byte. So at least one stable EE address (0x290278) can be read live. PCSX2 has: (a) in-emulator read/write BREAKPOINTS (CBreakPoints, BREAKPOINT_EE/IOP; iR5900.cpp dynarecMemcheck) - a debugger feature; (b) PINE IPC live guest memory read/write (PINE.cpp MsgRead8..64) exposed by the headless container helper (currently identity/save/load at slot 28193). Constraint: run EVERYTHING headless (Docker + Xvfb, fr2-recovery-headless); the user is using the host - no focus stealing on the Mac. Prior constraint from handoff: ordinary controller input + read-only/capture APIs only, no guest-memory writes/cheats/patches.",
+    "priorities": "Headless only (no host focus); read-only is preferred; must be able to name a decompilation-reachable address; a definitive recorded outcome is acceptable if the selector cannot be isolated; the user approved proceeding with the recommendations.",
+    "candidates": [
+      {
+        "id": "pine_read_then_poll",
+        "description": "Extend PINE with read-only reads, read the static entity-list global + chain live; if that names nothing, unpause and poll across three car selections."
+      },
+      {
+        "id": "breakpoint_first",
+        "description": "Lead with a PCSX2 read breakpoint in the headless instance."
+      },
+      {
+        "id": "decomp_first",
+        "description": "Trace FUN_001de3d8 fully to the exact static root before any live read."
+      },
+      {
+        "id": "stop_record_open",
+        "description": "Record Job B open without a live read."
+      }
+    ],
+    "requirements": [
+      "Runs headless",
+      "Names a decompilation-reachable address",
+      "Does not write guest memory"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "pine_read_then_poll",
+      "escaped": false,
+      "confidence": 0.92,
+      "probabilities": {
+        "none": 0,
+        "ask_user": 0,
+        "decomp_first": 0.01,
+        "breakpoint_first": 0.04,
+        "pine_read_then_poll": 0.94,
+        "investigate": 0,
+        "stop_record_open": 0.01
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "pine_read_then_poll",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "pine_read_then_poll",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "pine_read_then_poll",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "breakpoint_first",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "breakpoint_first",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "breakpoint_first",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "decomp_first",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "decomp_first",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "decomp_first",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop_record_open",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop_record_open",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "stop_record_open",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2782,
+      "output_tokens": 593
+    }
+  }
+}

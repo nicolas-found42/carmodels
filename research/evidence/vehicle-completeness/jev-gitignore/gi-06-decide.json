@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "What is the keep/ignore split for the .gitignore?",
+    "evidence": "Candidate file groups in the carmodels repo (Ford Racing 2 recovery), with sizes:\nG1 tools/validation-runtime 1.1G: Blender dmg + mounted Blender.app (third-party, re-downloadable). Scripts validate GLBs through Blender.\nG2 tools/headless-runtime AppImage 57M: PCSX2 v2.8.2 AppImage, pinned emulator dependency for the container.\nG3 research/evidence/continuation/runtime 960M: 40 savestates (.p2s ~11MB each) + unpacked EE/IOP/VU/hw-reg dumps + 13M F8 screenshots. Receipts record sha256 of these files.\nG4 research/evidence/job-b-live 704M: pairs/*-eeMemory.bin + members/ extracted dumps (experiment working sets, rebuilt by the probe tools).\nG5 viewer 57M: web viewer incl. vendor three.js + 35 recovered .glb files.\nG6 reference 65M: the per-car reference corpus (models, textures, sounds) \u2014 the deliverable.\nG7 recovered 972K: canonical index + per-car manifests.\nG8 receipts JSON (~5M total): validation receipts, Jev receipts, tickets, reports.\nG9 tools/*.py + batteries: all scripts.\nG10 869 .pyc / __pycache__: bytecode regenerable.\nContext: user cancelled a 2.6GB push; wants a lean repo. GitHub rejects files >100MB (only the Blender files exceed it). Tools read the unpacked runtime dumps at fixed paths (e.g. verify_selector_word reads RUNTIME eeMemory.bin); excluding them means a fresh clone cannot re-run those tools without re-capturing.",
+    "priorities": "Lean repo; keep everything needed to understand and re-verify the work; never ignore the deliverable or the proof; document what a fresh clone cannot re-run.",
+    "candidates": [
+      {
+        "id": "lean",
+        "description": "Keep tools+receipts+corpus+viewer+AppImage+screenshots; ignore Blender vendor, savestates/dumps, working sets, bytecode."
+      },
+      {
+        "id": "keep_dumps",
+        "description": "Keep the savestates/dumps too (full reproducibility, ~2.6GB push)."
+      },
+      {
+        "id": "minimal",
+        "description": "Keep only tools+receipts; ignore corpus, viewer, AppImage as well."
+      }
+    ],
+    "requirements": [
+      "Fits GitHub limits",
+      "Keeps the deliverable and the proof",
+      "Smallest push that preserves the work"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "lean",
+      "escaped": false,
+      "confidence": 0.82,
+      "probabilities": {
+        "ask_user": 0.04,
+        "minimal": 0,
+        "keep_dumps": 0.01,
+        "none": 0.07,
+        "lean": 0.85,
+        "investigate": 0.03
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "lean",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "lean",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "lean",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_dumps",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "keep_dumps",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_dumps",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "minimal",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "minimal",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "minimal",
+        "requirement": 2,
+        "answer": "contradicted"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2295,
+      "output_tokens": 464
+    }
+  }
+}

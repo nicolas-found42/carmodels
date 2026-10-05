@@ -1,0 +1,170 @@
+{
+ "car_code": "F150",
+ "display_name": "F-150 FLARESIDE 4X4",
+ "text_enum": "TXT_CARS_F150",
+ "group": "OFFROAD",
+ "model_year": "2001",
+ "icon_token": "F150",
+ "liveries": [
+  {
+   "label": "DEFAULT",
+   "code": "F150D"
+  },
+  {
+   "label": "A",
+   "code": "F150A"
+  },
+  {
+   "label": "B",
+   "code": "F150B"
+  },
+  {
+   "label": "C",
+   "code": "F150C"
+  }
+ ],
+ "performance": {
+  "AGILITY": "0.4",
+  "ACCELERATION": "0.4",
+  "SPEED": "0.6",
+  "WEIGHT": "0.8",
+  "BHP": "260.0",
+  "WEIGHT_IN_KILOS": "2096.0"
+ },
+ "top_speed_mph": "136.0",
+ "sound": {
+  "type": "CAR_SND_F150",
+  "inherits": "CAR_SND_CAR4",
+  "shared_bank_hint": "car4_snd.msb;1, car4_snd.msh;1 (in _shared/sounds/)"
+ },
+ "config_cross_refs": {
+  "body_type": "F150",
+  "engine_type": "F150",
+  "setup_type": "F150",
+  "gearbox_type": "OFFROAD_AWD",
+  "brake_type": "OFFROAD",
+  "tyre_front": "OFFROAD_R394x267",
+  "tyre_back": "OFFROAD_R394x268",
+  "control_type": "OFFROAD",
+  "overlay_type": "MODERN_STYLE_160_7"
+ },
+ "referenced_by_gameplay": [
+  "AM_2.DAT;1",
+  "EX.DAT;1",
+  "F100.DAT;1",
+  "F100_65.DAT;1",
+  "FOCUSWRC.DAT;1",
+  "QRACE_2.DAT;1",
+  "QRACE_4.DAT;1"
+ ],
+ "files": [
+  {
+   "src": "3DDATA/CARS/F150.PS2;1",
+   "dst": "cars/F150/model/F150.PS2;1",
+   "bytes": 1340032,
+   "sha256": "60f7ef5b1ee6edf106f3f71b905a1100feea683079c4a6ab4e8053051a6a0d1c"
+  },
+  {
+   "src": "GRAPHICS/GAME/CARS/f150d.ptg;1",
+   "dst": "cars/F150/graphics/icon/f150d.ptg;1",
+   "bytes": 100304,
+   "sha256": "34deecbe7054ac8c7516fdf43b309335a93bb6c6d9e1555a44511e7d67202b3f"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/f150d.ptg;1",
+   "dst": "cars/F150/graphics/liveries/f150d.ptg;1",
+   "bytes": 100304,
+   "sha256": "aeac1d6994db2efd4941f349c2eccbbaac7bebe89473ce895dc520ba4841f151"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/f150a.ptg;1",
+   "dst": "cars/F150/graphics/liveries/f150a.ptg;1",
+   "bytes": 100304,
+   "sha256": "3a4c367a7b165d916bbd8d6f3c92b8a1bd0d89be7b46e8674f62db69da5f67ac"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/f150b.ptg;1",
+   "dst": "cars/F150/graphics/liveries/f150b.ptg;1",
+   "bytes": 100304,
+   "sha256": "61620a0dc8eab0d14064d627c7bd2fc87370b36679e4d828a778e21739b08683"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/f150c.ptg;1",
+   "dst": "cars/F150/graphics/liveries/f150c.ptg;1",
+   "bytes": 100304,
+   "sha256": "b65c86480a22d22036c67a9eb27be7ab216b1ff50c99dfcfc95641a0fa89bf1b"
+  },
+  {
+   "src": "DATA/ASCII/GAMEPLAY/F150.DAT;1",
+   "dst": "cars/F150/data/F150.DAT;1",
+   "bytes": 2282,
+   "sha256": "1eda6d64cfbbe3e8b072f594628cf027075014fe67dec146992368effa104f55"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/cardata.txt",
+   "bytes": 870,
+   "sha256": "0fb79aceb8d7c43b117f68e737a9a388055a508e884504be3370e4fe0d04b3da"
+  },
+  {
+   "src": "DATA/ASCII/CARS/BODYDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/body.txt",
+   "bytes": 1779,
+   "sha256": "e38008ae58abe0b8677aedcb753b5977f2024d79591df5fdabab83e97c9ac113"
+  },
+  {
+   "src": "DATA/ASCII/CARS/ENGDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/engine.txt",
+   "bytes": 245,
+   "sha256": "4ac843deadf33e19b8e959d35dafd0bb1cb04e9447cd92e36727ab940fcf664d"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARSETUP.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/setup.txt",
+   "bytes": 795,
+   "sha256": "dda1aeaff70663d1890f8cff61b9e01a9dad0c4423decb07cb457e48e4d0a741"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARSOUND.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/sound.txt",
+   "bytes": 1505,
+   "sha256": "698d84cd520161d8563bafc4f4f2b00206517753d01a32ccbf6c867ac2aa1e64"
+  },
+  {
+   "src": "DATA/ASCII/CARS/GEARDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/gearbox.txt",
+   "bytes": 194,
+   "sha256": "3c4867954a4032b852b57c68f9ffff7d26193c0a73ec1bb1d8d27834ce7554ff"
+  },
+  {
+   "src": "DATA/ASCII/CARS/BRAKDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/brake.txt",
+   "bytes": 141,
+   "sha256": "3ba364096e86e3fe55ce8c342bc61f75aa13c84ec4960da0bbad9ce17de60494"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CTRLDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/control.txt",
+   "bytes": 1209,
+   "sha256": "db5740e66e4324fa5b1ca35490c53a0e8067c4c499f2c72d82535901929ca3ed"
+  },
+  {
+   "src": "DATA/ASCII/CARS/OVERDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/overlay.txt",
+   "bytes": 499,
+   "sha256": "1f2f047941652c0b0f691ee17a166654eaea395f64993022024ea5e853ac5def"
+  },
+  {
+   "src": "DATA/ASCII/CARS/TYREDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/tyres_front.txt",
+   "bytes": 183,
+   "sha256": "e97950ae898642bd8598ffdf601fa8f258096faeb0657f35f01c94204881379a"
+  },
+  {
+   "src": "DATA/ASCII/CARS/TYREDATA.DAT;1 [extracted block]",
+   "dst": "cars/F150/config/tyres_back.txt",
+   "bytes": 185,
+   "sha256": "a36673ccfc1badc4a61094ca5f1d94c6c99c8c83967a02c9417badaa977d51ac"
+  }
+ ]
+}

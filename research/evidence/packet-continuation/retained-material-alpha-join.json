@@ -1,0 +1,109 @@
+{
+ "scope": "Retained colour vector and alpha-lane join over aligned retained/GSDump pairs; RGB is not claimed.",
+ "by_pass_id": {
+  "1": {
+   "aligned_draws": 543,
+   "alpha_lanes_all_equal_vec4_w": 543,
+   "alpha_lane_min": 128,
+   "alpha_lane_max": 128
+  },
+  "2": {
+   "aligned_draws": 570,
+   "alpha_lanes_all_equal_vec4_w": 570,
+   "alpha_lane_min": 102,
+   "alpha_lane_max": 128
+  },
+  "4": {
+   "aligned_draws": 37,
+   "alpha_lanes_all_equal_vec4_w": 0,
+   "alpha_lane_min": 0,
+   "alpha_lane_max": 255
+  },
+  "5": {
+   "aligned_draws": 63,
+   "alpha_lanes_all_equal_vec4_w": 0,
+   "alpha_lane_min": 0,
+   "alpha_lane_max": 0
+  }
+ },
+ "pass2_vec4_equals_source_base_color_rgba_unscaled": {
+  "draws": 108,
+  "vec4_equals_base_color_rgba": 108
+ },
+ "seven_vertex_aligned_pass2": [
+  {
+   "retained_chain_addr": "0x89f650",
+   "transfer": 5906,
+   "source_headers": [
+    [
+     "COBRA",
+     149
+    ]
+   ],
+   "ptr6": "0x154d400",
+   "ptr4": "0x154d430",
+   "effective_flags": "0x2c2",
+   "vec4": [
+    0.0,
+    0.0,
+    0.0,
+    102.0
+   ],
+   "dump_alpha_lanes": [
+    102
+   ],
+   "arm": "bit8_clear_row_0x47c00000"
+  }
+ ],
+ "seven_vertex_retained_calls_with_cobra_pointer": [
+  {
+   "chain_addr": "0x89f650",
+   "pass_id": 2,
+   "prim": "0x4c",
+   "source_headers": [
+    [
+     "COBRA",
+     149
+    ]
+   ],
+   "ptr6": "0x154d400"
+  },
+  {
+   "chain_addr": "0x89f6e0",
+   "pass_id": 4,
+   "prim": "0x5c",
+   "source_headers": [
+    [
+     "COBRA",
+     149
+    ]
+   ],
+   "ptr6": "0x154d400"
+  },
+  {
+   "chain_addr": "0x89f760",
+   "pass_id": 5,
+   "prim": "0x5c",
+   "source_headers": [
+    [
+     "COBRA",
+     149
+    ]
+   ],
+   "ptr6": "0x154d400"
+  }
+ ],
+ "duplicate_headers": {
+  "149_header_offset": 1006164,
+  "261_header_offset": 1007392,
+  "planes": {
+   "149": {
+    "six_byte_offset": 1122048
+   },
+   "261": {
+    "six_byte_offset": 1200608
+   }
+  },
+  "material_words_equal": true
+ }
+}

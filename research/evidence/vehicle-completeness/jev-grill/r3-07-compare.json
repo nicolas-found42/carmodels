@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Stop-condition 7b: do not stop until all three threads are resolved.",
+    "passage_b": "Fallback: if the trace and one indirection pass name nothing, record the selector thread open.",
+    "aspects": [
+      "what 'resolved' means",
+      "whether the two conflict",
+      "effect on session end"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "contradicts": 0.1,
+        "same_fact": 0.01,
+        "different_facts": 0.89
+      },
+      "confidence": 0.84,
+      "margin": 0.79,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "what 'resolved' means",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.01,
+          "same_fact": 0,
+          "different_facts": 0.99
+        },
+        "confidence": 0.98,
+        "margin": 0.98,
+        "decision": "auto"
+      },
+      {
+        "aspect": "whether the two conflict",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.13,
+          "same_fact": 0.03,
+          "different_facts": 0.84
+        },
+        "confidence": 0.76,
+        "margin": 0.71,
+        "decision": "review"
+      },
+      {
+        "aspect": "effect on session end",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.21,
+          "same_fact": 0.05,
+          "different_facts": 0.74
+        },
+        "confidence": 0.61,
+        "margin": 0.53,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 830,
+      "output_tokens": 177
+    }
+  }
+}

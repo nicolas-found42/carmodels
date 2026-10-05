@@ -1,0 +1,81 @@
+{
+  "args": {
+    "document": "6-position screenshot-verified sweep results (slots 140-145, heap base identical 0x473d70, pause-control 0 diffs within pairs). Verified positions: 140=pos1 FORD'49, 141=pos2 '68 MUSTANG, 142=pos3 '55 Thunderbird, 143=pos6 FORD GT, 144=pos6 FORD GT, 145=pos5 Thunderbird Convertible. DECISIVE TEST 1: NO word anywhere in the 32 MiB EE image equals its slot's position in all 6 slots (0 hits at u32/u16/u8). TEST 2: the DAT-table small words do not track position: 0x241b60 reads 5,5,5,4,3,3 across pos1,2,3,6,6,5; 0x241e00 reads 5,5,5,5,4,4. Notably 143 vs 144 (BOTH pos6) differ at 0x241b60 (4 vs 3), so these words track something else (animation/other cursor), not the highlight. Combined with the earlier exhaustive result (no tuple, no flag, no pointer in ANY savestate member), the mark is definitively NOT a stored integer. Remaining possibilities: recomputed per frame, or an encoding not tested (float/bitfield). All headless, read-only + savestate saves; container left paused.",
+    "fields": [
+      {
+        "id": "test1",
+        "pattern": "0 hits at u32/u16/u8|NO word anywhere|0 words equal",
+        "description": "the TEST 1 result"
+      },
+      {
+        "id": "w60",
+        "pattern": "0x241b60 reads [0-9,]+",
+        "description": "the 0x241b60 readings"
+      },
+      {
+        "id": "heap",
+        "pattern": "0x473d70",
+        "description": "the heap base"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 3,
+      "extracted": 3,
+      "auto": 2,
+      "review": 1,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "test1",
+        "value": "0 hits at u32/u16/u8",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.76,
+        "top_probability": 0.84,
+        "margin": 0.71,
+        "candidates_considered": 2,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "w60",
+        "value": "0x241b60 reads 5,5,5,4,3,3",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.94,
+        "top_probability": 0.97,
+        "margin": 0.94,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "heap",
+        "value": "0x473d70",
+        "status": "auto",
+        "reason": null,
+        "confidence": 1,
+        "top_probability": 1,
+        "margin": 1,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1129,
+      "output_tokens": 113
+    }
+  }
+}

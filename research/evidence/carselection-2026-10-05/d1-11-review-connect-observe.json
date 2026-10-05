@@ -1,0 +1,75 @@
+{
+  "args": {
+    "request": "Open the noVNC URL in the hidden Playwright browser and prove that the live emulator state is observable, without touching the desktop.",
+    "diff": "+ opened hidden session fr2 on http://127.0.0.1:54239/vnc.html\n+ clicked noVNC_connect_button via trusted page JS (evaluate)\n+ VNC status: Connected (unencrypted) to 3f7463603fbf:99\n+ screenshot shows paused race POSITION 6/6 000 MPH, matching slot-100 live state\n+ no window promoted to desktop; no game input sent; no memory written"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.46,
+    "scores": {
+      "correctness": {
+        "score": 1.74,
+        "confidence": 0.61,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.23,
+          "2": 0.76
+        }
+      },
+      "spec_match": {
+        "score": 1.97,
+        "confidence": 0.95,
+        "probabilities": {
+          "0": 0,
+          "1": 0.03,
+          "2": 0.97
+        }
+      },
+      "test_gap": {
+        "score": 1.18,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.28,
+          "1": 0.26,
+          "2": 0.46
+        }
+      },
+      "blast_radius": {
+        "score": 0.27,
+        "confidence": 0.6,
+        "probabilities": {
+          "0": 0.79,
+          "1": 0.16,
+          "2": 0.05
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.83475,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 854,
+      "output_tokens": 79
+    }
+  }
+}

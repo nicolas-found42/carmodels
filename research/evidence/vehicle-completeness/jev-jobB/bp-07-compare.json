@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Static input-handler analysis + PINE verification (no build, no GUI).",
+    "passage_b": "Full PCSX2 source build + DebugServer patch.",
+    "aspects": [
+      "risk",
+      "verifiability",
+      "cost"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0,
+        "different_facts": 0.84,
+        "contradicts": 0.16
+      },
+      "confidence": 0.75,
+      "margin": 0.6799999999999999,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "risk",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0,
+          "different_facts": 0.97,
+          "contradicts": 0.03
+        },
+        "confidence": 0.94,
+        "margin": 0.94,
+        "decision": "auto"
+      },
+      {
+        "aspect": "verifiability",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.03,
+          "different_facts": 0.67,
+          "contradicts": 0.3
+        },
+        "confidence": 0.51,
+        "margin": 0.37000000000000005,
+        "decision": "review"
+      },
+      {
+        "aspect": "cost",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.81,
+          "same_fact": 0.01,
+          "contradicts": 0.18
+        },
+        "confidence": 0.72,
+        "margin": 0.6300000000000001,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 807,
+      "output_tokens": 177
+    }
+  }
+}

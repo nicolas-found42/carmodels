@@ -1,0 +1,102 @@
+{
+  "args": {
+    "claims": [
+      "Headless F8 screenshots work and land in /data/snaps.",
+      "Paused savestate pairs have 0 differing words within a pair.",
+      "The A->B move re-finds 0x241b60/0x241e00/0x2420a0 as changed.",
+      "0x241b60 reads 5,4,4 for highlights 1/5/4, so it is not the per-car id by value.",
+      "The mark word has been found."
+    ],
+    "evidence": "Breakthrough: headless F8 screenshots work (PCSX2 writes PNGs to /data/snaps). Current screen verified by vision: 6 thumbnails, 3rd highlighted, VEHICLE '55 Thunderbird. Paused-pair method: pause via RFB Space, save pair (pause-control = 0 differing words), unpause, one L key, re-pause, save pair. A=pos3, B=pos5 (screenshot-verified Thunderbird Convertible). Diff A->B re-finds the DAT-table candidates: 0x241b60 4->5, 0x241e00 4->3, 0x2420a0 4->5. But 0x241b60 reads 5,4,4 across slots 102/103/104 (highlights 1/5/4), so it is NOT the per-car id by value. FUN_001c4a40 indexes DAT_00241b40 by the per-entity type byte with stride 0x150, so these words are fields inside per-type menu records. Proposed: a 6-position sweep - move the highlight to each of the 6 thumbnails with a screenshot + paused savestate pair at each; the true mark word must equal (or map 1:1 to) the 1..6 position across all six samples. All headless, read-only + savestate saves."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 2
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "Headless F8 screenshots work and land in /data/snaps.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.95
+      },
+      {
+        "id": "claim1",
+        "claim": "Paused savestate pairs have 0 differing words within a pair.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.94
+      },
+      {
+        "id": "claim2",
+        "claim": "The A->B move re-finds 0x241b60/0x241e00/0x2420a0 as changed.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.84,
+          "contradicts": 0.16,
+          "says_nothing": 0
+        },
+        "confidence": 0.76,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.91
+      },
+      {
+        "id": "claim3",
+        "claim": "0x241b60 reads 5,4,4 for highlights 1/5/4, so it is not the per-car id by value.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.98,
+          "contradicts": 0.02,
+          "says_nothing": 0
+        },
+        "confidence": 0.96,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.96
+      },
+      {
+        "id": "claim4",
+        "claim": "The mark word has been found.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "supports": 0.03,
+          "contradicts": 0.76,
+          "says_nothing": 0.21
+        },
+        "confidence": 0.64,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.19
+      }
+    ],
+    "usage": {
+      "input_tokens": 2062,
+      "output_tokens": 311
+    }
+  }
+}

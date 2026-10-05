@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Record the mark-number search as exhaustive and negative; note the only path is a live tool.",
+    "diff": "+ searched all savestate members (EE/IOP/VU/hw/PAD/scratchpad) at all widths: 0 hits\n+ per-entity flag: 0 hits\n+ conclusion: needs a live breakpoint/scan; read-only constraint excludes it\n+ record open; no unsupported claim",
+    "tests": "probe_mark_exhaustive.py VERIFY OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.73,
+    "scores": {
+      "correctness": {
+        "score": 1.88,
+        "confidence": 0.82,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.09,
+          "2": 0.89
+        }
+      },
+      "spec_match": {
+        "score": 1.96,
+        "confidence": 0.93,
+        "probabilities": {
+          "0": 0,
+          "1": 0.04,
+          "2": 0.96
+        }
+      },
+      "test_gap": {
+        "score": 0.31,
+        "confidence": 0.54,
+        "probabilities": {
+          "0": 0.79,
+          "1": 0.11,
+          "2": 0.1
+        }
+      },
+      "blast_radius": {
+        "score": 0.25,
+        "confidence": 0.62,
+        "probabilities": {
+          "0": 0.83,
+          "1": 0.08,
+          "2": 0.09
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "review",
+    "composite": 0.9279999999999999,
+    "reason_codes": [
+      "safe_to_apply_below_auto_accept",
+      "confidence_below_auto_accept"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 808,
+      "output_tokens": 79
+    }
+  }
+}

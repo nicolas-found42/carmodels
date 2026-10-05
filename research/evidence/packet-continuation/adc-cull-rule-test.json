@@ -1,0 +1,311 @@
+{
+ "scope": "Measurement on aligned retained-descriptor/GSDump pairs; not a VU1 microprogram recovery and not a game-exact culling equation.",
+ "pairs_used": 1217,
+ "train_pairs": 609,
+ "test_pairs": 608,
+ "orientation_sign_fitted_on_train": 1,
+ "train_separation_by_sign": {
+  "1": 0.544245882184088,
+  "-1": -0.544245882184088
+ },
+ "held_out": {
+  "P(ADC=1 | W=0, back-facing)": 0.5309214887773464,
+  "P(ADC=1 | W=0, front-facing)": 0.003849608623123316,
+  "counts": {
+   "w1_adc1": 8709,
+   "w0_adc0_front": 7763,
+   "w0_adc0_back": 4953,
+   "w0_adc1_front": 30,
+   "w0_adc1_back": 5606,
+   "w1_adc0": 0,
+   "w0_adc1_zero_area": 112,
+   "w0_adc0_zero_area": 314
+  }
+ },
+ "control_mirrored_sign": {
+  "P(ADC=1 | W=0, back-facing)": 0.003849608623123316,
+  "P(ADC=1 | W=0, front-facing)": 0.5309214887773464,
+  "counts": {
+   "w1_adc1": 8709,
+   "w0_adc0_front": 4953,
+   "w0_adc0_back": 7763,
+   "w0_adc1_front": 5606,
+   "w0_adc1_back": 30,
+   "w1_adc0": 0,
+   "w0_adc1_zero_area": 112,
+   "w0_adc0_zero_area": 314
+  }
+ },
+ "control_shuffled_orientation": {
+  "P(ADC=1 | W=0, back-facing)": 0.3181868313664939,
+  "P(ADC=1 | W=0, front-facing)": 0.32180514550822437,
+  "counts": {
+   "w1_adc1": 8709,
+   "w0_adc0_front": 4824,
+   "w0_adc0_back": 6182,
+   "w0_adc1_front": 2289,
+   "w0_adc1_back": 2885,
+   "w1_adc0": 0,
+   "w0_adc1_zero_area": 574,
+   "w0_adc0_zero_area": 2024
+  }
+ },
+ "source_W_plane_rule": "W=1 implies ADC=1 on every aligned vertex except the retained-index/transfer pairs listed as violations in the alignment receipt.",
+ "subsets": {
+  "textured_prim_0x5c_or_0x1d": {
+   "pairs": 605,
+   "P(ADC=1 | W=0, back-facing)": 0.5309263657957245,
+   "P(ADC=1 | W=0, front-facing)": 0.0038905459732849175,
+   "counts": {
+    "w1_adc1": 8664,
+    "w0_adc0_front": 7681,
+    "w0_adc0_back": 4937,
+    "w0_adc1_front": 30,
+    "w0_adc1_back": 5588,
+    "w1_adc0": 0,
+    "w0_adc1_zero_area": 112,
+    "w0_adc0_zero_area": 314
+   }
+  },
+  "untextured": {
+   "pairs": 3,
+   "P(ADC=1 | W=0, back-facing)": 0.5294117647058824,
+   "P(ADC=1 | W=0, front-facing)": 0.0,
+   "counts": {
+    "w1_adc1": 45,
+    "w0_adc0_front": 82,
+    "w0_adc0_back": 16,
+    "w0_adc1_front": 0,
+    "w0_adc1_back": 18,
+    "w1_adc0": 0,
+    "w0_adc1_zero_area": 0,
+    "w0_adc0_zero_area": 0
+   }
+  }
+ },
+ "rule_gated_by_pass_id": {
+  "statement": "ADC = W OR (pass_id != 1 AND strip triangle signed area * sign < 0); pass_id is the second word of the FUN_0021bb48 header (2 when effective bit 0x200 is set); FUN_00128e88 blocks have no such word and are treated as not culling.",
+  "held_out": {
+   "tp_extra": 5606,
+   "fp_extra": 21,
+   "fn_extra": 142,
+   "tn_extra": 13009,
+   "vertices": 18778,
+   "exact_pair_matches": 563,
+   "pairs": 608,
+   "accuracy_over_W0_vertices": 0.9913196293534988
+  },
+  "control_without_pass_gate": {
+   "tp_extra": 5606,
+   "fp_extra": 4953,
+   "fn_extra": 142,
+   "tn_extra": 8077,
+   "vertices": 18778,
+   "exact_pair_matches": 322,
+   "pairs": 608,
+   "accuracy_over_W0_vertices": 0.7286718500372776
+  },
+  "control_mirrored_sign": {
+   "tp_extra": 30,
+   "fp_extra": 5930,
+   "fn_extra": 5718,
+   "tn_extra": 7100,
+   "vertices": 18778,
+   "exact_pair_matches": 272,
+   "pairs": 608,
+   "accuracy_over_W0_vertices": 0.37969964852486954
+  },
+  "control_shuffled_orientation": {
+   "tp_extra": 2859,
+   "fp_extra": 2260,
+   "fn_extra": 2889,
+   "tn_extra": 10770,
+   "vertices": 18778,
+   "exact_pair_matches": 279,
+   "pairs": 608,
+   "accuracy_over_W0_vertices": 0.7257961444243264
+  }
+ },
+ "rule_by_effective_flags": {
+  "FUN_00128e88|pass=None|flags=None": {
+   "tp_extra": 0,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 70,
+   "vertices": 70,
+   "exact_pair_matches": 2,
+   "pairs": 2,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=1|flags=0x48": {
+   "tp_extra": 0,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 1394,
+   "vertices": 1394,
+   "exact_pair_matches": 37,
+   "pairs": 37,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=1|flags=0x8": {
+   "tp_extra": 0,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 5597,
+   "vertices": 5597,
+   "exact_pair_matches": 233,
+   "pairs": 233,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x200": {
+   "tp_extra": 1179,
+   "fp_extra": 3,
+   "fn_extra": 6,
+   "tn_extra": 999,
+   "vertices": 2187,
+   "exact_pair_matches": 69,
+   "pairs": 72,
+   "accuracy_over_W0_vertices": 0.9958847736625515
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x201": {
+   "tp_extra": 16,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 12,
+   "vertices": 28,
+   "exact_pair_matches": 2,
+   "pairs": 2,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x208": {
+   "tp_extra": 2674,
+   "fp_extra": 15,
+   "fn_extra": 129,
+   "tn_extra": 2750,
+   "vertices": 5568,
+   "exact_pair_matches": 131,
+   "pairs": 164,
+   "accuracy_over_W0_vertices": 0.9741379310344828
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x210": {
+   "tp_extra": 312,
+   "fp_extra": 1,
+   "fn_extra": 2,
+   "tn_extra": 246,
+   "vertices": 561,
+   "exact_pair_matches": 15,
+   "pairs": 17,
+   "accuracy_over_W0_vertices": 0.9946524064171123
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x240": {
+   "tp_extra": 186,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 236,
+   "vertices": 422,
+   "exact_pair_matches": 9,
+   "pairs": 9,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x250": {
+   "tp_extra": 173,
+   "fp_extra": 2,
+   "fn_extra": 0,
+   "tn_extra": 167,
+   "vertices": 342,
+   "exact_pair_matches": 7,
+   "pairs": 9,
+   "accuracy_over_W0_vertices": 0.9941520467836257
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x2c0": {
+   "tp_extra": 0,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 49,
+   "vertices": 49,
+   "exact_pair_matches": 1,
+   "pairs": 1,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x2c2": {
+   "tp_extra": 18,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 28,
+   "vertices": 46,
+   "exact_pair_matches": 1,
+   "pairs": 1,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=2|flags=0x2d0": {
+   "tp_extra": 219,
+   "fp_extra": 0,
+   "fn_extra": 2,
+   "tn_extra": 452,
+   "vertices": 673,
+   "exact_pair_matches": 14,
+   "pairs": 16,
+   "accuracy_over_W0_vertices": 0.9970282317979198
+  },
+  "FUN_0021c3e0+0021bb48|pass=4|flags=0x2c2": {
+   "tp_extra": 26,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 22,
+   "vertices": 48,
+   "exact_pair_matches": 3,
+   "pairs": 3,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=4|flags=0x2d2": {
+   "tp_extra": 394,
+   "fp_extra": 0,
+   "fn_extra": 1,
+   "tn_extra": 300,
+   "vertices": 695,
+   "exact_pair_matches": 15,
+   "pairs": 16,
+   "accuracy_over_W0_vertices": 0.9985611510791367
+  },
+  "FUN_0021c3e0+0021bb48|pass=5|flags=0x242": {
+   "tp_extra": 57,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 51,
+   "vertices": 108,
+   "exact_pair_matches": 2,
+   "pairs": 2,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=5|flags=0x252": {
+   "tp_extra": 115,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 107,
+   "vertices": 222,
+   "exact_pair_matches": 6,
+   "pairs": 6,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=5|flags=0x2c2": {
+   "tp_extra": 18,
+   "fp_extra": 0,
+   "fn_extra": 0,
+   "tn_extra": 77,
+   "vertices": 95,
+   "exact_pair_matches": 2,
+   "pairs": 2,
+   "accuracy_over_W0_vertices": 1.0
+  },
+  "FUN_0021c3e0+0021bb48|pass=5|flags=0x2d2": {
+   "tp_extra": 219,
+   "fp_extra": 0,
+   "fn_extra": 2,
+   "tn_extra": 452,
+   "vertices": 673,
+   "exact_pair_matches": 14,
+   "pairs": 16,
+   "accuracy_over_W0_vertices": 0.9970282317979198
+  }
+ }
+}

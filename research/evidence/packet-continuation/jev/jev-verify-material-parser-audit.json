@@ -1,0 +1,22 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "summary": {"verified": 4, "contradicted": 2, "unsupported": 0, "needs_review": 3},
+  "results": [
+    {"id":"claim0","claim":"recover_material_headers.py consumes the optional header fields in the same order and under the same flag/sentinel conditions as the pinned 0021bc18 code.","verdict":"verified","probabilities":{"says_nothing":0,"supports":1,"contradicts":0},"confidence":1,"action":"auto","supporting_evidence":"parser","same_subject":0.91},
+    {"id":"claim1","claim":"The final PEXTLB→PEXTLH→PEXEW operations transform the little-endian bytes of the AARRGGBB packed word into RGBA lane order.","verdict":"verified","probabilities":{"says_nothing":0.01,"supports":0.86,"contradicts":0.13},"confidence":0.79,"action":"review","supporting_evidence":"lane_fixture","same_subject":0.87},
+    {"id":"claim2","claim":"The 1,024 lane fixtures inside recover_material_headers.py simulate all three PEXT operations starting from the original packed AARRGGBB scalar.","verdict":"contradicted","probabilities":{"says_nothing":0,"supports":0,"contradicts":1},"confidence":0.99,"action":"auto","supporting_evidence":"lane_fixture","same_subject":0.82},
+    {"id":"claim3","claim":"validate_material_headers.py enforces that every source header offset appears exactly once in the GLB export.","verdict":"contradicted","probabilities":{"says_nothing":0,"supports":0.05,"contradicts":0.95},"confidence":0.92,"action":"auto","supporting_evidence":"validator","same_subject":0.86},
+    {"id":"claim4","claim":"The current 35 GLBs contain exactly one primitive material headerOffset for every source geometry header; independent source-byte recomputation found no field or lane-scale mismatches across 12,080 headers.","verdict":"verified","probabilities":{"says_nothing":0.04,"supports":0.79,"contradicts":0.17},"confidence":0.69,"action":"review","supporting_evidence":"validator","same_subject":0.79},
+    {"id":"claim5","claim":"The current parser's originalMaterialHeader fields are byte-preserving and expose source header RGBA values and lane scaling as source data, without asserting final glTF PBR equivalence.","verdict":"verified","probabilities":{"says_nothing":0.3,"supports":0.65,"contradicts":0.05},"confidence":0.47,"action":"review","supporting_evidence":"parser","same_subject":0.37}
+  ],
+  "evidence_sent": {
+    "parser": "Source audit: decoder starts at +8, reads flag0x100 float, AARRGGBB if texture sentinel or flags&6, then optional fields flags8/16/128/64, requires exact end. Pinned 0021bc18 has same conditions and order; its 120 instructions are matched to ELF bytes.",
+    "lane_fixture": "Existing parser fixtures begin with interleaved [x,0] bytes (already-expanded PEXTLB-like input), then model interleaving and lane swap. Independent full-chain packed scalar PEXTLB→PEXTLH→PEXEW emulation yielded RGBA on representative non-symmetric colors.",
+    "validator": "Validator checks each present primitive's fields against source bytes but only returns len(seen), with no required-source-set or duplicate-offset test. Separate independent audit across all 35 current GLBs found all 12,080 source header offsets exactly once, no mismatch or lane-scaling error. Both scripts ran successfully, and a source-alpha mutation was rejected."
+  },
+  "usage": {"input_tokens":3321,"output_tokens":645},
+  "limitations": "Jev is advisory. Deterministic raw-source recomputation and the code path are authoritative for the specific checks. No retry was made to change review outcomes."
+}

@@ -1,0 +1,54 @@
+{
+  "args": {
+    "propositions": [
+      "The canonical index plus its verifier covers every per-vehicle satellite kind in the reference corpus.",
+      "Per-car config txt, data DAT and sound-bank chains are outside the canonical index and need their own parity ticket.",
+      "A green verifier run closes vehicle extraction completeness for geometry, textures, liveries, matrix icons and GLBs.",
+      "The 158 unmatched retained descriptors indicate vehicles missing from the extraction."
+    ],
+    "context": "Canonical index (recovered/index.json) counts: original_model 35, glb 35, model textures 700 display + 700 raw, mip planes 94 + stored-alpha 94, original_icon 35 + raw/display 35 each, original_livery 136 + raw/display 136 each, original_matrix 136 + csm0-swap raw/display 136 each. Status: 'Asset/index integrity checked. Rendering-fidelity completion not asserted.' Independent verifier tools/verify_recovered_asset_index.py checks roster/index/disk set equality, per-car producer-record equality, every asset hash/size, plus negative controls (corrupt manifest hash, cross-car model swap, schema/fidelity/status/limits mutations). Reference corpus per car (spot-checked 49_COUPE, THUNDERBIRD_2002, FORTYNINE): config/ (11 txt: cardata, body, engine, gearbox, tyres_front/back, brake, control, overlay, setup, sound), model/*.PS2;1, graphics/icon + 4 liveries, data/*.DAT;1; sound banks in reference/ford/_shared/sounds with per-car inheritance chains in manifests. The canonical index does NOT cover config txt, data DAT, or sound chains. Known open lists (unchanged): 158 unmatched retained descriptors, glass naming, ChallGlo blend, passes 4-5 RGB."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "The canonical index plus its verifier covers every per-vehicle satellite kind in the reference corpus.",
+        "probability": 0.03,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Per-car config txt, data DAT and sound-bank chains are outside the canonical index and need their own parity ticket.",
+        "probability": 0.84,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "A green verifier run closes vehicle extraction completeness for geometry, textures, liveries, matrix icons and GLBs.",
+        "probability": 0.2,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The 158 unmatched retained descriptors indicate vehicles missing from the extraction.",
+        "probability": 0.15,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1082,
+      "output_tokens": 88
+    }
+  }
+}

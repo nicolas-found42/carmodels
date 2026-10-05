@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "scope": "Independent archive/manifest byte, source-span, mip-record, PNG CRC/pixel, dimension and hash checks for the 35 car subset.",
+  "corpus_id": "e69a2afbd6db606d166e40bae32c436691e134722ad153200859961a5f517dab",
+  "checked_cars": 35,
+  "checked_extra_mip_levels": 94,
+  "checked_raw_plane_bytes": 75520,
+  "independently_decoded_pngs": 94,
+  "pcsx2_gs_tables_sha256": "a9a226297ede32b89177d7bdb04e9d8e21728e7d55799405f6112e97fe4969e8",
+  "validator_tool_sha256": "691b0f2f5f82166d648ecb1ceea148368a3d8588b2d59567100878aa2fe55d35",
+  "independent_methods": [
+    "archive+manifest exact bytes",
+    "raw mip offsets from parsed source",
+    "PNG CRC and decompression",
+    "separately implemented packed T8/T4 address permutations compared pixel-for-pixel against pinned PCSX2 page/block/column tables",
+    "direct format pixel conversion",
+    "source/output hashes"
+  ],
+  "limits": [
+    "Confirms the emitted static mapping and exact bytes; does not execute game, GS, emulator, or silicon.",
+    "The source/GS base-allocation and sampler-selector behavior remains unobserved."
+  ]
+}

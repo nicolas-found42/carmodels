@@ -1,0 +1,99 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "geometry_textures_liveries_glb",
+        "text": "Model PS2, 700+700 textures, 94 mips, 136 liveries, 136 matrix sets, 35 GLBs, all in canonical index with hashes."
+      },
+      {
+        "id": "config_data_sound",
+        "text": "Per-car config txt (11 files), data DAT, _shared sound banks with inheritance chains; in corpus manifests, not in canonical index."
+      },
+      {
+        "id": "render_fidelity",
+        "text": "Final game-render fidelity, materials, normals, winding, runtime trees; explicitly not asserted anywhere."
+      }
+    ],
+    "classes": [
+      {
+        "id": "verifier_covered",
+        "description": "Checked by verify_recovered_asset_index.py against producer receipts with negative controls. Example: model/texture/livery sha equality."
+      },
+      {
+        "id": "needs_ticket",
+        "description": "Real per-car content with no canonical parity check; needs a tracer ticket. Example: config txt and data DAT files."
+      },
+      {
+        "id": "explicitly_out",
+        "description": "Declared out of scope in index status/limits. Example: final render fidelity."
+      }
+    ],
+    "purpose": "sort per-vehicle content into verified, ticketed, or explicitly out of scope",
+    "context": "Vehicle completeness close-out; classes are mutually exclusive."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 3,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "verifier_covered": 1,
+        "needs_ticket": 1,
+        "explicitly_out": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "geometry_textures_liveries_glb",
+        "classification": "verifier_covered",
+        "probabilities": {
+          "verifier_covered": 1,
+          "needs_ticket": 0,
+          "explicitly_out": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "config_data_sound",
+        "classification": "needs_ticket",
+        "probabilities": {
+          "verifier_covered": 0,
+          "needs_ticket": 1,
+          "explicitly_out": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "render_fidelity",
+        "classification": "explicitly_out",
+        "probabilities": {
+          "verifier_covered": 0,
+          "needs_ticket": 0,
+          "explicitly_out": 1
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 728,
+      "output_tokens": 123
+    }
+  }
+}

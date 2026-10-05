@@ -1,0 +1,41 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {"verified": 3, "contradicted": 0, "unsupported": 0, "needs_review": 0},
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "On the type-2 CARS resource path, after the asynchronous read completes, FUN_00111cd0 obtains the compressed byte count, calls FUN_00101690 on the input buffer, replaces object field +0x40 with the decompressed output, and calls FUN_0022acc8.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.88, "says_nothing": 0.0, "contradicts": 0.12},
+      "confidence": 0.81,
+      "action": "auto",
+      "supporting_evidence": "00111cd0",
+      "same_subject": 0.8
+    },
+    {
+      "id": "claim1",
+      "claim": "FUN_00101690 treats the first 32-bit input word as decompressed output length and runs a zlib inflate stream over input bytes starting at offset 4.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.98, "says_nothing": 0.0, "contradicts": 0.02},
+      "confidence": 0.97,
+      "action": "auto",
+      "supporting_evidence": "00101690",
+      "same_subject": 0.86
+    },
+    {
+      "id": "claim2",
+      "claim": "The decompressed CARS PTG buffer uses the same measured size-prefix-plus-zlib wrapping profile as the archive's per-file extraction records.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.98, "says_nothing": 0.02, "contradicts": 0.0},
+      "confidence": 0.96,
+      "action": "auto",
+      "supporting_evidence": "archive_decoder",
+      "same_subject": 0.44
+    }
+  ],
+  "usage": {"input_tokens": 2067, "output_tokens": 404}
+}

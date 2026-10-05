@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "What counts as verified-full per vehicle, and what becomes tracer tickets?",
+    "evidence": "Canonical index (recovered/index.json) counts: original_model 35, glb 35, model textures 700 display + 700 raw, mip planes 94 + stored-alpha 94, original_icon 35 + raw/display 35 each, original_livery 136 + raw/display 136 each, original_matrix 136 + csm0-swap raw/display 136 each. Status: 'Asset/index integrity checked. Rendering-fidelity completion not asserted.' Independent verifier tools/verify_recovered_asset_index.py checks roster/index/disk set equality, per-car producer-record equality, every asset hash/size, plus negative controls (corrupt manifest hash, cross-car model swap, schema/fidelity/status/limits mutations). Reference corpus per car (spot-checked 49_COUPE, THUNDERBIRD_2002, FORTYNINE): config/ (11 txt: cardata, body, engine, gearbox, tyres_front/back, brake, control, overlay, setup, sound), model/*.PS2;1, graphics/icon + 4 liveries, data/*.DAT;1; sound banks in reference/ford/_shared/sounds with per-car inheritance chains in manifests. The canonical index does NOT cover config txt, data DAT, or sound chains. Known open lists (unchanged): 158 unmatched retained descriptors, glass naming, ChallGlo blend, passes 4-5 RGB.",
+    "priorities": "Code owns counts and hashes; judgments only route. A green verifier run plus gate closes geometry/textures/liveries/matrix/GLB. Config/data/sound get a parity ticket, not a silent pass. Render fidelity stays explicitly out. No new extraction without a failing check.",
+    "candidates": [
+      {
+        "id": "verify_then_ticket",
+        "description": "Run the independent verifier now; gate it; write one tracer ticket for config/data/sound parity per car."
+      },
+      {
+        "id": "index_counts_enough",
+        "description": "Accept index counts without running the verifier."
+      },
+      {
+        "id": "extract_more_first",
+        "description": "Extract more per-car assets before verifying."
+      },
+      {
+        "id": "claim_full",
+        "description": "Claim full vehicle extraction complete including render fidelity."
+      }
+    ],
+    "requirements": [
+      "Every claimed byte is hash-checked by code, not by judgment",
+      "Uncovered per-car content gets a ticket instead of a pass",
+      "Render fidelity stays explicitly unclaimed"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "verify_then_ticket",
+      "escaped": false,
+      "confidence": 1,
+      "probabilities": {
+        "claim_full": 0,
+        "ask_user": 0,
+        "investigate": 0,
+        "none": 0,
+        "verify_then_ticket": 1,
+        "extract_more_first": 0,
+        "index_counts_enough": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "verify_then_ticket",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "verify_then_ticket",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "verify_then_ticket",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "index_counts_enough",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "index_counts_enough",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "index_counts_enough",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "extract_more_first",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "extract_more_first",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "extract_more_first",
+        "requirement": 2,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "claim_full",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "claim_full",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "claim_full",
+        "requirement": 2,
+        "answer": "contradicted"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2611,
+      "output_tokens": 608
+    }
+  }
+}

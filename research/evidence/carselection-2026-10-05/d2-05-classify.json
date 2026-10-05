@@ -1,0 +1,97 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "slot102",
+        "text": "Ground-truth emulator screenshot slot102: Living Legends, thumbnail 1 highlighted (pale green Ford), VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS, STATUS UNLOCKED, ROOKIE 0%, BACK/OK prompts."
+      },
+      {
+        "id": "slot103",
+        "text": "Ground-truth emulator screenshot slot103: Living Legends, thumbnail 5 highlighted (white car), VEHICLE: THUNDERBIRD CONVERTIBLE, TRACK: DEER CREEK, TYPE: DRAFTING, STATUS UNLOCKED."
+      },
+      {
+        "id": "slot104",
+        "text": "Ground-truth emulator screenshot slot104 (vision transcript, model-generated): Living Legends, thumbnail 4 highlighted, VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE, STATUS UNLOCKED."
+      }
+    ],
+    "classes": [
+      {
+        "id": "labeled_vehicle",
+        "description": "Screen shows a highlighted car plus a readable VEHICLE label naming it. Example: VEHICLE: FORD '49 with thumbnail 1 highlighted."
+      },
+      {
+        "id": "unlabeled_strip",
+        "description": "Car strip visible but no VEHICLE detail text for the highlight. Example: theme screen before pressing Cross."
+      },
+      {
+        "id": "manual_review",
+        "description": "Label/highlight relationship ambiguous; needs a human look at the screenshot."
+      }
+    ],
+    "purpose": "confirm each capture carries a usable human label for the bridge",
+    "context": "Three ordinary-capture screens; classes are mutually exclusive."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 3,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "labeled_vehicle": 3
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "slot102",
+        "classification": "labeled_vehicle",
+        "probabilities": {
+          "labeled_vehicle": 1,
+          "unlabeled_strip": 0,
+          "manual_review": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "slot103",
+        "classification": "labeled_vehicle",
+        "probabilities": {
+          "labeled_vehicle": 1,
+          "unlabeled_strip": 0,
+          "manual_review": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "slot104",
+        "classification": "labeled_vehicle",
+        "probabilities": {
+          "labeled_vehicle": 0.97,
+          "unlabeled_strip": 0,
+          "manual_review": 0.03
+        },
+        "confidence": 0.96,
+        "margin": 0.94,
+        "top_probability": 0.97,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 800,
+      "output_tokens": 123
+    }
+  }
+}

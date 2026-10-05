@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the feasible headless path to the highlight variable",
+    "candidates": [
+      {
+        "id": "input_handler",
+        "text": "Static analysis: find the d-pad menu input handler and the variable it updates; verify live via PINE reads."
+      },
+      {
+        "id": "source_build",
+        "text": "Full PCSX2 source build + DebugServer patch for a TCP debug API."
+      },
+      {
+        "id": "blind_gui",
+        "text": "Drive the debugger GUI blind via RFB keys."
+      },
+      {
+        "id": "stop",
+        "text": "Record open; stop."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the feasible headless path to the highlight variable",
+    "exists": 0.89,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "input_handler",
+        "probability": 0.85,
+        "text": "Static analysis: find the d-pad menu input handler and the variable it updates; verify live via PINE reads."
+      },
+      {
+        "id": "source_build",
+        "probability": 0.15,
+        "text": "Full PCSX2 source build + DebugServer patch for a TCP debug API."
+      },
+      {
+        "id": "blind_gui",
+        "probability": 0,
+        "text": "Drive the debugger GUI blind via RFB keys."
+      },
+      {
+        "id": "stop",
+        "probability": 0,
+        "text": "Record open; stop."
+      }
+    ],
+    "usage": {
+      "input_tokens": 524,
+      "output_tokens": 66
+    }
+  }
+}

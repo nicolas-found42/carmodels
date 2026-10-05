@@ -1,0 +1,76 @@
+{
+  "capture_sha256": "2ecf3d10ef90586d79910ef7cc5562fd8b90b8f36607591f12d8f79c64989072",
+  "controls": [
+    {
+      "control": "source_hash",
+      "passed": true,
+      "expected_failure": "EE capture hash differs from joins",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "root_count",
+      "passed": true,
+      "expected_failure": "runtime root count differs",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "class_registry",
+      "passed": true,
+      "expected_failure": "runtime class registry does not resolve descriptor",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "geometry_id",
+      "passed": true,
+      "expected_failure": "runtime geometry ID differs",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "named_pair",
+      "passed": true,
+      "expected_failure": "runtime named pair differs",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "descriptor_parent",
+      "passed": true,
+      "expected_failure": "runtime descriptor parent differs",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "instance_parent",
+      "passed": true,
+      "expected_failure": "runtime instance parent differs",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "mutable_nonfinite",
+      "passed": true,
+      "expected_failure": "nonfinite runtime mutable transform",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "camera_nonfinite",
+      "passed": true,
+      "expected_failure": "nonfinite camera-relative vector",
+      "returncode": 1,
+      "optimized_python": true
+    },
+    {
+      "control": "short_memory",
+      "passed": true,
+      "expected_failure": "EE memory must be exactly 32 MiB",
+      "returncode": 1,
+      "optimized_python": true
+    }
+  ],
+  "failures": 0
+}

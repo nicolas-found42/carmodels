@@ -1,0 +1,49 @@
+{
+  "args": {
+    "query": "best starting emulator state for an ordinary-controller car-selection capture",
+    "candidates": [
+      {
+        "id": "slot98",
+        "text": "Slot 98: Select a Challenge Theme / Living Legends screen with six-car thumbnail strip, red car highlighted, OK prompt. 'Select a Challenge Theme' screen from Ford Racing 2 over a racetrack scene. Seven circular theme icons across upper middle: star (selected, gold), movie camera, SVT logo, trophy, paint palette, wrench, checkered flag. Title 'LIVING LEGENDS'. Six car thumbnails in a row below, each with a padlock badge (pale green, tan, light blue, brown, white, red cars); sixth red car highlighted with yellow border. Lower left 'ROOKIE 0%', lower right 'BACK' (triangle) and 'OK' (X) prompts. Visible text: SELECT A CHALLENGE THEME, FORD RACING 2, SVT, LIVING LEGENDS, ROOKIE 0%, BACK, OK. No car names or livery names readable."
+      },
+      {
+        "id": "slot99",
+        "text": "Slot 99: main menu, container boot default. Earlier state, requires navigating menus forward to reach any car selection."
+      },
+      {
+        "id": "slot100_live",
+        "text": "Slot 100 / current live state: paused Quick Race at 0 MPH, position 6/6, LAP 1/3. VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable."
+      }
+    ],
+    "top_k": 3
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best starting emulator state for an ordinary-controller car-selection capture",
+    "exists": 0.57,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "slot98",
+        "probability": 0.99,
+        "text": "Slot 98: Select a Challenge Theme / Living Legends screen with six-car thumbnail strip, red car highlighted, OK prompt. 'Select a Challenge Theme' screen from Ford Racing 2 over a racetrack scene. Seven circular theme icons across upper middle: star (selected, gold), movie camera, SVT logo, trophy, paint palette, wrench, checkered flag. Title 'LIVING LEGENDS'. Six car thumbnails in a row below, each with a padlock badge (pale green, tan, light blue, brown, white, red cars); sixth red car highlighted with yellow border. Lower left 'ROOKIE 0%', lower right 'BACK' (triangle) and 'OK' (X) prompts. Visible text: SELECT A CHALLENGE THEME, FORD RACING 2, SVT, LIVING LEGENDS, ROOKIE 0%, BACK, OK. No car names or livery names readable."
+      },
+      {
+        "id": "slot99",
+        "probability": 0.01,
+        "text": "Slot 99: main menu, container boot default. Earlier state, requires navigating menus forward to reach any car selection."
+      },
+      {
+        "id": "slot100_live",
+        "probability": 0,
+        "text": "Slot 100 / current live state: paused Quick Race at 0 MPH, position 6/6, LAP 1/3. VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable."
+      }
+    ],
+    "usage": {
+      "input_tokens": 862,
+      "output_tokens": 65
+    }
+  }
+}

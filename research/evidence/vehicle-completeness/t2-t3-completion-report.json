@@ -1,0 +1,96 @@
+{
+  "tickets": [
+    "T2",
+    "T3"
+  ],
+  "status": "both closed",
+  "commands": [
+    {
+      "cmd": "python3 tools/verify_config_data_sound.py",
+      "result": "VERIFY OK",
+      "exit": 0
+    },
+    {
+      "cmd": "python3 tools/resolve_display_names.py",
+      "result": "VERIFY OK",
+      "exit": 0,
+      "side_effect": "bridge-three-screens.json updated on pass"
+    },
+    {
+      "cmd": "python3 tools/test_retained_packet_evidence.py",
+      "result": "RETAINED PACKET EVIDENCE OK",
+      "exit": 0
+    },
+    {
+      "cmd": "python3 tools/verify_recovered_asset_index.py",
+      "result": "VERIFY OK (T1 unchanged)"
+    }
+  ],
+  "t2": {
+    "command": "python3 tools/verify_config_data_sound.py",
+    "result": "VERIFY OK",
+    "cars": 35,
+    "config_files_checked": 385,
+    "data_files_checked": 35,
+    "sound_chains_resolved": 35,
+    "manifest_files_checked": 626,
+    "negative_controls_rejected": [
+      "mutated_config_hash",
+      "cross_car_config_swap",
+      "missing_shared_banks",
+      "manifest_sha_tamper"
+    ],
+    "jev_gate": "escalate (5/5 claims verified, 0 contradicted; blast_radius limiting; confidence_below_review)",
+    "canonical_index_sha256": "9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe",
+    "render_fidelity_complete": false
+  },
+  "t3": {
+    "command": "python3 tools/resolve_display_names.py",
+    "result": "VERIFY OK",
+    "pairs": [
+      {
+        "capture": "slot102",
+        "enum": "TXT_CARS_COUPE_1949",
+        "resolved": "FORD '49"
+      },
+      {
+        "capture": "slot103",
+        "enum": "TXT_CARS_THUNDERBIRD_2002",
+        "resolved": "THUNDERBIRD CONVERTIBLE"
+      },
+      {
+        "capture": "slot104",
+        "enum": "TXT_CARS_FORTYNINE",
+        "resolved": "FORTYNINE CONCEPT"
+      }
+    ],
+    "apostrophe_byte_exact_from_archive": true,
+    "bridge_updated_on_pass": true,
+    "jev_gate": "escalate (5/5 claims verified, 0 contradicted; blast_radius limiting; confidence_below_review)",
+    "render_fidelity_complete": false
+  },
+  "jev_battery": {
+    "tools": 12,
+    "calls": 24,
+    "gates": "escalate (acceptable recorded outcome)",
+    "contradicted_real_claims": 0,
+    "contradicted_lines": "only the deliberately-false overclaim controls (render fidelity / 136-entry table)"
+  },
+  "new_tools": [
+    "tools/verify_config_data_sound.py",
+    "tools/resolve_display_names.py",
+    "tools/battery_t2_t3.py"
+  ],
+  "decompilation_leads": {
+    "translat_loader": "FUN_001bb4b8 / FUN_001bbaf0 (../fr2/source/misc/translat.c) load language\\tlate_<lang>.dat and key it by INGAME text enum",
+    "sound_bank_table": "static descriptors 'sounds\\car1_snd:0:0:5'..'car8_snd:7:35:5' (base index:offset:count) + '%s.msh'/'%s.msb' templates in soundman",
+    "config_keywords": "CAR_TYPE/CAR_SOUND_TYPE/CAR_BODY_TYPE/CAR_ENGINE_TYPE/CAR_SETUP_TYPE/CAR_GROUP_TYPE/CAR_PERFORMANCE/CAR_MODEL_YEAR/VALID_LIVERY/ICON_FILENAME present in the executable",
+    "note": "corroborating semantics only; verifiers check bytes against S, not decompilation"
+  },
+  "unresolved": [
+    "isolated EE per-screen selector word",
+    "reconciling the CAR_SND_CARn vs SOUNDBANK_TYPE carN index offset in the executable soundman table",
+    "136-entry display-name table (out of T3 scope)"
+  ],
+  "render_fidelity_complete": false
+}

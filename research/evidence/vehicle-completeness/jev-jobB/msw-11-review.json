@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Close the stored-integer hypothesis as negative on the sweep evidence.",
+    "diff": "+ 6 screenshot-verified slots (pos1,2,3,6,6,5)\n+ TEST 1: 0 words equal position at any width\n+ DAT words do not track position; differ even at same position\n+ record open; float encoding noted as the one untested form",
+    "tests": "pause-control 0 diffs; heap base identical"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.25,
+    "scores": {
+      "correctness": {
+        "score": 1.09,
+        "confidence": 0.51,
+        "probabilities": {
+          "0": 0.12,
+          "1": 0.67,
+          "2": 0.21
+        }
+      },
+      "spec_match": {
+        "score": 1.42,
+        "confidence": 0.13,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.43,
+          "2": 0.49
+        }
+      },
+      "test_gap": {
+        "score": 1.62,
+        "confidence": 0.43,
+        "probabilities": {
+          "0": 0.09,
+          "1": 0.21,
+          "2": 0.7
+        }
+      },
+      "blast_radius": {
+        "score": 0.27,
+        "confidence": 0.59,
+        "probabilities": {
+          "0": 0.81,
+          "1": 0.1,
+          "2": 0.08
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.58925,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "spec_match"
+    ],
+    "usage": {
+      "input_tokens": 803,
+      "output_tokens": 79
+    }
+  }
+}

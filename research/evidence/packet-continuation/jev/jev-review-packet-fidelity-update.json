@@ -1,0 +1,21 @@
+{
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "truncated": false,
+  "safe_to_apply": 0.5,
+  "scores": {
+    "correctness": {"score": 1.75, "confidence": 0.63, "probabilities": {"0": 0.01, "1": 0.23, "2": 0.76}},
+    "spec_match": {"score": 1.77, "confidence": 0.65, "probabilities": {"0": 0.01, "1": 0.21, "2": 0.78}},
+    "test_gap": {"score": 0.76, "confidence": 0.25, "probabilities": {"0": 0.37, "1": 0.5, "2": 0.13}},
+    "blast_radius": {"score": 0.99, "confidence": 0.61, "probabilities": {"0": 0.13, "1": 0.75, "2": 0.12}}
+  },
+  "weights": {"correctness": 0.4, "spec_match": 0.3, "test_gap": 0.15, "blast_radius": 0.15},
+  "thresholds": {"auto_accept": 0.8, "review_at": 0.5, "composite_floor": 0.7},
+  "action": "escalate",
+  "composite": 0.78425,
+  "reason_codes": ["confidence_below_review"],
+  "limiting_rubrics": ["test_gap"],
+  "usage": {"input_tokens": 1268, "output_tokens": 79},
+  "handling": "Retained the escalation. The code and docs are local research changes with deterministic parser checks; no favorable Jev rerun was used. Human review remains appropriate for whether the added color accounting is sufficiently tested and for final semantic claims."
+}

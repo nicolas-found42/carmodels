@@ -1,0 +1,72 @@
+case MsgSaveState:
+			{
+				if (!VMManager::HasValidVM())
+					goto error;
+				if (!SafetyChecks(buf_cnt, 1, ret_cnt, 0, buf_size)) [[unlikely]]
+					goto error;
+				Host::RunOnCPUThread([slot = FromSpan<u8>(buf, buf_cnt)] {
+					VMManager::SaveStateToSlot(slot, true, [slot](const std::string& error) {
+						SaveState_ReportSaveErrorOSD(error, slot);
+					});
+				});
+				buf_cnt += 1;
+				break;
+			}
+case MsgLoadState:
+			{
+				if (!VMManager::HasValidVM())
+					goto error;
+				if (!SafetyChecks(buf_cnt, 1, ret_cnt, 0, buf_size)) [[unlikely]]
+					goto error;
+				Host::RunOnCPUThread([slot = FromSpan<u8>(buf, buf_cnt)] {
+					Error state_error;
+					if (!VMManager::LoadStateFromSlot(slot, false, &state_error))
+						SaveState_ReportLoadErrorOSD(state_error.GetDescription(), slot, false);
+				});
+				buf_cnt += 1;
+				break;
+			}
+case MsgStatus:
+			{
+				if (!SafetyChecks(buf_cnt, 0, ret_cnt, 4, buf_size)) [[unlikely]]
+					goto error;
+				EmuStatus status;
+
+				switch (VMManager::GetState())
+				{
+					case VMState::Running:
+						status = EmuStatus::Running;
+						break;
+					case VMState::Paused:
+						status = EmuStatus::Paused;
+						break;
+					default:
+						status = EmuStatus::Shutdown;
+						break;
+				}
+
+				ToResultVector(ret_buffer, status, ret_cnt);
+				ret_cnt += 4;
+				break;
+			}
+			default:
+			{
+			error:
+				return IPCBuffer{5, MakeFailIPC(ret_buffer)};
+			}
+		}
+	}
+	return IPCBuffer{(int)ret_cnt, MakeOkIPC(ret_buffer, ret_cnt)};
+}
+
+case MsgVersion:
+			{
+				u32 size = strlen(BuildVersion::GitRev) + 7;
+				if (!SafetyChecks(buf_cnt, 0, ret_cnt, size + 4, buf_size)) [[unlikely]]
+					goto error;
+				ToResultVector(ret_buffer, size, ret_cnt);
+				ret_cnt += 4;
+				snprintf(reinterpret_cast<char*>(&ret_buffer[ret_cnt]), size, "PCSX2 %s", BuildVersion::GitRev);
+				ret_cnt += size;
+				break;
+			}

@@ -1,0 +1,86 @@
+{
+  "args": {
+    "passage_a": "Method for the selector: decompilation-first. Read FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10 to derive the exact struct offset, then read that address in the three existing EE images.",
+    "passage_b": "Method for the selector: runtime-first. Capture more car-selection screens with varied highlight and livery positions and diff the EE images.",
+    "aspects": [
+      "what it can name",
+      "cost",
+      "risk of noise",
+      "relies on existing evidence"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "contradicts": 0.12,
+        "same_fact": 0.03,
+        "different_facts": 0.85
+      },
+      "confidence": 0.76,
+      "margin": 0.73,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "what it can name",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.05,
+          "same_fact": 0.06,
+          "different_facts": 0.89
+        },
+        "confidence": 0.84,
+        "margin": 0.8300000000000001,
+        "decision": "auto"
+      },
+      {
+        "aspect": "cost",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0,
+          "same_fact": 0,
+          "different_facts": 1
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "decision": "auto"
+      },
+      {
+        "aspect": "risk of noise",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.03,
+          "same_fact": 0,
+          "different_facts": 0.97
+        },
+        "confidence": 0.96,
+        "margin": 0.94,
+        "decision": "auto"
+      },
+      {
+        "aspect": "relies on existing evidence",
+        "relation": "contradicts",
+        "probabilities": {
+          "contradicts": 0.52,
+          "same_fact": 0.05,
+          "different_facts": 0.43
+        },
+        "confidence": 0.27,
+        "margin": 0.09000000000000002,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 1004,
+      "output_tokens": 221
+    }
+  }
+}

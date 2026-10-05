@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "The container's Xvfb with xdotool (small image change).",
+    "passage_b": "A PCSX2 source build + DebugServer patch (large).",
+    "aspects": [
+      "setup cost",
+      "reliability",
+      "reversibility"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "contradicts": 0,
+        "different_facts": 1,
+        "same_fact": 0
+      },
+      "confidence": 1,
+      "margin": 1,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "setup cost",
+        "relation": "contradicts",
+        "probabilities": {
+          "contradicts": 0.5,
+          "different_facts": 0.35,
+          "same_fact": 0.15
+        },
+        "confidence": 0.24,
+        "margin": 0.15000000000000002,
+        "decision": "review"
+      },
+      {
+        "aspect": "reliability",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0,
+          "different_facts": 1,
+          "same_fact": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "decision": "auto"
+      },
+      {
+        "aspect": "reversibility",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.01,
+          "different_facts": 0.99,
+          "same_fact": 0
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 817,
+      "output_tokens": 177
+    }
+  }
+}

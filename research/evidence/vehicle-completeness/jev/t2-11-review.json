@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Implement tools/verify_config_data_sound.py: per-car config x11 txt set equality vs corpus manifests, every file sha256 vs manifest, data DAT present per car, sound inheritance chain per car resolves to an existing bank in reference/ford/_shared/sounds; plus at least two negative controls (mutated hash accepted nowhere; cross-car config swap rejected).",
+    "diff": "--- /dev/null\n+++ b/tools/verify_config_data_sound.py\n+#!/usr/bin/env python3\n+\"\"\"T2 \u2014 config / data-DAT / sound parity verifier (independent, destination-side).\n+\n+Parity audit for the per-car config extracts, the per-car GAMEPLAY data DAT, and\n+the per-car sound-bank inheritance chain.\n+\n+It is NOT a re-extraction: it reuses build_reference.py's parsing primitives\n+(block_spans / clean_block / field + the col-0 block patterns) and asserts that\n+the corpus on disk equals what those parsers derive from the shared source\n+configs in S, that every recorded file sha256 matches the manifest, that each\n+car carries exactly one data DAT, and that each car's sound.txt :INHERIT_TYPE\n+resolves one hop to a base bank whose carN_snd.msb/.msh exist in _shared/sounds.\n+\n+Scope: 35 cars x config (11 files) + data DAT + sound chain. Geometry/textures/\n+liveries/GLB are closed by T1. Render fidelity stays out.\n+\n+Receipt: research/evidence/vehicle-completeness/t2-config-data-sound-validation.json\n+Exit 0 + \"VERIFY OK\" only when every equality holds and all negative controls reject.\n+\"\"\"\n+import hashlib\n+import json\n+import re\n+import sys\n+from pathlib import Path\n+\n+ROOT = Path(__file__).resolve().parents[1]\n+sys.path.insert(0, str(ROOT / \"tools\"))\n+import build_reference as B  # parsing primitives + constants (NOT re-derived)\n+\n+CORPUS = ROOT / \"reference/ford\"\n+SRC = B.SRC\n+OUT = ROOT / \"research/evidence/vehicle-completeness/t2-config-data-sound-validation.json\"\n+\n+CONFIG_NAMES = [\"cardata\", \"body\", \"engine\", \"setup\", \"sound\", \"gearbox\",\n+                \"brake\", \"tyres_front\", \"tyres_back\", \"control\", \"overlay\"]\n+SHARED_CONFIG_NAMES = [Path(r).name for r in B.SHARED_CONFIG]\n+BASE_BANK_RX = rb\"(?m)^:TYPE[ \\t]+(CAR_SND_CAR\\d+)[ \\t]*\\r?$([\\s\\S]{0,400}?):SOUNDBANK_TYPE[ \\t]+(CAR\\d+_SOUND_FILE)\"\n+\n+\n+def sha256_bytes(data: bytes) -> str:\n+    return hashlib.sha256(data).hexdigest()\n+\n+\n+def read_bytes(path: Path, overrides):\n+    \"\"\"Bytes as presented to the checker: an override simulates a mutated corpus.\"\"\"\n+    key = str(path)\n+    if overrides and key in overrides:\n+        return overrides[key]\n+    return path.read_bytes()\n+\n+\n+def check(root: Path, overrides=None, hide=None):\n+    \"\"\"Raise ValueError on any divergence; return the parity result dict on success.\n+\n+    overrides: path -> bytes, simulating mutated file content.\n+    hide: set of paths treated as absent on disk (existence checks).\n+    \"\"\"\n+    overrides = overrides or {}\n+    hide = {str(h) for h in (hide or set())}\n+\n+    def exists(path: Path) -> bool:\n+        return str(path) not in hide and path.is_file()\n+\n+    corpus = root / \"reference/ford\"\n+    if not SRC.is_dir():\n+        raise ValueError(f\"source tree missing: {SRC}\")\n+\n+    # ---- derive expected config bytes from S, via build_reference's parsers ----\n+    cardata_bytes = (SRC / f\"{B.CONFIG_DIR}/CARDATA.DAT;1\").read_bytes()\n+    car_spans = B.block_spans(cardata_bytes, B.CAR_TYPE_RX)\n+    cars = sorted(car_spans)\n+    if len(cars) != 35:\n+        raise ValueError(f\"expected 35 CARDATA cars, parsed {len(cars)}\")\n+\n+    parsed = {}\n+    for name, (rel, pat, _field) in B.BLOCK_SOURCES.items():\n+        data = (SRC / rel).read_bytes()\n+        parsed[name] = (rel, data, B.block_spans(data, pat))\n+    tyre_rel, tyre_pat = B.TYRE_SOURCE\n+    tyre_data = (SRC / tyre_rel).read_bytes()\n+    tyre_spans = B.block_spans(tyre_data, tyre_pat)\n+\n+    # base sound blocks: CAR_SND_CARn -> bank stem  (same rule as build_reference)\n+    sdata = (SRC / B.BLOCK_SOURCES[\"sound\"][0]).read_bytes()\n+    base_bank = {}\n+    for m in re.finditer(BASE_BANK_RX, sdata):\n+        base_bank[m.group(1).decode()] = \"car\" + m.group(3).decode()[3] + \"_snd\"\n+\n+    # ---- shared files must be present ----\n+    for name in SHARED_CONFIG_NAMES:\n+        if not exists(corpus / \"_shared/config\" / name):\n+            raise ValueError(f\"missing shared config {name}\")\n+\n+    config_files_checked = 0\n+    data_files_checked = 0\n+    sound_chains = 0\n+    manifest_files_checked = 0\n+\n+    for code in cars:\n+        s, e = car_spans[code]\n+        cardata_block = cardata_bytes[s:e]\n+        cdir = corpus / \"cars\" / code\n+\n+        # expected per-car config bytes from S\n+        expected = {\"cardata\": B.clean_block(cardata_block)}\n+        for name, (rel, _data, spans) in parsed.items():\n+            key = B.field(cardata_block, B.BLOCK_SOURCES[name][2])\n+            if key is None or key not in spans:\n+                raise ValueError(f\"{code}: {name} type {key!r} unresolved\")\n+            expected[name] = B.clean_block(parsed[name][1][spans[key][0]:spans[key][1]])\n+        for side, field_name in ((\"tyres_front\", \"CAR_FRONT_TYRE_TYPE\"),\n+                                 (\"tyres_back\", \"CAR_BACK_TYRE_TYPE\")):\n+            key = B.field(cardata_block, field_name)\n+            if key is None or key not in tyre_spans:\n+                raise ValueError(f\"{code}: {side} type {key!r} unresolved\")\n+            expected[side] = B.clean_block(tyre_data[tyre_spans[key][0]:tyre_spans[key][1]])\n+\n+        # (1) config x11 txt set equality on disk\n+        actual_names = {p.name for p in (cdir / \"config\").iterdir()} if (cdir / \"config\").is_dir() else set()\n+        want_names = {f\"{n}.txt\" for n in CONFIG_NAMES}\n+        if actual_names != want_names:\n+            raise ValueError(f\"{code}: config file set mismatch {sorted(actual_names)}\")\n+\n+        # (2) each config file equals the S-derived bytes (content + sha256), override-aware\n+        for name in CONFIG_NAMES:\n+            path = cdir / \"config\" / f\"{name}.txt\"\n+            got = read_bytes(path, overrides)\n+            if got != expected[name]:\n+                raise ValueError(f\"{code}: config/{name}.txt != S-derived block\")\n+            if sha256_bytes(got) != sha256_bytes(expected[name]):\n+                raise ValueError(f\"{code}: config/{name}.txt sha256 mismatch\")\n+            config_files_checked += 1\n+\n+        # (3) exactly one data DAT, named by OWN_GAMEPLAY\n+        data_dir = cdir / \"data\"\n+        data_files = sorted(p.name for p in data_dir.iterdir()) if data_dir.is_dir() else []\n+        if data_files != [B.OWN_GAMEPLAY[code]]:\n+            raise ValueError(f\"{code}: data DAT set {data_files} != [{B.OWN_GAMEPLAY[code]}]\")\n+        data_files_checked += 1\n+\n+        # (4) sound inheritance chain resolves to an existing shared bank\n+        sound_txt = read_bytes(cdir / \"config/sound.txt\", overrides)\n+        m = re.search(rb\"(?m)^:INHERIT_TYPE[ \\t]+(\\S+)\", sound_txt)\n+        if not m:\n+            raise ValueError(f\"{code}: no :INHERIT_TYPE in sound.txt\")\n+        inherit = m.group(1).decode()\n+        bank = base_bank.get(inherit)\n+        if bank is None:\n+            raise ValueError(f\"{code}: :INHERIT_TYPE {inherit} has no base bank\")\n+        for ext in (\".msb;1\", \".msh;1\"):\n+            if not exists(corpus / \"_shared/sounds\" / f\"{bank}{ext}\"):\n+                raise ValueError(f\"{code}: shared bank {bank}{ext} missing\")\n+        sound_chains += 1\n+\n+        # (5) manifest records every file with a matching sha256 (disk == manifest)\n+        man = read_bytes(cdir / \"manifest.json\", overrides)\n+        doc = json.loads(man)\n+        if doc.get(\"car_code\") != code:\n+            raise ValueError(f\"{code}: manifest car_code mismatch\")\n+        recorded = {f[\"dst\"] for f in doc[\"files\"]}\n+        on_disk = {p.relative_to(corpus).as_posix()\n+                   for p in cdir.rglob(\"*\")\n+                   if p.is_file() and p.name not in (\"manifest.json\", \"manifest.md\")}\n+        if recorded != on_disk:\n+            raise ValueError(f\"{code}: manifest file set != disk file set\")\n+        for f in doc[\"files\"]:\n+            p = corpus / f[\"dst\"]\n+            d = read_bytes(p, overrides)\n+            if len(d) != f[\"bytes\"] or sha256_bytes(d) != f[\"sha256\"]:\n+                raise ValueError(f\"{code}: manifest hash/size mismatch {f['dst']}\")\n+            manifest_files_checked += 1\n+\n+        # (5b) manifest sound hint consistent with the resolved chain\n+        hint = (doc.get(\"sound\") or {}).get(\"shared_bank_hint\")\n+        if hint and bank not in hint:\n+            raise ValueError(f\"{code}: manifest sound hint inconsistent with chain\")\n+\n+    if config_files_checked != 35 * 11:\n+        raise ValueError(f\"config files checked {config_files_checked} != 385\")\n+    if data_files_checked != 35 or sound_chains != 35:\n+        raise ValueError(\"data/sound car count mismatch\")\n+\n+    return {\n+        \"cars\": len(cars),\n+        \"config_files_checked\": config_files_checked,\n+        \"config_set_equality\": True,\n+        \"config_s_derived_content_equality\": True,\n+        \"data_files_checked\": data_files_checked,\n+        \"sound_chains_resolved\": sound_chains,\n+        \"shared_config_files_present\": len(SHARED_CONFIG_NAMES),\n+        \"manifest_files_checked\": manifest_files_checked,\n+        \"manifest_disk_parity\": True,\n+    }\n+\n+\n+def main() -> int:\n+    root = ROOT\n+    result = check(root)\n+    result[\"result\"] = \"VERIFY OK\"\n+\n+    # ---- negative controls: each mutation must be rejected ----\n+    cars = sorted(json.loads((CORPUS / \"inventory.json\").read_text())[\"cars\"])\n+\n+    def rejects(label, overrides, marker, hide=None):\n+        try:\n+            check(root, overrides, hide=hide)\n+        except ValueError as e:\n+            if marker not in str(e):\n+                raise ValueError(f\"control {label}: rejected for the wrong reason: {e}\")\n+            result[f\"control_{label}_rejected\"] = True\n+            return\n+        raise ValueError(f\"control {label}: mutation ACCEPTED\")\n+\n+    # NC1 mutated config hash/content\n+    c0 = CORPUS / f\"cars/{cars[0]}/config/cardata.txt\"\n+    mutated = bytearray(c0.read_bytes())\n+    mutated[-2] ^= 0x01\n+    rejects(\"mutated_config_hash\", {str(c0): bytes(mutated)}, \"!= S-derived block\")\n+\n+    # NC2 cross-car config swap\n+    c1 = CORPUS / f\"cars/{cars[1]}/config/cardata.txt\"\n+    a0, a1 = c0.read_bytes(), c1.read_bytes()\n+    rejects(\"cross_car_config_swap\", {str(c0): a1, str(c1): a0}, \"!= S-derived block\")\n+\n+    # NC3 missing shared sound bank referenced by a resolved chain\n+    base_snd = json.loads((CORPUS / f\"cars/{cars[0]}/manifest.json\").read_text())[\"sound\"][\"shared_bank_hint\"]\n+    bank0 = base_snd.split(\".msb\")[0]\n+    rejects(\"missing_shared_banks\",\n+            None,\n+            \"shared bank\",\n+            hide={CORPUS / \"_shared/sounds\" / f\"{bank0}.msb;1\",\n+                  CORPUS / \"_shared/sounds\" / f\"{bank0}.msh;1\"})\n+\n+    # NC4 manifest sha tamper (recorded hash no longer matches disk)\n+    m0 = CORPUS / f\"cars/{cars[0]}/manifest.json\"\n+    doc = json.loads(m0.read_bytes())\n+    doc[\"files\"][0][\"sha256\"] = \"0\" * 64\n+    rejects(\"manifest_sha_tamper\", {str(m0): (json.dumps(doc, indent=1) + \"\\n\").encode()},\n+            \"manifest hash/size mismatch\")\n+\n+    # NC5 manifest tamper via hash override is covered above; broken-chain NC3 covers bank lookup.\n+    result[\"controls\"] = [k for k in result if k.startswith(\"control_\")]\n+    result[\"controls_all_rejected\"] = all(result[k] for k in result[\"controls\"])\n+    result[\"render_fidelity_complete\"] = False\n+    result[\"scope\"] = (\"35 cars x config (11 files) + data DAT + sound chain; \"\n+                       \"geometry/textures/liveries/GLB out (T1), render fidelity out\")\n+    OUT.parent.mkdir(parents=True, exist_ok=True)\n+    OUT.write_text(json.dumps(result, indent=2) + \"\\n\")\n+    print(json.dumps(result, indent=2))\n+    print(\"VERIFY OK\" if result[\"controls_all_rejected\"] else \"VERIFY FAILED\")\n+    return 0 if result[\"controls_all_rejected\"] else 1\n+\n+\n+if __name__ == \"__main__\":\n+    sys.exit(main())\n+",
+    "tests": "RETAINED PACKET EVIDENCE OK\n"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.43,
+    "scores": {
+      "correctness": {
+        "score": 1.38,
+        "confidence": 0.25,
+        "probabilities": {
+          "0": 0.06,
+          "1": 0.5,
+          "2": 0.44
+        }
+      },
+      "spec_match": {
+        "score": 1.91,
+        "confidence": 0.86,
+        "probabilities": {
+          "0": 0,
+          "1": 0.09,
+          "2": 0.91
+        }
+      },
+      "test_gap": {
+        "score": 0.82,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.46,
+          "1": 0.27,
+          "2": 0.27
+        }
+      },
+      "blast_radius": {
+        "score": 0.43,
+        "confidence": 0.36,
+        "probabilities": {
+          "0": 0.65,
+          "1": 0.27,
+          "2": 0.08
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.76875,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 4179,
+      "output_tokens": 79
+    }
+  }
+}

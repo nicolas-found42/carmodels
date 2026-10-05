@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Adopt round-3 decisions: define 'resolved' for B, shape C, keep the ceiling.",
+    "diff": "+ B resolved := named decompilation-reachable address OR evidenced recorded-open\n+ C delivered as a new tool + ticket T4 (mirrors T2/T3)\n+ order A -> B -> C; render_fidelity_complete stays false throughout",
+    "tests": "existing verifiers stay green: verify_config_data_sound VERIFY OK; resolve_display_names VERIFY OK; test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.36,
+    "scores": {
+      "correctness": {
+        "score": 1.74,
+        "confidence": 0.61,
+        "probabilities": {
+          "0": 0.04,
+          "1": 0.19,
+          "2": 0.77
+        }
+      },
+      "spec_match": {
+        "score": 1.72,
+        "confidence": 0.57,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.26,
+          "2": 0.73
+        }
+      },
+      "test_gap": {
+        "score": 1.38,
+        "confidence": 0.08,
+        "probabilities": {
+          "0": 0.12,
+          "1": 0.37,
+          "2": 0.51
+        }
+      },
+      "blast_radius": {
+        "score": 1.57,
+        "confidence": 0.35,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.38,
+          "2": 0.6
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.6847500000000001,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 817,
+      "output_tokens": 79
+    }
+  }
+}

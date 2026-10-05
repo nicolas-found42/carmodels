@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the file group most important to keep in git",
+    "candidates": [
+      {
+        "id": "corpus",
+        "text": "G6 reference corpus 65M: the per-car deliverable everything joins against."
+      },
+      {
+        "id": "receipts",
+        "text": "G8 receipts JSON: sha256-pinned validation evidence and tickets."
+      },
+      {
+        "id": "tools",
+        "text": "G9 tools and verifier scripts."
+      },
+      {
+        "id": "dumps",
+        "text": "G3 savestates and unpacked memory dumps (960M)."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the file group most important to keep in git",
+    "exists": 0.39,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "tools",
+        "probability": 0.69,
+        "text": "G9 tools and verifier scripts."
+      },
+      {
+        "id": "receipts",
+        "probability": 0.24,
+        "text": "G8 receipts JSON: sha256-pinned validation evidence and tickets."
+      },
+      {
+        "id": "corpus",
+        "probability": 0.07,
+        "text": "G6 reference corpus 65M: the per-car deliverable everything joins against."
+      },
+      {
+        "id": "dumps",
+        "probability": 0,
+        "text": "G3 savestates and unpacked memory dumps (960M)."
+      }
+    ],
+    "usage": {
+      "input_tokens": 525,
+      "output_tokens": 65
+    }
+  }
+}

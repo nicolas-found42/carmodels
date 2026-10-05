@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "Is T2 (per-car config / data-DAT / sound parity) complete enough to close?",
+    "evidence": "Ticket T2 acceptance: Implement tools/verify_config_data_sound.py: per-car config x11 txt set equality vs corpus manifests, every file sha256 vs manifest, data DAT present per car, sound inheritance chain per car resolves to an existing bank in reference/ford/_shared/sounds; plus at least two negative controls (mutated hash accepted nowhere; cross-car config swap rejected).\n\nVerifier run log:\n{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n\n\nRegression log:\nRETAINED PACKET EVIDENCE OK\n\n\nThe checker reuses build_reference.py parsing primitives (block_spans/clean_block/field) rather than re-deriving formats. Canonical index sha256 9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe unchanged. render_fidelity_complete stays false.",
+    "priorities": "Close only on real tool output; never overclaim; render_fidelity_complete stays false; negative controls must reject; do not re-derive config formats already parsed by build_reference.py.",
+    "candidates": [
+      {
+        "id": "close_t2",
+        "description": "Close T2: parity verified over 35 cars with four rejected negative controls."
+      },
+      {
+        "id": "keep_open",
+        "description": "Keep T2 open until runtime proves it loads the same bytes."
+      },
+      {
+        "id": "widen_first",
+        "description": "Extend to shared gameplay/config before closing."
+      }
+    ],
+    "requirements": [
+      "Rests on real checker output",
+      "Includes at least two rejected negative controls",
+      "Does not assert render fidelity"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "close_t2",
+      "escaped": false,
+      "confidence": 1,
+      "probabilities": {
+        "close_t2": 1,
+        "widen_first": 0,
+        "none": 0,
+        "investigate": 0,
+        "ask_user": 0,
+        "keep_open": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "close_t2",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "close_t2",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "close_t2",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "keep_open",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "keep_open",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "keep_open",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "widen_first",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "widen_first",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "widen_first",
+        "requirement": 2,
+        "answer": "unknown"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2304,
+      "output_tokens": 455
+    }
+  }
+}

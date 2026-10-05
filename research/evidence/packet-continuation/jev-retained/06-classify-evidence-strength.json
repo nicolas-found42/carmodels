@@ -1,0 +1,211 @@
+{
+ "args": {
+  "items": [
+   {
+    "id": "s1",
+    "text": "All ten 0x6c058000 markers parse strictly and each referenced six-byte and four-byte plane is byte-equal to exactly one source header."
+   },
+   {
+    "id": "s2",
+    "text": "GIF transfers 406 to 409 carry the same vertex counts, PRIM values and ADC sequences as the retained blocks for COBRA headers 320 to 323."
+   },
+   {
+    "id": "s3",
+    "text": "The retained buffers prove that FUN_00128e88 ran during the dumped frame and produced transfer 406."
+   },
+   {
+    "id": "s4",
+    "text": "Header 149 rather than header 261 is the producer of the seven-vertex alpha-102 packet."
+   },
+   {
+    "id": "s5",
+    "text": "A one-bit flip of a referenced plane byte leaves zero byte-equal source headers."
+   },
+   {
+    "id": "s6",
+    "text": "The extra ADC bits beyond the source W lane are the result of back-face culling in the VU1 program."
+   },
+   {
+    "id": "s7",
+    "text": "Uploads of 32x32 PSMT8 tiles in the menu98 dump are exact substrings of GRAPHICS/GAME/MATRIX PTG files."
+   },
+   {
+    "id": "s8",
+    "text": "The human livery label for numeric texture selector 2 of the Cobra is established."
+   }
+  ],
+  "classes": [
+   {
+    "id": "deterministic_byte_fact",
+    "description": "A statement fully established by an exact byte comparison, count or hash that code reproduced, including negative controls."
+   },
+   {
+    "id": "bounded_content_join",
+    "description": "A statement that two captures carry matching structured content (counts, sequences, positions) without proving that one produced the other."
+   },
+   {
+    "id": "execution_claim_unproven",
+    "description": "A statement that a specific code path executed or produced a specific output, which needs a live trace to prove."
+   },
+   {
+    "id": "semantic_unresolved",
+    "description": "A statement assigning meaning, naming or an exact rule that no current evidence settles."
+   },
+   {
+    "id": "manual_review",
+    "description": "Genuinely ambiguous statements that need a person to decide."
+   }
+  ],
+  "purpose": "Label each continuation claim by the strength of the evidence that currently supports it.",
+  "context": "Retained EE buffers were captured in separate savestates from the GSDump; code compared bytes but nothing traced execution."
+ },
+ "result": {
+  "tool": "jev_classify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "summary": {
+   "items": 8,
+   "auto": 3,
+   "review": 5,
+   "invalid_response": 0,
+   "by_class": {
+    "deterministic_byte_fact": 2,
+    "bounded_content_join": 2,
+    "execution_claim_unproven": 2,
+    "semantic_unresolved": 2
+   }
+  },
+  "thresholds": {
+   "auto_accept": 0.85,
+   "minimum_margin": 0.5
+  },
+  "results": [
+   {
+    "id": "s1",
+    "classification": "deterministic_byte_fact",
+    "probabilities": {
+     "deterministic_byte_fact": 0.62,
+     "bounded_content_join": 0.35,
+     "execution_claim_unproven": 0.01,
+     "semantic_unresolved": 0.01,
+     "manual_review": 0.01
+    },
+    "confidence": 0.51,
+    "margin": 0.27,
+    "top_probability": 0.62,
+    "decision": "review"
+   },
+   {
+    "id": "s2",
+    "classification": "bounded_content_join",
+    "probabilities": {
+     "deterministic_byte_fact": 0.15000000000000002,
+     "bounded_content_join": 0.85,
+     "execution_claim_unproven": 0,
+     "semantic_unresolved": 0,
+     "manual_review": 0
+    },
+    "confidence": 0.81,
+    "margin": 0.7,
+    "top_probability": 0.85,
+    "decision": "auto"
+   },
+   {
+    "id": "s3",
+    "classification": "execution_claim_unproven",
+    "probabilities": {
+     "deterministic_byte_fact": 0,
+     "bounded_content_join": 0.01,
+     "execution_claim_unproven": 0.98,
+     "semantic_unresolved": 0.01,
+     "manual_review": 0
+    },
+    "confidence": 0.97,
+    "margin": 0.97,
+    "top_probability": 0.98,
+    "decision": "auto"
+   },
+   {
+    "id": "s4",
+    "classification": "execution_claim_unproven",
+    "probabilities": {
+     "deterministic_byte_fact": 0.01,
+     "bounded_content_join": 0.1,
+     "execution_claim_unproven": 0.55,
+     "semantic_unresolved": 0.3,
+     "manual_review": 0.04
+    },
+    "confidence": 0.45,
+    "margin": 0.25000000000000006,
+    "top_probability": 0.55,
+    "decision": "review"
+   },
+   {
+    "id": "s5",
+    "classification": "deterministic_byte_fact",
+    "probabilities": {
+     "deterministic_byte_fact": 0.27,
+     "bounded_content_join": 0.24,
+     "execution_claim_unproven": 0.18,
+     "semantic_unresolved": 0.23,
+     "manual_review": 0.08
+    },
+    "confidence": 0.09,
+    "margin": 0.030000000000000027,
+    "top_probability": 0.27,
+    "decision": "review"
+   },
+   {
+    "id": "s6",
+    "classification": "semantic_unresolved",
+    "probabilities": {
+     "deterministic_byte_fact": 0,
+     "bounded_content_join": 0.01,
+     "execution_claim_unproven": 0.2,
+     "semantic_unresolved": 0.78,
+     "manual_review": 0.01
+    },
+    "confidence": 0.72,
+    "margin": 0.5800000000000001,
+    "top_probability": 0.78,
+    "decision": "review"
+   },
+   {
+    "id": "s7",
+    "classification": "bounded_content_join",
+    "probabilities": {
+     "deterministic_byte_fact": 0.4,
+     "bounded_content_join": 0.51,
+     "execution_claim_unproven": 0.02,
+     "semantic_unresolved": 0.02,
+     "manual_review": 0.05
+    },
+    "confidence": 0.39,
+    "margin": 0.10999999999999999,
+    "top_probability": 0.51,
+    "decision": "review"
+   },
+   {
+    "id": "s8",
+    "classification": "semantic_unresolved",
+    "probabilities": {
+     "deterministic_byte_fact": 0.01,
+     "bounded_content_join": 0.02,
+     "execution_claim_unproven": 0.01,
+     "semantic_unresolved": 0.94,
+     "manual_review": 0.02
+    },
+    "confidence": 0.92,
+    "margin": 0.9199999999999999,
+    "top_probability": 0.94,
+    "decision": "auto"
+   }
+  ],
+  "usage": {
+   "input_tokens": 1390,
+   "output_tokens": 451
+  }
+ },
+ "result_sha256": "cf8557e2101abed86b7c05fbcf672814eeda523a11b268d6871a0bcfc023ff49",
+ "jev_tool": "jev_classify"
+}

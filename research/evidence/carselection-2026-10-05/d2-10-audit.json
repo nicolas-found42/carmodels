@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "slot102 sha 6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7 labels VEHICLE: FORD '49; VEHICLE: THUNDERBIRD CONVERTIBLE; VEHICLE: FORTYNINE CONCEPT. record base 0x233070, table 0x0143b736.",
+    "records": [
+      {
+        "id": "label_ford49",
+        "request": "extract label_ford49",
+        "value": "VEHICLE: FORD '49"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "label_ford49",
+        "value": "VEHICLE: FORD '49",
+        "checks": {
+          "hallucinated": 0.02,
+          "off_target": 0.06,
+          "incomplete": 0.12,
+          "format": 0.1
+        },
+        "p_wrong": 0.12,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 851,
+      "output_tokens": 86
+    }
+  }
+}

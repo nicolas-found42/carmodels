@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "cases": [
+    {
+      "case": "unaltered complete corpus",
+      "result": "accepted"
+    },
+    {
+      "case": "mutated source-plane hash",
+      "result": "rejected"
+    },
+    {
+      "case": "mutated PNG payload",
+      "result": "rejected"
+    },
+    {
+      "case": "negative source-file offset",
+      "result": "rejected"
+    }
+  ],
+  "test_tool_sha256": "f739242ebc01d8a239b2963e5febb2d5a39ccdf1a4b8854af8f595ca69efe739",
+  "scope": "The unaltered corpus passes; three copied-artifact mutations are rejected by the validator.",
+  "note": "Negative controls ran in temporary copies and did not modify the exported evidence."
+}

@@ -1,0 +1,62 @@
+{
+  "args": {
+    "propositions": [
+      "A 6-position screenshot-verified sweep will identify the mark word.",
+      "F8 screenshots plus paused savestate pairs give attributable ground truth.",
+      "0x241b60 (reads 5,4,4 for highlights 1/5/4) is the per-car highlight id.",
+      "The mark word must equal or map 1:1 to the 1..6 highlight position.",
+      "The sweep needs no new tool class beyond keys, screenshots, and savestates."
+    ],
+    "context": "Breakthrough: headless F8 screenshots work (PCSX2 writes PNGs to /data/snaps). Current screen verified by vision: 6 thumbnails, 3rd highlighted, VEHICLE '55 Thunderbird. Paused-pair method: pause via RFB Space, save pair (pause-control = 0 differing words), unpause, one L key, re-pause, save pair. A=pos3, B=pos5 (screenshot-verified Thunderbird Convertible). Diff A->B re-finds the DAT-table candidates: 0x241b60 4->5, 0x241e00 4->3, 0x2420a0 4->5. But 0x241b60 reads 5,4,4 across slots 102/103/104 (highlights 1/5/4), so it is NOT the per-car id by value. FUN_001c4a40 indexes DAT_00241b40 by the per-entity type byte with stride 0x150, so these words are fields inside per-type menu records. Proposed: a 6-position sweep - move the highlight to each of the 6 thumbnails with a screenshot + paused savestate pair at each; the true mark word must equal (or map 1:1 to) the 1..6 position across all six samples. All headless, read-only + savestate saves."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "A 6-position screenshot-verified sweep will identify the mark word.",
+        "probability": 0.78,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition1",
+        "proposition": "F8 screenshots plus paused savestate pairs give attributable ground truth.",
+        "probability": 0.86,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "0x241b60 (reads 5,4,4 for highlights 1/5/4) is the per-car highlight id.",
+        "probability": 0.03,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The mark word must equal or map 1:1 to the 1..6 highlight position.",
+        "probability": 0.78,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "The sweep needs no new tool class beyond keys, screenshots, and savestates.",
+        "probability": 0.87,
+        "label": "likely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1210,
+      "output_tokens": 109
+    }
+  }
+}

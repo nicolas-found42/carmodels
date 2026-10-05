@@ -1,0 +1,52 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {"verified": 4, "contradicted": 0, "unsupported": 0, "needs_review": 0},
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "In the refreshed typed pseudocode, FUN_0021d180 calls FUN_0021bc18 to advance through geometry headers, then calls FUN_0021bf28 for each header.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.9400000000000001, "contradicts": 0.06, "says_nothing": 0},
+      "confidence": 0.9,
+      "action": "auto",
+      "supporting_evidence": "0021d180",
+      "same_subject": 0.87
+    },
+    {
+      "id": "claim1",
+      "claim": "In the refreshed typed pseudocode, FUN_0021bf28 selects FUN_00128218 when both its effective flags include bit 8 and the current header's bit 0x10 is set; otherwise its shown branch calls FUN_0021c3e0 directly.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.96, "contradicts": 0.04, "says_nothing": 0},
+      "confidence": 0.93,
+      "action": "auto",
+      "supporting_evidence": "0021bf28",
+      "same_subject": 0.81
+    },
+    {
+      "id": "claim2",
+      "claim": "FUN_0021c3e0's shown conditional appends an MPG VIF command from its third parameter only if its fifth parameter has bit 8 set; the inspected FUN_00128218 call sites invoke it with flags 2 and 0x2a after masking their incoming flags to 0x100.",
+      "verdict": "verified",
+      "probabilities": {"supports": 0.9, "contradicts": 0.09, "says_nothing": 0.01},
+      "confidence": 0.86,
+      "action": "auto",
+      "supporting_evidence": "0021c3e0",
+      "same_subject": 0.76
+    },
+    {
+      "id": "claim3",
+      "claim": "These typed pseudocode excerpts do not identify the actual runtime MPG source buffer with overlay-5 or overlay-6, or join that program selection to race94's paused VU PC.",
+      "verdict": "verified",
+      "probabilities": {"supports": 1, "contradicts": 0, "says_nothing": 0},
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "export_identity",
+      "same_subject": 0.75
+    }
+  ],
+  "usage": {"input_tokens": 2999, "output_tokens": 612},
+  "handling": "Typed pseudocode verification is advisory; all selection and execution claims remain bounded by the current typed-export excerpts and lack a captured runtime MPG-source-to-VU-PC join."
+}

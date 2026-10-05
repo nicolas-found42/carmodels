@@ -1,0 +1,55 @@
+{
+  "schema": "fr2-index-verifier-typesafe-gate-receipt/v1",
+  "tool": "jev_gate",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "request": "Review updated canonical asset index verifier and supported completion claims.",
+  "action": "escalate",
+  "review": {
+    "composite": 0.6885,
+    "safe_to_apply": 0.35,
+    "limiting_rubric": "blast_radius",
+    "note": "Low confidence on blast radius; do not use score as a correctness gate. Source inspection and deterministic execution are the basis."
+  },
+  "verification": {
+    "summary": {
+      "verified": 3,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 2
+    },
+    "claims": [
+      {
+        "claim": "35 cars, 2579 files verified",
+        "verdict": "verified",
+        "confidence": 0.69,
+        "action": "review"
+      },
+      {
+        "claim": "Rehashed cross-car swaps rejected by per-car producer comparison",
+        "verdict": "verified",
+        "confidence": 0.94,
+        "action": "auto"
+      },
+      {
+        "claim": "Rehashed schema/fidelity/status/limits controls rejected",
+        "verdict": "verified",
+        "confidence": 0.99,
+        "action": "auto"
+      },
+      {
+        "claim": "Index proves game-render equivalence",
+        "verdict": "unsupported",
+        "confidence": 0.76,
+        "action": "review"
+      }
+    ]
+  },
+  "usage_tokens": {
+    "input": 2038,
+    "output": 254
+  },
+  "validation_command": "python3 tools/verify_recovered_asset_index.py",
+  "validation_result": "VERIFY OK; 35 cars, 2579 assets; hash, rehashed cross-car swap, declaration controls rejected. Game-render equivalence remains outside validator scope.",
+  "reviewed_file_sha256": "98a8b10d4c52cee3f81de18a77500fc7012f8bd1ebc0e42ac587a70b06afc997"
+}

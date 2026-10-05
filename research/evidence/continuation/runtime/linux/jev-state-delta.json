@@ -1,0 +1,17 @@
+{
+  "args": {
+    "claims": [
+      "Between race95 and race97, 120 mutable visibility bits changed across five cars: each WHEEL_MOVING changes0to1 and its named WHEEL_STATIC counterpart1to0. COBRA has no visibility-bit changes.",
+      "Race97 has144 mutable rotation triples with at least one nonzero XYZ lane,24percar for six archive-joined cars. This proves captured mutable-state changes, not that every part produced a GS draw."
+    ],
+    "evidence": "race95/race97 independently source-joined against six original archive carfiles,378descriptornodes,sixinstancegraphs,failure0. Statecomparison keyedcar+source_node_offset: COBRA0changes24nonzero, CROWN_VICTORIA24changes24nonzero, FOCUS_SVT24changes24nonzero, LIGHTNING_SVT24changes24nonzero, POWERSTROKE24changes24nonzero, THUNDERBIRD_MOVIE24changes24nonzero. Allchangedvisibilitynames onlyWHEEL_MOVING0→1 andWHEEL_STATIC1→0,12eachperfivecars. Rootpredictions fromcapturedcameraZ remain0 COBRA/CROWN/THUNDERBIRD;threeothers0→3. Statejoins sourceflags/classregistry/parentchains/transforms andfiniteXYZW allpass; GSdrawsnotproven bystatechanges."
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 1,\n    \"contradicted\": 1,\n    \"unsupported\": 0,\n    \"needs_review\": 2\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"Between race95 and race97, 120 mutable visibility bits changed across five cars: each WHEEL_MOVING changes0to1 and its named WHEEL_STATIC counterpart1to0. COBRA has no visibility-bit changes.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"contradicts\": 0.6900000000000001,\n        \"supports\": 0.31,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.53,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.83\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"Race97 has144 mutable rotation triples with at least one nonzero XYZ lane,24percar for six archive-joined cars. This proves captured mutable-state changes, not that every part produced a GS draw.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0.28,\n        \"supports\": 0.71,\n        \"says_nothing\": 0.01\n      },\n      \"confidence\": 0.57,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.78\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1160,\n    \"output_tokens\": 128\n  }\n}"
+      }
+    ]
+  }
+}

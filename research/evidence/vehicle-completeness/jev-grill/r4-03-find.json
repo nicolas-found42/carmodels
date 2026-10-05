@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "best definition of 'B resolved' given the named livery store and the open car cursor",
+    "candidates": [
+      {
+        "id": "read_store_record_cursor",
+        "text": "Read entity+0x64 via the pointer chain in all three EE images and record its value; record the car-highlight cursor open."
+      },
+      {
+        "id": "require_car_cursor",
+        "text": "B resolved only if the per-screen car-highlight cursor itself is named and read."
+      },
+      {
+        "id": "declare_open_now",
+        "text": "Record B open immediately without any read."
+      },
+      {
+        "id": "drop_b",
+        "text": "Drop thread B."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best definition of 'B resolved' given the named livery store and the open car cursor",
+    "exists": 0.85,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "read_store_record_cursor",
+        "probability": 0.85,
+        "text": "Read entity+0x64 via the pointer chain in all three EE images and record its value; record the car-highlight cursor open."
+      },
+      {
+        "id": "require_car_cursor",
+        "probability": 0.14,
+        "text": "B resolved only if the per-screen car-highlight cursor itself is named and read."
+      },
+      {
+        "id": "declare_open_now",
+        "probability": 0.01,
+        "text": "Record B open immediately without any read."
+      },
+      {
+        "id": "drop_b",
+        "probability": 0,
+        "text": "Drop thread B."
+      }
+    ],
+    "usage": {
+      "input_tokens": 558,
+      "output_tokens": 73
+    }
+  }
+}

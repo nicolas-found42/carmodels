@@ -1,0 +1,4297 @@
+{
+  "inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+  "elf_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+  "census_sha256": "03fb67b1315ab54c4870bade23263c456489035d50ee397d2d4119695740b1ce",
+  "original_loop_words": [
+    {
+      "address": "00124900",
+      "text": "lw t6,0xf4(s1)",
+      "bytes": "f4002e8e",
+      "references": []
+    },
+    {
+      "address": "00124904",
+      "text": "lw t2,0x1c(t3)",
+      "bytes": "1c006a8d",
+      "references": []
+    },
+    {
+      "address": "00124908",
+      "text": "move t4,t6",
+      "bytes": "2d60c001",
+      "references": []
+    },
+    {
+      "address": "0012490c",
+      "text": "nop",
+      "bytes": "00000000",
+      "references": []
+    },
+    {
+      "address": "00124910",
+      "text": "lw a3,0x0(t2)",
+      "bytes": "0000478d",
+      "references": []
+    },
+    {
+      "address": "00124914",
+      "text": "sll t1,a3,0x3",
+      "bytes": "c0480700",
+      "references": []
+    },
+    {
+      "address": "00124918",
+      "text": "addu a0,t1,t4",
+      "bytes": "21202c01",
+      "references": []
+    },
+    {
+      "address": "0012491c",
+      "text": "lw v0,0x0(a0)",
+      "bytes": "0000828c",
+      "references": []
+    },
+    {
+      "address": "00124920",
+      "text": "andi v0,v0,0x1000",
+      "bytes": "00104230",
+      "references": []
+    },
+    {
+      "address": "00124924",
+      "text": "beql v0,zero,0x001249ac",
+      "bytes": "21004050",
+      "references": [
+        {
+          "to": "001249ac",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "00124928",
+      "text": "_addiu t7,t7,0x1",
+      "bytes": "0100ef25",
+      "references": []
+    },
+    {
+      "address": "0012492c",
+      "text": "lbu v0,0x2(a0)",
+      "bytes": "02008290",
+      "references": []
+    },
+    {
+      "address": "00124930",
+      "text": "beql v0,zero,0x001249ac",
+      "bytes": "1e004050",
+      "references": [
+        {
+          "to": "001249ac",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "00124934",
+      "text": "_addiu t7,t7,0x1",
+      "bytes": "0100ef25",
+      "references": []
+    },
+    {
+      "address": "00124938",
+      "text": "move a2,zero",
+      "bytes": "2d300000",
+      "references": []
+    },
+    {
+      "address": "0012493c",
+      "text": "slt v0,v0,a2",
+      "bytes": "2a104600",
+      "references": []
+    },
+    {
+      "address": "00124940",
+      "text": "bnel v0,zero,0x001249ac",
+      "bytes": "1a004054",
+      "references": [
+        {
+          "to": "001249ac",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "00124944",
+      "text": "_addiu t7,t7,0x1",
+      "bytes": "0100ef25",
+      "references": []
+    },
+    {
+      "address": "00124948",
+      "text": "lbu v0,0x3(a0)",
+      "bytes": "03008290",
+      "references": []
+    },
+    {
+      "address": "0012494c",
+      "text": "bnel v0,t5,0x00124968",
+      "bytes": "06004d54",
+      "references": [
+        {
+          "to": "00124968",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "00124950",
+      "text": "_addu v0,t1,t4",
+      "bytes": "21102c01",
+      "references": []
+    },
+    {
+      "address": "00124954",
+      "text": "lw v0,0xec(s1)",
+      "bytes": "ec00228e",
+      "references": []
+    },
+    {
+      "address": "00124958",
+      "text": "sll v1,a3,0x2",
+      "bytes": "80180700",
+      "references": []
+    },
+    {
+      "address": "0012495c",
+      "text": "b 0x0012499c",
+      "bytes": "0f000010",
+      "references": [
+        {
+          "to": "0012499c",
+          "type": "UNCONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "00124960",
+      "text": "_lw a0,0x4(a0)",
+      "bytes": "0400848c",
+      "references": []
+    },
+    {
+      "address": "00124968",
+      "text": "addiu a2,a2,0x1",
+      "bytes": "0100c624",
+      "references": []
+    },
+    {
+      "address": "0012496c",
+      "text": "lbu a0,0x2(v0)",
+      "bytes": "02004490",
+      "references": []
+    },
+    {
+      "address": "00124970",
+      "text": "addu v1,a3,a2",
+      "bytes": "2118e600",
+      "references": []
+    },
+    {
+      "address": "00124974",
+      "text": "sll v1,v1,0x3",
+      "bytes": "c0180300",
+      "references": []
+    },
+    {
+      "address": "00124978",
+      "text": "slt a0,a0,a2",
+      "bytes": "2a208600",
+      "references": []
+    },
+    {
+      "address": "0012497c",
+      "text": "bne a0,zero,0x001249a8",
+      "bytes": "0a008014",
+      "references": [
+        {
+          "to": "001249a8",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "00124980",
+      "text": "_addu a1,v1,t6",
+      "bytes": "21286e00",
+      "references": []
+    },
+    {
+      "address": "00124984",
+      "text": "lbu v0,0x3(a1)",
+      "bytes": "0300a290",
+      "references": []
+    },
+    {
+      "address": "00124988",
+      "text": "bne v0,t5,0x00124968",
+      "bytes": "f7ff4d14",
+      "references": [
+        {
+          "to": "00124968",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "0012498c",
+      "text": "_addu v0,t1,t4",
+      "bytes": "21102c01",
+      "references": []
+    },
+    {
+      "address": "00124990",
+      "text": "lw v0,0xec(s1)",
+      "bytes": "ec00228e",
+      "references": []
+    },
+    {
+      "address": "00124994",
+      "text": "sll v1,a3,0x2",
+      "bytes": "80180700",
+      "references": []
+    },
+    {
+      "address": "00124998",
+      "text": "lw a0,0x4(a1)",
+      "bytes": "0400a48c",
+      "references": []
+    },
+    {
+      "address": "0012499c",
+      "text": "addu v1,v1,v0",
+      "bytes": "21186200",
+      "references": []
+    },
+    {
+      "address": "001249a0",
+      "text": "sw a0,0x0(v1)",
+      "bytes": "000064ac",
+      "references": []
+    },
+    {
+      "address": "001249a4",
+      "text": "lbu t0,0xe(t3)",
+      "bytes": "0e006891",
+      "references": []
+    },
+    {
+      "address": "001249a8",
+      "text": "addiu t7,t7,0x1",
+      "bytes": "0100ef25",
+      "references": []
+    },
+    {
+      "address": "001249ac",
+      "text": "slt v0,t7,t0",
+      "bytes": "2a10e801",
+      "references": []
+    },
+    {
+      "address": "001249b0",
+      "text": "bne v0,zero,0x00124910",
+      "bytes": "d7ff4014",
+      "references": [
+        {
+          "to": "00124910",
+          "type": "CONDITIONAL_JUMP",
+          "function": "001248a0"
+        }
+      ]
+    },
+    {
+      "address": "001249b4",
+      "text": "_addiu t2,t2,0x4",
+      "bytes": "04004a25",
+      "references": []
+    }
+  ],
+  "library_helper_words": [
+    {
+      "address": "0021b6e0",
+      "text": "srl a0,a0,0x14",
+      "bytes": "02250400",
+      "references": []
+    },
+    {
+      "address": "0021b6e4",
+      "text": "andi a0,a0,0xf",
+      "bytes": "0f008430",
+      "references": []
+    },
+    {
+      "address": "0021b6e8",
+      "text": "sll v0,a0,0x4",
+      "bytes": "00110400",
+      "references": []
+    },
+    {
+      "address": "0021b6ec",
+      "text": "addu v0,v0,a0",
+      "bytes": "21104400",
+      "references": []
+    },
+    {
+      "address": "0021b6f0",
+      "text": "sll v0,v0,0x2",
+      "bytes": "80100200",
+      "references": []
+    },
+    {
+      "address": "0021b6f4",
+      "text": "addu v0,v0,a0",
+      "bytes": "21104400",
+      "references": []
+    },
+    {
+      "address": "0021b6f8",
+      "text": "sll v0,v0,0x2",
+      "bytes": "80100200",
+      "references": []
+    },
+    {
+      "address": "0021b6fc",
+      "text": "lui at,0x23",
+      "bytes": "2300013c",
+      "references": []
+    },
+    {
+      "address": "0021b700",
+      "text": "addiu at,at,0x3070",
+      "bytes": "70302124",
+      "references": []
+    },
+    {
+      "address": "0021b704",
+      "text": "addu v0,at,v0",
+      "bytes": "21102200",
+      "references": []
+    },
+    {
+      "address": "0021b708",
+      "text": "jr ra",
+      "bytes": "0800e003",
+      "references": []
+    },
+    {
+      "address": "0021b70c",
+      "text": "_nop",
+      "bytes": "00000000",
+      "references": []
+    }
+  ],
+  "synthetic_source_probes": 852,
+  "changed_word_negative_controls": [
+    {
+      "name": "selector_byte",
+      "address": "00124948",
+      "changed_bytes": "02008290",
+      "rejected": true
+    },
+    {
+      "name": "pointer_store",
+      "address": "001249a0",
+      "changed_bytes": "040064ac",
+      "rejected": true
+    },
+    {
+      "name": "flag_mask",
+      "address": "00124920",
+      "changed_bytes": "00004230",
+      "rejected": true
+    }
+  ],
+  "runtime": [
+    {
+      "capture": "race95",
+      "car": "COBRA",
+      "entity": 4935392,
+      "selector": 0,
+      "library": 2306712,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        0,
+        8,
+        12,
+        16,
+        4
+      ],
+      "material_remap": {
+        "0": 0,
+        "4": 4,
+        "8": 8,
+        "12": 12,
+        "16": 16
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race95",
+      "car": "CROWN_VICTORIA",
+      "entity": 28031008,
+      "selector": 5,
+      "library": 2306988,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        12,
+        8,
+        16,
+        0,
+        4
+      ],
+      "material_remap": {
+        "0": 3,
+        "4": 7,
+        "8": 11,
+        "12": 15,
+        "16": 19
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race95",
+      "car": "FOCUS_SVT",
+      "entity": 4825184,
+      "selector": 2,
+      "library": 2307264,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        12,
+        8,
+        4,
+        0,
+        16
+      ],
+      "material_remap": {
+        "0": 2,
+        "4": 6,
+        "8": 10,
+        "12": 14,
+        "16": 18
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race95",
+      "car": "LIGHTNING_SVT",
+      "entity": 4848608,
+      "selector": 5,
+      "library": 2307540,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        4,
+        8,
+        0,
+        16,
+        12
+      ],
+      "material_remap": {
+        "0": 3,
+        "4": 7,
+        "8": 11,
+        "12": 15,
+        "16": 19
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race95",
+      "car": "POWERSTROKE",
+      "entity": 4897824,
+      "selector": 2,
+      "library": 2307816,
+      "original_flags_checked": 18,
+      "descriptor_group_indices": [
+        9,
+        13,
+        5,
+        0
+      ],
+      "material_remap": {
+        "0": 2,
+        "5": 7,
+        "9": 11,
+        "13": 15
+      },
+      "raw_loop_writes": 4,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race95",
+      "car": "THUNDERBIRD_MOVIE",
+      "entity": 4873120,
+      "selector": 0,
+      "library": 2308092,
+      "original_flags_checked": 6,
+      "descriptor_group_indices": [],
+      "material_remap": {},
+      "raw_loop_writes": 0,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race97",
+      "car": "COBRA",
+      "entity": 4935392,
+      "selector": 0,
+      "library": 2306712,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        0,
+        8,
+        12,
+        16,
+        4
+      ],
+      "material_remap": {
+        "0": 0,
+        "4": 4,
+        "8": 8,
+        "12": 12,
+        "16": 16
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race97",
+      "car": "CROWN_VICTORIA",
+      "entity": 28031008,
+      "selector": 5,
+      "library": 2306988,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        12,
+        8,
+        16,
+        0,
+        4
+      ],
+      "material_remap": {
+        "0": 3,
+        "4": 7,
+        "8": 11,
+        "12": 15,
+        "16": 19
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race97",
+      "car": "FOCUS_SVT",
+      "entity": 4825184,
+      "selector": 2,
+      "library": 2307264,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        12,
+        8,
+        4,
+        0,
+        16
+      ],
+      "material_remap": {
+        "0": 2,
+        "4": 6,
+        "8": 10,
+        "12": 14,
+        "16": 18
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race97",
+      "car": "LIGHTNING_SVT",
+      "entity": 4848608,
+      "selector": 5,
+      "library": 2307540,
+      "original_flags_checked": 21,
+      "descriptor_group_indices": [
+        4,
+        8,
+        0,
+        16,
+        12
+      ],
+      "material_remap": {
+        "0": 3,
+        "4": 7,
+        "8": 11,
+        "12": 15,
+        "16": 19
+      },
+      "raw_loop_writes": 5,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race97",
+      "car": "POWERSTROKE",
+      "entity": 4897824,
+      "selector": 2,
+      "library": 2307816,
+      "original_flags_checked": 18,
+      "descriptor_group_indices": [
+        9,
+        13,
+        5,
+        0
+      ],
+      "material_remap": {
+        "0": 2,
+        "5": 7,
+        "9": 11,
+        "13": 15
+      },
+      "raw_loop_writes": 4,
+      "captured_table_matches": true
+    },
+    {
+      "capture": "race97",
+      "car": "THUNDERBIRD_MOVIE",
+      "entity": 4873120,
+      "selector": 0,
+      "library": 2308092,
+      "original_flags_checked": 6,
+      "descriptor_group_indices": [],
+      "material_remap": {},
+      "raw_loop_writes": 0,
+      "captured_table_matches": true
+    }
+  ],
+  "cars": [
+    {
+      "car": "49_COUPE",
+      "source_sha256": "62e3de6688791e6af88d65bebe7156ee2d1f1ec83911316cafddf3173259f381",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "COUPE49_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "COUPE49_256",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "COUPE49_128",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "COUPE49_64",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15
+          }
+        }
+      ]
+    },
+    {
+      "car": "49_COUPE_MOVIE",
+      "source_sha256": "b5717d0b1c80398d3f36cd586a925219fdf2ead7a52e84eed7bbcdaf10c46b8e",
+      "referenced_texture_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "groups": [],
+      "complete_selectors": [],
+      "variants": []
+    },
+    {
+      "car": "COBRA",
+      "source_sha256": "751fb754d2510c9d5d7fce725c13f5bed5e9e2edc0d670644dbb688d488e6912",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "COBRA512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "COBRAWHEELBLUR",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "COBRA256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "COBRA128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "COBRA64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "CROWN_VICTORIA",
+      "source_sha256": "2fe9a2429091cdfb9022e55098f3df486eabb21da74812854c24e149d1d29d0c",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "CROWNV512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "MOVING_WHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "CROWNV256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "CROWNV128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "CROWNV64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "EX",
+      "source_sha256": "10735c9e97db9cb79a3e9ea9e91f59e18bb9312eac33f0618dacfb2656fcda55",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "BUGGY_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "EXBLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "BUGGY_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "BUGGYALL128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "BUGGYALL64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "EXPLORER",
+      "source_sha256": "e09982cb4441149e5c5b3b7eec173ba508d51bd0afe56bda036fa31422b3e2e0",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "SPORTTRAC_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "SPORTTRAC_BLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "SPORTTRAC_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "SPORTTRAC_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "SPORTTRAC_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "F100_1956",
+      "source_sha256": "0ec391fc96f572d0ca3d445feddad97a8ac35919a540fea91338bc8292240a23",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "F100_56_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "F100_56_256",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "F100_56_128",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "F100_56_64",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15
+          }
+        }
+      ]
+    },
+    {
+      "car": "F100_1965",
+      "source_sha256": "1a9e92a8a109aaae4688f1c77269cf20d44842bc3e5d28b0cdace3c09460314a",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "F100_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "F100_256",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "F100_128",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "F100_64",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15
+          }
+        }
+      ]
+    },
+    {
+      "car": "F150",
+      "source_sha256": "60f7ef5b1ee6edf106f3f71b905a1100feea683079c4a6ab4e8053051a6a0d1c",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "F150_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "F150BLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "F150_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "F150_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "F150_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "F150_2004",
+      "source_sha256": "e1ee009ce3bc04b24e04a761b1eae2d8c74f896d95f2fc87ffca103932a4faee",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "F150_2004_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "F150_2004_BLURRY_WHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "F150_2004_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "F150_2004_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "F150_2004_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "F350",
+      "source_sha256": "48b4c87e18b095efe5bca98079546cd3cb47ac8e4954cb00eca4dd990e8c0a71",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "F350_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "F350_BLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "F350_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "F350_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "F350_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "FOCUS_FR200",
+      "source_sha256": "aecdb24d4d4070f27c8283b976c8429881ebb4e075a40b72a6bb9a7e5815b8a1",
+      "referenced_texture_indices": [
+        0,
+        4,
+        5,
+        9,
+        13,
+        17,
+        21
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "FOCUSFR200_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 5,
+          "additional_members": 3,
+          "name": "FOCUSSVTBLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 5,
+            "1": 6,
+            "2": 7,
+            "5": 8
+          }
+        },
+        {
+          "base_texture_index": 9,
+          "additional_members": 3,
+          "name": "FOCUSFR200_256",
+          "selector_to_texture": {
+            "0": 9,
+            "1": 10,
+            "2": 11,
+            "5": 12
+          }
+        },
+        {
+          "base_texture_index": 13,
+          "additional_members": 3,
+          "name": "FOCUSFR200_128",
+          "selector_to_texture": {
+            "0": 13,
+            "1": 14,
+            "2": 15,
+            "5": 16
+          }
+        },
+        {
+          "base_texture_index": 17,
+          "additional_members": 3,
+          "name": "FOCUSFR200_64",
+          "selector_to_texture": {
+            "0": 17,
+            "1": 18,
+            "2": 19,
+            "5": 20
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "5": 5,
+            "9": 9,
+            "13": 13,
+            "17": 17
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "5": 6,
+            "9": 10,
+            "13": 14,
+            "17": 18
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "5": 7,
+            "9": 11,
+            "13": 15,
+            "17": 19
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "5": 8,
+            "9": 12,
+            "13": 16,
+            "17": 20
+          }
+        }
+      ]
+    },
+    {
+      "car": "FOCUS_SVT",
+      "source_sha256": "be8e5a6454771fb20dab61c7c1c6017cba504a9b9726bff1f5bc7cd5656e5380",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "FOCUSSVT512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "FOCUSSVTBLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "FOCUSSVT256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "FOCUSSVT128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "FOCUSSVT64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "FOCUS_WRC",
+      "source_sha256": "20da6f3b5791fae8d7a579dc7892339207017fd4c6beea8396486d3fac7cd95a",
+      "referenced_texture_indices": [
+        0,
+        2,
+        3,
+        5,
+        7,
+        9,
+        11
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 1,
+          "name": "FOCUSWRC512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1
+          }
+        },
+        {
+          "base_texture_index": 3,
+          "additional_members": 1,
+          "name": "FOCUSRALLYBLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 3,
+            "1": 4
+          }
+        },
+        {
+          "base_texture_index": 5,
+          "additional_members": 1,
+          "name": "FOCUSWRC256",
+          "selector_to_texture": {
+            "0": 5,
+            "1": 6
+          }
+        },
+        {
+          "base_texture_index": 7,
+          "additional_members": 1,
+          "name": "FOCUSWRC128",
+          "selector_to_texture": {
+            "0": 7,
+            "1": 8
+          }
+        },
+        {
+          "base_texture_index": 9,
+          "additional_members": 1,
+          "name": "FOCUSWRC64",
+          "selector_to_texture": {
+            "0": 9,
+            "1": 10
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "3": 3,
+            "5": 5,
+            "7": 7,
+            "9": 9
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "3": 4,
+            "5": 6,
+            "7": 8,
+            "9": 10
+          }
+        }
+      ]
+    },
+    {
+      "car": "FORD_GT",
+      "source_sha256": "463b30ac918bca9676903639c1198faa8c314efcb0e112f05527d49b7a8d9d28",
+      "referenced_texture_indices": [
+        0,
+        4,
+        5,
+        6,
+        10,
+        14,
+        18,
+        22
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "FORDGT_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 6,
+          "additional_members": 3,
+          "name": "FORDGT_BLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 6,
+            "1": 7,
+            "2": 8,
+            "5": 9
+          }
+        },
+        {
+          "base_texture_index": 10,
+          "additional_members": 3,
+          "name": "FORDGT_256",
+          "selector_to_texture": {
+            "0": 10,
+            "1": 11,
+            "2": 12,
+            "5": 13
+          }
+        },
+        {
+          "base_texture_index": 14,
+          "additional_members": 3,
+          "name": "FORDGT_128",
+          "selector_to_texture": {
+            "0": 14,
+            "1": 15,
+            "2": 16,
+            "5": 17
+          }
+        },
+        {
+          "base_texture_index": 18,
+          "additional_members": 3,
+          "name": "FORDGT_64",
+          "selector_to_texture": {
+            "0": 18,
+            "1": 19,
+            "2": 20,
+            "5": 21
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "6": 6,
+            "10": 10,
+            "14": 14,
+            "18": 18
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "6": 7,
+            "10": 11,
+            "14": 15,
+            "18": 19
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "6": 8,
+            "10": 12,
+            "14": 16,
+            "18": 20
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "6": 9,
+            "10": 13,
+            "14": 17,
+            "18": 21
+          }
+        }
+      ]
+    },
+    {
+      "car": "FORTYNINE",
+      "source_sha256": "60af4baccd375773999d89364628c45926dc16583e05d089510981656bc5c2e9",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "FORTYNINE512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "FORTYNINE256",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "FORTYNINE128",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "FORTYNINE64",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15
+          }
+        }
+      ]
+    },
+    {
+      "car": "FR500",
+      "source_sha256": "f602fbbaf0b523b1c581a324c54515499813d32bd0204e3252b9f140a10fd674",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "FR500_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "FR500WHEELBLUR",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "FR500_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "FR500_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "FR500_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "GRAN_TORINO",
+      "source_sha256": "d3234f605e98e4dadf46633f4de3271f937bd8fe46dfdbcf1904de4aaf734909",
+      "referenced_texture_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "groups": [],
+      "complete_selectors": [],
+      "variants": []
+    },
+    {
+      "car": "GT90",
+      "source_sha256": "5330ef43f70432f4429494df7977d54ea3205257b7bb4172c0c96e1be05ad999",
+      "referenced_texture_indices": [
+        0,
+        4,
+        5,
+        6,
+        10,
+        14,
+        18,
+        22
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "GT90_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 6,
+          "additional_members": 3,
+          "name": "GT90BLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 6,
+            "1": 7,
+            "2": 8,
+            "5": 9
+          }
+        },
+        {
+          "base_texture_index": 10,
+          "additional_members": 3,
+          "name": "GT90_256",
+          "selector_to_texture": {
+            "0": 10,
+            "1": 11,
+            "2": 12,
+            "5": 13
+          }
+        },
+        {
+          "base_texture_index": 14,
+          "additional_members": 3,
+          "name": "GT90_128",
+          "selector_to_texture": {
+            "0": 14,
+            "1": 15,
+            "2": 16,
+            "5": 17
+          }
+        },
+        {
+          "base_texture_index": 18,
+          "additional_members": 3,
+          "name": "GT90_64",
+          "selector_to_texture": {
+            "0": 18,
+            "1": 19,
+            "2": 20,
+            "5": 21
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "6": 6,
+            "10": 10,
+            "14": 14,
+            "18": 18
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "6": 7,
+            "10": 11,
+            "14": 15,
+            "18": 19
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "6": 8,
+            "10": 12,
+            "14": 16,
+            "18": 20
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "6": 9,
+            "10": 13,
+            "14": 17,
+            "18": 21
+          }
+        }
+      ]
+    },
+    {
+      "car": "INDIGO",
+      "source_sha256": "63fc16e9d44d2ecf72709779c021b46987c73bd129cd6e2d038a0002ea2bc7f2",
+      "referenced_texture_indices": [
+        0,
+        4,
+        5,
+        6,
+        10,
+        14,
+        18,
+        22,
+        26
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "INDIGO512X256",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 6,
+          "additional_members": 3,
+          "name": "INDIGOWHEELBLUR",
+          "selector_to_texture": {
+            "0": 6,
+            "1": 7,
+            "2": 8,
+            "5": 9
+          }
+        },
+        {
+          "base_texture_index": 10,
+          "additional_members": 3,
+          "name": "BRAKELIGHTSON",
+          "selector_to_texture": {
+            "0": 10,
+            "1": 11,
+            "2": 12,
+            "5": 13
+          }
+        },
+        {
+          "base_texture_index": 14,
+          "additional_members": 3,
+          "name": "INDIGO256X256",
+          "selector_to_texture": {
+            "0": 14,
+            "1": 15,
+            "2": 16,
+            "5": 17
+          }
+        },
+        {
+          "base_texture_index": 18,
+          "additional_members": 3,
+          "name": "INDIGO128X128",
+          "selector_to_texture": {
+            "0": 18,
+            "1": 19,
+            "2": 20,
+            "5": 21
+          }
+        },
+        {
+          "base_texture_index": 22,
+          "additional_members": 3,
+          "name": "INDIGO64X64",
+          "selector_to_texture": {
+            "0": 22,
+            "1": 23,
+            "2": 24,
+            "5": 25
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "6": 6,
+            "10": 10,
+            "14": 14,
+            "18": 18,
+            "22": 22
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "6": 7,
+            "10": 11,
+            "14": 15,
+            "18": 19,
+            "22": 23
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "6": 8,
+            "10": 12,
+            "14": 16,
+            "18": 20,
+            "22": 24
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "6": 9,
+            "10": 13,
+            "14": 17,
+            "18": 21,
+            "22": 25
+          }
+        }
+      ]
+    },
+    {
+      "car": "LIGHTNING_SVT",
+      "source_sha256": "60e3ecd7bd4a34dea60efa943c976a60577d9b57cb72e39e60c2d6fdabbf7f48",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "LIGHTNING_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "LIGHTNINGBLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "LIGHTNING_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "LIGHTNING_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "LIGHTNING_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "MACH1_AGENT",
+      "source_sha256": "8b2c548d23f1ea831c8cdc54fabf4a623d9a7b51379e4f406e02821e7be66c40",
+      "referenced_texture_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "groups": [],
+      "complete_selectors": [],
+      "variants": []
+    },
+    {
+      "car": "MACH1_SIXTY",
+      "source_sha256": "0ccf798cb857dcfcff41ab76a23a56aad9e43119164540831b301293715a2021",
+      "referenced_texture_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "groups": [],
+      "complete_selectors": [],
+      "variants": []
+    },
+    {
+      "car": "MACH3",
+      "source_sha256": "162befcf68782a0c70795252b39213f4864f95238a786b127c08c0e27b515c83",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "MAC3_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "MACH3_MOVING_WHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "MAC3_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "MAC3_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "MAC3_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "MUSTANG_68",
+      "source_sha256": "d56ae2c9537ae4461c697dc4169cb9ce8683b36553e351abd3c9926f9c3736a6",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "MUSTANG68_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "MUSTANG68_MOVING_WHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "MUSTANG68_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "MUSTANG68_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "MUSTANG68_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "MUSTANG_68B",
+      "source_sha256": "04c2298b2d87ef3d150f45fe4a099fdd5603f405dad53b937c3af16957123383",
+      "referenced_texture_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "groups": [],
+      "complete_selectors": [],
+      "variants": []
+    },
+    {
+      "car": "MUSTANG_CONCEPT",
+      "source_sha256": "4d78397759d0d4bba1877db4a68308ef05213baa0dcabd183d9882f33e3711fd",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "MUSTCON512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "MUSTCONBLURRYWHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "MUSTCON256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "MUSTCON128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "MUSTCON64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "POWERSTROKE",
+      "source_sha256": "bf1bd43dad4cc65b76eed40770c92882c85991cb976ca33a0ec475691f575c1b",
+      "referenced_texture_indices": [
+        0,
+        4,
+        5,
+        9,
+        13,
+        17
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "POWERSTROKE_512X256",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 5,
+          "additional_members": 3,
+          "name": "POWERSTROKE256X256",
+          "selector_to_texture": {
+            "0": 5,
+            "1": 6,
+            "2": 7,
+            "5": 8
+          }
+        },
+        {
+          "base_texture_index": 9,
+          "additional_members": 3,
+          "name": "POWERSTROKE128ALL",
+          "selector_to_texture": {
+            "0": 9,
+            "1": 10,
+            "2": 11,
+            "5": 12
+          }
+        },
+        {
+          "base_texture_index": 13,
+          "additional_members": 3,
+          "name": "POWERSTROKE64ALL",
+          "selector_to_texture": {
+            "0": 13,
+            "1": 14,
+            "2": 15,
+            "5": 16
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "5": 5,
+            "9": 9,
+            "13": 13
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "5": 6,
+            "9": 10,
+            "13": 14
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "5": 7,
+            "9": 11,
+            "13": 15
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "5": 8,
+            "9": 12,
+            "13": 16
+          }
+        }
+      ]
+    },
+    {
+      "car": "TAURUS_STOCK_A",
+      "source_sha256": "9aa6264a7eb3185480a36ca2ac317e37c3015c86576afdbc5e4e345905cafe97",
+      "referenced_texture_indices": [
+        0,
+        9,
+        10,
+        11,
+        12,
+        13,
+        22,
+        31,
+        40
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 8,
+          "name": "TAURUS_512A",
+          "selector_to_texture": {
+            "0": 0,
+            "3": 1,
+            "4": 2,
+            "6": 3,
+            "7": 4,
+            "8": 5,
+            "9": 6,
+            "10": 7,
+            "11": 8
+          }
+        },
+        {
+          "base_texture_index": 13,
+          "additional_members": 8,
+          "name": "TAURUS_256A",
+          "selector_to_texture": {
+            "0": 13,
+            "3": 14,
+            "4": 15,
+            "6": 16,
+            "7": 17,
+            "8": 18,
+            "9": 19,
+            "10": 20,
+            "11": 21
+          }
+        },
+        {
+          "base_texture_index": 22,
+          "additional_members": 8,
+          "name": "TAURUS_128A",
+          "selector_to_texture": {
+            "0": 22,
+            "3": 23,
+            "4": 24,
+            "6": 25,
+            "7": 26,
+            "8": 27,
+            "9": 28,
+            "10": 29,
+            "11": 30
+          }
+        },
+        {
+          "base_texture_index": 31,
+          "additional_members": 8,
+          "name": "TAURUS_64A",
+          "selector_to_texture": {
+            "0": 31,
+            "3": 32,
+            "4": 33,
+            "6": 34,
+            "7": 35,
+            "8": 36,
+            "9": 37,
+            "10": 38,
+            "11": 39
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "13": 13,
+            "22": 22,
+            "31": 31
+          }
+        },
+        {
+          "selector": 3,
+          "material_remap": {
+            "0": 1,
+            "13": 14,
+            "22": 23,
+            "31": 32
+          }
+        },
+        {
+          "selector": 4,
+          "material_remap": {
+            "0": 2,
+            "13": 15,
+            "22": 24,
+            "31": 33
+          }
+        },
+        {
+          "selector": 6,
+          "material_remap": {
+            "0": 3,
+            "13": 16,
+            "22": 25,
+            "31": 34
+          }
+        },
+        {
+          "selector": 7,
+          "material_remap": {
+            "0": 4,
+            "13": 17,
+            "22": 26,
+            "31": 35
+          }
+        },
+        {
+          "selector": 8,
+          "material_remap": {
+            "0": 5,
+            "13": 18,
+            "22": 27,
+            "31": 36
+          }
+        },
+        {
+          "selector": 9,
+          "material_remap": {
+            "0": 6,
+            "13": 19,
+            "22": 28,
+            "31": 37
+          }
+        },
+        {
+          "selector": 10,
+          "material_remap": {
+            "0": 7,
+            "13": 20,
+            "22": 29,
+            "31": 38
+          }
+        },
+        {
+          "selector": 11,
+          "material_remap": {
+            "0": 8,
+            "13": 21,
+            "22": 30,
+            "31": 39
+          }
+        }
+      ]
+    },
+    {
+      "car": "TAURUS_STOCK_B",
+      "source_sha256": "35338e4c3276052cef7a44d0a199a9355638aa74e01e8b8c985be458518d91a8",
+      "referenced_texture_indices": [
+        0,
+        9,
+        10,
+        11,
+        12,
+        13,
+        22,
+        31,
+        40
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 8,
+          "name": "TAURUS_512B",
+          "selector_to_texture": {
+            "0": 0,
+            "3": 1,
+            "4": 2,
+            "6": 3,
+            "7": 4,
+            "8": 5,
+            "9": 6,
+            "10": 7,
+            "11": 8
+          }
+        },
+        {
+          "base_texture_index": 13,
+          "additional_members": 8,
+          "name": "TAURUS_256B",
+          "selector_to_texture": {
+            "0": 13,
+            "3": 14,
+            "4": 15,
+            "6": 16,
+            "7": 17,
+            "8": 18,
+            "9": 19,
+            "10": 20,
+            "11": 21
+          }
+        },
+        {
+          "base_texture_index": 22,
+          "additional_members": 8,
+          "name": "TAURUS_128B",
+          "selector_to_texture": {
+            "0": 22,
+            "3": 23,
+            "4": 24,
+            "6": 25,
+            "7": 26,
+            "8": 27,
+            "9": 28,
+            "10": 29,
+            "11": 30
+          }
+        },
+        {
+          "base_texture_index": 31,
+          "additional_members": 8,
+          "name": "TAURUS_64B",
+          "selector_to_texture": {
+            "0": 31,
+            "3": 32,
+            "4": 33,
+            "6": 34,
+            "7": 35,
+            "8": 36,
+            "9": 37,
+            "10": 38,
+            "11": 39
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "13": 13,
+            "22": 22,
+            "31": 31
+          }
+        },
+        {
+          "selector": 3,
+          "material_remap": {
+            "0": 1,
+            "13": 14,
+            "22": 23,
+            "31": 32
+          }
+        },
+        {
+          "selector": 4,
+          "material_remap": {
+            "0": 2,
+            "13": 15,
+            "22": 24,
+            "31": 33
+          }
+        },
+        {
+          "selector": 6,
+          "material_remap": {
+            "0": 3,
+            "13": 16,
+            "22": 25,
+            "31": 34
+          }
+        },
+        {
+          "selector": 7,
+          "material_remap": {
+            "0": 4,
+            "13": 17,
+            "22": 26,
+            "31": 35
+          }
+        },
+        {
+          "selector": 8,
+          "material_remap": {
+            "0": 5,
+            "13": 18,
+            "22": 27,
+            "31": 36
+          }
+        },
+        {
+          "selector": 9,
+          "material_remap": {
+            "0": 6,
+            "13": 19,
+            "22": 28,
+            "31": 37
+          }
+        },
+        {
+          "selector": 10,
+          "material_remap": {
+            "0": 7,
+            "13": 20,
+            "22": 29,
+            "31": 38
+          }
+        },
+        {
+          "selector": 11,
+          "material_remap": {
+            "0": 8,
+            "13": 21,
+            "22": 30,
+            "31": 39
+          }
+        }
+      ]
+    },
+    {
+      "car": "TAURUS_STOCK_C",
+      "source_sha256": "7e72ae77f5091f19a4b9344ce4578c91011d9ec9c1cafd5cfa4562f9be658c6c",
+      "referenced_texture_indices": [
+        0,
+        9,
+        10,
+        11,
+        12,
+        13,
+        22,
+        31,
+        40
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 8,
+          "name": "TAURUS_512C",
+          "selector_to_texture": {
+            "0": 0,
+            "3": 1,
+            "4": 2,
+            "6": 3,
+            "7": 4,
+            "8": 5,
+            "9": 6,
+            "10": 7,
+            "11": 8
+          }
+        },
+        {
+          "base_texture_index": 13,
+          "additional_members": 8,
+          "name": "TAURUS_256C",
+          "selector_to_texture": {
+            "0": 13,
+            "3": 14,
+            "4": 15,
+            "6": 16,
+            "7": 17,
+            "8": 18,
+            "9": 19,
+            "10": 20,
+            "11": 21
+          }
+        },
+        {
+          "base_texture_index": 22,
+          "additional_members": 8,
+          "name": "TAURUS_128C",
+          "selector_to_texture": {
+            "0": 22,
+            "3": 23,
+            "4": 24,
+            "6": 25,
+            "7": 26,
+            "8": 27,
+            "9": 28,
+            "10": 29,
+            "11": 30
+          }
+        },
+        {
+          "base_texture_index": 31,
+          "additional_members": 8,
+          "name": "TAURUS_64C",
+          "selector_to_texture": {
+            "0": 31,
+            "3": 32,
+            "4": 33,
+            "6": 34,
+            "7": 35,
+            "8": 36,
+            "9": 37,
+            "10": 38,
+            "11": 39
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "13": 13,
+            "22": 22,
+            "31": 31
+          }
+        },
+        {
+          "selector": 3,
+          "material_remap": {
+            "0": 1,
+            "13": 14,
+            "22": 23,
+            "31": 32
+          }
+        },
+        {
+          "selector": 4,
+          "material_remap": {
+            "0": 2,
+            "13": 15,
+            "22": 24,
+            "31": 33
+          }
+        },
+        {
+          "selector": 6,
+          "material_remap": {
+            "0": 3,
+            "13": 16,
+            "22": 25,
+            "31": 34
+          }
+        },
+        {
+          "selector": 7,
+          "material_remap": {
+            "0": 4,
+            "13": 17,
+            "22": 26,
+            "31": 35
+          }
+        },
+        {
+          "selector": 8,
+          "material_remap": {
+            "0": 5,
+            "13": 18,
+            "22": 27,
+            "31": 36
+          }
+        },
+        {
+          "selector": 9,
+          "material_remap": {
+            "0": 6,
+            "13": 19,
+            "22": 28,
+            "31": 37
+          }
+        },
+        {
+          "selector": 10,
+          "material_remap": {
+            "0": 7,
+            "13": 20,
+            "22": 29,
+            "31": 38
+          }
+        },
+        {
+          "selector": 11,
+          "material_remap": {
+            "0": 8,
+            "13": 21,
+            "22": 30,
+            "31": 39
+          }
+        }
+      ]
+    },
+    {
+      "car": "TAURUS_STOCK_D",
+      "source_sha256": "377514d73fa238f79afc5c45097673feec90e8ddb111539f51e6c757331f6779",
+      "referenced_texture_indices": [
+        0,
+        9,
+        10,
+        11,
+        12,
+        13,
+        22,
+        31,
+        40
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 8,
+          "name": "TAURUS_512D",
+          "selector_to_texture": {
+            "0": 0,
+            "3": 1,
+            "4": 2,
+            "6": 3,
+            "7": 4,
+            "8": 5,
+            "9": 6,
+            "10": 7,
+            "11": 8
+          }
+        },
+        {
+          "base_texture_index": 13,
+          "additional_members": 8,
+          "name": "TAURUS_256D",
+          "selector_to_texture": {
+            "0": 13,
+            "3": 14,
+            "4": 15,
+            "6": 16,
+            "7": 17,
+            "8": 18,
+            "9": 19,
+            "10": 20,
+            "11": 21
+          }
+        },
+        {
+          "base_texture_index": 22,
+          "additional_members": 8,
+          "name": "TAURUS_128D",
+          "selector_to_texture": {
+            "0": 22,
+            "3": 23,
+            "4": 24,
+            "6": 25,
+            "7": 26,
+            "8": 27,
+            "9": 28,
+            "10": 29,
+            "11": 30
+          }
+        },
+        {
+          "base_texture_index": 31,
+          "additional_members": 8,
+          "name": "TAURUS_64D",
+          "selector_to_texture": {
+            "0": 31,
+            "3": 32,
+            "4": 33,
+            "6": 34,
+            "7": 35,
+            "8": 36,
+            "9": 37,
+            "10": 38,
+            "11": 39
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "13": 13,
+            "22": 22,
+            "31": 31
+          }
+        },
+        {
+          "selector": 3,
+          "material_remap": {
+            "0": 1,
+            "13": 14,
+            "22": 23,
+            "31": 32
+          }
+        },
+        {
+          "selector": 4,
+          "material_remap": {
+            "0": 2,
+            "13": 15,
+            "22": 24,
+            "31": 33
+          }
+        },
+        {
+          "selector": 6,
+          "material_remap": {
+            "0": 3,
+            "13": 16,
+            "22": 25,
+            "31": 34
+          }
+        },
+        {
+          "selector": 7,
+          "material_remap": {
+            "0": 4,
+            "13": 17,
+            "22": 26,
+            "31": 35
+          }
+        },
+        {
+          "selector": 8,
+          "material_remap": {
+            "0": 5,
+            "13": 18,
+            "22": 27,
+            "31": 36
+          }
+        },
+        {
+          "selector": 9,
+          "material_remap": {
+            "0": 6,
+            "13": 19,
+            "22": 28,
+            "31": 37
+          }
+        },
+        {
+          "selector": 10,
+          "material_remap": {
+            "0": 7,
+            "13": 20,
+            "22": 29,
+            "31": 38
+          }
+        },
+        {
+          "selector": 11,
+          "material_remap": {
+            "0": 8,
+            "13": 21,
+            "22": 30,
+            "31": 39
+          }
+        }
+      ]
+    },
+    {
+      "car": "THUNDERBIRD",
+      "source_sha256": "dd4aea15895268d220775448415f7561e3d1cf7ecc15a95a34d59b5a1abb9401",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "TBIRD_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "TBIRD_256",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "TBIRD_128",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "TBIRD_64",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15
+          }
+        }
+      ]
+    },
+    {
+      "car": "THUNDERBIRD_2002",
+      "source_sha256": "c3d03b36ec5d2eb89d4d26f3b8b31e11db6b852a60ca37366b62820e0f16e415",
+      "referenced_texture_indices": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "groups": [
+        {
+          "base_texture_index": 0,
+          "additional_members": 3,
+          "name": "TBIRD_2002_512",
+          "selector_to_texture": {
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "5": 3
+          }
+        },
+        {
+          "base_texture_index": 4,
+          "additional_members": 3,
+          "name": "TBIRD_2002_MOVING_WHEEL",
+          "selector_to_texture": {
+            "0": 4,
+            "1": 5,
+            "2": 6,
+            "5": 7
+          }
+        },
+        {
+          "base_texture_index": 8,
+          "additional_members": 3,
+          "name": "TBIRD_2002_256",
+          "selector_to_texture": {
+            "0": 8,
+            "1": 9,
+            "2": 10,
+            "5": 11
+          }
+        },
+        {
+          "base_texture_index": 12,
+          "additional_members": 3,
+          "name": "TBIRD_2002_128",
+          "selector_to_texture": {
+            "0": 12,
+            "1": 13,
+            "2": 14,
+            "5": 15
+          }
+        },
+        {
+          "base_texture_index": 16,
+          "additional_members": 3,
+          "name": "TBIRD_2002_64",
+          "selector_to_texture": {
+            "0": 16,
+            "1": 17,
+            "2": 18,
+            "5": 19
+          }
+        }
+      ],
+      "complete_selectors": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "variants": [
+        {
+          "selector": 0,
+          "material_remap": {
+            "0": 0,
+            "4": 4,
+            "8": 8,
+            "12": 12,
+            "16": 16
+          }
+        },
+        {
+          "selector": 1,
+          "material_remap": {
+            "0": 1,
+            "4": 5,
+            "8": 9,
+            "12": 13,
+            "16": 17
+          }
+        },
+        {
+          "selector": 2,
+          "material_remap": {
+            "0": 2,
+            "4": 6,
+            "8": 10,
+            "12": 14,
+            "16": 18
+          }
+        },
+        {
+          "selector": 5,
+          "material_remap": {
+            "0": 3,
+            "4": 7,
+            "8": 11,
+            "12": 15,
+            "16": 19
+          }
+        }
+      ]
+    },
+    {
+      "car": "THUNDERBIRD_MOVIE",
+      "source_sha256": "32579b498e35973ef5ad6ab48617688b901320e13faeb539c1a7bd09e0a59aa4",
+      "referenced_texture_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "groups": [],
+      "complete_selectors": [],
+      "variants": []
+    }
+  ],
+  "limits": [
+    "Missing selectors leave prior descriptor pointers intact. Complete selectors apply across all referenced variant groups.",
+    "Numeric selector IDs are proven; human livery labels and UI variant paths remain separate.",
+    "Host emulation checks descriptor remapping only, not actual GS draw execution or shading."
+  ]
+}

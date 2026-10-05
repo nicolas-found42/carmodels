@@ -1,0 +1,56 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "arguments": {
+    "claims": [
+      "FUN_0022acc8 sets the texture object's cell-record list at +0x44 and links each same-index tile descriptor at record +8.",
+      "FUN_0021fd50 traverses the texture's rows and columns in grid order and reads each cell's U/V extents and descriptor pointer.",
+      "The source draw path computes per-cell screen steps from header stride/cell and image dimensions, then scales each cell's quad extent by its recorded U/V fractions.",
+      "The deterministic decoder's row-major clipped 32-by-32 composition agrees with the source cell-grid formulas for every one of the 171 files.",
+      "Because the class-selected base-image upload ignores +0x2c/+0x35, the available evidence proves that the dynamic CARS request in REWRD.UI uses this base-image path."
+    ],
+    "evidence": "reward-ui-graphic-path-trace.json plus tools/recover_car_ptg.py --verify-only output: 171 verified assets, zero failures. The receipt records source hashes, parser-to-record offsets, renderer loops/formulas and measured U/V-fraction checks."
+  },
+  "summary": {"verified": 4, "contradicted": 1, "unsupported": 0, "needs_review": 0},
+  "results": [
+    {
+      "claim": "FUN_0022acc8 sets the texture object's cell-record list at +0x44 and links each same-index tile descriptor at record +8.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.01, "says_nothing": 0, "supports": 0.99},
+      "confidence": 0.99,
+      "action": "auto"
+    },
+    {
+      "claim": "FUN_0021fd50 traverses the texture's rows and columns in grid order and reads each cell's U/V extents and descriptor pointer.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.02, "says_nothing": 0, "supports": 0.98},
+      "confidence": 0.97,
+      "action": "auto"
+    },
+    {
+      "claim": "The source draw path computes per-cell screen steps from header stride/cell and image dimensions, then scales each cell's quad extent by its recorded U/V fractions.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.02, "says_nothing": 0.01, "supports": 0.97},
+      "confidence": 0.95,
+      "action": "auto"
+    },
+    {
+      "claim": "The deterministic decoder's row-major clipped 32-by-32 composition agrees with the source cell-grid formulas for every one of the 171 files.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "contradicts": 0, "supports": 1},
+      "confidence": 0.99,
+      "action": "auto"
+    },
+    {
+      "claim": "Because the class-selected base-image upload ignores +0x2c/+0x35, the available evidence proves that the dynamic CARS request in REWRD.UI uses this base-image path.",
+      "verdict": "contradicted",
+      "probabilities": {"contradicts": 0.94, "says_nothing": 0.05, "supports": 0.01},
+      "confidence": 0.92,
+      "action": "auto"
+    }
+  ],
+  "usage": {"input_tokens": 2409, "output_tokens": 311},
+  "disposition": "The draw-grid/composition claims are verified as source interpretation and corpus agreement. The CARS-to-renderer claim is explicitly contradicted by the available evidence gap and remains unresolved; Jev does not prove actual runtime pixels."
+}

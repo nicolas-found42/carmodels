@@ -1,0 +1,142 @@
+{
+  "args": {
+    "request": "Gate the lean .gitignore split.",
+    "diff": "{\n \"keep\": [\n  \"tools\",\n  \"receipts\",\n  \"reference\",\n  \"viewer\",\n  \"AppImage\",\n  \"screenshots\"\n ],\n \"ignore\": [\n  \"blender\",\n  \"sstates/dumps\",\n  \"working-sets\",\n  \"bytecode\"\n ]\n}",
+    "claims": [
+      "Everything over GitHub limits is ignored.",
+      "The deliverable and the proof are kept.",
+      "A fresh clone can rebuild everything except re-capturing live emulator state."
+    ],
+    "evidence": "Candidate file groups in the carmodels repo (Ford Racing 2 recovery), with sizes:\nG1 tools/validation-runtime 1.1G: Blender dmg + mounted Blender.app (third-party, re-downloadable). Scripts validate GLBs through Blender.\nG2 tools/headless-runtime AppImage 57M: PCSX2 v2.8.2 AppImage, pinned emulator dependency for the container.\nG3 research/evidence/continuation/runtime 960M: 40 savestates (.p2s ~11MB each) + unpacked EE/IOP/VU/hw-reg dumps + 13M F8 screenshots. Receipts record sha256 of these files.\nG4 research/evidence/job-b-live 704M: pairs/*-eeMemory.bin + members/ extracted dumps (experiment working sets, rebuilt by the probe tools).\nG5 viewer 57M: web viewer incl. vendor three.js + 35 recovered .glb files.\nG6 reference 65M: the per-car reference corpus (models, textures, sounds) \u2014 the deliverable.\nG7 recovered 972K: canonical index + per-car manifests.\nG8 receipts JSON (~5M total): validation receipts, Jev receipts, tickets, reports.\nG9 tools/*.py + batteries: all scripts.\nG10 869 .pyc / __pycache__: bytecode regenerable.\nContext: user cancelled a 2.6GB push; wants a lean repo. GitHub rejects files >100MB (only the Blender files exceed it). Tools read the unpacked runtime dumps at fixed paths (e.g. verify_selector_word reads RUNTIME eeMemory.bin); excluding them means a fresh clone cannot re-run those tools without re-capturing.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"lean\", \"escaped\": false, \"confidence\": 0.82, \"probabilities\": {\"ask_user\": 0.04, \"minimal\": 0, \"keep_dumps\": 0.01, \"none\": 0.07, \"lean\": 0.85, \"investigate\": 0.03}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"lean\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"lean\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"lean\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"keep_dumps\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"keep_dumps\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"keep_dumps\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"minimal\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"minimal\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"minimal\", \"requirement\": 2, \"answer\": \"contradicted\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2295, \"output_tokens\": 464}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_contradicted",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.29,
+      "scores": {
+        "correctness": {
+          "score": 0.93,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.43,
+            "1": 0.21,
+            "2": 0.36
+          }
+        },
+        "spec_match": {
+          "score": 1.4,
+          "confidence": 0.1,
+          "probabilities": {
+            "0": 0.08,
+            "1": 0.44,
+            "2": 0.48
+          }
+        },
+        "test_gap": {
+          "score": 1.66,
+          "confidence": 0.5,
+          "probabilities": {
+            "0": 0.13,
+            "1": 0.07,
+            "2": 0.8
+          }
+        },
+        "blast_radius": {
+          "score": 1.05,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.31,
+            "1": 0.33,
+            "2": 0.36
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.49275,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "correctness",
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 2,
+        "contradicted": 1,
+        "unsupported": 0,
+        "needs_review": 3,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "Everything over GitHub limits is ignored.",
+          "verdict": "verified",
+          "confidence": 0.17,
+          "probabilities": {
+            "contradicted": 0.24,
+            "unsupported": 0.31,
+            "verified": 0.45
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "The deliverable and the proof are kept.",
+          "verdict": "verified",
+          "confidence": 0.65,
+          "probabilities": {
+            "contradicted": 0.15,
+            "unsupported": 0.08,
+            "verified": 0.77
+          },
+          "action": "review"
+        },
+        {
+          "claim": "A fresh clone can rebuild everything except re-capturing live emulator state.",
+          "verdict": "contradicted",
+          "confidence": 0.47,
+          "probabilities": {
+            "contradicted": 0.65,
+            "unsupported": 0.13,
+            "verified": 0.22
+          },
+          "action": "escalate"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2211,
+      "output_tokens": 201
+    }
+  }
+}

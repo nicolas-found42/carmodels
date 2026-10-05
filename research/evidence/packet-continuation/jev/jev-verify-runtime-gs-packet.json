@@ -1,0 +1,42 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "request_claims": [
+    "The dump contains 5,879 packed geometry GIF tags with descriptor nibbles [2,1,4], whose register sequence is STQ, RGBAQ, XYZF2.",
+    "PCSX2's packed STQ/RGBA/XYZF2 handler consumes three qwords per vertex in that exact order and forwards XYZF2.Skip() to VertexKick.",
+    "For packed XYZF2, ADC is bit 15 of U32[3] and the GS handler uses that bit to determine whether to skip the vertex kick.",
+    "The race-frame packet decode contains 135,032 XYZF2 vertices, with ADC set for 67,433 and clear for 67,599.",
+    "The primitive-type counts and material-state values from this dump are frame-wide and do not prove that any specific car used a particular tag, texture, alpha, or filter value."
+  ],
+  "evidence": [
+    {
+      "id": "PCSX2-GSRegs",
+      "text": "At PCSX2 commit 81526d4dc7cc70e4ae75abb35a789417456c6d43, GSRegs.h enum GIF_REG_STQ=0x02, GIF_REG_RGBAQ=0x01, GIF_REG_XYZF2=0x04. GIFPacked STQ fields float S,T,Q. GIFPacked XYZF2 fields X,Y,Z(24),F(8),ADC bit 15; Skip() is U32[3] & 0x8000."
+    },
+    {
+      "id": "PCSX2-GSState",
+      "text": "At the same PCSX2 commit, GSState.cpp GIFPackedRegHandlerSTQRGBAXYZF2 asserts size divisible by 3; reads r[0] STQ, r[1] RGBA, r[2] XYZF2; invokes VertexKick(r[2].XYZF2.Skip()); and advances r by 3. GIFPackedRegHandlerXYZF2 computes skip = adc || r->XYZF2.Skip() and passes skip to VertexKick."
+    },
+    {
+      "id": "GSDump-decode",
+      "text": "Pinned single-frame PCSX2 GSDump decoded completely to EOF, with 5,879 packed geometry tags whose descriptor nibble sequence is [2,1,4]. The deterministic decoder finds 135,032 vertex records, 67,433 ADC set, 67,599 clear. Primitive raw type 4 (triangle strip): 2,799 tags; raw type 5 (triangle fan): 3,080 tags. Capture is one game frame with a car visibly present, but the counts are global; no tags have been assigned to a specific car or material."
+    }
+  ],
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+    "verified": 5,
+    "contradicted": 0,
+    "unsupported": 0,
+    "needs_review": 0
+  },
+  "results": [
+    {"id":"claim0","verdict":"verified","confidence":1,"action":"auto","supporting_evidence":"GSDump-decode","same_subject":0.93},
+    {"id":"claim1","verdict":"verified","confidence":0.96,"action":"auto","supporting_evidence":"PCSX2-GSState","same_subject":0.66},
+    {"id":"claim2","verdict":"verified","confidence":0.89,"action":"auto","supporting_evidence":"PCSX2-GSRegs","same_subject":0.72},
+    {"id":"claim3","verdict":"verified","confidence":0.99,"action":"auto","supporting_evidence":"GSDump-decode","same_subject":0.92},
+    {"id":"claim4","verdict":"verified","confidence":1,"action":"auto","supporting_evidence":"GSDump-decode","same_subject":0.9}
+  ],
+  "usage": {"input_tokens":2759,"output_tokens":620}
+}

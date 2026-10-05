@@ -1,0 +1,107 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "zero154",
+        "text": "0 hits for (1,5,4) at all widths."
+      },
+      {
+        "id": "chain",
+        "text": "Live chain resolves over read-only PINE."
+      },
+      {
+        "id": "store",
+        "text": "entity+0x64 is a float, read live."
+      },
+      {
+        "id": "claim_isolated",
+        "text": "The per-screen selector word was isolated."
+      }
+    ],
+    "classes": [
+      {
+        "id": "supported_fact",
+        "description": "A measured result the code produced. Example: 0 tuple hits."
+      },
+      {
+        "id": "unsupported_claim",
+        "description": "Asserts a find the evidence does not support."
+      }
+    ],
+    "purpose": "separate measured facts from overclaims",
+    "context": "Job B closing."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 2,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "supported_fact": 2,
+        "unsupported_claim": 2
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "zero154",
+        "classification": "supported_fact",
+        "probabilities": {
+          "supported_fact": 0.99,
+          "unsupported_claim": 0.01
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "chain",
+        "classification": "unsupported_claim",
+        "probabilities": {
+          "supported_fact": 0.1,
+          "unsupported_claim": 0.9
+        },
+        "confidence": 0.81,
+        "margin": 0.8,
+        "top_probability": 0.9,
+        "decision": "auto"
+      },
+      {
+        "id": "store",
+        "classification": "supported_fact",
+        "probabilities": {
+          "supported_fact": 0.68,
+          "unsupported_claim": 0.32
+        },
+        "confidence": 0.36,
+        "margin": 0.36000000000000004,
+        "top_probability": 0.68,
+        "decision": "review"
+      },
+      {
+        "id": "claim_isolated",
+        "classification": "unsupported_claim",
+        "probabilities": {
+          "supported_fact": 0.32,
+          "unsupported_claim": 0.68
+        },
+        "confidence": 0.35,
+        "margin": 0.36000000000000004,
+        "top_probability": 0.68,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 640,
+      "output_tokens": 131
+    }
+  }
+}

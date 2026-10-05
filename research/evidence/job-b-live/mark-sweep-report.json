@@ -1,0 +1,37 @@
+{
+  "experiment": "6-position screenshot-verified sweep + float-encoding scan",
+  "slots": {
+    "140": "pos1 FORD'49",
+    "141": "pos2 '68 MUSTANG",
+    "142": "pos3 '55 Thunderbird",
+    "143": "pos6 FORD GT",
+    "144": "pos6 FORD GT",
+    "145": "pos5 Thunderbird Convertible"
+  },
+  "method": "F8 screenshot + paused savestate pair per position; pause-control 0 diffs; heap base identical 0x473d70",
+  "findings": {
+    "TEST1_no_word_equals_position": "0 hits at u32/u16/u8 across all 6 slots",
+    "DAT_words_do_not_track": "0x241b60 reads 5,5,5,4,3,3; 0x241e00 reads 5,5,5,5,4,4 across pos1,2,3,6,6,5",
+    "same_position_differs": "143 vs 144 (both pos6) differ at 0x241b60 (4 vs 3): tracks animation, not highlight",
+    "float_encoding": "0 words equal position as float32; only denormal noise otherwise"
+  },
+  "verdict": "the mark is NOT a stored integer OR float in EE; closed_negative per Jev (0.89)",
+  "gaps": {
+    "G1_mark_not_in_savestate": "CLOSED as negative (int + float both exhausted)",
+    "G2_PINE_no_pause": "CLOSED: stdlib RFB key injector to :99 works (Space toggles 1<->0)",
+    "G3_no_X_tools": "CLOSED: no image change needed (stdlib socket only)",
+    "G4_no_headless_debugger_API": "RESEARCHED: PCSX2-MCP DebugServer is Windows-only; breakpoint remains the only untested path and needs approval"
+  },
+  "receipts": [
+    "research/evidence/job-b-live/pairs/140..145-eeMemory.bin",
+    "research/evidence/continuation/runtime/linux/snaps/*0458*.png + *0459*.png",
+    "research/evidence/vehicle-completeness/jev-jobB/sweep-*.json + msw-*.json"
+  ],
+  "tools": [
+    "tools/headless-runtime/rfb_key.py",
+    "tools/headless-runtime/live_paused_pair.py",
+    "tools/battery_jobB_sweep.py",
+    "tools/battery_jobB_sweep_close.py"
+  ],
+  "render_fidelity_complete": false
+}

@@ -1,0 +1,211 @@
+{
+  "control_claims": 84,
+  "verdict_matches_expected": 66,
+  "relation_matches_expected": 75,
+  "needs_review": 28,
+  "mismatches": [
+    {
+      "receipt": "controls-container-code.json",
+      "claim_index": 4,
+      "claim": "The parser derives texture width from descriptor bits 19 through 22.",
+      "expected": "contradicted",
+      "verdict": "verified",
+      "relation_verdict": null,
+      "confidence": 0.82,
+      "action": "auto",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-container-code.json",
+      "claim_index": 5,
+      "claim": "The decoder doubles every stored alpha byte before returning RGBA.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.83,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-container-code.json",
+      "claim_index": 6,
+      "claim": "The indexed RGBA decoder selects 256 palette entries for format 4.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.95,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-fresh-export.json",
+      "claim_index": 4,
+      "claim": "The fresh export inspected 56 car models.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 1,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-fresh-export.json",
+      "claim_index": 5,
+      "claim": "The fresh export decoded 701 level-zero textures.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.98,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-fresh-export.json",
+      "claim_index": 6,
+      "claim": "The fresh export counted 657138 geometry samples.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 1,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-geometry-layout.json",
+      "claim_index": 2,
+      "claim": "Each geometry header always has a six-byte plane and a four-byte plane.",
+      "expected": "verified",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.93,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-geometry-layout.json",
+      "claim_index": 4,
+      "claim": "The geometry table uses 0x58-byte records.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.99,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-geometry-layout.json",
+      "claim_index": 5,
+      "claim": "The two geometry group counts come from offsets +0x20 and +0x2c.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.99,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-geometry-layout.json",
+      "claim_index": 6,
+      "claim": "Each geometry header always has a twenty-byte plane.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.97,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-index-code.json",
+      "claim_index": 2,
+      "claim": "Descriptor bit 8 selects packed upload.",
+      "expected": "verified",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.3,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-index-code.json",
+      "claim_index": 4,
+      "claim": "Direct format 3 is always unswizzled by unswizzle8.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.99,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-index-code.json",
+      "claim_index": 5,
+      "claim": "Direct format 4 expands each byte into its high nibble followed by its low nibble.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.91,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-index-code.json",
+      "claim_index": 6,
+      "claim": "Descriptor bit 9 selects packed upload.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.63,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-index-code.json",
+      "claim_index": 7,
+      "claim": "The decoder accepts a texture item whose dimensions disagree with its descriptor.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 1,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-ptg-census.json",
+      "claim_index": 7,
+      "claim": "All 171 measured car PTGs are classified as completely_decoded.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.8,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-vif-order.json",
+      "claim_index": 5,
+      "claim": "The audited row update contains three raw words 0x45c00000 and a zero fourth word.",
+      "expected": "contradicted",
+      "verdict": "verified",
+      "relation_verdict": null,
+      "confidence": 0.38,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    },
+    {
+      "receipt": "controls-vif-order.json",
+      "claim_index": 7,
+      "claim": "The first render iteration inherited VIF state has been proven.",
+      "expected": "contradicted",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "confidence": 0.99,
+      "action": "review",
+      "disposition": "Model outcome retained. Source code / exact arithmetic controls the fact; do not use automatic verdict as proof."
+    }
+  ],
+  "usage_so_far": {
+    "input_tokens": 141571,
+    "output_tokens": 9641
+  },
+  "limits": "Manually labeled local source-control battery; not general accuracy or empirical calibration on unknown game hypotheses. All outcomes retained without retrying for favorable labels."
+}

@@ -1,0 +1,59 @@
+# carmodels .gitignore — decided by Jev battery tools/battery_gitignore.py
+# (receipts: research/evidence/vehicle-completeness/jev-gitignore/).
+# Split: lean 0.85. Keep tools, receipts, reference corpus, viewer GLBs,
+# AppImage, screenshots. Ignore vendor blobs, savestates/dumps, working
+# sets, bytecode. Fresh-clone note: savestates/dumps are re-captured live
+# via PINE in the container; GLB builds need Blender (re-download);
+# validation receipts keep sha256 pins of the excluded files.
+#
+# OS / editor cruft
+.DS_Store
+.AppleDouble
+._*
+*~
+
+# Python bytecode (regenerable)
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+np-venv/
+*-venv/
+
+# Third-party vendor binaries (re-downloadable; Blender exceeds GitHub's 100MB limit)
+tools/validation-runtime/blender-4.5.14-macos-arm64.dmg
+tools/validation-runtime/blender-mount/
+viewer/vendor/
+
+# Savestates (each ~11MB; re-captured live via PINE + savestate ops)
+*.p2s
+*.p2s.*.part
+
+# Unpacked savestate members: EE/IOP/VU RAM, microcode, hw regs, audio/video,
+# pad/usb state, PCSX2 CPU structures (read by probe tools at fixed paths;
+# re-extracted from .p2s with a zstd-capable python)
+*-eeMemory.bin
+*-iopMemory.bin
+*Memory.bin
+loading-ee.bin
+*MicroMem.bin
+*Scratchpad.bin
+*HwRegs.bin
+*SPU2.bin
+*USB.bin
+*PAD.bin
+*GS.bin
+*.gs.zst
+*Structures.dat
+*Savestate-Version.id
+
+# macOS PCSX2 app bundle accidentally captured under runtime/ (vendor binary,
+# same class as the Blender vendor files: re-downloadable, not our work)
+research/evidence/continuation/runtime/PCSX2.app/
+
+# Experiment working sets (rebuilt by the probe tools from the above)
+research/evidence/job-b-live/pairs/
+research/evidence/job-b-live/members/
+
+# Local scratch
+.scratch/

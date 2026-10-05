@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "The selector is a plain integer word in EE main RAM, findable by diff.",
+    "passage_b": "The selector is behind a pointer/struct reached from the menu draw path, so a direct diff misses it.",
+    "aspects": [
+      "what a diff would show",
+      "how the label chain relates",
+      "plausibility given the failed triangulation"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "contradicts",
+      "probabilities": {
+        "different_facts": 0.01,
+        "same_fact": 0,
+        "contradicts": 0.99
+      },
+      "confidence": 0.98,
+      "margin": 0.98,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "what a diff would show",
+        "relation": "contradicts",
+        "probabilities": {
+          "different_facts": 0.01,
+          "same_fact": 0,
+          "contradicts": 0.99
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "decision": "auto"
+      },
+      {
+        "aspect": "how the label chain relates",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.61,
+          "same_fact": 0.01,
+          "contradicts": 0.38
+        },
+        "confidence": 0.41,
+        "margin": 0.22999999999999998,
+        "decision": "review"
+      },
+      {
+        "aspect": "plausibility given the failed triangulation",
+        "relation": "contradicts",
+        "probabilities": {
+          "different_facts": 0.19,
+          "same_fact": 0.02,
+          "contradicts": 0.79
+        },
+        "confidence": 0.68,
+        "margin": 0.6000000000000001,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 849,
+      "output_tokens": 177
+    }
+  }
+}

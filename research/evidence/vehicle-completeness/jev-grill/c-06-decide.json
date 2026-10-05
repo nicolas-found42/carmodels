@@ -1,0 +1,122 @@
+{
+  "args": {
+    "decision": "Is the consolidated plan complete and ready to act on, or does a decision remain open?",
+    "evidence": "CONSOLIDATED PLAN for the next session on the Ford Racing 2 (SLES_517.05) car-model recovery, workspace R (projects/carmodels).\nORDER: A (sound index) -> B (selector) -> C (display names). Stop only when all three reach a definite outcome (stop condition 7b); C is required.\nA: RECORDED VERDICT. The executable binds :SOUNDBANK_TYPE by name: config-key table @0x24af68 (CAR1..CAR8_SOUND_FILE then CAR_GENERIC/UI_SOUNDS) and descriptor table @0x24afe8 (sounds\\car1_snd:0:0:5 .. car8_snd:7:35:5), same index 0..7; FUN_001d7950 resolves the token to car struct +0x40; FUN_00165b10 indexes carN_snd by +0x40; FUN_001408d8 loads carN_snd.msh/.msb from the literal stem; the first numeric field is a discarded bank ordinal. Verdict: build_reference.py's name-based rule is CONSISTENT, no off-by-one. Action: record this verdict in a sound-index reconciliation receipt; do NOT change the green T2 verifier.\nB: PROOF BAR = a decompilation-reachable address, never a value-only match (value triangulation already returned 0 word hits and 97 noisy byte hits). METHOD: trace FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10. The livery-label selector is named: FUN_00125640 returns a packed selector (low-16 resource-list ordinal) from record base 0x233070+type*0x114 (count +0xbc, list +0x90); FUN_00121e10 stores it at entity+0x64; the chain hangs off the dynamic gameflow pointers outer+4 -> +0x14c -> +0x174. DO: read entity+0x64 via the chain in the three existing EE images (slots 102/103/104), expected the same DEFAULT value in all three (non-distinguishing by construction at DEFAULT livery). Then ONE time-boxed indirection pass for the per-screen CAR highlight cursor (FUN_001c4a40 over DAT_00241b40, caller open). 'B resolved' = a DEFINITE OUTCOME: the named livery store read AND recorded, plus the car-highlight cursor recorded open if the indirection pass names nothing. FALLBACK: broaden_indirect once before recording open.\nC: extend tools/resolve_display_names.py to the full car-keyed TXT_CARS_* set (~35-39 rows), delivered as its own receipt under vehicle-completeness/; the three-pair T3 claim stays intact and separate. The '136-entry display-name table' is a misnomer (136 is livery rows; display names are keyed by car).\nCEILING: render_fidelity_complete stays false on every artifact; partial claims only; no completion gate passes; a Jev gate escalate is an acceptable recorded outcome. CONSTRAINTS: never print credentials; new files in R not S; close tickets only on real tool output.",
+    "priorities": "No silently-assumed branch; every artifact keeps partial claims; the plan must be executable end to end without a positive-find requirement.",
+    "candidates": [
+      {
+        "id": "ready",
+        "description": "The plan is complete and can be executed as written."
+      },
+      {
+        "id": "reopen_b",
+        "description": "Reopen B: require the car-highlight cursor to be named before acting."
+      },
+      {
+        "id": "cut_c",
+        "description": "Cut C to shrink scope."
+      },
+      {
+        "id": "investigate_more",
+        "description": "Gather more evidence before acting."
+      }
+    ],
+    "requirements": [
+      "Leaves no decision silently assumed",
+      "Executable end to end",
+      "Keeps partial claims"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "ready",
+      "escaped": false,
+      "confidence": 0.95,
+      "probabilities": {
+        "reopen_b": 0.01,
+        "cut_c": 0,
+        "investigate": 0.01,
+        "ready": 0.96,
+        "investigate_more": 0.01,
+        "ask_user": 0,
+        "none": 0.01
+      },
+      "contradicted_requirements": [
+        0
+      ]
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "ready",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "ready",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "ready",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "reopen_b",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "reopen_b",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "reopen_b",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "cut_c",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "cut_c",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "cut_c",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "investigate_more",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "investigate_more",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "investigate_more",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [
+      "Requirement 1 contradicted by the recommended candidate; inspect before acting"
+    ],
+    "usage": {
+      "input_tokens": 2992,
+      "output_tokens": 614
+    }
+  }
+}

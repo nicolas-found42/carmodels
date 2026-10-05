@@ -1,0 +1,99 @@
+{
+  "args": {
+    "passage_a": "Implement tools/verify_config_data_sound.py: per-car config x11 txt set equality vs corpus manifests, every file sha256 vs manifest, data DAT present per car, sound inheritance chain per car resolves to an existing bank in reference/ford/_shared/sounds; plus at least two negative controls (mutated hash accepted nowhere; cross-car config swap rejected).",
+    "passage_b": "{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n",
+    "aspects": [
+      "config x11 set equality",
+      "sha256 vs manifest",
+      "data DAT per car",
+      "sound chain resolution",
+      "negative controls"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "same_fact",
+      "probabilities": {
+        "same_fact": 0.69,
+        "contradicts": 0.01,
+        "different_facts": 0.3
+      },
+      "confidence": 0.54,
+      "margin": 0.38999999999999996,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "config x11 set equality",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.91,
+          "contradicts": 0,
+          "different_facts": 0.09
+        },
+        "confidence": 0.86,
+        "margin": 0.8200000000000001,
+        "decision": "auto"
+      },
+      {
+        "aspect": "sha256 vs manifest",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.93,
+          "contradicts": 0,
+          "different_facts": 0.07
+        },
+        "confidence": 0.89,
+        "margin": 0.8600000000000001,
+        "decision": "auto"
+      },
+      {
+        "aspect": "data DAT per car",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.92,
+          "contradicts": 0,
+          "different_facts": 0.08
+        },
+        "confidence": 0.88,
+        "margin": 0.8400000000000001,
+        "decision": "auto"
+      },
+      {
+        "aspect": "sound chain resolution",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.96,
+          "contradicts": 0,
+          "different_facts": 0.04
+        },
+        "confidence": 0.94,
+        "margin": 0.9199999999999999,
+        "decision": "auto"
+      },
+      {
+        "aspect": "negative controls",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.87,
+          "contradicts": 0.01,
+          "different_facts": 0.12
+        },
+        "confidence": 0.82,
+        "margin": 0.75,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 1408,
+      "output_tokens": 259
+    }
+  }
+}

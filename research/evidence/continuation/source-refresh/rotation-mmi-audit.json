@@ -1,0 +1,30 @@
+{
+  "args": {
+    "source": "void PEXTUW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[3];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[3];\n}\n\nvoid PEXTLW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[1];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[1];\n}\n\nvoid PCPYLD() {\n\tif (!_Rd_) return;\n\n\t// note: first _Rs_, since the other way when _Rd_ equals\n\t// _Rs_ or _Rt_ this would screw up\n\tcpuRegs.GPR.r[_Rd_].UD[1] = cpuRegs.GPR.r[_Rs_].UD[0];\n\tcpuRegs.GPR.r[_Rd_].UD[0] = cpuRegs.GPR.r[_Rt_].UD[0];\n}\n\nvoid PEXCW() {\n\tGPR_reg Rt;\n\n\tif (!_Rd_) return;\n\n\tRt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[1];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rt.UL[3];\n}\n\nvoid PROT3W() {\n\tGPR_reg Rt;\n\n\tif (!_Rd_) return;\n\n\tRt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[1];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rt.UL[3];\n}\n",
+    "records": [
+      {
+        "id": "pexcw",
+        "request": "Word-lane permutation in PEXCW output relative to its input Rt.",
+        "value": "UL[0]=Rt.UL[0]; UL[1]=Rt.UL[2]; UL[2]=Rt.UL[1]; UL[3]=Rt.UL[3]."
+      },
+      {
+        "id": "prot3w",
+        "request": "Word-lane permutation in PROT3W output relative to input Rt.",
+        "value": "UL[0]=Rt.UL[1]; UL[1]=Rt.UL[2]; UL[2]=Rt.UL[0]; UL[3]=Rt.UL[3]."
+      },
+      {
+        "id": "pextuw",
+        "request": "The low output word of PEXTUW.",
+        "value": "Rt.UL[2]"
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_audit\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"action\": \"pass\",\n  \"wrong_at\": 0.7,\n  \"truncated\": false,\n  \"summary\": {\n    \"records\": 3,\n    \"flagged\": 0,\n    \"invalid\": 0\n  },\n  \"records\": [\n    {\n      \"id\": \"pexcw\",\n      \"value\": \"UL[0]=Rt.UL[0]; UL[1]=Rt.UL[2]; UL[2]=Rt.UL[1]; UL[3]=Rt.UL[3].\",\n      \"checks\": {\n        \"hallucinated\": 0.02,\n        \"off_target\": 0.02,\n        \"incomplete\": 0.03,\n        \"format\": 0.05\n      },\n      \"p_wrong\": 0.05,\n      \"action\": \"ok\"\n    },\n    {\n      \"id\": \"prot3w\",\n      \"value\": \"UL[0]=Rt.UL[1]; UL[1]=Rt.UL[2]; UL[2]=Rt.UL[0]; UL[3]=Rt.UL[3].\",\n      \"checks\": {\n        \"hallucinated\": 0.02,\n        \"off_target\": 0.02,\n        \"incomplete\": 0.03,\n        \"format\": 0.05\n      },\n      \"p_wrong\": 0.05,\n      \"action\": \"ok\"\n    },\n    {\n      \"id\": \"pextuw\",\n      \"value\": \"Rt.UL[2]\",\n      \"checks\": {\n        \"hallucinated\": 0.04,\n        \"off_target\": 0.04,\n        \"incomplete\": 0.11,\n        \"format\": 0.1\n      },\n      \"p_wrong\": 0.11,\n      \"action\": \"ok\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 2253,\n    \"output_tokens\": 250\n  }\n}"
+      }
+    ]
+  }
+}

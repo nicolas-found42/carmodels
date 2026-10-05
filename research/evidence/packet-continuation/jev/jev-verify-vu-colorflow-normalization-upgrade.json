@@ -1,0 +1,67 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+    "verified": 4,
+    "contradicted": 0,
+    "unsupported": 1,
+    "needs_review": 3
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "Overlay-1's static lit path uses DM[6].xyz as the dot-product direction, clamps the dot product at zero, scales it by DM[5].xyz, adds the distinct ambient vector DM[4].xyz, multiplies by vf05.xyz, converts with FTOI0, and stores at output qword vi04+1.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 0.8, "contradicts": 0.2},
+      "confidence": 0.69,
+      "action": "review",
+      "supporting_evidence": "overlay1-static",
+      "same_subject": 0.84
+    },
+    {
+      "id": "claim1",
+      "claim": "Overlay-1 subtracts LOI 98304 from the input +1 XYZ and conditionally calls BAL vi15,+459 when vi14 is nonzero; the target/effect is outside the inspected overlay listing.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 0.96, "contradicts": 0.04},
+      "confidence": 0.93,
+      "action": "auto",
+      "supporting_evidence": "overlay1-static",
+      "same_subject": 0.92
+    },
+    {
+      "id": "claim2",
+      "claim": "FUN_0021c3e0's param_5 bit-8-clear branch emits STROW 0x47c00000 for XYZ, STMOD 1, then a V4-8 REF with USN clear, while the alternative bit-8-set branch does not establish this order.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0.01, "supports": 0.66, "contradicts": 0.33},
+      "confidence": 0.49,
+      "action": "review",
+      "supporting_evidence": "cpu-helper-and-elf",
+      "same_subject": 0.86
+    },
+    {
+      "id": "claim3",
+      "claim": "Under the pinned PCSX2 VIF mode-1 and signed V4-8 unpack semantics, float32(bitcast_u32(0x47c00000 + s))-98304.0 equals s/128 exactly for every signed byte s from -128 through 127.",
+      "verdict": "verified",
+      "probabilities": {"says_nothing": 0, "supports": 1, "contradicts": 0},
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "pcsx2-vif-and-arithmetic",
+      "same_subject": 0.96
+    },
+    {
+      "id": "claim4",
+      "claim": "The available evidence proves that the FUN_0021c3e0 normalized V4-8 path and overlay-1 generated the sampled COBRA RGB packets.",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "probabilities": {"says_nothing": 0.02, "supports": 0, "contradicts": 0.98},
+      "confidence": 0.97,
+      "action": "review",
+      "supporting_evidence": null,
+      "same_subject": 0.38
+    }
+  ],
+  "usage": {"input_tokens": 3438, "output_tokens": 662}
+}

@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "Is the final plan ready to act on with no branch silently assumed?",
+    "evidence": "Final plan: ORDER A->B->C; A = record the consistent sound verdict (no verifier change); B = read entity+0x64 via the dynamic gameflow chain in slots 102/103/104, then ONE bounded indirection pass (one read of the DAT_00241b40 cursor + one FUN_001c4a40 caller walk), record the car cursor open if unnamed, broaden_indirect once before recording open; C = one tool holding both the 3-pair regression and the full car-keyed TXT_CARS_* table (~35-39); ceiling render_fidelity_complete false; stop only on three definite outcomes.",
+    "priorities": "No silently-assumed branch; executable end to end; partial claims preserved.",
+    "candidates": [
+      {
+        "id": "ready",
+        "description": "The plan is complete and ready to execute as written."
+      },
+      {
+        "id": "still_open",
+        "description": "A branch remains unspecified that could block the session."
+      },
+      {
+        "id": "gather_more",
+        "description": "More evidence is needed before acting."
+      }
+    ],
+    "requirements": [
+      "Leaves no decision silently assumed",
+      "Executable end to end",
+      "Keeps partial claims"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "still_open",
+      "escaped": false,
+      "confidence": 0.77,
+      "probabilities": {
+        "none": 0,
+        "still_open": 0.81,
+        "ask_user": 0.01,
+        "ready": 0.16,
+        "investigate": 0.01,
+        "gather_more": 0.01
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "ready",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "ready",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "ready",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "still_open",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "still_open",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "still_open",
+        "requirement": 2,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "gather_more",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "gather_more",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "gather_more",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 1927,
+      "output_tokens": 458
+    }
+  }
+}

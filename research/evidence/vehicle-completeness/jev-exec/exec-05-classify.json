@@ -1,0 +1,97 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "A",
+        "text": "A: sound mapping consistent; controls rejected; no verifier change."
+      },
+      {
+        "id": "B",
+        "text": "B: livery store named; per-screen cursor recorded open; no value-only match."
+      },
+      {
+        "id": "C",
+        "text": "C: 35/35 car-keyed display names with controls; 3-pair regression kept."
+      }
+    ],
+    "classes": [
+      {
+        "id": "definite_outcome",
+        "description": "A recorded result that closes the thread without a positive-find requirement. Example: a recorded open with evidence."
+      },
+      {
+        "id": "positive_find_asserted",
+        "description": "Claims a discovery the evidence does not support."
+      },
+      {
+        "id": "incomplete",
+        "description": "The thread is neither closed nor honestly recorded open."
+      }
+    ],
+    "purpose": "confirm each thread reached a definite outcome",
+    "context": "Execution closure."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 2,
+      "review": 1,
+      "invalid_response": 0,
+      "by_class": {
+        "definite_outcome": 3
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "A",
+        "classification": "definite_outcome",
+        "probabilities": {
+          "definite_outcome": 0.84,
+          "positive_find_asserted": 0.05,
+          "incomplete": 0.11
+        },
+        "confidence": 0.76,
+        "margin": 0.73,
+        "top_probability": 0.84,
+        "decision": "review"
+      },
+      {
+        "id": "B",
+        "classification": "definite_outcome",
+        "probabilities": {
+          "definite_outcome": 0.94,
+          "positive_find_asserted": 0.01,
+          "incomplete": 0.05
+        },
+        "confidence": 0.92,
+        "margin": 0.8899999999999999,
+        "top_probability": 0.94,
+        "decision": "auto"
+      },
+      {
+        "id": "C",
+        "classification": "definite_outcome",
+        "probabilities": {
+          "definite_outcome": 0.88,
+          "positive_find_asserted": 0.05,
+          "incomplete": 0.07
+        },
+        "confidence": 0.83,
+        "margin": 0.81,
+        "top_probability": 0.88,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 641,
+      "output_tokens": 123
+    }
+  }
+}

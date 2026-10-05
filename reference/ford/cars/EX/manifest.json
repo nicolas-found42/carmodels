@@ -1,0 +1,171 @@
+{
+ "car_code": "EX",
+ "display_name": "EX CONCEPT",
+ "text_enum": "TXT_CARS_EX",
+ "group": "OFFROAD",
+ "model_year": "2001",
+ "icon_token": "EX",
+ "liveries": [
+  {
+   "label": "DEFAULT",
+   "code": "EXD"
+  },
+  {
+   "label": "A",
+   "code": "EXA"
+  },
+  {
+   "label": "B",
+   "code": "EXB"
+  },
+  {
+   "label": "C",
+   "code": "EXC"
+  }
+ ],
+ "performance": {
+  "AGILITY": "0.7",
+  "ACCELERATION": "0.5",
+  "SPEED": "0.4",
+  "WEIGHT": "0.3",
+  "BHP": "375.0",
+  "WEIGHT_IN_KILOS": "1181.0"
+ },
+ "top_speed_mph": "133.0",
+ "sound": {
+  "type": "CAR_SND_EX",
+  "inherits": "CAR_SND_CAR7",
+  "shared_bank_hint": "car7_snd.msb;1, car7_snd.msh;1 (in _shared/sounds/)"
+ },
+ "config_cross_refs": {
+  "body_type": "EX",
+  "engine_type": "EX",
+  "setup_type": "EX",
+  "gearbox_type": "OFFROAD_AWD",
+  "brake_type": "OFFROAD",
+  "tyre_front": "OFFROAD_R380x293",
+  "tyre_back": "OFFROAD_R380x294",
+  "control_type": "OFFROAD",
+  "overlay_type": "MODERN_STYLE_160_7"
+ },
+ "referenced_by_gameplay": [
+  "AM_2.DAT;1",
+  "AM_4.DAT;1",
+  "EXPLORER.DAT;1",
+  "F100_56.DAT;1",
+  "F100_65.DAT;1",
+  "F150.DAT;1",
+  "QRACE_2.DAT;1",
+  "QRACE_4.DAT;1"
+ ],
+ "files": [
+  {
+   "src": "3DDATA/CARS/EX.PS2;1",
+   "dst": "cars/EX/model/EX.PS2;1",
+   "bytes": 1339040,
+   "sha256": "10735c9e97db9cb79a3e9ea9e91f59e18bb9312eac33f0618dacfb2656fcda55"
+  },
+  {
+   "src": "GRAPHICS/GAME/CARS/exd.ptg;1",
+   "dst": "cars/EX/graphics/icon/exd.ptg;1",
+   "bytes": 100304,
+   "sha256": "f301849e61cb5e3e3208488e53f9ab27010e19eb1a455c05adac548e2560fde6"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/exd.ptg;1",
+   "dst": "cars/EX/graphics/liveries/exd.ptg;1",
+   "bytes": 100304,
+   "sha256": "5a2b9970a84c70c770646c511ba51b9c671d1afa838775f5c49da2a8867df0ae"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/exa.ptg;1",
+   "dst": "cars/EX/graphics/liveries/exa.ptg;1",
+   "bytes": 100304,
+   "sha256": "30d49dcf4dde09ce97d5ca2df3426b7de7496c8831f0d909e42cd4a3788a886a"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/exb.ptg;1",
+   "dst": "cars/EX/graphics/liveries/exb.ptg;1",
+   "bytes": 100304,
+   "sha256": "4b2adc70c94acef95fba0979b23c0bf46fc2b249d9f30975c35c76f8f151a8f9"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/exc.ptg;1",
+   "dst": "cars/EX/graphics/liveries/exc.ptg;1",
+   "bytes": 100304,
+   "sha256": "186d39a186ef8e8169eff29d02db749f8a0f9045f3072997b6acf2d26e549d76"
+  },
+  {
+   "src": "DATA/ASCII/GAMEPLAY/EX.DAT;1",
+   "dst": "cars/EX/data/EX.DAT;1",
+   "bytes": 2572,
+   "sha256": "1f50aea2d36f6e5720fb86f5df15a0800a6e3d9ba7c46a0c0f1e000ec317ca74"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/cardata.txt",
+   "bytes": 841,
+   "sha256": "6657314755a69320fdeb66286ee47b703722333fbd65fc07d7634da511ad06b6"
+  },
+  {
+   "src": "DATA/ASCII/CARS/BODYDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/body.txt",
+   "bytes": 2192,
+   "sha256": "d017f49e85c5b2e0f1d47ba5c3fbf003de35ad086c8a23ba27af967bc1f51a46"
+  },
+  {
+   "src": "DATA/ASCII/CARS/ENGDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/engine.txt",
+   "bytes": 320,
+   "sha256": "a5fe6478900ac19498a4aa16241e8f1ff1131835bb720fbfec49f65c05ec4bf9"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARSETUP.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/setup.txt",
+   "bytes": 795,
+   "sha256": "a5387acd2e28cbbb06dbdae3199b536dc93dda0388c01c42a3968b47f3d39e18"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARSOUND.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/sound.txt",
+   "bytes": 1638,
+   "sha256": "bd35f69fc149111e612f8ee9b251c33e667f8e782d79301dd598af07a899854a"
+  },
+  {
+   "src": "DATA/ASCII/CARS/GEARDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/gearbox.txt",
+   "bytes": 194,
+   "sha256": "3c4867954a4032b852b57c68f9ffff7d26193c0a73ec1bb1d8d27834ce7554ff"
+  },
+  {
+   "src": "DATA/ASCII/CARS/BRAKDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/brake.txt",
+   "bytes": 141,
+   "sha256": "3ba364096e86e3fe55ce8c342bc61f75aa13c84ec4960da0bbad9ce17de60494"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CTRLDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/control.txt",
+   "bytes": 1209,
+   "sha256": "db5740e66e4324fa5b1ca35490c53a0e8067c4c499f2c72d82535901929ca3ed"
+  },
+  {
+   "src": "DATA/ASCII/CARS/OVERDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/overlay.txt",
+   "bytes": 499,
+   "sha256": "1f2f047941652c0b0f691ee17a166654eaea395f64993022024ea5e853ac5def"
+  },
+  {
+   "src": "DATA/ASCII/CARS/TYREDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/tyres_front.txt",
+   "bytes": 183,
+   "sha256": "10a43d54841893e3b8b67e1c2d62d26490cf5c089974c66b4f3026752ddab4dd"
+  },
+  {
+   "src": "DATA/ASCII/CARS/TYREDATA.DAT;1 [extracted block]",
+   "dst": "cars/EX/config/tyres_back.txt",
+   "bytes": 181,
+   "sha256": "333cfe917ec54de7fc7b89be01985547384da11267b682f6ea216865fd322c70"
+  }
+ ]
+}

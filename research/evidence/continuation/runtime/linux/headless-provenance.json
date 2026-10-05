@@ -1,0 +1,81 @@
+{
+  "container_id": "3f7463603fbf9d3e6733eb7c229964a1ce31a2f91ef0e81704600a29a1304413",
+  "image_id": "sha256:593b88e1846548ad7c33060bab233ca23827f0fa6d32b421695f1f03ef9b6c43",
+  "image_digest": "sha256:593b88e1846548ad7c33060bab233ca23827f0fa6d32b421695f1f03ef9b6c43",
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 1108,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-05T00:28:30.316528928Z",
+    "FinishedAt": "2026-10-05T00:28:30.158421053Z"
+  },
+  "ports": {
+    "6080/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "50421"
+      }
+    ]
+  },
+  "mounts": [
+    {
+      "Type": "bind",
+      "Source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/ford-racing-2.bin",
+      "Destination": "/game.bin",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/sstates/SLES-51705 (37F695CD).94.p2s",
+      "Destination": "/race94.p2s",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/sstates/SLES-51705 (37F695CD).93.p2s",
+      "Destination": "/menu93.p2s",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/linux",
+      "Destination": "/data",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/Users/Nicolas/Library/Application Support/PCSX2/bios/ps2-0160a-20020207.bin",
+      "Destination": "/data/bios/ps2-0160a-20020207.bin",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "resource_limits": {
+    "memory_bytes": 4294967296,
+    "nano_cpus": 4000000000
+  },
+  "launcher_sha256": "e00d1a5aabccede75ee949699c87703f392688e24a5d9c1f79ce176345bae0da",
+  "launcher_note": "Private Xvfb launcher now starts Openbox. This updated launcher was copied into the owned container; openbox is installed in its overlay. Dockerfile updated for future reproducible builds, current image remains unchanged.",
+  "boot_state_path": "/data/sstates/SLES-51705 (37F695CD).96.p2s",
+  "audio": {
+    "backend": "Null",
+    "output_muted": true,
+    "config_sha256": "fb44db8a87471e4f159c382312288da0ed95e4ed67ebe12a01758e2ad247a15e",
+    "private_display_observation": "Paused menu rendered without an audio-backend error dialog."
+  }
+}

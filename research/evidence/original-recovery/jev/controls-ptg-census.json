@@ -1,0 +1,43 @@
+{
+  "id": "controls-ptg-census",
+  "args": {
+    "claims": [
+      "The measured car PTG corpus has 171 files.",
+      "The measured car PTG corpus has 35 images with dimensions 165x98.",
+      "The measured car PTG corpus has 136 images with dimensions 227x85.",
+      "All 171 measured car PTGs are classified as tiled_header_only.",
+      "The measured car PTG corpus has 170 files.",
+      "The measured car PTG corpus has 35 images with dimensions 227x85.",
+      "The measured car PTG corpus has 136 images with dimensions 165x98.",
+      "All 171 measured car PTGs are classified as completely_decoded.",
+      "The measured PTG pixels have been decoded correctly.",
+      "The PTG palettes are identical to the corresponding embedded model palettes.",
+      "The icon and livery with the same code have byte-identical contents.",
+      "Every car PTG mip level has been recovered."
+    ],
+    "evidence": "{\n  \"files\": 171,\n  \"profiles\": {\n    \"tiled_header_only\": 171\n  },\n  \"header_relation_violations\": 0,\n  \"unique_sizes\": [\n    100304\n  ],\n  \"dimensions\": {\n    \"165x98\": 35,\n    \"227x85\": 136\n  }\n}"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 4,\n    \"contradicted\": 3,\n    \"unsupported\": 5,\n    \"needs_review\": 2\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The measured car PTG corpus has 171 files.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0,\n        \"says_nothing\": 0,\n        \"supports\": 1\n      },\n      \"confidence\": 1,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.92\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The measured car PTG corpus has 35 images with dimensions 165x98.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0,\n        \"says_nothing\": 0,\n        \"supports\": 1\n      },\n      \"confidence\": 1,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.92\n    },\n    {\n      \"id\": \"claim2\",\n      \"claim\": \"The measured car PTG corpus has 136 images with dimensions 227x85.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0,\n        \"says_nothing\": 0,\n        \"supports\": 1\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.93\n    },\n    {\n      \"id\": \"claim3\",\n      \"claim\": \"All 171 measured car PTGs are classified as tiled_header_only.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0.01,\n        \"says_nothing\": 0,\n        \"supports\": 0.99\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.93\n    },\n    {\n      \"id\": \"claim4\",\n      \"claim\": \"The measured car PTG corpus has 170 files.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"contradicts\": 1,\n        \"says_nothing\": 0,\n        \"supports\": 0\n      },\n      \"confidence\": 1,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.82\n    },\n    {\n      \"id\": \"claim5\",\n      \"claim\": \"The measured car PTG corpus has 35 images with dimensions 227x85.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"contradicts\": 1,\n        \"says_nothing\": 0,\n        \"supports\": 0\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.77\n    },\n    {\n      \"id\": \"claim6\",\n      \"claim\": \"The measured car PTG corpus has 136 images with dimensions 165x98.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"contradicts\": 0.99,\n        \"says_nothing\": 0,\n        \"supports\": 0.01\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.69\n    },\n    {\n      \"id\": \"claim7\",\n      \"claim\": \"All 171 measured car PTGs are classified as completely_decoded.\",\n      \"verdict\": \"unsupported\",\n      \"relation_verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"contradicts\": 0.87,\n        \"says_nothing\": 0.13,\n        \"supports\": 0\n      },\n      \"confidence\": 0.8,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.17\n    },\n    {\n      \"id\": \"claim8\",\n      \"claim\": \"The measured PTG pixels have been decoded correctly.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"contradicts\": 0.1,\n        \"says_nothing\": 0.8,\n        \"supports\": 0.1\n      },\n      \"confidence\": 0.71,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.11\n    },\n    {\n      \"id\": \"claim9\",\n      \"claim\": \"The PTG palettes are identical to the corresponding embedded model palettes.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"contradicts\": 0,\n        \"says_nothing\": 1,\n        \"supports\": 0\n      },\n      \"confidence\": 1,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.05\n    },\n    {\n      \"id\": \"claim10\",\n      \"claim\": \"The icon and livery with the same code have byte-identical contents.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"contradicts\": 0,\n        \"says_nothing\": 1,\n        \"supports\": 0\n      },\n      \"confidence\": 1,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.05\n    },\n    {\n      \"id\": \"claim11\",\n      \"claim\": \"Every car PTG mip level has been recovered.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"contradicts\": 0.05,\n        \"says_nothing\": 0.92,\n        \"supports\": 0.03\n      },\n      \"confidence\": 0.88,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.08\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 3746,\n    \"output_tokens\": 764\n  }\n}"
+      }
+    ]
+  },
+  "seconds": 1.451,
+  "expected": [
+    "verified",
+    "verified",
+    "verified",
+    "verified",
+    "contradicted",
+    "contradicted",
+    "contradicted",
+    "contradicted",
+    "unsupported",
+    "unsupported",
+    "unsupported",
+    "unsupported"
+  ]
+}

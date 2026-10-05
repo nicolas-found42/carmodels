@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Adopt this plan for the next session on the Ford Racing 2 car-model recovery.",
+    "diff": "+ ordering: sound-index reconciliation, then decompilation-first selector hunt, display-name table optional\n+ proof bar: selector word must be decompilation-reachable, not a bare value match\n+ claim ceiling: render_fidelity_complete false on every artifact\n+ selector method: read FUN_0019eb90/FUN_00125640/FUN_00121e10, then read the derived address in the three EE images\n+ no re-run of value-only triangulation",
+    "tests": "existing verifiers stay green: tools/verify_config_data_sound.py VERIFY OK; tools/resolve_display_names.py VERIFY OK; tools/test_retained_packet_evidence.py OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.36,
+    "scores": {
+      "correctness": {
+        "score": 1.21,
+        "confidence": 0.49,
+        "probabilities": {
+          "0": 0.07,
+          "1": 0.65,
+          "2": 0.28
+        }
+      },
+      "spec_match": {
+        "score": 1.14,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.31,
+          "1": 0.23,
+          "2": 0.46
+        }
+      },
+      "test_gap": {
+        "score": 1.37,
+        "confidence": 0.05,
+        "probabilities": {
+          "0": 0.24,
+          "1": 0.16,
+          "2": 0.6
+        }
+      },
+      "blast_radius": {
+        "score": 1.21,
+        "confidence": 0.3,
+        "probabilities": {
+          "0": 0.13,
+          "1": 0.53,
+          "2": 0.34
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.5195,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "spec_match"
+    ],
+    "usage": {
+      "input_tokens": 886,
+      "output_tokens": 79
+    }
+  }
+}

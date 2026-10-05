@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Prior method: three-way value triangulation across slot102/103/104 (0 word hits, 97 noisy byte hits).",
+    "passage_b": "Proposed method: read the decompiled label/store chain to derive the address, then read that address in the same three images.",
+    "aspects": [
+      "what names the address",
+      "evidence used",
+      "false-positive risk"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0.03,
+        "different_facts": 0.85,
+        "contradicts": 0.12
+      },
+      "confidence": 0.78,
+      "margin": 0.73,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "what names the address",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.02,
+          "different_facts": 0.82,
+          "contradicts": 0.16
+        },
+        "confidence": 0.73,
+        "margin": 0.6599999999999999,
+        "decision": "review"
+      },
+      {
+        "aspect": "evidence used",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0.04,
+          "different_facts": 0.32,
+          "contradicts": 0.64
+        },
+        "confidence": 0.46,
+        "margin": 0.32,
+        "decision": "review"
+      },
+      {
+        "aspect": "false-positive risk",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.01,
+          "different_facts": 0.93,
+          "contradicts": 0.06
+        },
+        "confidence": 0.9,
+        "margin": 0.8700000000000001,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 851,
+      "output_tokens": 177
+    }
+  }
+}

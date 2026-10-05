@@ -1,0 +1,53 @@
+{
+  "args": {
+    "query": "residual risk each thread leaves open",
+    "candidates": [
+      {
+        "id": "A_risk",
+        "text": "None material: the mapping is read straight from the executable tables."
+      },
+      {
+        "id": "B_risk",
+        "text": "The per-screen highlight cursor stays unnamed; a live (unpaused) capture may still expose it."
+      },
+      {
+        "id": "C_risk",
+        "text": "en-only; other locale tlate files not resolved; the '136' phrasing still appears in old notes."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "residual risk each thread leaves open",
+    "summary": {
+      "candidates": 3,
+      "returned": 3
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "B_risk",
+        "relevance": 0.51,
+        "text": "The per-screen highlight cursor stays unnamed; a live (unpaused) capture may still expose it."
+      },
+      {
+        "rank": 2,
+        "id": "C_risk",
+        "relevance": 0.23,
+        "text": "en-only; other locale tlate files not resolved; the '136' phrasing still appears in old notes."
+      },
+      {
+        "rank": 3,
+        "id": "A_risk",
+        "relevance": 0.2,
+        "text": "None material: the mapping is read straight from the executable tables."
+      }
+    ],
+    "usage": {
+      "input_tokens": 539,
+      "output_tokens": 58
+    }
+  }
+}

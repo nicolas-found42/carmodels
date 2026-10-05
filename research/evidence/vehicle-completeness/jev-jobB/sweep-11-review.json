@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Approve the 6-position screenshot-verified sweep.",
+    "diff": "+ F8 screenshot + paused savestate pair at each of 6 highlight positions\n+ rank words by 1:1 mapping to position; require decompilation reachability\n+ headless, read-only, no new tool class",
+    "tests": "F8 works; pause-control 0 diffs; PINE reads green"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.31,
+    "scores": {
+      "correctness": {
+        "score": 1.31,
+        "confidence": 0.43,
+        "probabilities": {
+          "0": 0.03,
+          "1": 0.62,
+          "2": 0.35
+        }
+      },
+      "spec_match": {
+        "score": 1.75,
+        "confidence": 0.63,
+        "probabilities": {
+          "0": 0.04,
+          "1": 0.17,
+          "2": 0.79
+        }
+      },
+      "test_gap": {
+        "score": 1.48,
+        "confidence": 0.22,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.36,
+          "2": 0.56
+        }
+      },
+      "blast_radius": {
+        "score": 0.67,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.47,
+          "1": 0.38,
+          "2": 0.15
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.66325,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "blast_radius"
+    ],
+    "usage": {
+      "input_tokens": 794,
+      "output_tokens": 79
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "args": {
+    "purpose": "Confirm original v2.8.2 macro button capacity from PadTypes.h definitions referenced by Pad.h.",
+    "text": "\tstatic constexpr u32 NUM_CONTROLLER_PORTS = Pcsx2Config::PadOptions::NUM_PORTS;\n\tstatic constexpr u32 NUM_MACRO_BUTTONS_PER_CONTROLLER = 16;\n"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.02,\n    \"substance\": 0.92,\n    \"relevance\": 0.82\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"pass\",\n    \"reason\": \"no signals above thresholds\"\n  },\n  \"usage\": {\n    \"input_tokens\": 571,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+[
+  {
+    "file": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/tools/ps2_container.py",
+    "start": 174,
+    "end": 198,
+    "p": 0.93,
+    "text": "def decode_rgba(data: bytes, item: dict) -> bytes:\n    \"\"\"Level-0 RGBA with the stored alpha (the game's palettes use 0..0x80 as opaque).\"\"\"\n    level = item[\"levels\"][0]\n    plane = data[level[\"offset\"] : level[\"offset\"] + level[\"size\"]]\n    if item[\"format\"] == 1:\n        return plane\n    if item[\"format\"] in (3, 4):\n        from ps2_texture_indices import decode_indices\n        count = 256 if item[\"format\"] == 3 else 16\n        palette_size = count * 4\n        allowed_sizes = (0x400,) if item['format'] == 3 else (0x40, 0x400)\n        if item[\"palette_bytes\"] not in allowed_sizes:\n            raise Unsupported(f\"format {item['format']} palette block is outside the measured profile\")\n        pixels = decode_indices(data, item)\n        palette_block = data[item[\"palette_offset\"] : item[\"palette_offset\"] + item['palette_bytes']]\n        if len(palette_block) != item['palette_bytes']:\n            raise Invalid('palette bytes are outside the input')\n        # The 16x16 PSMCT32 upload of a 256-color A/C block follows the\n        # loader's bit3/4 permutation; CSM0/CSA0 then restores raw indices\n        # 0..15 for PSMT4, as does the unpermuted 8x2 sixteen-color upload.\n        palette = palette_block[:palette_size]\n        entries = [palette[4 * i : 4 * i + 4] for i in range(count)]\n        return b\"\".join(map(entries.__getitem__, pixels))\n    raise Unsupported(f\"format {item['format']} pixel layout is not decoded\")\n"
+  }
+]

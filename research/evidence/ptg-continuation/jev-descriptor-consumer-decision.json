@@ -1,0 +1,165 @@
+{
+  "schema": "jev-receipt/v1",
+  "task": "ptg-continuation descriptor consumer and next-experiment decision",
+  "provider": "OpenRouter via TypeSafe Jev",
+  "model": "typesafe/jev-1.13",
+  "calls": [
+    {
+      "tool": "jev_verify",
+      "arguments": {
+        "claims": [
+          "For a serialized 49 Coupe PTG tile descriptor, byte offset +0x34 is 1 and +0x35 is 0xDD; offset +0x2c contains 0xDDDDDDDD.",
+          "FUN_00222358 treats descriptor byte +0x35 as an additional-mip count and reads additional mip records through the pointer at +0x2c.",
+          "The supplied static evidence does not prove the serialized PTG descriptors are passed unchanged to FUN_00222358; the nonzero +0x35 and sentinel +0x2c conflict with direct consumption semantics.",
+          "The current source decoder can establish 32x32x32bpp tile spans but cannot by itself establish channel ordering, alpha presentation behavior, or in-game icon/livery composition."
+        ],
+        "evidence": [
+          {
+            "id": "ptg-descriptor-bytes",
+            "text": "49 Coupe PTG descriptor index 0 at file offset 464: 00 00 00 00 00 00 00 00 00 dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd d0 51 c9 01 dd dd dd dd 10 00 41 d0 01 dd dd dd 45 8c aa aa dd dd dd dd. Thus descriptor +0x28 = 0x01c951d0; +0x2c = 0xdddddddd; +0x30 bytes = 10 00 41 d0; +0x34 = 01; +0x35 = dd; +0x38 qword = 0xddddddddaaaa8c45."
+          },
+          {
+            "id": "loader-parser-decomp",
+            "text": "FUN_0022acc8 assigns descriptor +0x28 to the current body pointer, normalizes qword +0x38 with mask 0xffffffffffff87ff | 0x800, then advances by ((1 << exponentX)*(1 << exponentY)*formatTableBpp)>>3. It does not write +0x2c or +0x35 in this function."
+          },
+          {
+            "id": "upload-consumer-decomp",
+            "text": "FUN_00222358 reads byte +0x35. If nonzero, it enters a loop for three additional slots, reading records at *(int *)(param_1+0x2c)+i*0x10 and calling FUN_00222110 for each. It reads base pixel pointer +0x28, dimensions/format from +0x30/+0x34/+0x38. No supplied evidence proves a runtime transformation replacing PTG +0x2c/+0x35 before this call."
+          },
+          {
+            "id": "decoder-scope",
+            "text": "tools/recover_car_ptg.py source-computes 32x32, 32bpp, 4096-byte tile payloads and reconstructs candidate RGBA bytes. Its output labels are provisional; pixel interpretation status remains provisional pending loader/runtime validation."
+          }
+        ]
+      },
+      "result": {
+        "tool": "jev_verify",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "auto_accept": 0.8,
+        "subject_at": 0.5,
+        "summary": {
+          "verified": 4,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0
+        },
+        "results": [
+          {
+            "id": "claim0",
+            "claim": "For a serialized 49 Coupe PTG tile descriptor, byte offset +0x34 is 1 and +0x35 is 0xDD; offset +0x2c contains 0xDDDDDDDD.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 1,
+              "contradicts": 0,
+              "says_nothing": 0
+            },
+            "confidence": 0.99,
+            "action": "auto",
+            "supporting_evidence": "ptg-descriptor-bytes",
+            "same_subject": 0.96
+          },
+          {
+            "id": "claim1",
+            "claim": "FUN_00222358 treats descriptor byte +0x35 as an additional-mip count and reads additional mip records through the pointer at +0x2c.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 0.96,
+              "contradicts": 0.04,
+              "says_nothing": 0
+            },
+            "confidence": 0.94,
+            "action": "auto",
+            "supporting_evidence": "upload-consumer-decomp",
+            "same_subject": 0.75
+          },
+          {
+            "id": "claim2",
+            "claim": "The supplied static evidence does not prove the serialized PTG descriptors are passed unchanged to FUN_00222358; the nonzero +0x35 and sentinel +0x2c conflict with direct consumption semantics.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 0.99,
+              "contradicts": 0.01,
+              "says_nothing": 0
+            },
+            "confidence": 0.98,
+            "action": "auto",
+            "supporting_evidence": "upload-consumer-decomp",
+            "same_subject": 0.64
+          },
+          {
+            "id": "claim3",
+            "claim": "The current source decoder can establish 32x32x32bpp tile spans but cannot by itself establish channel ordering, alpha presentation behavior, or in-game icon/livery composition.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 0.96,
+              "contradicts": 0,
+              "says_nothing": 0.04
+            },
+            "confidence": 0.94,
+            "action": "auto",
+            "supporting_evidence": "decoder-scope",
+            "same_subject": 0.61
+          }
+        ],
+        "usage": {
+          "input_tokens": 2536,
+          "output_tokens": 527
+        }
+      }
+    },
+    {
+      "tool": "jev_decide",
+      "arguments": {
+        "decision": "Which next bounded evidence action best resolves whether the reconstructed 24-tile PTG image is faithful to game output, while respecting the user's requirement to use primary source/runtime evidence and not infer from plausible imagery?",
+        "candidates": [
+          {
+            "id": "trace-transformation",
+            "description": "Trace the PTG descriptor consumer call path from the CARS async parser through runtime object construction to FUN_00222358, focusing on any writes or copies to +0x2c/+0x35."
+          },
+          {
+            "id": "compare-live-menu",
+            "description": "Capture a selected-car menu state and compare a controlled screenshot crop against the candidate tile-order/channel/alpha interpretations."
+          },
+          {
+            "id": "gs-byte-semantics",
+            "description": "Derive byte channel/alpha semantics from PS2SDK plus PCSX2 primary source and test against the PTG byte corpus."
+          },
+          {
+            "id": "stop-at-provisional",
+            "description": "Document the exact semantic blockers and preserve only source-bound RGBA byte outputs as provisional."
+          }
+        ],
+        "evidence": "The PTG files are archive/manifest-bound and parser arithmetic establishes 24 records, 24 descriptor blocks, and 24 4096-byte format-1 payloads with 32x32 dimensions. The serialized descriptor carries +0x2c=0xDDDDDDDD and +0x35=0xDD, while FUN_0022acc8 only writes +0x28 and normalizes +0x38. No captured car-menu runtime state is presently in the evidence directory; only loading/menu .91 and .92 states exist. PS2SDK maps 32-bit texture format to GS code 0. PCSX2 source is cited as showing 32-bit words arranged 0x00AA00BB00GG00RR, suggestive of little-endian RGBA bytes, but PS2 alpha/display scaling and actual menu composite remain unvalidated.",
+        "priorities": "Prefer an action that can directly prove the actual PTG-to-display path, using concrete source bytes, consumer trace, or an observed in-game capture. Do not promote a likely or visually plausible result to validated. Continue useful independent source work while runtime evidence is collected."
+      },
+      "result": {
+        "tool": "jev_decide",
+        "model": "typesafe/jev-1.13",
+        "provider": "openrouter",
+        "recommendation": {
+          "selected": "compare-live-menu",
+          "escaped": false,
+          "confidence": 0.43,
+          "probabilities": {
+            "none": 0,
+            "investigate": 0.01,
+            "gs-byte-semantics": 0,
+            "ask_user": 0,
+            "compare-live-menu": 0.51,
+            "stop-at-provisional": 0.01,
+            "trace-transformation": 0.47
+          },
+          "contradicted_requirements": []
+        },
+        "requirements_checked": 0,
+        "checks": [],
+        "warnings": [],
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 83
+        }
+      }
+    }
+  ]
+}

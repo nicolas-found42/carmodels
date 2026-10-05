@@ -1,0 +1,71 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "summary": {
+    "verified": 4,
+    "contradicted": 0,
+    "unsupported": 0,
+    "needs_review": 1
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "FUN_0015b280 places property key 0x6d immediately before the copied incoming a0 value in its outgoing object-property buffer.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "supports": 0.9,
+        "contradicts": 0.1
+      },
+      "confidence": 0.85,
+      "action": "auto",
+      "supporting_evidence": "raw-caller"
+    },
+    {
+      "id": "claim1",
+      "claim": "At type index 1, FUN_00145b08 routes attribute 0x6d through DAT_00239070[1], which FUN_0014ddc8 initializes to FUN_0014e298.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "supports": 1,
+        "contradicts": 0
+      },
+      "confidence": 0.99,
+      "action": "auto",
+      "supporting_evidence": "fresh-source"
+    },
+    {
+      "id": "claim2",
+      "claim": "FUN_0014e298 stores its argument in the type-1 object's +0x140 dynamically allocated string buffer by copying the source string with FUN_001017e8.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "supports": 1,
+        "contradicts": 0
+      },
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "fresh-source"
+    },
+    {
+      "id": "claim3",
+      "claim": "The 0x25a1d0 string passed into FUN_0015b280 therefore enters the UI object's string field and this specific call path does not show a PTG open, parse, or upload.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0.16,
+        "supports": 0.82,
+        "contradicts": 0.02
+      },
+      "confidence": 0.73,
+      "action": "review",
+      "supporting_evidence": "fresh-source"
+    }
+  ],
+  "usage": {
+    "input_tokens": 2454,
+    "output_tokens": 412
+  },
+  "disposition": "The raw key/value pairing, type-1 attribute dispatch, and string-copy setter each independently verify at or above 0.85. Jev marked the combined conclusion below the automatic confidence threshold; the direct control-flow evidence still demonstrates the particular call path is string storage and does not show PTG loading."
+}

@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "The mark number is computed, not stored, so a saved state can never reveal it.",
+      "Installing xdotool in the container is the cleanest headless input path.",
+      "A debugger breakpoint is required to find the mark.",
+      "hkmodd/PCSX2-MCP can be used as-is on Linux.",
+      "A live value scan (PINCE/scanmem) could find the mark without a breakpoint.",
+      "Every gap has a solution that needs a policy change the user must approve."
+    ],
+    "context": "GAPS blocking access to the mark number, and the solutions found by research:\nG1 (fundamental): the mark is NOT stored in any savestate as a readable integer (exhaustive: every member, every width, 0 hits). => it is computed, not stored; the only way is a debugger breakpoint on the draw/input code, or a live value scan.\nG2 (control): PINE has NO pause/resume opcode (only read/write/save/load/status); the container boots into a PAUSED savestate. => need a headless way to unpause. Solution: xdotool sends the emulator's ESC key to the container's own Xvfb display (:99) - headless, no host focus.\nG3 (headless input): the container image has no X tools (no xdotool/xte/wmctrl). => install xdotool in the container (apt) and drive :99; this is the standard Xvfb+xdotool Docker pattern. The proven existing path is the hidden Playwright->noVNC browser, but it cannot drive the debugger UI reliably.\nG4 (headless debugger): PCSX2's built-in debugger (breakpoints/watchpoints) has no IPC/remote API. Solutions: (a) pcsx2's DebugServer patch from hkmodd/PCSX2-MCP - a ~1-file GPL patch giving a TCP debug API (breakpoints, registers, memory diff); the prebuilt release is WINDOWS-ONLY (pcsx2-qt.exe/MSVC), so on Linux it needs a PCSX2 source build + the patch; (b) drive the built-in debugger GUI headlessly with xdotool; (c) a live value scan (PINCE/scanmem) against the emulator process.\nNo native PCSX2 GDB stub exists (forum request only).\nConstraint: headless only, no host focus; read-only preferred; a container image change and a debugger feature are both policy changes that need user approval."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "The mark number is computed, not stored, so a saved state can never reveal it.",
+        "probability": 0.91,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Installing xdotool in the container is the cleanest headless input path.",
+        "probability": 0.78,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "A debugger breakpoint is required to find the mark.",
+        "probability": 0.11,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "hkmodd/PCSX2-MCP can be used as-is on Linux.",
+        "probability": 0.03,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "A live value scan (PINCE/scanmem) could find the mark without a breakpoint.",
+        "probability": 0.94,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition5",
+        "proposition": "Every gap has a solution that needs a policy change the user must approve.",
+        "probability": 0.11,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1384,
+      "output_tokens": 130
+    }
+  }
+}

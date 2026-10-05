@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "{\n  \"archive_path\": \"LANGUAGE/tlate_en.dat;1\",\n  \"archive_sha256\": \"469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3\",\n  \"archive_bytes\": 109940,\n  \"encoding\": \"utf-16-le\",\n  \"pairs\": 3,\n  \"rows\": [\n    {\n      \"capture\": \"slot102\",\n      \"car_type\": \"49_COUPE\",\n      \"ingame_text_enum\": \"TXT_CARS_COUPE_1949\",\n      \"resolved_string\": \"FORD '49\",\n      \"vehicle_label_on_screen\": \"FORD '49\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f00520044002000270034003900\",\n      \"apostrophe_raw_0x27_present\": true,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot103\",\n      \"car_type\": \"THUNDERBIRD_2002\",\n      \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_2002\",\n      \"resolved_string\": \"THUNDERBIRD CONVERTIBLE\",\n      \"vehicle_label_on_screen\": \"THUNDERBIRD CONVERTIBLE\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"5400480055004e004400450052004200490052004400200043004f004e005600450052005400490042004c004500\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot104\",\n      \"car_type\": \"FORTYNINE\",\n      \"ingame_text_enum\": \"TXT_CARS_FORTYNINE\",\n      \"resolved_string\": \"FORTYNINE CONCEPT\",\n      \"vehicle_label_on_screen\": \"FORTYNINE CONCEPT\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f005200540059004e0049004e004500200043004f004e004300450050005400\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    }\n  ],\n  \"all_pairs_pass\": true,\n  \"control_apostrophe_stripped_label_rejected\": true,\n  \"control_unknown_key_unresolved\": true,\n  \"control_enum_matches_cardata\": true,\n  \"bridge_updated\": true,\n  \"result\": \"VERIFY OK\",\n  \"scope\": \"three captured pairs (slot102/103/104); no 136-entry table\",\n  \"render_fidelity_complete\": false\n}\nVERIFY OK\n",
+    "records": [
+      {
+        "id": "result",
+        "request": "extract result",
+        "value": "VERIFY OK"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "result",
+        "value": "VERIFY OK",
+        "checks": {
+          "hallucinated": 0.03,
+          "off_target": 0.07,
+          "incomplete": 0.06,
+          "format": 0.06
+        },
+        "p_wrong": 0.07,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1494,
+      "output_tokens": 86
+    }
+  }
+}

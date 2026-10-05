@@ -1,0 +1,98 @@
+{
+  "args": {
+    "document": "Settled for the next session: order A (sound index) -> B (selector) -> C (display-name table). B proof bar = a decompilation-reachable address, not a value match. Claim ceiling = render_fidelity_complete false on every artifact, partial claims only. B method = decompilation-first trace of FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10, then ONE time-boxed indirection pass before recording the thread open. A method = settle with a definite verdict (consistent | off_by_one | undecidable) from the soundman consumer. Stop condition 7b = do NOT stop until all three threads are resolved (C now required, not optional).\n\nTension: Jev rounds 1-2 put 'an isolated EE word that tracks the highlight exists' at 0.13 likely-false and contradicted 'the highlight is stored as a plain integer word in EE main RAM' (0.88); the fallback allows recording the selector thread open. But stop-condition 7b says do not stop until all three threads are resolved. If B yields no positive find, 'resolved' must mean a definite outcome (named address OR evidenced open) or the session cannot end.\n\nC target: Jev round-1 classify labeled C breadth_only, auto. The '136' figure refers either to the 35 cars or to the 136 liveries (exact meaning pending a fact check). LANGUAGE/tlate_en.dat;1 holds TXT_CARS_* keys that build_reference.py already parses; T3 already resolved three pairs (COUPE_1949/THUNDERBIRD_2002/FORTYNINE).",
+    "fields": [
+      {
+        "id": "order",
+        "pattern": "order A[^.]*\\.",
+        "description": "the settled thread order"
+      },
+      {
+        "id": "proof_bar",
+        "pattern": "decompilation-reachable address, not a value match",
+        "description": "the B proof bar"
+      },
+      {
+        "id": "ceiling",
+        "pattern": "render_fidelity_complete false",
+        "description": "the claim ceiling phrase"
+      },
+      {
+        "id": "stop",
+        "pattern": "do NOT stop until all three threads are resolved",
+        "description": "the stop condition"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 4,
+      "auto": 4,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "order",
+        "value": "order A (sound index) -> B (selector) -> C (display-name table).",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.91,
+        "top_probability": 0.96,
+        "margin": 0.9199999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "proof_bar",
+        "value": "decompilation-reachable address, not a value match",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.99,
+        "top_probability": 1,
+        "margin": 1,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "ceiling",
+        "value": "render_fidelity_complete false",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.87,
+        "top_probability": 0.94,
+        "margin": 0.8799999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "stop",
+        "value": "do NOT stop until all three threads are resolved",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.95,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1241,
+      "output_tokens": 139
+    }
+  }
+}

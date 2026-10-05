@@ -1,0 +1,31 @@
+--- historical/00121cd0.c
++++ typed/00121cd0.c
+@@ -8,8 +8,8 @@
+   int iVar4;
+   float fVar5;
+   
+-  if (iGpffff937c != 0) {
+-    param_1 = param_1 * *(float *)(iGpffff937c + 0x20);
++  if (iRam0028f0ec != 0) {
++    param_1 = param_1 * *(float *)(iRam0028f0ec + 0x20);
+   }
+   iVar4 = 1;
+   if (*(byte *)(param_2 + 0x12) < 2) {
+@@ -29,7 +29,7 @@
+       fVar5 = *pfVar2;
+     }
+     bVar1 = *(byte *)(param_2 + 0x11);
+-    iVar4 = iVar4 + iGpffff93c0 + -1;
++    iVar4 = iVar4 + iRam0028f130 + -1;
+     iVar3 = bVar1 - 1;
+     if (iVar3 <= iVar4) {
+       iVar4 = bVar1 - 2;
+@@ -38,7 +38,7 @@
+       }
+       return iVar4;
+     }
+-    if ((iVar4 < iGpffff93bc) && (iVar4 = iGpffff93bc, iVar3 <= iGpffff93bc)) {
++    if ((iVar4 < iRam0028f12c) && (iVar4 = iRam0028f12c, iVar3 <= iRam0028f12c)) {
+       iVar4 = bVar1 - 2;
+       if (bVar1 < 3) {
+         iVar4 = 0;

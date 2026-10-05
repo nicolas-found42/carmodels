@@ -1,0 +1,62 @@
+{
+  "args": {
+    "propositions": [
+      "build_reference.py's name-based rule (CAR_SND_CARn + CARn_SOUND_FILE -> carN_snd) agrees with the executable's sounds\\carN_snd table.",
+      "The build_reference mapping is off by one.",
+      "The MASTER_SOUND_SAMPLE_CAR6_* sample names corroborate CAR_SND_CAR6 -> car6_snd.",
+      "A name-based mapping makes an index off-by-one impossible for this corpus.",
+      "T2's sound-chain assertion could be wrong even though every chain resolves to an existing bank file."
+    ],
+    "context": "build_reference.py (line ~261) builds base_bank with a NAME-based rule: for each CAR_SND_CARn block in CARSOUND.DAT it reads :SOUNDBANK_TYPE CARn_SOUND_FILE and sets base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd', i.e. CAR_SND_CAR6 + CAR6_SOUND_FILE -> 'car6_snd' (the digit is taken from the bank file name, not from the CAR_SND_CARn number). CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 -> CAR1_SOUND_FILE..CAR8_SOUND_FILE (verified: 8 base blocks). The executable's static strings are 'sounds\\car1_snd:0:0:5' ... 'sounds\\car8_snd:7:35:5' (addresses 0x288e40..0x288f18) with templates '%s.msh' (0x28f508) and '%s.msb' (0x28f510); the trailing fields are base:offset:count with base 0..7, suggesting an index. Corroboration: 49_COUPE's sound type CAR_SND_49_COUPE inherits CAR_SND_CAR6 and its sample names are literally MASTER_SOUND_SAMPLE_CAR6_TICKOVER / ..._LOW_UNLOADED / ..._HIGH_LOADED, so the 'CAR6' identity appears in the sample data itself. All 35 cars resolve a chain; the 8 distinct inherit targets are CAR_SND_CAR1..CAR_SND_CAR8."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "build_reference.py's name-based rule (CAR_SND_CARn + CARn_SOUND_FILE -> carN_snd) agrees with the executable's sounds\\carN_snd table.",
+        "probability": 0.71,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition1",
+        "proposition": "The build_reference mapping is off by one.",
+        "probability": 0.14,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "The MASTER_SOUND_SAMPLE_CAR6_* sample names corroborate CAR_SND_CAR6 -> car6_snd.",
+        "probability": 0.89,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "A name-based mapping makes an index off-by-one impossible for this corpus.",
+        "probability": 0.22,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "T2's sound-chain assertion could be wrong even though every chain resolves to an existing bank file.",
+        "probability": 0.8,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1263,
+      "output_tokens": 109
+    }
+  }
+}

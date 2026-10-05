@@ -1,0 +1,62 @@
+{
+  "args": {
+    "propositions": [
+      "Sending the M key twice through the noVNC canvas toggles Cross on then off in the headless PCSX2 window.",
+      "Loading PINE slot 98 while paused replaces the live race state with the Living Legends theme screen.",
+      "Pressing Cross on a padlocked car thumbnail in slot 98 advances to another screen.",
+      "The slot 98 cars are locked, so Cross on a thumbnail produces no screen advance.",
+      "Reading the input-indicator overlay in a noVNC screenshot proves a key press registered."
+    ],
+    "context": "Controller macros bound to keys: M=Cross, N=Circle, I=Up, K=Down, J=Left, L=Right, O=Start, P=R2, B=Triangle. A press toggles the button on and a second press toggles it off, so every action needs two key presses with observation between them. Space toggles emulator pause; F7 frame-advance; F8 screenshot; Shift+F8 single-frame GSDump. Starting states under sstates: slot 99 = main menu (boot default), slot 98 = 'Select a Challenge Theme / Living Legends' car-selection strip, slots 93/95/96/97 = in-race/other, slot 100 = paused Quick Race at zero MPH position 6/6 (current live state). Live VNC status: Connected (unencrypted) to 3f7463603fbf:99. VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "Sending the M key twice through the noVNC canvas toggles Cross on then off in the headless PCSX2 window.",
+        "probability": 0.74,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Loading PINE slot 98 while paused replaces the live race state with the Living Legends theme screen.",
+        "probability": 0.69,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "Pressing Cross on a padlocked car thumbnail in slot 98 advances to another screen.",
+        "probability": 0.11,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The slot 98 cars are locked, so Cross on a thumbnail produces no screen advance.",
+        "probability": 0.31,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "Reading the input-indicator overlay in a noVNC screenshot proves a key press registered.",
+        "probability": 0.19,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1253,
+      "output_tokens": 109
+    }
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "purpose": "Trace the separate LIVERY template reference and source-level GS alpha/texture-state behavior for the recovered PTG sprite path. This receipt deliberately separates parser facts from an unproven LIVERY loader path and unresolved runtime compositing.",
+  "source_identities": {
+    "fresh_export": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po",
+      "inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+      "repository_head": "fddc51516cf4bb3357f1a694f116e9d51893637f",
+      "instruction_records_independently_checked": 285006,
+      "pseudocode_hashes_checked": 5454,
+      "source_refresh_failures": 0,
+      "selected_decomp_hashes": {
+        "00173938.c": "fbf48ce4f37ca95fde2426a6590585620ed58bd3cca37928e158a28fe7d850eb",
+        "0015b280.c": "0ce19f845ab08de28064595f87be48914f2f691480873f5516fd54bb809c42cf",
+        "00175498.c": "eb45f5fec6a0d45dd38fde1b96e21db0c78eedc4fd35013ab6dbfd760a902699",
+        "0021fd50.c": "600e60f4f64a6553b20a0feb31e00364e299071daa8085ef6c72a5a3a9ab6e68",
+        "00220678.c": "588899f7ea9ad5124f5f25fd500d5a97de19f2e1501270a0e34768af530a205f",
+        "00220d60.c": "0b5e3e666fcc571cdb4954438f0bb221dc8cf2301841ed8f98b7e51f0318163f",
+        "0010fa20.c": "fdf40a3c4e4edfd52b6d87c68c94418ff315f37cd69089857202022d2dc0775e"
+      }
+    },
+    "pal_executable": {
+      "path": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/extracted/SLES_517.05",
+      "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+      "va_to_file_offset": "VA - 0xff000 for .text addresses; PT_LOAD file mapping used separately for data"
+    },
+    "livery_function_listing": {
+      "path": ".scratch/mesh/codex-root/recomp-fixed-01/sub_00173938_0x173938.cpp",
+      "sha256": "79e70a0b9ae46d3820d9cdb97c49fcf92370d628c1adccdb9de4fdd5d66ae672"
+    },
+    "0015b280_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0015b280.c",
+      "sha256": "0ce19f845ab08de28064595f87be48914f2f691480873f5516fd54bb809c42cf"
+    },
+    "0021fd50_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0021fd50.c",
+      "sha256": "eb1d14347ad30f2cdf2723c454a4a303817c9a8e475f16d8deadcf7ed7fac6e7"
+    },
+    "00220d60_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00220d60.c",
+      "sha256": "d52a461e90003244e9952fb5d30ace1a49e23c2efdb364fcbdceb31e8d76d1ed"
+    },
+    "00220fe0_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00220fe0.c",
+      "sha256": "b06e228a10d18ed582e1ccbbafd03da1723cce3a605e8ca35b3d42676980561b"
+    },
+    "00220678_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00220678.c",
+      "sha256": "588899f7ea9ad5124f5f25fd500d5a97de19f2e1501270a0e34768af530a205f"
+    },
+    "0010fa20_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0010fa20.c",
+      "sha256": "9a1c1c1fe430eea603e4316c71871bcf435d8254725a3d9d74d2b7fd7a775cdd"
+    },
+    "00159080_decomp": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00159080.c",
+      "sha256": "86c11e6c8d7dff27979aa602ceee1ca413d3cf90bee6390473e46362fdb9f1c6"
+    }
+  },
+  "livery_branch": {
+    "template": "GRAPHICS\\GAME\\LIVERY\\%s.PSD",
+    "template_va": "0x25a1d0",
+    "instruction_evidence": [
+      {
+        "va": "0x17434c",
+        "file_offset": "0x7534c",
+        "word_le_hex": "2600043c",
+        "assembly": "lui a0,0x26"
+      },
+      {
+        "va": "0x17435c",
+        "file_offset": "0x7535c",
+        "word_le_hex": "d0a18424",
+        "assembly": "addiu a0,a0,-0x5e30",
+        "computed_a0": "0x25a1d0"
+      },
+      {
+        "va": "0x174370",
+        "file_offset": "0x75370",
+        "word_le_hex": "a06c050c",
+        "assembly": "jal FUN_0015b280"
+      },
+      {
+        "va": "0x174374",
+        "file_offset": "0x75374",
+        "word_le_hex": "006f5226",
+        "assembly": "delay slot: addiu s2,s2,0x6f00"
+      }
+    ],
+    "call_arguments_at_0x174370": "a1=s0; a2=0; a3=0; t0=2",
+    "fresh_caller_context": "Fresh 00173938.c shows this template argument among many FUN_0015b280 calls that initialize menu/UI values; a preceding virtual-method call from FUN_00175498 dispatches 00173938 on an object created from VA 0x259928. The particular call at VA 0x174370 has no captured return-use in the decompiled function.",
+    "callee_observation": "Raw ELF instructions correct the earlier decompiler interpretation: FUN_0015b280 stores incoming a0 at sp+0x170, reloads it at 0x15b4d8, and copies it to the outgoing property pack at sp+0x98. The 0x6d key is paired with this string. Type 1 dispatches through FUN_0014bed0 to FUN_00145b08; the type-1 0x6d setter FUN_0014e298 copies the value into the object string buffer at +0x140. This is a UI string-property path, not evidence of PTG parsing/upload.",
+    "conclusion": "The observed LIVERY template argument enters a type-1 UI object string field through property 0x6d. This call does not load/parse/upload a LIVERY PTG. The actual game-facing consumer route for the 136 LIVERY files remains unresolved."
+  },
+  "sprite_alpha_and_gs_state": {
+    "register_map_correction": "Pinned GSRegs.h defines GIF A+D register 0x3f as TEXFLUSH, 0x47 as TEST_1, and 0x42 as ALPHA_1. Earlier source-trace prose and Jev receipts incorrectly called 0x3f TEST and claimed no ALPHA_1 activity; those statements are superseded.",
+    "raw_sprite_packet_tokens": {
+      "source_function": "FUN_0021fd50",
+      "instructions": [
+        {
+          "va": "0x22000c",
+          "bytes_le": "47000624",
+          "assembly": "li a2,0x47"
+        },
+        {
+          "va": "0x220080",
+          "bytes_le": "80226324",
+          "assembly": "addiu v1,v1,0x2280; subsequent source instructions read GS context/global fields before building a word"
+        },
+        {
+          "va": "0x220094",
+          "bytes_le": "4e000824",
+          "assembly": "li t0,0x4e"
+        },
+        {
+          "va": "0x22009c",
+          "bytes_le": "44000924",
+          "assembly": "li t1,0x44"
+        },
+        {
+          "va": "0x2200c0",
+          "bytes_le": "25104700",
+          "assembly": "or v0,v0,a3"
+        },
+        {
+          "va": "0x2200c4",
+          "bytes_le": "42000624",
+          "assembly": "li a2,0x42"
+        }
+      ],
+      "interpretation": "The function places tokens for TEST_1, ZBUF_1, DIMX, and ALPHA_1 and computed words between some tokens, then finalizes/flushed the packet through FUN_00110148 and FUN_00110688. This is evidence of TEST_1- and ALPHA_1-related packet activity, but not enough to establish data/address pair interpretation, resulting ALPHA_1 value, blend equation, or displayed alpha."
+    },
+    "texture_flush_path": "FUN_00220d60 emits a selector-dependent register 0x3f packet and texture setup for the selected format. Register 0x3f is TEXFLUSH; this is not the TEST_1 evidence.",
+    "vertex_color_transform": "FUN_0021fd50 transforms each packed vertex RGBA component as (component+1)>>1 before packet emission; this applies to vertex color, not source texel alpha.",
+    "wrapper_raw_abi": {
+      "wrapper": "FUN_00220678 at VA 0x220678",
+      "instructions": [
+        {
+          "va": "0x22068c",
+          "bytes_le": "0000a5af",
+          "assembly": "sw a1,0(sp)"
+        },
+        {
+          "va": "0x220690",
+          "bytes_le": "01000524",
+          "assembly": "li a1,1"
+        },
+        {
+          "va": "0x220694",
+          "bytes_le": "2d388000",
+          "assembly": "move a3,a0"
+        },
+        {
+          "va": "0x220698",
+          "bytes_le": "2d200000",
+          "assembly": "move a0,zero"
+        },
+        {
+          "va": "0x22069c",
+          "bytes_le": "0000a28f",
+          "assembly": "lw v0,0(sp)"
+        },
+        {
+          "va": "0x2206a8",
+          "bytes_le": "2d300000",
+          "assembly": "move a2,zero"
+        },
+        {
+          "va": "0x2206ac",
+          "bytes_le": "24404800",
+          "assembly": "and t0,v0,t0"
+        },
+        {
+          "va": "0x2206b0",
+          "bytes_le": "547f080c",
+          "assembly": "jal 0x0021fd50"
+        },
+        {
+          "va": "0x2206b4",
+          "bytes_le": "01000924",
+          "assembly": "delay slot: li t1,1"
+        }
+      ],
+      "fpu_inputs": "Clears f16, copies its zero to f17/f18, leaves f12-f15 unchanged. This raw call setup is safer than assigning the six pseudocode arguments to the callee decompiler prototype (13 parameters). The class-3 caller value loaded into incoming a1 and its prior stack/FPU context remain to be traced."
+    },
+    "decomp_param_caveat": "Do not interpret param_9/param_13 from the decompiled 13-argument signature as conventional API arguments until ABI mapping is independently established."
+  },
+  "jev_typesafe": {
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "claims": [
+      "FUN_0021fd50 sets texture state selectors 10 and 11 to 1 when its param_13 is zero, and to 2 otherwise.",
+      "FUN_00220d60 emits GS register address 0x3f with a value constructed from the two selector==2 booleans, then emits texture state registers for direct formats; this function itself does not write an ALPHA_1 register.",
+      "FUN_0021fd50 halves each component of its param_12 vertex-color value using integer round-up before it emits sprite color data.",
+      "FUN_0021fd50's PRIM-like state uses base value 0x114 or 0x116 and adds bit 0x40 only when param_9==1.",
+      "FUN_00220678 derives param_9 from the low 16 bits of its original second argument, but the evidence does not identify that argument as an alpha byte or prove the reward button sets it to one.",
+      "FUN_00173938 passes the LIVERY format-string address 0x25a1d0 to FUN_0015b280, whose recovered body does not demonstrate a texture load; this evidence does not prove the LIVERY PTGs share the CARS asynchronous loader.",
+      "Because the ALPHA_1/blend state and runtime draw parameters are not fully closed, this source excerpt alone cannot establish the final on-screen RGBA/alpha compositing behavior of recovered PTGs."
+    ],
+    "summary": {
+      "verified": 7,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 2
+    },
+    "usage": {
+      "input_tokens": 4288,
+      "output_tokens": 989
+    },
+    "result_disposition": "Claims about the source-backed helpers and LIVERY callsite were verified. The vertex-color-transform claim (confidence 0.79) and final composite-limitation claim (confidence 0.79) were flagged for review; they are retained as source observations and conservative limitations, not as an automatic approval. Full call arguments / RGBA composition require further source or runtime evidence.",
+    "raw_tool_result_path": "jev-livery-alpha-source-trace.json",
+    "fresh_export_receipt": "jev-fresh-export-livery-alpha.json",
+    "raw_abi_correction_receipt": "jev-livery-ui-string-contract.json",
+    "superseded_note": "The earlier statement that param_1 is saved but not read is superseded by raw instruction evidence. The corresponding older Jev receipt is historical."
+  },
+  "runtime_state": {
+    "menu_state_identity": "research/evidence/continuation/runtime/menu-state-identity.json",
+    "state_purpose": "paused post-profile original menu; no in-race car yet",
+    "runtime_pixel_confirmation": false
+  },
+  "jev_correction": {
+    "receipt": "jev-alpha-correction.json",
+    "status": "Fresh verification supports all corrected register labels, raw sprite token description, wrapper register setup, and separate LIVERY call interpretation. Earlier Jev receipts are historical and superseded for the 0x3f/ALPHA claims."
+  }
+}

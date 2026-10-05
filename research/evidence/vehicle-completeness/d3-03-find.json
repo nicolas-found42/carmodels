@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "strongest completeness signal per vehicle in the existing evidence",
+    "candidates": [
+      {
+        "id": "index_counts",
+        "text": "Canonical index counts: 35 models, 35 GLBs, 136 liveries, 136 matrix sets."
+      },
+      {
+        "id": "verifier",
+        "text": "Independent verifier: roster/index/disk equality, per-car record equality, all hashes, negative controls."
+      },
+      {
+        "id": "corpus_manifests",
+        "text": "Per-car corpus manifests with per-file sha256 and sound inheritance chains."
+      },
+      {
+        "id": "census",
+        "text": "Model census car-asset-census.json with per-car texture lists and sha256."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "strongest completeness signal per vehicle in the existing evidence",
+    "exists": 0.73,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "verifier",
+        "probability": 0.68,
+        "text": "Independent verifier: roster/index/disk equality, per-car record equality, all hashes, negative controls."
+      },
+      {
+        "id": "corpus_manifests",
+        "probability": 0.25,
+        "text": "Per-car corpus manifests with per-file sha256 and sound inheritance chains."
+      },
+      {
+        "id": "census",
+        "probability": 0.07,
+        "text": "Model census car-asset-census.json with per-car texture lists and sha256."
+      },
+      {
+        "id": "index_counts",
+        "probability": 0,
+        "text": "Canonical index counts: 35 models, 35 GLBs, 136 liveries, 136 matrix sets."
+      }
+    ],
+    "usage": {
+      "input_tokens": 566,
+      "output_tokens": 71
+    }
+  }
+}

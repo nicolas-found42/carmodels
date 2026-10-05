@@ -1,0 +1,102 @@
+{
+  "args": {
+    "claims": [
+      "A paused savestate carries no live pointers, which blocks the per-screen selector.",
+      "FUN_001c4540 iterates the car-entity list from a static global at about 0x290278.",
+      "PCSX2 PINE exposes read-only guest memory access over IPC.",
+      "The headless container helper currently exposes only identity/save/load.",
+      "A value-only match in live memory is sufficient proof of the selector."
+    ],
+    "evidence": "Job B (per-screen selector) is blocked because a PAUSED savestate carries no live pointers (arXiv 2503.15065; 2307.12060). Named: the livery store is entity+0x64 via FUN_00121e10; resolver FUN_00125640 over record base 0x233070+type*0x114; chain outer+4 -> +0x14c -> +0x174 = entity. New decompilation fact: FUN_0019c310 writes the gameflow pointer at outer+4 -> +0x14c, and its caller FUN_001de3d8 originates it. FUN_001c4540 iterates the car-entity list from a STATIC global (iRam00290278, EE ~0x290278; +8 = list head, +0xc = next). The cursor fn FUN_001c4a40 indexes DAT_00241b40 by a per-entity type byte. So at least one stable EE address (0x290278) can be read live. PCSX2 has: (a) in-emulator read/write BREAKPOINTS (CBreakPoints, BREAKPOINT_EE/IOP; iR5900.cpp dynarecMemcheck) - a debugger feature; (b) PINE IPC live guest memory read/write (PINE.cpp MsgRead8..64) exposed by the headless container helper (currently identity/save/load at slot 28193). Constraint: run EVERYTHING headless (Docker + Xvfb, fr2-recovery-headless); the user is using the host - no focus stealing on the Mac. Prior constraint from handoff: ordinary controller input + read-only/capture APIs only, no guest-memory writes/cheats/patches."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 3,
+      "contradicted": 1,
+      "unsupported": 1,
+      "needs_review": 2
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "A paused savestate carries no live pointers, which blocks the per-screen selector.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "says_nothing": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.63
+      },
+      {
+        "id": "claim1",
+        "claim": "FUN_001c4540 iterates the car-entity list from a static global at about 0x290278.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "says_nothing": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.77
+      },
+      {
+        "id": "claim2",
+        "claim": "PCSX2 PINE exposes read-only guest memory access over IPC.",
+        "verdict": "contradicted",
+        "probabilities": {
+          "contradicts": 0.59,
+          "says_nothing": 0,
+          "supports": 0.41
+        },
+        "confidence": 0.39,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.63
+      },
+      {
+        "id": "claim3",
+        "claim": "The headless container helper currently exposes only identity/save/load.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.1,
+          "says_nothing": 0,
+          "supports": 0.9
+        },
+        "confidence": 0.85,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.74
+      },
+      {
+        "id": "claim4",
+        "claim": "A value-only match in live memory is sufficient proof of the selector.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "contradicts": 0.72,
+          "says_nothing": 0.26,
+          "supports": 0.02
+        },
+        "confidence": 0.59,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.13
+      }
+    ],
+    "usage": {
+      "input_tokens": 2164,
+      "output_tokens": 313
+    }
+  }
+}

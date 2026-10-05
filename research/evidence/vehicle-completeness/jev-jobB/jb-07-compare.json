@@ -1,0 +1,86 @@
+{
+  "args": {
+    "passage_a": "PINE read-only live guest-memory read (PINE.cpp MsgRead8..64).",
+    "passage_b": "PCSX2 read/write breakpoint (CBreakPoints, memchecks).",
+    "aspects": [
+      "writes guest memory",
+      "new tool class",
+      "headless feasibility",
+      "what it names"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0,
+        "contradicts": 0.11,
+        "different_facts": 0.89
+      },
+      "confidence": 0.84,
+      "margin": 0.78,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "writes guest memory",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0.02,
+          "contradicts": 0.81,
+          "different_facts": 0.17
+        },
+        "confidence": 0.72,
+        "margin": 0.64,
+        "decision": "review"
+      },
+      {
+        "aspect": "new tool class",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.06,
+          "contradicts": 0.02,
+          "different_facts": 0.92
+        },
+        "confidence": 0.88,
+        "margin": 0.8600000000000001,
+        "decision": "auto"
+      },
+      {
+        "aspect": "headless feasibility",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0,
+          "contradicts": 0,
+          "different_facts": 1
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "decision": "auto"
+      },
+      {
+        "aspect": "what it names",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.04,
+          "contradicts": 0.05,
+          "different_facts": 0.91
+        },
+        "confidence": 0.86,
+        "margin": 0.86,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 951,
+      "output_tokens": 221
+    }
+  }
+}

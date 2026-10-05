@@ -1,0 +1,40 @@
+{
+  "args": {
+    "propositions": [
+      "The evidence establishes a working export of embedded level-zero car textures.",
+      "The original car mesh is complete because the embedded textures decode.",
+      "The geometry parser alone establishes which planes contain vertex positions.",
+      "An exhaustive f32 scan can rule out signed-16 packed positions.",
+      "Repeated byte-identical alleged strip indices inside palette spans can instead be shared palettes.",
+      "Thirty-five exact-EOF car parses establish complete knowledge of all geometry plane semantics.",
+      "An explicitly labeled candidate geometry preview can help falsify a numeric decoding hypothesis.",
+      "An attractive candidate mesh proves the decoded positions are original.",
+      "VIF state should be reconstructed in actual DMA/TTE processing order before attributing its row constants.",
+      "Old global-scale failures exclude all per-axis per-record quantization methods.",
+      "Exact TEX0 descriptor dimensions establish the dimensions of a distinct car PTG icon.",
+      "PNG roundtrip proves equality to the exported pixel bytes but cannot establish hardware rendering equivalence."
+    ],
+    "context": [
+      {
+        "id": "measured",
+        "text": "{\"summary\":{\"models\":35,\"geometry_records\":1872,\"geometry_headers\":12080,\"exact_eof\":35,\"textures\":700,\"mip_levels_stored\":94,\"geometry_samples\":657139},\"formats\":{\"1\":78,\"3\":618,\"4\":4},\"limits\":[\"Level zero only under the static model upload contract.\",\"Display alpha uses min(255,2*a); raw-alpha PNG and raw RGBA hash preserve stored values.\",\"Model textures are distinct from PTG menu icons and alternative liveries.\",\"Geometry layout and samples do not establish axes, scale, topology, UVs or material bindings.\"]}"
+      },
+      {
+        "id": "palette",
+        "text": "G_TORINO supposed u16 strip span1748..6410 lies entirely inside loader-derived palette region720..17168. F100_1956 supposed strip1876..3930 lies inside palette848..29584. TAURUSA supposed strip2196..4250 lies inside palette1168..53456."
+      },
+      {
+        "id": "limits",
+        "text": "VIF source count+6-byte plane has signed16-compatible layout; position semantics, scale, topology, UV still under investigation. Car-model geometry headers parsed directly within per-car files. PTG header-only profiles are distinct data."
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_noul\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"status\": \"ok\",\n  \"results\": [\n    {\n      \"id\": \"proposition0\",\n      \"proposition\": \"The evidence establishes a working export of embedded level-zero car textures.\",\n      \"probability\": 0.49,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition1\",\n      \"proposition\": \"The original car mesh is complete because the embedded textures decode.\",\n      \"probability\": 0.06,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition2\",\n      \"proposition\": \"The geometry parser alone establishes which planes contain vertex positions.\",\n      \"probability\": 0.13,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition3\",\n      \"proposition\": \"An exhaustive f32 scan can rule out signed-16 packed positions.\",\n      \"probability\": 0.24,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition4\",\n      \"proposition\": \"Repeated byte-identical alleged strip indices inside palette spans can instead be shared palettes.\",\n      \"probability\": 0.68,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition5\",\n      \"proposition\": \"Thirty-five exact-EOF car parses establish complete knowledge of all geometry plane semantics.\",\n      \"probability\": 0.03,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition6\",\n      \"proposition\": \"An explicitly labeled candidate geometry preview can help falsify a numeric decoding hypothesis.\",\n      \"probability\": 0.88,\n      \"label\": \"likely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition7\",\n      \"proposition\": \"An attractive candidate mesh proves the decoded positions are original.\",\n      \"probability\": 0.05,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition8\",\n      \"proposition\": \"VIF state should be reconstructed in actual DMA/TTE processing order before attributing its row constants.\",\n      \"probability\": 0.73,\n      \"label\": \"uncertain\",\n      \"auto\": false\n    },\n    {\n      \"id\": \"proposition9\",\n      \"proposition\": \"Old global-scale failures exclude all per-axis per-record quantization methods.\",\n      \"probability\": 0.12,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition10\",\n      \"proposition\": \"Exact TEX0 descriptor dimensions establish the dimensions of a distinct car PTG icon.\",\n      \"probability\": 0.15,\n      \"label\": \"unlikely\",\n      \"auto\": true\n    },\n    {\n      \"id\": \"proposition11\",\n      \"proposition\": \"PNG roundtrip proves equality to the exported pixel bytes but cannot establish hardware rendering equivalence.\",\n      \"probability\": 0.9,\n      \"label\": \"likely\",\n      \"auto\": true\n    }\n  ],\n  \"thresholds\": {\n    \"auto_accept\": 0.85\n  },\n  \"usage\": {\n    \"input_tokens\": 1925,\n    \"output_tokens\": 258\n  }\n}"
+      }
+    ]
+  }
+}

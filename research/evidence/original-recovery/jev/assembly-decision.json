@@ -1,0 +1,33 @@
+{
+  "args": {
+    "decision": "How should the newly observed serialized part tree be exposed in the experimental geometry artifact?",
+    "priorities": "User wants thorough original model recovery and Jev-based decisions. Preserve original evidence, enable useful inspection, and keep unknown runtime selection explicit.",
+    "evidence": "All35 car containers have one later object record and five node-tree roots. Node fields contain geometry record ID, flags, three floats at+8/+12/+16 and three zero floats at+20/+24/+28. FUN001208d0 copies those six fields into runtime nodes and recurses through children. GranTorino first rootID1 matches body geometryrecord1; descendants withID0 contain mount translations(+/-0.7485,0.3371,-1.3721) and(+/-0.7485,0.3231,1.5579), then descendant IDs7..14 whose bounds are small wheel-shaped local geometries. All35 trees have zero last-three float fields. Names include WHEEL_MOVING andWHEEL_STATIC; runtime state selection is not yet traced. Current GLBs preserve all geometries as independent records.",
+    "candidates": [
+      {
+        "id": "tree_candidate",
+        "description": "Add a separate clearly labeled first-tree assembly candidate using serialized translations and hierarchy, retaining all alternative states. Keep independent records available."
+      },
+      {
+        "id": "raw_only",
+        "description": "Only expose independent geometry records."
+      },
+      {
+        "id": "pick_states",
+        "description": "Choose wheel and light states visually and call the assembled car complete."
+      }
+    ],
+    "requirements": [
+      "The artifact retains unresolved runtime state selection visibly.",
+      "The artifact preserves the independent geometry records."
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_decide\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"recommendation\": {\n    \"selected\": \"tree_candidate\",\n    \"escaped\": false,\n    \"confidence\": 1,\n    \"probabilities\": {\n      \"ask_user\": 0,\n      \"raw_only\": 0,\n      \"pick_states\": 0,\n      \"tree_candidate\": 1,\n      \"none\": 0,\n      \"investigate\": 0\n    },\n    \"contradicted_requirements\": []\n  },\n  \"requirements_checked\": 2,\n  \"checks\": [\n    {\n      \"candidate\": \"tree_candidate\",\n      \"requirement\": 0,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"tree_candidate\",\n      \"requirement\": 1,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"raw_only\",\n      \"requirement\": 0,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"raw_only\",\n      \"requirement\": 1,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"pick_states\",\n      \"requirement\": 0,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"pick_states\",\n      \"requirement\": 1,\n      \"answer\": \"unknown\"\n    }\n  ],\n  \"warnings\": [],\n  \"usage\": {\n    \"input_tokens\": 1642,\n    \"output_tokens\": 332\n  }\n}"
+      }
+    ]
+  }
+}

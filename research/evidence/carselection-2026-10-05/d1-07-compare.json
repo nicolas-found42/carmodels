@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "'Select a Challenge Theme' screen from Ford Racing 2 over a racetrack scene. Seven circular theme icons across upper middle: star (selected, gold), movie camera, SVT logo, trophy, paint palette, wrench, checkered flag. Title 'LIVING LEGENDS'. Six car thumbnails in a row below, each with a padlock badge (pale green, tan, light blue, brown, white, red cars); sixth red car highlighted with yellow border. Lower left 'ROOKIE 0%', lower right 'BACK' (triangle) and 'OK' (X) prompts. Visible text: SELECT A CHALLENGE THEME, FORD RACING 2, SVT, LIVING LEGENDS, ROOKIE 0%, BACK, OK. No car names or livery names readable.",
+    "passage_b": "VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable.",
+    "aspects": [
+      "screen type",
+      "pause state",
+      "visible car/label text"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "different_facts": 0.95,
+        "same_fact": 0,
+        "contradicts": 0.05
+      },
+      "confidence": 0.92,
+      "margin": 0.8999999999999999,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "screen type",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.62,
+          "same_fact": 0.01,
+          "contradicts": 0.37
+        },
+        "confidence": 0.43,
+        "margin": 0.25,
+        "decision": "review"
+      },
+      {
+        "aspect": "pause state",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.97,
+          "same_fact": 0,
+          "contradicts": 0.03
+        },
+        "confidence": 0.94,
+        "margin": 0.94,
+        "decision": "auto"
+      },
+      {
+        "aspect": "visible car/label text",
+        "relation": "same_fact",
+        "probabilities": {
+          "different_facts": 0.44,
+          "same_fact": 0.45,
+          "contradicts": 0.11
+        },
+        "confidence": 0.18,
+        "margin": 0.010000000000000009,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 1108,
+      "output_tokens": 176
+    }
+  }
+}

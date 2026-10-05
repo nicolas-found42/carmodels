@@ -1,0 +1,100 @@
+{
+  "task": "Independent review of bounded texture selector remap and KHR_materials_variants GLB export",
+  "reviewed_at": "2026-10-04",
+  "scope": "Read-only audit; no parent tool/profile/synthesis files edited. Source reverse-engineering repository remains read-only.",
+  "sha256": {
+    "remapper": "585bfdc9ad984eac31ace44f0d1eff2f439a070f3b1fb7f0329b60b76c391d05",
+    "contract": "753c631eb8a1526b52e5a3f90e8bc51bbe7816ac04d4dfd4da34fffcf997c1f7",
+    "exporter": "b4cfe3e25812bc2f65bde70f3a72273cebffcee4b76c67c4a3444677886d01ea",
+    "exporter_before_variants": "fe2e61b2cd6b336dce97a32dab49e93c68d9ed75b5efbd2325092716f7c2a77a",
+    "serializer_validator": "b84adcd8e6e04dc5d55270aa46becefb7666ff44dc84d4360f82b7b9238227fe",
+    "serializer_receipt": "73480f38c544caefa5f468437dccab326608bcd527a4a18266d6e97bc30b6276",
+    "khronos_spec": "10a7e92e802a77ab608e070b296fcce3c84290bcb5a4e46b7920aa67f3803f7d",
+    "census": "03fb67b1315ab54c4870bade23263c456489035d50ee397d2d4119695740b1ce"
+  },
+  "remapper_assessment": {
+    "execution": "Parent-produced bounded run: 35 cars, 136 variant groups, 852 synthetic source probes, 12 runtime entity-capture records, 134 complete numeric selectors, 0 failures.",
+    "runtime_capture_scope": {
+      "capture_records": 12,
+      "capture_counts": {
+        "race95": 6,
+        "race97": 6
+      },
+      "unique_car_selector_pairs": 6,
+      "pairs": [
+        {
+          "car": "COBRA",
+          "selector": 0
+        },
+        {
+          "car": "CROWN_VICTORIA",
+          "selector": 5
+        },
+        {
+          "car": "FOCUS_SVT",
+          "selector": 2
+        },
+        {
+          "car": "LIGHTNING_SVT",
+          "selector": 5
+        },
+        {
+          "car": "POWERSTROKE",
+          "selector": 2
+        },
+        {
+          "car": "THUNDERBIRD_MOVIE",
+          "selector": 0
+        }
+      ],
+      "interpretation": "12 entity-capture checks (six repeated car-selector pairs across race95/race97), not 12 distinct livery selectors or distinct cars."
+    },
+    "independent_result": "No concrete remapping implementation defect found in reviewed bounded loop/interpreter. ELF word binding and call-seeded emulator contract are accepted only for this remap loop, not the full program or GS execution.",
+    "limits": [
+      "numeric selectors do not resolve human livery names",
+      "runtime checks establish descriptor remap and source flag correspondence, not GS draw/shader equivalence",
+      "the geometry stream third field remains explicitly a candidate texture-index interpretation in the exporter"
+    ]
+  },
+  "export_assessment": {
+    "diff_scope": "Only the variant-contract loading/identity guard, root KHR_materials_variants declarations, per-primitive mappings, output selector index, and source-variant contract hash were added relative to saved baseline.",
+    "structural_result": "No concrete KHR_materials_variants serialization defect found. Root variants use stable numeric selector IDs. Primitive mappings use root material indices and root variant indices, with one mapping entry for each complete selector per affected primitive. Texture-index and material-index correspondence follows exporter construction order.",
+    "contract_crosscheck": "Independent re-evaluation of all 35 contract rows found zero disagreement between complete_selectors and variants, and zero disagreement between each selector_to_texture group value and the corresponding material_remap entry.",
+    "external_validation": {
+      "cars": 35,
+      "numeric_variants": 134,
+      "mapping_rows": 42480,
+      "failures": 0,
+      "negative_case": {
+        "corrupt_material_rejected": true
+      },
+      "khronos_cli": "variant-khronos.log reports 0 errors and 0 warnings for each of 35 GLBs",
+      "blender": "variant-blender.log records successful import of all 35 GLBs; no evidence of game-render equivalence"
+    },
+    "reporting_findings": [
+      {
+        "severity": "clarity",
+        "field": "primitive_mappings",
+        "finding": "The validator increments mappings_count by len(mappings) for each primitive. 42,480 is total mapping rows, not number of distinct primitive objects."
+      },
+      {
+        "severity": "test-scope",
+        "field": "negative.corrupt_material_rejected",
+        "finding": "Negative mutation sets the mapping material index to len(car['textures']). The exporter appends an Untextured candidate material at exactly that index, so it is a valid, in-range index. The check proves rejection of a wrong semantic mapping, but does not exercise out-of-range material index rejection."
+      }
+    ],
+    "semantic_limit": "The contract does not prove geometry header third field means texture-table index on the original console. The exporter itself marks texture-index interpretation candidate. Therefore successful GLB validation certifies serialization against the chosen interpretation, not correct original pixel assignment or game appearance."
+  },
+  "jev_typesafe_disposition": {
+    "provider": "OpenRouter / typesafe/jev-1.13",
+    "tool": "jev_verify",
+    "usage_tokens": {
+      "first_call_input": 2476,
+      "first_call_output": 491,
+      "second_call_input": 1760,
+      "second_call_output": 346
+    },
+    "summary": "First verification: 3 verified, 1 contradicted (claim that serializer checks prove GS appearance was contradicted at 0.98). Second: mapping-row count verified at 0.97; valid-untextured-index finding got review at 0.58; claimed export defect contradicted at 0.97. The valid-index finding is independently established by direct index construction in exporter code; retain Jev review disposition rather than retry unchanged."
+  },
+  "overall": "Remap contract and extension serialization survive independent static and generated-output review. Keep the two validation report qualifications above and preserve the explicit unresolved third-field/game-rendering boundary."
+}

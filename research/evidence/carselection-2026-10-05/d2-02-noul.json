@@ -1,0 +1,62 @@
+{
+  "args": {
+    "propositions": [
+      "Thumbnail 1 (FORD '49) is the 49_COUPE car type whose MATRIX icon is 49couped.ptg.",
+      "Thumbnail 5 (THUNDERBIRD CONVERTIBLE) is the THUNDERBIRD_2002 car type whose icon is tbird22d.ptg.",
+      "Thumbnail 4 (FORTYNINE CONCEPT) is the FORTYNINE car type whose icon is fortyd.ptg.",
+      "The EE livery-name tables stayed identical because the tables are static and selection lives elsewhere.",
+      "A single isolated highlight-index word exists in EE memory for these menu screens."
+    ],
+    "context": "Screens:\n- Ground-truth emulator screenshot slot102: Living Legends, thumbnail 1 highlighted (pale green Ford), VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS, STATUS UNLOCKED, ROOKIE 0%, BACK/OK prompts.\n- Ground-truth emulator screenshot slot103: Living Legends, thumbnail 5 highlighted (white car), VEHICLE: THUNDERBIRD CONVERTIBLE, TRACK: DEER CREEK, TYPE: DRAFTING, STATUS UNLOCKED.\n- Ground-truth emulator screenshot slot104 (vision transcript, model-generated): Living Legends, thumbnail 4 highlighted, VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE, STATUS UNLOCKED.\nEE:\nEE scans (code-measured): six static 12-name livery tables present in slot102 at 0x0143b736,0x0157e365,0x016b7934,0x017ec5aa,0x0192f915,0x01a5856e; record bases 0x233070+type*0x114 with count 12 for types 2..7, all words unchanged between slot102 and slot103. No FORD'49/ROUTE 50/label strings in EE (labels come from text archive + glyphs). Three-way word triangulation for highlight tuples (0,4,3)/(1,5,4): 0 hits. Byte-level (0,4,3): 97 hits, clustered in VU-packet regions; (1,5,4): 0 hits. Scratchpad diffs are float-scale VU noise. L key moved highlight leftward (5->4 single step; 1->5 via wrap under hold), contrary to the assumed L=Right mapping.\nCaptures: slot102 sha 6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7, slot103 sha b5e569fcc561fa3a5408f6eb0a7a6497594e52bdb26f5cdb2dbfeed31dc56c3e, slot104 sha 74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694. 19 key presses used of 30 budget. Slot 100 untouched; slot 101 backs up the pre-experiment live state."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "Thumbnail 1 (FORD '49) is the 49_COUPE car type whose MATRIX icon is 49couped.ptg.",
+        "probability": 0.3,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Thumbnail 5 (THUNDERBIRD CONVERTIBLE) is the THUNDERBIRD_2002 car type whose icon is tbird22d.ptg.",
+        "probability": 0.39,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition2",
+        "proposition": "Thumbnail 4 (FORTYNINE CONCEPT) is the FORTYNINE car type whose icon is fortyd.ptg.",
+        "probability": 0.46,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The EE livery-name tables stayed identical because the tables are static and selection lives elsewhere.",
+        "probability": 0.87,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "A single isolated highlight-index word exists in EE memory for these menu screens.",
+        "probability": 0.16,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1618,
+      "output_tokens": 109
+    }
+  }
+}

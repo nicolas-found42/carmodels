@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "build_reference.py rule: base_bank['CAR_SND_CAR6'] = 'car6_snd' derived from the token CAR6_SOUND_FILE.",
+    "passage_b": "Executable table: 'sounds\\car6_snd:5:25:5' where the middle fields are base:offset:count with base = 5.",
+    "aspects": [
+      "authority for the digit",
+      "name vs index",
+      "agreement"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "different_facts": 0.76,
+        "same_fact": 0.22,
+        "contradicts": 0.02
+      },
+      "confidence": 0.63,
+      "margin": 0.54,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "authority for the digit",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.93,
+          "same_fact": 0.05,
+          "contradicts": 0.02
+        },
+        "confidence": 0.9,
+        "margin": 0.88,
+        "decision": "auto"
+      },
+      {
+        "aspect": "name vs index",
+        "relation": "same_fact",
+        "probabilities": {
+          "different_facts": 0.48,
+          "same_fact": 0.49,
+          "contradicts": 0.03
+        },
+        "confidence": 0.23,
+        "margin": 0.010000000000000009,
+        "decision": "review"
+      },
+      {
+        "aspect": "agreement",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.53,
+          "same_fact": 0.45,
+          "contradicts": 0.02
+        },
+        "confidence": 0.29,
+        "margin": 0.08000000000000002,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 851,
+      "output_tokens": 176
+    }
+  }
+}

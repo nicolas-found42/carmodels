@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "The livery store is named at entity+0x64 (a float) and the live chain resolves via read-only PINE.",
+    "passage_b": "The per-screen highlight is stored as an EE integer/pointer.",
+    "aspects": [
+      "evidence",
+      "which is supported",
+      "which is not"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "different_facts": 1,
+        "contradicts": 0,
+        "same_fact": 0
+      },
+      "confidence": 0.99,
+      "margin": 1,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "evidence",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.98,
+          "contradicts": 0.01,
+          "same_fact": 0.01
+        },
+        "confidence": 0.97,
+        "margin": 0.97,
+        "decision": "auto"
+      },
+      {
+        "aspect": "which is supported",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.98,
+          "contradicts": 0.01,
+          "same_fact": 0.01
+        },
+        "confidence": 0.97,
+        "margin": 0.97,
+        "decision": "auto"
+      },
+      {
+        "aspect": "which is not",
+        "relation": "different_facts",
+        "probabilities": {
+          "different_facts": 0.97,
+          "contradicts": 0.01,
+          "same_fact": 0.02
+        },
+        "confidence": 0.95,
+        "margin": 0.95,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 827,
+      "output_tokens": 177
+    }
+  }
+}

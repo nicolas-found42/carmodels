@@ -1,0 +1,22 @@
+{
+  "schema": "ptg-runtime-exact-tile-scan/v1",
+  "state_identity": "research/evidence/continuation/runtime/race94-state-identity.json",
+  "method": "Search every distinct raw 4096-byte PTG body for its 16-byte prefix, then require the full 4096-byte sequence to match at the same linear capture offset. This is a negative/positive byte match only; it does not account for GS swizzling or transformation.",
+  "elapsed_seconds": 104.447,
+  "captures": [
+    {
+      "capture": "race94-eeMemory.bin",
+      "bytes": 33554432,
+      "sha256": "2ecf3d10ef90586d79910ef7cc5562fd8b90b8f36607591f12d8f79c64989072",
+      "unique_tile_payloads_tested": 3136,
+      "exact_linear_payload_matches": []
+    },
+    {
+      "capture": "race94-GS.bin",
+      "bytes": 4194813,
+      "sha256": "bd2284899853090c5084653a499ded2468c9d8d482e5a5bf0911aaa753e9e9a0",
+      "unique_tile_payloads_tested": 3136,
+      "exact_linear_payload_matches": []
+    }
+  ]
+}

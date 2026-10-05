@@ -1,0 +1,62 @@
+{
+  "args": {
+    "propositions": [
+      "No GDB stub exists in this PCSX2 build.",
+      "The debugger GUI cannot be driven headlessly with any verification.",
+      "Static analysis of the menu input handler can find the highlight variable.",
+      "A PCSX2 source build inside the container is too risky to attempt.",
+      "The highlight variable, once named, can be verified by read-only PINE."
+    ],
+    "context": "Breakpoint-road feasibility findings (all verified in the headless container): PCSX2 v2.8.2 AppImage binary contains ZERO gdb strings: no GDB stub. The debugger GUI has no remote/IPC API (only a forum request exists upstream). hkmodd/PCSX2-MCP DebugServer patch is Windows-only (pcsx2-qt.exe/MSVC); Linux needs a full PCSX2 source build + patch (hours, GBs, risky inside the running container). Driving the debugger GUI blind via RFB keys is infeasible: F8 screenshots capture only the emulated game screen, never the Qt debugger window, so there is zero visibility into debugger state. What REMAINS feasible headlessly: (a) static analysis of the menu INPUT handler in the decompilation - find which variable the d-pad handler increments when moving the highlight (read-only, headless, no new tool); then verify the variable live via read-only PINE across the six screenshot-verified slots; (b) full PCSX2 source build + DebugServer patch; (c) stop and record open. NOTE: the sweep proved no EE word equals position 1..6, so the handler more likely writes an index into a table, a pointer, or a per-frame recomputation - the variable may still be found and read even if it is not position-valued."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "No GDB stub exists in this PCSX2 build.",
+        "probability": 0.98,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "The debugger GUI cannot be driven headlessly with any verification.",
+        "probability": 0.91,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "Static analysis of the menu input handler can find the highlight variable.",
+        "probability": 0.84,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "A PCSX2 source build inside the container is too risky to attempt.",
+        "probability": 0.86,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "The highlight variable, once named, can be verified by read-only PINE.",
+        "probability": 0.94,
+        "label": "likely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1119,
+      "output_tokens": 109
+    }
+  }
+}

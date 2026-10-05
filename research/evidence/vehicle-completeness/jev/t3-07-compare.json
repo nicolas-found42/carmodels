@@ -1,0 +1,99 @@
+{
+  "args": {
+    "passage_a": "Implement tools/resolve_display_names.py: read each captured car's INGAME_TEXT_ENUM from reference CARDATA, resolve through LANGUAGE/tlate_en.dat;1 (UTF-16-LE, keys TXT_CARS_*) in code, assert resolved strings equal the screens' VEHICLE labels; apostrophe byte-exact from the archive, not vision; receipt records archive path, sha256, key->string rows, pass/fail per pair; update bridge-three-screens.json only on pass.",
+    "passage_b": "{\n  \"archive_path\": \"LANGUAGE/tlate_en.dat;1\",\n  \"archive_sha256\": \"469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3\",\n  \"archive_bytes\": 109940,\n  \"encoding\": \"utf-16-le\",\n  \"pairs\": 3,\n  \"rows\": [\n    {\n      \"capture\": \"slot102\",\n      \"car_type\": \"49_COUPE\",\n      \"ingame_text_enum\": \"TXT_CARS_COUPE_1949\",\n      \"resolved_string\": \"FORD '49\",\n      \"vehicle_label_on_screen\": \"FORD '49\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f00520044002000270034003900\",\n      \"apostrophe_raw_0x27_present\": true,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot103\",\n      \"car_type\": \"THUNDERBIRD_2002\",\n      \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_2002\",\n      \"resolved_string\": \"THUNDERBIRD CONVERTIBLE\",\n      \"vehicle_label_on_screen\": \"THUNDERBIRD CONVERTIBLE\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"5400480055004e004400450052004200490052004400200043004f004e005600450052005400490042004c004500\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot104\",\n      \"car_type\": \"FORTYNINE\",\n      \"ingame_text_enum\": \"TXT_CARS_FORTYNINE\",\n      \"resolved_string\": \"FORTYNINE CONCEPT\",\n      \"vehicle_label_on_screen\": \"FORTYNINE CONCEPT\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f005200540059004e0049004e004500200043004f004e004300450050005400\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    }\n  ],\n  \"all_pairs_pass\": true,\n  \"control_apostrophe_stripped_label_rejected\": true,\n  \"control_unknown_key_unresolved\": true,\n  \"control_enum_matches_cardata\": true,\n  \"bridge_updated\": true,\n  \"result\": \"VERIFY OK\",\n  \"scope\": \"three captured pairs (slot102/103/104); no 136-entry table\",\n  \"render_fidelity_complete\": false\n}\nVERIFY OK\n",
+    "aspects": [
+      "enum from CARDATA",
+      "tlate_en resolution",
+      "apostrophe byte-exactness",
+      "bridge update on pass",
+      "scope of pairs"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "same_fact",
+      "probabilities": {
+        "contradicts": 0.01,
+        "different_facts": 0.37,
+        "same_fact": 0.62
+      },
+      "confidence": 0.44,
+      "margin": 0.25,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "enum from CARDATA",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.89,
+          "different_facts": 0.11,
+          "contradicts": 0
+        },
+        "confidence": 0.83,
+        "margin": 0.78,
+        "decision": "auto"
+      },
+      {
+        "aspect": "tlate_en resolution",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.98,
+          "different_facts": 0.02,
+          "contradicts": 0
+        },
+        "confidence": 0.97,
+        "margin": 0.96,
+        "decision": "auto"
+      },
+      {
+        "aspect": "apostrophe byte-exactness",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.98,
+          "different_facts": 0.02,
+          "contradicts": 0
+        },
+        "confidence": 0.96,
+        "margin": 0.96,
+        "decision": "auto"
+      },
+      {
+        "aspect": "bridge update on pass",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.99,
+          "different_facts": 0.01,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "decision": "auto"
+      },
+      {
+        "aspect": "scope of pairs",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.41,
+          "different_facts": 0.57,
+          "contradicts": 0.02
+        },
+        "confidence": 0.36,
+        "margin": 0.15999999999999998,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 1948,
+      "output_tokens": 260
+    }
+  }
+}

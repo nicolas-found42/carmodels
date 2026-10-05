@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "best fallback if the label chain names no per-screen selector field",
+    "candidates": [
+      {
+        "id": "broaden_indirect",
+        "text": "Trace indirect/pointer structures reached from the label chain and the menu draw path."
+      },
+      {
+        "id": "record_open",
+        "text": "Record the selector thread open, with the three-pair bridge as the delivered result."
+      },
+      {
+        "id": "more_screens",
+        "text": "Capture more screens with varied highlight and livery and diff."
+      },
+      {
+        "id": "drop",
+        "text": "Drop the selector thread entirely."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best fallback if the label chain names no per-screen selector field",
+    "exists": 0.86,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "broaden_indirect",
+        "probability": 0.71,
+        "text": "Trace indirect/pointer structures reached from the label chain and the menu draw path."
+      },
+      {
+        "id": "more_screens",
+        "probability": 0.17,
+        "text": "Capture more screens with varied highlight and livery and diff."
+      },
+      {
+        "id": "record_open",
+        "probability": 0.11,
+        "text": "Record the selector thread open, with the three-pair bridge as the delivered result."
+      },
+      {
+        "id": "drop",
+        "probability": 0.01,
+        "text": "Drop the selector thread entirely."
+      }
+    ],
+    "usage": {
+      "input_tokens": 536,
+      "output_tokens": 74
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+ "car_code": "MACH3",
+ "display_name": "MUSTANG MACH III CONCEPT",
+ "text_enum": "TXT_CARS_MUSTANG_MK3",
+ "group": "PERFORMANCE",
+ "model_year": "1992",
+ "icon_token": "MACH3",
+ "liveries": [
+  {
+   "label": "DEFAULT",
+   "code": "MACH3D"
+  },
+  {
+   "label": "A",
+   "code": "MACH3A"
+  },
+  {
+   "label": "B",
+   "code": "MACH3B"
+  },
+  {
+   "label": "C",
+   "code": "MACH3C"
+  }
+ ],
+ "performance": {
+  "AGILITY": "0.6",
+  "ACCELERATION": "0.8",
+  "SPEED": "0.8",
+  "WEIGHT": "0.6",
+  "BHP": "450.0",
+  "WEIGHT_IN_KILOS": "1568.0"
+ },
+ "top_speed_mph": "187.0",
+ "sound": {
+  "type": "CAR_SND_MACH3",
+  "inherits": "CAR_SND_CAR1",
+  "shared_bank_hint": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+ },
+ "config_cross_refs": {
+  "body_type": "MACH3",
+  "engine_type": "MACH3",
+  "setup_type": "MACH3",
+  "gearbox_type": "ROAD_RWD",
+  "brake_type": "ROAD",
+  "tyre_front": "ROAD_R330x252",
+  "tyre_back": "ROAD_R356x291",
+  "control_type": "MODERN_ROAD",
+  "overlay_type": "MODERN_STYLE_180_8"
+ },
+ "referenced_by_gameplay": [
+  "AM_1.DAT;1",
+  "FR500.DAT;1",
+  "GT90.DAT;1",
+  "MUSTCON.DAT;1"
+ ],
+ "files": [
+  {
+   "src": "3DDATA/CARS/MACH3.PS2;1",
+   "dst": "cars/MACH3/model/MACH3.PS2;1",
+   "bytes": 1215488,
+   "sha256": "162befcf68782a0c70795252b39213f4864f95238a786b127c08c0e27b515c83"
+  },
+  {
+   "src": "GRAPHICS/GAME/CARS/mach3d.ptg;1",
+   "dst": "cars/MACH3/graphics/icon/mach3d.ptg;1",
+   "bytes": 100304,
+   "sha256": "86cc249dc238790cdf4118c6e2d772181a6c68662dc15749bada6439ce2198f7"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/mach3d.ptg;1",
+   "dst": "cars/MACH3/graphics/liveries/mach3d.ptg;1",
+   "bytes": 100304,
+   "sha256": "651d0ab95245a31fb0e6936350bda058b17903b9d6947cf35e2dad34b2ca4283"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/mach3a.ptg;1",
+   "dst": "cars/MACH3/graphics/liveries/mach3a.ptg;1",
+   "bytes": 100304,
+   "sha256": "8e25bf545abf46934e7fd886077d2adc3ad7847707d9a82f11184b6d5d8bfd65"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/mach3b.ptg;1",
+   "dst": "cars/MACH3/graphics/liveries/mach3b.ptg;1",
+   "bytes": 100304,
+   "sha256": "bcb7b3012290fbdb0f00730eca32aa102b477b4492e3a5ebe5ad85b6345c8fe8"
+  },
+  {
+   "src": "GRAPHICS/GAME/LIVERY/mach3c.ptg;1",
+   "dst": "cars/MACH3/graphics/liveries/mach3c.ptg;1",
+   "bytes": 100304,
+   "sha256": "c51947fa61ef7be6874ec16653d24cc8ad7e5fa86424721f20853e69549c1f3d"
+  },
+  {
+   "src": "DATA/ASCII/GAMEPLAY/MACH3.DAT;1",
+   "dst": "cars/MACH3/data/MACH3.DAT;1",
+   "bytes": 2293,
+   "sha256": "0c6c1c76808138cb76497489da94fe1fb232678f69eb2960492338ee033dbf67"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/cardata.txt",
+   "bytes": 905,
+   "sha256": "5e773b6fd4321811f2b9bedb9c789673d86a6f6ddf2f760d353a0ef3d43d0f02"
+  },
+  {
+   "src": "DATA/ASCII/CARS/BODYDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/body.txt",
+   "bytes": 1599,
+   "sha256": "5cd85f609892ebdfb8877610371cfd8eb566b1ce86718cff3cd1d79b602afaec"
+  },
+  {
+   "src": "DATA/ASCII/CARS/ENGDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/engine.txt",
+   "bytes": 589,
+   "sha256": "030f0a5eb7611fe3095bcb617f0fba3e4d4f317f49d8673ed5b65cade8360ed8"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARSETUP.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/setup.txt",
+   "bytes": 785,
+   "sha256": "3fb606ff3db1dd152d8efa482817ac9824fc8ca61bddb6b6aba27e4f0ac5f405"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CARSOUND.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/sound.txt",
+   "bytes": 1658,
+   "sha256": "368ae10d0f44adb543be2713cfca0807e656db649165aa5e9f62f3e548ab73a6"
+  },
+  {
+   "src": "DATA/ASCII/CARS/GEARDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/gearbox.txt",
+   "bytes": 191,
+   "sha256": "0cdb3132705045ba72f71d5b464dc7a44f0a5e3cf01f859a46945a3e21ea33f5"
+  },
+  {
+   "src": "DATA/ASCII/CARS/BRAKDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/brake.txt",
+   "bytes": 134,
+   "sha256": "28d6adc180b479d1301daa5c0563ca0892e77b313802b03f2f11969147645b77"
+  },
+  {
+   "src": "DATA/ASCII/CARS/CTRLDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/control.txt",
+   "bytes": 1135,
+   "sha256": "5ce49319629ed952ccffbe4495565ccae8581ecb2534c8d7f6b267a02c6cf913"
+  },
+  {
+   "src": "DATA/ASCII/CARS/OVERDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/overlay.txt",
+   "bytes": 514,
+   "sha256": "5375fb1432f534353b5743e344d3f39bc1966cbc628d1f7185757bd50af29d4e"
+  },
+  {
+   "src": "DATA/ASCII/CARS/TYREDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/tyres_front.txt",
+   "bytes": 140,
+   "sha256": "6cc22f36f65f4323cfeedea71aa142655a09bb8b0d7770c8d63c6b2a6f8586e7"
+  },
+  {
+   "src": "DATA/ASCII/CARS/TYREDATA.DAT;1 [extracted block]",
+   "dst": "cars/MACH3/config/tyres_back.txt",
+   "bytes": 140,
+   "sha256": "7d2b55c95b3cc5b5a231545f3f1ed17f012771f822a046a1e438aaa9bd0c4136"
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Recommend the headless path: small image change (xdotool) + a debugger pass.",
+    "diff": "+ G1: mark is computed, needs a debugger breakpoint\n+ G2: PINE has no pause; use xdotool ESC on :99\n+ G3: install xdotool in the container (small, reversible)\n+ G4: drive PCSX2's debugger or build DebugServer\n+ both need user approval; nothing done without it",
+    "tests": "container stays headless; no host focus"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.13,
+    "scores": {
+      "correctness": {
+        "score": 1.38,
+        "confidence": 0.36,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.57,
+          "2": 0.41
+        }
+      },
+      "spec_match": {
+        "score": 1.79,
+        "confidence": 0.68,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.17,
+          "2": 0.81
+        }
+      },
+      "test_gap": {
+        "score": 1.7,
+        "confidence": 0.55,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.14,
+          "2": 0.78
+        }
+      },
+      "blast_radius": {
+        "score": 0.56,
+        "confidence": 0.16,
+        "probabilities": {
+          "0": 0.52,
+          "1": 0.4,
+          "2": 0.08
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.6749999999999999,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "blast_radius"
+    ],
+    "usage": {
+      "input_tokens": 821,
+      "output_tokens": 79
+    }
+  }
+}

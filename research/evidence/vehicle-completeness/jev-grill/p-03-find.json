@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "most important reason to do the sound-index reconciliation first",
+    "candidates": [
+      {
+        "id": "correctness",
+        "text": "If build_reference's name-based rule disagrees with the executable's index table, the just-closed T2 sound assertion is wrong."
+      },
+      {
+        "id": "cheap",
+        "text": "It is a small, bounded investigation with a definite verdict."
+      },
+      {
+        "id": "unblocks",
+        "text": "It unblocks nothing downstream."
+      },
+      {
+        "id": "documents",
+        "text": "It documents the soundman table for the corpus README."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "most important reason to do the sound-index reconciliation first",
+    "exists": 0.93,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "correctness",
+        "probability": 0.99,
+        "text": "If build_reference's name-based rule disagrees with the executable's index table, the just-closed T2 sound assertion is wrong."
+      },
+      {
+        "id": "cheap",
+        "probability": 0.01,
+        "text": "It is a small, bounded investigation with a definite verdict."
+      },
+      {
+        "id": "unblocks",
+        "probability": 0,
+        "text": "It unblocks nothing downstream."
+      },
+      {
+        "id": "documents",
+        "probability": 0,
+        "text": "It documents the soundman table for the corpus README."
+      }
+    ],
+    "usage": {
+      "input_tokens": 526,
+      "output_tokens": 67
+    }
+  }
+}

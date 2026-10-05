@@ -1,0 +1,138 @@
+{
+  "args": {
+    "request": "Gate the live mark attempt: method works, mark not confirmed.",
+    "diff": "+ RFB key injector (headless unpause) works\n+ live PINE diff found input-responsive words\n+ decisive load test disproves them as the per-car id\n+ no per-car 1/5/4 integer exists in EE",
+    "claims": [
+      "The headless live method works.",
+      "The candidates are disproven as the mark.",
+      "No per-car highlight integer is stored in EE."
+    ],
+    "evidence": "Mark-number live attempt, headless: unpaused the container via a stdlib RFB key injector to the container's own Xvfb (no host focus); live PINE diff found words that respond to the arrow keys (0x241b60, 0x241e00 change with L/J but not without input). DECISIVE TEST: loaded slots 102/103/104 (highlights car1/car5/car4 = positions 1/5/4) live and read the candidates: 0x241b60 reads (5,4,4) and 0x241e00 reads (5,4,4) - NOT a per-car id (car5 and car4 both read 4). So the responsive words are an animation/other cursor, NOT the mark. Combined with the exhaustive scan (no width holds (1,5,4)), the conclusion stands: the menu highlight is not stored as a per-car integer in EE. The live method itself works (keys + PINE reads headless)."
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.2,
+      "scores": {
+        "correctness": {
+          "score": 1.53,
+          "confidence": 0.3,
+          "probabilities": {
+            "0": 0.1,
+            "1": 0.27,
+            "2": 0.63
+          }
+        },
+        "spec_match": {
+          "score": 1.26,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.18,
+            "1": 0.37,
+            "2": 0.45
+          }
+        },
+        "test_gap": {
+          "score": 0.51,
+          "confidence": 0.23,
+          "probabilities": {
+            "0": 0.69,
+            "1": 0.11,
+            "2": 0.2
+          }
+        },
+        "blast_radius": {
+          "score": 0.57,
+          "confidence": 0.15,
+          "probabilities": {
+            "0": 0.61,
+            "1": 0.21,
+            "2": 0.18
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.714,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "spec_match"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The headless live method works.",
+          "verdict": "verified",
+          "confidence": 1,
+          "probabilities": {
+            "verified": 1,
+            "unsupported": 0,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The candidates are disproven as the mark.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "verified": 1,
+            "unsupported": 0,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "No per-car highlight integer is stored in EE.",
+          "verdict": "verified",
+          "confidence": 0.98,
+          "probabilities": {
+            "verified": 0.99,
+            "unsupported": 0.01,
+            "contradicted": 0
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 1670,
+      "output_tokens": 198
+    }
+  }
+}

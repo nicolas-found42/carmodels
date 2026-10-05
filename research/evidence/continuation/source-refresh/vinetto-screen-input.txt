@@ -1,0 +1,268 @@
+# -*- coding: UTF-8 -*-
+"""
+module thumbOLE.py
+-----------------------------------------------------------------------------
+
+ Vinetto : a forensics tool to examine Thumb Database files
+ Copyright (C) 2005, 2006 by Michel Roukine
+ Copyright (C) 2019-2026 by Keven L. Ates
+
+This file is part of Vinetto.
+
+ Vinetto is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as published
+ by the Free Software Foundation; either version 2 of the License, or (at
+ your option) any later version.
+
+ Vinetto is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+
+ You should have received a copy of the GNU General Public License along
+ with the vinetto package; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+-----------------------------------------------------------------------------
+"""
+
+
+file_major = "0"
+file_minor = "2"
+file_micro = "0"
+
+# Built-in...
+import os
+import sys
+from io import BytesIO
+from struct import unpack
+from binascii import hexlify
+from importlib.resources import files, as_file
+
+# Local...
+import vinetto.config as config
+import vinetto.tdb_catalog as tdb_catalog
+import vinetto.tdb_streams as tdb_streams
+import vinetto.utils as utils
+import vinetto.error as verror
+
+
+def preparePILOutput() :
+    if (config.ARGS.outdir == None) :
+        if (config.ARGS.verbose > 0) :
+            sys.stderr.write(" Info: No output directory for PIL exports...unused.\n")
+        return
+
+    #
+    # Initialize processing for output...
+    #
+
+    # If already attempted to load PIL...
+    if (config.THUMBS_TYPE_OLE_PIL == False) :
+        return
+
+    # Initializing PIL library for Type 1 image extraction...
+    config.THUMBS_TYPE_OLE_PIL = False  # ...attempting to load PIL
+    try :
+        from PIL import Image # ...third-party Pillow
+        config.THUMBS_TYPE_OLE_PIL = True  # ...loaded PIL
+        if (config.ARGS.verbose > 0):
+            sys.stderr.write(" Info: Imported PIL for possible Type 1 exports.\n")
+    except ImportError :
+        if (config.ARGS.verbose >= 0):
+            sys.stderr.write(" Warning: Cannot find PIL Package Image module.\n" +
+                                "          Vinetto will only extract Type 2 thumbnails.\n")
+    if (config.THUMBS_TYPE_OLE_PIL == True) :
+        try :
+            ref = files('vinetto') / 'data/header'
+            with as_file(ref) as pathHeader :
+                config.THUMBS_TYPE_OLE_PIL_TYPE1_HEADER   = open(pathHeader, "rb").read()
+            ref = files('vinetto') / 'data/quantization'
+            with as_file(ref) as pathQuant :
+                config.THUMBS_TYPE_OLE_PIL_TYPE1_QUANTIZE = open(pathQuant, "rb").read()
+            ref = files('vinetto') / 'data/huffman'
+            with as_file(ref) as pathHuffman :
+                config.THUMBS_TYPE_OLE_PIL_TYPE1_HUFFMAN  = open(pathHuffman, "rb").read()
+        except :
+            # Hard Error!  The header, quantization, and huffman data files are installed
+            #    locally with Vinetto, so missing missing files are bad!
+            raise verror.InstallError(" Error: Cannot load PIL support data files!")
+
+
+def nextBlock(fileTDB, listSAT, iCurrentSector, cEndian) :
+    # Return next block
+    iSATIndex = iCurrentSector // 128  # ...SAT index for search sector
+    iSATOffset = iCurrentSector % 128  # ...Sector offset within search sector
+    iFileOffset = 512 + listSAT[iSATIndex] * 512 + iSATOffset * 4
+    fileTDB.seek(iFileOffset)
+    return unpack(cEndian+"L", fileTDB.read(4))[0]
+
+
+def printHead(strCLSID, iRevisionNo, iVersionNo, cEndian,
+                 iSectorSize, iSectorSizeMini, iSAT_TotalSec, iDir1stSec,
+                 iStreamSizeMini, iMSAT_1stSec, iMSAT_TotalSec,
+                 iDISAT_1stSec, iDISAT_TotalSec):
+    print("     Signature: %s" % config.THUMBS_FILE_TYPES[config.THUMBS_TYPE_OLE])
+    print("      Class ID: %s" % strCLSID)
+    print("      Revision: %d" % iRevisionNo)
+    print("       Version: %d" % iVersionNo)
+    if (config.ARGS.verbose > 0):
+        print("        Endian: %s" % ("Little" if (cEndian == "<") else "Big"))
+        print("       DB Info:")
+        if iSectorSize     == config.OLE_LAST_BLOCK: iSectorSize     = None
+        if iSectorSizeMini == config.OLE_LAST_BLOCK: iSectorSizeMini = None
+        if iSAT_TotalSec   == config.OLE_LAST_BLOCK: iSAT_TotalSec   = None
+        if iDir1stSec      == config.OLE_LAST_BLOCK: iDir1stSec      = None
+        if iStreamSizeMini == config.OLE_LAST_BLOCK: iStreamSizeMini = None
+        if iMSAT_1stSec    == config.OLE_LAST_BLOCK: iMSAT_1stSec    = None
+        if iMSAT_TotalSec  == config.OLE_LAST_BLOCK: iMSAT_TotalSec  = None
+        if iDISAT_1stSec   == config.OLE_LAST_BLOCK: iDISAT_1stSec   = None
+        if iDISAT_TotalSec == config.OLE_LAST_BLOCK: iDISAT_TotalSec = None
+        print("    SAT  Sec Size: %s" % str(iSectorSize))
+        print("   MSAT  Sec Size: %s" % str(iSectorSizeMini))
+        print("    SAT Total Sec: %s" % str(iSAT_TotalSec))
+        print("    SAT  1st  Sec: %s" % str(iDir1stSec))
+        print("      Stream Size: %s" % str(iStreamSizeMini))
+        print("   MSAT  1st  Sec: %s" % str(iMSAT_1stSec))
+        print("   MSAT Total Sec: %s" % str(iMSAT_TotalSec))
+        print(" DirSAT  1st  Sec: %s" % str(iDISAT_1stSec))
+        print(" DirSAT Total Sec: %s" % str(iDISAT_TotalSec))
+
+
+def printCache(strName, dictOLECache) :
+    print("          Name: %s" % strName)
+    print("          Type: %d (%s)" % (dictOLECache["type"], config.OLE_BLOCK_TYPES[dictOLECache["type"]]))
+    if (config.ARGS.verbose > 0) :
+        print("         Color: %d (%s)" % (dictOLECache["color"], "Black" if dictOLECache["color"] else "Red"))
+        print("   Prev Dir ID: %s" % ("None" if (dictOLECache["PDID"] == config.OLE_NONE_BLOCK) else str(dictOLECache["PDID"])))
+        print("   Next Dir ID: %s" % ("None" if (dictOLECache["NDID"] == config.OLE_NONE_BLOCK) else str(dictOLECache["NDID"])))
+        print("   Sub  Dir ID: %s" % ("None" if (dictOLECache["SDID"] == config.OLE_NONE_BLOCK) else str(dictOLECache["SDID"])))
+        print("      Class ID: " + dictOLECache["CID"])
+        print("    User Flags: " + dictOLECache["userflags"])
+        print("        Create: " + utils.getFormattedWinToPyTimeUTC(dictOLECache["create"]))
+        print("        Modify: " + utils.getFormattedWinToPyTimeUTC(dictOLECache["modify"]))
+        print("       1st Sec: %d" % dictOLECache["SID_firstSecDir"])
+        print("          Size: %d" % dictOLECache["SID_sizeDir"])
+        if (config.ARGS.edbfile != None) :
+            config.ESEDB.printInfo()
+
+
+def process(infile, fileThumbsDB, iThumbsDBSize) :
+    preparePILOutput()
+    if (config.THUMBS_TYPE_OLE_PIL == True) :
+        from PIL import Image # ...third-party Pillow
+
+    if (config.ARGS.verbose >= 0) :
+        if (iThumbsDBSize % 512 ) != 0 :
+            sys.stderr.write(" Warning: Length of %s == %d not multiple 512\n" % (infile, iThumbsDBSize))
+
+    # Structure:
+    # --------------------
+    # The CFBF file consists of a 512-Byte header record followed by a number of
+    # sectors whose size is defined in the header. The literature defines Sectors
+    # to be either 512 or 4096 bytes in length, although the format is potentially
+    # capable of supporting sectors ranging in size from 128-Bytes upwards in
+    # powers of 2 (128, 256, 512, 1024, etc.). The lower limit of 128 is the
+    # minimum required to fit a single directory entry in a Directory Sector.
+    #
+    # There are several types of sector that may be present in a CFBF:
+    #
+    # * Sector Allocation Table (FAT) Sector - contains chains of sector indices
+    #     much as a FAT does in the FAT/FAT32 filesystems
+    # * MiniSAT Sectors - similar to the SAT but storing chains of mini-sectors
+    #     within the Mini-Stream
+    # * Double-Indirect SAT (DISAT) Sector - contains chains of SAT sector indices
+    # * Directory Sector – contains directory entries
+    # * Stream Sector – contains arbitrary file data
+    # * Range Lock Sector – contains the byte-range locking area of a large file
+
+    tDB_endian = "<" # Little Endian
+
+    fileThumbsDB.seek(8)  # ...skip magic bytes                              # File Signature: 0xD0CF11E0A1B11AE1 for current version
+    tDB_CLSID             = str(hexlify( fileThumbsDB.read(16) ))[2:-1]      # CLSID
+    tDB_revisionNo        = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Minor Version
+    tDB_versionNo         = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Version
+
+    tDB_endianOrder       = fileThumbsDB.read(2)  # 0xFFFE OR 0xFEFF         # Byte Order, 0xFFFE (Intel)
+    if (tDB_endianOrder == bytearray(config.BIG_ENDIAN)):
+        tDB_endian = ">"  # Big Endian
+    # Otherwise, it's Little Endian:
+    #     (tDB_endianOrder == bytearray(config.LIL_ENDIAN))
+    # which was initialized above.
+
+    tDB_SectorSize         = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Sector Shift
+    tDB_SectorSizeMini     = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # Mini Sector Shift
+    reserved01             = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]  # short int reserved
+    reserved02             = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # int reserved
+    reserved03             = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count for Directory Chain (4 KB Sectors)
+    tDB_SID_SAT_TotalSec   = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count for SAT Chain (512 B Sectors)
+    tDB_SID_SAT_FirstSec   = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Root Directory: 1st Sector in Directory Chain
+    reserved04             = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Signature for transactions (0, not implemented)
+    tDB_StreamSize         = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Stream Max Size (typically 4 KB)
+    tDB_SID_MSAT_FirstSec  = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # First Sector in the MiniSAT chain
+    tDB_SID_MSAT_TotalSec  = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count in the MiniSAT chain
+    tDB_SID_DISAT_FirstSec = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # First Sector in the DISAT chain
+    tDB_SID_DISAT_TotalSec = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # Sector Count in the DISAT chain
+    iOffset = 76
+
+    if (config.ARGS.verbose >= 0):
+        print(" Header\n --------------------")
+        printHead(tDB_CLSID, tDB_revisionNo, tDB_versionNo, tDB_endian,
+                     tDB_SectorSize, tDB_SectorSizeMini, tDB_SID_SAT_TotalSec, tDB_SID_SAT_FirstSec,
+                     tDB_StreamSize, tDB_SID_MSAT_FirstSec, tDB_SID_MSAT_TotalSec,
+                     tDB_SID_DISAT_FirstSec, tDB_SID_DISAT_TotalSec)
+        print(config.STR_SEP)
+
+    # Load Sector Allocation Table (SAT) list...
+    listSAT = []
+    for iCurrentSector in range(tDB_SID_SAT_TotalSec):
+        listSAT.append(unpack(tDB_endian+"L", fileThumbsDB.read(4))[0])
+        iOffset += 4
+
+    # Load Mini Sector Allocation Table (MiniSAT) list...
+    iCurrentSector = tDB_SID_MSAT_FirstSec
+    listMiniSAT = []
+    while (iCurrentSector != config.OLE_LAST_BLOCK):
+        listMiniSAT.append(iCurrentSector)
+        iCurrentSector = nextBlock(fileThumbsDB, listSAT, iCurrentSector, tDB_endian)
+
+    # Load Mini SAT Streams list...
+    iCurrentSector = tDB_SID_SAT_FirstSec  # First Entry (Root)
+    iOffset = 512 + iCurrentSector * 512   # First Entry Offset (to Root)
+    fileThumbsDB.seek(iOffset + 116)           # First Entry Offset + First Sec Offset (always Mini @ Root)
+    iStream = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]  # First Mini SAT Entry (usually Mini's Catalog or OLE_LAST_BLOCK)
+    listMiniSATStreams = []
+    while (iStream != config.OLE_LAST_BLOCK):
+        listMiniSATStreams.append(iStream)
+        iStream = nextBlock(fileThumbsDB, listSAT, iStream, tDB_endian)
+
+    # =============================================================
+    # Process Entries...
+    # =============================================================
+
+    tdbStreams = tdb_streams.TDB_Streams()
+    tdbCatalog = tdb_catalog.TDB_Catalog()
+
+    iStreamCounter = 1
+    while (iCurrentSector != config.OLE_LAST_BLOCK):
+        iOffset = 512 + iCurrentSector * 512
+        for iSeekOffset in range(iOffset, iOffset + 512, 128):  # 4 Entries per Block: 128 * 4 = 512
+            fileThumbsDB.seek(iSeekOffset)
+            dictOLECache = {}
+            dictOLECache["nameDir"]         = fileThumbsDB.read(64)
+            dictOLECache["nameDirSize"]     = unpack(tDB_endian+"H", fileThumbsDB.read(2))[0]
+            dictOLECache["type"]            = unpack("B",            fileThumbsDB.read(1))[0]
+            dictOLECache["color"]           = unpack("?",            fileThumbsDB.read(1))[0]
+            dictOLECache["PDID"]            = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["NDID"]            = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["SDID"]            = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["CID"]             = str(hexlify( fileThumbsDB.read(16) ))[2:-1]
+            dictOLECache["userflags"]       = str(hexlify( fileThumbsDB.read( 4) ))[2:-1]
+            dictOLECache["create"]          = unpack(tDB_endian+"Q", fileThumbsDB.read(8))[0]
+            dictOLECache["modify"]          = unpack(tDB_endian+"Q", fileThumbsDB.read(8))[0]
+            dictOLECache["SID_firstSecDir"] = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+            dictOLECache["SID_sizeDir"]     = unpack(tDB_endian+"L", fileThumbsDB.read(4))[0]
+
+            # Convert encoded bytes to unicode string:
+            #   a unicode string length is half the bytes length minus 1 (terminal null)
+            strR

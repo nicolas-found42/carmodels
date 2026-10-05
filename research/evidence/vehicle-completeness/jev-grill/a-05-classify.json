@@ -1,0 +1,98 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "rule",
+        "text": "build_reference: base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd'"
+      },
+      {
+        "id": "samples",
+        "text": "MASTER_SOUND_SAMPLE_CAR6_TICKOVER for a car inheriting CAR_SND_CAR6"
+      },
+      {
+        "id": "exe_table",
+        "text": "sounds\\car1_snd:0:0:5 ... car8_snd:7:35:5 with base 0..7"
+      }
+    ],
+    "classes": [
+      {
+        "id": "supports_name_mapping",
+        "description": "Evidence that the CAR-number identity is carried by the name/data. Example: sample names saying CAR6."
+      },
+      {
+        "id": "supports_index_mapping",
+        "description": "Evidence that a separate 0..7 index is the authority. Example: a base field consumed positionally."
+      },
+      {
+        "id": "neutral",
+        "description": "Consistent with both mappings."
+      }
+    ],
+    "purpose": "sort the sound evidence by which mapping it supports",
+    "context": "Off-by-one question for T2."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 1,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "supports_name_mapping": 2,
+        "supports_index_mapping": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "rule",
+        "classification": "supports_name_mapping",
+        "probabilities": {
+          "supports_name_mapping": 0.54,
+          "supports_index_mapping": 0.31,
+          "neutral": 0.15
+        },
+        "confidence": 0.3,
+        "margin": 0.23000000000000004,
+        "top_probability": 0.54,
+        "decision": "review"
+      },
+      {
+        "id": "samples",
+        "classification": "supports_name_mapping",
+        "probabilities": {
+          "supports_name_mapping": 0.91,
+          "supports_index_mapping": 0.01,
+          "neutral": 0.08
+        },
+        "confidence": 0.87,
+        "margin": 0.8300000000000001,
+        "top_probability": 0.91,
+        "decision": "auto"
+      },
+      {
+        "id": "exe_table",
+        "classification": "supports_index_mapping",
+        "probabilities": {
+          "supports_name_mapping": 0.07,
+          "supports_index_mapping": 0.8,
+          "neutral": 0.13
+        },
+        "confidence": 0.7,
+        "margin": 0.67,
+        "top_probability": 0.8,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 685,
+      "output_tokens": 123
+    }
+  }
+}

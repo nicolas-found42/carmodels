@@ -1,0 +1,99 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "A",
+        "text": "Sound bank index: does build_reference's CAR_SND_CARn->carN_snd name rule agree with the executable's carN_snd:base:offset table? Decidable by reading soundman decompilation."
+      },
+      {
+        "id": "B",
+        "text": "EE selector word: find the per-screen highlight/selector value and tie it to a decompiled field. Prior value-only triangulation found nothing discriminating."
+      },
+      {
+        "id": "C",
+        "text": "Display-name table: resolve all TXT_CARS_* keys through tlate_en.dat; breadth work, no unknown."
+      }
+    ],
+    "classes": [
+      {
+        "id": "decidable_now",
+        "description": "Answerable from existing static/decompilation material with a definite verdict. Example: reading a table's consumption."
+      },
+      {
+        "id": "needs_new_evidence",
+        "description": "Requires a new capture, runtime read, or artefact before it can be decided."
+      },
+      {
+        "id": "breadth_only",
+        "description": "Mechanical expansion over known material; no unknown to resolve."
+      }
+    ],
+    "purpose": "triage the three open threads by tractability",
+    "context": "Three open threads from the T2/T3 close-out."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 2,
+      "review": 1,
+      "invalid_response": 0,
+      "by_class": {
+        "decidable_now": 1,
+        "needs_new_evidence": 1,
+        "breadth_only": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "A",
+        "classification": "decidable_now",
+        "probabilities": {
+          "decidable_now": 1,
+          "needs_new_evidence": 0,
+          "breadth_only": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "B",
+        "classification": "needs_new_evidence",
+        "probabilities": {
+          "decidable_now": 0.21,
+          "needs_new_evidence": 0.78,
+          "breadth_only": 0.01
+        },
+        "confidence": 0.66,
+        "margin": 0.5700000000000001,
+        "top_probability": 0.78,
+        "decision": "review"
+      },
+      {
+        "id": "C",
+        "classification": "breadth_only",
+        "probabilities": {
+          "decidable_now": 0.03,
+          "needs_new_evidence": 0,
+          "breadth_only": 0.97
+        },
+        "confidence": 0.95,
+        "margin": 0.94,
+        "top_probability": 0.97,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 722,
+      "output_tokens": 123
+    }
+  }
+}

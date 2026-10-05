@@ -1,0 +1,122 @@
+{
+  "args": {
+    "decision": "Which input path drives the headless game for the ordinary car-selection capture?",
+    "evidence": "VNC status: Connected (unencrypted) to 3f7463603fbf:99.\nLive screenshot transcript: VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable.\nSlot 98 screenshot transcript: 'Select a Challenge Theme' screen from Ford Racing 2 over a racetrack scene. Seven circular theme icons across upper middle: star (selected, gold), movie camera, SVT logo, trophy, paint palette, wrench, checkered flag. Title 'LIVING LEGENDS'. Six car thumbnails in a row below, each with a padlock badge (pale green, tan, light blue, brown, white, red cars); sixth red car highlighted with yellow border. Lower left 'ROOKIE 0%', lower right 'BACK' (triangle) and 'OK' (X) prompts. Visible text: SELECT A CHALLENGE THEME, FORD RACING 2, SVT, LIVING LEGENDS, ROOKIE 0%, BACK, OK. No car names or livery names readable.\nPINE identity: PCSX2 v2.8.2, Ford Racing 2, SLES-51705, uuid 37f695cd, game 1.00, status 1 (paused).\nContainer facts: no xdotool/xte, no python-Xlib, DISPLAY=:99 under Xvfb; hidden jev-browser session connected via trusted evaluate click on noVNC_connect_button; prior session found frame-step navigation unreliable with lagging screenshots; input indicators enabled in ini. Slot 100 is the live paused race to preserve; new saves go to 101+.",
+    "priorities": "Stay headless (no desktop window, no focus theft). Ordinary controller input only: no guest-memory writes, cheats, patches, or memory cards. Bounded effort: stop after ~30 observed key presses without verified indicator response. Preserve slot 100; new saves to slots 101+.",
+    "candidates": [
+      {
+        "id": "browser_keys",
+        "description": "Send toggled key presses (M/N/I/K/J/L/O/Space) via hidden Playwright press_key to the connected noVNC canvas; observe via noVNC screenshots and input indicators."
+      },
+      {
+        "id": "jev_act_clicks",
+        "description": "Use Jev-driven browser act/click on noVNC UI controls only (Connect, fullscreen). No game input possible this way."
+      },
+      {
+        "id": "container_xlib",
+        "description": "Install a key-injection helper (python-xlib/XTEST) inside the container. Needs image change and user approval; not currently allowed."
+      },
+      {
+        "id": "static_only",
+        "description": "No input at all: analyse slot 98/99 EE images already on disk and abandon the ordinary-capture goal."
+      }
+    ],
+    "requirements": [
+      "Keeps PCSX2 headless with no native window or desktop focus theft",
+      "Uses only ordinary controller input plus read-only/capture APIs",
+      "Can actually deliver game button presses, not just browser-UI clicks"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "browser_keys",
+      "escaped": false,
+      "confidence": 0.81,
+      "probabilities": {
+        "static_only": 0.06999999999999999,
+        "container_xlib": 0,
+        "browser_keys": 0.85,
+        "investigate": 0.03,
+        "ask_user": 0,
+        "none": 0.05,
+        "jev_act_clicks": 0
+      },
+      "contradicted_requirements": [
+        1
+      ]
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "browser_keys",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "browser_keys",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "browser_keys",
+        "requirement": 2,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "jev_act_clicks",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "jev_act_clicks",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "jev_act_clicks",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "container_xlib",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "container_xlib",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "container_xlib",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "static_only",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "static_only",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "static_only",
+        "requirement": 2,
+        "answer": "contradicted"
+      }
+    ],
+    "warnings": [
+      "Requirement 2 contradicted by the recommended candidate; inspect before acting"
+    ],
+    "usage": {
+      "input_tokens": 2954,
+      "output_tokens": 608
+    }
+  }
+}

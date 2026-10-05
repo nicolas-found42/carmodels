@@ -1,0 +1,97 @@
+{
+ "args": {
+  "source": "RETAINED BLOCKS (race95 EE image, sha256 eacbcb2e8304957e35e784a927c4c17206ccef363c24eea6c1f6887f00f58355):\n- 10 aligned 0x6c058000 markers; every one parsed by the strict FUN_00128e88 layout parser with zero rejects; counts [63, 62, 64, 41, 37] in two ring pages.\n- Each block REF pointer set is byte-equal to exactly one source header across all 35 car models and positionally equals COBRA file base 0x143b500 + plane offset: headers [320, 321, 322, 323, 324].\n- Pair copies differ only in word indices 18, 27, 39 and 48 (double-buffer unpack address 0x2c8/0x208 and VIF BASE 0x3aa/0x388); the fifth pair also differs at 51 and 60.\n- Controls rejected: {\"word_corruption\": {\"marker\": \"rejected: qword0 shape\", \"dma_tag\": \"rejected: dma tag 0x10000004\", \"gif_hi\": \"rejected: gif hi 0x30264001\", \"unpack_addr\": \"rejected: unpack addr 0x2c9\", \"ref4_tag\": \"rejected: ref4 qwc\", \"row0\": \"rejected: row0\", \"tail_cnt\": \"rejected: tail\"}, \"plane_bit_flip_six\": {\"byte_equal_candidates\": 0}, \"plane_bit_flip_four\": {\"byte_equal_candidates\": 0}, \"base_shift_positional_matches\": {\"-16\": 0, \"16\": 0, \"4096\": 0}, \"other_car_six_plane_contains_probe\": {\"cars_with_match\": [], \"cars_tested\": 34}, \"truncated\": \"rejected: bounds 0x816310+0x30\", \"shifted_marker\": \"rejected: qword0 shape\", \"B_gif_tag_corrupted\": \"rejected: gif tag 0x1000000000008003 / A+D\", \"B_frame_a\n- 8 aligned 0x6c048003 blocks parse as the FUN_0021ba50 A+D layout: GIF tag 0x1000000000008003, FRAME_1 data 0xff000000000a0050, ALPHA_1 data 0x44, TEST_1 data 0x50000.\nRETAINED BLOCK TO GSDUMP (race94 gs dump sha256 fe3cad80...):\n- block 0x81627c header COBRA:320 count 63 prim 0x4c matches GIF transfers [406, 6483] on count, prim and ADC==source W; headers sharing count and W sequence across all cars: 1.\n- block 0x81634c header COBRA:321 count 62 prim 0x4c matches GIF transfers [407, 6484] on count, prim and ADC==source W; headers sharing count and W sequence across all cars: 1.\n- block 0x81641c header COBRA:322 count 64 prim 0x4c matches GIF transfers [408, 6485] on count, prim and ADC==source W; headers sharing count and W sequence across all cars: 1.\n- block 0x8164ec header COBRA:323 count 41 prim 0x4c matches GIF transfers [409, 6486] on count, prim and ADC==source W; headers sharing count and W sequence across all cars: 1.\n- block 0x81661c header COBRA:324 count 37 prim 0x5c matches GIF transfers [411, 6488] on count, prim and ADC==source W; headers sharing count and W sequence across all cars: 32.\n- header 324 UV: max abs error 6.23e-08; one-unit UV mutation rejected: True; but 29 other cars have a header with the same W sequence and UV plane.\n- dump has exactly 8 A+D triples (FRAME_1, ALPHA_1, TEST_1) and retained memory has 8 FUN_0021ba50-shaped blocks; content key sets equal: True.\n- following geometry transfers: [{\"ad_transfer\": 5903, \"next_geometry_transfer\": 5906, \"next_geometry_nloop\": 7, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 5905, \"next_geometry_transfer\": 5906, \"next_geometry_nloop\": 7, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 5911, \"next_geometry_transfer\": 5912, \"next_geometry_nloop\": 64, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 5917, \"next_geometry_transfer\": 5918, \"next_geometry_nloop\": 64, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 11932, \"next_geometry_transfer\": 11938, \"next_geometry_nloop\": 7, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 11937, \"next_geometry_transfer\": 11938, \"next_geometry_nloop\": 7, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 11943, \"next_geometry_transfer\": 11944, \"next_geometry_nloop\": 64, \"next_geometry_prim\": \"0x4c\"}, {\"ad_transfer\": 11949, \"next_geometry_transfer\": 11950, \"next_geometry_nloop\": 64, \"next_geometry_prim\": \"0x4c\"}]\nRING ALIGNMENT: complete DMA chain 0x814880..0x8c6500 status END with 8491 elements; 1497 draw descriptors ({'FUN_00128e88': 5, 'FUN_0021c3e0+0021bb48': 1357, 'texture_pass_variant': 135}); 1339 aligned to dump tags in 10 blocks (longest 438); 1218 aligned pairs have a source W plane: ADC equals W in 565, is a superset of W in 1217, subset violations [[971, 4542]].\n- seven-vertex retained call(s) with COBRA source header: [{\"chain_addr\": 9041488, \"arm\": \"bit8_clear_row_0x47c00000\", \"pass_id\": 2, \"prim\": 76, \"ptr6\": 22336512, \"ptr4\": 22336560, \"source_headers\": [[\"COBRA\", 149]], \"vec4_u32\": [0, 0, 0, 1120665600], \"effective_flags\": 706}, {\"chain_addr\": 9041632, \"arm\": \"bit8_clear_row_0x47c00000\", \"pass_id\": 4, \"prim\": 92, \"ptr6\": 22336512, \"ptr4\": 22336560, \"source_headers\": [[\"COBRA\", 149]], \"vec4_u32\": [1107525502, 1107525502, 1107525502, 1118175232], \"effective_flags\": 706}, {\"chain_addr\": 9041760, \"arm\": \"bit8_clear_row_0x47c00000\", \"pass_id\": 5, \"prim\": 92, \"ptr6\": 22336512, \"ptr4\": 22336560, \"source_headers\": [[\"COBRA\", 149]], \"vec4_u32\": [1127668589, 1127668589, 1127668589, 1050253721], \"effective_flags\": 706}]\nMENU98 PTG: {\"uploads_32x32_psmct32\": 150} fitted mapping {'ax': 1.0, 'ay': 0.9375, 'bx': 1, 'by': 1, 'fit_half_mean_abs_rgb_error': 15.952053440847465, 'fit_set': 'CHALL PSMCT32 sprites with even index'}; families {\"GRAPHICS/GAME|psmct32\": {\"sprites\": 412, \"mean_abs_rgb_error\": 23.9, \"shifted_controls\": {\"8,0\": 47.740702408059065, \"0,8\": 66.04468287698275, \"-8,0\": 46.52857042203903, \"0,-8\": 70.65003831951509}, \"swapped_tile_control\": 48.1}, \"GRAPHICS/GAME|psmt8_clut\": {\"sprites\": 312, \"mean_abs_rgb_error\": 21.9, \"shifted_controls\": {\"8,0\": 23.376134767714575, \"0,8\": 28.13140168451342, \"-8,0\": 23.636433640658495, \"0,-8\": 27.551666358904914}, \"swapped_tile_control\": 28.4}, \"GRAPHICS/GAME/CHALL|psmct32\": {\"sprites\": 56, \"mean_abs_rgb_error\": 16.9, \"shifted_controls\": {\"8,0\": 69.5569766312005, \"0,8\": 73.72308458436574, \"-8,0\": 67.18404751493951, \"0,-8\": 72.03827187484818}, \"swapped_tile_control\": 75.2}, \"GRAPHICS/GAME/CHALL|psmt8_clut\": {\"sprites\": 50, \"mean_abs_rgb_error\": 119.6, \"shifted_controls\": {\"8,0\": 117.02830188679245, \"0,8\": 117.86257011728709, \"-8,0\": 118.09867414584396, \"0,-8\": 118.77672955974843}, \"swapped_tile_control\": 117.8}, \"GRAPHICS/GAME/MATRIX|psmt8_clut\": {\"sprites\": 72, \"mean_abs_rgb_error\": 17.6, \"shifted_controls\": {\"8,0\": 41.03292867981791, \"0,8\": 56.20295059854999, \"-8,0\": 40.27231495531951, \"0,-8\": 52.67533299612207}, \"swapped_tile_control\": 50.4}}\nMATRIX groups: {\"49couped.ptg;1\": [114.0, 248.9, 182.9, 298.9], \"must68d.ptg;1\": [183.0, 248.9, 251.9, 298.9], \"tbirdd.ptg;1\": [251.9, 248.9, 320.9, 298.9], \"fortyd.ptg;1\": [320.9, 248.9, 389.9, 298.9], \"tbird22d.ptg;1\": [389.9, 248.9, 458.9, 298.9], \"fordgtd.ptg;1\": [458.9, 248.9, 527.9, 298.9]}",
+  "records": [
+   {
+    "id": "ring_aligned_tags",
+    "request": "the number of retained draw descriptors aligned to GSDump tags",
+    "value": "1339 aligned to dump tags"
+   },
+   {
+    "id": "header_324_other_car_matches",
+    "request": "how many other cars have a header with the same W sequence and UV plane as header 324",
+    "value": "but 29 other cars"
+   },
+   {
+    "id": "adc_superset_count",
+    "request": "the number of aligned pairs where ADC is a superset of the source W lane",
+    "value": "is a superset of W in 1217"
+   },
+   {
+    "id": "cobra_file_base",
+    "request": "the EE address of the COBRA model file base",
+    "value": "COBRA file base 0x143b500"
+   }
+  ],
+  "wrong_at": 0.7
+ },
+ "result": {
+  "tool": "jev_audit",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "action": "escalate",
+  "wrong_at": 0.7,
+  "truncated": false,
+  "summary": {
+   "records": 4,
+   "flagged": 2,
+   "invalid": 0
+  },
+  "records": [
+   {
+    "id": "ring_aligned_tags",
+    "value": "1339 aligned to dump tags",
+    "checks": {
+     "hallucinated": 0.03,
+     "off_target": 0.05,
+     "incomplete": 0.08,
+     "format": 0.6
+    },
+    "p_wrong": 0.6,
+    "action": "ok"
+   },
+   {
+    "id": "header_324_other_car_matches",
+    "value": "but 29 other cars",
+    "checks": {
+     "hallucinated": 0.08,
+     "off_target": 0.09,
+     "incomplete": 0.24,
+     "format": 0.82
+    },
+    "p_wrong": 0.82,
+    "action": "wrong"
+   },
+   {
+    "id": "adc_superset_count",
+    "value": "is a superset of W in 1217",
+    "checks": {
+     "hallucinated": 0.05,
+     "off_target": 0.06,
+     "incomplete": 0.14,
+     "format": 0.77
+    },
+    "p_wrong": 0.77,
+    "action": "wrong"
+   },
+   {
+    "id": "cobra_file_base",
+    "value": "COBRA file base 0x143b500",
+    "checks": {
+     "hallucinated": 0.04,
+     "off_target": 0.08,
+     "incomplete": 0.1,
+     "format": 0.38
+    },
+    "p_wrong": 0.38,
+    "action": "ok"
+   }
+  ],
+  "usage": {
+   "input_tokens": 5234,
+   "output_tokens": 332
+  }
+ },
+ "result_sha256": "22153b018297792ffdfd4d0cffce8f3cab30351ad7d491de89eba520dc44ca21",
+ "jev_tool": "jev_audit"
+}

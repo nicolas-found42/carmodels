@@ -1,0 +1,101 @@
+{
+  "args": {
+    "claims": [
+      "The headless live PINE reads reached the car-entity chain without writing guest memory.",
+      "The (1,5,4) highlight tuple has 0 hits at width 8, 16 and 32.",
+      "The (0,4,3) tuple has 0 u32 hits and 97 u8 noise hits.",
+      "The per-screen selector word was isolated.",
+      "The named livery store entity+0x64 is a float, read live."
+    ],
+    "evidence": "Job B headless execution, read-only: extended the PINE helper with read opcodes (MsgRead8/16/32/64, no writes); loaded each existing savestate (102/103/104) live in the headless container; traversed the live entity chain via PINE (static global 0x290278 -> manager 0x473d70 -> 6 car entities at node+0x10); confirmed the named livery store is a float at entity+0x64; then exhaustively scanned all three 32 MiB EE images for the highlight tuples. RESULT: (1,5,4) has 0 hits at width 8/16/32; (0,4,3) has 0 u32 hits and 97 u8 noise hits. The per-screen highlight is NOT stored as a readable EE integer or pointer. Job B stays a recorded-open definite outcome. The live chain and store are decompilation-reachable and named.\n\n{\n  \"summary\": \"Headless read-only PINE reaches the live car-entity chain, but the per-screen highlight is not stored as a readable EE integer or pointer in any of the three savestates; Job B stays a recorded-open definite outcome.\",\n  \"live_chain\": {\n    \"slot102\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot103\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot104\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    }\n  },\n  \"live_chain_resolves\": true,\n  \"named_store\": {\n    \"offset\": \"entity+0x64 (node+0x10+0x64)\",\n    \"type\": \"float (FUN_00121e10)\",\n    \"entity_floats_car1_6\": [\n      \"0x3f7f8382\",\n      \"0x3f7ffed3\",\n      \"0x3f55bdc1\",\n      \"0x3f800000\",\n      \"0x3f6d40bf\",\n      \"0x3f712801\"\n    ]\n  },\n  \"exhaustive_tuple_scan\": {\n    \"u32\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 0\n    },\n    \"u16\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 2\n    },\n    \"u8\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 97\n    }\n  },\n  \"ee_image_sha256\": {\n    \"slot102\": \"c8167b6ec2c4f43ad7c3ff968249fbb4b3802011a3b2d72feac7d1ffef34239f\",\n    \"slot103\": \"8e5af5b2605d708d8c78d51e4168c30e6961f234527482964ca09c2303a5adcc\",\n    \"slot104\": \"26cdd8fef7f7b3ccf76ccc8b7a2cc1814c8921c65b9f9137765b99668c14eba2\"\n  },\n  \"control_tuple154_zero_all_widths\": true,\n  \"control_tuple043_only_byte_noise\": true,\n  \"control_live_chain_resolves\": true,\n  \"control_store_is_float\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"three captured savestates (live-loaded) + exhaustive EE tuple scan; read-only\",\n  \"result\": \"VERIFY OK\"\n}\n"
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 1,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The headless live PINE reads reached the car-entity chain without writing guest memory.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.01,
+          "supports": 0.98,
+          "contradicts": 0.01
+        },
+        "confidence": 0.97,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.89
+      },
+      {
+        "id": "claim1",
+        "claim": "The (1,5,4) highlight tuple has 0 hits at width 8, 16 and 32.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.98
+      },
+      {
+        "id": "claim2",
+        "claim": "The (0,4,3) tuple has 0 u32 hits and 97 u8 noise hits.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.98
+      },
+      {
+        "id": "claim3",
+        "claim": "The per-screen selector word was isolated.",
+        "verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0.02,
+          "supports": 0.03,
+          "contradicts": 0.95
+        },
+        "confidence": 0.92,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.81
+      },
+      {
+        "id": "claim4",
+        "claim": "The named livery store entity+0x64 is a float, read live.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      }
+    ],
+    "usage": {
+      "input_tokens": 2785,
+      "output_tokens": 311
+    }
+  }
+}

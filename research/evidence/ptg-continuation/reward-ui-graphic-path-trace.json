@@ -1,0 +1,212 @@
+{
+  "purpose": "Trace serialized reward-screen UI classes through their class-selected resource setters and draw methods to the main-image sprite uploader, while preserving the unresolved CARS-record-to-node join.",
+  "source_identities": {
+    "executable": {
+      "path": "games/ford-racing-2/extracted/SLES_517.05",
+      "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95"
+    },
+    "reward_layout": {
+      "path": "games/ford-racing-2/extracted/files/UI/REWRD.UI;1",
+      "sha256": "d99f85ae4e8980211ee37221a82504c3098070c1cab837542b8f69aedd083182"
+    },
+    "callback_listing": {
+      "path": ".scratch/mesh/codex-root/recomp-fixed-01/sub_001820F0_0x1820f0.cpp",
+      "sha256": "69cb0f1520568553e62d8c6c39f9a4749ab47f38f599872b06f2292fb2ed7b0b"
+    },
+    "00181f38": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00181f38.c",
+      "sha256": "a12ceca223b5f42d6c33c088fc25819898e50feca73eb07ade748a0b8804ddcb"
+    },
+    "001485f0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/001485f0.c",
+      "sha256": "a531941ae207d4b3f61da3ecbe3d1115434a39c24df68db81d5b1a1670e0e250"
+    },
+    "00144a60": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00144a60.c",
+      "sha256": "98d97bb70b42f39e8f703497dd774dfb9c722ed429c534277a9e8c5bac220ce6"
+    },
+    "00156e28": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00156e28.c",
+      "sha256": "c3fa132393c2cfb4d3e4b4116ea9bbfd72784d177621bc7746f250aa379efab3"
+    },
+    "00156c40": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00156c40.c",
+      "sha256": "d80dcdc661d45507e80b1d0f22fdd2acd27e614796578fcfedfba17ae23ba73b"
+    },
+    "00156f70": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00156f70.c",
+      "sha256": "c65560a2b682f18c9f4a9c5b79a1300bd106bafcfcc1a4d4aa6a66c2152c7576"
+    },
+    "001566b0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/001566b0.c",
+      "sha256": "41510514bd13578734807b2ef6bef0b66303688124334e002e518237947a912a"
+    },
+    "0014d568": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0014d568.c",
+      "sha256": "b87ef283d86acdb2a0d03316c80686464ba2a0c4eaf1ca068de7fac789a7220e"
+    },
+    "0014d1d8": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0014d1d8.c",
+      "sha256": "2a99f59a3dff1e5b7f144c5d1410e22facd65e2374e6459a4917b41b396ce702"
+    },
+    "0014d5c0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0014d5c0.c",
+      "sha256": "3e93a9aebc89bdc8249c542a00f0e4496dafcc0b125763ceb9bc6ed6d72c8d77"
+    },
+    "0014d728": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0014d728.c",
+      "sha256": "377e24796f223c1addcba17c5a9ff54d207667e6043861c9ac6e00a7b84ef8d4"
+    },
+    "0014ca80": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0014ca80.c",
+      "sha256": "600d9e051eb76d5563d76e8d37279ebf0e72dc0a8acdd3331779905af7863eff"
+    },
+    "00159610": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00159610.c",
+      "sha256": "7052f5ee221513e0369310669a05982b22080c4a57ac4e3f061b5649db7a54f5"
+    },
+    "001595f0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/001595f0.c",
+      "sha256": "dd64d5415fc438452984bd7fbc5915e2f32dc69917ec850aa1320ef93ccc1906"
+    },
+    "00159080": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00159080.c",
+      "sha256": "86c11e6c8d7dff27979aa602ceee1ca413d3cf90bee6390473e46362fdb9f1c6"
+    },
+    "0015e2e0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0015e2e0.c",
+      "sha256": "3ed94f8b3bc8d242ccc1767c72fb173e2cf507fba9b3d9b83dca0c811ffead21"
+    },
+    "00220678": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00220678.c",
+      "sha256": "588899f7ea9ad5124f5f25fd500d5a97de19f2e1501270a0e34768af530a205f"
+    },
+    "0021fd50": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0021fd50.c",
+      "sha256": "eb1d14347ad30f2cdf2723c454a4a303817c9a8e475f16d8deadcf7ed7fac6e7"
+    },
+    "00220fe0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/00220fe0.c",
+      "sha256": "b06e228a10d18ed582e1ccbbafd03da1723cce3a605e8ca35b3d42676980561b"
+    },
+    "002209a0": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/002209a0.c",
+      "sha256": "a2fd1a79b220877559d69d0c12b85cd26409a85bc92efb7c0d18dd2243d3a7b3"
+    },
+    "0022acc8": {
+      "path": ".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions/0022acc8.c",
+      "sha256": "ba10b18bdaae0480e9c98cf20ecc063ff1b0789dc86deb2e27db6fb8f8bbe9ca"
+    }
+  },
+  "serialized_layout_facts": [
+    {
+      "object_id": "GLOW",
+      "type_token": "UI_TYPE_GRAPHIC",
+      "class_id": 4,
+      "texture_enum": "GRAPHICS\\GAME\\CARGLOW.PSD",
+      "position_start": [
+        0.35,
+        0.32
+      ],
+      "size": [
+        0.35,
+        0.25
+      ],
+      "stretch_graphic": 1,
+      "evidence": "Exact fields in archived REWRD.UI;1. This establishes GLOW as class 4 and its static texture as CARGLOW.PSD; it does not identify this node as the target of the dynamic CARS\\%s.PSD request."
+    },
+    {
+      "object_id": "BUTTON1",
+      "type_token": "UI_TYPE_BUTTON",
+      "class_id": 3,
+      "texture_enum": null,
+      "position_start": [
+        0.35,
+        0.32
+      ],
+      "size": [
+        0.35,
+        0.25
+      ],
+      "evidence": "Exact fields in archived REWRD.UI;1. Button nodes are possible dynamic object classes, but the file does not bind the CARS request template to BUTTON1."
+    },
+    {
+      "object_id": "BUTTON2",
+      "type_token": "UI_TYPE_BUTTON",
+      "class_id": 3,
+      "texture_enum": null,
+      "position_start": [
+        0.65,
+        0.32
+      ],
+      "size": [
+        0.35,
+        0.25
+      ],
+      "evidence": "Exact fields in archived REWRD.UI;1. Button nodes are possible dynamic object classes, but the file does not bind the CARS request template to BUTTON2."
+    }
+  ],
+  "class_and_render_paths": [
+    {
+      "class_id": 1,
+      "type_token": "UI_TYPE_AREA",
+      "setter": "FUN_0014d728",
+      "resource_field_offset": "node+0x154",
+      "render_initializer": "FUN_0014d1d8 -> FUN_0014ca80",
+      "draw": "FUN_0014ca80 -> FUN_0015e2e0 -> FUN_00220678 -> FUN_0021fd50 -> FUN_00220fe0",
+      "evidence": "UI type strings map index 1 to UI_TYPE_AREA. FUN_0014d568(1) installs FUN_0014d728 in the setter table and FUN_0014d1d8 installs FUN_0014ca80 in the renderer table. FUN_0014ca80 handles resource state 3, resolves the resource handle, reads image width/height via FUN_002209a0, computes the draw rectangle from layout and dimensions, and calls FUN_0015e2e0."
+    },
+    {
+      "class_id": 3,
+      "type_token": "UI_TYPE_BUTTON",
+      "setter": "FUN_0014d728 installed for class id 3 by FUN_0014d568(3) called from FUN_00159610",
+      "resource_field_offset": "node+0x154",
+      "render_initializer": "FUN_001595f0 -> FUN_00159080",
+      "draw": "FUN_00159080 -> FUN_0015e2e0 -> FUN_00220678 -> FUN_0021fd50 -> FUN_00220fe0",
+      "evidence": "FUN_00159610 calls FUN_0014d568 with its class id, and FUN_0014d568(3) invokes FUN_0014d5c0(3), installing FUN_0014d728 in setter slot 3; FUN_0014d728 stores the handle at node+0x154. FUN_001595f0 installs FUN_00159080. FUN_00159080 obtains a resource through class getters, checks readiness, reads dimensions with FUN_002209a0, builds the image rectangle, and calls FUN_0015e2e0."
+    },
+    {
+      "class_id": 4,
+      "type_token": "UI_TYPE_GRAPHIC",
+      "setter": "FUN_00156f70",
+      "resource_field_offset": "node+0x114",
+      "render_initializer": "FUN_00156c40 -> FUN_001566b0",
+      "draw": "FUN_001566b0 -> FUN_0015e2e0 -> FUN_00220678 -> FUN_0021fd50 -> FUN_00220fe0",
+      "evidence": "FUN_00156e28 calls FUN_00156c40 and installs FUN_00156f70 in the class setter table. FUN_001566b0 obtains a ready graphic resource, reads width/height via FUN_002209a0, computes a draw rectangle using UI layout flags, and calls FUN_0015e2e0."
+    }
+  ],
+  "base_image_upload": {
+    "entry": "FUN_00220fe0",
+    "cell_iteration": "FUN_0021fd50 loops rows/columns from parsed header values, reads each same-index 16-byte cell record at object+0x44 (U/V extents at +0/+4, descriptor pointer at +8), computes cell origins from header stride/cell and image width/height, then calls FUN_00220fe0 per descriptor.",
+    "main_pixel_fields": {
+      "data_pointer_offset": "descriptor+0x28",
+      "format_offset": "descriptor+0x34",
+      "dimension_bits_offset": "descriptor+0x38"
+    },
+    "mip_fields_read_by_function": false,
+    "evidence": "Saved function body FUN_00220fe0 calls FUN_00222110 using descriptor+0x28 data, format byte at +0x34, and descriptor dimension bits at +0x38; it does not load +0x2c or +0x35. This is a base image sprite path and is distinct from mip-aware FUN_00222358."
+  },
+  "unresolved_join": {
+    "claim": "The type-1 CARS reward asset request is attached to a specific reward-screen UI object class and its draw route.",
+    "status": "source_proven_conditional_runtime_completion",
+    "resolved_fact": "The request is indexed by reward item, bound to BUTTON1 or BUTTON2 via gp-0x5370+s7, and set through that button node\u2019s class-3 setter. Class-3 button rendering uses FUN_00159080 -> FUN_0015e2e0 -> FUN_00220678 -> FUN_0021fd50 -> FUN_00220fe0.",
+    "runtime_limit": "Static control flow does not prove the async gate/poll conditions completed in a particular emulator state, nor does it show output pixels or GS alpha blending."
+  },
+  "conclusion": "The source-derived CARS reward-icon path is now connected: the type-1 CARS template loads into the same-index BUTTON1/BUTTON2 UI node (class 3), whose class-selected renderer uses the main-image sprite uploader. The uploader ignores descriptor +0x2c/+0x35, so serialized mip sentinels do not block this CARS reward-icon route. FUN_0022acc8 builds same-index cell/descriptor links, and FUN_0021fd50 renders the row-major grid using the verified U/V edge fractions. Static code proves the route conditionally; a captured menu draw is still needed to validate actual pixels, alpha and runtime reachability.",
+  "render_grid_composition": {
+    "parser": "FUN_0022acc8 sets runtime image dimensions from header words 5/6 at object+0x14/+0x18; header stride/cell fields occupy +0x0c/+0x10; row/column counts are +0x08/+0x04. It sets object+0x44 to the 16-byte per-tile record array and writes the same-index descriptor pointer to each record+8.",
+    "renderer": "FUN_0021fd50 loops rows from object+0x08 and columns from object+0x04. For each 16-byte cell record, it reads normalized U/V extents from record+0/+4 and calls FUN_00220fe0 on the descriptor pointer from record+8.",
+    "position_and_extent": "The renderer advances cell origins by xStep=(right-left)*object.stride/object.imageWidth and yStep=(bottom-top)*object.cell/object.imageHeight. Each cell quad ends at originX+xStep*record.U and originY+yStep*record.V. The recorded U/V fractions are 1.0 for full cells and equal to clipped image remainder divided by 32 for edge cells. This establishes row-major descriptor-cell composition and edge extents in the source display path.",
+    "source_image_placement_equivalence": "The decoder places source pixels at x=(index mod columns)*32 and y=floor(index/columns)*32, clipping to declared image dimensions. This agrees with source renderer cell-origin increments and serialized per-cell U/V edge fractions when cell dimensions/stride are 32; record/descriptor payload association is same-index in FUN_0022acc8.",
+    "limits": "The source renderer establishes the per-cell display geometry for parsed texture objects; it does not establish that the dynamic CARS request is attached to any particular REWRD.UI object, nor channel/alpha blending or observed output pixels."
+  },
+  "cars_callback_join": {
+    "reward_callback_entry": "0x001820f0",
+    "button_array_global": "gp-0x5370 (the same address shown as gp0xffffac90 in FUN_00181f38)",
+    "button_object_creation": "FUN_00181f38 formats BUTTON%d at VA 0x25d110 with values 1 and 2, looks each name up under the UIREWRD.UI root at VA 0x25d0e0, and stores the returned node pointers at array indexes 0 and 1 (byte offsets 0 and 4). The archived REWRD.UI defines both as UI_TYPE_BUTTON, class id 3.",
+    "reward_iteration": "FUN_001820f0 starts reward index at stack+0x58=0, forms s7=index*4 at VA 0x182194, uses gp-0x5370+s7 to fetch the current button node, and increments through the reward-item count. This reuses the same BUTTON1/BUTTON2 pointer array created by FUN_00181f38.",
+    "cars_dispatch": "Callback switches on one-based reward type at VA 0x1821f4. The type-1 jump-table entry at VA 0x25d2f0 targets 0x182220. That case formats GRAPHICS\\GAME\\CARS\\%s.PSD (string VA 0x25d1c0), then calls FUN_0022a910 with load type 2.",
+    "returned_handle_setter": "On the completion path, VA 0x1826d8 loads button object from gp-0x5370+s7 and the same-index resource handle from gp-0x6018+s7, reads the button class id, indexes setter table DAT_00239a20 by class id, and calls the setter with (button,handle). Because BUTTON1/2 class id is 3, FUN_0014d728 stores the handle at node+0x154.",
+    "runtime_condition": "This proves the static resource-to-UI wiring when the conditional async callback reaches the type-1 CARS case and completion path. It does not prove that loader gates/polling completed in a captured runtime state."
+  }
+}

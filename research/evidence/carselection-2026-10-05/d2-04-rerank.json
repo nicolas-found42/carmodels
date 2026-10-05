@@ -1,0 +1,73 @@
+{
+  "args": {
+    "query": "next analysis step to close the numeric-selector to human-label bridge",
+    "candidates": [
+      {
+        "id": "read_19eb90_addrs",
+        "text": "Read FUN_0019eb90/FUN_00125640 disassembly for the selector-store address, then read that word in all three EE images."
+      },
+      {
+        "id": "menu_state_struct",
+        "text": "Find the menu cursor struct via the highlight-draw code and read the selected car/type field per capture."
+      },
+      {
+        "id": "more_screens",
+        "text": "Capture more thumbnail screens (cars 2, 3, 6) for a bigger label set."
+      },
+      {
+        "id": "text_archive",
+        "text": "Resolve TXT_CARS_COUPE_1949/TXT_CARS_FORTYNINE through the language archive to the rendered strings."
+      },
+      {
+        "id": "stop_claim",
+        "text": "Stop and report the three pairs as a partial bridge without an isolated selector word."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "next analysis step to close the numeric-selector to human-label bridge",
+    "summary": {
+      "candidates": 5,
+      "returned": 5
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "read_19eb90_addrs",
+        "relevance": 0.75,
+        "text": "Read FUN_0019eb90/FUN_00125640 disassembly for the selector-store address, then read that word in all three EE images."
+      },
+      {
+        "rank": 2,
+        "id": "menu_state_struct",
+        "relevance": 0.73,
+        "text": "Find the menu cursor struct via the highlight-draw code and read the selected car/type field per capture."
+      },
+      {
+        "rank": 3,
+        "id": "text_archive",
+        "relevance": 0.7,
+        "text": "Resolve TXT_CARS_COUPE_1949/TXT_CARS_FORTYNINE through the language archive to the rendered strings."
+      },
+      {
+        "rank": 4,
+        "id": "stop_claim",
+        "relevance": 0.67,
+        "text": "Stop and report the three pairs as a partial bridge without an isolated selector word."
+      },
+      {
+        "rank": 5,
+        "id": "more_screens",
+        "relevance": 0.37,
+        "text": "Capture more thumbnail screens (cars 2, 3, 6) for a bigger label set."
+      }
+    ],
+    "usage": {
+      "input_tokens": 750,
+      "output_tokens": 94
+    }
+  }
+}

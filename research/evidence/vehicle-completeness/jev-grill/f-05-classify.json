@@ -1,0 +1,107 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "A",
+        "text": "Sound verdict recorded consistent (two tables + loader chain)."
+      },
+      {
+        "id": "B",
+        "text": "Read entity+0x64 via chain; one bounded indirection pass; record definite outcome."
+      },
+      {
+        "id": "C",
+        "text": "One tool, 3-pair regression + full car-keyed table (~35-39)."
+      },
+      {
+        "id": "ceiling",
+        "text": "render_fidelity_complete false; partial claims; escalate acceptable."
+      }
+    ],
+    "classes": [
+      {
+        "id": "specified",
+        "description": "The plan states exactly what to do and what outcome counts. Example: the bounded indirection pass."
+      },
+      {
+        "id": "vague",
+        "description": "Still open to interpretation; could block the session."
+      }
+    ],
+    "purpose": "confirm every plan step is specified, none vague",
+    "context": "Final confirmation."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 1,
+      "review": 3,
+      "invalid_response": 0,
+      "by_class": {
+        "vague": 3,
+        "specified": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "A",
+        "classification": "vague",
+        "probabilities": {
+          "specified": 0.47,
+          "vague": 0.53
+        },
+        "confidence": 0.05,
+        "margin": 0.06000000000000005,
+        "top_probability": 0.53,
+        "decision": "review"
+      },
+      {
+        "id": "B",
+        "classification": "specified",
+        "probabilities": {
+          "specified": 1,
+          "vague": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "C",
+        "classification": "vague",
+        "probabilities": {
+          "specified": 0.38,
+          "vague": 0.62
+        },
+        "confidence": 0.25,
+        "margin": 0.24,
+        "top_probability": 0.62,
+        "decision": "review"
+      },
+      {
+        "id": "ceiling",
+        "classification": "vague",
+        "probabilities": {
+          "specified": 0.17,
+          "vague": 0.83
+        },
+        "confidence": 0.66,
+        "margin": 0.6599999999999999,
+        "top_probability": 0.83,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 670,
+      "output_tokens": 131
+    }
+  }
+}

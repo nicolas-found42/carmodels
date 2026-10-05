@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "Did the execution meet the agreed plan and reach a definite outcome on all three threads?",
+    "evidence": "A: sound mapping equals the executable (two tables, 35 cars, controls rejected) - VERIFY OK. B: livery store named at entity+0x64; per-screen cursor recorded OPEN (0 sig-scan candidates, 0 exact-base pointers); receipt PASS (definite outcome recorded). C: all 35 cars resolve with controls, 3-pair kept - VERIFY OK. render_fidelity_complete false everywhere; index sha unchanged.",
+    "priorities": "Each thread to a definite outcome (7b); no positive-find requirement; render_fidelity_complete false; no value-only match; escalate acceptable.",
+    "candidates": [
+      {
+        "id": "met",
+        "description": "All three threads reached a definite outcome; the plan's bar is met."
+      },
+      {
+        "id": "b_short",
+        "description": "B is short: it should have isolated the per-screen cursor positively."
+      },
+      {
+        "id": "rework",
+        "description": "Rework required."
+      }
+    ],
+    "requirements": [
+      "All three threads to a definite outcome",
+      "No value-only match claimed",
+      "render_fidelity_complete false"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "met",
+      "escaped": false,
+      "confidence": 0.97,
+      "probabilities": {
+        "rework": 0,
+        "met": 0.98,
+        "b_short": 0.02,
+        "investigate": 0,
+        "none": 0,
+        "ask_user": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "met",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "met",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "met",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "b_short",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "b_short",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "b_short",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "rework",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "rework",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "rework",
+        "requirement": 2,
+        "answer": "unknown"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 1900,
+      "output_tokens": 458
+    }
+  }
+}

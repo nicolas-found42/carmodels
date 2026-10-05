@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the strongest evidence supporting the recorded-open outcome",
+    "candidates": [
+      {
+        "id": "zero154",
+        "text": "The (1,5,4) highlight tuple has 0 hits at width 8, 16 and 32 across all three images."
+      },
+      {
+        "id": "noise043",
+        "text": "The (0,4,3) tuple has 0 u32 hits and only 97 u8 hits in VU-packet noise regions."
+      },
+      {
+        "id": "chain",
+        "text": "The live chain 0x290278 -> 0x473d70 -> 6 car entities resolves over read-only PINE."
+      },
+      {
+        "id": "store",
+        "text": "The named store entity+0x64 is a float (FUN_00121e10), read live."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the strongest evidence supporting the recorded-open outcome",
+    "exists": 0.53,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "chain",
+        "probability": 0.53,
+        "text": "The live chain 0x290278 -> 0x473d70 -> 6 car entities resolves over read-only PINE."
+      },
+      {
+        "id": "zero154",
+        "probability": 0.22,
+        "text": "The (1,5,4) highlight tuple has 0 hits at width 8, 16 and 32 across all three images."
+      },
+      {
+        "id": "store",
+        "probability": 0.17,
+        "text": "The named store entity+0x64 is a float (FUN_00121e10), read live."
+      },
+      {
+        "id": "noise043",
+        "probability": 0.08,
+        "text": "The (0,4,3) tuple has 0 u32 hits and only 97 u8 hits in VU-packet noise regions."
+      }
+    ],
+    "usage": {
+      "input_tokens": 593,
+      "output_tokens": 68
+    }
+  }
+}

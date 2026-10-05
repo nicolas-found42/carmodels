@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "best anchor for deriving the selector address",
+    "candidates": [
+      {
+        "id": "fun19eb90",
+        "text": "FUN_0019eb90 reads the livery label via static table VA 0x23acb0 and resolves via FUN_00125640, storing via FUN_00121e10."
+      },
+      {
+        "id": "fun1c4a40",
+        "text": "001c4a40 indexed cursor over DAT_00241b40 table, caller context open."
+      },
+      {
+        "id": "va241b60",
+        "text": "VA_0x241b60 = 5,4,4 across the three captures."
+      },
+      {
+        "id": "scratchpad",
+        "text": "121 changed scratchpad words, all float-scale VU noise."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best anchor for deriving the selector address",
+    "exists": 0.59,
+    "exists_verdict": "partial",
+    "top": [
+      {
+        "id": "fun19eb90",
+        "probability": 0.48,
+        "text": "FUN_0019eb90 reads the livery label via static table VA 0x23acb0 and resolves via FUN_00125640, storing via FUN_00121e10."
+      },
+      {
+        "id": "fun1c4a40",
+        "probability": 0.29,
+        "text": "001c4a40 indexed cursor over DAT_00241b40 table, caller context open."
+      },
+      {
+        "id": "va241b60",
+        "probability": 0.23,
+        "text": "VA_0x241b60 = 5,4,4 across the three captures."
+      },
+      {
+        "id": "scratchpad",
+        "probability": 0,
+        "text": "121 changed scratchpad words, all float-scale VU noise."
+      }
+    ],
+    "usage": {
+      "input_tokens": 612,
+      "output_tokens": 87
+    }
+  }
+}

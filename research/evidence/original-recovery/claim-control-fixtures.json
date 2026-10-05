@@ -1,0 +1,387 @@
+[
+  {
+    "id": "container-code",
+    "source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/tools/ps2_container.py",
+    "evidence": "\"\"\"Section chain of an FR2 `.PS2` model, translated from the executable's loader.\n\nVerified on the unchanged PAL corpus only. The loader (`FUN_0011ed90`) parses the buffer as a chain:\n\n1. name tree: word 0 is the byte offset of the next section, rounded up to 16 (`FUN_00123908`);\n2. texture library (`FUN_0022ba30`): three palette-block counts A, B, C; a 12-byte table entry per block;\n   the blocks themselves (A and C blocks of 0x400 bytes, B blocks of 0x40); a count N and one extra word;\n   then N items, each a flags word, a length-prefixed name, a 0x40-byte descriptor (format byte at 0x34,\n   mip-level count at 0x35, a 64-bit field at 0x38 whose bits 15-18 and 19-22 are log2 width and height),\n   a 0x10-byte record per mip level, and finally the image planes, each 16-byte aligned;\n3. the next section starts at the 16-byte-aligned end and opens with a record count (records of 0x34 bytes).\n\nLevel-zero decoding covers format 1 (32-bit linear) and formats 3/4 under the\nbounded static upload contract in ps2_texture_indices. Descriptor bit8 selects\npacked upload versus direct linear indices. Mips and later geometry remain\nseparate, and no original rendering or hardware execution is claimed.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom functools import lru_cache\nimport struct\n\nfrom evidence_common import Invalid, sha256\nfrom format_contracts import model\n\nFORMATS = {1, 2, 3, 4}\nMAX_BLOCKS = 4096\nMAX_ITEMS = 4096\nMAX_NAME = 256\nMAX_DIM = 2048\nMAX_MIPS = 8\nNEXT_RECORD = 0x34\n\n\nclass Unsupported(ValueError):\n    \"\"\"The item is valid but its pixels are outside the measured decoding profile.\"\"\"\n\n\ndef align16(n: int) -> int:\n    return (n + 15) & ~15\n\n\ndef level_bytes(fmt: int, w: int, h: int) -> int:\n    return {1: w * h * 4, 2: w * h * 2, 3: w * h, 4: w * h // 2}[fmt]\n\n\ndef parse(data: bytes) -> dict:\n    tree = model(data)\n    pool_end = tree[\"leading_count\"]\n    start = align16(pool_end)\n\n    def need(pos: int, size: int, what: str) -> None:\n        if pos < 0 or size < 0 or pos + size > len(data):\n            raise Invalid(f\"{what} at {pos:#x} (+{size}) exceeds the {len(data)}-byte file\")\n\n    need(start, 12, \"texture section header\")\n    a, b, c = struct.unpack_from(\"<3I\", data, start)\n    if max(a, b, c) > MAX_BLOCKS:\n        raise Invalid(f\"palette block counts {(a, b, c)} exceed the bound {MAX_BLOCKS}\")\n    total = a + b + c\n    table = start + 12\n    need(table, 12 * total, \"palette block table\")\n    palettes = align16(table + 12 * total)\n    block_size = [0x400] * a + [0x40] * b + [0x400] * c\n    block_at = [palettes + sum(block_size[:i]) for i in range(total)]\n    pos = palettes + sum(block_size)\n    need(palettes, pos - palettes, \"palette blocks\")\n    need(pos, 8, \"texture count\")\n    count, extra = struct.unpack_from(\"<2I\", data, pos)\n    if count > MAX_ITEMS:\n        raise Invalid(f\"texture count {count} exceeds the bound {MAX_ITEMS}\")\n    pos += 8\n    items = []\n    for i in range(count):\n        need(pos, 8, f\"texture {i} header\")\n        flags, length = struct.unpack_from(\"<2I\", data, pos)\n        pos += 8\n        if not 1 <= length <= MAX_NAME:\n            raise Invalid(f\"texture {i}: name length {length} outside 1..{MAX_NAME}\")\n        need(pos, length, f\"texture {i} name\")\n        raw = data[pos : pos + length]\n        name = raw.split(b\"\\0\")[0]\n        if raw[-1:] != b\"\\0\" or not name or not all(32 <= ch < 127 for ch in name):\n            raise Invalid(f\"texture {i}: name is not a printable NUL-terminated string\")\n        pos += length\n        if flags & 1:\n            raise Invalid(f\"texture {i}: items without image data are outside the measured profile\")\n        pos = align16(pos)\n        need(pos, 0x40, f\"texture {i} descriptor\")\n        struct_at = pos\n        palette_index = struct.unpack_from(\"<I\", data, pos)[0]\n        fmt, mips = data[pos + 0x34], data[pos + 0x35]\n        (field,) = struct.unpack_from(\"<Q\", data, pos + 0x38)\n        width, height = 1 << ((field >> 15) & 0xF), 1 << ((field >> 19) & 0xF)\n        if fmt not in FORMATS:\n            raise Invalid(f\"texture {i}: unknown format {fmt}\")\n        if mips > MAX_MIPS or width > MAX_DIM or height > MAX_DIM:\n            raise Invalid(f\"texture {i}: mips {mips} or size {width}x{height} outside the measured profile\")\n        if mips >= min(width, height).bit_length():\n            raise Invalid(f\"texture {i}: {mips} mips exceed the {min(width, height).bit_length() - 1} halvings a {width}x{height} image supports\")\n        if fmt in (3, 4) and palette_index >= total:\n            raise Invalid(f\"texture {i}: palette index {palette_index} outside the {total}-entry table\")\n        pos += 0x40 + 0x10 * mips\n        need(struct_at, pos - struct_at, f\"texture {i} descriptor and mip records\")\n        items.append(\n            {\n                \"index\": i,\n                \"name\": name.decode(\"ascii\"),\n                \"flags\": flags,\n                \"descriptor_offset\": struct_at,\n                \"format\": fmt,\n                \"mips\": mips,\n                \"width\": width,\n                \"height\": height,\n                \"palette_index\": palette_index,\n                \"palette_offset\": block_at[palette_index] if palette_index < total else None,\n                \"palette_bytes\": block_size[palette_index] if palette_index < total else None,\n                \"descriptor_field\": f\"{field:#018x}\",\n                \"levels\": [],\n            }\n        )\n    for it in items:\n        w, h = it[\"width\"], it[\"height\"]\n        for level in range(it[\"mips\"] + 1):\n            pos = align16(pos)\n            size = level_bytes(it[\"format\"], w, h)\n            need(pos, size, f\"texture {it['index']} level {level} image data\")\n            it[\"levels\"].append({\"level\": level, \"offset\": pos, \"size\": size, \"width\": w, \"height\": h})\n            pos += size\n            w, h = w >> 1, h >> 1\n    end = align16(pos)\n    need(end, 4, \"record count of the next section\")\n    (records,) = struct.unpack_from(\"<I\", data, end)\n    if 4 + NEXT_RECORD * records > len(data) - end:\n        raise Invalid(f\"next section announces {records} records of {NEXT_RECORD} bytes, which do not fit after {end:#x}\")\n    return {\n        \"tree\": {\"name_pool_end\": pool_end, \"next_section_offset\": start},\n        \"textures\": {\n            \"section_start\": start,\n            \"palette_blocks\": (a, b, c),\n            \"palette_table_sha256\": sha256(data[table : table + 12 * total]),\n            \"palette_region\": [palettes, palettes + sum(block_size)],\n            \"extra_word\": extra,\n            \"image_count\": count,\n            \"items\": items,\n            \"section_end\": end,\n        },\n        \"next_section\": {\"offset\": end, \"record_count\": records, \"record_bytes\": NEXT_RECORD},\n    }\n\n\n@lru_cache(maxsize=64)\ndef _block_order8(w: int, h: int) -> tuple[int, ...]:\n    \"\"\"Source index in the GS 8-bit block layout for each pixel of a w x h image, row-major.\"\"\"\n    order = []\n    for y in range(h):\n        for x in range(w):\n            block = (y & ~0xF) * w + (x & ~0xF) * 2\n            swap = (((y + 2) >> 2) & 1) * 4\n            row = (((y & ~3) >> 1) + (y & 1)) & 7\n            column = row * w * 2 + ((x + swap) & 7) * 4\n            order.append(block + column + ((y >> 1) & 1) + ((x >> 2) & 2))\n    return tuple(order)\n\n\ndef unswizzle8(plane: bytes, w: int, h: int) -> bytes:\n    if w < 16 or h < 16 or w % 16 or h % 16:\n        raise Unsupported(f\"8-bit block layout needs multiples of 16; got {w}x{h}\")\n    order = _block_order8(w, h)\n    if len(plane) < w * h or max(order) >= len(plane):\n        raise Unsupported(\"plane is shorter than the block layout requires\")\n    return bytes(map(plane.__getitem__, order))\n\n\ndef decode_rgba(data: bytes, item: dict) -> bytes:\n    \"\"\"Level-0 RGBA with the stored alpha (the game's palettes use 0..0x80 as opaque).\"\"\"\n    level = item[\"levels\"][0]\n    plane = data[level[\"offset\"] : level[\"offset\"] + level[\"size\"]]\n    if item[\"format\"] == 1:\n        return plane\n    if item[\"format\"] in (3, 4):\n        from ps2_texture_indices import decode_indices\n        count = 256 if item[\"format\"] == 3 else 16\n        palette_size = count * 4\n        allowed_sizes = (0x400,) if item['format'] == 3 else (0x40, 0x400)\n        if item[\"palette_bytes\"] not in allowed_sizes:\n            raise Unsupported(f\"format {item['format']} palette block is outside the measured profile\")\n        pixels = decode_indices(data, item)\n        palette_block = data[item[\"palette_offset\"] : item[\"palette_offset\"] + item['palette_bytes']]\n        if len(palette_block) != item['palette_bytes']:\n            raise Invalid('palette bytes are outside the input')\n        # The 16x16 PSMCT32 upload of a 256-color A/C block follows the\n        # loader's bit3/4 permutation; CSM0/CSA0 then restores raw indices\n        # 0..15 for PSMT4, as does the unpermuted 8x2 sixteen-color upload.\n        palette = palette_block[:palette_size]\n        entries = [palette[4 * i : 4 * i + 4] for i in range(count)]\n        return b\"\".join(map(entries.__getitem__, pixels))\n    raise Unsupported(f\"format {item['format']} pixel layout is not decoded\")\n",
+    "cases": [
+      {
+        "claim": "The parser derives texture width from descriptor bits 15 through 18.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The decoder returns the image plane directly for format 1.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The indexed RGBA decoder selects 16 palette entries for format 4.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The parser aligns each stored mip image start to a 16-byte boundary.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The parser derives texture width from descriptor bits 19 through 22.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The decoder doubles every stored alpha byte before returning RGBA.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The indexed RGBA decoder selects 256 palette entries for format 4.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The parser stores mip images without aligning their starts.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The original Gran Torino mesh has a proven world-space vertex scale of 1/16384.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The texture decoder was compared against a live game screenshot.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The material-to-mesh UV binding is recovered for every car.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "All 171 car PTG files decode into complete icons and liveries.",
+        "expected": "unsupported"
+      }
+    ]
+  },
+  {
+    "id": "index-code",
+    "source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/tools/ps2_texture_indices.py",
+    "evidence": "\"\"\"Bounded level-zero indices under FR2's static model upload contract.\n\nFUN_00222358 selects PSMCT32 for packed format3 and PSMCT16 for packed\nformat4, then samples PSMT8/PSMT4. Direct uploads retain linear indices.\nGS address arithmetic was checked against PCSX2 GSTables.cpp at\n81526d4dc7cc70e4ae75abb35a789417456c6d43. This is an offline file\ninterpretation; no original uploader, GS, emulator, or game code is run.\nThe earlier baseline results are preserved as a superseded decoding profile.\n\"\"\"\nfrom functools import lru_cache\nimport struct\n\nfrom evidence_common import Invalid\nfrom ps2_container import Unsupported, unswizzle8\n\nMAX_DIMENSION = 512\n\n\ndef _xor_basis(value: int, basis: tuple[int, ...]) -> int:\n    result = 0\n    for bit, mask in enumerate(basis):\n        if (value >> bit) & 1:\n            result ^= mask\n    return result\n\n\ndef _block(x: int, y: int) -> int:\n    return _xor_basis(x | y << 2, (2, 8, 1, 4, 16))\n\n\n# Exhaustively compared with all 32 blocks and 128/512 public table cells.\n_INVERSE_BLOCK = { _block(x, y): (x, y) for y in range(8) for x in range(4) }\n_INVERSE_COLUMN16 = {\n    _xor_basis(x | y << 4, (2, 8, 16, 1, 4, 32, 64)): (x, y)\n    for y in range(8) for x in range(16)\n}\n\n\n@lru_cache(maxsize=8)\ndef _packed4_order(width: int, height: int, uw: int, uh: int, dbw: int, tbw: int) -> tuple[int, ...]:\n    order = []\n    pages_wide = (tbw * 64) // 128\n    for y in range(height):\n        for x in range(width):\n            page = (y // 128) * pages_wide + x // 128\n            block = _block((x % 128) // 32, (y % 128) // 16)\n            column = _xor_basis((x % 32) | (y % 16) << 5, (8, 32, 64, 2, 4, 16, 65, 192, 256))\n            nibble = page * 16384 + block * 512 + column\n            halfword = nibble // 4\n            upload_page, in_page = divmod(halfword, 4096)\n            bx, by = _INVERSE_BLOCK[in_page // 128]\n            cx, cy = _INVERSE_COLUMN16[in_page % 128]\n            ux = (upload_page % dbw) * 64 + bx * 16 + cx\n            uy = (upload_page // dbw) * 64 + by * 8 + cy\n            if ux >= uw or uy >= uh:\n                raise Invalid('packed four-bit mapping reads an unwritten upload coordinate')\n            order.append((uy * uw + ux) * 4 + (nibble & 3))\n    if len(set(order)) != width * height or min(order) != 0 or max(order) != width * height - 1:\n        raise Invalid('packed four-bit upload is not an exact nibble permutation')\n    return tuple(order)\n\n\ndef _span(data: bytes, offset: int, size: int, label: str) -> bytes:\n    if type(offset) is not int or type(size) is not int or offset < 0 or size < 0 or offset > len(data) or size > len(data) - offset:\n        raise Invalid(f'{label} is outside the input bytes')\n    return data[offset:offset + size]\n\n\ndef decode_indices(data: bytes, texture: dict) -> bytes:\n    \"\"\"Return one palette index byte per level-zero pixel, with stored alpha untouched.\"\"\"\n    descriptor = _span(data, texture['descriptor_offset'], 64, 'texture descriptor')\n    field, = struct.unpack_from('<Q', descriptor, 0x38)\n    buffer_field, = struct.unpack_from('<Q', descriptor, 0x30)\n    fmt = descriptor[0x34]\n    width, height = 1 << ((field >> 15) & 15), 1 << ((field >> 19) & 15)\n    if fmt != texture['format'] or width != texture['width'] or height != texture['height']:\n        raise Invalid('texture item differs from its descriptor')\n    if fmt not in (3, 4):\n        raise Unsupported('only indexed format3/format4 are interpreted')\n    if max(width, height) > MAX_DIMENSION or width * height < 2:\n        raise Unsupported('indexed dimensions are outside the bounded 2..512 profile')\n    level = texture['levels'][0]\n    size = width * height * (8 if fmt == 3 else 4) // 8\n    if level['size'] != size or level['width'] != width or level['height'] != height:\n        raise Invalid('level-zero dimensions or size differ from the descriptor')\n    plane = _span(data, level['offset'], size, 'level-zero plane')\n    uw, uh = 1 << ((field >> 23) & 15), 1 << ((field >> 27) & 15)\n    packed = bool(field & 256)\n    expected = (width // 2, height // 2) if packed else (width, height)\n    if (uw, uh) != expected:\n        raise Invalid('transfer dimensions do not match the measured upload profile')\n    tbw, dbw = (buffer_field >> 16) & 63, (buffer_field >> 22) & 63\n    if tbw != max(2, width // 64) or dbw != (max(1, uw // 64) if packed else tbw):\n        raise Invalid('buffer width does not match the measured upload profile')\n    if fmt == 3:\n        return unswizzle8(plane, width, height) if packed else plane\n    if not packed:\n        return bytes(n for byte in plane for n in (byte & 15, byte >> 4))\n    order = _packed4_order(width, height, uw, uh, dbw, tbw)\n    return bytes((plane[n // 2] >> ((n & 1) * 4)) & 15 for n in order)\n",
+    "cases": [
+      {
+        "claim": "Packed format 3 uses unswizzle8; direct format 3 retains the linear image plane.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Direct format 4 expands each byte into its low nibble followed by its high nibble.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Descriptor bit 8 selects packed upload.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The decoder rejects a texture item whose dimensions disagree with its descriptor.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Direct format 3 is always unswizzled by unswizzle8.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "Direct format 4 expands each byte into its high nibble followed by its low nibble.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "Descriptor bit 9 selects packed upload.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The decoder accepts a texture item whose dimensions disagree with its descriptor.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The car PTG menu icon uses this same format 4 decoder.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The runtime GS chooses exactly the same material for every car part.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "Every stored mip level is decoded by decode_indices.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The recovered car meshes have been exported as faithful GLBs.",
+        "expected": "unsupported"
+      }
+    ]
+  },
+  {
+    "id": "geometry-layout",
+    "source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/tools/ps2_sections.py",
+    "evidence": "\"\"\"Bounded offline section-chain translation of FR2 FUN_0011ed90.\n\nSerialized spans are kept separate from expanded memory records. Names refer to\nloader offsets/strides; their game meaning remains unresolved.\n\"\"\"\nfrom __future__ import annotations\n\nimport struct\n\nimport ps2_container\nfrom evidence_common import Incomplete, Invalid\n\nMAX_BYTES = 128 * 1024 * 1024\nMAX_RECORDS = 1_000_000\nLATER_PROFILES = (\"loader68\", \"measured_legacy60\")\n\n\nclass Reader:\n    def __init__(self, data: bytes, offset: int):\n        self.data = data\n        self.pos = offset\n\n    def take(self, size: int, what: str) -> int:\n        at = self.pos\n        if size < 0 or at < 0 or size > len(self.data) - at:\n            raise Invalid(f\"{what} at {at:#x} (+{size}) exceeds {len(self.data)} bytes\")\n        self.pos += size\n        return at\n\n    def word(self, what: str) -> int:\n        return struct.unpack_from(\"<I\", self.data, self.take(4, what))[0]\n\n    def count(self, what: str, mask: int = 0xFFFFFFFF) -> int:\n        value = self.word(what) & mask\n        if value > MAX_RECORDS:\n            raise Invalid(f\"{what} count {value} exceeds {MAX_RECORDS}\")\n        return value\n\n    def span(self, count: int, stride: int, what: str, aligned: bool = False) -> dict:\n        if count < 0 or count > MAX_RECORDS:\n            raise Invalid(f\"{what} count {count} outside 0..{MAX_RECORDS}\")\n        size = count * stride\n        at = self.take(size, what)\n        end = self.pos\n        if aligned:\n            self.take(ps2_container.align16(end) - end, what + \" alignment\")\n        return {\"offset\": at, \"count\": count, \"stride\": stride, \"size\": size, \"end\": end}\n\n\ndef header(reader: Reader) -> dict:\n    \"\"\"FUN_00121420: 8-byte prefix plus flag-dependent four-byte slots.\"\"\"\n    at = reader.take(8, \"geometry header\")\n    flags, count, third, fourth = struct.unpack_from(\"<4H\", reader.data, at)\n    size = 20 if flags & 0x800 else 0\n    size += 4 if flags & 0x100 else 0\n    size += 4 if third == 0xFFFF or flags & 6 else 0\n    size += 4 * sum(bool(flags & bit) for bit in (8, 0x10, 0x40, 0x80))\n    reader.take(size, \"geometry header optional slots\")\n    return {\"offset\": at, \"size\": reader.pos - at, \"flags\": flags,\n            \"count\": count, \"third\": third, \"fourth\": fourth}\n\n\ndef geometry(data: bytes, parsed: dict) -> tuple[Reader, dict]:\n    start = parsed[\"next_section\"][\"offset\"]\n    r = Reader(data, start)\n    count = r.count(\"0x34 record table\")\n    table = r.span(count, 0x34, \"0x34 record table\")\n    groups = []\n    total = 0\n    for i in range(count):\n        at = table[\"offset\"] + i * 0x34\n        pair = struct.unpack_from(\"<H\", data, at + 0x1C)[0], struct.unpack_from(\"<H\", data, at + 0x28)[0]\n        total += sum(pair)\n        groups.append(pair)\n    if total > MAX_RECORDS:\n        raise Invalid(f\"geometry header total {total} exceeds {MAX_RECORDS}\")\n    headers = [header(r) for _ in range(total)]\n    header_end = r.pos\n    r.take(ps2_container.align16(r.pos) - r.pos, \"geometry header alignment\")\n    payload_start = r.pos\n    for h in headers:\n        n, flags = h[\"count\"], h[\"flags\"]\n        planes = {\"six_byte\": r.span(n, 6, \"six-byte geometry plane\", True)}\n        if flags & 0x800:\n            planes[\"twenty_byte\"] = r.span(n, 20, \"twenty-byte geometry plane\", True)\n        planes[\"four_byte\"] = r.span(n, 4, \"four-byte geometry plane\", True)\n        if h[\"third\"] != 0xFFFF:\n            planes[\"third_four_byte\"] = r.span(n, 4, \"third four-byte geometry plane\", True)\n        for bit in (0x40, 0x80):\n            if flags & bit:\n                planes[f\"flag_{bit:02x}\"] = r.span(n, 4, f\"flag {bit:#x} geometry plane\", True)\n        h[\"planes\"] = planes\n    return r, {\"section_start\": start, \"table\": table, \"group_header_counts\": groups,\n               \"header_count\": total, \"header_end\": header_end, \"payload_start\": payload_start,\n               \"section_end\": r.pos, \"headers\": headers}\n\n",
+    "cases": [
+      {
+        "claim": "The geometry table uses 0x34-byte records.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The two geometry group counts come from offsets +0x1c and +0x28.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Each geometry header always has a six-byte plane and a four-byte plane.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Flag 0x800 adds a twenty-byte-per-sample geometry plane.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The geometry table uses 0x58-byte records.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The two geometry group counts come from offsets +0x20 and +0x2c.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "Each geometry header always has a twenty-byte plane.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "Flag 0x800 adds a sixteen-byte-per-sample geometry plane.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The six-byte samples are proven to be world-space XYZ in meters.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The four-byte samples are proven to be packed normals.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The third four-byte plane is proven to be UV coordinates.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The parser proves the final triangle-strip winding order.",
+        "expected": "unsupported"
+      }
+    ]
+  },
+  {
+    "id": "vif-order",
+    "source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/notes/evidence/fr2-geometry-vif-preamble/README.md",
+    "evidence": "# VIF preamble and E-stop continuation audit\n\nThis bundle narrows the static VU-input investigation to the DMA-buffer helper `FUN_0010f8f8`, the geometry packet writer `FUN_00128e88`, and the VU E-stop / VIF MSCNT continuation around overlay 5. It contains source hashes, bounded receipts and interpretations only; no game routine or emulator was executed.\n\nThe raw overlay settles the pair numbering: overlay 5 begins at disassembly byte address `0x2800`, and each VU pair is 8 bytes. Pair 213 at `0x2ea8` is E-marked `nop`; pair 214 at `0x2eb0` is the one-instruction delay-slot `nop`; pair 215 at `0x2eb8` is `xtop vi01`. This pair/address/raw-byte finding supersedes the interim line-count labels 214/215/216 in `jev-verify-e-stop-msc-order-superseded-pair-index.json` and the first screen receipt. The initial Jev verification left the line-count statement at review; the corrected raw bytes are verified with one review disposition retained in `jev-verify-correct-pair-addresses.json`.\n\nThe material control-flow correction is the output-buffer order in `FUN_00128e88`: after the current geometry payloads, it writes STMOD 0 and STCYCL 4/4, then MSCNT, then a BASE selected between `0x3aa` and `0x388`, then OFFSET 0. The saved source advances the same `puGpffff9220` cursor after each store. Pinned PCSX2 VIF1 code handles MSCNT by calling `vuExecMicro(idx, -1, false)`. That path latches TOP from the current TOPS before updating TOPS from DBF/BASE/OFFSET; OFFSET itself clears DBF and sets TOPS to BASE when the parser reaches it. Therefore the BASE/OFFSET emitted after this MSCNT do not set the TOP latched by that same MSCNT. The resumed XTOP at pair 215 has a TOP value dependent on TOPS already in effect at MSCNT. The prior inference that this MSCNT continuation necessarily uses the newly emitted `0x388`/`0x3aa` BASE is superseded.\n\n`FUN_0010f8f8` starts an inline CNT tag, puts VIF FLUSHA (`0x13000000`) and DIRECT(2) (`0x50000002`) in the TTE words, then appends one packed GIF A+D write. The GIF register address is `0x4e` (PS2SDK `GS_REG_ZBUF_1`); the qword computed from `DAT_002324fa`, `DAT_002324ec`, and `iGpffff911c` is the GS register data. It is not a DMA REF descriptor. Its function body has no literal STCYCL/STMOD/STROW/BASE/OFFSET/MSCNT command. A bounded VIF1 submitter writes QWC zero at `0x10009020`, TADR at `0x10009030`, and CHCR `0x145` at `0x10009000`, which sets TTE bit 6. The pinned PCSX2 VIF1 chain source transfers the upper 64 bits of a tag when TTE is set. Static follow-through from the later render buffer to a particular submitter/queue remains incomplete.\n\n`FUN_00128e88` writes STROW: after STCYCL 3/1 and the V4-8 transfer segment, it stores `0x30000000` followed by row words `[0x44400000, 0x44400000, 0x44400000, 0]`. If `param_4 != 0`, it later emits another STCYCL 3/1 and STROW `[0x45c00000, 0x45c00000, 0, 0]`. These row updates precede the tail STMOD 0 and STCYCL 4/4; they do not prove that earlier packet data used MODE 0. The later tail sequence is statically established, but the first render iteration's inherited VIF state and runtime dispatch remain open.\n\nThe `uVar14` selector values `0x208` and `0x2c8` are not the V4-32 UNPACK destination or a proven buffer base. `FUN_00128e88` first emits V4-32 command `0x6c058000` (NUM=5, TOPS-relative address 0); the selected `uVar14` is data in that packet and also contributes to a later V4-8 command immediate. The tail BASE value is independently selected from `0x3aa` and `0x388` by `uGpffff921c`. These fields have distinct packet roles; this bundle makes no equivalence claim between them.\n\nA conditional MODE/CYCLE path is supported at the builder level. In `FUN_001288b0`, each nonzero-count group at record offsets `+0x1c` or `+0x28` calls `FUN_00128e88` in a loop. `FUN_001ce288` calls `FUN_00128ca0` before `FUN_001288b0` on each loop iteration; if a geometry group runs and another outer iteration follows, that next iteration's explicit V4-32 packet is appended after the prior group's STMOD 0 and STCYCL 4/4 tail. Between them, the visible path appends FLUSHA/DIRECT and GS packets; `0010f8f8`'s computed qword is GS data, not a VIF tag or REF. This proves source-level command-buffer order only, not DMA scheduling or runtime VIF state. The first loop iteration's inherited state, queue boundaries, prior TOPS, and VU consumption remain unresolved.\n\nThe prior statement that a BASE/OFFSET in `FUN_00128e88` precedes its MSCNT was wrong; it is retained as superseded in `jev-screen-initial-review.json`. The first screen receipt included an agent-authored parenthetical suggesting that order and received `review`; it is not evidence. An intermediate screen also passed while containing the same incorrect order and pair labels; its outcome is retained only as a superseded receipt. The corrected primary-source screen passed in `jev-screen-primary-sources-corrected.json`. Prior broad jgrep no-hit and hit outcomes remain unchanged; those no-hit results did not establish absence. Exact raw jgrep outputs and argument arrays remain under ignored `.scratch/mesh/codex-root/geometry-vif-preamble/jgrep/`; `jgrep-summary.json` records their hashes, paths, and counts. The explicit STROW findings here come from source-word order and pinned PS2SDK opcode definitions. Earlier provenance in `../fr2-geometry-vu-input-provenance/` is left untouched.\n\nSony\u2019s VU User\u2019s Manual v6.0 \u00a73.4 / Figure 3-19 defines the single E-bit delay instruction and TPC continuation. The online mirror used for the bounded check is [VU User\u2019s Manual](https://docs.alexrp.com/mips/ee_vu.pdf). PCSX2 source is pinned to commit `81526d4dc7cc70e4ae75abb35a789417456c6d43`; PS2SDK command field definitions and hashes appear in `source-provenance.json`.\n\nNo runtime, emulator, GUI, or original game routine was run. This audit proves static command-buffer order and a source-pinned emulator continuation model, not hardware execution equivalence.\n",
+    "cases": [
+      {
+        "claim": "The audited geometry tail appends MSCNT before BASE and OFFSET.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The audited row update contains three raw words 0x44400000 and a zero fourth word.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Overlay 5 pair 213 is E-marked nop, pair 214 is its delay nop, and pair 215 is xtop vi01.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The first render iteration inherited VIF state remains unresolved.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The audited geometry tail appends BASE and OFFSET before MSCNT.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The audited row update contains three raw words 0x45c00000 and a zero fourth word.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "Overlay 5 pair 214 is E-marked nop, pair 215 is its delay nop, and pair 216 is xtop vi01.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The first render iteration inherited VIF state has been proven.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The row constants establish a world-space position scale of 1/768.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The recovered vertex data produced a faithful rendered Ford GT screenshot.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The original Gran Torino front-wheel normals are known.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The camera projection matrix for all tracks has been recovered.",
+        "expected": "unsupported"
+      }
+    ]
+  },
+  {
+    "id": "vu-consumer",
+    "source": "/Users/Nicolas/Documents/github/hermes/reverse-engineering/notes/evidence/fr2-geometry-vu-consumer/README.md",
+    "evidence": "# Overlay-5 consumer of the TOP-relative packet\n\nThis supplement records what the static VU instructions establish about the continuation after the E-marked pair. It does not claim that the game executes this stream, that the VIF TOPS state is globally known, or that the selected value is a renderer output pointer.\n\nOverlay 5's saved `.data` base is `0x2800`; pairs are 8 bytes. Raw pair 213 at `0x2ea8` is `nop[e]`, pair 214 at `0x2eb0` is its `nop` delay instruction, and pair 215 at `0x2eb8` is `xtop vi01`. Pair 221 at `0x2ee8` executes `ilw.z vi03,3(vi01)z`, reading the Z component of VU data-memory quadword `TOP+3` into `vi03`. Later instructions use `vi03` as a VU data-memory base: `lq vf15,0(vi03)` at pair 228, `lq vf12,2(vi03)` at pair 229, and `ilw.w vi06,1(vi03)w` at pair 237.\n\nThe packet writer's inline CNT packet records the V4-32 command followed by five payload qwords before it patches the CNT QWC and appends the later vertex REF: qword 0 comes from `param_5`; qword 1 repeats the low-byte value from `param_8`; qword 2 combines the preceding 64-bit GIF-tag field with `0x412`; qword 3 is `[count, 0, uVar14, 0]`; qword 4 is the 16-byte `param_6` value. The writer's QWC formula is `ceil((write_cursor - CNT_tag_start)/16) - 1`; at the patch point the span is the 16-byte tag plus 80 bytes of payload, so it yields CNT QWC=5. The first `param_3` REF record is appended after that patch. This establishes that the later REF data cannot shift the earlier qword-3 lane.\n\nGiven the packet's stated V4-32 layout, the lane-level static mapping is therefore `uVar14` at TOPS-relative payload qword 3, Z lane. Pair 221 reads `TOP+3.z` into `vi03`; if this same TOPS value is latched by the later MSCNT continuation and VIF's applicable mode/cycle state stores the lanes directly, `vi03` receives the selected `0x208` or `0x2c8` value. The control/data linkage is static and conditional on that VIF state; actual runtime TOPS and all-caller MODE/cycle state remain unproved. The selected values are not named as XGKICK pointers.\n\nThe same saved render-loop path gives a conditional prior-tail-to-next-header sequence. In `001ce288`, the `00126c18(4)` preparation call precedes `00128ca0`'s matrix packet, which precedes `001288b0`'s geometry packets. Inside `001288b0`, `00129428` and `001297b8` append FLUSHA/DIRECT and GIF/GS packets before `00128e88` writes its V4-32 header. The saved direct-call closure contains 276 functions; exact command-word scanning finds the STMOD literal `0x05000000` and STCYCL literal `0x01000404` only in `00128e88`. Other nearby `0x50` words are DIRECT commands, not STMOD. For repeated geometry records, the saved order is `00128e88`, record advance `00121420`, then loop back to `00128e88`; there is no explicit STMOD/STCYCL writer between those calls in the closure. Therefore, if those appended packets reach VIF in this one order, the prior geometry tail's MODE=0 and CL=WL=4 remain the explicit state at the next matrix and geometry headers. The first iteration's inherited state and actual DMA/VIF order remain unknown; unmodeled indirect or external state effects are outside this static result.\n\nThe four scratchpad vectors have a concrete producer path but no semantic names. Raw calls show `001ce288` passes 4 to `00126c18`; that function calls `00127c00(1)`, which passes output addresses `0x70003160`, `0x700031e0`, and `0x70003220` to `00128518`. It tail-calls `00115560`; the latter stores four 16-byte vectors at the first output base plus offsets `0x30`, `0`, `0x10`, and `0x20`. `00128ca0` later reloads `0x70003160`, `0x70003170`, `0x70003180`, and `0x70003190` into the packet. This proves the producer-to-packet address path, not camera, projection, axis, unit, or other vector meaning.\n\nThe saved overlay has XGKICK instructions at `0x2a50` (`vi11`), `0x2b70` (`vi08`), and `0x2e38` (`vi11`), all before the E stop at `0x2ea8`. There is no XGKICK after pair 215 in this overlay. This means this resumed sequence does not itself execute an XGKICK using `vi03`; it does not rule out later code outside this overlay consuming a related value.\n\nAn earlier working hypothesis treated all eight vectors in the separate `0x6c080000` matrix packet as caller-provided `param_1` data. The saved source does not support that: only the first four vectors come from `param_1`; the last four come from the separately produced scratchpad block `0x70003160..0x70003190`. That hypothesis is superseded, and no semantic matrix labels are assigned here.\n\nRaw binaries and full disassembly remain in ignored `.scratch`; only bounded instruction anchors, source hashes, and the Jev receipt are kept here.\n\nRoot independently checked149 stored EE anchor occurrences at108 unique addresses against both the pinned static export and unique ELF PT_LOAD byte ranges, plus seven VU pairs against original overlay bytes. Only delay-slot underscore text prefixes were normalized. The checker and result retain the earlier wrong0010f9f0 row and two checker-shape failures; neither failure accepted an incorrect row. The separate [authored VIF/DMA probe](../fr2-vif-header-synthetic-audit/README.md) verifies the five-qword software mapping at every TOPS value and a coalesced TTE chain. That mechanism result leaves actual game state conditional.\n",
+    "cases": [
+      {
+        "claim": "Pair 221 reads TOP+3.z into vi03.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The writer header qword 3 is [count, 0, uVar14, 0].",
+        "expected": "verified"
+      },
+      {
+        "claim": "Only the first four of the eight matrix-packet vectors come from param_1.",
+        "expected": "verified"
+      },
+      {
+        "claim": "There is no XGKICK after pair 215 in this saved overlay.",
+        "expected": "verified"
+      },
+      {
+        "claim": "Pair 221 reads TOP+3.x into vi03.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The writer header qword 3 is [count, uVar14, 0, 0].",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "All eight matrix-packet vectors come from param_1.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "This saved overlay has an XGKICK after pair 215 that uses vi03.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The selected vi03 value is proven to be the final XGKICK output pointer.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The last four matrix-packet vectors are definitely the camera projection matrix.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The original mesh normals have been decoded.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The emitted vertices have been tested against original hardware.",
+        "expected": "unsupported"
+      }
+    ]
+  },
+  {
+    "id": "ptg-census",
+    "source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/ptg-investigation/ptg-profile-carmodels.json",
+    "evidence": "{\n  \"files\": 171,\n  \"profiles\": {\n    \"tiled_header_only\": 171\n  },\n  \"header_relation_violations\": 0,\n  \"unique_sizes\": [\n    100304\n  ],\n  \"dimensions\": {\n    \"165x98\": 35,\n    \"227x85\": 136\n  }\n}",
+    "cases": [
+      {
+        "claim": "The measured car PTG corpus has 171 files.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The measured car PTG corpus has 35 images with dimensions 165x98.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The measured car PTG corpus has 136 images with dimensions 227x85.",
+        "expected": "verified"
+      },
+      {
+        "claim": "All 171 measured car PTGs are classified as tiled_header_only.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The measured car PTG corpus has 170 files.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The measured car PTG corpus has 35 images with dimensions 227x85.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The measured car PTG corpus has 136 images with dimensions 165x98.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "All 171 measured car PTGs are classified as completely_decoded.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The measured PTG pixels have been decoded correctly.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The PTG palettes are identical to the corresponding embedded model palettes.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The icon and livery with the same code have byte-identical contents.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "Every car PTG mip level has been recovered.",
+        "expected": "unsupported"
+      }
+    ]
+  },
+  {
+    "id": "fresh-export",
+    "source": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/original-recovery/car-asset-census.json",
+    "evidence": "{\n  \"summary\": {\n    \"models\": 35,\n    \"geometry_records\": 1872,\n    \"geometry_headers\": 12080,\n    \"exact_eof\": 35,\n    \"textures\": 700,\n    \"mip_levels_stored\": 94,\n    \"geometry_samples\": 657139\n  },\n  \"formats\": {\n    \"3\": 618,\n    \"1\": 78,\n    \"4\": 4\n  },\n  \"upload_profiles\": {\n    \"3:packed\": 567,\n    \"3:direct\": 51,\n    \"1:direct\": 78,\n    \"4:packed\": 4\n  },\n  \"limits\": [\n    \"Level zero only under the static model upload contract.\",\n    \"Display alpha uses min(255,2*a); raw-alpha PNG and raw RGBA hash preserve stored values.\",\n    \"Model textures are distinct from PTG menu icons and alternative liveries.\",\n    \"Geometry layout and samples do not establish axes, scale, topology, UVs or material bindings.\"\n  ]\n}",
+    "cases": [
+      {
+        "claim": "The fresh export inspected 35 car models.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The fresh export decoded 700 level-zero textures.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The fresh export counted 657139 geometry samples.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The export includes 94 stored mip levels but claims level-zero decoding only.",
+        "expected": "verified"
+      },
+      {
+        "claim": "The fresh export inspected 56 car models.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The fresh export decoded 701 level-zero textures.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The fresh export counted 657138 geometry samples.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The export claims every stored mip level is decoded.",
+        "expected": "contradicted"
+      },
+      {
+        "claim": "The exported images are bit-exact with a running GS emulator.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "Every original car triangle has been reconstructed.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "The exported textures are bound to original mesh UVs.",
+        "expected": "unsupported"
+      },
+      {
+        "claim": "Every alternate livery texture has been recovered.",
+        "expected": "unsupported"
+      }
+    ]
+  }
+]

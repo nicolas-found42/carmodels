@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Close the residual branches: root the gameflow chain, define C's rows/controls, define the closure artifact.",
+    "diff": "+ root gameflow chain via the bootstrap global, read it in the savestate, follow to entity+0x64\n+ C asserts all 35 cars resolve with unknown-key and apostrophe controls, gated\n+ one receipt + jev_gate per thread; one session completion report for the three definite outcomes",
+    "tests": "existing verifiers stay green"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.25,
+    "scores": {
+      "correctness": {
+        "score": 1.2,
+        "confidence": 0.64,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.76,
+          "2": 0.22
+        }
+      },
+      "spec_match": {
+        "score": 1.64,
+        "confidence": 0.46,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.31,
+          "2": 0.67
+        }
+      },
+      "test_gap": {
+        "score": 1.48,
+        "confidence": 0.22,
+        "probabilities": {
+          "0": 0.17,
+          "1": 0.19,
+          "2": 0.64
+        }
+      },
+      "blast_radius": {
+        "score": 1.71,
+        "confidence": 0.56,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.25,
+          "2": 0.73
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.5467500000000001,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 810,
+      "output_tokens": 79
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "w_241b60",
+        "text": "0x241b60 reads 5,4,4 for highlights 1/5/4; 4->5 in the A->B move."
+      },
+      {
+        "id": "f8",
+        "text": "F8 screenshots land in /data/snaps headlessly."
+      },
+      {
+        "id": "pairs",
+        "text": "Paused savestate pairs have 0 pause-control diffs."
+      }
+    ],
+    "classes": [
+      {
+        "id": "ground_truth",
+        "description": "Verified observation tying a screen to a state. Example: a screenshot showing the highlighted thumbnail."
+      },
+      {
+        "id": "candidate",
+        "description": "A word that moves with the highlight but is not yet attributed."
+      },
+      {
+        "id": "disproven",
+        "description": "A word shown not to be the per-car id by value."
+      }
+    ],
+    "purpose": "sort sweep facts by evidential status",
+    "context": "Mark sweep."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 0,
+      "review": 3,
+      "invalid_response": 0,
+      "by_class": {
+        "ground_truth": 3
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "w_241b60",
+        "classification": "ground_truth",
+        "probabilities": {
+          "ground_truth": 0.5,
+          "candidate": 0.16,
+          "disproven": 0.34
+        },
+        "confidence": 0.25,
+        "margin": 0.15999999999999998,
+        "top_probability": 0.5,
+        "decision": "review"
+      },
+      {
+        "id": "f8",
+        "classification": "ground_truth",
+        "probabilities": {
+          "ground_truth": 0.82,
+          "candidate": 0.14,
+          "disproven": 0.04
+        },
+        "confidence": 0.73,
+        "margin": 0.6799999999999999,
+        "top_probability": 0.82,
+        "decision": "review"
+      },
+      {
+        "id": "pairs",
+        "classification": "ground_truth",
+        "probabilities": {
+          "ground_truth": 0.41,
+          "candidate": 0.4,
+          "disproven": 0.19
+        },
+        "confidence": 0.11,
+        "margin": 0.009999999999999953,
+        "top_probability": 0.41,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 653,
+      "output_tokens": 123
+    }
+  }
+}

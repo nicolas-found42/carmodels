@@ -1,0 +1,77 @@
+{
+  "args": {
+    "request": "Adopt the final plan for the next session.",
+    "diff": "+ A: record consistent sound verdict; no verifier change\n+ B: read entity+0x64 via chain; one bounded indirection pass; record definite outcome (cursor open allowed)\n+ C: one tool, 3-pair regression + full car-keyed table\n+ ceiling: render_fidelity_complete false; stop on three definite outcomes (7b)",
+    "tests": "verify_config_data_sound VERIFY OK; resolve_display_names VERIFY OK; test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.32,
+    "scores": {
+      "correctness": {
+        "score": 1.07,
+        "confidence": 0.56,
+        "probabilities": {
+          "0": 0.11,
+          "1": 0.71,
+          "2": 0.18
+        }
+      },
+      "spec_match": {
+        "score": 0.96,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.41,
+          "1": 0.21,
+          "2": 0.38
+        }
+      },
+      "test_gap": {
+        "score": 1.31,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.19,
+          "1": 0.31,
+          "2": 0.5
+        }
+      },
+      "blast_radius": {
+        "score": 0.99,
+        "confidence": 0.23,
+        "probabilities": {
+          "0": 0.26,
+          "1": 0.49,
+          "2": 0.25
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.4855,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "spec_match",
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 826,
+      "output_tokens": 79
+    }
+  }
+}

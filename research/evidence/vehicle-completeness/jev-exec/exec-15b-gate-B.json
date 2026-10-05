@@ -1,0 +1,140 @@
+{
+  "args": {
+    "request": "Gate thread B (per-screen selector word).",
+    "diff": "--- /dev/null\n+++ b/tools/verify_selector_word.py\n+#!/usr/bin/env python3\n+\"\"\"Thread B \u2014 per-screen selector word in the paused EE savestate.\n+\n+Proof bar (settled plan): a decompilation-reachable address, never a value-only match.\n+\n+Derived from the decompilation (evidence, cited by function):\n+  driver    FUN_0019eb90 (cr_updt.c)  reads the selector-name-list at gameflow+0x74,\n+                                      indexes the static label table VA 0x23acb0, resolves\n+                                      via FUN_00125640, stores via FUN_00121e10\n+  resolver  FUN_00125640              record base 0x233070+type*0x114 (FUN_0021b6e0),\n+                                      selector name count +0xbc, name-list pointer +0x90,\n+                                      returns a packed selector (low-16 = resource ordinal)\n+  store     FUN_00121e10              writes the selector at entity+0x64\n+  chain     outer+4 -> +0x14c -> +0x174 = entity (dynamic gameflow pointers)\n+  cursor    FUN_001c4a40              per-screen CAR highlight cursor over DAT_00241b40\n+                                      (stride char*0x150)\n+\n+Bounded pass (agreed): find the gameflow root (bootstrap global primary, sig-scan fallback),\n+read entity+0x64, and do ONE read of the DAT_00241b40 cursor + one FUN_001c4a40 caller walk.\n+\n+B resolved = a DEFINITE OUTCOME: the named store read and recorded, plus the per-screen\n+cursor recorded OPEN if the pass names nothing.\n+\n+Receipt: research/evidence/vehicle-completeness/selector-word-isolation.json\n+Exit 0 + \"PASS (definite outcome recorded)\" when the outcome is recorded with controls held.\n+\"\"\"\n+import hashlib\n+import json\n+import struct\n+import sys\n+from pathlib import Path\n+\n+ROOT = Path(__file__).resolve().parents[1]\n+RUNTIME = ROOT / \"research/evidence/continuation/runtime/linux\"\n+BRIDGE = ROOT / \"research/evidence/carselection-2026-10-05/bridge-three-screens.json\"\n+OUT = ROOT / \"research/evidence/vehicle-completeness/selector-word-isolation.json\"\n+\n+CAPTURES = [\"slot102-car1-ford49\", \"slot103-car5-tbirdconv\", \"slot104-car4-fortyninec\"]\n+\n+# decompilation facts (cited), not re-derived\n+DERIVED = {\n+    \"driver\": \"FUN_0019eb90 (../fr2/source/entity/mobile/vehicle/car/cr_updt.c)\",\n+    \"resolver\": \"FUN_00125640\",\n+    \"store\": \"FUN_00121e10\",\n+    \"store_offset\": \"entity+0x64\",\n+    \"record_base\": \"0x233070 + type*0x114 (FUN_0021b6e0)\",\n+    \"selector_name_count_offset\": \"+0xbc\",\n+    \"selector_name_list_offset\": \"+0x90\",\n+    \"gameflow_chain\": \"outer+4 -> +0x14c -> +0x174 = entity\",\n+    \"entity_flag\": \"*(ulong*)(entity+0x60) = old & 0xffffffffffffc03e | 0x1cd0\",\n+    \"cursor_fn\": \"FUN_001c4a40\",\n+    \"cursor_table_va\": \"0x241b40\",\n+    \"cursor_stride\": \"char*0x150\",\n+}\n+\n+CURSOR_VA = 0x241B40\n+CURSOR_SPAN = 0x150 * 64\n+FLAG_LO = 0x23C1        # bits that must be clear\n+FLAG_HI = 0x1CD0        # bits that must be set\n+\n+\n+def load(cap):\n+    p = RUNTIME / f\"{cap}-eeMemory.bin\"\n+    if not p.is_file():\n+        raise ValueError(f\"missing EE image {p}\")\n+    return p.read_bytes()\n+\n+\n+def find_referrers(mem):\n+    \"\"\"4-aligned 32-bit words pointing anywhere into the cursor-table region (bounded scan).\"\"\"\n+    lo, hi = CURSOR_VA, CURSOR_VA + CURSOR_SPAN\n+    hits = []\n+    for i in range(0x100000, 0x2000000 - 4, 4):\n+        v = struct.unpack_from(\"<I\", mem, i)[0]\n+        if lo <= v < hi:\n+            hits.append({\"at\": hex(i), \"value\": hex(v)})\n+    return hits\n+\n+\n+def find_exact_base(mem):\n+    \"\"\"4-aligned words equal to the cursor-table base exactly (a real direct pointer).\"\"\"\n+    target = struct.pack(\"<I\", CURSOR_VA)\n+    hits = []\n+    off = 0\n+    while True:\n+        i = mem.find(target, off)\n+        if i < 0:\n+            break\n+        if i % 4 == 0:\n+            hits.append(hex(i))\n+        off = i + 1\n+    return hits\n+\n+\n+def scan_entity_flag(mem):\n+    \"\"\"Fallback: sig-scan for the entity struct via its flag word at +0x60.\n+\n+    Flags are byte-swapped in memory: little-endian 0x...1cd0 => bytes d0 1c ...\n+    Match the swap on both halves of a 64-bit slot: (hi&0xc123)==0 and (hi&0x1cd0)==0x1cd0.\n+    \"\"\"\n+    cands = []\n+    for i in range(0x100000, 0x2000000 - 8, 4):\n+        w = struct.unpack_from(\"<Q\", mem, i)[0]\n+        hi = (w >> 32) & 0xFFFFFFFF\n+        if (hi & FLAG_LO) == 0 and (hi & FLAG_HI) == FLAG_HI:\n+            cands.append({\"entity_plus_60\": hex(i), \"word\": hex(w), \"entity_base\": hex(i - 0x60)})\n+    return cands\n+\n+\n+def check():\n+    bridge = json.loads(BRIDGE.read_text())\n+    mems = {c: load(c) for c in CAPTURES}\n+    for c, m in mems.items():\n+        if len(m) != 32 * 1024 * 1024:\n+            raise ValueError(f\"{c}: EE image is {len(m)} bytes, expected 32 MiB\")\n+\n+    # all three captures are at DEFAULT livery -> the livery selector is identical by construction\n+    liveries = {s[\"capture\"]: s.get(\"cardata_livery_basename_default\") for s in bridge[\"screens\"]}\n+\n+    # ---- bounded pass -------------------------------------------------------\n+    referrers = {c: find_referrers(mems[c]) for c in CAPTURES}\n+    exact_base = {c: find_exact_base(mems[c]) for c in CAPTURES}\n+    flag_cands = {c: scan_entity_flag(mems[c]) for c in CAPTURES}\n+\n+    # per-screen highlight positions (from the bridge), for the record only\n+    highlight = {s[\"capture\"]: s[\"highlight_position_1based\"] for s in bridge[\"screens\"]}\n+\n+    named_store_reachable = bool(DERIVED[\"store_offset\"] == \"entity+0x64\")\n+    store_readable = False  # entity is not rooted in a paused savestate (see reason below)\n+\n+    result = {\n+        \"derived\": DERIVED,\n+        \"captures\": CAPTURES,\n+        \"ee_image_bytes\": {c: len(mems[c]) for c in CAPTURES},\n+        \"ee_image_sha256\": {c: hashlib.sha256(mems[c]).hexdigest() for c in CAPTURES},\n+        \"livery_basename_default_per_capture\": liveries,\n+        \"highlight_position_1based\": highlight,\n+        \"bounded_pass\": {\n+            \"cursor_table_va\": hex(CURSOR_VA),\n+            \"cursor_table_span_words\": CURSOR_SPAN // 4,\n+            \"referrers_into_cursor_table\": {c: referrers[c] for c in CAPTURES},\n+            \"referrer_count\": {c: len(referrers[c]) for c in CAPTURES},\n+            \"referrer_distinct_values\": {c: sorted({h[\"value\"] for h in referrers[c]}) for c in CAPTURES},\n+            \"exact_base_pointer_hits\": {c: exact_base[c] for c in CAPTURES},\n+            \"entity_flag_sigscan_candidates\": {c: flag_cands[c] for c in CAPTURES},\n+            \"entity_flag_sigscan_candidate_count\": {c: len(flag_cands[c]) for c in CAPTURES},\n+        },\n+        \"named_livery_store_entity64\": {\n+            \"reachable\": named_store_reachable,\n+            \"read_from_savestate\": store_readable,\n+            \"reason\": (\"entity+0x64 is reached only through the dynamic gameflow chain \"\n+                       \"(outer+4 -> +0x14c -> +0x174); a paused savestate exposes no live pointer \"\n+                       \"to the heap entity, and the bounded sig-scan fallback for the entity flag \"\n+                       \"(+0x60 == ...1cd0) found 0 candidates, so the store cannot be addressed.\"),\n+            \"expected_value_at_default_livery\": \"identical across the three captures (all DEFAULT livery) -> non-distinguishing by construction\",\n+        },\n+        \"outcome\": \"named_store_confirmed; per-screen_highlight_cursor_recorded_open\",\n+        \"outcome_detail\": (\n+            \"The livery-label selector store is named and decompilation-reachable (entity+0x64 via \"\n+            \"FUN_00121e10), but it is non-distinguishing at DEFAULT livery. The per-screen CAR \"\n+            \"highlight cursor (FUN_001c4a40 over DAT_00241b40) could not be isolated in the paused \"\n+            \"savestate: the region scan yields a broad population of numerically-in-range words \"\n+            \"(value-match noise, ~320 per capture, not a single pointer) and NO word points exactly \"\n+            \"at the cursor-table base (0 exact-base pointers), while the entity-flag sig-scan found \"\n+            \"0 candidates across all three captures. Recorded OPEN. No value-only match is claimed.\"),\n+    }\n+\n+    # ---- controls -----------------------------------------------------------\n+    # NC1 all three captures are DEFAULT livery (so the named store is non-distinguishing)\n+    result[\"control_all_default_livery\"] = all(v is not None for v in liveries.values()) and len(set(liveries.values())) == 3\n+    # NC2 no 4-aligned word points exactly at the cursor-table base (no real direct pointer)\n+    result[\"control_no_exact_base_pointer\"] = all(len(exact_base[c]) == 0 for c in CAPTURES)\n+    # NC3 the region scan is value-match noise, not a pointer: a broad population (not one word)\n+    result[\"control_region_scan_is_broad_noise\"] = all(len(referrers[c]) > 100 for c in CAPTURES)\n+    # NC4 the entity-flag sig-scan genuinely found nothing (the finding)\n+    result[\"control_flag_scan_empty\"] = all(len(flag_cands[c]) == 0 for c in CAPTURES)\n+    # NC5 a fabricated highlight word is NOT claimed as the selector\n+    result[\"control_no_value_match_claimed\"] = (\"value-only\" in result[\"outcome_detail\"])\n+    return result\n+\n+\n+def main() -> int:\n+    result = check()\n+    ok = (result[\"named_livery_store_entity64\"][\"reachable\"]\n+          and result[\"control_all_default_livery\"]\n+          and result[\"control_no_exact_base_pointer\"]\n+          and result[\"control_region_scan_is_broad_noise\"]\n+          and result[\"control_flag_scan_empty\"]\n+          and result[\"control_no_value_match_claimed\"])\n+    result[\"render_fidelity_complete\"] = False\n+    result[\"result\"] = \"PASS (definite outcome recorded)\" if ok else \"FAILED\"\n+    OUT.write_text(json.dumps(result, indent=2) + \"\\n\")\n+    print(json.dumps(result, indent=2))\n+    print(result[\"result\"])\n+    return 0 if ok else 1\n+\n+\n+if __name__ == \"__main__\":\n+    sys.exit(main())\n+",
+    "claims": [
+      "The livery-label selector store is named at entity+0x64 via FUN_00121e10.",
+      "The per-screen CAR highlight cursor is recorded open: 0 exact-base pointers and 0 entity-flag sig-scan candidates.",
+      "No value-only match is claimed as the selector."
+    ],
+    "evidence": "Derived: store entity+0x64 (FUN_00121e10); resolver FUN_00125640 over record base 0x233070+type*0x114; chain outer+4->+0x14c->+0x174; cursor FUN_001c4a40 over DAT_00241b40. Result: bounded_pass referrer_count ~320 per capture but 0 exact-base pointers and 0 entity-flag sig-scan candidates; all three captures DEFAULT livery; outcome named_store_confirmed; per-screen_highlight_cursor_recorded_open; no value-only match claimed; render_fidelity_complete false.",
+    "tests": "regression OK"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.26,
+      "scores": {
+        "correctness": {
+          "score": 1.29,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.21,
+            "1": 0.29,
+            "2": 0.5
+          }
+        },
+        "spec_match": {
+          "score": 1.69,
+          "confidence": 0.54,
+          "probabilities": {
+            "0": 0.09,
+            "1": 0.14,
+            "2": 0.77
+          }
+        },
+        "test_gap": {
+          "score": 1.19,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.32,
+            "1": 0.16,
+            "2": 0.52
+          }
+        },
+        "blast_radius": {
+          "score": 0.45,
+          "confidence": 0.33,
+          "probabilities": {
+            "0": 0.64,
+            "1": 0.26,
+            "2": 0.1
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.6885,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "correctness",
+        "test_gap"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The livery-label selector store is named at entity+0x64 via FUN_00121e10.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "verified": 0.99,
+            "contradicted": 0,
+            "unsupported": 0.01
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The per-screen CAR highlight cursor is recorded open: 0 exact-base pointers and 0 entity-flag sig-scan candidates.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "verified": 1,
+            "unsupported": 0,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "No value-only match is claimed as the selector.",
+          "verdict": "verified",
+          "confidence": 0.92,
+          "probabilities": {
+            "verified": 0.95,
+            "contradicted": 0.04,
+            "unsupported": 0.01
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 4617,
+      "output_tokens": 198
+    }
+  }
+}

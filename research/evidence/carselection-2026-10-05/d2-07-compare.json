@@ -1,0 +1,86 @@
+{
+  "args": {
+    "passage_a": "Ground-truth emulator screenshot slot102: Living Legends, thumbnail 1 highlighted (pale green Ford), VEHICLE: FORD '49, TRACK: ROUTE 50, TYPE: DRIVING SKILLS, STATUS UNLOCKED, ROOKIE 0%, BACK/OK prompts.",
+    "passage_b": "Ground-truth emulator screenshot slot104 (vision transcript, model-generated): Living Legends, thumbnail 4 highlighted, VEHICLE: FORTYNINE CONCEPT, TRACK: PORT SIDE, TYPE: RACING LINE, STATUS UNLOCKED.",
+    "aspects": [
+      "highlighted car",
+      "vehicle label",
+      "track and type",
+      "status"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "different_facts",
+      "probabilities": {
+        "same_fact": 0,
+        "contradicts": 0.4,
+        "different_facts": 0.6
+      },
+      "confidence": 0.4,
+      "margin": 0.19999999999999996,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "highlighted car",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0,
+          "contradicts": 0.95,
+          "different_facts": 0.05
+        },
+        "confidence": 0.92,
+        "margin": 0.8999999999999999,
+        "decision": "auto"
+      },
+      {
+        "aspect": "vehicle label",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0.09,
+          "contradicts": 0.84,
+          "different_facts": 0.07
+        },
+        "confidence": 0.75,
+        "margin": 0.75,
+        "decision": "review"
+      },
+      {
+        "aspect": "track and type",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0,
+          "contradicts": 0.84,
+          "different_facts": 0.16
+        },
+        "confidence": 0.75,
+        "margin": 0.6799999999999999,
+        "decision": "review"
+      },
+      {
+        "aspect": "status",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.98,
+          "contradicts": 0,
+          "different_facts": 0.02
+        },
+        "confidence": 0.96,
+        "margin": 0.96,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 1031,
+      "output_tokens": 220
+    }
+  }
+}

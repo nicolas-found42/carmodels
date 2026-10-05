@@ -1,0 +1,107 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "ee",
+        "text": "EE main RAM: 0 hits at all widths."
+      },
+      {
+        "id": "iop",
+        "text": "IOP RAM 2 MiB: 0 hits at all widths."
+      },
+      {
+        "id": "hw",
+        "text": "EE/IOP hw registers, PAD, scratchpad, VU: 0 hits."
+      },
+      {
+        "id": "found",
+        "text": "The mark number was found."
+      }
+    ],
+    "classes": [
+      {
+        "id": "searched_negative",
+        "description": "A region searched with a clean zero result. Example: IOP RAM 0 hits."
+      },
+      {
+        "id": "positive",
+        "description": "A region where the mark was found."
+      }
+    ],
+    "purpose": "confirm the search is exhausted and negative",
+    "context": "Mark search."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 4,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "searched_negative": 3,
+        "positive": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "ee",
+        "classification": "searched_negative",
+        "probabilities": {
+          "searched_negative": 1,
+          "positive": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "iop",
+        "classification": "searched_negative",
+        "probabilities": {
+          "searched_negative": 1,
+          "positive": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "hw",
+        "classification": "searched_negative",
+        "probabilities": {
+          "searched_negative": 1,
+          "positive": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "found",
+        "classification": "positive",
+        "probabilities": {
+          "searched_negative": 0,
+          "positive": 1
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 647,
+      "output_tokens": 131
+    }
+  }
+}

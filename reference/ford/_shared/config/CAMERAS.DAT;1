@@ -1,0 +1,3577 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CAMERAS.DAT /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SECONDARY CAMERAS ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mirror Camera
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70001 0
+																							"c_mirror"
+																							0,
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_SECONDARY
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_LAYOUT_OFFSET_COORDS									CAMERA_SECONDARY_VIEWPORT_RATIO_TYPE_MAINTAIN 0.315, 0.085, 0.685, 0.185
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											0
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_INTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_INVERT														1
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_HEADING_PITCH,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_HEADING									1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_PITCH										1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_ROLL										1
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							90.0 90.0 90.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_mirror",
+																							"ALL_TRACKS",
+																							70001 0
+																							MOUNTING_TRACKING_TYPE_SUBJECT
+
+:CAMERA_SYSTEM_MOUNTING_ENABLE_COLLISION_CHECKING							0
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_SUBJECT_BOUND,
+																							0,
+																							0,
+																							1, -0.8
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ,
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.75, -0.8,
+																							0.0, 0.75, -0.8,
+																							0.0, 0.75, -0.8,
+
+:CAMERA_SYSTEM_MOUNTING_CREATE
+ 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// REVERSE CAMERAS /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						                                                                                                                                                                                                              
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reverse Chase
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70002 30004
+																							"c_rev_chase"
+																							0,
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_RETURN														0.1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_NONE
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.7,
+																							0.0, 1.6, 0.7,
+																							0.0, 1.6, 0.7
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							60.0 60.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_rev_chase" 
+																							"ALL_TRACKS"
+																							70002 30004
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.1, 6.999,
+																							0.0, 2.1, 6.999,
+																							0.0, 2.1, 6.999
+
+:CAMERA_SYSTEM_MOUNTING_ENABLE_COLLISION_CHECKING							0
+
+:CAMERA_SYSTEM_MOUNTING_SUBJECT_DOT_MULTIPLIER								100.0
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.999, 2.1,
+																							6.999, 2.1,
+																							6.999, 2.1
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 6.0
+
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reverse Bonnet
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70003 30005
+																							"c_rev_bonnet"
+																							0,
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+																							
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											0
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_NONE
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_HEADING_PITCH,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							                                                                                                                                                
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_HEADING									1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_PITCH										1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_ROLL										1
+
+:CAMERA_SYSTEM_CAMERA_INVERT														1
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 70.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_rev_bonnet",
+																							"ALL_TRACKS",
+																							70003 30005
+																							MOUNTING_TRACKING_TYPE_SUBJECT
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_SUBJECT_BOUND,
+																							0,
+																							0,
+																							1, -0.8
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ,
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.1, -0.8,
+																							0.0, 0.1, -0.8,
+																							0.0, 0.1, -0.8
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reverse Left
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70004 0
+																							"c_reverse_left"
+																							0,
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_NONE
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 2.1, 0.0,
+																							0.0, 2.1, 0.0,
+																							0.0, 2.1, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							65.0 30.0 30.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_reverse_left"
+																							"ALL_TRACKS"
+																							70004 0
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							12.0, 4.1, 3.0,
+																							12.0, 4.1, 3.0,
+																							12.0, 4.1, 3.0
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reverse Right
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70005 0
+																							"c_reverse_right"
+																							0,
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_NONE
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 2.1, 0.0,
+																							0.0, 2.1, 0.0,
+																							0.0, 2.1, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							65.0 30.0 30.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_reverse_right"
+																							"ALL_TRACKS"
+																							70005 0
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							-12.0, 4.1, 3.0,
+																							-12.0, 4.1, 3.0,
+																							-12.0, 4.1, 3.0
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CHASE CAMERAS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						                                                                                                                                                                                                              
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/ Ex
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70100 30003
+																							"c_chase_ex" 
+																							1,
+																							"EX",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_ex"
+																							"ALL_TRACKS"
+																							70100 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.0, -6.4,
+																							0.0, 2.0, -6.4,
+																							0.0, 2.0, -6.4
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1	,
+																							6.4, 2.0,
+																							6.4, 2.0,
+																							6.4, 2.0
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Escape
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70101 30003
+																							"c_chase_esc"
+																							1,
+																							"ESCAPE",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_esc"
+																							"ALL_TRACKS"
+																							70101 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.5, -6.5,
+																							0.0, 2.5, -6.5,
+																							0.0, 2.5, -6.5
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1	,
+																							6.5, 2.5,
+																							6.5, 2.5,
+																							6.5, 2.5
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Expedition
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70102 30003
+																							"c_chase_exp"
+																							1,
+																							"EXPEDITION",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_exp"
+																							"ALL_TRACKS"
+																							70102 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.5, -6.5,
+																							0.0, 2.5, -6.5,
+																							0.0, 2.5, -6.5
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1	,
+																							6.5, 2.5,
+																							6.5, 2.5,
+																							6.5, 2.5
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Explorer
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70103 30003
+																							"c_chase_expl"
+																							1,
+																							"EXPLORER",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_expl"
+																							"ALL_TRACKS"
+																							70103 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.2, -6.5,
+																							0.0, 2.2, -6.5,
+																							0.0, 2.2, -6.5
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1	,
+																							6.5, 2.2,
+																							6.5, 2.2,
+																							6.5, 2.2
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_MOUNTING_CREATE
+//////////////////////////////////////////////////////////////////////////////////2/////////////////////////////////////////////
+// F150
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////2
+:CAMERA_SYSTEM_CAMERA 																70104 30003
+																							"c_chase_f150"
+																							1,
+																							"F150",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_f150"
+																							"ALL_TRACKS"
+																							70104 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.7, 2.3,
+																							6.7, 2.3,
+																							6.7, 2.3
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// F350
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70105 30003
+																							"c_chase_f350"
+																							1,
+																							"F350",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_f350"
+																							"ALL_TRACKS"
+																							70105 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.5, -6.9,
+																							0.0, 2.5, -6.9,
+																							0.0, 2.5, -6.9
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1	,
+																							6.9, 2.5,
+																							6.9, 2.5,
+																							6.9, 2.5
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Powerstroke
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70106 30003
+																							"c_chase_powr"
+																							1,
+																							"POWERSTROKE",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_powr"
+																							"ALL_TRACKS"
+																							70106 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1	,
+																							6.7, 2.3,
+																							6.7, 2.3,
+																							6.7, 2.3
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SVT Lightning 
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70107 30003
+																							"c_chase_lit"
+																							1,
+																							"LIGHTNING_SVT",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_lit"
+																							"ALL_TRACKS"
+																							70107 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.2, -6.4,
+																							0.0, 2.2, -6.4,
+																							0.0, 2.2, -6.4
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.4, 2.2,
+																							6.4, 2.2,
+																							6.4, 2.2
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 1949 Coupe
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70108 30003
+																							"c_chase_1949"
+																							1,
+																							"1949",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_1949"
+																							"ALL_TRACKS"
+																							70108 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Cobra
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70109 30003
+																							"c_chase_cobr"
+																							1,
+																							"COBRA",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_cobr" 
+																							"ALL_TRACKS"
+																							70109 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 49 Coupe
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70110 30003
+																							"c_chase_49c"
+																							1,
+																							"49_COUPE",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_49c" 
+																							"ALL_TRACKS"
+																							70110 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.9, -6.1,
+																							0.0, 1.9, -6.1,
+																							0.0, 1.9, -6.1
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.1, 1.9,
+																							6.1, 1.9,
+																							6.1, 1.9
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 49 Coupe Movie
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70111 30003
+																							"c_chase_49cm"
+																							1,
+																							"49_COUPE_MOVIE",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6,	 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_49cm" 
+																							"ALL_TRACKS"
+																							70111 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -6.3,
+																							0.0, 1.7, -6.3,
+																							0.0, 1.7, -6.3
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.3, 1.7,
+																							6.3, 1.7,
+																							6.3, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 49 Coupe Police
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70112 30003
+																							"c_chase_49po"
+																							1,
+																							"49_COUPE_POLICE",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_49po"
+																							"ALL_TRACKS"
+																							70112 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Crown Victoria
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70113 30003
+																							"c_chase_crow"
+																							1,
+																							"CROWN_VICTORIA",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_crow"
+																							"ALL_TRACKS"
+																							70113 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_TIME 10.0f,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.9, -5.9,
+																							0.0, 1.9, -5.9,
+																							0.0, 1.9, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.9,
+																							5.9, 1.9,
+																							5.9, 1.9
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Focus FR200
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70114 30003
+																							"c_chase_fr200"
+																							1,
+																							"FOCUS_FR200",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_fr200"
+																							"ALL_TRACKS"
+																							70114 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.8,
+																							5.9, 1.8,
+																							5.9, 1.8
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Focus SVT
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70115 30003
+																							"c_chase_fsvt"
+																							1,
+																							"FOCUS_SVT",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_fsvt"
+																							"ALL_TRACKS"
+																							70115 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.8,
+																							5.9, 1.8,
+																							5.9, 1.8
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Focus WRC
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70116 30003
+																							"c_chase_wrc"
+																							1,
+																							"FOCUS_WRC",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_wrc"
+																							"ALL_TRACKS"
+																							70116 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.8,
+																							5.9, 1.8,
+																							5.9, 1.8
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Forty Nine
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70117 30003
+																							"c_chase_fort"
+																							1,
+																							"FORTYNINE"
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_fort"
+																							"ALL_TRACKS"
+																							70117 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FR500
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70118 30003
+																							"c_chase_fr500"
+																							1,
+																							"FR500",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_fr500"
+																							"ALL_TRACKS"
+																							70118 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Gran Torino 
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70119 30003
+																							"c_chase_gtor"
+																							1,
+																							"GRAN_TORINO",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_gtor"
+																							"ALL_TRACKS"
+																							70119 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.9, -6.3,
+																							0.0, 1.9, -6.3,
+																							0.0, 1.9, -6.3
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.3, 1.9,
+																							6.3, 1.9,
+																							6.3, 1.9
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mach1 Agent
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70120 30003
+																							"c_chase_m1a"
+																							1,
+																							"MACH1_AGENT",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_m1a"
+																							"ALL_TRACKS"
+																							70120 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mach1 Sixty
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70121 30003
+																							"c_chase_m1s"
+																							1,
+																							"MACH1_SIXTY",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_m1s"
+																							"ALL_TRACKS"
+																							70121 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mach3
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70122 30003
+																							"c_chase_mch3"
+																							1,
+																							"MACH3",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_mch3"
+																							"ALL_TRACKS"
+																							70122 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mercury
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70123 30003
+																							"c_chase_merc"
+																							1,
+																							"MERCURY",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_merc"
+																							"ALL_TRACKS"
+																							70123 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Thunderbird
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70124 30003
+																							"c_chase_tbird"
+																							1,
+																							"THUNDERBIRD",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_tbird"
+																							"ALL_TRACKS"
+																							70124 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Thunderbird 2002
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70125 30003
+																							"c_chase_tbird2"
+																							1,
+																							"THUNDERBIRD_2002",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_tbird2"
+																							"ALL_TRACKS"
+																							70125 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Thunderbird Movie
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70126 30003
+																							"c_chase_tbirdm"
+																							1,
+																							"THUNDERBIRD_MOVIE",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_tbirdm"
+																							"ALL_TRACKS"
+																							70126 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ford GT
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70127 30003
+																							"c_chase_fordgt"
+																							1,
+																							"FORD_GT",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_fordgt"
+																							"ALL_TRACKS"
+																							70127 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, -6.8,
+																							0.0, 1.5, -6.8,
+																							0.0, 1.5, -6.8
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.8, 1.5,
+																							5.8, 1.5,
+																							5.8, 1.5
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GT90
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70128 30003
+																							"c_chase_gt90"
+																							1,
+																							"GT90",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_gt90"
+																							"ALL_TRACKS"
+																							70128 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, -6.2,
+																							0.0, 1.5, -6.2,
+																							0.0, 1.5, -6.2
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.2, 1.5,
+																							6.2, 1.5,
+																							6.2, 1.5
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Indigo
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70129 30003
+																							"c_chase_indi"
+																							1,
+																							"INDIGO",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_indi"
+																							"ALL_TRACKS"
+																							70129 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, -6.8,
+																							0.0, 1.5, -6.8,
+																							0.0, 1.5, -6.8
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.8, 1.5,
+																							5.8, 1.5,
+																							5.8, 1.5
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mustang 68
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70131 30003
+																							"c_chase_m68"
+																							1,
+																							"MUSTANG_68",
+																							"MUSTANG_68B",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_m68"
+																							"ALL_TRACKS"
+																							70131 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9,
+																							0.0, 1.8, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.8,
+																							5.9, 1.8,
+																							5.9, 1.8
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mustang Concept
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70132 30003
+																							"c_chase_mcon"
+																							1,
+																							"MUSTANG_CONCEPT",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+                                                                                                                                                
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0,
+																							0.0, 1.6, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_mcon"
+																							"ALL_TRACKS"
+																							70132 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9,
+																							0.0, 1.7, -5.9
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.9, 1.7,
+																							5.9, 1.7,
+																							5.9, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// F100 1965
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70133 30003
+																							"c_chase_f100_65"
+																							1,
+																							"F100_1965",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_f150_65"
+																							"ALL_TRACKS"
+																							70133 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.2, -6.7,
+																							0.0, 2.2, -6.7,
+																							0.0, 2.2, -6.7
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.7, 2.2,
+																							6.7, 2.2,
+																							6.7, 2.2
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Taurus A
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70134 30003
+																							"c_chase_taurus_a"
+																							1,
+																							"TAURUS_STOCK_A",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_taurus_a"
+																							"ALL_TRACKS"
+																							70134 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.8, 1.7,
+																							5.8, 1.7,
+																							5.8, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Taurus B
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70135 30003
+																							"c_chase_taurus_b"
+																							1,
+																							"TAURUS_STOCK_B",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_taurus_b"
+																							"ALL_TRACKS"
+																							70135 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.8, 1.7,
+																							5.8, 1.7,
+																							5.8, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Taurus C
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70136 30003
+																							"c_chase_taurus_c"
+																							1,
+																							"TAURUS_STOCK_C",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_taurus_c"
+																							"ALL_TRACKS"
+																							70136 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.8, 1.7,
+																							5.8, 1.7,
+																							5.8, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Taurus D
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70137 30003
+																							"c_chase_taurus_d"
+																							1,
+																							"TAURUS_STOCK_D",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,																							
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+																							
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_taurus_d"
+																							"ALL_TRACKS"
+																							70137 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8,
+																							0.0, 1.7, -5.8
+
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							5.8, 1.7,
+																							5.8, 1.7,
+																							5.8, 1.7
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                           
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// F100 1956
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70138 30003
+																							"c_chase_f100_56"
+																							1,
+																							"F100_1956",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_f100_56"
+																							"ALL_TRACKS"
+																							70138 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.7, 2.3,
+																							6.7, 2.3,
+																							6.7, 2.3
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// F150
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																70139 30003
+																							"c_chase_f150_2004"
+																							1,
+																							"F150_2004",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS"
+																							CAMERA_TYPE_PRIMARY,
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE,
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											1
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_EXTERNAL
+                                                                                                                                                
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS                                                      
+																							CAMERA_MODE_TYPE_XYZ,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0,
+																							0.0, 1.5, 0.0
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 110.0
+
+:CAMERA_SYSTEM_CAMERA_FOV_MECHANICS												CAMERA_MECHANICS_TYPE_LAG 1.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_chase_f150_2004"
+																							"ALL_TRACKS"
+																							70139 30003
+																							MOUNTING_TRACKING_TYPE_SUBJECT,
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+																							                                                                                                                                                
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7,
+																							0.0, 2.3, -6.7
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_RING
+																							1,
+																							6.7, 2.3,
+																							6.7, 2.3,
+																							6.7, 2.3
+
+:CAMERA_SYSTEM_MOUNTING_POSITION_MECHANICS									MOUNTING_MECHANICS_TYPE_LAG 1.0
+                                                                                                                                                
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BONNET CAMERAS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Offroad
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																71001 30014
+																							"c_bon_offrd"
+																							1,
+																							"EX",
+																							"ESCAPE",
+																							"EXPEDITION",
+																							"EXPLORER",
+																							"F100_1965",
+																							"F100_1956",
+																							"F150",
+																							"F150_2004",
+																							"F350",
+																							"POWERSTROKE",
+																							"LIGHTNING_SVT",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS",
+																							CAMERA_TYPE_PRIMARY,
+																							70001 0
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											0
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_INTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_HEADING_PITCH,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+                                                                                                                                                
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							                                                                                                                                                
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_HEADING									1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_PITCH										1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_ROLL										1
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 70.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_bon_offrd",
+																							"ALL_TRACKS",
+																							71001 30014
+																							MOUNTING_TRACKING_TYPE_SUBJECT
+
+:CAMERA_SYSTEM_MOUNTING_ENABLE_COLLISION_CHECKING							0
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_SUBJECT_BOUND,
+																							0,
+																							0,
+																							1, -2.3
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ,
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 1.1, 2.5,
+																							0.0, 1.1, 2.5,
+																							0.0, 1.1, 2.5
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Road
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																71002 30014
+																							"c_bon_rd",
+																							1
+																							"1949"
+																							"COBRA"
+																							"49_COUPE"
+																							"49_COUPE_MOVIE"
+																							"49_COUPE_POLICE"
+																							"CROWN_VICTORIA"
+																							"FOCUS_FR200"
+																							"FOCUS_SVT"
+																							"FOCUS_WRC"
+																							"FORTYNINE"
+																							"FR500"
+																							"GRAN_TORINO"
+																							"MACH1_AGENT"
+																							"MACH1_SIXTY"
+																							"MACH3"
+																							"MERCURY"
+																							"MUSTANG_68"
+																							"MUSTANG_68B"
+																							"MUSTANG_CONCEPT"
+																							"THUNDERBIRD"
+																							"THUNDERBIRD_2002"
+																							"THUNDERBIRD_MOVIE"
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS",
+																							CAMERA_TYPE_PRIMARY,
+																							70001 0
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											0
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_INTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_HEADING_PITCH,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_HEADING									1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_PITCH										1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_ROLL										1
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 70.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_bon_rd",
+																							"ALL_TRACKS",
+																							71002 30014
+																							MOUNTING_TRACKING_TYPE_SUBJECT
+
+:CAMERA_SYSTEM_MOUNTING_ENABLE_COLLISION_CHECKING							0
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_SUBJECT_BOUND,
+																							0,
+																							0,
+																							1, -2.3
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ,
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.1, 2.5,
+																							0.0, 0.1, 2.5,
+																							0.0, 0.1, 2.5
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Track
+// menu_title
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+:CAMERA_SYSTEM_CAMERA 																71003 30014
+																							"c_bon_trk",
+																							1,
+																							"FORD_GT",
+																							"GT90",
+																							"INDIGO",
+																							"TAURUS_STOCK_A",
+																							"TAURUS_STOCK_B",
+																							"TAURUS_STOCK_C",
+																							"TAURUS_STOCK_D",
+																							"SUPPORTING_SUBJECT_END",
+																							"ALL_TRACKS",
+																							CAMERA_TYPE_PRIMARY,
+																							70001 0
+																							-1
+																							CAMERA_TRACKING_TYPE_SUBJECT_FORCE_SINGLE
+
+:CAMERA_SYSTEM_CAMERA_SUBJECT_VISIBLE											0
+
+:CAMERA_SYSTEM_CAMERA_OVERLAY_INFO												CAMERA_OVERLAY_INFO_TYPE_INTERNAL
+
+:CAMERA_SYSTEM_CAMERA_SEQUENCE_TIME												1.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_DOF											0
+:CAMERA_SYSTEM_CAMERA_APPLY_EFFECT_HEAT_HAZE									0
+
+:CAMERA_SYSTEM_CAMERA_OFFSET_FOCUS
+																							CAMERA_MODE_TYPE_HEADING_PITCH,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																																													
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+																							CAMERA_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0,
+																							0.0, 0.0, 0.0
+
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_HEADING									1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_PITCH										1
+:CAMERA_SYSTEM_CAMERA_APPLY_SUBJECT_ROLL										1
+
+:CAMERA_SYSTEM_CAMERA_FOV															CAMERA_FOV_TRACKING_TYPE_NOTHING,
+																							CAMERA_DELTA_UPDATE_TYPE_NONE,
+																							70.0 70.0 70.0
+
+:CAMERA_SYSTEM_CAMERA_CREATE
+
+:CAMERA_SYSTEM_MOUNTING																"m_bon_trk",
+																							"ALL_TRACKS",
+																							71003 30014
+																							MOUNTING_TRACKING_TYPE_SUBJECT
+
+:CAMERA_SYSTEM_MOUNTING_ENABLE_COLLISION_CHECKING							0
+:CAMERA_SYSTEM_MOUNTING_LOCK														MOUNTING_LOCK_TYPE_SUBJECT_BOUND,
+																							0,
+																							0,
+																							1, -2.3
+
+:CAMERA_SYSTEM_MOUNTING_OFFSET_POSITION                                 
+																							MOUNTING_MODE_TYPE_XYZ,
+																							MOUNTING_DELTA_UPDATE_TYPE_NONE,
+
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+																							MOUNTING_SPACE_TYPE_SUBJECT,
+
+																							0.0, 0.1, 2.5,
+																							0.0, 0.1, 2.5,
+																							0.0, 0.1, 2.5
+:CAMERA_SYSTEM_MOUNTING_CREATE
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

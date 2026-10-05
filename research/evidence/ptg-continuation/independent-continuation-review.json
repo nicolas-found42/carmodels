@@ -1,0 +1,116 @@
+{
+  "schema": "fr2-independent-recovery-review/v1",
+  "scope": "Read-only review of source-derived visibility presets, the ten added pruned GLB scenes per car, and canonical asset index validation. Shared parent tools/manifests were not edited.",
+  "inputs": {
+    "tools/recover_visibility_presets.py": {
+      "sha256": "989c75ab56fd32a326725c839e2b741c252590e6334667c0dfee75464e4fd61c"
+    },
+    "tools/export_geometry_candidates.py": {
+      "sha256": "176e23a4931c484831f16d4700fa5538831fb4cad3df9fdd1d4bdc784c085b5a"
+    },
+    "tools/validate_visibility_presets.py": {
+      "sha256": "fd8dd0096b7062eaa3c6fbb42f37cfe3a3d4173be6a92ea8d99442982db42fef"
+    },
+    "tools/verify_recovered_asset_index.py": {
+      "sha256": "98a8b10d4c52cee3f81de18a77500fc7012f8bd1ebc0e42ac587a70b06afc997"
+    },
+    "tools/build_recovered_asset_index.py": {
+      "sha256": "c49fac7af159c7481a2f7873ab9517fb1375f17f20d5bf847f3340e70149b4e7"
+    },
+    "recovered/index.json": {
+      "sha256": "56b1b41b4f1e3ff0fbfda418e7a2547db52be97eaaaa7916dfea3fac7ae53059"
+    },
+    "research/evidence/continuation/source-refresh/visibility-presets.json": {
+      "sha256": "e585da06d163e34c960db46bb20337dff2bd10a8c5d02b46d208277479006201"
+    },
+    "research/evidence/continuation/source-refresh/visibility-export-validation.json": {
+      "sha256": "8ec507afedb6dc955a18251a7eef80674218a30aa05c1ad5e359a37e4000ce8c"
+    },
+    "research/evidence/continuation/source-refresh/recovered-asset-index-validation.json": {
+      "sha256": "24978ade9813e7c6855899d9405813ac5d14858e61136d2aa158625980cd3839"
+    }
+  },
+  "checks": {
+    "visibility_preset_validator": {
+      "command": "python3 tools/validate_visibility_presets.py",
+      "result": "pass",
+      "cars": 35,
+      "preset_scenes": 350,
+      "preset_nodes_checked": 3243,
+      "negative_controls": {
+        "changed_translation_rejected": true,
+        "missing_visible_root_rejected": true
+      },
+      "validator_sha256": "fd8dd0096b7062eaa3c6fbb42f37cfe3a3d4173be6a92ea8d99442982db42fef",
+      "generator_sha256": "989c75ab56fd32a326725c839e2b741c252590e6334667c0dfee75464e4fd61c",
+      "exporter_sha256": "176e23a4931c484831f16d4700fa5538831fb4cad3df9fdd1d4bdc784c085b5a"
+    },
+    "canonical_index_verifier": {
+      "command": "python3 tools/verify_recovered_asset_index.py",
+      "result": "VERIFY OK",
+      "cars": 35,
+      "assets": 2579,
+      "producer_receipt_set_equality": true,
+      "per_car_producer_record_equality": true,
+      "corrupt_manifest_hash_rejected": true,
+      "rehashed_cross_car_model_swap_rejected": true,
+      "index_sha256": "56b1b41b4f1e3ff0fbfda418e7a2547db52be97eaaaa7916dfea3fac7ae53059",
+      "rehashed_schema_fidelity_status_limits_controls_rejected": true,
+      "verifier_sha256": "98a8b10d4c52cee3f81de18a77500fc7012f8bd1ebc0e42ac587a70b06afc997"
+    }
+  },
+  "findings": [
+    {
+      "severity": "qualification",
+      "claim": "Visibility output matches explicit source-derived local node states, not every live game frame or shader/draw result.",
+      "evidence": "Generator derives constructor geometry-presence values, applies explicit wheel/light/exhaust setters, compares mutable node bits to race95, and exporter clones only locally visible nodes. Validator checks source node identity, offsets, geometry, translation, names, mutability, child pruning, and mesh references.",
+      "impact": "Do not describe these GLB scene presets as full game-render equivalence."
+    },
+    {
+      "severity": "qualification",
+      "claim": "The GLB does not store the global wheel override input as a machine-readable scene property.",
+      "evidence": "Preset contract describes helper `param6` and global override behavior, but scene extras only include `visibilityPreset`, `sourceTree`, and status. Cloned nodes encode selected local wheel visibility bits without an animation/controller that executes the helper.",
+      "impact": "Describe output as an explicit local node-state preset, not executable animation or full source-state replay."
+    },
+    {
+      "severity": "resolved",
+      "claim": "The manifest schema/status/limits and per-car ownership verifier gaps identified in the prior review are closed in the current pinned verifier.",
+      "evidence": "Current verifier checks exact index and manifest schema/status/fidelity/limits declarations, derives complete expected records per car from producer receipts, and runs rehashed declaration mutations plus cross-car original-model swap as negative controls. Current `python3 tools/verify_recovered_asset_index.py` passes 35 cars and 2579 assets.",
+      "impact": "Current index integrity validation covers the documented declarations and producer-to-manifest per-car record association. It still does not test in-game rendering equivalence."
+    }
+  ],
+  "jev_review": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "escalate",
+    "composite": 0.5493333333333333,
+    "safe_to_apply": 0.18,
+    "usage_tokens": {
+      "input": 7740,
+      "output": 277
+    },
+    "receipt_note": "Raw typed result captured in this note: low-confidence rubric outputs; agent performed direct source/code and adversarial-control inspection."
+  },
+  "jev_verify_crosswalk": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 2,
+      "needs_review": 2
+    },
+    "usage_tokens": {
+      "input": 5096,
+      "output": 428
+    },
+    "disposition": "Evidence passed to Jev was too abbreviated/misaligned to establish two crosswalk claims. Treat that result as a negative/needs-review disposition, not positive proof; the artifact and deterministic joins remain source evidence."
+  },
+  "limitations": [
+    "Updated source hashes are pinned in inputs; the independent review describes source-derived visibility states, not all live frames.",
+    "The index verifier validates producer records and output bytes; it does not validate final in-game shader/draw equivalence.",
+    "A checker passing is not proof that all runtime or transformed texture paths are fully reconstructed."
+  ]
+}

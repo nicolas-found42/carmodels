@@ -1,0 +1,116 @@
+{
+  "args": {
+    "claims": [
+      "tools/verify_config_data_sound.py prints VERIFY OK.",
+      "The verifier checked 385 config files, 35 data DAT files and 35 sound chains over 35 cars.",
+      "Each config txt file equals the block derived from the shared source config via build_reference parsers.",
+      "Each car's sound chain resolves to a carN_snd bank present in _shared/sounds.",
+      "Four negative controls (mutated config, cross-car swap, missing shared bank, manifest sha tamper) are rejected.",
+      "The verifier asserts render fidelity."
+    ],
+    "evidence": "Ticket T2 acceptance: Implement tools/verify_config_data_sound.py: per-car config x11 txt set equality vs corpus manifests, every file sha256 vs manifest, data DAT present per car, sound inheritance chain per car resolves to an existing bank in reference/ford/_shared/sounds; plus at least two negative controls (mutated hash accepted nowhere; cross-car config swap rejected).\n\nVerifier run log:\n{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n\n\nRegression log:\nRETAINED PACKET EVIDENCE OK\n\n\nThe checker reuses build_reference.py parsing primitives (block_spans/clean_block/field) rather than re-deriving formats. Canonical index sha256 9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe unchanged. render_fidelity_complete stays false."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 5,
+      "contradicted": 1,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "tools/verify_config_data_sound.py prints VERIFY OK.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "supports": 1,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim1",
+        "claim": "The verifier checked 385 config files, 35 data DAT files and 35 sound chains over 35 cars.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "supports": 1,
+          "says_nothing": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim2",
+        "claim": "Each config txt file equals the block derived from the shared source config via build_reference parsers.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.01,
+          "supports": 0.98,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.89
+      },
+      {
+        "id": "claim3",
+        "claim": "Each car's sound chain resolves to a carN_snd bank present in _shared/sounds.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0.01,
+          "supports": 0.99,
+          "says_nothing": 0
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.94
+      },
+      {
+        "id": "claim4",
+        "claim": "Four negative controls (mutated config, cross-car swap, missing shared bank, manifest sha tamper) are rejected.",
+        "verdict": "verified",
+        "probabilities": {
+          "contradicts": 0,
+          "supports": 1,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim5",
+        "claim": "The verifier asserts render fidelity.",
+        "verdict": "contradicted",
+        "probabilities": {
+          "contradicts": 1,
+          "supports": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.86
+      }
+    ],
+    "usage": {
+      "input_tokens": 2466,
+      "output_tokens": 372
+    }
+  }
+}

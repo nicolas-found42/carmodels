@@ -1,0 +1,14 @@
+{
+  "args": {
+    "text": "void PEXTUW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[3];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[3];\n}\n\nvoid PEXTLW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[1];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[1];\n}\n\nvoid PCPYLD() {\n\tif (!_Rd_) return;\n\n\t// note: first _Rs_, since the other way when _Rd_ equals\n\t// _Rs_ or _Rt_ this would screw up\n\tcpuRegs.GPR.r[_Rd_].UD[1] = cpuRegs.GPR.r[_Rs_].UD[0];\n\tcpuRegs.GPR.r[_Rd_].UD[0] = cpuRegs.GPR.r[_Rt_].UD[0];\n}\n\nvoid PEXCW() {\n\tGPR_reg Rt;\n\n\tif (!_Rd_) return;\n\n\tRt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[1];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rt.UL[3];\n}\n\nvoid PROT3W() {\n\tGPR_reg Rt;\n\n\tif (!_Rd_) return;\n\n\tRt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[1];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[0];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rt.UL[3];\n}\n",
+    "purpose": "Determine exact word-lane movement for original car hierarchy rotation decoding in MMI operations PEXTLW/PEXTUW/PCPYLD/PEXCW/PROT3W, using preserved official PCSX2v2.8.2 source as an independent lane definition."
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.03,\n    \"substance\": 0.97,\n    \"relevance\": 0.93\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"pass\",\n    \"reason\": \"no signals above thresholds\"\n  },\n  \"usage\": {\n    \"input_tokens\": 1197,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

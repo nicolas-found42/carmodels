@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "What must 'B (selector) resolved' require, given the named livery store and the open car cursor?",
+    "evidence": "Sound index verdict (evidence): two parallel tables in SLES_517.05, both ascending index 0..7 = CAR1..CAR8: config-key table @0x24af68 (CAR1_SOUND_FILE..CAR8_SOUND_FILE, then CAR_GENERIC_SOUND_FILE, UI_SOUNDS_FILE) and descriptor table @0x24afe8 (sounds\\car1_snd:0:0:5 .. car8_snd:7:35:5, then car_gen:8:40:51, ui_snds:9:91:9). FUN_001d7950 (db_crsnd.c) resolves the :SOUNDBANK_TYPE token by name via table 0x24af68 and stores the index into car struct +0x40; FUN_00165b10 (mfile.c) indexes the carN_snd descriptor table by that +0x40; FUN_001408d8 parses 'sounds\\carN_snd:B:O:C' and builds carN_snd.msh/.msb with the literal stem. The first numeric field (0 for car1) is a bank/stream ordinal that is discarded in the filename path. Verdict: build_reference.py's name-based rule (CAR_SND_CARn + CARn_SOUND_FILE -> carN_snd) is CONSISTENT with the executable; no off-by-one.\n\nSelector path (evidence): FUN_0019eb90 driver reads the selector-name-list at gameflow+0x74 and a label string from the static pointer table VA 0x23acb0 (12 pointers -> INVALID, A, A1..D1), resolves via FUN_00125640, stores via FUN_00121e10. FUN_00125640: record base 0x233070+type*0x114 (via FUN_0021b6e0), selector name count at +0xbc, name-list pointer at +0x90, returns a packed selector whose low 16 bits are the matched resource-list ordinal. FUN_00121e10 stores that selector at entity+0x64 (100 dec). The whole path hangs off the dynamic gameflow pointer chain outer+4 -> +0x14c -> +0x174, not a fixed VA. All three captured cars are at DEFAULT livery, so the livery selector is expected to be the same value (0) across all three. The per-screen CAR highlight cursor (FUN_001c4a40 over DAT_00241b40) remains caller-open.\n\nC scope: the '136-entry display-name table' is a conflation. 136 is the count of :VALID_LIVERY rows across 35 cars; display names are keyed by car. There are 35 cars and 39 TXT_CARS_* keys in tlate_en.dat;1. The only resolver, tools/resolve_display_names.py, asserts exactly 3 pairs. No artifact defines a 136-row display-name table. A car-keyed display-name table has ~35-39 rows, not 136.",
+    "priorities": "Accept a definite recorded outcome short of a forced positive; keep partial claims and render_fidelity_complete false; do not claim the car cursor is found when it is not; record what a read actually shows.",
+    "candidates": [
+      {
+        "id": "read_store_record_cursor",
+        "description": "Read entity+0x64 via the chain in the three EE images, record its value (expected DEFAULT), and record the car-highlight cursor as still open -> definite outcome."
+      },
+      {
+        "id": "require_car_cursor",
+        "description": "Require the car-highlight cursor itself to be named and read before B is resolved."
+      },
+      {
+        "id": "declare_open_now",
+        "description": "Record B open with no read."
+      },
+      {
+        "id": "drop_b",
+        "description": "Drop B from scope."
+      }
+    ],
+    "requirements": [
+      "Produces a definite recorded outcome",
+      "Does not assert an unread find",
+      "Keeps render_fidelity_complete false"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "read_store_record_cursor",
+      "escaped": false,
+      "confidence": 0.98,
+      "probabilities": {
+        "ask_user": 0,
+        "read_store_record_cursor": 0.99,
+        "drop_b": 0,
+        "investigate": 0,
+        "none": 0,
+        "declare_open_now": 0.01,
+        "require_car_cursor": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "read_store_record_cursor",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "read_store_record_cursor",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "read_store_record_cursor",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "require_car_cursor",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "require_car_cursor",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "require_car_cursor",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "declare_open_now",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "declare_open_now",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "declare_open_now",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "drop_b",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "drop_b",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "drop_b",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 3027,
+      "output_tokens": 602
+    }
+  }
+}

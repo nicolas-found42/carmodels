@@ -1,0 +1,75 @@
+{
+  "args": {
+    "request": "Adopt the lean .gitignore split.",
+    "diff": "+ ignore: Blender vendor, *.p2s, unpacked memory dumps, job-b-live working sets, bytecode, OS cruft\n+ keep: tools, receipts, reference corpus, viewer, AppImage, screenshots\n+ document what a fresh clone cannot re-run",
+    "tests": "git status shows only intended files tracked"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.58,
+    "scores": {
+      "correctness": {
+        "score": 1.79,
+        "confidence": 0.69,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.18,
+          "2": 0.81
+        }
+      },
+      "spec_match": {
+        "score": 1.86,
+        "confidence": 0.79,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.12,
+          "2": 0.87
+        }
+      },
+      "test_gap": {
+        "score": 0.85,
+        "confidence": 0.26,
+        "probabilities": {
+          "0": 0.32,
+          "1": 0.51,
+          "2": 0.17
+        }
+      },
+      "blast_radius": {
+        "score": 0.57,
+        "confidence": 0.14,
+        "probabilities": {
+          "0": 0.66,
+          "1": 0.11,
+          "2": 0.23
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.8305,
+    "reason_codes": [
+      "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+      "blast_radius"
+    ],
+    "usage": {
+      "input_tokens": 791,
+      "output_tokens": 79
+    }
+  }
+}

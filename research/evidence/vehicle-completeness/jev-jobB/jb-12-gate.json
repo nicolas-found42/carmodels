@@ -1,0 +1,140 @@
+{
+  "args": {
+    "request": "Approve leading Job B with read-only PINE live reads, headless.",
+    "diff": "+ PINE read-only ops (no writes); static global + chain read; optional headless unpause + poll\n+ never write guest memory\n+ record open if not isolated",
+    "claims": [
+      "The plan runs headless and writes no guest memory.",
+      "The plan can name a decompilation-reachable address.",
+      "The plan keeps a recorded-open outcome available."
+    ],
+    "evidence": "Job B (per-screen selector) is blocked because a PAUSED savestate carries no live pointers (arXiv 2503.15065; 2307.12060). Named: the livery store is entity+0x64 via FUN_00121e10; resolver FUN_00125640 over record base 0x233070+type*0x114; chain outer+4 -> +0x14c -> +0x174 = entity. New decompilation fact: FUN_0019c310 writes the gameflow pointer at outer+4 -> +0x14c, and its caller FUN_001de3d8 originates it. FUN_001c4540 iterates the car-entity list from a STATIC global (iRam00290278, EE ~0x290278; +8 = list head, +0xc = next). The cursor fn FUN_001c4a40 indexes DAT_00241b40 by a per-entity type byte. So at least one stable EE address (0x290278) can be read live. PCSX2 has: (a) in-emulator read/write BREAKPOINTS (CBreakPoints, BREAKPOINT_EE/IOP; iR5900.cpp dynarecMemcheck) - a debugger feature; (b) PINE IPC live guest memory read/write (PINE.cpp MsgRead8..64) exposed by the headless container helper (currently identity/save/load at slot 28193). Constraint: run EVERYTHING headless (Docker + Xvfb, fr2-recovery-headless); the user is using the host - no focus stealing on the Mac. Prior constraint from handoff: ordinary controller input + read-only/capture APIs only, no guest-memory writes/cheats/patches.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"pine_read_then_poll\", \"escaped\": false, \"confidence\": 0.92, \"probabilities\": {\"none\": 0, \"ask_user\": 0, \"decomp_first\": 0.01, \"breakpoint_first\": 0.04, \"pine_read_then_poll\": 0.94, \"investigate\": 0, \"stop_record_open\": 0.01}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"pine_read_then_poll\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"pine_read_then_poll\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"pine_read_then_poll\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"breakpoint_first\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"breakpoint_first\", \"requirement\": 1, \"answer\": \"unknown\"}, {\"candidate\": \"breakpoint_first\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"decomp_first\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"decomp_first\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"decomp_first\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"stop_record_open\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"stop_record_open\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"stop_record_open\", \"requirement\": 2, \"answer\": \"supported\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2782, \"output_tokens\": 593}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.23,
+      "scores": {
+        "correctness": {
+          "score": 1.44,
+          "confidence": 0.24,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.5,
+            "2": 0.47
+          }
+        },
+        "spec_match": {
+          "score": 1.74,
+          "confidence": 0.61,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.24,
+            "2": 0.75
+          }
+        },
+        "test_gap": {
+          "score": 1.86,
+          "confidence": 0.79,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.05,
+            "2": 0.91
+          }
+        },
+        "blast_radius": {
+          "score": 1.2,
+          "confidence": 0.13,
+          "probabilities": {
+            "0": 0.19,
+            "1": 0.42,
+            "2": 0.39
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.6194999999999999,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 2,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The plan runs headless and writes no guest memory.",
+          "verdict": "verified",
+          "confidence": 0.64,
+          "probabilities": {
+            "contradicted": 0.02,
+            "unsupported": 0.22,
+            "verified": 0.76
+          },
+          "action": "review"
+        },
+        {
+          "claim": "The plan can name a decompilation-reachable address.",
+          "verdict": "verified",
+          "confidence": 0.96,
+          "probabilities": {
+            "contradicted": 0,
+            "unsupported": 0.02,
+            "verified": 0.98
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The plan keeps a recorded-open outcome available.",
+          "verdict": "verified",
+          "confidence": 0.28,
+          "probabilities": {
+            "contradicted": 0.02,
+            "unsupported": 0.47,
+            "verified": 0.51
+          },
+          "action": "escalate"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2350,
+      "output_tokens": 198
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "args": {
+    "propositions": [
+      "The Blender vendor files (G1) should be ignored (re-downloadable, exceed GitHub limits).",
+      "The PCSX2 AppImage (G2) should be kept (pinned dependency, under limits).",
+      "The savestates and unpacked dumps (G3) should be ignored (regenerable via re-capture).",
+      "The job-b-live working sets (G4) should be ignored (rebuilt by probe tools).",
+      "The reference corpus (G6) must be kept (the deliverable).",
+      "The F8 screenshots (13M, ground-truth evidence) should be kept.",
+      "Excluding files that tools read at fixed paths is acceptable if documented."
+    ],
+    "context": "Candidate file groups in the carmodels repo (Ford Racing 2 recovery), with sizes:\nG1 tools/validation-runtime 1.1G: Blender dmg + mounted Blender.app (third-party, re-downloadable). Scripts validate GLBs through Blender.\nG2 tools/headless-runtime AppImage 57M: PCSX2 v2.8.2 AppImage, pinned emulator dependency for the container.\nG3 research/evidence/continuation/runtime 960M: 40 savestates (.p2s ~11MB each) + unpacked EE/IOP/VU/hw-reg dumps + 13M F8 screenshots. Receipts record sha256 of these files.\nG4 research/evidence/job-b-live 704M: pairs/*-eeMemory.bin + members/ extracted dumps (experiment working sets, rebuilt by the probe tools).\nG5 viewer 57M: web viewer incl. vendor three.js + 35 recovered .glb files.\nG6 reference 65M: the per-car reference corpus (models, textures, sounds) \u2014 the deliverable.\nG7 recovered 972K: canonical index + per-car manifests.\nG8 receipts JSON (~5M total): validation receipts, Jev receipts, tickets, reports.\nG9 tools/*.py + batteries: all scripts.\nG10 869 .pyc / __pycache__: bytecode regenerable.\nContext: user cancelled a 2.6GB push; wants a lean repo. GitHub rejects files >100MB (only the Blender files exceed it). Tools read the unpacked runtime dumps at fixed paths (e.g. verify_selector_word reads RUNTIME eeMemory.bin); excluding them means a fresh clone cannot re-run those tools without re-capturing."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "The Blender vendor files (G1) should be ignored (re-downloadable, exceed GitHub limits).",
+        "probability": 0.9,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "The PCSX2 AppImage (G2) should be kept (pinned dependency, under limits).",
+        "probability": 0.85,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "The savestates and unpacked dumps (G3) should be ignored (regenerable via re-capture).",
+        "probability": 0.31,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The job-b-live working sets (G4) should be ignored (rebuilt by probe tools).",
+        "probability": 0.64,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "The reference corpus (G6) must be kept (the deliverable).",
+        "probability": 0.95,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition5",
+        "proposition": "The F8 screenshots (13M, ground-truth evidence) should be kept.",
+        "probability": 0.8,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition6",
+        "proposition": "Excluding files that tools read at fixed paths is acceptable if documented.",
+        "probability": 0.64,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1514,
+      "output_tokens": 151
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "args": {
+    "purpose": "Classify recovery evidence by what each receipt can establish; retain open game-fidelity questions.",
+    "context": "These are archive-bound deterministic receipts and literal source traces. A validated GLB does not establish game rendering. Jev classifies scope only, not arithmetic truth.",
+    "classes": [
+      {
+        "id": "source_storage",
+        "description": "Proves source byte storage, bounds, arithmetic, extraction or descriptor interpretation."
+      },
+      {
+        "id": "runtime_behavior",
+        "description": "Actual observed car rendering or state selection in the original running game, with a captured car-specific state."
+      },
+      {
+        "id": "interoperability",
+        "description": "Independent GLB conformance or DCC import, limited to exported candidate compatibility."
+      },
+      {
+        "id": "source_behavior",
+        "description": "Pinned executable consumer semantics, including named parts and conditional state writes, without captured in-game values."
+      },
+      {
+        "id": "manual_review",
+        "description": "Insufficient, conflicting, overbroad or ambiguous evidence."
+      }
+    ],
+    "items": [
+      {
+        "id": "descriptor_dimensions",
+        "text": "Exact source-parser bit slices applied to 4,104 archive-bound PTG descriptors yield format1, width32, height32, 4096 bytes per tile."
+      },
+      {
+        "id": "all_scene_import",
+        "text": "Official Blender4.5.14 imports 210 exported candidate scenes across35cars, triangle/object counts match and referenced images usable. Original game fidelity not claimed."
+      },
+      {
+        "id": "wheel_pair",
+        "text": "Pinned ELF instructions in0019a7b8 write complementary visibility bits;0019a1b8 supplies abs(field+ec)<=200. Runtime field values have not been captured."
+      },
+      {
+        "id": "loading",
+        "text": "Original game screenshot displays a loading screen photo and loading bar. No actual 3D car scene has yet been captured."
+      },
+      {
+        "id": "format",
+        "text": "Khronos validator finds zero errors and warnings in all35candidateGLBs."
+      },
+      {
+        "id": "mips",
+        "text": "All94storedmip levels have archive-bound offsets and pixel validation; runtime GS mipselection remains unresolved."
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_classify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"summary\": {\n    \"items\": 6,\n    \"auto\": 6,\n    \"review\": 0,\n    \"invalid_response\": 0,\n    \"by_class\": {\n      \"source_storage\": 2,\n      \"interoperability\": 2,\n      \"source_behavior\": 1,\n      \"manual_review\": 1\n    }\n  },\n  \"thresholds\": {\n    \"auto_accept\": 0.85,\n    \"minimum_margin\": 0.5\n  },\n  \"results\": [\n    {\n      \"id\": \"descriptor_dimensions\",\n      \"classification\": \"source_storage\",\n      \"probabilities\": {\n        \"source_storage\": 1,\n        \"runtime_behavior\": 0,\n        \"interoperability\": 0,\n        \"source_behavior\": 0,\n        \"manual_review\": 0\n      },\n      \"confidence\": 1,\n      \"margin\": 1,\n      \"top_probability\": 1,\n      \"decision\": \"auto\"\n    },\n    {\n      \"id\": \"all_scene_import\",\n      \"classification\": \"interoperability\",\n      \"probabilities\": {\n        \"source_storage\": 0,\n        \"runtime_behavior\": 0,\n        \"interoperability\": 1,\n        \"source_behavior\": 0,\n        \"manual_review\": 0\n      },\n      \"confidence\": 1,\n      \"margin\": 1,\n      \"top_probability\": 1,\n      \"decision\": \"auto\"\n    },\n    {\n      \"id\": \"wheel_pair\",\n      \"classification\": \"source_behavior\",\n      \"probabilities\": {\n        \"source_storage\": 0,\n        \"runtime_behavior\": 0,\n        \"interoperability\": 0,\n        \"source_behavior\": 1,\n        \"manual_review\": 0\n      },\n      \"confidence\": 1,\n      \"margin\": 1,\n      \"top_probability\": 1,\n      \"decision\": \"auto\"\n    },\n    {\n      \"id\": \"loading\",\n      \"classification\": \"manual_review\",\n      \"probabilities\": {\n        \"source_storage\": 0,\n        \"runtime_behavior\": 0.02,\n        \"interoperability\": 0,\n        \"source_behavior\": 0,\n        \"manual_review\": 0.98\n      },\n      \"confidence\": 0.97,\n      \"margin\": 0.96,\n      \"top_probability\": 0.98,\n      \"decision\": \"auto\"\n    },\n    {\n      \"id\": \"format\",\n      \"classification\": \"interoperability\",\n      \"probabilities\": {\n        \"source_storage\": 0,\n        \"runtime_behavior\": 0,\n        \"interoperability\": 1,\n        \"source_behavior\": 0,\n        \"manual_review\": 0\n      },\n      \"confidence\": 1,\n      \"margin\": 1,\n      \"top_probability\": 1,\n      \"decision\": \"auto\"\n    },\n    {\n      \"id\": \"mips\",\n      \"classification\": \"source_storage\",\n      \"probabilities\": {\n        \"source_storage\": 0.97,\n        \"runtime_behavior\": 0,\n        \"interoperability\": 0,\n        \"source_behavior\": 0.02,\n        \"manual_review\": 0.01\n      },\n      \"confidence\": 0.95,\n      \"margin\": 0.95,\n      \"top_probability\": 0.97,\n      \"decision\": \"auto\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1187,\n    \"output_tokens\": 339\n  }\n}"
+      }
+    ]
+  }
+}

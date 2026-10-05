@@ -1,0 +1,99 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "test1",
+        "text": "0 words equal position in all 6 slots."
+      },
+      {
+        "id": "dat_words",
+        "text": "0x241b60/0x241e00 move with animation, differ even at same position."
+      },
+      {
+        "id": "sweep_truth",
+        "text": "Each slot has a vision-verified screenshot."
+      }
+    ],
+    "classes": [
+      {
+        "id": "decisive_negative",
+        "description": "Rules out the stored-integer hypothesis. Example: TEST 1 zero."
+      },
+      {
+        "id": "ground_truth",
+        "description": "Verified observation. Example: screenshot per slot."
+      },
+      {
+        "id": "inconclusive",
+        "description": "Neither rules in nor out."
+      }
+    ],
+    "purpose": "sort sweep results by evidential weight",
+    "context": "Sweep close-out."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 3,
+      "auto": 1,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "decisive_negative": 1,
+        "inconclusive": 1,
+        "ground_truth": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "test1",
+        "classification": "decisive_negative",
+        "probabilities": {
+          "decisive_negative": 0.39,
+          "ground_truth": 0.29,
+          "inconclusive": 0.32
+        },
+        "confidence": 0.08,
+        "margin": 0.07,
+        "top_probability": 0.39,
+        "decision": "review"
+      },
+      {
+        "id": "dat_words",
+        "classification": "inconclusive",
+        "probabilities": {
+          "decisive_negative": 0.26,
+          "ground_truth": 0.22,
+          "inconclusive": 0.52
+        },
+        "confidence": 0.28,
+        "margin": 0.26,
+        "top_probability": 0.52,
+        "decision": "review"
+      },
+      {
+        "id": "sweep_truth",
+        "classification": "ground_truth",
+        "probabilities": {
+          "decisive_negative": 0,
+          "ground_truth": 1,
+          "inconclusive": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 628,
+      "output_tokens": 123
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "rank the breakpoint-road options by feasibility headlessly",
+    "candidates": [
+      {
+        "id": "input_handler",
+        "text": "Static input-handler analysis + PINE verification (read-only, no build)."
+      },
+      {
+        "id": "source_build",
+        "text": "PCSX2 source build + DebugServer (hours, risky)."
+      },
+      {
+        "id": "blind_gui",
+        "text": "Blind debugger-GUI driving (no visibility)."
+      },
+      {
+        "id": "stop",
+        "text": "Record open."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "rank the breakpoint-road options by feasibility headlessly",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "blind_gui",
+        "relevance": 0.4,
+        "text": "Blind debugger-GUI driving (no visibility)."
+      },
+      {
+        "rank": 2,
+        "id": "source_build",
+        "relevance": 0.38,
+        "text": "PCSX2 source build + DebugServer (hours, risky)."
+      },
+      {
+        "rank": 3,
+        "id": "input_handler",
+        "relevance": 0.29,
+        "text": "Static input-handler analysis + PINE verification (read-only, no build)."
+      },
+      {
+        "rank": 4,
+        "id": "stop",
+        "relevance": 0.09,
+        "text": "Record open."
+      }
+    ],
+    "usage": {
+      "input_tokens": 594,
+      "output_tokens": 76
+    }
+  }
+}

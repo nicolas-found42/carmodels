@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Adopt the consolidated plan for the next session.",
+    "diff": "+ A: record sound verdict consistent (two tables @0x24af68/@0x24afe8 + loader chain); no verifier change\n+ B: trace FUN_0019eb90->FUN_00125640->FUN_00121e10; read entity+0x64 via chain in slots 102/103/104; one indirection pass; record definite outcome\n+ C: extend resolve_display_names.py to car-keyed TXT_CARS_* (~35-39 rows), own receipt\n+ ceiling: render_fidelity_complete false; stop only on three definite outcomes (7b)",
+    "tests": "verify_config_data_sound VERIFY OK; resolve_display_names VERIFY OK; test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.43,
+    "scores": {
+      "correctness": {
+        "score": 1.42,
+        "confidence": 0.24,
+        "probabilities": {
+          "0": 0.04,
+          "1": 0.5,
+          "2": 0.46
+        }
+      },
+      "spec_match": {
+        "score": 1.51,
+        "confidence": 0.26,
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.2,
+          "2": 0.65
+        }
+      },
+      "test_gap": {
+        "score": 0.95,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.37,
+          "1": 0.31,
+          "2": 0.32
+        }
+      },
+      "blast_radius": {
+        "score": 0.97,
+        "confidence": 0.64,
+        "probabilities": {
+          "0": 0.13,
+          "1": 0.76,
+          "2": 0.11
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.6665,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 899,
+      "output_tokens": 79
+    }
+  }
+}

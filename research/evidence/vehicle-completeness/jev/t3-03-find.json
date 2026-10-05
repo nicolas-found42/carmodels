@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "strongest evidence the three captured VEHICLE labels resolve through the language archive",
+    "candidates": [
+      {
+        "id": "cardata_enum",
+        "text": "Each car's INGAME_TEXT_ENUM is read from the reference CARDATA block and equals the bridge enum."
+      },
+      {
+        "id": "tlate_lookup",
+        "text": "Each enum key resolves in tlate_en.dat;1 to a string equal to the on-screen label."
+      },
+      {
+        "id": "byte_exact",
+        "text": "The resolved string's raw UTF-16-LE bytes occur verbatim in the archive, including the 0x27 apostrophe."
+      },
+      {
+        "id": "bridge_update",
+        "text": "bridge-three-screens.json is updated with the resolved rows only when all three pass."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "strongest evidence the three captured VEHICLE labels resolve through the language archive",
+    "exists": 0.93,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "byte_exact",
+        "probability": 0.86,
+        "text": "The resolved string's raw UTF-16-LE bytes occur verbatim in the archive, including the 0x27 apostrophe."
+      },
+      {
+        "id": "tlate_lookup",
+        "probability": 0.12,
+        "text": "Each enum key resolves in tlate_en.dat;1 to a string equal to the on-screen label."
+      },
+      {
+        "id": "bridge_update",
+        "probability": 0.02,
+        "text": "bridge-three-screens.json is updated with the resolved rows only when all three pass."
+      },
+      {
+        "id": "cardata_enum",
+        "probability": 0,
+        "text": "Each car's INGAME_TEXT_ENUM is read from the reference CARDATA block and equals the bridge enum."
+      }
+    ],
+    "usage": {
+      "input_tokens": 581,
+      "output_tokens": 69
+    }
+  }
+}

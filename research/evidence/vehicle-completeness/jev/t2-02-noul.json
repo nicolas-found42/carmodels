@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "Every one of the 35 cars carries exactly the 11 named config txt files in its config/ folder.",
+      "Each config txt file equals the block that build_reference.py derives from the shared source config.",
+      "Each car's sound.txt :INHERIT_TYPE resolves in one hop to a base bank whose carN_snd.msb/.msh exist in _shared/sounds.",
+      "Each car has exactly one data DAT matching its OWN_GAMEPLAY name.",
+      "The four negative controls (mutated config, cross-car swap, missing shared bank, manifest sha tamper) are each rejected.",
+      "The config/data/sound verifier proves render fidelity."
+    ],
+    "context": "Ticket T2 acceptance: Implement tools/verify_config_data_sound.py: per-car config x11 txt set equality vs corpus manifests, every file sha256 vs manifest, data DAT present per car, sound inheritance chain per car resolves to an existing bank in reference/ford/_shared/sounds; plus at least two negative controls (mutated hash accepted nowhere; cross-car config swap rejected).\n\nVerifier run log:\n{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n\n\nRegression log:\nRETAINED PACKET EVIDENCE OK\n\n\nThe checker reuses build_reference.py parsing primitives (block_spans/clean_block/field) rather than re-deriving formats. Canonical index sha256 9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe unchanged. render_fidelity_complete stays false."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "Every one of the 35 cars carries exactly the 11 named config txt files in its config/ folder.",
+        "probability": 0.93,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "Each config txt file equals the block that build_reference.py derives from the shared source config.",
+        "probability": 0.89,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "Each car's sound.txt :INHERIT_TYPE resolves in one hop to a base bank whose carN_snd.msb/.msh exist in _shared/sounds.",
+        "probability": 0.57,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition3",
+        "proposition": "Each car has exactly one data DAT matching its OWN_GAMEPLAY name.",
+        "probability": 0.84,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition4",
+        "proposition": "The four negative controls (mutated config, cross-car swap, missing shared bank, manifest sha tamper) are each rejected.",
+        "probability": 0.98,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition5",
+        "proposition": "The config/data/sound verifier proves render fidelity.",
+        "probability": 0.02,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1492,
+      "output_tokens": 130
+    }
+  }
+}

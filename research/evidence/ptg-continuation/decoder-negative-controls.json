@@ -1,0 +1,45 @@
+{
+  "schema": "ptg-decoder-negative-controls/v1",
+  "decoder_sha256": "62e83c0e3018bc627f50400d6c4eae886839d24c64516a9b21728b2e09a5e31a",
+  "fixture_path": "reference/ford/cars/49_COUPE/graphics/icon/49couped.ptg;1",
+  "fixture_sha256": "87cde2058e92ef16a8d283b42b9e24c07d28b2b129740bcc5cdbf130e9326856",
+  "checks": [
+    {
+      "case": "mip-sentinel-changed",
+      "rejected": true,
+      "message": "mip-sentinel-changed: descriptor 1 mip fields differ from the measured serialized sentinel profile",
+      "expected_message_fragment": "mip fields differ",
+      "valid": true
+    },
+    {
+      "case": "format-code-unsupported",
+      "rejected": true,
+      "message": "format-code-unsupported: unsupported source format code 15 at descriptor 1",
+      "expected_message_fragment": "unsupported source format code",
+      "valid": true
+    },
+    {
+      "case": "truncated-final-body",
+      "rejected": true,
+      "message": "truncated-final-body: parser-computed body span ends at 0x187d0, file size is 0x187cf",
+      "expected_message_fragment": "body span ends",
+      "valid": true
+    },
+    {
+      "case": "header-count-corrupt",
+      "rejected": true,
+      "message": "header-count-corrupt: tile grid disagrees with image dimensions",
+      "expected_message_fragment": "tile grid disagrees",
+      "valid": true
+    },
+    {
+      "case": "descriptor-padding-corrupt",
+      "rejected": true,
+      "message": "descriptor-padding-corrupt: descriptor 1 differs at a measured 0xdd padding word",
+      "expected_message_fragment": "padding word",
+      "valid": true
+    }
+  ],
+  "passed": 5,
+  "failed": []
+}

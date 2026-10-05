@@ -1,0 +1,52 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {"verified": 3, "contradicted": 0, "unsupported": 1, "needs_review": 2},
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "In FUN_00128218 the first call to FUN_0021c3e0 passes the masked flags OR 0x2, so bit 0x8 is clear and the STROW-before-V4-8 normalization branch is selected.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.2, "supports": 0.79, "says_nothing": 0.01},
+      "confidence": 0.69,
+      "action": "review",
+      "supporting_evidence": "typed-wrapper",
+      "same_subject": 0.72
+    },
+    {
+      "id": "claim1",
+      "claim": "In FUN_00128218 the second call to FUN_0021c3e0 passes the masked flags OR 0x2a, so bit 0x8 is set and the V4-8-before-STROW alternate branch is selected.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.09, "supports": 0.89, "says_nothing": 0.02},
+      "confidence": 0.84,
+      "action": "auto",
+      "supporting_evidence": "typed-wrapper",
+      "same_subject": 0.67
+    },
+    {
+      "id": "claim2",
+      "claim": "FUN_0021bf28 calls FUN_00128218 only when flag bit 0x8 and source-header bit 0x10 are both set; otherwise it calls FUN_0021c3e0 directly.",
+      "verdict": "verified",
+      "probabilities": {"contradicts": 0.03, "supports": 0.96, "says_nothing": 0.01},
+      "confidence": 0.94,
+      "action": "auto",
+      "supporting_evidence": "dispatch-selection",
+      "same_subject": 0.54
+    },
+    {
+      "id": "claim3",
+      "claim": "The pinned typed source and raw instruction evidence prove these call-path conditions were true for the sampled COBRA race packet.",
+      "verdict": "unsupported",
+      "relation_verdict": "contradicted",
+      "probabilities": {"contradicts": 0.98, "supports": 0.01, "says_nothing": 0.01},
+      "confidence": 0.98,
+      "action": "review",
+      "supporting_evidence": null,
+      "same_subject": 0.14
+    }
+  ],
+  "usage": {"input_tokens": 2594, "output_tokens": 480}
+}

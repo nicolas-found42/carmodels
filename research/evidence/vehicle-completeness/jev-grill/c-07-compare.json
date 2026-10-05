@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Stop condition 7b: all three threads to a definite outcome, C required.",
+    "passage_b": "Plan: B resolved = definite outcome (store read + cursor open if unnamed); C = car-keyed extension.",
+    "aspects": [
+      "whether all three threads can reach a definite outcome",
+      "whether C is defined",
+      "internal consistency"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "same_fact",
+      "probabilities": {
+        "same_fact": 0.51,
+        "different_facts": 0.4,
+        "contradicts": 0.09
+      },
+      "confidence": 0.27,
+      "margin": 0.10999999999999999,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "whether all three threads can reach a definite outcome",
+        "relation": "different_facts",
+        "probabilities": {
+          "same_fact": 0.35,
+          "different_facts": 0.41,
+          "contradicts": 0.24
+        },
+        "confidence": 0.12,
+        "margin": 0.06,
+        "decision": "review"
+      },
+      {
+        "aspect": "whether C is defined",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.58,
+          "different_facts": 0.34,
+          "contradicts": 0.08
+        },
+        "confidence": 0.37,
+        "margin": 0.23999999999999994,
+        "decision": "review"
+      },
+      {
+        "aspect": "internal consistency",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.46,
+          "different_facts": 0.46,
+          "contradicts": 0.08
+        },
+        "confidence": 0.2,
+        "margin": 0,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 838,
+      "output_tokens": 174
+    }
+  }
+}

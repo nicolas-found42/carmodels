@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable.",
+    "purpose": "decide navigation inputs for ordinary car-selection capture"
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.03,
+      "substance": 0.87,
+      "relevance": 0.12
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "skip",
+      "reason": "not relevant to the stated purpose (relevance 0.12)"
+    },
+    "usage": {
+      "input_tokens": 656,
+      "output_tokens": 57
+    }
+  }
+}

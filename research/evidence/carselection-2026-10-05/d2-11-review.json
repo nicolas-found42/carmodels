@@ -1,0 +1,75 @@
+{
+  "args": {
+    "request": "Reach a real car-selection screen by ordinary controller input headless; save new slots with extracted members and hashes; join on-screen labels to the numeric livery selector without claiming a full table.",
+    "diff": "+ connected hidden browser to noVNC, proved Space delivery (status 1->0)\n+ loaded slot 98, unpaused to Living Legends theme screen\n+ Cross on highlighted car opened the VEHICLE/TRACK/TYPE/STATUS detail panel\n+ captured 3 labeled screens (cars 1, 5, 4) into slots 102, 103, 104 with unpacked members\n+ L key moved highlight leftward (5->4 step; 1->5 wrap under hold), against assumed L=Right\n+ EE: six static 12-name tables unchanged; triangulation found no isolated highlight word\n+ slot 100 untouched; slot 101 backs up pre-experiment live state"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.19,
+    "scores": {
+      "correctness": {
+        "score": 1.03,
+        "confidence": 0.71,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.81,
+          "2": 0.11
+        }
+      },
+      "spec_match": {
+        "score": 1.05,
+        "confidence": 0.73,
+        "probabilities": {
+          "0": 0.07,
+          "1": 0.82,
+          "2": 0.11
+        }
+      },
+      "test_gap": {
+        "score": 1.76,
+        "confidence": 0.64,
+        "probabilities": {
+          "0": 0.07,
+          "1": 0.1,
+          "2": 0.83
+        }
+      },
+      "blast_radius": {
+        "score": 0.48,
+        "confidence": 0.28,
+        "probabilities": {
+          "0": 0.6,
+          "1": 0.33,
+          "2": 0.07
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.49550000000000005,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "blast_radius"
+    ],
+    "usage": {
+      "input_tokens": 920,
+      "output_tokens": 79
+    }
+  }
+}

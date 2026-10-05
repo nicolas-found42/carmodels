@@ -1,0 +1,87 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "live",
+        "text": "VNC desktop shows one window titled 'Ford Racing 2'. First-person race view: track ahead, trees and structures left, fencing and stone wall right, rear-view mirror top center, two circular gauges bottom. HUD text: 'POSITION 6/6', 'Paused' upper-right, 'LAP 1/3', 'LAP 00:00.00', 'LAST 00:00.00', 'BEST 00:00.00', gear '1', '000 MPH', tachometer 'x1000'. Small white symbols lower-left edge may be input indicators, too small to identify. No menu items, car names, or button prompts readable."
+      },
+      {
+        "id": "slot98",
+        "text": "'Select a Challenge Theme' screen from Ford Racing 2 over a racetrack scene. Seven circular theme icons across upper middle: star (selected, gold), movie camera, SVT logo, trophy, paint palette, wrench, checkered flag. Title 'LIVING LEGENDS'. Six car thumbnails in a row below, each with a padlock badge (pale green, tan, light blue, brown, white, red cars); sixth red car highlighted with yellow border. Lower left 'ROOKIE 0%', lower right 'BACK' (triangle) and 'OK' (X) prompts. Visible text: SELECT A CHALLENGE THEME, FORD RACING 2, SVT, LIVING LEGENDS, ROOKIE 0%, BACK, OK. No car names or livery names readable."
+      }
+    ],
+    "classes": [
+      {
+        "id": "race_paused",
+        "description": "In-race view with HUD (position, lap, speed) and a pause indicator. Example: POSITION 6/6, LAP 1/3, 000 MPH, Paused."
+      },
+      {
+        "id": "theme_select_strip",
+        "description": "Challenge-theme icon row plus a car thumbnail strip, with BACK/OK prompts. Example: LIVING LEGENDS with six thumbnails."
+      },
+      {
+        "id": "car_select_labels",
+        "description": "Car selection screen showing readable car names or livery/colour labels. Must quote at least one name."
+      },
+      {
+        "id": "manual_review",
+        "description": "Cannot be placed confidently in any other class; ambiguous or conflicting signals."
+      }
+    ],
+    "purpose": "label observed emulator screens before choosing navigation inputs",
+    "context": "Ford Racing 2 headless capture; classes are mutually exclusive screen types."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 2,
+      "auto": 2,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "race_paused": 1,
+        "theme_select_strip": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "live",
+        "classification": "race_paused",
+        "probabilities": {
+          "race_paused": 1,
+          "theme_select_strip": 0,
+          "car_select_labels": 0,
+          "manual_review": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "slot98",
+        "classification": "theme_select_strip",
+        "probabilities": {
+          "race_paused": 0,
+          "theme_select_strip": 1,
+          "car_select_labels": 0,
+          "manual_review": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 950,
+      "output_tokens": 99
+    }
+  }
+}

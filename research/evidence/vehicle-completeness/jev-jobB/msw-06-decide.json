@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "Is the stored-integer hypothesis for the mark now closed?",
+    "evidence": "6-position screenshot-verified sweep results (slots 140-145, heap base identical 0x473d70, pause-control 0 diffs within pairs). Verified positions: 140=pos1 FORD'49, 141=pos2 '68 MUSTANG, 142=pos3 '55 Thunderbird, 143=pos6 FORD GT, 144=pos6 FORD GT, 145=pos5 Thunderbird Convertible. DECISIVE TEST 1: NO word anywhere in the 32 MiB EE image equals its slot's position in all 6 slots (0 hits at u32/u16/u8). TEST 2: the DAT-table small words do not track position: 0x241b60 reads 5,5,5,4,3,3 across pos1,2,3,6,6,5; 0x241e00 reads 5,5,5,5,4,4. Notably 143 vs 144 (BOTH pos6) differ at 0x241b60 (4 vs 3), so these words track something else (animation/other cursor), not the highlight. Combined with the earlier exhaustive result (no tuple, no flag, no pointer in ANY savestate member), the mark is definitively NOT a stored integer. Remaining possibilities: recomputed per frame, or an encoding not tested (float/bitfield). All headless, read-only + savestate saves; container left paused.",
+    "priorities": "Honest partial result; do not claim what is not shown; a recorded open is acceptable.",
+    "candidates": [
+      {
+        "id": "closed_negative",
+        "description": "Closed as negative: the mark is not a stored EE integer; record open with float-encoding noted untested."
+      },
+      {
+        "id": "float_scan",
+        "description": "Run one float-encoding scan before closing."
+      },
+      {
+        "id": "breakpoint",
+        "description": "Go to a debugger breakpoint now."
+      }
+    ],
+    "requirements": [
+      "Rests on the sweep evidence",
+      "Does not overclaim",
+      "Leaves a next step"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "closed_negative",
+      "escaped": false,
+      "confidence": 0.86,
+      "probabilities": {
+        "breakpoint": 0,
+        "investigate": 0,
+        "closed_negative": 0.89,
+        "ask_user": 0,
+        "none": 0,
+        "float_scan": 0.11
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "closed_negative",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "closed_negative",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "closed_negative",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "float_scan",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "float_scan",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "float_scan",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "breakpoint",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "breakpoint",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "breakpoint",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2159,
+      "output_tokens": 452
+    }
+  }
+}

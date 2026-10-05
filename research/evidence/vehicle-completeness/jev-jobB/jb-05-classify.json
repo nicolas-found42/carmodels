@@ -1,0 +1,116 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "pine_read",
+        "text": "Headless PINE read-only memory read of guest EE RAM."
+      },
+      {
+        "id": "breakpoint",
+        "text": "PCSX2 read/write breakpoint (debugger) in the headless instance."
+      },
+      {
+        "id": "pointer_scan",
+        "text": "Pointer scan on guest memory."
+      },
+      {
+        "id": "keys",
+        "text": "Ordinary controller key delivery via the hidden browser/noVNC."
+      }
+    ],
+    "classes": [
+      {
+        "id": "read_only_ok",
+        "description": "Reads guest state without writing or patching; within the stated read-only constraint. Example: PINE read32."
+      },
+      {
+        "id": "debugger_feature",
+        "description": "A debugger facility (breakpoints/watchpoints) that modifies no guest memory but is a new tool class."
+      },
+      {
+        "id": "needs_confirm",
+        "description": "Writes guest memory or patches code; needs explicit confirmation."
+      }
+    ],
+    "purpose": "sort the remedies by the project constraint",
+    "context": "Job B headless remedies."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 3,
+      "review": 1,
+      "invalid_response": 0,
+      "by_class": {
+        "read_only_ok": 2,
+        "debugger_feature": 1,
+        "needs_confirm": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "pine_read",
+        "classification": "read_only_ok",
+        "probabilities": {
+          "read_only_ok": 1,
+          "debugger_feature": 0,
+          "needs_confirm": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "breakpoint",
+        "classification": "debugger_feature",
+        "probabilities": {
+          "read_only_ok": 0,
+          "debugger_feature": 0.87,
+          "needs_confirm": 0.13
+        },
+        "confidence": 0.8,
+        "margin": 0.74,
+        "top_probability": 0.87,
+        "decision": "auto"
+      },
+      {
+        "id": "pointer_scan",
+        "classification": "read_only_ok",
+        "probabilities": {
+          "read_only_ok": 0.92,
+          "debugger_feature": 0.05,
+          "needs_confirm": 0.03
+        },
+        "confidence": 0.88,
+        "margin": 0.87,
+        "top_probability": 0.92,
+        "decision": "auto"
+      },
+      {
+        "id": "keys",
+        "classification": "needs_confirm",
+        "probabilities": {
+          "read_only_ok": 0.16,
+          "debugger_feature": 0.14,
+          "needs_confirm": 0.7
+        },
+        "confidence": 0.54,
+        "margin": 0.5399999999999999,
+        "top_probability": 0.7,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 731,
+      "output_tokens": 163
+    }
+  }
+}

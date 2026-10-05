@@ -1,0 +1,22 @@
+{
+  "args": {
+    "purpose": "Check the live continuation report's completion boundaries against the underlying validation receipts.",
+    "passage_a": "The official Khronos validator reports zero errors/warnings for all35GLBs. Blender4.5.14 imports all210scenes with source mesh/trianglecounts. The source-named hierarchy covers2246nodes,2051pairs,175roots;2723instructions? actualsourcecheck2623instructions. Runtimecarstatevisibilityandgeometrysemanticsareopen. Stored94mipplane extractionpassesboundscountGSordering, butdynamicGSruntimefidelityopen.",
+    "passage_b": "The continuation matrix states that35GLBs are format valid and210 scenes independently imported, but full recovery remains open. Static namedownership and wheelalternative visibilitywrites are traced. Its sourceinstructionreceipt2623instructions is cited. All94additionalmiplevelsare decoded; actualruntime textureallocation/filter/blendselection remainsunproven.",
+    "aspects": [
+      "format validity",
+      "independent scene count",
+      "source instruction count",
+      "runtime fidelity",
+      "stored mip extraction"
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_compare\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"overall\": {\n    \"relation\": \"same_fact\",\n    \"probabilities\": {\n      \"different_facts\": 0.01,\n      \"same_fact\": 0.94,\n      \"contradicts\": 0.05\n    },\n    \"confidence\": 0.91,\n    \"margin\": 0.8899999999999999,\n    \"decision\": \"auto\"\n  },\n  \"aspects\": [\n    {\n      \"aspect\": \"format validity\",\n      \"relation\": \"same_fact\",\n      \"probabilities\": {\n        \"different_facts\": 0,\n        \"same_fact\": 1,\n        \"contradicts\": 0\n      },\n      \"confidence\": 0.99,\n      \"margin\": 1,\n      \"decision\": \"auto\"\n    },\n    {\n      \"aspect\": \"independent scene count\",\n      \"relation\": \"same_fact\",\n      \"probabilities\": {\n        \"different_facts\": 0,\n        \"same_fact\": 1,\n        \"contradicts\": 0\n      },\n      \"confidence\": 1,\n      \"margin\": 1,\n      \"decision\": \"auto\"\n    },\n    {\n      \"aspect\": \"source instruction count\",\n      \"relation\": \"same_fact\",\n      \"probabilities\": {\n        \"different_facts\": 0.01,\n        \"same_fact\": 0.95,\n        \"contradicts\": 0.04\n      },\n      \"confidence\": 0.93,\n      \"margin\": 0.9099999999999999,\n      \"decision\": \"auto\"\n    },\n    {\n      \"aspect\": \"runtime fidelity\",\n      \"relation\": \"same_fact\",\n      \"probabilities\": {\n        \"different_facts\": 0.14,\n        \"same_fact\": 0.86,\n        \"contradicts\": 0\n      },\n      \"confidence\": 0.78,\n      \"margin\": 0.72,\n      \"decision\": \"auto\"\n    },\n    {\n      \"aspect\": \"stored mip extraction\",\n      \"relation\": \"same_fact\",\n      \"probabilities\": {\n        \"different_facts\": 0.06,\n        \"same_fact\": 0.8099999999999999,\n        \"contradicts\": 0.13\n      },\n      \"confidence\": 0.72,\n      \"margin\": 0.6799999999999999,\n      \"decision\": \"review\"\n    }\n  ],\n  \"thresholds\": {\n    \"auto_accept\": 0.85,\n    \"minimum_margin\": 0.5\n  },\n  \"usage\": {\n    \"input_tokens\": 1290,\n    \"output_tokens\": 259\n  }\n}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "args": {
+    "query": "best way to root the gameflow pointer chain for reading entity+0x64",
+    "candidates": [
+      {
+        "id": "boot_global",
+        "text": "Find the bootstrap global storing the gameflow pointer and read it in the savestate."
+      },
+      {
+        "id": "sig_scan",
+        "text": "Signature-scan the EE image for the entity struct via flags 0x1cd0 at +0x60 and follow back-pointers."
+      },
+      {
+        "id": "record_open",
+        "text": "Record B's store read as attempted with the pointer root unresolved."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "best way to root the gameflow pointer chain for reading entity+0x64",
+    "summary": {
+      "candidates": 3,
+      "returned": 3
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "sig_scan",
+        "relevance": 0.84,
+        "text": "Signature-scan the EE image for the entity struct via flags 0x1cd0 at +0x60 and follow back-pointers."
+      },
+      {
+        "rank": 2,
+        "id": "boot_global",
+        "relevance": 0.83,
+        "text": "Find the bootstrap global storing the gameflow pointer and read it in the savestate."
+      },
+      {
+        "rank": 3,
+        "id": "record_open",
+        "relevance": 0.39,
+        "text": "Record B's store read as attempted with the pointer root unresolved."
+      }
+    ],
+    "usage": {
+      "input_tokens": 550,
+      "output_tokens": 58
+    }
+  }
+}

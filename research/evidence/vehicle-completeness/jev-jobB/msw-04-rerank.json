@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "what to try next for the mark, if anything",
+    "candidates": [
+      {
+        "id": "float_scan",
+        "text": "Scan float/fixed-point encodings of 1..6 across the six slots."
+      },
+      {
+        "id": "breakpoint",
+        "text": "A PCSX2 read/write breakpoint on the draw path (debugger feature)."
+      },
+      {
+        "id": "per_frame",
+        "text": "Accept the mark is recomputed per frame; record open."
+      },
+      {
+        "id": "more_int",
+        "text": "More integer scans."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "what to try next for the mark, if anything",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "breakpoint",
+        "relevance": 0.55,
+        "text": "A PCSX2 read/write breakpoint on the draw path (debugger feature)."
+      },
+      {
+        "rank": 2,
+        "id": "float_scan",
+        "relevance": 0.52,
+        "text": "Scan float/fixed-point encodings of 1..6 across the six slots."
+      },
+      {
+        "rank": 3,
+        "id": "per_frame",
+        "relevance": 0.49,
+        "text": "Accept the mark is recomputed per frame; record open."
+      },
+      {
+        "rank": 4,
+        "id": "more_int",
+        "relevance": 0.47,
+        "text": "More integer scans."
+      }
+    ],
+    "usage": {
+      "input_tokens": 602,
+      "output_tokens": 76
+    }
+  }
+}

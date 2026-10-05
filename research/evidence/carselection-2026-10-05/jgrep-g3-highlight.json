@@ -1,0 +1,16 @@
+[
+  {
+    "file": "0017cb80.c",
+    "start": 1,
+    "end": 60,
+    "p": 0.76,
+    "text": "\nvoid candidate_ee_0017cb80(int *param_1,long param_2)\n\n{\n  int iVar1;\n  int *piVar2;\n  undefined4 *puVar3;\n  int iVar4;\n  undefined4 *puVar5;\n  \n  iVar1 = (**(code **)(&DAT_00237bd0 + *param_1 * 4))();\n  if ((param_2 != 0) && (param_1 != piRam002909b4)) {\n    if (*(int *)param_2 == 1) {\n      piVar2 = &DAT_0036d088 + iVar1 * 2;\n      iVar1 = *piVar2;\n      if (iVar1 == 0x20) {\n        *piVar2 = 0x41;\n      }\n      else if (iVar1 == 0x2e) {\n        *piVar2 = 0x20;\n      }\n      else {\n        *piVar2 = iVar1 + 1;\n        if (0x5a < iVar1 + 1) {\n          *piVar2 = 0x2e;\n        }\n      }\n      FUN_001d4b10(8);\n    }\n    else if (*(int *)param_2 == 4) {\n      piVar2 = &DAT_0036d088 + iVar1 * 2;\n      iVar1 = *piVar2;\n      if (iVar1 == 0x20) {\n        *piVar2 = 0x2e;\n      }\n      else if (iVar1 == 0x2e) {\n        *piVar2 = 0x5a;\n      }\n      else {\n        *piVar2 = iVar1 + -1;\n        if (iVar1 + -1 < 0x41) {\n          *piVar2 = 0x20;\n        }\n      }\n      FUN_001d4b10(8);\n    }\n  }\n  iVar4 = 0;\n  iVar1 = 0;\n  puVar5 = &DAT_0036d088;\n  do {\n    iVar4 = iVar4 + 1;\n    puVar3 = (undefined4 *)(&DAT_0036d078 + iVar1);\n    (**(code **)(&DAT_00239070 + *(int *)*puVar3 * 4))((int *)*puVar3,puVar5);\n    FUN_0016a620(*(undefined4 *)(&DAT_0036d058 + iVar1),*puVar3);\n    FUN_0016a620(*(undefined4 *)(&DAT_0036d068 + iVar1),*puVar3);\n    iVar1 = iVar4 * 4;\n    puVar5 = puVar5 + 2;\n  } while (iVar4 < 3);\n  return;"
+  },
+  {
+    "file": "00184430.c",
+    "start": 1,
+    "end": 33,
+    "p": 0.76,
+    "text": "\nvoid candidate_ee_00184430(undefined8 param_1,long param_2)\n\n{\n  uint uVar1;\n  \n  if (param_2 != 0) {\n    if (*(int *)param_2 == 3) {\n      if (iRam0028fd70 == 1) {\n        uVar1 = uRam0028fd74 + 1;\n        uRam0028fd74 = 1;\n        if (uVar1 < 4) {\n          uRam0028fd74 = uVar1;\n        }\n      }\n      FUN_001d4b10(6);\n    }\n    else if (*(int *)param_2 == 2) {\n      if (iRam0028fd70 == 1) {\n        uVar1 = uRam0028fd74 - 1;\n        uRam0028fd74 = 3;\n        if (uVar1 != 0) {\n          uRam0028fd74 = uVar1;\n        }\n      }\n      FUN_001d4b10(6);\n    }\n  }\n  FUN_00183fb8();\n  return;\n}\n\n"
+  }
+]

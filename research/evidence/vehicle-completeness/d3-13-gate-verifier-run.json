@@ -1,0 +1,153 @@
+{
+  "args": {
+    "request": "Close geometry/texture/livery/matrix/GLB extraction on the independent verifier's real output.",
+    "diff": "ran tools/verify_recovered_asset_index.py -> VERIFY OK: 35 cars, 2579 assets, producer_receipt_set_equality true, per_car_producer_record_equality true, corrupt_manifest_hash_rejected true, rehashed_cross_car_model_swap_rejected true, rehashed_schema_fidelity_status_limits_controls_rejected true, index_sha256 9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe (canonical unchanged)",
+    "claims": [
+      "All 35 cars and 2579 canonical assets hash-check against producer receipts.",
+      "Roster, index and disk agree; per-car records equal producer receipts.",
+      "Four negative-control families reject corruption.",
+      "Render fidelity remains unclaimed."
+    ],
+    "evidence": "research/evidence/continuation/source-refresh/recovered-asset-index-validation.json: {cars: 35, assets: 2579, producer_receipt_set_equality: true, per_car_producer_record_equality: true, corrupt_manifest_hash_rejected: true, rehashed_cross_car_model_swap_rejected: true, rehashed_schema_fidelity_status_limits_controls_rejected: true, result: VERIFY OK, index_sha256: 9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe}. Index status: Asset/index integrity checked. Rendering-fidelity completion not asserted. Scope note: config txt, data DAT and sound chains are in the corpus but outside this index."
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claim_confidence_low"
+    ],
+    "review": {
+      "safe_to_apply": 0.46,
+      "scores": {
+        "correctness": {
+          "score": 1.07,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.3,
+            "1": 0.33,
+            "2": 0.37
+          }
+        },
+        "spec_match": {
+          "score": 0.92,
+          "confidence": 0.3,
+          "probabilities": {
+            "0": 0.27,
+            "1": 0.54,
+            "2": 0.19
+          }
+        },
+        "test_gap": {
+          "score": 0.71,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.51,
+            "1": 0.26,
+            "2": 0.23
+          }
+        },
+        "blast_radius": {
+          "score": 1.02,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.36,
+            "1": 0.26,
+            "2": 0.38
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.52225,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "correctness",
+        "test_gap",
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 4,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "All 35 cars and 2579 canonical assets hash-check against producer receipts.",
+          "verdict": "verified",
+          "confidence": 0.83,
+          "probabilities": {
+            "contradicted": 0.01,
+            "verified": 0.88,
+            "unsupported": 0.11
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "Roster, index and disk agree; per-car records equal producer receipts.",
+          "verdict": "verified",
+          "confidence": 0.27,
+          "probabilities": {
+            "contradicted": 0.03,
+            "verified": 0.51,
+            "unsupported": 0.46
+          },
+          "action": "escalate"
+        },
+        {
+          "claim": "Four negative-control families reject corruption.",
+          "verdict": "verified",
+          "confidence": 0.89,
+          "probabilities": {
+            "contradicted": 0.01,
+            "verified": 0.92,
+            "unsupported": 0.07
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "Render fidelity remains unclaimed.",
+          "verdict": "verified",
+          "confidence": 0.96,
+          "probabilities": {
+            "contradicted": 0,
+            "verified": 0.97,
+            "unsupported": 0.03
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 1922,
+      "output_tokens": 238
+    }
+  }
+}

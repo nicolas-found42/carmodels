@@ -1,0 +1,49 @@
+{
+  "args": {
+    "query": "strongest evidence that CAR_SND_CARn -> carN_snd is not off by one",
+    "candidates": [
+      {
+        "id": "sample_names",
+        "text": "49_COUPE inherits CAR_SND_CAR6 and its samples are literally MASTER_SOUND_SAMPLE_CAR6_*."
+      },
+      {
+        "id": "bank_file",
+        "text": "The digit comes from the CARn_SOUND_FILE token, not from the CAR_SND_CARn number."
+      },
+      {
+        "id": "table_index",
+        "text": "The executable table 'carN_snd:B:O:C' carries a 0..7 base index that could disagree with the name."
+      }
+    ],
+    "top_k": 3
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "strongest evidence that CAR_SND_CARn -> carN_snd is not off by one",
+    "exists": 0.88,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "sample_names",
+        "probability": 0.89,
+        "text": "49_COUPE inherits CAR_SND_CAR6 and its samples are literally MASTER_SOUND_SAMPLE_CAR6_*."
+      },
+      {
+        "id": "bank_file",
+        "probability": 0.09,
+        "text": "The digit comes from the CARn_SOUND_FILE token, not from the CAR_SND_CARn number."
+      },
+      {
+        "id": "table_index",
+        "probability": 0.02,
+        "text": "The executable table 'carN_snd:B:O:C' carries a 0..7 base index that could disagree with the name."
+      }
+    ],
+    "usage": {
+      "input_tokens": 553,
+      "output_tokens": 59
+    }
+  }
+}

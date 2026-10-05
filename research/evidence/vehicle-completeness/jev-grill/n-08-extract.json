@@ -1,0 +1,98 @@
+{
+  "args": {
+    "document": "carselection bridge: no FORD'49 / TXT_CARS_* label bytes in slot102 EE (labels via text archive + glyphs). Static leads: FUN_0019eb90 reads the livery label via static table VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL), resolves via FUN_00125640, stores via FUN_00121e10; VA_0x23acb0 = 0x0028f7c8 stable across captures. jgrep hits: 0017cb80 (initials cycler, discarded), 00184430 (1..3 cursor on uRam0028fd74, reads 0 in all three), 001c4a40 (indexed cursor over DAT_00241b40, caller open). VA_0x241b60 = 5,4,4 (does not track highlight). Three-way triangulation: (1,5,4) 0 hits; (0,4,3) words 0 hits; (0,4,3) bytes 97 hits in VU regions, no menu-struct candidate; scratchpad 121 changed words all float VU noise. Screens: highlight 1/5/4 -> 49_COUPE / THUNDERBIRD_2002 / FORTYNINE, all DEFAULT livery. Jev round-1 noul: 'an isolated EE word that tracks the highlight exists' = 0.13 unlikely; 'deriving the store address from the FUN_0019eb90 chain will name it' = 0.29 uncertain; 'value-only match sufficient' = 0.09 unlikely. Round-1 decide chose trace_store 0.96.",
+    "fields": [
+      {
+        "id": "cursor",
+        "pattern": "DAT_00241b40",
+        "description": "the indexed cursor table address"
+      },
+      {
+        "id": "store_fn",
+        "pattern": "FUN_00121e10",
+        "description": "the store function"
+      },
+      {
+        "id": "word_hits",
+        "pattern": "words [0-9]+ hits",
+        "description": "word-level triangulation count"
+      },
+      {
+        "id": "unlikely_p",
+        "pattern": "= 0.13 unlikely",
+        "description": "the noul probability that an isolated word exists"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 4,
+      "extracted": 4,
+      "auto": 4,
+      "review": 0,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "cursor",
+        "value": "DAT_00241b40",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.91,
+        "top_probability": 0.96,
+        "margin": 0.9199999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "store_fn",
+        "value": "FUN_00121e10",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.96,
+        "top_probability": 0.98,
+        "margin": 0.96,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "word_hits",
+        "value": "words 0 hits",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.92,
+        "top_probability": 0.96,
+        "margin": 0.9199999999999999,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "unlikely_p",
+        "value": "= 0.13 unlikely",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.87,
+        "top_probability": 0.93,
+        "margin": 0.8600000000000001,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1283,
+      "output_tokens": 139
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "Job B (per-screen selector) is blocked because a PAUSED savestate carries no live pointers (arXiv 2503.15065; 2307.12060). Named: the livery store is entity+0x64 via FUN_00121e10; resolver FUN_00125640 over record base 0x233070+type*0x114; chain outer+4 -> +0x14c -> +0x174 = entity. New decompilation fact: FUN_0019c310 writes the gameflow pointer at outer+4 -> +0x14c, and its caller FUN_001de3d8 originates it. FUN_001c4540 iterates the car-entity list from a STATIC global (iRam00290278, EE ~0x290278; +8 = list head, +0xc = next). The cursor fn FUN_001c4a40 indexes DAT_00241b40 by a per-entity type byte. So at least one stable EE address (0x290278) can be read live. PCSX2 has: (a) in-emulator read/write BREAKPOINTS (CBreakPoints, BREAKPOINT_EE/IOP; iR5900.cpp dynarecMemcheck) - a debugger feature; (b) PINE IPC live guest memory read/write (PINE.cpp MsgRead8..64) exposed by the headless container helper (currently identity/save/load at slot 28193). Constraint: run EVERYTHING headless (Docker + Xvfb, fr2-recovery-headless); the user is using the host - no focus stealing on the Mac. Prior constraint from handoff: ordinary controller input + read-only/capture APIs only, no guest-memory writes/cheats/patches.",
+    "records": [
+      {
+        "id": "store",
+        "request": "extract store",
+        "value": "entity+0x64"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "store",
+        "value": "entity+0x64",
+        "checks": {
+          "hallucinated": 0.05,
+          "off_target": 0.15,
+          "incomplete": 0.23,
+          "format": 0.15
+        },
+        "p_wrong": 0.23,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1165,
+      "output_tokens": 86
+    }
+  }
+}

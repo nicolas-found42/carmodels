@@ -1,0 +1,107 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "A",
+        "text": "Sound verdict recorded consistent; no verifier change."
+      },
+      {
+        "id": "B",
+        "text": "Root via bootstrap global (fallback sig_scan), read entity+0x64, one bounded pass, definite outcome."
+      },
+      {
+        "id": "C",
+        "text": "One tool: 3-pair regression + all 35 cars + controls + gate."
+      },
+      {
+        "id": "closure",
+        "text": "Receipt + jev_gate per thread plus a completion report."
+      }
+    ],
+    "classes": [
+      {
+        "id": "specified",
+        "description": "The plan states exactly what to do and what outcome counts. Example: the rooting primary+fallback."
+      },
+      {
+        "id": "vague",
+        "description": "Still open to interpretation; could block the session."
+      }
+    ],
+    "purpose": "confirm every plan step is now specified, none vague",
+    "context": "Final confirmation."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 1,
+      "review": 3,
+      "invalid_response": 0,
+      "by_class": {
+        "vague": 3,
+        "specified": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "A",
+        "classification": "vague",
+        "probabilities": {
+          "specified": 0.43,
+          "vague": 0.57
+        },
+        "confidence": 0.13,
+        "margin": 0.13999999999999996,
+        "top_probability": 0.57,
+        "decision": "review"
+      },
+      {
+        "id": "B",
+        "classification": "specified",
+        "probabilities": {
+          "specified": 0.99,
+          "vague": 0.01
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "C",
+        "classification": "vague",
+        "probabilities": {
+          "specified": 0.29,
+          "vague": 0.71
+        },
+        "confidence": 0.41,
+        "margin": 0.42,
+        "top_probability": 0.71,
+        "decision": "review"
+      },
+      {
+        "id": "closure",
+        "classification": "vague",
+        "probabilities": {
+          "specified": 0.37,
+          "vague": 0.63
+        },
+        "confidence": 0.26,
+        "margin": 0.26,
+        "top_probability": 0.63,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 666,
+      "output_tokens": 131
+    }
+  }
+}

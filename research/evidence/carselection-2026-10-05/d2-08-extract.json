@@ -1,0 +1,149 @@
+{
+  "args": {
+    "document": "slot102 sha 6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7 slot103 sha b5e569fcc561fa3a5408f6eb0a7a6497594e52bdb26f5cdb2dbfeed31dc56c3e slot104 sha 74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694 labels VEHICLE: FORD '49; VEHICLE: THUNDERBIRD CONVERTIBLE; VEHICLE: FORTYNINE CONCEPT. slots 101,102,103,104; record base 0x233070; tables 0x0143b736 0x0157e365.",
+    "fields": [
+      {
+        "id": "slot102_sha",
+        "pattern": "slot102 sha [0-9a-f]{64}",
+        "description": "full hex sha256 of the slot102 savestate"
+      },
+      {
+        "id": "slot104_sha",
+        "pattern": "slot104 sha [0-9a-f]{64}",
+        "description": "full hex sha256 of the slot104 savestate"
+      },
+      {
+        "id": "label_ford49",
+        "pattern": "VEHICLE: FORD '49",
+        "description": "vehicle label shown on the car-1 screen"
+      },
+      {
+        "id": "label_tbird",
+        "pattern": "VEHICLE: THUNDERBIRD CONVERTIBLE",
+        "description": "vehicle label shown on the car-5 screen"
+      },
+      {
+        "id": "label_49concept",
+        "pattern": "VEHICLE: FORTYNINE CONCEPT",
+        "description": "vehicle label shown on the car-4 screen"
+      },
+      {
+        "id": "rec_base",
+        "pattern": "0x233070",
+        "description": "EE base of the selector-record array"
+      },
+      {
+        "id": "table1",
+        "pattern": "0x0143b736",
+        "description": "EE address of the first livery-name table in slot102"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 7,
+      "extracted": 7,
+      "auto": 5,
+      "review": 2,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "slot102_sha",
+        "value": "slot102 sha 6e39717778e9887c2fe65a370098c391ab974a0d109d60d74d6c0b3afa47f1e7",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.14,
+        "top_probability": 0.57,
+        "margin": 0.13999999999999996,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "slot104_sha",
+        "value": "slot104 sha 74acb509d464d9def05f5a233a5b79142ff12534ac9c21415ecb44d821940694",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.38,
+        "top_probability": 0.69,
+        "margin": 0.37999999999999995,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "label_ford49",
+        "value": "VEHICLE: FORD '49",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.99,
+        "top_probability": 1,
+        "margin": 1,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "label_tbird",
+        "value": "VEHICLE: THUNDERBIRD CONVERTIBLE",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.99,
+        "top_probability": 1,
+        "margin": 1,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "label_49concept",
+        "value": "VEHICLE: FORTYNINE CONCEPT",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.99,
+        "top_probability": 1,
+        "margin": 1,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "rec_base",
+        "value": "0x233070",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.98,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "table1",
+        "value": "0x0143b736",
+        "status": "auto",
+        "reason": null,
+        "confidence": 0.99,
+        "top_probability": 0.99,
+        "margin": 0.98,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1822,
+      "output_tokens": 241
+    }
+  }
+}

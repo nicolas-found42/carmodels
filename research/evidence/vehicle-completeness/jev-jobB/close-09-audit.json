@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "{\n  \"summary\": \"Headless read-only PINE reaches the live car-entity chain, but the per-screen highlight is not stored as a readable EE integer or pointer in any of the three savestates; Job B stays a recorded-open definite outcome.\",\n  \"live_chain\": {\n    \"slot102\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot103\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    },\n    \"slot104\": {\n      \"status_after\": 1,\n      \"manager_global\": 4668784,\n      \"nodes\": 6,\n      \"type_bytes\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    }\n  },\n  \"live_chain_resolves\": true,\n  \"named_store\": {\n    \"offset\": \"entity+0x64 (node+0x10+0x64)\",\n    \"type\": \"float (FUN_00121e10)\",\n    \"entity_floats_car1_6\": [\n      \"0x3f7f8382\",\n      \"0x3f7ffed3\",\n      \"0x3f55bdc1\",\n      \"0x3f800000\",\n      \"0x3f6d40bf\",\n      \"0x3f712801\"\n    ]\n  },\n  \"exhaustive_tuple_scan\": {\n    \"u32\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 0\n    },\n    \"u16\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 2\n    },\n    \"u8\": {\n      \"tuple_154_hits\": 0,\n      \"tuple_043_hits\": 97\n    }\n  },\n  \"ee_image_sha256\": {\n    \"slot102\": \"c8167b6ec2c4f43ad7c3ff968249fbb4b3802011a3b2d72feac7d1ffef34239f\",\n    \"slot103\": \"8e5af5b2605d708d8c78d51e4168c30e6961f234527482964ca09c2303a5adcc\",\n    \"slot104\": \"26cdd8fef7f7b3ccf76ccc8b7a2cc1814c8921c65b9f9137765b99668c14eba2\"\n  },\n  \"control_tuple154_zero_all_widths\": true,\n  \"control_tuple043_only_byte_noise\": true,\n  \"control_live_chain_resolves\": true,\n  \"control_store_is_float\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"three captured savestates (live-loaded) + exhaustive EE tuple scan; read-only\",\n  \"result\": \"VERIFY OK\"\n}\n",
+    "records": [
+      {
+        "id": "u32_154",
+        "request": "extract u32_154",
+        "value": "0"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "u32_154",
+        "value": "0",
+        "checks": {
+          "hallucinated": 0.05,
+          "off_target": 0.07,
+          "incomplete": 0.16,
+          "format": 0.1
+        },
+        "p_wrong": 0.16,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1553,
+      "output_tokens": 86
+    }
+  }
+}

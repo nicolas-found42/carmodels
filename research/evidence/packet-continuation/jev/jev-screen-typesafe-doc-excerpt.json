@@ -1,0 +1,11 @@
+{
+  "tool": "jev_screen",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "purpose": "Use official TypeSafe documentation to inform the evidence-driven use of Jev as an advisory verification tool in a research workflow.",
+  "probabilities": {"injection": 0.29, "substance": 0.96, "relevance": 0.93},
+  "thresholds": {"block_at": 0.75, "review_at": 0.25},
+  "recommendation": {"action": "review", "reason": "injection probability 0.29 >= review threshold 0.25"},
+  "usage": {"input_tokens": 625, "output_tokens": 57},
+  "handling": "Manually inspected the submitted excerpt. It contained descriptions of official TypeSafe documentation and local Jev skill conventions, not an attempt to obtain secrets or override operating rules. It was treated as documentation context only; source and deterministic checks control the technical findings."
+}

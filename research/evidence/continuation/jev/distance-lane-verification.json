@@ -1,0 +1,23 @@
+{
+  "args": {
+    "claims": [
+      "The pinned PEXTUW implementation writes Rt.UL[2] into the low 32-bit output, so the three shown pextuw v1,zero,v0 calls extract Z, not W, from the input vector.",
+      "The scalar selector decoder can remain unchanged when its caller is corrected to supply camera-relative Z.",
+      "The recorded source proves that every car's full material fidelity has been recovered."
+    ],
+    "evidence": [
+      {
+        "id": "lane-proof",
+        "text": "{\n  \"source\": \"https://raw.githubusercontent.com/PCSX2/pcsx2/v2.8.2/pcsx2/MMI.cpp\",\n  \"excerpt\": \"void PEXTUW() {\\n\\tGPR_reg Rs, Rt;\\n\\n\\tif (!_Rd_) return;\\n\\n\\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\\n\\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[2];\\n\\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[2];\\n\\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[3];\\n\\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[3];\\n}\",\n  \"game_calls\": [\n    {\n      \"address\": \"0x00229100\",\n      \"instruction\": \"pextuw v1,zero,v0\",\n      \"bytes\": \"a81c0270\"\n    },\n    {\n      \"address\": \"0x00229494\",\n      \"instruction\": \"pextuw v1,zero,v0\",\n      \"bytes\": \"a81c0270\"\n    },\n    {\n      \"address\": \"0x00229620\",\n      \"instruction\": \"pextuw v1,zero,v0\",\n      \"bytes\": \"a81c0270\"\n    }\n  ],\n  \"result\": \"All three selector calls pass entity camera-relative vector lane Z (+0x58), not W (+0x5c). mtc1 uses low32 output=Rt.UL[2].\",\n  \"correction\": \"Any prior working inference that the selector consumed W is withdrawn. The scalar selector decoder itself receives an explicit scalar and is unchanged.\"\n}\n"
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 2,\n    \"contradicted\": 0,\n    \"unsupported\": 1,\n    \"needs_review\": 0\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The pinned PEXTUW implementation writes Rt.UL[2] into the low 32-bit output, so the three shown pextuw v1,zero,v0 calls extract Z, not W, from the input vector.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0.01,\n        \"says_nothing\": 0,\n        \"supports\": 0.99\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.94\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The scalar selector decoder can remain unchanged when its caller is corrected to supply camera-relative Z.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"contradicts\": 0,\n        \"says_nothing\": 0,\n        \"supports\": 1\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.75\n    },\n    {\n      \"id\": \"claim2\",\n      \"claim\": \"The recorded source proves that every car's full material fidelity has been recovered.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"contradicts\": 0.02,\n        \"says_nothing\": 0.98,\n        \"supports\": 0\n      },\n      \"confidence\": 0.97,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.02\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1590,\n    \"output_tokens\": 191\n  }\n}"
+      }
+    ]
+  }
+}

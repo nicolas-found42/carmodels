@@ -1,0 +1,118 @@
+{
+  "args": {
+    "decision": "Which breakpoint-road option should we execute?",
+    "evidence": "Breakpoint-road feasibility findings (all verified in the headless container): PCSX2 v2.8.2 AppImage binary contains ZERO gdb strings: no GDB stub. The debugger GUI has no remote/IPC API (only a forum request exists upstream). hkmodd/PCSX2-MCP DebugServer patch is Windows-only (pcsx2-qt.exe/MSVC); Linux needs a full PCSX2 source build + patch (hours, GBs, risky inside the running container). Driving the debugger GUI blind via RFB keys is infeasible: F8 screenshots capture only the emulated game screen, never the Qt debugger window, so there is zero visibility into debugger state. What REMAINS feasible headlessly: (a) static analysis of the menu INPUT handler in the decompilation - find which variable the d-pad handler increments when moving the highlight (read-only, headless, no new tool); then verify the variable live via read-only PINE across the six screenshot-verified slots; (b) full PCSX2 source build + DebugServer patch; (c) stop and record open. NOTE: the sweep proved no EE word equals position 1..6, so the handler more likely writes an index into a table, a pointer, or a per-frame recomputation - the variable may still be found and read even if it is not position-valued.",
+    "priorities": "Headless, verifiable, smallest risk; read-only preferred; user approved proceeding; an honest open stays acceptable.",
+    "candidates": [
+      {
+        "id": "input_handler",
+        "description": "Static analysis of the menu input handler to name the highlight variable; verify live via read-only PINE across the six verified slots."
+      },
+      {
+        "id": "source_build",
+        "description": "Full PCSX2 source build + DebugServer patch inside the container."
+      },
+      {
+        "id": "blind_gui",
+        "description": "Drive the debugger GUI blind via RFB."
+      },
+      {
+        "id": "stop",
+        "description": "Record open without further attempts."
+      }
+    ],
+    "requirements": [
+      "Headless and verifiable",
+      "Low risk to the running container",
+      "Read-only unless approved"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "input_handler",
+      "escaped": false,
+      "confidence": 1,
+      "probabilities": {
+        "source_build": 0,
+        "stop": 0,
+        "none": 0,
+        "input_handler": 1,
+        "investigate": 0,
+        "blind_gui": 0,
+        "ask_user": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "input_handler",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "input_handler",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "input_handler",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "source_build",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "source_build",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "source_build",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "blind_gui",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "blind_gui",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "blind_gui",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "stop",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2553,
+      "output_tokens": 602
+    }
+  }
+}

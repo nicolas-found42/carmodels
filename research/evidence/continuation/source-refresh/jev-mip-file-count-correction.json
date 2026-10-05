@@ -1,0 +1,11 @@
+{
+  "judgment": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 1,\n    \"contradicted\": 1,\n    \"unsupported\": 0,\n    \"needs_review\": 1\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The extra mip recovery produces 188 raw-alpha and display-alpha PNGs.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"supports\": 0.01,\n        \"contradicts\": 0.99,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.98,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.5\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The mip recovery produces 94 raw binary image planes and 94 decoded RGBA PNGs, preserving stored alpha.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.6900000000000001,\n        \"contradicts\": 0.31,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.53,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.88\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 983,\n    \"output_tokens\": 128\n  }\n}"
+      }
+    ]
+  },
+  "disposition": "The incorrect 188-PNG statement is withdrawn. Independent filesystem count and mip-index records agree on 94 stored-alpha PNGs plus 94 verbatim binary planes. The positive wording remains model review; deterministic counts and source-span hashes support the correction."
+}

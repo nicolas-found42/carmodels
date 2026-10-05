@@ -1,0 +1,14 @@
+{
+  "args": {
+    "purpose": "Verify the actual number of configurable macro buttons per controller so the headless game uses valid isolated keyboard bindings.",
+    "text": "Traceback (most recent call last):\n  File \"<stdin>\", line 2, in <module>\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py\", line 787, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py\", line 771, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'research/evidence/continuation/runtime/Pad-v2.8.2.h'\n"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.03,\n    \"substance\": 0.11,\n    \"relevance\": 0.04\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"skip\",\n    \"reason\": \"little substantive content (substance 0.11)\"\n  },\n  \"usage\": {\n    \"input_tokens\": 825,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

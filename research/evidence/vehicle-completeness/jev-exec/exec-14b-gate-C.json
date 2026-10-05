@@ -1,0 +1,140 @@
+{
+  "args": {
+    "request": "Gate thread C (car-keyed display-name table).",
+    "diff": "#!/usr/bin/env python3\n\"\"\"T3 \u2014 resolve the three captured VEHICLE labels from the language archive.\n\nReads each captured car's INGAME_TEXT_ENUM from the reference CARDATA block, then\nresolves it through the game's LANGUAGE/tlate_en.dat;1 (UTF-16-LE, keys TXT_CARS_*)\nin code, and asserts the resolved string equals the on-screen VEHICLE label.\nThe apostrophe is taken byte-exact from the archive (raw UTF-16 bytes must appear\nverbatim in the archive), never from a vision transcript.\n\nScope: the three captured pairs only (slot102/103/104). No 136-entry table.\n\nReceipt: research/evidence/vehicle-completeness/t3-display-name-resolution-validation.json\nbridge-three-screens.json is updated with the resolved rows ONLY when all three pass.\nExit 0 + \"VERIFY OK\" only on pass.\n\"\"\"\nimport hashlib\nimport json\nimport re\nimport sys\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT / \"tools\"))\nimport build_reference as B  # reuse the exact tlate parser + paths\n\nCORPUS = ROOT / \"reference/ford\"\nTLATE = B.SRC / \"LANGUAGE/tlate_en.dat;1\"\nBRIDGE = ROOT / \"research/evidence/carselection-2026-10-05/bridge-three-screens.json\"\nOUT = ROOT / \"research/evidence/vehicle-completeness/t3-display-name-resolution-validation.json\"\nFULL_OUT = ROOT / \"research/evidence/vehicle-completeness/full-display-name-table.json\"\n\n\ndef parse_tlate(data: bytes) -> dict:\n    \"\"\"Same parse as build_reference.py: UTF-16-LE, TXT_CARS_* lines.\"\"\"\n    text = data.decode(\"utf-16-le\", \"replace\")\n    txt = {}\n    for line in text.split(\"\\r\\n\"):\n        line = line.strip(\"\\ufeff\").strip()\n        if line.startswith(\"TXT_CARS_\") and \" \" in line:\n            k, v = line.split(\" \", 1)\n            txt[k] = v.strip()\n    return txt\n\n\ndef cardata_enum(car_type: str):\n    \"\"\"INGAME_TEXT_ENUM for a car from its extracted reference CARDATA block.\"\"\"\n    path = CORPUS / \"cars\" / car_type / \"config/cardata.txt\"\n    if not path.is_file():\n        raise ValueError(f\"missing reference cardata for {car_type}\")\n    block = path.read_bytes()\n    m = re.search(rb\"(?m)^:INGAME_TEXT_ENUM[ \\t]+(\\S+)[ \\t]*\\r?$\", block)\n    return m.group(1).decode() if m else None\n\n\ndef check():\n    if not TLATE.is_file():\n        raise ValueError(f\"language archive missing: {TLATE}\")\n    raw = TLATE.read_bytes()\n    txt = parse_tlate(raw)\n    bridge = json.loads(BRIDGE.read_text())\n    screens = bridge[\"screens\"]\n\n    rows = []\n    for s in screens:\n        car_type = s[\"car_type\"]\n        expected_enum = s[\"ingame_text_enum\"]\n        label = s[\"vehicle\"]\n\n        enum = cardata_enum(car_type)\n        if enum != expected_enum:\n            raise ValueError(f\"{car_type}: CARDATA enum {enum!r} != bridge enum {expected_enum!r}\")\n        resolved = txt.get(enum)\n        if resolved is None:\n            raise ValueError(f\"{car_type}: key {enum} absent from tlate_en archive\")\n        if resolved != label:\n            raise ValueError(f\"{car_type}: resolved {resolved!r} != VEHICLE label {label!r}\")\n        # byte-exact: the raw UTF-16-LE bytes of the resolved string must occur verbatim\n        needle = resolved.encode(\"utf-16-le\")\n        if needle not in raw:\n            raise ValueError(f\"{car_type}: resolved string bytes not verbatim in archive\")\n        rows.append({\n            \"capture\": s[\"capture\"],\n            \"car_type\": car_type,\n            \"ingame_text_enum\": enum,\n            \"resolved_string\": resolved,\n            \"vehicle_label_on_screen\": label,\n            \"labels_equal\": True,\n            \"utf16le_bytes_hex\": needle.hex(),\n            \"apostrophe_raw_0x27_present\": (b\"\\x27\\x00\" in needle),\n            \"archive_verbatim\": True,\n            \"pass\": True,\n        })\n\n    result = {\n        \"archive_path\": str(TLATE.relative_to(B.SRC)),\n        \"archive_sha256\": hashlib.sha256(raw).hexdigest(),\n        \"archive_bytes\": len(raw),\n        \"encoding\": \"utf-16-le\",\n        \"pairs\": len(rows),\n        \"rows\": rows,\n        \"all_pairs_pass\": all(r[\"pass\"] for r in rows),\n    }\n\n    # ---- negative controls ----\n    # NC1 a label lacking the archive's apostrophe must NOT equal the resolution\n    wrong = rows[0][\"resolved_string\"].replace(\"'\", \"\")\n    if wrong == rows[0][\"resolved_string\"]:\n        raise ValueError(\"control setup: expected an apostrophe in the resolved string\")\n    result[\"control_apostrophe_stripped_label_rejected\"] = (wrong != rows[0][\"resolved_string\"])\n\n    # NC2 a wrong archive key must not resolve to the label\n    bogus = txt.get(\"TXT_CARS_NOT_A_REAL_KEY\")\n    result[\"control_unknown_key_unresolved\"] = (bogus is None)\n\n    # NC3 CARDATA enum must actually be the bridge enum (guards a silent remap)\n    result[\"control_enum_matches_cardata\"] = all(\n        cardata_enum(r[\"car_type\"]) == r[\"ingame_text_enum\"] for r in rows)\n    return result, bridge, raw\n\n\ndef corpus_enum(car_type: str):\n    \"\"\"INGAME_TEXT_ENUM for a car from its extracted reference CARDATA block.\"\"\"\n    path = CORPUS / \"cars\" / car_type / \"config/cardata.txt\"\n    if not path.is_file():\n        raise ValueError(f\"missing reference cardata for {car_type}\")\n    m = re.search(rb\"(?m)^:INGAME_TEXT_ENUM[ \\t]+(\\S+)[ \\t]*\\r?$\", path.read_bytes())\n    return m.group(1).decode() if m else None\n\n\ndef check_full_table(raw: bytes, txt: dict):\n    \"\"\"Every car in the corpus resolves its CARDATA enum through the archive, byte-exact.\n\n    The car-keyed display-name table: all 35 cars, not the three captured pairs.\n    \"\"\"\n    cars = sorted(json.loads((CORPUS / \"inventory.json\").read_text())[\"cars\"])\n    rows = []\n    for code in cars:\n        enum = corpus_enum(code)\n        if enum is None:\n            raise ValueError(f\"{code}: no INGAME_TEXT_ENUM in reference CARDATA\")\n        s = txt.get(enum)\n        if s is None:\n            raise ValueError(f\"{code}: enum {enum} absent from tlate_en archive\")\n        if s.encode(\"utf-16-le\") not in raw:\n            raise ValueError(f\"{code}: resolved string bytes not verbatim in archive\")\n        rows.append({\"car_type\": code, \"ingame_text_enum\": enum, \"resolved_string\": s,\n                     \"archive_verbatim\": True, \"pass\": True})\n    if len(rows) != 35:\n        raise ValueError(f\"car-keyed table has {len(rows)} rows, expected 35\")\n    return {\"rows\": len(rows), \"car_keyed_table\": rows,\n            \"all_35_pass\": all(r[\"pass\"] for r in rows)}\n\n\ndef main() -> int:\n    result, bridge, raw = check()\n    txt = parse_tlate(raw)\n    full = check_full_table(raw, txt)\n    result[\"full_car_keyed_table\"] = full\n    result[\"control_full_unknown_key_unresolved\"] = (txt.get(\"TXT_CARS_UNKNOWN_KEY_XYZ\") is None)\n    ap = next((r for r in full[\"car_keyed_table\"] if \"'\" in r[\"resolved_string\"]), None)\n    result[\"control_full_apostrophe_present_and_byte_exact\"] = (\n        ap is not None and ap[\"resolved_string\"].replace(\"'\", \"\") != ap[\"resolved_string\"]\n        and ap[\"resolved_string\"].encode(\"utf-16-le\") in raw)\n\n    ok = (result[\"all_pairs_pass\"]\n          and result[\"control_apostrophe_stripped_label_rejected\"]\n          and result[\"control_unknown_key_unresolved\"]\n          and result[\"control_enum_matches_cardata\"]\n          and full[\"all_35_pass\"]\n          and result[\"control_full_unknown_key_unresolved\"]\n          and result[\"control_full_apostrophe_present_and_byte_exact\"])\n\n    if ok:\n        # update bridge only on pass; idempotent (replace, not append)\n        by_capture = {r[\"capture\"]: r for r in result[\"rows\"]}\n        for s in bridge[\"screens\"]:\n            r = by_capture[s[\"capture\"]]\n            s[\"display_name_resolution\"] = {\n                \"archive_path\": result[\"archive_path\"],\n                \"archive_sha256\": result[\"archive_sha256\"],\n                \"key\": r[\"ingame_text_enum\"],\n                \"resolved_string\": r[\"resolved_string\"],\n                \"matches_vehicle_label\": True,\n                \"utf16le_bytes_hex\": r[\"utf16le_bytes_hex\"],\n                \"apostrophe_raw_0x27_present\": r[\"apostrophe_raw_0x27_present\"],\n            }\n        bridge[\"display_name_resolution_summary\"] = {\n            \"method\": \"LANGUAGE/tlate_en.dat;1 UTF-16-LE keys resolved in code; apostrophe byte-exact from archive\",\n            \"pairs\": result[\"pairs\"],\n            \"all_pass\": True,\n            \"archive_sha256\": result[\"archive_sha256\"],\n        }\n        BRIDGE.write_text(json.dumps(bridge, indent=1) + \"\\n\")\n        result[\"bridge_updated\"] = True\n    else:\n        result[\"bridge_updated\"] = False\n\n    result[\"result\"] = \"VERIFY OK\" if ok else \"VERIFY FAILED\"\n    result[\"scope\"] = (\"three captured pairs (T3 regression) + full car-keyed display-name table (35 cars); \"\n                       \"no 136-entry table\")\n    result[\"render_fidelity_complete\"] = False\n    OUT.parent.mkdir(parents=True, exist_ok=True)\n    OUT.write_text(json.dumps(result, indent=2) + \"\\n\")\n    FullReceipt = {\"archive_path\": result[\"archive_path\"], \"archive_sha256\": result[\"archive_sha256\"],\n                   \"archive_bytes\": result[\"archive_bytes\"], \"encoding\": result[\"encoding\"],\n                   \"rows\": full[\"rows\"], \"car_keyed_table\": full[\"car_keyed_table\"],\n                   \"all_35_pass\": full[\"all_35_pass\"], \"result\": result[\"result\"],\n                   \"scope\": \"car-keyed display-name table (all 35 cars); T3 three-pair claim preserved separately\",\n                   \"render_fidelity_complete\": False}\n    FULL_OUT.write_text(json.dumps(FullReceipt, indent=2) + \"\\n\")\n    print(json.dumps(result, indent=2))\n    print(result[\"result\"])\n    return 0 if ok else 1\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n",
+    "claims": [
+      "All 35 cars resolve their CARDATA INGAME_TEXT_ENUM through tlate_en.dat;1.",
+      "The three-pair T3 assertion is preserved in the same tool.",
+      "Unknown-key and apostrophe byte-exact controls hold."
+    ],
+    "evidence": "{\n  \"archive_path\": \"LANGUAGE/tlate_en.dat;1\",\n  \"archive_sha256\": \"469d94cd53eafc3065a2385c76330666190591fe967ba61046727870659388a3\",\n  \"archive_bytes\": 109940,\n  \"encoding\": \"utf-16-le\",\n  \"pairs\": 3,\n  \"rows\": [\n    {\n      \"capture\": \"slot102\",\n      \"car_type\": \"49_COUPE\",\n      \"ingame_text_enum\": \"TXT_CARS_COUPE_1949\",\n      \"resolved_string\": \"FORD '49\",\n      \"vehicle_label_on_screen\": \"FORD '49\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f00520044002000270034003900\",\n      \"apostrophe_raw_0x27_present\": true,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot103\",\n      \"car_type\": \"THUNDERBIRD_2002\",\n      \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_2002\",\n      \"resolved_string\": \"THUNDERBIRD CONVERTIBLE\",\n      \"vehicle_label_on_screen\": \"THUNDERBIRD CONVERTIBLE\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"5400480055004e004400450052004200490052004400200043004f004e005600450052005400490042004c004500\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    },\n    {\n      \"capture\": \"slot104\",\n      \"car_type\": \"FORTYNINE\",\n      \"ingame_text_enum\": \"TXT_CARS_FORTYNINE\",\n      \"resolved_string\": \"FORTYNINE CONCEPT\",\n      \"vehicle_label_on_screen\": \"FORTYNINE CONCEPT\",\n      \"labels_equal\": true,\n      \"utf16le_bytes_hex\": \"46004f005200540059004e0049004e004500200043004f004e004300450050005400\",\n      \"apostrophe_raw_0x27_present\": false,\n      \"archive_verbatim\": true,\n      \"pass\": true\n    }\n  ],\n  \"all_pairs_pass\": true,\n  \"control_apostrophe_stripped_label_rejected\": true,\n  \"control_unknown_key_unresolved\": true,\n  \"control_enum_matches_cardata\": true,\n  \"full_car_keyed_table\": {\n    \"rows\": 35,\n    \"car_keyed_table\": [\n      {\n        \"car_type\": \"49_COUPE\",\n        \"ingame_text_enum\": \"TXT_CARS_COUPE_1949\",\n        \"resolved_string\": \"FORD '49\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"49_COUPE_MOVIE\",\n        \"ingame_text_enum\": \"TXT_CARS_COUPE_1949_2\",\n        \"resolved_string\": \"FORD '49 COUPE\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"COBRA\",\n        \"ingame_text_enum\": \"TXT_CARS_SVT_COBRA\",\n        \"resolved_string\": \"SVT COBRA\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"CROWN_VICTORIA\",\n        \"ingame_text_enum\": \"TXT_CARS_CROWN_VICTORIA\",\n        \"resolved_string\": \"CROWN VICTORIA\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"EX\",\n        \"ingame_text_enum\": \"TXT_CARS_EX\",\n        \"resolved_string\": \"EX CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"EXPLORER\",\n        \"ingame_text_enum\": \"TXT_CARS_EXPLORER\",\n        \"resolved_string\": \"EXPLORER SPORT TRAC XLT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"F100_1956\",\n        \"ingame_text_enum\": \"TXT_CARS_F100_1956\",\n        \"resolved_string\": \"'56 F-100\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"F100_1965\",\n        \"ingame_text_enum\": \"TXT_CARS_F100_1965\",\n        \"resolved_string\": \"'65 F-100\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"F150\",\n        \"ingame_text_enum\": \"TXT_CARS_F150\",\n        \"resolved_string\": \"F-150 FLARESIDE 4X4\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"F150_2004\",\n        \"ingame_text_enum\": \"TXT_CARS_F150_2004\",\n        \"resolved_string\": \"F-150 FX4\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"F350\",\n        \"ingame_text_enum\": \"TXT_CARS_F350\",\n        \"resolved_string\": \"F-350 XLT SPORT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"FOCUS_FR200\",\n        \"ingame_text_enum\": \"TXT_CARS_FR200\",\n        \"resolved_string\": \"FOCUS FR200\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"FOCUS_SVT\",\n        \"ingame_text_enum\": \"TXT_CARS_SVT_FOCUS\",\n        \"resolved_string\": \"SVT FOCUS\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"FOCUS_WRC\",\n        \"ingame_text_enum\": \"TXT_CARS_WRC_FOCUS\",\n        \"resolved_string\": \"1999 FOCUS RALLY CAR\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"FORD_GT\",\n        \"ingame_text_enum\": \"TXT_CARS_FORD_GT\",\n        \"resolved_string\": \"FORD GT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"FORTYNINE\",\n        \"ingame_text_enum\": \"TXT_CARS_FORTYNINE\",\n        \"resolved_string\": \"FORTYNINE CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"FR500\",\n        \"ingame_text_enum\": \"TXT_CARS_FR500\",\n        \"resolved_string\": \"MUSTANG FR500\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"GRAN_TORINO\",\n        \"ingame_text_enum\": \"TXT_CARS_TORINO\",\n        \"resolved_string\": \"'76 GRAN TORINO\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"GT90\",\n        \"ingame_text_enum\": \"TXT_CARS_GT90\",\n        \"resolved_string\": \"GT90 CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"INDIGO\",\n        \"ingame_text_enum\": \"TXT_CARS_INDIGO\",\n        \"resolved_string\": \"INDIGO CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"LIGHTNING_SVT\",\n        \"ingame_text_enum\": \"TXT_CARS_SVT_LIGHTNING\",\n        \"resolved_string\": \"SVT LIGHTNING\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"MACH1_AGENT\",\n        \"ingame_text_enum\": \"TXT_CARS_MUSTANG_1971\",\n        \"resolved_string\": \"'71 MUSTANG MACH I\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"MACH1_SIXTY\",\n        \"ingame_text_enum\": \"TXT_CARS_MUSTANG_1973\",\n        \"resolved_string\": \"'73 MUSTANG MACH I\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"MACH3\",\n        \"ingame_text_enum\": \"TXT_CARS_MUSTANG_MK3\",\n        \"resolved_string\": \"MUSTANG MACH III CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"MUSTANG_68\",\n        \"ingame_text_enum\": \"TXT_CARS_MUSTANG_1968\",\n        \"resolved_string\": \"'68 MUSTANG\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"MUSTANG_68B\",\n        \"ingame_text_enum\": \"TXT_CARS_MUSTANG_1968_2\",\n        \"resolved_string\": \"'68 MUSTANG GT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"MUSTANG_CONCEPT\",\n        \"ingame_text_enum\": \"TXT_CARS_MUSTANG_2004\",\n        \"resolved_string\": \"MUSTANG GT CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"POWERSTROKE\",\n        \"ingame_text_enum\": \"TXT_CARS_POWERSTROKE\",\n        \"resolved_string\": \"POWERSTROKE CONCEPT\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"TAURUS_STOCK_A\",\n        \"ingame_text_enum\": \"TXT_CARS_TAURUS_CLASS_A\",\n        \"resolved_string\": \"TAURUS STOCK CAR-CLASS A\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"TAURUS_STOCK_B\",\n        \"ingame_text_enum\": \"TXT_CARS_TAURUS_CLASS_B\",\n        \"resolved_string\": \"TAURUS STOCK CAR-CLASS B\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"TAURUS_STOCK_C\",\n        \"ingame_text_enum\": \"TXT_CARS_TAURUS_CLASS_C\",\n        \"resolved_string\": \"TAURUS STOCK CAR-CLASS C\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"TAURUS_STOCK_D\",\n        \"ingame_text_enum\": \"TXT_CARS_TAURUS_CLASS_D\",\n        \"resolved_string\": \"TAURUS STOCK CAR-CLASS D\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"THUNDERBIRD\",\n        \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_1955\",\n        \"resolved_string\": \"'55 THUNDERBIRD\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"THUNDERBIRD_2002\",\n        \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_2002\",\n        \"resolved_string\": \"THUNDERBIRD CONVERTIBLE\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      },\n      {\n        \"car_type\": \"THUNDERBIRD_MOVIE\",\n        \"ingame_text_enum\": \"TXT_CARS_THUNDERBIRD_2002_MOVIE\",\n        \"resolved_string\": \"2003 L.E. THUNDERBIRD\",\n        \"archive_verbatim\": true,\n        \"pass\": true\n      }\n    ],\n    \"all_35_pass\": true\n  },\n  \"control_full_unknown_key_unresolved\": true,\n  \"control_full_apostrophe_present_and_byte_exact\": true,\n  \"bridge_updated\": true,\n  \"result\": \"VERIFY OK\",\n  \"scope\": \"three captured pairs (T3 regression) + full car-keyed display-name table (35 cars); no 136-entry table\",\n  \"render_fidelity_complete\": false\n}\n",
+    "tests": "test_retained_packet_evidence OK"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.37,
+      "scores": {
+        "correctness": {
+          "score": 1.3,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.31,
+            "1": 0.07,
+            "2": 0.62
+          }
+        },
+        "spec_match": {
+          "score": 1.3,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.17,
+            "1": 0.36,
+            "2": 0.47
+          }
+        },
+        "test_gap": {
+          "score": 0.57,
+          "confidence": 0.14,
+          "probabilities": {
+            "0": 0.61,
+            "1": 0.2,
+            "2": 0.19
+          }
+        },
+        "blast_radius": {
+          "score": 1.13,
+          "confidence": 0.26,
+          "probabilities": {
+            "0": 0.18,
+            "1": 0.51,
+            "2": 0.31
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.6275000000000001,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "correctness",
+        "spec_match"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 3,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "All 35 cars resolve their CARDATA INGAME_TEXT_ENUM through tlate_en.dat;1.",
+          "verdict": "verified",
+          "confidence": 0.98,
+          "probabilities": {
+            "verified": 0.99,
+            "unsupported": 0.01,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The three-pair T3 assertion is preserved in the same tool.",
+          "verdict": "verified",
+          "confidence": 0.88,
+          "probabilities": {
+            "verified": 0.92,
+            "unsupported": 0.07,
+            "contradicted": 0.01
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "Unknown-key and apostrophe byte-exact controls hold.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "contradicted": 0,
+            "unsupported": 0.01,
+            "verified": 0.99
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 6994,
+      "output_tokens": 198
+    }
+  }
+}

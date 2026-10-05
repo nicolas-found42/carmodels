@@ -1,0 +1,76 @@
+{
+ "args": {
+  "passage_a": "A third helper, 0021c3e0, chooses ALPHA 0x44 in the direct untextured branch when effective bit 0x20 is clear and passes it to 0021ba50, which writes fixed PRIM 0x4c and that ALPHA value.",
+  "passage_b": "FUN_0021ba50 writes one GIF A+D packet: GIF tag 0x1000000000008003 then three A+D pairs, FRAME_1 (address 0x4c, data built from FBP/FBW/PSM globals and the FBMSK argument), ALPHA_1 (address 0x42, data = its second argument, 0x44 in the retained blocks) and TEST_1 (address 0x47). It does not write PRIM; the 0x4c value is a register address.",
+  "aspects": [
+   "what 0x4c denotes",
+   "ALPHA value passed",
+   "whether PRIM is written by FUN_0021ba50"
+  ],
+  "purpose": "Reconcile earlier research prose with the decompiled function and retained A+D blocks."
+ },
+ "result": {
+  "tool": "jev_compare",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "overall": {
+   "relation": "contradicts",
+   "probabilities": {
+    "same_fact": 0,
+    "different_facts": 0,
+    "contradicts": 1
+   },
+   "confidence": 0.99,
+   "margin": 1,
+   "decision": "auto"
+  },
+  "aspects": [
+   {
+    "aspect": "what 0x4c denotes",
+    "relation": "contradicts",
+    "probabilities": {
+     "same_fact": 0,
+     "different_facts": 0.01,
+     "contradicts": 0.99
+    },
+    "confidence": 0.99,
+    "margin": 0.98,
+    "decision": "auto"
+   },
+   {
+    "aspect": "ALPHA value passed",
+    "relation": "same_fact",
+    "probabilities": {
+     "same_fact": 1,
+     "different_facts": 0,
+     "contradicts": 0
+    },
+    "confidence": 1,
+    "margin": 1,
+    "decision": "auto"
+   },
+   {
+    "aspect": "whether PRIM is written by FUN_0021ba50",
+    "relation": "contradicts",
+    "probabilities": {
+     "same_fact": 0,
+     "different_facts": 0,
+     "contradicts": 1
+    },
+    "confidence": 1,
+    "margin": 1,
+    "decision": "auto"
+   }
+  ],
+  "thresholds": {
+   "auto_accept": 0.85,
+   "minimum_margin": 0.5
+  },
+  "usage": {
+   "input_tokens": 1038,
+   "output_tokens": 176
+  }
+ },
+ "result_sha256": "48251d34b7ad5cb9f66114833f6d4cd3bfc109524b4e33f40ac5208ffce85dfb",
+ "jev_tool": "jev_compare"
+}

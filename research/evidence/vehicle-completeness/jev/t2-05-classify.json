@@ -1,0 +1,132 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "main",
+        "text": "config x11 set equality + S-derived content equality + sha256 over 385 files; result VERIFY OK"
+      },
+      {
+        "id": "nc_hash",
+        "text": "mutated_config_hash_rejected: true"
+      },
+      {
+        "id": "nc_swap",
+        "text": "cross_car_config_swap_rejected: true"
+      },
+      {
+        "id": "nc_bank",
+        "text": "missing_shared_banks_rejected: true"
+      },
+      {
+        "id": "nc_manifest",
+        "text": "manifest_sha_tamper_rejected: true"
+      }
+    ],
+    "classes": [
+      {
+        "id": "passed_check",
+        "description": "A positive parity assertion that held over the real corpus. Example: 385 config files equal to S-derived bytes."
+      },
+      {
+        "id": "rejected_control",
+        "description": "A deliberate mutation that the checker rejected, with the expected rejection reason."
+      },
+      {
+        "id": "inconclusive",
+        "description": "Result reported neither as a clean pass nor as a clean rejection."
+      }
+    ],
+    "purpose": "confirm the T2 result is all positive passes plus four cleanly rejected controls",
+    "context": "T2 verifier receipt; classes are mutually exclusive."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 5,
+      "auto": 5,
+      "review": 0,
+      "invalid_response": 0,
+      "by_class": {
+        "passed_check": 1,
+        "rejected_control": 4
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "main",
+        "classification": "passed_check",
+        "probabilities": {
+          "passed_check": 0.99,
+          "rejected_control": 0,
+          "inconclusive": 0.01
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "nc_hash",
+        "classification": "rejected_control",
+        "probabilities": {
+          "passed_check": 0,
+          "rejected_control": 0.99,
+          "inconclusive": 0.01
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "nc_swap",
+        "classification": "rejected_control",
+        "probabilities": {
+          "passed_check": 0,
+          "rejected_control": 0.95,
+          "inconclusive": 0.05
+        },
+        "confidence": 0.93,
+        "margin": 0.8999999999999999,
+        "top_probability": 0.95,
+        "decision": "auto"
+      },
+      {
+        "id": "nc_bank",
+        "classification": "rejected_control",
+        "probabilities": {
+          "passed_check": 0.01,
+          "rejected_control": 0.9,
+          "inconclusive": 0.09
+        },
+        "confidence": 0.85,
+        "margin": 0.81,
+        "top_probability": 0.9,
+        "decision": "auto"
+      },
+      {
+        "id": "nc_manifest",
+        "classification": "rejected_control",
+        "probabilities": {
+          "passed_check": 0,
+          "rejected_control": 0.98,
+          "inconclusive": 0.02
+        },
+        "confidence": 0.96,
+        "margin": 0.96,
+        "top_probability": 0.98,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 813,
+      "output_tokens": 203
+    }
+  }
+}

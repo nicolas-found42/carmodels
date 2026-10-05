@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the correct meaning of 'resolved' for the selector thread under stop-condition 7b",
+    "candidates": [
+      {
+        "id": "definite_outcome",
+        "text": "Resolved = a named decompilation-reachable address OR an evidenced recorded-open outcome."
+      },
+      {
+        "id": "positive_find",
+        "text": "Resolved = the selector word was positively isolated."
+      },
+      {
+        "id": "blocked",
+        "text": "If no positive find, the session is blocked and the decision escalates."
+      },
+      {
+        "id": "drop_thread",
+        "text": "Resolved = the selector thread is dropped from scope."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the correct meaning of 'resolved' for the selector thread under stop-condition 7b",
+    "exists": 0.87,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "definite_outcome",
+        "probability": 0.77,
+        "text": "Resolved = a named decompilation-reachable address OR an evidenced recorded-open outcome."
+      },
+      {
+        "id": "positive_find",
+        "probability": 0.2,
+        "text": "Resolved = the selector word was positively isolated."
+      },
+      {
+        "id": "drop_thread",
+        "probability": 0.02,
+        "text": "Resolved = the selector thread is dropped from scope."
+      },
+      {
+        "id": "blocked",
+        "probability": 0.01,
+        "text": "If no positive find, the session is blocked and the decision escalates."
+      }
+    ],
+    "usage": {
+      "input_tokens": 549,
+      "output_tokens": 72
+    }
+  }
+}

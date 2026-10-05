@@ -1,0 +1,24 @@
+{
+  "args": {
+    "claims": [
+      "The independently checked GLB metadata covers all 35 cars, 2246 serialized nodes and 2051 named pairs, with zero mismatches.",
+      "The independent named-export checker rejects a deliberately corrupted source name.",
+      "Every moving wheel node has a named static sibling.",
+      "These metadata checks demonstrate original runtime visibility for every car."
+    ],
+    "evidence": [
+      {
+        "id": "independent_metadata",
+        "text": "{\"cars\": 35, \"nodes\": 2246, \"pairs\": 2051, \"corrupt_name_rejected\": true, \"failures\": 0, \"limits\": \"Checks source metadata; does not prove runtime visibility or rendering.\"}\n{\n  \"scope\": \"Every source named WHEEL_MOVING node and its direct siblings in all 35 archive-bound cars\",\n  \"moving_count\": 356,\n  \"exceptions\": [\n    {\n      \"car\": \"INDIGO\",\n      \"record\": 0,\n      \"node_offset\": 1315820,\n      \"parent_offset\": 1315772,\n      \"names\": [\n        \"WHEEL_MOVING\"\n      ],\n      \"siblings\": [\n        [\n          \"WHEEL_MOVING\"\n        ],\n        []\n      ]\n    }\n  ],\n  \"disposition\": \"Preserve source structure; do not require a paired static alternative for every moving wheel node.\"\n}\n\n"
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 2,\n    \"contradicted\": 2,\n    \"unsupported\": 0,\n    \"needs_review\": 0\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The independently checked GLB metadata covers all 35 cars, 2246 serialized nodes and 2051 named pairs, with zero mismatches.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"says_nothing\": 0,\n        \"supports\": 0.99,\n        \"contradicts\": 0.01\n      },\n      \"confidence\": 0.98,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.92\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The independent named-export checker rejects a deliberately corrupted source name.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"says_nothing\": 0,\n        \"supports\": 1,\n        \"contradicts\": 0\n      },\n      \"confidence\": 1,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.91\n    },\n    {\n      \"id\": \"claim2\",\n      \"claim\": \"Every moving wheel node has a named static sibling.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"says_nothing\": 0,\n        \"supports\": 0.01,\n        \"contradicts\": 0.99\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.9\n    },\n    {\n      \"id\": \"claim3\",\n      \"claim\": \"These metadata checks demonstrate original runtime visibility for every car.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"says_nothing\": 0.03,\n        \"supports\": 0,\n        \"contradicts\": 0.97\n      },\n      \"confidence\": 0.95,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.55\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1642,\n    \"output_tokens\": 252\n  }\n}"
+      }
+    ]
+  }
+}

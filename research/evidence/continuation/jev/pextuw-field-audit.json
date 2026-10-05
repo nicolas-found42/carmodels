@@ -1,0 +1,20 @@
+{
+  "args": {
+    "source": "void PEXTUW() {\n\tGPR_reg Rs, Rt;\n\n\tif (!_Rd_) return;\n\n\tRs = cpuRegs.GPR.r[_Rs_]; Rt = cpuRegs.GPR.r[_Rt_];\n\tcpuRegs.GPR.r[_Rd_].UL[0] = Rt.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[1] = Rs.UL[2];\n\tcpuRegs.GPR.r[_Rd_].UL[2] = Rt.UL[3];\n\tcpuRegs.GPR.r[_Rd_].UL[3] = Rs.UL[3];\n}\n",
+    "records": [
+      {
+        "id": "low_word",
+        "request": "The exact right-hand expression assigned to cpuRegs.GPR.r[_Rd_].UL[0] by the shown PEXTUW implementation.",
+        "value": "Rt.UL[2]"
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_audit\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"action\": \"pass\",\n  \"wrong_at\": 0.7,\n  \"truncated\": false,\n  \"summary\": {\n    \"records\": 1,\n    \"flagged\": 0,\n    \"invalid\": 0\n  },\n  \"records\": [\n    {\n      \"id\": \"low_word\",\n      \"value\": \"Rt.UL[2]\",\n      \"checks\": {\n        \"hallucinated\": 0.02,\n        \"off_target\": 0.02,\n        \"incomplete\": 0.03,\n        \"format\": 0.05\n      },\n      \"p_wrong\": 0.05,\n      \"action\": \"ok\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 867,\n    \"output_tokens\": 86\n  }\n}"
+      }
+    ]
+  }
+}

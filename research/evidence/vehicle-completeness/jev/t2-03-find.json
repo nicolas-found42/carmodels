@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "strongest evidence that the per-car config/data/sound parity verifier actually checks parity",
+    "candidates": [
+      {
+        "id": "s_derived",
+        "text": "Config txt content is compared to bytes derived from the source config via build_reference parsers, not just against the manifest."
+      },
+      {
+        "id": "sha256",
+        "text": "Every file's sha256 is recomputed on disk and matched to the manifest record."
+      },
+      {
+        "id": "sound_chain",
+        "text": "Each car's :INHERIT_TYPE resolves to a base bank and the carN_snd.msb/.msh files are asserted present."
+      },
+      {
+        "id": "controls",
+        "text": "Four negative controls each raise the expected rejection."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "strongest evidence that the per-car config/data/sound parity verifier actually checks parity",
+    "exists": 0.92,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "controls",
+        "probability": 0.78,
+        "text": "Four negative controls each raise the expected rejection."
+      },
+      {
+        "id": "sha256",
+        "probability": 0.17,
+        "text": "Every file's sha256 is recomputed on disk and matched to the manifest record."
+      },
+      {
+        "id": "s_derived",
+        "probability": 0.05,
+        "text": "Config txt content is compared to bytes derived from the source config via build_reference parsers, not just against the manifest."
+      },
+      {
+        "id": "sound_chain",
+        "probability": 0,
+        "text": "Each car's :INHERIT_TYPE resolves to a base bank and the carN_snd.msb/.msh files are asserted present."
+      }
+    ],
+    "usage": {
+      "input_tokens": 577,
+      "output_tokens": 68
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "args": {
+    "request": "Lead the headless Job B execution with read-only PINE live memory reads.",
+    "diff": "+ add read8/16/32/64 + read_range to the headless PINE helper (no writes)\n+ read the static entity-list global (~0x290278) and the gameflow chain in the live instance\n+ if unnamed, unpause headlessly and poll candidate words across three car selections\n+ proof bar: live read varies with highlight AND decompilation-reachable; else record open",
+    "tests": "existing verifiers stay green; container remains headless"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.35,
+    "scores": {
+      "correctness": {
+        "score": 1.63,
+        "confidence": 0.44,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.35,
+          "2": 0.64
+        }
+      },
+      "spec_match": {
+        "score": 1.91,
+        "confidence": 0.86,
+        "probabilities": {
+          "0": 0,
+          "1": 0.08,
+          "2": 0.92
+        }
+      },
+      "test_gap": {
+        "score": 1.58,
+        "confidence": 0.36,
+        "probabilities": {
+          "0": 0.06,
+          "1": 0.31,
+          "2": 0.63
+        }
+      },
+      "blast_radius": {
+        "score": 0.94,
+        "confidence": 0.65,
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.76,
+          "2": 0.09
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.7235,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+      "test_gap"
+    ],
+    "usage": {
+      "input_tokens": 840,
+      "output_tokens": 79
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "args": {
+    "text": "olefile 0.47 official API: isOleFile tests OLE signature; OleFileIO defaults to read-only and can be a context manager. raise_defects=olefile.DEFECT_INCORRECT raises malformed-container issues; parsing_issues retains nonfatal issues. listdir returns stream paths; get_size returns stream byte size; openstream returns BytesIO. Write mode is only enabled explicitly.",
+    "purpose": "Read-only inspection of original shipped Thumbs.db streams."
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.02,\n    \"substance\": 0.98,\n    \"relevance\": 0.95\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"pass\",\n    \"reason\": \"no signals above thresholds\"\n  },\n  \"usage\": {\n    \"input_tokens\": 593,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  },
+  "source": "https://olefile.readthedocs.io/en/latest/Howto.html",
+  "operational_correction": "Earlier call used unknown argument content and was rejected; this call uses documented text parameter."
+}

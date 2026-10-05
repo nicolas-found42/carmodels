@@ -1,0 +1,58 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "summary": {
+    "verified": 2,
+    "contradicted": 0,
+    "unsupported": 1,
+    "needs_review": 1
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "FUN_0015b280 stores its incoming a0 at sp+0x170, reloads it, and copies it to sp+0x98 before calling FUN_00148468.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "contradicts": 0,
+        "supports": 1
+      },
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "caller-bytes"
+    },
+    {
+      "id": "claim1",
+      "claim": "The constructor call from FUN_0015b280 targets FUN_00148468 with type id 1, and type 1 dispatches through FUN_0014bed0 to FUN_00145b08.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0.15,
+        "contradicts": 0.03,
+        "supports": 0.82
+      },
+      "confidence": 0.73,
+      "action": "review",
+      "supporting_evidence": "factory-source"
+    },
+    {
+      "id": "claim2",
+      "claim": "The copied string is proven to be used as a LIVERY PTG pathname by FUN_00145b08.",
+      "verdict": "unsupported",
+      "probabilities": {
+        "says_nothing": 0.98,
+        "contradicts": 0.01,
+        "supports": 0.01
+      },
+      "confidence": 0.97,
+      "action": "auto",
+      "supporting_evidence": null
+    }
+  ],
+  "usage": {
+    "input_tokens": 1975,
+    "output_tokens": 313
+  },
+  "disposition": "The raw string copy is verified. The type-1 factory/control flow is supported by direct decompilation and registration source, but Jev marked confidence below auto threshold; it remains manually source-evidenced. The PTG-path claim is unsupported."
+}

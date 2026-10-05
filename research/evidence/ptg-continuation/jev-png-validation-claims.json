@@ -1,0 +1,146 @@
++{
+  "schema": "jev-receipt/v1",
+  "provider": "OpenRouter via TypeSafe Jev",
+  "model": "typesafe/jev-1.13",
+  "tool": "jev_verify",
+  "arguments": {
+    "claims": [
+      "The recovery script verified all 171 manifest car icon/livery PTGs against archive and reference bytes, and source-computed 4,104 descriptors as 32x32, format 1, 32 bpp, each spanning 4,096 bytes.",
+      "Every asset descriptor has serialized +0x2c=0xDDDDDDDD and +0x35=0xDD, so those fields cannot be presented as valid unchanged runtime mip pointer/count values.",
+      "The decoder preserves raw alpha bytes and emits a separate preview with alpha min(255, 2*source_alpha_byte); the preview transform is not asserted as the game's exact composite.",
+      "An independent `/usr/bin/sips` pass read 342 generated PNGs and found every expected dimension.",
+      "Five corrupt-source negative controls were rejected by the decoder, with all five expected failure reasons observed.",
+      "The exported PNGs are fully validated as the exact in-game icon/livery images and menu composition."
+    ],
+    "evidence": [
+      {
+        "id": "archive-receipt",
+        "text": "`archive-layout-validation.json` schema `fr2-car-ptg-recovery/v1`: corpus expected_assets=171, manifest_assets=171, archive_car_graphics_entries=171, associated_archive_entries=171, verified_assets=171, failures=[]. Each asset records 24 descriptor_runtime_fields; each has format_code=1, bpp=32, dimensions=[32,32], body span length4096. This deterministic receipt is generated from source/archive/reference-bound inputs. Parser code hash is recorded in source_code_sha256."
+      },
+      {
+        "id": "descriptor-sentinel",
+        "text": "`archive-layout-validation.json` and `recovered-car-ptgs.json` record every descriptor’s serialized_mip_pointer_word=0xdddddddd and serialized_mip_count_byte=221. `FUN_00222358` decomp reads +0x35 as additional mip count and +0x2c as the record-list base; async-branch evidence explains why direct runtime identity remains unresolved."
+      },
+      {
+        "id": "pixel-output",
+        "text": "`recover_car_ptg.py` writes `.raw-alpha.png` preserving the source rgba bytes and `.png` whose alpha uses min(255, 2*source_alpha_byte). Metadata explicitly says game-menu alpha behavior awaits observed output. `recovered-car-ptgs.json` says direct PTG descriptor-to-upload and observed composition remain unresolved."
+      },
+      {
+        "id": "sips-reader",
+        "text": "`png-independent-reader-validation.json`: checked_images=342, valid_images=342, failures=[]. The reader was macOS `/usr/bin/sips`; each PNG width/height equals the PTG header dimension."
+      },
+      {
+        "id": "negative-controls",
+        "text": "`decoder-negative-controls.json`: checks=5, passed=5, failed=[]; controls modify mip sentinel, format code, final body truncation, header count, and descriptor padding."
+      },
+      {
+        "id": "scope-limits",
+        "text": "`research/ptg-continuation.md` states exports are archive-bound image candidates with validated bounds/byte order, not fully validated game-faithful menu renders; current runtime captures include pre-menu/loading and quick-race state, not a selected-car/menu screenshot."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 5,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 2
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The recovery script verified all 171 manifest car icon/livery PTGs against archive and reference bytes, and source-computed 4,104 descriptors as 32x32, format 1, 32 bpp, each spanning 4,096 bytes.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.01,
+          "supports": 0.97,
+          "contradicts": 0.02
+        },
+        "confidence": 0.94,
+        "action": "auto",
+        "supporting_evidence": "archive-receipt",
+        "same_subject": 0.77
+      },
+      {
+        "id": "claim1",
+        "claim": "Every asset descriptor has serialized +0x2c=0xDDDDDDDD and +0x35=0xDD, so those fields cannot be presented as valid unchanged runtime mip pointer/count values.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.03,
+          "supports": 0.9,
+          "contradicts": 0.07
+        },
+        "confidence": 0.85,
+        "action": "auto",
+        "supporting_evidence": "descriptor-sentinel",
+        "same_subject": 0.94
+      },
+      {
+        "id": "claim2",
+        "claim": "The decoder preserves raw alpha bytes and emits a separate preview with alpha min(255, 2*source_alpha_byte); the preview transform is not asserted as the game's exact composite.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "pixel-output",
+        "same_subject": 0.95
+      },
+      {
+        "id": "claim3",
+        "claim": "An independent `/usr/bin/sips` pass read 342 generated PNGs and found every expected dimension.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "sips-reader",
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim4",
+        "claim": "Five corrupt-source negative controls were rejected by the decoder, with all five expected failure reasons observed.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.02,
+          "supports": 0.54,
+          "contradicts": 0.44
+        },
+        "confidence": 0.3,
+        "action": "review",
+        "supporting_evidence": "negative-controls",
+        "same_subject": 0.82
+      },
+      {
+        "id": "claim5",
+        "claim": "The exported PNGs are fully validated as the exact in-game icon/livery images and menu composition.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 0,
+          "contradicts": 1
+        },
+        "confidence": 1,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.47
+      }
+    ],
+    "usage": {
+      "input_tokens": 3352,
+      "output_tokens": 843
+    }
+  }
+}

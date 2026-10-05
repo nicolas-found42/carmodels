@@ -1,0 +1,116 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "no_gdb",
+        "text": "Zero gdb strings in the pcsx2-qt binary."
+      },
+      {
+        "id": "no_visibility",
+        "text": "F8 captures only the emulated screen, never Qt windows."
+      },
+      {
+        "id": "win_only",
+        "text": "PCSX2-MCP prebuilt is Windows-only."
+      },
+      {
+        "id": "input_static",
+        "text": "The input handler can be read in the decompilation export we already have."
+      }
+    ],
+    "classes": [
+      {
+        "id": "hard_blocker",
+        "description": "Rules the option out entirely. Example: no GDB stub in the binary."
+      },
+      {
+        "id": "feasible",
+        "description": "Can be done headlessly with tools present. Example: static analysis + PINE reads."
+      },
+      {
+        "id": "heavy",
+        "description": "Possible but costly/risky."
+      }
+    ],
+    "purpose": "sort feasibility facts",
+    "context": "Breakpoint road."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 2,
+      "review": 2,
+      "invalid_response": 0,
+      "by_class": {
+        "hard_blocker": 2,
+        "heavy": 1,
+        "feasible": 1
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "no_gdb",
+        "classification": "hard_blocker",
+        "probabilities": {
+          "hard_blocker": 0.99,
+          "feasible": 0.01,
+          "heavy": 0
+        },
+        "confidence": 0.99,
+        "margin": 0.98,
+        "top_probability": 0.99,
+        "decision": "auto"
+      },
+      {
+        "id": "no_visibility",
+        "classification": "heavy",
+        "probabilities": {
+          "hard_blocker": 0.23,
+          "feasible": 0.27,
+          "heavy": 0.5
+        },
+        "confidence": 0.24,
+        "margin": 0.22999999999999998,
+        "top_probability": 0.5,
+        "decision": "review"
+      },
+      {
+        "id": "win_only",
+        "classification": "hard_blocker",
+        "probabilities": {
+          "hard_blocker": 0.79,
+          "feasible": 0.05,
+          "heavy": 0.16
+        },
+        "confidence": 0.68,
+        "margin": 0.63,
+        "top_probability": 0.79,
+        "decision": "review"
+      },
+      {
+        "id": "input_static",
+        "classification": "feasible",
+        "probabilities": {
+          "hard_blocker": 0,
+          "feasible": 1,
+          "heavy": 0
+        },
+        "confidence": 0.99,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      }
+    ],
+    "usage": {
+      "input_tokens": 709,
+      "output_tokens": 163
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "args": {
+    "document": "{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n",
+    "fields": [
+      {
+        "id": "cars",
+        "pattern": "\"cars\": [0-9]+",
+        "description": "number of cars the verifier covered"
+      },
+      {
+        "id": "config_files",
+        "pattern": "\"config_files_checked\": [0-9]+",
+        "description": "config files checked"
+      },
+      {
+        "id": "data_files",
+        "pattern": "\"data_files_checked\": [0-9]+",
+        "description": "data DAT files checked"
+      },
+      {
+        "id": "sound_chains",
+        "pattern": "\"sound_chains_resolved\": [0-9]+",
+        "description": "resolved sound chains"
+      },
+      {
+        "id": "manifest_files",
+        "pattern": "\"manifest_files_checked\": [0-9]+",
+        "description": "manifest files checked"
+      },
+      {
+        "id": "result",
+        "pattern": "\"result\": \"[A-Z ]+\"",
+        "description": "final verifier result token"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_extract",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "fields": 6,
+      "extracted": 5,
+      "auto": 0,
+      "review": 6,
+      "not_found": 0,
+      "invalid": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "cars",
+        "value": "\"cars\": 35",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.2,
+        "top_probability": 0.6,
+        "margin": 0.19999999999999996,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "config_files",
+        "value": "\"config_files_checked\": 385",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.51,
+        "top_probability": 0.75,
+        "margin": 0.5,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "data_files",
+        "value": "\"data_files_checked\": 35",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.48,
+        "top_probability": 0.74,
+        "margin": 0.48,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "sound_chains",
+        "value": "\"sound_chains_resolved\": 35",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.4,
+        "top_probability": 0.7,
+        "margin": 0.39999999999999997,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "manifest_files",
+        "value": "\"manifest_files_checked\": 626",
+        "status": "review",
+        "reason": null,
+        "confidence": 0.46,
+        "top_probability": 0.73,
+        "margin": 0.45999999999999996,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      },
+      {
+        "id": "result",
+        "value": null,
+        "status": "review",
+        "reason": "none_matched_ambiguous",
+        "confidence": 0.31,
+        "top_probability": 0.65,
+        "margin": 0.30000000000000004,
+        "candidates_considered": 1,
+        "candidates_truncated": false,
+        "matches_skipped_too_long": 0
+      }
+    ],
+    "usage": {
+      "input_tokens": 1416,
+      "output_tokens": 209
+    }
+  }
+}

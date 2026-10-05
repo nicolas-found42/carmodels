@@ -1,0 +1,70 @@
+{
+  "args": {
+    "propositions": [
+      "The final plan leaves no decision silently assumed on any of the three threads.",
+      "The bounded indirection pass (one read + one caller walk) makes 'record open' a terminating outcome.",
+      "C's single tool with both assertions preserves the T3 three-pair claim.",
+      "The final plan keeps every artifact's render_fidelity_complete false.",
+      "The final plan is executable end to end without a positive-find requirement.",
+      "The final plan still contains an open branch that would block the session."
+    ],
+    "context": "FINAL PLAN \u2014 Ford Racing 2 (SLES_517.05) car-model recovery, workspace R.\nORDER: A -> B -> C. Stop only when all three reach a definite outcome (7b); C required.\nA \u2014 RECORDED VERDICT: the executable binds :SOUNDBANK_TYPE by name (config-key table @0x24af68, descriptor table @0x24afe8, same index 0..7 CAR1..CAR8; FUN_001d7950 -> car struct +0x40; FUN_00165b10 -> carN_snd; FUN_001408d8 loads carN_snd.msh/.msb; first numeric field is a discarded ordinal). build_reference.py's name-based CAR_SND_CARn -> carN_snd rule is CONSISTENT, no off-by-one. Record in a sound-index reconciliation receipt; do NOT change the green T2 verifier.\nB \u2014 SELECTOR: proof bar = a decompilation-reachable address, never a value-only match. Trace FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10. The livery-label selector is named: FUN_00125640 returns a packed selector (low-16 resource-list ordinal) from record base 0x233070+type*0x114 (count +0xbc, list +0x90); FUN_00121e10 stores it at entity+0x64; the chain hangs off dynamic gameflow pointers outer+4 -> +0x14c -> +0x174. DO: read entity+0x64 via the chain in slots 102/103/104 (expected the same DEFAULT value, non-distinguishing). THEN the BOUNDED INDIRECTION PASS (Q10a): ONE bounded read of the DAT_00241b40 indexed cursor and one walk of the FUN_001c4a40 caller chain; if the cursor's selected-index field is not identified, record the per-screen CAR highlight cursor OPEN and move to C \u2014 no further chasing. B resolved = a DEFINITE OUTCOME: entity+0x64 read and recorded, plus the cursor recorded open if the pass names nothing (broaden_indirect once before recording open).\nC \u2014 DISPLAY NAMES (Q11a): extend tools/resolve_display_names.py keeping BOTH assertions in ONE tool and receipt: the existing 3-pair check (T3 regression, preserved) AND the full car-keyed TXT_CARS_* table (~35-39 rows). The three-pair T3 claim survives as a check, not superseded. The '136-entry display-name table' is a misnomer (136 is livery rows; display names are keyed by car).\nCEILING: render_fidelity_complete false on every artifact; partial claims only; no completion gate passes; a Jev gate escalate is an acceptable recorded outcome. CONSTRAINTS: never print credentials; new files in R not S; close tickets only on real tool output."
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "The final plan leaves no decision silently assumed on any of the three threads.",
+        "probability": 0.62,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition1",
+        "proposition": "The bounded indirection pass (one read + one caller walk) makes 'record open' a terminating outcome.",
+        "probability": 0.87,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "C's single tool with both assertions preserves the T3 three-pair claim.",
+        "probability": 0.95,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition3",
+        "proposition": "The final plan keeps every artifact's render_fidelity_complete false.",
+        "probability": 0.96,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition4",
+        "proposition": "The final plan is executable end to end without a positive-find requirement.",
+        "probability": 0.77,
+        "label": "uncertain",
+        "auto": false
+      },
+      {
+        "id": "proposition5",
+        "proposition": "The final plan still contains an open branch that would block the session.",
+        "probability": 0.29,
+        "label": "uncertain",
+        "auto": false
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1658,
+      "output_tokens": 130
+    }
+  }
+}

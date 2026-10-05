@@ -1,0 +1,42 @@
+--- historical/0019a1b8.c
++++ typed/0019a1b8.c
+@@ -51,6 +51,7 @@
+   pfVar14 = afStack_70;
+   pfVar15 = afStack_80;
+   iVar7 = *(int *)(iVar3 + 0x14c);
++  fVar19 = FLOAT_0029016c * 0.10471974;
+   pfVar8 = (float *)(puVar5 + 0x90);
+   iVar11 = 0;
+   pfVar9 = pfVar16;
+@@ -61,7 +62,7 @@
+     }
+     iVar6 = iVar6 * 4;
+     pfVar10 = pfVar13 + iVar11;
+-    afStack_90[iVar11] = pfVar8[-4] * fGpffffa3fc * fGpffff861c;
++    afStack_90[iVar11] = pfVar8[-4] * fVar19;
+     iVar4 = *(int *)(iVar6 + iVar7 + 0x194);
+     pfVar14[iVar11] = pfVar8[-0xc];
+     pfVar15[iVar11] = pfVar8[-8];
+@@ -93,16 +94,16 @@
+     FUN_0019a728(*pfVar14,afStack_c0[iVar12],*pfVar15,*pfVar16,param_1,iVar12);
+     iVar7 = iStack_60 + *(int *)(**(int **)(iVar3 + 0xe0) + 0x6f0);
+     iStack_60 = iStack_60 + 0x130;
+-    fVar18 = *(float *)(*(int *)(iVar7 + 0x120) + 0xec);
++    fVar19 = *(float *)(*(int *)(iVar7 + 0x120) + 0xec);
+     fVar20 = 0.0;
+-    fVar19 = *pfVar13;
+-    if (0.0 <= fVar19) {
+-      fVar20 = (float)((int)fVar19 * (uint)(fVar19 < 1.0) | (uint)(fVar19 >= 1.0) * 0x3f800000);
++    fVar18 = *pfVar13;
++    if (0.0 <= fVar18) {
++      fVar20 = (float)((int)fVar18 * (uint)(fVar18 < 1.0) | (uint)(fVar18 >= 1.0) * 0x3f800000);
+     }
+     *pfVar13 = fVar20;
+-    fVar19 = *pfVar13;
++    fVar18 = *pfVar13;
+     pfVar13 = pfVar13 + 1;
+-    FUN_0019a7b8(afStack_90[iVar12],*pfVar14,fVar19,param_1,iVar12,ABS(fVar18) <= 200.0);
++    FUN_0019a7b8(afStack_90[iVar12],*pfVar14,fVar18,param_1,iVar12,ABS(fVar19) <= 200.0);
+     iVar7 = 1;
+     cVar1 = *pcVar17;
+     pcVar17 = pcVar17 + 0x1c;

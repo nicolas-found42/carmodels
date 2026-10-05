@@ -1,0 +1,37 @@
+{
+  "args": {
+    "decision": "Which offline numeric geometry experiment should run next to constrain original car position decoding?",
+    "priorities": "User requests thorough original mesh and texture recovery with plentiful evidence-recorded Jev experiments. Prefer original-source constrained hypotheses, reversible read-only analysis and falsifiable measurements across all35 car files.",
+    "evidence": "All35 car files directly parse12080 geometry headers and657139 six-byte samples. Source FUN001288b0 builds a4-word qword from component-wise maximum absolute values of bbox endpoint pairs and1.0, passes its address toFUN00128e88 asparam6. FUN00128e88 writes thatparam6 qword asV4-32 header qword4; source shows STROW [0x44400000 x3,0], STMOD1 and V3-16 command0x69. VU continuation loads header qword4 intoVF09 and multiplies coordinates byVF09 components. No original runtime executed, no raw instruction checking of new inference yet. Naive global scales and offsets failed across1837 records. Existing oldmaxabs/16384 fullcorpus fit failed1051/16018 groups, including tracks. The vertex semantics and topology are still unproven.",
+    "candidates": [
+      {
+        "id": "per_record",
+        "description": "Test per-axis per-record maxabs bbox factors with divisors16384/32768/65536 and exact IEEE bit-bias subtraction; preserve all counterexamples and source pins."
+      },
+      {
+        "id": "global_fit",
+        "description": "Fit a new unconstrained global scale and offset to all record extrema."
+      },
+      {
+        "id": "visual_only",
+        "description": "Choose the nicest looking candidate mesh as the original result."
+      },
+      {
+        "id": "runtime_capture",
+        "description": "Start a new emulator and take a frame capture now."
+      }
+    ],
+    "requirements": [
+      "The experiment tests a falsifiable original-source-constrained mapping.",
+      "The experiment can run offline without changing the original corpus."
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_decide\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"recommendation\": {\n    \"selected\": \"per_record\",\n    \"escaped\": false,\n    \"confidence\": 1,\n    \"probabilities\": {\n      \"ask_user\": 0,\n      \"none\": 0,\n      \"runtime_capture\": 0,\n      \"global_fit\": 0,\n      \"investigate\": 0,\n      \"per_record\": 1,\n      \"visual_only\": 0\n    },\n    \"contradicted_requirements\": []\n  },\n  \"requirements_checked\": 2,\n  \"checks\": [\n    {\n      \"candidate\": \"per_record\",\n      \"requirement\": 0,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"per_record\",\n      \"requirement\": 1,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"global_fit\",\n      \"requirement\": 0,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"global_fit\",\n      \"requirement\": 1,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"visual_only\",\n      \"requirement\": 0,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"visual_only\",\n      \"requirement\": 1,\n      \"answer\": \"unknown\"\n    },\n    {\n      \"candidate\": \"runtime_capture\",\n      \"requirement\": 0,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"runtime_capture\",\n      \"requirement\": 1,\n      \"answer\": \"contradicted\"\n    }\n  ],\n  \"warnings\": [],\n  \"usage\": {\n    \"input_tokens\": 2057,\n    \"output_tokens\": 431\n  }\n}"
+      }
+    ]
+  }
+}

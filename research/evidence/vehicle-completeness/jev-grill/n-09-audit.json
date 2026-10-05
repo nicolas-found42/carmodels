@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "carselection bridge: no FORD'49 / TXT_CARS_* label bytes in slot102 EE (labels via text archive + glyphs). Static leads: FUN_0019eb90 reads the livery label via static table VA 0x23acb0 (packed strings INVALID/WHEELS/FUEL), resolves via FUN_00125640, stores via FUN_00121e10; VA_0x23acb0 = 0x0028f7c8 stable across captures. jgrep hits: 0017cb80 (initials cycler, discarded), 00184430 (1..3 cursor on uRam0028fd74, reads 0 in all three), 001c4a40 (indexed cursor over DAT_00241b40, caller open). VA_0x241b60 = 5,4,4 (does not track highlight). Three-way triangulation: (1,5,4) 0 hits; (0,4,3) words 0 hits; (0,4,3) bytes 97 hits in VU regions, no menu-struct candidate; scratchpad 121 changed words all float VU noise. Screens: highlight 1/5/4 -> 49_COUPE / THUNDERBIRD_2002 / FORTYNINE, all DEFAULT livery. Jev round-1 noul: 'an isolated EE word that tracks the highlight exists' = 0.13 unlikely; 'deriving the store address from the FUN_0019eb90 chain will name it' = 0.29 uncertain; 'value-only match sufficient' = 0.09 unlikely. Round-1 decide chose trace_store 0.96.",
+    "records": [
+      {
+        "id": "store_fn",
+        "request": "extract store_fn",
+        "value": "FUN_00121e10"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "store_fn",
+        "value": "FUN_00121e10",
+        "checks": {
+          "hallucinated": 0.02,
+          "off_target": 0.05,
+          "incomplete": 0.06,
+          "format": 0.07
+        },
+        "p_wrong": 0.07,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 1136,
+      "output_tokens": 86
+    }
+  }
+}

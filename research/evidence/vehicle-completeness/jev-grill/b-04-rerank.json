@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "which decompiled function most likely stores the per-screen car/livery selector",
+    "candidates": [
+      {
+        "id": "fun121e10",
+        "text": "FUN_00121e10 stores the resolved label (the write side of FUN_0019eb90)."
+      },
+      {
+        "id": "fun1c4a40",
+        "text": "001c4a40 indexed cursor over DAT_00241b40, caller context open."
+      },
+      {
+        "id": "fun184430",
+        "text": "00184430 1..3 bounded cursor on uRam0028fd74 (read 0 in all three)."
+      },
+      {
+        "id": "fun17cb80",
+        "text": "0017cb80 initials-entry cycler (discarded)."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "which decompiled function most likely stores the per-screen car/livery selector",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "fun121e10",
+        "relevance": 0.36,
+        "text": "FUN_00121e10 stores the resolved label (the write side of FUN_0019eb90)."
+      },
+      {
+        "rank": 2,
+        "id": "fun1c4a40",
+        "relevance": 0.35,
+        "text": "001c4a40 indexed cursor over DAT_00241b40, caller context open."
+      },
+      {
+        "rank": 3,
+        "id": "fun184430",
+        "relevance": 0.34,
+        "text": "00184430 1..3 bounded cursor on uRam0028fd74 (read 0 in all three)."
+      },
+      {
+        "rank": 4,
+        "id": "fun17cb80",
+        "relevance": 0.12,
+        "text": "0017cb80 initials-entry cycler (discarded)."
+      }
+    ],
+    "usage": {
+      "input_tokens": 662,
+      "output_tokens": 76
+    }
+  }
+}

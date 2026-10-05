@@ -1,0 +1,101 @@
+{
+  "args": {
+    "claims": [
+      "The complete plan specifies rooting the gameflow chain via a bootstrap global with a sig_scan fallback in one bounded pass.",
+      "The complete plan specifies the closure artifact as one receipt + jev_gate per thread plus a completion report.",
+      "C asserts all 35 cars resolve with unknown-key and apostrophe controls.",
+      "The complete plan keeps render_fidelity_complete false on every artifact.",
+      "The complete plan has no silently-assumed branch remaining."
+    ],
+    "evidence": "COMPLETE PLAN \u2014 Ford Racing 2 (SLES_517.05) car-model recovery, workspace R. Every decision Q1-Q13 is now fixed; the residual branches are closed.\nORDER A -> B -> C. Stop only when all three reach a definite outcome (7b); C required. Claim ceiling: render_fidelity_complete false on every artifact; partial claims only; no completion gate passes; a Jev gate escalate is an acceptable recorded outcome.\nA \u2014 RECORDED VERDICT (no code change): the executable binds :SOUNDBANK_TYPE by name (config-key table @0x24af68, descriptor table @0x24afe8, same index 0..7 CAR1..CAR8; FUN_001d7950 -> car struct +0x40; FUN_00165b10 -> carN_snd; FUN_001408d8 loads carN_snd.msh/.msb; the first numeric field is a discarded bank ordinal). build_reference.py's name-based CAR_SND_CARn -> carN_snd rule is CONSISTENT, no off-by-one. Record in a sound-index reconciliation receipt; do NOT change the green T2 verifier.\nB \u2014 SELECTOR: proof bar = a decompilation-reachable address, never a value-only match. Trace FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10. Named: the livery-label selector is stored at entity+0x64 (FUN_00121e10), from the packed selector FUN_00125640 returns out of record base 0x233070+type*0x114 (count +0xbc, list +0x90). ROOTING (Q12a): find the bootstrap global that stores the gameflow pointer via decompilation (primary), read it in each of slots 102/103/104, and follow outer+4 -> +0x14c -> +0x174 to entity; if the global is not cleanly identified, fall back INSIDE the same bounded pass to scanning for the entity struct via its flags 0x1cd0 at +0x60; then read entity+0x64 (expected the same DEFAULT value, non-distinguishing). Then the BOUNDED INDIRECTION PASS (Q10a): ONE bounded read of the DAT_00241b40 indexed cursor and ONE walk of the FUN_001c4a40 caller chain; if the cursor's selected-index field is not identified, record the per-screen CAR highlight cursor OPEN and move to C. B resolved = a DEFINITE OUTCOME: entity+0x64 read and recorded, plus the cursor recorded open if the pass names nothing.\nC \u2014 DISPLAY NAMES (Q11a + default): extend tools/resolve_display_names.py keeping BOTH assertions in ONE tool and receipt: the existing 3-pair check (T3 regression, preserved) AND a full car-keyed table asserting ALL 35 cars resolve (not just TXT_CARS_* keys), with negative controls (unknown key unresolved; apostrophe byte-exact from the archive) and a jev_gate. '136-entry display-name table' is a misnomer.\nCLOSURE (Q13a): one receipt + jev_gate per thread (escalate acceptable) plus a single session completion report listing the three definite outcomes. CONSTRAINTS: never print credentials; new files in R not S; close tickets only on real tool output."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 5,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 2
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The complete plan specifies rooting the gameflow chain via a bootstrap global with a sig_scan fallback in one bounded pass.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.55
+      },
+      {
+        "id": "claim1",
+        "claim": "The complete plan specifies the closure artifact as one receipt + jev_gate per thread plus a completion report.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 0.99,
+          "contradicts": 0.01
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.26
+      },
+      {
+        "id": "claim2",
+        "claim": "C asserts all 35 cars resolve with unknown-key and apostrophe controls.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.01,
+          "supports": 0.81,
+          "contradicts": 0.18
+        },
+        "confidence": 0.72,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.13
+      },
+      {
+        "id": "claim3",
+        "claim": "The complete plan keeps render_fidelity_complete false on every artifact.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "supports": 1,
+          "contradicts": 0
+        },
+        "confidence": 0.99,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.35
+      },
+      {
+        "id": "claim4",
+        "claim": "The complete plan has no silently-assumed branch remaining.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.02,
+          "supports": 0.84,
+          "contradicts": 0.14
+        },
+        "confidence": 0.77,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.52
+      }
+    ],
+    "usage": {
+      "input_tokens": 2506,
+      "output_tokens": 309
+    }
+  }
+}

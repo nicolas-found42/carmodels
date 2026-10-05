@@ -1,0 +1,98 @@
+{
+  "args": {
+    "decision": "How should the gameflow pointer chain be rooted to read entity+0x64?",
+    "evidence": "Residual open branches after the final plan (Jev f-06b: still_open 0.81; 'ready' contradicted on 'leaves no decision silently assumed'):\n(1) POINTER ROOT: B says read entity+0x64 via the dynamic gameflow chain outer+4 -> +0x14c -> +0x174, but the plan never says how to locate the gameflow root 'outer' inside a raw EE savestate. The decompilation FUN_0019eb90:19 reads ((param_1+4)+0x14c)+0x174 and :37 sets flags at entity+0x60 = (...|0x1cd0); FUN_00121e10 stores the selector at entity+0x64. The prior tools scanned values/tables, never walked a pointer chain from a root. Options: (a) find the bootstrap global that stores the gameflow pointer (decompilation-first), then read that global in the savestate; (b) signature-scan the EE image for the entity struct (e.g. flags 0x...1cd0 at +0x60) and follow back-pointers; (c) accept a paused savestate may not expose a stable chain and record B's store read as 'attempted; pointer root unresolved' -> recorded open.\n(2) C ROW SET + CONTROLS: C extends resolve_display_names.py to the car-keyed set (~35-39). Unspecified: exact row set (all 35 CARDATA INGAME_TEXT_ENUM values vs only TXT_CARS_* keys present), what happens for cars whose enum is missing from tlate_en, whether en-only or multi-locale, and what negative controls / gate apply. Options: (a) assert all 35 cars resolve, negative controls (unknown key unresolved; apostrophe byte-exact), jev_gate; (b) 35 cars, no new controls; (c) TXT_CARS_* keys only.\n(3) CLOSURE ARTIFACT: stop condition 7b requires all three threads to reach a definite outcome, but the plan never says what artifact proves each is 'resolved'. Options: (a) one receipt + jev_gate per thread (escalate acceptable), plus a single session completion report listing the three definite outcomes; (b) three new tickets T4/T5/T6; (c) record in the continuation status only.",
+    "priorities": "Decompilation-reachable (the B proof bar); bounded; a definite recorded outcome is acceptable if the root cannot be resolved; do not re-run value-only scanning.",
+    "candidates": [
+      {
+        "id": "boot_global",
+        "description": "Find the bootstrap global that stores the gameflow pointer (decompilation-first), read it in the savestate, follow the chain."
+      },
+      {
+        "id": "sig_scan",
+        "description": "Signature-scan the EE image for the entity struct (flags 0x1cd0 at +0x60) and follow back-pointers."
+      },
+      {
+        "id": "record_open",
+        "description": "Record the store read as attempted with the pointer root unresolved."
+      }
+    ],
+    "requirements": [
+      "Is decompilation-reachable",
+      "Turns the chain into a named address",
+      "Does not rely on value-only matching"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "boot_global",
+      "escaped": false,
+      "confidence": 0.88,
+      "probabilities": {
+        "ask_user": 0,
+        "investigate": 0,
+        "none": 0,
+        "boot_global": 0.91,
+        "record_open": 0.09,
+        "sig_scan": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "boot_global",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "boot_global",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "boot_global",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "sig_scan",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "sig_scan",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "sig_scan",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "record_open",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "record_open",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "record_open",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2430,
+      "output_tokens": 464
+    }
+  }
+}

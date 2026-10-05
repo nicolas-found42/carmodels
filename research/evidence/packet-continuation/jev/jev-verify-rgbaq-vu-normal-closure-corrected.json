@@ -1,0 +1,85 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+    "verified": 3,
+    "contradicted": 0,
+    "unsupported": 0,
+    "needs_review": 0
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "Under packed GIF transfer mode, each RGBA byte is the low byte of one of the four 32-bit lanes in its 16-byte qword, at byte offsets 0, 4, 8, and 12; Q is sourced from preceding STQ, not from the RGBA qword.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "supports": 0.98,
+        "contradicts": 0.02
+      },
+      "confidence": 0.97,
+      "action": "auto",
+      "supporting_evidence": "pcsx2-packed-rgba-handler",
+      "same_subject": 0.92
+    },
+    {
+      "id": "claim1",
+      "claim": "The corrected deterministic race94 decoder reports 106 bounded texture-index-0 tags and 5,915 RGBA records; its new distinct RGBA count is 249 with alpha bytes 128 on 5,908 vertices and 102 on 7 vertices.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "supports": 1,
+        "contradicts": 0
+      },
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "deterministic-corrected-decode",
+      "same_subject": 0.96
+    },
+    {
+      "id": "claim2",
+      "claim": "Exact 8-byte-aligned residency scans found overlay source binaries 0 through 6 in loading, race94, and race97 micro-memory snapshots, with no exact aligned residency for overlay 7; this does not prove which overlay executed or generated a given packet.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "supports": 1,
+        "contradicts": 0
+      },
+      "confidence": 1,
+      "action": "auto",
+      "supporting_evidence": "residency-audit",
+      "same_subject": 0.96
+    }
+  ],
+  "usage": {
+    "input_tokens": 2266,
+    "output_tokens": 429
+  },
+  "handling": "Advisory verification; pinned PCSX2 code and deterministic byte decoding control these factual conclusions.",
+  "request_claims": [
+    "Under packed GIF transfer mode, each RGBA byte is the low byte of one of the four 32-bit lanes in its 16-byte qword, at byte offsets 0, 4, 8, and 12; Q is sourced from preceding STQ, not from the RGBA qword.",
+    "The corrected deterministic race94 decoder reports 106 bounded texture-index-0 tags and 5,915 RGBA records; its new distinct RGBA count is 249 with alpha bytes 128 on 5,908 vertices and 102 on 7 vertices.",
+    "Exact 8-byte-aligned residency scans found overlay source binaries 0 through 6 in loading, race94, and race97 micro-memory snapshots, with no exact aligned residency for overlay 7; this does not prove which overlay executed or generated a given packet."
+  ],
+  "evidence": [
+    {
+      "id": "pcsx2-packed-rgba-handler",
+      "text": "Pinned PCSX2 source: pcsx2/GS/GSState.cpp GIFPackedRegHandlerRGBA at commit 81526d4dc7cc70e4ae75abb35a789417456c6d43 reads a packed record and shuffles bytes with mask 0x0c080400, selecting byte offsets 0,4,8,12 as the four color components. It sets RGBAQ.Q from m_q."
+    },
+    {
+      "id": "pcsx2-packed-stq-handler",
+      "text": "Pinned PCSX2 source at the same commit: GIFPackedRegHandlerSTQ reads the 2nd U64 lane of the packed STQ qword as Q and assigns it to m_q after zero/NaN handling. The packed STQ/RGBA/XYZF2 path reads the three records in that order."
+    },
+    {
+      "id": "deterministic-corrected-decode",
+      "text": "tools/trace_car_packets.py now decodes packed GIF RGBA as the low byte from each little-endian u32 lane in the full 16-byte RGBA qword; it retains lane words and raw qword, and retains Q independently from preceding STQ. Rerun result: race parser passes; bounded interval has 106 geometry tags, 5,915 RGBA records, 249 distinct decoded RGBA tuples, 7 uniform tags, 99 nonuniform tags, alpha byte counts {128:5908,102:7}. The prior result interpreted this packed qword as a 64-bit register and is superseded."
+    },
+    {
+      "id": "residency-audit",
+      "text": "An independent deterministic byte-exact scan of 8-byte-aligned windows in each 16KiB micro-memory snapshot found overlay source binaries 0..6 in loading, race94, and race97 snapshots at offsets 0x0000..0x3000. Overlay7 (1120 bytes) had no exact aligned hit in any. This is residency only, not execution or active PC. Receipt vu-overlay-residency.json records source hashes/sizes and snapshot hashes."
+    }
+  ]
+}

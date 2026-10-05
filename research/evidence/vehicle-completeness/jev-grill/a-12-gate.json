@@ -1,0 +1,141 @@
+{
+  "args": {
+    "request": "Record a definite verdict on the CAR_SND_CARn -> carN_snd mapping.",
+    "diff": "+ verdict to be recorded from the decompilation, not asserted\n+ no change to build_reference unless off_by_one is proven",
+    "claims": [
+      "T2's sound-chain assertion resolves every car to an existing bank file.",
+      "The name-based mapping is corroborated by CAR6 sample names.",
+      "No off-by-one has yet been proven from the executable."
+    ],
+    "evidence": "build_reference.py (line ~261) builds base_bank with a NAME-based rule: for each CAR_SND_CARn block in CARSOUND.DAT it reads :SOUNDBANK_TYPE CARn_SOUND_FILE and sets base_bank['CAR_SND_CARn'] = 'car' + SOUNDBANK_TYPE[3] + '_snd', i.e. CAR_SND_CAR6 + CAR6_SOUND_FILE -> 'car6_snd' (the digit is taken from the bank file name, not from the CAR_SND_CARn number). CARSOUND.DAT binds CAR_SND_CAR1..CAR_SND_CAR8 -> CAR1_SOUND_FILE..CAR8_SOUND_FILE (verified: 8 base blocks). The executable's static strings are 'sounds\\car1_snd:0:0:5' ... 'sounds\\car8_snd:7:35:5' (addresses 0x288e40..0x288f18) with templates '%s.msh' (0x28f508) and '%s.msb' (0x28f510); the trailing fields are base:offset:count with base 0..7, suggesting an index. Corroboration: 49_COUPE's sound type CAR_SND_49_COUPE inherits CAR_SND_CAR6 and its sample names are literally MASTER_SOUND_SAMPLE_CAR6_TICKOVER / ..._LOW_UNLOADED / ..._HIGH_LOADED, so the 'CAR6' identity appears in the sample data itself. All 35 cars resolve a chain; the 8 distinct inherit targets are CAR_SND_CAR1..CAR_SND_CAR8.\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"declare_name_based\", \"escaped\": false, \"confidence\": 0.43, \"probabilities\": {\"read_then_decide\": 0.46, \"investigate\": 0.01, \"none\": 0, \"ask_user\": 0, \"change_preemptively\": 0, \"declare_name_based\": 0.53}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"read_then_decide\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"read_then_decide\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"read_then_decide\", \"requirement\": 2, \"answer\": \"unknown\"}, {\"candidate\": \"change_preemptively\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"change_preemptively\", \"requirement\": 1, \"answer\": \"contradicted\"}, {\"candidate\": \"change_preemptively\", \"requirement\": 2, \"answer\": \"contradicted\"}, {\"candidate\": \"declare_name_based\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"declare_name_based\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"declare_name_based\", \"requirement\": 2, \"answer\": \"supported\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2188, \"output_tokens\": 461}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_unsupported",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.2,
+      "scores": {
+        "correctness": {
+          "score": 1.31,
+          "confidence": 0.2,
+          "probabilities": {
+            "0": 0.11,
+            "1": 0.47,
+            "2": 0.42
+          }
+        },
+        "spec_match": {
+          "score": 0.86,
+          "confidence": 0.39,
+          "probabilities": {
+            "0": 0.27,
+            "1": 0.6,
+            "2": 0.13
+          }
+        },
+        "test_gap": {
+          "score": 1.38,
+          "confidence": 0.07,
+          "probabilities": {
+            "0": 0.26,
+            "1": 0.11,
+            "2": 0.63
+          }
+        },
+        "blast_radius": {
+          "score": 1.09,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.31,
+            "1": 0.3,
+            "2": 0.39
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.50575,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 1,
+        "needs_review": 2,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "T2's sound-chain assertion resolves every car to an existing bank file.",
+          "verdict": "verified",
+          "confidence": 0.52,
+          "probabilities": {
+            "verified": 0.68,
+            "contradicted": 0.07,
+            "unsupported": 0.25
+          },
+          "action": "review"
+        },
+        {
+          "claim": "The name-based mapping is corroborated by CAR6 sample names.",
+          "verdict": "verified",
+          "confidence": 0.8,
+          "probabilities": {
+            "verified": 0.86,
+            "contradicted": 0.04,
+            "unsupported": 0.1
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "No off-by-one has yet been proven from the executable.",
+          "verdict": "unsupported",
+          "confidence": 0.44,
+          "probabilities": {
+            "verified": 0.36,
+            "unsupported": 0.63,
+            "contradicted": 0.01
+          },
+          "action": "escalate"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2183,
+      "output_tokens": 198
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "controls-fresh-export",
+  "args": {
+    "claims": [
+      "The fresh export inspected 35 car models.",
+      "The fresh export decoded 700 level-zero textures.",
+      "The fresh export counted 657139 geometry samples.",
+      "The export includes 94 stored mip levels but claims level-zero decoding only.",
+      "The fresh export inspected 56 car models.",
+      "The fresh export decoded 701 level-zero textures.",
+      "The fresh export counted 657138 geometry samples.",
+      "The export claims every stored mip level is decoded.",
+      "The exported images are bit-exact with a running GS emulator.",
+      "Every original car triangle has been reconstructed.",
+      "The exported textures are bound to original mesh UVs.",
+      "Every alternate livery texture has been recovered."
+    ],
+    "evidence": "{\n  \"summary\": {\n    \"models\": 35,\n    \"geometry_records\": 1872,\n    \"geometry_headers\": 12080,\n    \"exact_eof\": 35,\n    \"textures\": 700,\n    \"mip_levels_stored\": 94,\n    \"geometry_samples\": 657139\n  },\n  \"formats\": {\n    \"3\": 618,\n    \"1\": 78,\n    \"4\": 4\n  },\n  \"upload_profiles\": {\n    \"3:packed\": 567,\n    \"3:direct\": 51,\n    \"1:direct\": 78,\n    \"4:packed\": 4\n  },\n  \"limits\": [\n    \"Level zero only under the static model upload contract.\",\n    \"Display alpha uses min(255,2*a); raw-alpha PNG and raw RGBA hash preserve stored values.\",\n    \"Model textures are distinct from PTG menu icons and alternative liveries.\",\n    \"Geometry layout and samples do not establish axes, scale, topology, UVs or material bindings.\"\n  ]\n}"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 4,\n    \"contradicted\": 1,\n    \"unsupported\": 7,\n    \"needs_review\": 6\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The fresh export inspected 35 car models.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.99,\n        \"says_nothing\": 0.01,\n        \"contradicts\": 0\n      },\n      \"confidence\": 0.98,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.85\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The fresh export decoded 700 level-zero textures.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.91,\n        \"says_nothing\": 0.03,\n        \"contradicts\": 0.06\n      },\n      \"confidence\": 0.87,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.85\n    },\n    {\n      \"id\": \"claim2\",\n      \"claim\": \"The fresh export counted 657139 geometry samples.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.99,\n        \"says_nothing\": 0.01,\n        \"contradicts\": 0\n      },\n      \"confidence\": 0.99,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.93\n    },\n    {\n      \"id\": \"claim3\",\n      \"claim\": \"The export includes 94 stored mip levels but claims level-zero decoding only.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.94,\n        \"says_nothing\": 0.01,\n        \"contradicts\": 0.05\n      },\n      \"confidence\": 0.91,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.79\n    },\n    {\n      \"id\": \"claim4\",\n      \"claim\": \"The fresh export inspected 56 car models.\",\n      \"verdict\": \"unsupported\",\n      \"relation_verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"supports\": 0,\n        \"says_nothing\": 0,\n        \"contradicts\": 1\n      },\n      \"confidence\": 1,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.47\n    },\n    {\n      \"id\": \"claim5\",\n      \"claim\": \"The fresh export decoded 701 level-zero textures.\",\n      \"verdict\": \"unsupported\",\n      \"relation_verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"supports\": 0.01,\n        \"says_nothing\": 0.01,\n        \"contradicts\": 0.98\n      },\n      \"confidence\": 0.98,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.47\n    },\n    {\n      \"id\": \"claim6\",\n      \"claim\": \"The fresh export counted 657138 geometry samples.\",\n      \"verdict\": \"unsupported\",\n      \"relation_verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"supports\": 0,\n        \"says_nothing\": 0,\n        \"contradicts\": 1\n      },\n      \"confidence\": 1,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.35\n    },\n    {\n      \"id\": \"claim7\",\n      \"claim\": \"The export claims every stored mip level is decoded.\",\n      \"verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"supports\": 0,\n        \"says_nothing\": 0.01,\n        \"contradicts\": 0.99\n      },\n      \"confidence\": 0.98,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.59\n    },\n    {\n      \"id\": \"claim8\",\n      \"claim\": \"The exported images are bit-exact with a running GS emulator.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"supports\": 0,\n        \"says_nothing\": 0.97,\n        \"contradicts\": 0.03\n      },\n      \"confidence\": 0.95,\n      \"action\": \"auto\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.05\n    },\n    {\n      \"id\": \"claim9\",\n      \"claim\": \"Every original car triangle has been reconstructed.\",\n      \"verdict\": \"unsupported\",\n      \"probabilities\": {\n        \"says_nothing\": 0.7,\n        \"supports\": 0,\n        \"contradicts\": 0.3\n      },\n      \"confidence\": 0.54,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.08\n    },\n    {\n      \"id\": \"claim10\",\n      \"claim\": \"The exported textures are bound to original mesh UVs.\",\n      \"verdict\": \"unsupported\",\n      \"relation_verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"says_nothing\": 0.35,\n        \"supports\": 0,\n        \"contradicts\": 0.65\n      },\n      \"confidence\": 0.47,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.16\n    },\n    {\n      \"id\": \"claim11\",\n      \"claim\": \"Every alternate livery texture has been recovered.\",\n      \"verdict\": \"unsupported\",\n      \"relation_verdict\": \"contradicted\",\n      \"probabilities\": {\n        \"says_nothing\": 0.25,\n        \"supports\": 0,\n        \"contradicts\": 0.75\n      },\n      \"confidence\": 0.63,\n      \"action\": \"review\",\n      \"supporting_evidence\": null,\n      \"same_subject\": 0.09\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 3847,\n    \"output_tokens\": 760\n  }\n}"
+      }
+    ]
+  },
+  "seconds": 1.219,
+  "expected": [
+    "verified",
+    "verified",
+    "verified",
+    "verified",
+    "contradicted",
+    "contradicted",
+    "contradicted",
+    "contradicted",
+    "unsupported",
+    "unsupported",
+    "unsupported",
+    "unsupported"
+  ]
+}

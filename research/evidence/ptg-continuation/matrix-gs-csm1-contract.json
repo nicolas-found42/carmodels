@@ -1,0 +1,248 @@
+{
+  "schema": "fr2-matrix-gs-clut-contract/v1",
+  "source_identity": {
+    "game": "Ford Racing 2 PAL SLES_517.05",
+    "elf_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+    "typed_export": "frontier-3845-01/types-t2/export-5454-po",
+    "inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+    "decomp_files_sha256": {
+      "0022f948.c": "2cd6ceafbe95f215a924229f2cc8c88107d13857642b2ed8803ae0ef6ee79121",
+      "00220fe0.c": "ec1ba40f4e4ae88d2cbc66635623475efdc5dc749c3c42b4f4a45ddb15623d8a",
+      "00222110.c": "542c7e852e49527c2134baf691b9be4365104f2f680eed8ff80c728c23a338c5",
+      "00220d60.c": "0b5e3e666fcc571cdb4954438f0bb221dc8cf2301841ed8f98b7e51f0318163f"
+    }
+  },
+  "game_code_functions": {
+    "0022f948": {
+      "name": "FUN_0022f948",
+      "instruction_count": 101,
+      "all_instruction_bytes_match_unique_elf_pt_load": true,
+      "canonical_instruction_records_sha256": "1d95adc0927ef49a6b8507f1eee88c676b32f07e8cd8823db83223216f2ccdb1",
+      "call_sites": [
+        {
+          "address": "0022f964",
+          "bytes": "ff31080c",
+          "text": "jal 0x0020c7fc"
+        }
+      ]
+    },
+    "00220fe0": {
+      "name": "FUN_00220fe0",
+      "instruction_count": 229,
+      "all_instruction_bytes_match_unique_elf_pt_load": true,
+      "canonical_instruction_records_sha256": "ea23f1dd02f788adc46fa7acd6a9f12f59bb921ab0f554caa3a36b6d62a35688",
+      "call_sites": [
+        {
+          "address": "00221004",
+          "bytes": "b641040c",
+          "text": "jal 0x001106d8"
+        },
+        {
+          "address": "00221028",
+          "bytes": "7682080c",
+          "text": "jal 0x002209d8"
+        },
+        {
+          "address": "002210c4",
+          "bytes": "4488080c",
+          "text": "jal 0x00222110"
+        },
+        {
+          "address": "00221100",
+          "bytes": "e482080c",
+          "text": "jal 0x00220b90"
+        },
+        {
+          "address": "0022113c",
+          "bytes": "4488080c",
+          "text": "jal 0x00222110"
+        },
+        {
+          "address": "00221170",
+          "bytes": "4488080c",
+          "text": "jal 0x00222110"
+        },
+        {
+          "address": "002211b8",
+          "bytes": "b02b040c",
+          "text": "jal 0x0010aec0"
+        },
+        {
+          "address": "002211e0",
+          "bytes": "7682080c",
+          "text": "jal 0x002209d8"
+        },
+        {
+          "address": "002212a4",
+          "bytes": "4488080c",
+          "text": "jal 0x00222110"
+        },
+        {
+          "address": "002212d4",
+          "bytes": "e482080c",
+          "text": "jal 0x00220b90"
+        },
+        {
+          "address": "00221310",
+          "bytes": "4488080c",
+          "text": "jal 0x00222110"
+        },
+        {
+          "address": "00221340",
+          "bytes": "4488080c",
+          "text": "jal 0x00222110"
+        },
+        {
+          "address": "00221354",
+          "bytes": "9888080c",
+          "text": "jal 0x00222260"
+        },
+        {
+          "address": "00221364",
+          "bytes": "5883080c",
+          "text": "jal 0x00220d60"
+        }
+      ]
+    },
+    "00222110": {
+      "name": "FUN_00222110",
+      "instruction_count": 84,
+      "all_instruction_bytes_match_unique_elf_pt_load": true,
+      "canonical_instruction_records_sha256": "dfbcacb18900aed0c13319d4c1d68e8ada33cb6b5ee4209693199587a0f02ca4",
+      "call_sites": []
+    },
+    "00220d60": {
+      "name": "FUN_00220d60",
+      "instruction_count": 159,
+      "all_instruction_bytes_match_unique_elf_pt_load": true,
+      "canonical_instruction_records_sha256": "7321fd598d278d1a5b8eef60244e86cfbe1aa6f529a167c5aefb97be0da93447",
+      "call_sites": [
+        {
+          "address": "00220dd4",
+          "bytes": "8641040c",
+          "text": "jal 0x00110618"
+        },
+        {
+          "address": "00220fa0",
+          "bytes": "5240040c",
+          "text": "jal 0x00110148"
+        },
+        {
+          "address": "00220fa8",
+          "bytes": "a241040c",
+          "text": "jal 0x00110688"
+        }
+      ]
+    }
+  },
+  "format3_source_contract": {
+    "function_0022f948": "Initializes a 15-byte format table row. Format ID 3 indexes row base DAT_00232dbe; that row has indexed flag 1 at DAT_00232dbe, PSM selector 0x13 at DAT_00232dc6 (row +8), and CPSM selector 0 at DAT_00232dc7 (row +9).",
+    "function_00220fe0": "For each indexed format3 tile, it calls FUN_00222110 using descriptor+0x28 pixels, PSMT8 selector 0x13, 8 bits/pixel, and the descriptor dimensions (32x32). The palette-wrapper branch for wrapper[1]==0 calls FUN_00222110 with the wrapper palette pointer, BITBLTBUF DBW=1, DPSM=0 (PSMCT32), 32 bits/pixel, and 16x16 dimensions; it then loads a 256-entry CLUT with FUN_00220b90 and calls FUN_00220d60.",
+    "function_00222110": "Transfer builder computes payload qwords as width*height*bpp/128. Its param4 is DBW and param5 is DPSM in BITBLTBUF: MATRIX tile upload uses DBW from descriptor and DPSM=0x13 (PSMT8); raw palette upload uses DBW=1 and DPSM=0 (PSMCT32). Palette upload dimensions are 16x16 with bpp=32 (1024 bytes).",
+    "function_00220d60": "For indexed format, TEX0 packs format-table PSM selector into bits20..25, palette CPSM selector into bits51..54, uses destination CLUT base in bits37..50, sets TCC(bit34), dimension exponents from descriptor+0x38 into TW/T H, and CLD=1(bit61). CSM(bit55) and CSA(bits56..60) are zero because no bits are ORed there."
+  },
+  "derived_gs_recipe": {
+    "PSM": "0x13 = PSMT8",
+    "CPSM": "0 = PSMCT32",
+    "CSM_field": "0 (PCSX2 names the corresponding code path CSM1)",
+    "CSA": 0,
+    "CLD": 1,
+    "palette_upload": "Raw 16x16 PSMCT32 palette, no source-order permutation in game uploader."
+  },
+  "palette_index_mapping": {
+    "formula": "mapped_index=(i & ~0x18) | ((i & 0x08)<<1) | ((i & 0x10)>>1)",
+    "meaning": "For T8, CSM=0/CSM1, CPSM=CT32, CSA=0, the GS lookup after raw CT32 palette upload maps index bits 3 and 4 by swapping them; e.g. index 8 reads original upload entry 16. For all136 MATRIX assets, the output uses palette[mapped_index].",
+    "proof_layers": [
+      "Game format table and TEX0 construction are pinned executable-derived code.",
+      "PCSX2 v2.8.2 source at tag v2.8.2 dispatches by CSM/CPSM/PSM; TEX0.CSM=0,CPSM=PSMCT32,PSM=PSMT8 selects WriteCLUT32_I8_CSM1, which uses clutTableT32I8 and T32-I4 lane reordering.",
+      "Official source: https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSClut.cpp and https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSTables.cpp.",
+      "Unit test in sibling PS2Recomp tree independently exercises raw CT32 upload and demonstrates source slot16 appears for texture index8, and a CSA test explicitly documents bit3/4 address swap. This tests an implementation, not PS2 hardware itself."
+    ]
+  },
+  "visual_corroboration": {
+    "variants_compared": 136,
+    "cswapped_lower_mae_count": 136,
+    "linear_lower_mae_count": 0,
+    "mean_mae": {
+      "linear": 39.23154020288671,
+      "bit3_bit4_swap": 29.480370455473857
+    },
+    "limitation": "Reference images use substitute JPEG quantization/Huffman tables and inferred YMCA conversion, so this is not pixel proof; GS contract determines mapping."
+  },
+  "jev": {
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "runs": [
+      {
+        "id": "matrix-gs-source-contract",
+        "summary": {
+          "verified": 3,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0
+        },
+        "results": [
+          {
+            "claim": "Format-3 pixels are PSMT8 and palette is PSMCT32 (CPSM 0).",
+            "verdict": "verified",
+            "confidence": 1.0,
+            "action": "auto"
+          },
+          {
+            "claim": "Format-3 TEX0 uses CSM=0, CSA=0, CLD=1.",
+            "verdict": "verified",
+            "confidence": 0.99,
+            "action": "auto"
+          },
+          {
+            "claim": "Raw 16x16 CT32 upload + CSM=0 uses bit3/4 swap, with index8 loading source slot16.",
+            "verdict": "verified",
+            "confidence": 0.99,
+            "action": "auto"
+          }
+        ],
+        "usage_tokens": {
+          "input": 2254,
+          "output": 385
+        }
+      },
+      {
+        "id": "matrix-output-contract",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0
+        },
+        "results": [
+          {
+            "claim": "MATRIX header profile 90x64, grid3x2, 32x32 tiles and last column26 pixels.",
+            "verdict": "verified",
+            "confidence": 0.91,
+            "action": "auto"
+          },
+          {
+            "claim": "Tool validates 544 outputs against exact expected RGBA and PNG structure/CRCs.",
+            "verdict": "verified",
+            "confidence": 0.99,
+            "action": "auto"
+          }
+        ],
+        "usage_tokens": {
+          "input": 1456,
+          "output": 232
+        }
+      }
+    ],
+    "total_usage_tokens": {
+      "input": 3710,
+      "output": 617
+    },
+    "note": "Jev provides a typed consistency signal over supplied evidence; the raw source, exact-byte checks and independent deterministic reparse are the proof."
+  },
+  "limits": [
+    "PCSX2 source describes a pinned emulator implementation; this is an independent GS contract implementation, not physical-console instrumentation.",
+    "Thumbnail MAE is corroboration only.",
+    "This contract applies to MATRIX format3 assets with wrapper[1]==0; do not generalize to other indexed formats."
+  ]
+}

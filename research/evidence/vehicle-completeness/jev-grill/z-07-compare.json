@@ -1,0 +1,73 @@
+{
+  "args": {
+    "passage_a": "Round-5 finding: the plan omitted how to root the gameflow chain and what proves each thread resolved.",
+    "passage_b": "Q12a/Q13a and the C default now specify rooting (primary+fallback), closure (receipt+gate+report), and C's rows/controls.",
+    "aspects": [
+      "whether the earlier gaps are closed",
+      "remaining assumptions",
+      "readiness"
+    ]
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "contradicts",
+      "probabilities": {
+        "contradicts": 0.42,
+        "different_facts": 0.39,
+        "same_fact": 0.19
+      },
+      "confidence": 0.14,
+      "margin": 0.02999999999999997,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "whether the earlier gaps are closed",
+        "relation": "contradicts",
+        "probabilities": {
+          "contradicts": 0.6,
+          "different_facts": 0.15,
+          "same_fact": 0.25
+        },
+        "confidence": 0.4,
+        "margin": 0.35,
+        "decision": "review"
+      },
+      {
+        "aspect": "remaining assumptions",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.05,
+          "different_facts": 0.93,
+          "same_fact": 0.02
+        },
+        "confidence": 0.89,
+        "margin": 0.88,
+        "decision": "auto"
+      },
+      {
+        "aspect": "readiness",
+        "relation": "different_facts",
+        "probabilities": {
+          "contradicts": 0.31,
+          "different_facts": 0.64,
+          "same_fact": 0.05
+        },
+        "confidence": 0.47,
+        "margin": 0.33,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 848,
+      "output_tokens": 177
+    }
+  }
+}

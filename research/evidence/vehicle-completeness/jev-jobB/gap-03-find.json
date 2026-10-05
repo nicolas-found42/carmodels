@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the single best headless path to the mark number",
+    "candidates": [
+      {
+        "id": "xdotool_debugger",
+        "text": "Install xdotool in the container and drive PCSX2's built-in debugger on :99 to read the watchpoint that touches the highlight."
+      },
+      {
+        "id": "build_debugserver",
+        "text": "Build PCSX2 from source + the DebugServer patch for a headless TCP debug API."
+      },
+      {
+        "id": "pince_scan",
+        "text": "Run PINCE/scanmem against the emulator to narrow the value live."
+      },
+      {
+        "id": "none",
+        "text": "No headless path exists."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the single best headless path to the mark number",
+    "exists": 0.87,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "build_debugserver",
+        "probability": 0.54,
+        "text": "Build PCSX2 from source + the DebugServer patch for a headless TCP debug API."
+      },
+      {
+        "id": "xdotool_debugger",
+        "probability": 0.19,
+        "text": "Install xdotool in the container and drive PCSX2's built-in debugger on :99 to read the watchpoint that touches the highlight."
+      },
+      {
+        "id": "pince_scan",
+        "probability": 0.17,
+        "text": "Run PINCE/scanmem against the emulator to narrow the value live."
+      },
+      {
+        "id": "none",
+        "probability": 0.1,
+        "text": "No headless path exists."
+      }
+    ],
+    "usage": {
+      "input_tokens": 563,
+      "output_tokens": 77
+    }
+  }
+}

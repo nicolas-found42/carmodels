@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "the decisive next experiment to find the mark number",
+    "candidates": [
+      {
+        "id": "same_session_adjacent",
+        "text": "Headless: load a menu state live, deliver one key to move the highlight, save two fresh savestates one car apart, and diff them (only highlight-dependent state changes)."
+      },
+      {
+        "id": "scanmem_unknown",
+        "text": "Headless scanmem/unknown-initial-value scan narrowed by moving the highlight live."
+      },
+      {
+        "id": "live_breakpoint",
+        "text": "A PCSX2 read breakpoint on FUN_001c4a40's draw path to catch the highlight read."
+      },
+      {
+        "id": "more_decomp",
+        "text": "Read the menu-input handler that changes the highlight index."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "the decisive next experiment to find the mark number",
+    "exists": 0.81,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "same_session_adjacent",
+        "probability": 0.59,
+        "text": "Headless: load a menu state live, deliver one key to move the highlight, save two fresh savestates one car apart, and diff them (only highlight-dependent state changes)."
+      },
+      {
+        "id": "scanmem_unknown",
+        "probability": 0.26,
+        "text": "Headless scanmem/unknown-initial-value scan narrowed by moving the highlight live."
+      },
+      {
+        "id": "live_breakpoint",
+        "probability": 0.12,
+        "text": "A PCSX2 read breakpoint on FUN_001c4a40's draw path to catch the highlight read."
+      },
+      {
+        "id": "more_decomp",
+        "probability": 0.03,
+        "text": "Read the menu-input handler that changes the highlight index."
+      }
+    ],
+    "usage": {
+      "input_tokens": 578,
+      "output_tokens": 77
+    }
+  }
+}

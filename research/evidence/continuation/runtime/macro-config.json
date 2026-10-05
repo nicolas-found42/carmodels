@@ -1,0 +1,18 @@
+{
+  "previous_ini_sha256": "cd91c9f8eeb9e59eb6e3600ea334596989fa6289b8ad08bfb4e5cff054ce6742",
+  "new_ini_sha256": "c4f6d8ba25674f1d688a45da9c53559c65fcc00e2bc0c2dca578ef917e7a2052",
+  "reason": "Native controller macros hold buttons until a second host key press, avoiding lost short key pulses; disable MTVU for stable captures.",
+  "macros": {
+    "M": "Cross",
+    "N": "Circle",
+    "I": "Up",
+    "K": "Down",
+    "J": "Left",
+    "L": "Right",
+    "O": "Start",
+    "P": "R2"
+  },
+  "game_memory_modified": false,
+  "verified_ini_sha256": "5c9569a4374505cd4147f42f057e5887a255f82ae4505004a5d67a76f9c50728",
+  "correction": "First config edit raced with shutdown writeback. Reap process fully before mutating owned INI."
+}

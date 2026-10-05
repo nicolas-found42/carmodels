@@ -1,0 +1,269 @@
+{
+  "schema": "fr2-menu98-gif-transfer-trace/v1",
+  "state": {
+    "savestate": "research/evidence/continuation/runtime/linux/sstates/SLES-51705 (37F695CD).98.p2s",
+    "sha256": "9210c85d622619ea101a00d30798e8408d4377515b746619",
+    "screenshot": "research/evidence/continuation/runtime/linux/menu98-Screenshot.png",
+    "screenshot_sha256": "30c6c73f1815f9aff40469934a4109d6e504406ed152ab577d9f33acd91da63a",
+    "screen": "Select a Challenge Theme / Living Legends; six visible car thumbnails"
+  },
+  "capture": {
+    "pcsx2_release": "v2.8.2",
+    "path": "research/evidence/continuation/runtime/linux/snaps/Ford Racing 2_SLES-51705_20261005010217.gs.zst",
+    "compressed_sha256": "126c9a909501d157d5bab5359a66c63cbb6966bf70504e3f671a9ede5ee01ae9",
+    "zstd_test": "pass",
+    "uncompressed_bytes": 16023665,
+    "uncompressed_sha256": "d5ea85248626d60508d16010cd922ced83787cf425994b8f47797acf35a43f70",
+    "event_stream_offset": 5431859,
+    "parser_end_offset": 16023665,
+    "parser_ended_exactly_at_file_end": true
+  },
+  "parser": {
+    "transfer_event_record": "event id 0; one-byte GIF path, little-endian u32 record size, then bounded GIF bytes",
+    "tag_fields": "GIFtag low64 NLOOP[0:14], EOP15, FLG58:59, NREG60:63 (zero means 16); high64 REGS descriptors; IMAGE FLG=2 carries NLOOP*16 payload bytes",
+    "register_write_handling": "Packed FLG=0 descriptors with register id A+D (0xE); A+D address is low byte of second qword. Retained BITBLTBUF (0x50), TRXPOS (0x51), TRXREG (0x52), TRXDIR (0x53) across the serialized stream. Transfer and GIF record sizes were bounds-checked.",
+    "event_totals": {
+      "transfer_events": 10747,
+      "packed_tags": 10173,
+      "image_tags": 1562,
+      "packed_ad_writes": 43112,
+      "images_32x32_psmct32_host_to_local": 150
+    }
+  },
+  "target_upload": {
+    "event_header_offset": 9873483,
+    "path": 3,
+    "event_size": 4112,
+    "gif_tag_offset": 9873489,
+    "image_payload_offset": 9873505,
+    "payload_bytes": 4096,
+    "gif_nloop": 256,
+    "gif_flg": "IMAGE (2)",
+    "gif_transfer_registers": {
+      "BITBLTBUF": "0x129dd00000000",
+      "TRXPOS": "0x0",
+      "TRXREG": "0x2000000020",
+      "TRXDIR": "0x0"
+    },
+    "decoded": {
+      "DBP_blocks": 10717,
+      "DBP_hex": "0x29dd",
+      "DBW": 1,
+      "DPSM": 0,
+      "destination_format": "PSMCT32",
+      "DSAX": 0,
+      "DSAY": 0,
+      "DIR": 0,
+      "RRW": 32,
+      "RRH": 32,
+      "TRXDIR_mode": 0
+    },
+    "source_prefix_offsets_in_payload": [
+      1824,
+      1952
+    ],
+    "interpretation": "A 32x32, 4096-byte PSMCT32 host-to-local transfer to GS base block 0x29dd is present in this captured screen state. This identifies GS transfer semantics/destination for the packet, not a source PTG descriptor or a visible icon binding."
+  },
+  "source_comparison": {
+    "unique_source_ptg_tile_bodies": 3136,
+    "whole_4096_byte_source_tile_matches_in_raw_dump": 0,
+    "whole_4096_byte_source_tile_matches_in_serialized_vram_scan": 0,
+    "prefix_matches": [
+      {
+        "source": "GRAPHICS/GAME/LIVERY/f350c.ptg;1",
+        "tile": 12,
+        "raw_dump_offset": 9875329,
+        "upload_payload_offset": 1824,
+        "matched_prefix_bytes": 64,
+        "full_tile_match": false
+      },
+      {
+        "source": "GRAPHICS/GAME/LIVERY/fordgtc.ptg;1",
+        "tile": 10,
+        "raw_dump_offset": 9875457,
+        "upload_payload_offset": 1952,
+        "matched_prefix_bytes": 64,
+        "full_tile_match": false
+      },
+      {
+        "source": "GRAPHICS/GAME/LIVERY/fordgtc.ptg;1",
+        "tile": 11,
+        "raw_dump_offset": 9875457,
+        "upload_payload_offset": 1952,
+        "matched_prefix_bytes": 64,
+        "full_tile_match": false
+      }
+    ],
+    "caveat": "The three 64-byte prefixes occur inside the identified IMAGE payload, but have no exact 4096-byte continuation and are not asset identifications. Existing raw exact search and aligned-origin PSMCT32 VRAM scan test untransformed source tile bytes; neither exhausts color/alpha remapping, alternate transfer coordinates/pitch, texture reuse, or crop/composition."
+  },
+  "references": [
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSDump.cpp#L32-L74",
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSDump.h#L10-L24",
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSState.cpp#L3130-L3306",
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSLocalMemory.h#L440-L453",
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSLocalMemory.h#L204-L242",
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSTables.cpp#L18-L82",
+    "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSTables.cpp#L234-L245"
+  ],
+  "limits": [
+    "This is a packet-level host-to-local transfer; it does not establish that the upload is one of the visible thumbnails.",
+    "No complete source tile matches this image payload under the raw unchanged-byte scan. No color/alpha transform has yet been source-proven for this specific transfer.",
+    "No PTG file-to-transfer descriptor join, full destination-tile join, or UI sprite draw-to-upload join has been proven from this dump.",
+    "The 3 64-byte prefixes are retained as negative/ambiguous evidence; do not identify them as tiles."
+  ],
+  "transformed_candidate_tests": {
+    "candidate_universe": "3136 unique source tile bodies derived from all 171 archive-bound CARS/LIVERY PTGs; source tile is 32x32 RGBA bytes.",
+    "transform_set": {
+      "component_permutations": 24,
+      "alpha_modes": [
+        "raw",
+        "min(255,2*A)",
+        "opaque 255",
+        "zero"
+      ],
+      "alpha_rule": "alpha mode is applied when the output alpha slot is sourced from the source alpha byte; all four positions/permutation forms otherwise remain byte permutations."
+    },
+    "origin_test": {
+      "method": "Compare each source tile first 16 pixels after each tested transform to payload bytes 0..63.",
+      "candidates": 0,
+      "result": "No complete 32x32 transformed tile can match at upload origin under this transform set because even the first 64 bytes fail."
+    },
+    "displaced_prefix_test": {
+      "method": "Search each transformed 64-byte source-tile prefix throughout the 4096-byte payload at 4-byte-aligned offsets; source origin maps to pixel x=offset%128/4 and y=floor(offset/128).",
+      "candidate_matches": 66,
+      "candidate_identity_count": 18,
+      "unique_source_tiles": 3,
+      "positions_and_identity": {
+        "f350c_tile12": {
+          "offsets": [
+            1824
+          ],
+          "xy": [
+            [
+              8,
+              14
+            ]
+          ],
+          "RGB_permutations": 6,
+          "alpha_modes": [
+            "raw"
+          ]
+        },
+        "fordgtc_tile10": {
+          "offsets": [
+            1952,
+            2076,
+            2204,
+            2328,
+            2456
+          ],
+          "xy": [
+            [
+              8,
+              15
+            ],
+            [
+              7,
+              16
+            ],
+            [
+              7,
+              17
+            ],
+            [
+              6,
+              18
+            ],
+            [
+              6,
+              19
+            ]
+          ],
+          "RGB_permutations": 6,
+          "alpha_modes": [
+            "raw"
+          ]
+        },
+        "fordgtc_tile11": {
+          "offsets": [
+            1952,
+            2076,
+            2204,
+            2328,
+            2456
+          ],
+          "xy": [
+            [
+              8,
+              15
+            ],
+            [
+              7,
+              16
+            ],
+            [
+              7,
+              17
+            ],
+            [
+              6,
+              18
+            ],
+            [
+              6,
+              19
+            ]
+          ],
+          "RGB_permutations": 6,
+          "alpha_modes": [
+            "raw"
+          ]
+        }
+      },
+      "note": "Repeated prefix positions come from repeated pixel sequences in the payload; they are candidate locations, not distinct asset evidence."
+    },
+    "crop_continuation_test": {
+      "method": "For candidates at offsets 1824 and 1952, place source tile pixel (0,0) at the matching upload pixel and compare every remaining in-bounds pixel using each matching RGB permutation. This tests the resulting 24x18 and 24x17 visible crops, 432 and 408 pixels.",
+      "results": {
+        "checks": 18,
+        "complete_crop_matches": 0,
+        "each_candidate_matches_initial_pixels": 16,
+        "first_mismatch": "the first compared pixel after the matched 16-pixel prefix"
+      },
+      "interpretation": "The hit covers exactly a 16-pixel prefix; no matching cropped tile continuation was found."
+    },
+    "limits": [
+      "No source-derived runtime channel transform or alpha equation has been proved; this is an adversarial candidate search only.",
+      "Does not cover arbitrary color curves, alpha-test survival, per-component arithmetic other than alpha doubling/clamp, non-RGBA encodings, or source pixels whose tile origin is outside the 32x32 upload (arbitrary crop windows).",
+      "A prefix match remains ambiguous; do not promote it to an asset identity."
+    ],
+    "all_150_uploads": {
+      "candidate_universe": "All 150 32x32 PSMCT32 host-to-local IMAGE payloads from the menu98 dump; each 4096 bytes. Same 3136 unique source PTG tile bodies.",
+      "transform_set": {
+        "component_permutations": 24,
+        "alpha_modes": [
+          "raw",
+          "min(255,2*A)",
+          "opaque 255",
+          "zero"
+        ],
+        "alpha_rule": "alpha mode is applied when the output alpha slot is sourced from the source alpha byte; all four positions/permutation forms otherwise remain byte permutations."
+      },
+      "method": "For each transformed source tile first-16-pixel (64-byte) prefix, index all unique pixel-aligned 64-byte windows in all 150 upload payloads. Every matching prefix candidate places source tile pixel (0,0) at that in-bounds payload coordinate; compare the entire remaining source-origin crop through the payload edge.",
+      "measurements": {
+        "unique_pixel_aligned_payload_windows": 49400,
+        "distinct_transformed_tile_prefixes": 67443,
+        "prefix_candidate_hits": 14220,
+        "upload_payloads_with_candidates": 44,
+        "full_in_bounds_crop_tests": 14220,
+        "full_crop_matches": 0,
+        "maximum_initial_pixels_matched_before_first_difference": 27
+      },
+      "limits": [
+        "This tests source-tile-origin placements with source-origin continuation, not arbitrary source crop origins outside the upload.",
+        "Only tested channel permutations and alpha modes are covered; arbitrary color/alpha arithmetic, alpha-test-dependent output, swizzle/twiddle transformations, and intermediate copies remain untested.",
+        "Prefix hit counts include many repeated candidate sequences and are not unique source-asset identifications."
+      ]
+    }
+  }
+}

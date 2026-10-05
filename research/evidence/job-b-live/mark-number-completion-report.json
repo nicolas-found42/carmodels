@@ -1,0 +1,53 @@
+{
+  "goal": "find the mark number (the game's own id for the highlighted car)",
+  "result": "NOT FOUND in any savestate \u2014 exhaustive and negative; needs a live tool",
+  "experiments": [
+    {
+      "id": "cross_session_tuple_scan",
+      "what": "3 EE images, all widths, highlight tuple (1,5,4)/(0,4,3)",
+      "result": "(1,5,4)=0 all widths; (0,4,3) only u8 VU noise"
+    },
+    {
+      "id": "per_entity_flag",
+      "what": "one-of-six 'selected' flag across the 6 car entities",
+      "result": "0 strong hits at width 1/2/4"
+    },
+    {
+      "id": "pointer_to_highlighted",
+      "what": "common address holding a pointer to the highlighted node/entity",
+      "result": "none (heap addresses differ across sessions)"
+    },
+    {
+      "id": "all_savestate_members",
+      "what": "EE + IOP RAM + VU0/VU1 + EE/IOP hw regs + PAD + scratchpad, all widths",
+      "result": "0 hits for (1,5,4)"
+    },
+    {
+      "id": "live_pine_chain",
+      "what": "traverse the entity chain live over read-only PINE",
+      "result": "resolves: 0x290278 -> 0x473d70 -> 6 car entities; store entity+0x64 float"
+    },
+    {
+      "id": "ps2dev",
+      "what": "github.com/ps2dev",
+      "result": "homebrew toolchain only (ps2sdk/ps2gl/ps2client/ps2link/ps2gdb); no memory-search/pointer tool for a retail game"
+    }
+  ],
+  "conclusion": "The mark is not stored in any savestate as a readable integer or pointer. Isolating it needs a LIVE tool (a PCSX2 read/write breakpoint or a live value scan) \u2014 which the project's read-only constraint currently excludes.",
+  "the_one_remaining_path": {
+    "tool": "PCSX2 read/write breakpoint on the menu draw path (FUN_001c4a40) OR a live value scan",
+    "needs": "the user to lift the read-only rule (writes no game data; a debugger feature)"
+  },
+  "receipts": [
+    "research/evidence/job-b-live/mark-number-exhaustive-search.json",
+    "research/evidence/job-b-live/selector-live-findings.json",
+    "research/evidence/vehicle-completeness/jev-jobB/ (mark-*, mclose-* receipts)"
+  ],
+  "jev": {
+    "batteries": 2,
+    "calls": 24,
+    "decide": "exhausted_live_needed 0.99",
+    "gate": "escalate, composite 0.8178, 3/3 verified, 0 contradicted"
+  },
+  "render_fidelity_complete": false
+}

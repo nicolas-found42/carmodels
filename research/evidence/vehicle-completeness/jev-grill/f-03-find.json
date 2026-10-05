@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "any decision still silently assumed in the final plan",
+    "candidates": [
+      {
+        "id": "bounded_pass",
+        "text": "The indirection pass is defined as one bounded read plus one caller walk."
+      },
+      {
+        "id": "c_single_tool",
+        "text": "C keeps both assertions in one tool and receipt."
+      },
+      {
+        "id": "b_outcome",
+        "text": "B resolved is a definite outcome, cursor open allowed."
+      },
+      {
+        "id": "hidden",
+        "text": "A branch remains that nothing in the plan decides."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "any decision still silently assumed in the final plan",
+    "exists": 0.93,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "hidden",
+        "probability": 0.99,
+        "text": "A branch remains that nothing in the plan decides."
+      },
+      {
+        "id": "b_outcome",
+        "probability": 0.01,
+        "text": "B resolved is a definite outcome, cursor open allowed."
+      },
+      {
+        "id": "bounded_pass",
+        "probability": 0,
+        "text": "The indirection pass is defined as one bounded read plus one caller walk."
+      },
+      {
+        "id": "c_single_tool",
+        "probability": 0,
+        "text": "C keeps both assertions in one tool and receipt."
+      }
+    ],
+    "usage": {
+      "input_tokens": 519,
+      "output_tokens": 68
+    }
+  }
+}

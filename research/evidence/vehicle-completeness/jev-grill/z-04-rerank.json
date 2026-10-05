@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "how well the complete plan answers the residual-branch findings",
+    "candidates": [
+      {
+        "id": "q12_closes",
+        "text": "Q12a closes the gameflow rooting branch."
+      },
+      {
+        "id": "q13_closes",
+        "text": "Q13a closes the closure-artifact branch."
+      },
+      {
+        "id": "c_default",
+        "text": "C's all-35 row set with controls closes C's row/control branch."
+      },
+      {
+        "id": "still_open",
+        "text": "Some branch is still unspecified."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "how well the complete plan answers the residual-branch findings",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "still_open",
+        "relevance": 0.71,
+        "text": "Some branch is still unspecified."
+      },
+      {
+        "rank": 2,
+        "id": "q13_closes",
+        "relevance": 0.69,
+        "text": "Q13a closes the closure-artifact branch."
+      },
+      {
+        "rank": 3,
+        "id": "q12_closes",
+        "relevance": 0.56,
+        "text": "Q12a closes the gameflow rooting branch."
+      },
+      {
+        "rank": 4,
+        "id": "c_default",
+        "relevance": 0.55,
+        "text": "C's all-35 row set with controls closes C's row/control branch."
+      }
+    ],
+    "usage": {
+      "input_tokens": 598,
+      "output_tokens": 76
+    }
+  }
+}

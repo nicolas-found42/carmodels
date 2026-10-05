@@ -1,0 +1,95 @@
+{
+  "session": "2026-10-05 execution of the grilled plan (threads A/B/C)",
+  "order": [
+    "A",
+    "B",
+    "C"
+  ],
+  "outcomes": {
+    "A": {
+      "status": "definite (consistent)",
+      "tool": "tools/verify_sound_bank_index.py",
+      "receipt": "research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json",
+      "result": "VERIFY OK",
+      "verdict": "consistent",
+      "controls": [
+        "off_by_one_mapping_rejected",
+        "swapped_table_rejected",
+        "ordinals_sequential"
+      ],
+      "gate": "research/evidence/vehicle-completeness/jev-exec/exec-13b-gate-A.json (3/3 verified, 0 contradicted, escalate)"
+    },
+    "B": {
+      "status": "definite (recorded open)",
+      "tool": "tools/verify_selector_word.py",
+      "receipt": "research/evidence/vehicle-completeness/selector-word-isolation.json",
+      "result": "PASS (definite outcome recorded)",
+      "named": "livery store entity+0x64 via FUN_00121e10",
+      "recorded_open": "per-screen CAR highlight cursor (0 exact-base pointers, 0 entity-flag sig-scan candidates)",
+      "controls": [
+        "all_default_livery",
+        "no_exact_base_pointer",
+        "region_scan_is_broad_noise",
+        "flag_scan_empty",
+        "no_value_match_claimed"
+      ],
+      "gate": "research/evidence/vehicle-completeness/jev-exec/exec-15b-gate-B.json (3/3 verified, 0 contradicted, escalate)"
+    },
+    "C": {
+      "status": "definite (35/35)",
+      "tool": "tools/resolve_display_names.py",
+      "receipt": "research/evidence/vehicle-completeness/full-display-name-table.json",
+      "result": "VERIFY OK",
+      "rows": 35,
+      "both_assertions": "3-pair T3 regression + all-35 car-keyed",
+      "controls": [
+        "unknown_key_unresolved",
+        "apostrophe_byte_exact",
+        "enum_matches_cardata"
+      ],
+      "gate": "research/evidence/vehicle-completeness/jev-exec/exec-14b-gate-C.json (3/3 verified, 0 contradicted, escalate)"
+    }
+  },
+  "composite_gate": "research/evidence/vehicle-completeness/jev-exec/exec-12c-gate.json (4/4 verified, 0 contradicted, escalate)",
+  "regression": "python3 tools/test_retained_packet_evidence.py -> RETAINED PACKET EVIDENCE OK",
+  "invariants": {
+    "canonical_index_sha256": "9fcbac873a96b72d8ef71822f3e0fcccc7bec1a174da18b8a54e93090063befe",
+    "canonical_index_unchanged": true,
+    "t2_verifier_unchanged": "tools/verify_config_data_sound.py VERIFY OK (not modified)",
+    "render_fidelity_complete": false,
+    "source_checkout_edited": false
+  },
+  "jev": {
+    "grill_batteries": 8,
+    "grill_calls": 100,
+    "exec_calls": 14,
+    "gates": "all escalate (acceptable recorded outcome); 0 contradicted on real claims",
+    "one_contradiction_found_and_fixed": "exec-13 gate-A contradicted 'discarded ordinal, not the name index' -> corrected to per-bank ordinal coincident with the index"
+  },
+  "new_tools": [
+    "tools/verify_sound_bank_index.py",
+    "tools/verify_selector_word.py",
+    "tools/battery_grill_plan.py",
+    "tools/battery_grill_selector.py",
+    "tools/battery_grill_round3.py",
+    "tools/battery_grill_round4.py",
+    "tools/battery_grill_capstone.py",
+    "tools/battery_grill_final.py",
+    "tools/battery_grill_round5.py",
+    "tools/battery_grill_complete.py",
+    "tools/battery_exec.py"
+  ],
+  "new_receipts": [
+    "research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json",
+    "research/evidence/vehicle-completeness/selector-word-isolation.json",
+    "research/evidence/vehicle-completeness/full-display-name-table.json",
+    "research/evidence/vehicle-completeness/t3-display-name-resolution-validation.json (extended)",
+    "research/evidence/vehicle-completeness/jev-exec/ (14)"
+  ],
+  "residual_risk": [
+    "B: the per-screen highlight cursor stays unnamed; a live (unpaused, pointer-chain) capture may still expose it.",
+    "C: en-only; other locale tlate_*.dat not resolved; the historical '136-entry' phrasing may persist in older notes.",
+    "A: none material; mapping read straight from the ELF tables."
+  ],
+  "render_fidelity_complete": false
+}

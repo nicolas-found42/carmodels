@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "next step after the three captured labels resolve through the archive",
+    "candidates": [
+      {
+        "id": "close_t3",
+        "text": "Gate the resolver and close T3."
+      },
+      {
+        "id": "full_table",
+        "text": "Resolve the full 136-entry TXT_CARS_* table."
+      },
+      {
+        "id": "selector",
+        "text": "Isolate the EE per-screen numeric selector word."
+      },
+      {
+        "id": "stop",
+        "text": "Stop; keep the three-pair result as the delivered scope."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "next step after the three captured labels resolve through the archive",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "stop",
+        "relevance": 0.6,
+        "text": "Stop; keep the three-pair result as the delivered scope."
+      },
+      {
+        "rank": 2,
+        "id": "close_t3",
+        "relevance": 0.57,
+        "text": "Gate the resolver and close T3."
+      },
+      {
+        "rank": 3,
+        "id": "full_table",
+        "relevance": 0.33,
+        "text": "Resolve the full 136-entry TXT_CARS_* table."
+      },
+      {
+        "rank": 4,
+        "id": "selector",
+        "relevance": 0.21,
+        "text": "Isolate the EE per-screen numeric selector word."
+      }
+    ],
+    "usage": {
+      "input_tokens": 597,
+      "output_tokens": 76
+    }
+  }
+}

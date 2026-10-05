@@ -1,0 +1,102 @@
+{
+  "args": {
+    "claims": [
+      "The RFB key injector unpaused the container headlessly (Space toggled status 1->0).",
+      "Live PINE diffs found words that respond to the arrow keys.",
+      "0x241b60 reads (5,4,4) across slots 102/103/104, so it is not a per-car highlight id.",
+      "The mark number was found.",
+      "The menu highlight is not stored as a per-car integer in EE."
+    ],
+    "evidence": "Mark-number live attempt, headless: unpaused the container via a stdlib RFB key injector to the container's own Xvfb (no host focus); live PINE diff found words that respond to the arrow keys (0x241b60, 0x241e00 change with L/J but not without input). DECISIVE TEST: loaded slots 102/103/104 (highlights car1/car5/car4 = positions 1/5/4) live and read the candidates: 0x241b60 reads (5,4,4) and 0x241e00 reads (5,4,4) - NOT a per-car id (car5 and car4 both read 4). So the responsive words are an animation/other cursor, NOT the mark. Combined with the exhaustive scan (no width holds (1,5,4)), the conclusion stands: the menu highlight is not stored as a per-car integer in EE. The live method itself works (keys + PINE reads headless)."
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 0,
+      "unsupported": 1,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The RFB key injector unpaused the container headlessly (Space toggled status 1->0).",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0.05,
+          "contradicts": 0.04,
+          "supports": 0.91
+        },
+        "confidence": 0.86,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.73
+      },
+      {
+        "id": "claim1",
+        "claim": "Live PINE diffs found words that respond to the arrow keys.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim2",
+        "claim": "0x241b60 reads (5,4,4) across slots 102/103/104, so it is not a per-car highlight id.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.98
+      },
+      {
+        "id": "claim3",
+        "claim": "The mark number was found.",
+        "verdict": "unsupported",
+        "relation_verdict": "contradicted",
+        "probabilities": {
+          "says_nothing": 0.07,
+          "contradicts": 0.83,
+          "supports": 0.1
+        },
+        "confidence": 0.75,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.46
+      },
+      {
+        "id": "claim4",
+        "claim": "The menu highlight is not stored as a per-car integer in EE.",
+        "verdict": "verified",
+        "probabilities": {
+          "says_nothing": 0,
+          "contradicts": 0,
+          "supports": 1
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.95
+      }
+    ],
+    "usage": {
+      "input_tokens": 1953,
+      "output_tokens": 311
+    }
+  }
+}

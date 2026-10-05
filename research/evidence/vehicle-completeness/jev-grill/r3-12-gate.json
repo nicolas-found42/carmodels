@@ -1,0 +1,140 @@
+{
+  "args": {
+    "request": "Adopt: B resolved = definite outcome; C = new tool + T4; order A->B->C.",
+    "diff": "{\n \"B_resolved\": \"definite outcome (named address OR evidenced open)\",\n \"C\": \"new tool resolve_all_display_names.py + ticket T4\",\n \"order\": [\n  \"A\",\n  \"B\",\n  \"C\"\n ]\n}",
+    "claims": [
+      "B resolved is defined as a definite outcome, not a required positive find.",
+      "C is delivered as a new tool and ticket.",
+      "render_fidelity_complete stays false throughout."
+    ],
+    "evidence": "Settled for the next session: order A (sound index) -> B (selector) -> C (display-name table). B proof bar = a decompilation-reachable address, not a value match. Claim ceiling = render_fidelity_complete false on every artifact, partial claims only. B method = decompilation-first trace of FUN_0019eb90 -> FUN_00125640 -> FUN_00121e10, then ONE time-boxed indirection pass before recording the thread open. A method = settle with a definite verdict (consistent | off_by_one | undecidable) from the soundman consumer. Stop condition 7b = do NOT stop until all three threads are resolved (C now required, not optional).\n\nTension: Jev rounds 1-2 put 'an isolated EE word that tracks the highlight exists' at 0.13 likely-false and contradicted 'the highlight is stored as a plain integer word in EE main RAM' (0.88); the fallback allows recording the selector thread open. But stop-condition 7b says do not stop until all three threads are resolved. If B yields no positive find, 'resolved' must mean a definite outcome (named address OR evidenced open) or the session cannot end.\n\nC target: Jev round-1 classify labeled C breadth_only, auto. The '136' figure refers either to the 35 cars or to the 136 liveries (exact meaning pending a fact check). LANGUAGE/tlate_en.dat;1 holds TXT_CARS_* keys that build_reference.py already parses; T3 already resolved three pairs (COUPE_1949/THUNDERBIRD_2002/FORTYNINE).\n\nDecide: {\"tool\": \"jev_decide\", \"model\": \"typesafe/jev-1.13\", \"provider\": \"openrouter\", \"recommendation\": {\"selected\": \"definite_outcome\", \"escaped\": false, \"confidence\": 0.99, \"probabilities\": {\"definite_outcome\": 1, \"none\": 0, \"escalate_if_no_find\": 0, \"investigate\": 0, \"positive_find\": 0, \"ask_user\": 0}, \"contradicted_requirements\": []}, \"requirements_checked\": 3, \"checks\": [{\"candidate\": \"definite_outcome\", \"requirement\": 0, \"answer\": \"supported\"}, {\"candidate\": \"definite_outcome\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"definite_outcome\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"positive_find\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"positive_find\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"positive_find\", \"requirement\": 2, \"answer\": \"supported\"}, {\"candidate\": \"escalate_if_no_find\", \"requirement\": 0, \"answer\": \"contradicted\"}, {\"candidate\": \"escalate_if_no_find\", \"requirement\": 1, \"answer\": \"supported\"}, {\"candidate\": \"escalate_if_no_find\", \"requirement\": 2, \"answer\": \"supported\"}], \"warnings\": [], \"usage\": {\"input_tokens\": 2267, \"output_tokens\": 458}}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_unsupported",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "safe_to_apply": 0.2,
+      "scores": {
+        "correctness": {
+          "score": 1.49,
+          "confidence": 0.23,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.24,
+            "2": 0.62
+          }
+        },
+        "spec_match": {
+          "score": 1.73,
+          "confidence": 0.6,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.21,
+            "2": 0.76
+          }
+        },
+        "test_gap": {
+          "score": 1.38,
+          "confidence": 0.07,
+          "probabilities": {
+            "0": 0.27,
+            "1": 0.08,
+            "2": 0.65
+          }
+        },
+        "blast_radius": {
+          "score": 0.87,
+          "confidence": 0.14,
+          "probabilities": {
+            "0": 0.35,
+            "1": 0.43,
+            "2": 0.22
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.68875,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    "verification": {
+      "action": "review",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 1,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "B resolved is defined as a definite outcome, not a required positive find.",
+          "verdict": "verified",
+          "confidence": 0.99,
+          "probabilities": {
+            "verified": 0.99,
+            "unsupported": 0.01,
+            "contradicted": 0
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "C is delivered as a new tool and ticket.",
+          "verdict": "unsupported",
+          "confidence": 0.73,
+          "probabilities": {
+            "verified": 0.02,
+            "unsupported": 0.82,
+            "contradicted": 0.16
+          },
+          "action": "review"
+        },
+        {
+          "claim": "render_fidelity_complete stays false throughout.",
+          "verdict": "verified",
+          "confidence": 0.97,
+          "probabilities": {
+            "verified": 0.98,
+            "unsupported": 0.02,
+            "contradicted": 0
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 2216,
+      "output_tokens": 198
+    }
+  }
+}

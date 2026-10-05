@@ -1,0 +1,57 @@
+{
+  "job": "B \u2014 per-screen selector word",
+  "approach": "headless, read-only: PINE guest-memory reads in the fr2-recovery-headless container",
+  "outcome": "definite recorded outcome \u2014 livery store named, per-screen highlight recorded OPEN",
+  "what_was_run": [
+    "extended tools/headless-runtime/pine_control.py with PINE read opcodes MsgRead8/16/32/64 (no writes)",
+    "loaded slots 102/103/104 live in the container and traversed the entity chain over PINE",
+    "exhaustive tuple scan of all three 32 MiB EE images (widths 8/16/32)"
+  ],
+  "live_chain": {
+    "root_global": "0x290278",
+    "manager": "0x473d70 (stable across all three savestates)",
+    "car_entities": "6 (node+0x10; type bytes 0..5)",
+    "read_only": true
+  },
+  "named_store": {
+    "addr": "entity+0x64 (node+0x10+0x64)",
+    "type": "float",
+    "writer": "FUN_00121e10"
+  },
+  "highlight_evidence": {
+    "tuple_1_5_4_hits": {
+      "u32": 0,
+      "u16": 0,
+      "u8": 0
+    },
+    "tuple_0_4_3_hits": {
+      "u32": 0,
+      "u16": 2,
+      "u8": 97
+    },
+    "conclusion": "the per-screen highlight is not stored as a readable EE integer or pointer"
+  },
+  "receipts": [
+    "research/evidence/job-b-live/selector-live-findings.json",
+    "research/evidence/job-b-live/probe-slot102.json",
+    "research/evidence/job-b-live/probe-slot103.json",
+    "research/evidence/job-b-live/probe-slot104.json",
+    "research/evidence/vehicle-completeness/job-b-remedy-methods-survey.md",
+    "research/evidence/vehicle-completeness/jev-jobB/ (24 receipts)"
+  ],
+  "jev": {
+    "batteries": 2,
+    "calls": 24,
+    "decide": "record_open 1.00",
+    "gate": "escalate, composite 0.8855, 4/4 verified, 0 contradicted",
+    "false_overclaim_control": "'per-screen selector word was isolated' contradicted 0.92 (as intended)"
+  },
+  "policy": {
+    "guest_memory_writes": false,
+    "breakpoints_used": false,
+    "host_focus_stolen": false,
+    "note": "read-only PINE reads and existing-savestate loads only; no writes, cheats, patches, or breakpoints"
+  },
+  "next_possible": "trace FUN_001c4a40's param_5 byte (entity+0x11) / a headless read breakpoint on the draw path (Jev close-04 menu_struct 0.61)",
+  "render_fidelity_complete": false
+}

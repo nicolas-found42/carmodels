@@ -1,0 +1,115 @@
+{
+  "args": {
+    "items": [
+      {
+        "id": "plain_word",
+        "text": "Highlight stored as a plain integer word in EE RAM."
+      },
+      {
+        "id": "indirect",
+        "text": "Selection reached only via pointer/heap struct."
+      },
+      {
+        "id": "no_bytes",
+        "text": "No label strings in EE; labels via archive + glyphs."
+      },
+      {
+        "id": "no_word_hit",
+        "text": "0 word hits for the highlight tuple; 97 noisy byte hits."
+      }
+    ],
+    "classes": [
+      {
+        "id": "supports_direct_word",
+        "description": "Evidence that a plain integer word holds the highlight. Example: a small-int cursor in RAM."
+      },
+      {
+        "id": "supports_indirection",
+        "description": "Evidence the value is behind a pointer/struct so direct diffs miss it. Example: label bytes absent and draw code indirection."
+      },
+      {
+        "id": "neutral",
+        "description": "Consistent with both storage forms."
+      }
+    ],
+    "purpose": "sort selector evidence by storage form",
+    "context": "Selector thread design."
+  },
+  "result": {
+    "tool": "jev_classify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "summary": {
+      "items": 4,
+      "auto": 3,
+      "review": 1,
+      "invalid_response": 0,
+      "by_class": {
+        "supports_direct_word": 1,
+        "supports_indirection": 3
+      }
+    },
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "results": [
+      {
+        "id": "plain_word",
+        "classification": "supports_direct_word",
+        "probabilities": {
+          "supports_direct_word": 1,
+          "supports_indirection": 0,
+          "neutral": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "indirect",
+        "classification": "supports_indirection",
+        "probabilities": {
+          "supports_direct_word": 0,
+          "supports_indirection": 1,
+          "neutral": 0
+        },
+        "confidence": 1,
+        "margin": 1,
+        "top_probability": 1,
+        "decision": "auto"
+      },
+      {
+        "id": "no_bytes",
+        "classification": "supports_indirection",
+        "probabilities": {
+          "supports_direct_word": 0.01,
+          "supports_indirection": 0.96,
+          "neutral": 0.03
+        },
+        "confidence": 0.94,
+        "margin": 0.9299999999999999,
+        "top_probability": 0.96,
+        "decision": "auto"
+      },
+      {
+        "id": "no_word_hit",
+        "classification": "supports_indirection",
+        "probabilities": {
+          "supports_direct_word": 0.04,
+          "supports_indirection": 0.75,
+          "neutral": 0.21
+        },
+        "confidence": 0.62,
+        "margin": 0.54,
+        "top_probability": 0.75,
+        "decision": "review"
+      }
+    ],
+    "usage": {
+      "input_tokens": 719,
+      "output_tokens": 163
+    }
+  }
+}

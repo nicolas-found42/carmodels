@@ -1,0 +1,63 @@
+{
+  "args": {
+    "query": "next step to settle the sound-index question",
+    "candidates": [
+      {
+        "id": "read_soundman",
+        "text": "Read the soundman function that consumes sounds\\carN_snd:B:O:C and state what B indexes."
+      },
+      {
+        "id": "fix_t2",
+        "text": "Pre-emptively change build_reference to an index rule."
+      },
+      {
+        "id": "accept_name",
+        "text": "Accept the name-based mapping as sufficient because samples say CAR6."
+      },
+      {
+        "id": "runtime_probe",
+        "text": "Probe the bank loads at runtime."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_rerank",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "next step to settle the sound-index question",
+    "summary": {
+      "candidates": 4,
+      "returned": 4
+    },
+    "ranked": [
+      {
+        "rank": 1,
+        "id": "read_soundman",
+        "relevance": 0.82,
+        "text": "Read the soundman function that consumes sounds\\carN_snd:B:O:C and state what B indexes."
+      },
+      {
+        "rank": 2,
+        "id": "accept_name",
+        "relevance": 0.63,
+        "text": "Accept the name-based mapping as sufficient because samples say CAR6."
+      },
+      {
+        "rank": 3,
+        "id": "fix_t2",
+        "relevance": 0.6,
+        "text": "Pre-emptively change build_reference to an index rule."
+      },
+      {
+        "rank": 4,
+        "id": "runtime_probe",
+        "relevance": 0.13,
+        "text": "Probe the bank loads at runtime."
+      }
+    ],
+    "usage": {
+      "input_tokens": 605,
+      "output_tokens": 76
+    }
+  }
+}

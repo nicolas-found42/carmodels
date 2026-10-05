@@ -1,0 +1,76 @@
+{
+  "purpose": "Check whether another executable path that initializes PTG-like mip fields can account for the CARS descriptor sentinels.",
+  "primary_executable": {
+    "path": "reverse-engineering/games/ford-racing-2/extracted/SLES_517.05",
+    "sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+    "string_va": "0x28f110",
+    "string_file_offset": "0x200110",
+    "string_bytes": "%s.ps2\\0",
+    "va_to_file_offset": "VA - 0xff000"
+  },
+  "saved_decompilation": {
+    "root": "reverse-engineering/.scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions",
+    "hashes": {
+      "0011ed90.c": "8cedf6847f21090b17e082d4c2a2d423cc2d57d08c392db6d7dc9125bb5d87cc",
+      "0022ba30.c": "739430567be7971820aaef961423dbe7e3f4f19072c6cc4b777fa7390181b9b2",
+      "0022aed8.c": "af310ef8929c6a6ade7fba970341558e3e95c6ccac772f293d3b1af233465389",
+      "001d3a78.c": "4ac1442382fef42dacf906051c0e1fe812459d5a71a90dd0ffa52c389df31e18"
+    }
+  },
+  "static_facts": [
+    {
+      "claim": "FUN_0011ed90 builds a path using `%s.ps2`, loads it, parses its container, and calls FUN_0022ba30.",
+      "evidence": "Saved pseudocode calls FUN_00101730 with format address 0x28f110, then FUN_00107ce0, FUN_00123908 and FUN_0022ba30. Raw executable bytes at the format address spell `%s.ps2`."
+    },
+    {
+      "claim": "FUN_0022ba30 explicitly creates runtime mip pointers and count state.",
+      "evidence": "Its saved pseudocode reads byte +0x35, allocates and stores pointer +0x2c, writes each subsequent mip payload pointer, advances through records, then calls FUN_0022c660."
+    },
+    {
+      "claim": "The saved export's only caller of FUN_0022ba30 is FUN_0011ed90.",
+      "evidence": "Exact-call search over the saved decompilation function exports returned only the call in FUN_0011ed90.c. This is limited to the coverage of that saved export set."
+    },
+    {
+      "claim": "FUN_0022aed8 is a separate constructor/parser caller used by FUN_001d3a78.",
+      "evidence": "Saved pseudocode for FUN_001d3a78 calls FUN_0022aed8 with buffer VA 0x244418, length 0x60dd and resource type 9, then passes its returned texture object to FUN_00220678. FUN_0022aed8 unwraps a buffer, calls FUN_0022acc8, and links the created object into the global resource list. No CARS loader call is present in this sequence."
+    }
+  ],
+  "interpretation": "The source has a separate .ps2 container path that explicitly initializes mip fields. The exported caller graph does not route CARS .ptg data through it, so this path does not explain or repair the car descriptor +0x2c/+0x35 sentinel values. The inline-buffer texture path is also separate from the CARS async loader in the examined exports.",
+  "jev": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "usage": {
+      "input_tokens": 1962,
+      "output_tokens": 367
+    },
+    "summary": {
+      "verified": 2,
+      "contradicted": 1,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "claim": "FUN_0022ba30 initializes mip records and is called from FUN_0011ed90.",
+        "verdict": "verified",
+        "confidence": 0.99,
+        "action": "auto"
+      },
+      {
+        "claim": "FUN_0011ed90 formats a `%s.ps2` path and then calls FUN_0022ba30.",
+        "verdict": "verified",
+        "confidence": 1,
+        "action": "auto"
+      },
+      {
+        "claim": "FUN_0022ba30's mip setup proves CARS PTG descriptors pass through it.",
+        "verdict": "contradicted",
+        "confidence": 0.98,
+        "action": "auto"
+      }
+    ],
+    "receipt_note": "Jev evaluated the supplied decompilation and call-search evidence; this is not proof from executing the routines."
+  },
+  "conclusion": "This alternative static branch cannot close the CARS PTG sentinel or draw/composition gap."
+}

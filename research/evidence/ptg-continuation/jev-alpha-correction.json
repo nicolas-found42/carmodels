@@ -1,0 +1,21 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {"verified": 5, "contradicted": 0, "unsupported": 0, "needs_review": 0},
+  "results": [
+    {"claim": "GS register address 0x3f is TEXFLUSH, 0x47 is TEST_1, and 0x42 is ALPHA_1 according to the pinned GS register definitions.", "verdict": "verified", "confidence": 1.0, "action": "auto", "supporting_evidence": "gs-register-map"},
+    {"claim": "Raw instructions in FUN_0021fd50 enqueue literal tokens 0x47, 0x4e, 0x44, and 0x42, with computed words between some tokens; this establishes TEST_1- and ALPHA_1-related packet activity but not a complete blend equation.", "verdict": "verified", "confidence": 0.89, "action": "auto", "supporting_evidence": "fresh-raw-instructions"},
+    {"claim": "FUN_00220d60's selector-dependent 0x3f write is TEXFLUSH, so it is incorrect to label that write TEST state.", "verdict": "verified", "confidence": 0.99, "action": "auto", "supporting_evidence": "fresh-raw-instructions"},
+    {"claim": "FUN_00220678 stores incoming a1 at stack offset zero, then sets a1=1, a3=incoming a0, a0=a2=0, t0=(saved a1 & 0xffff), and delay-slot t1=1 for its call to FUN_0021fd50.", "verdict": "verified", "confidence": 0.92, "action": "auto", "supporting_evidence": "wrapper-bytes"},
+    {"claim": "At 0x174370, FUN_00173938 calls FUN_0015b280 with the LIVERY string 0x25a1d0 as a0, s0 as a1, zero a2/a3, t0=2, and the preceding loaded flag masked into t1; this is a UI setup call, not by itself proof of LIVERY file loading.", "verdict": "verified", "confidence": 0.99, "action": "auto", "supporting_evidence": "livery-raw"}
+  ],
+  "usage": {"input_tokens": 3547, "output_tokens": 647},
+  "source_identity": {
+    "executable_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+    "fresh_inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b"
+  },
+  "limitation": "Jev judged the supplied claims against excerpts. Pinned executable bytes, primary GS register definitions, and code-level analysis are the technical evidence; the receipt is a bounded review signal."
+}

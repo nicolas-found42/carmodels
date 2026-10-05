@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "Mark-number search result, exhaustive: across all three menu savestates I searched EVERY savestate member (EE main RAM 32 MiB, IOP RAM 2 MiB, VU0/VU1 memory+micro, EE/IOP hardware registers, PAD, scratchpad) at widths 8/16/32 for the highlight tuple (1,5,4) and the car-index tuple (0,4,3): 0 hits everywhere. The strong per-entity 'selected' flag test also gives 0 hits. Earlier: no common pointer to the highlighted node; the named livery store entity+0x64 is a float. ps2dev.org is the PS2 homebrew toolchain (ps2sdk/ps2gl/ps2client/ps2link/ps2gdb) - build tools only, no memory-search/pointer tool for a retail game. CONCLUSION: the mark number is not stored in any savestate as a readable integer; isolating it needs a live tool (PCSX2 read/write breakpoint or live value scan), which the project's read-only constraint excludes.",
+    "purpose": "review the mark search result as task data"
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.02,
+      "substance": 0.98,
+      "relevance": 0.97
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 741,
+      "output_tokens": 57
+    }
+  }
+}

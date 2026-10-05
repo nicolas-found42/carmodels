@@ -1,0 +1,58 @@
+{
+  "args": {
+    "query": "strongest EE anchor tying a captured screen to its numeric livery selector",
+    "candidates": [
+      {
+        "id": "six_tables",
+        "text": "Six static 12-name livery tables at fixed EE addresses, unchanged across captures."
+      },
+      {
+        "id": "record_abi",
+        "text": "Record layout 0x233070+type*0x114 with count 12 and list pointers matching the six tables."
+      },
+      {
+        "id": "fun_19eb90",
+        "text": "FUN_0019eb90 reads the gameflow livery label from static table VA 0x23acb0 and resolves it via FUN_00125640."
+      },
+      {
+        "id": "triangulation",
+        "text": "Three-way byte/word diff hits for highlight tuples (97 noisy byte hits, 0 word hits)."
+      }
+    ],
+    "top_k": 4
+  },
+  "result": {
+    "tool": "jev_find",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "query": "strongest EE anchor tying a captured screen to its numeric livery selector",
+    "exists": 0.76,
+    "exists_verdict": "answered",
+    "top": [
+      {
+        "id": "fun_19eb90",
+        "probability": 0.56,
+        "text": "FUN_0019eb90 reads the gameflow livery label from static table VA 0x23acb0 and resolves it via FUN_00125640."
+      },
+      {
+        "id": "record_abi",
+        "probability": 0.22,
+        "text": "Record layout 0x233070+type*0x114 with count 12 and list pointers matching the six tables."
+      },
+      {
+        "id": "six_tables",
+        "probability": 0.17,
+        "text": "Six static 12-name livery tables at fixed EE addresses, unchanged across captures."
+      },
+      {
+        "id": "triangulation",
+        "probability": 0.05,
+        "text": "Three-way byte/word diff hits for highlight tuples (97 noisy byte hits, 0 word hits)."
+      }
+    ],
+    "usage": {
+      "input_tokens": 616,
+      "output_tokens": 80
+    }
+  }
+}

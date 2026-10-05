@@ -1,0 +1,96 @@
+{
+  "schema": "fr2-menu98-gif-typesafe-verification/v1",
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13",
+  "provider": "openrouter",
+  "summary": {
+    "verified": 4,
+    "contradicted": 1,
+    "unsupported": 0,
+    "needs_review": 0
+  },
+  "usage_tokens": {
+    "input": 2571,
+    "output": 537
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "verdict": "verified",
+      "confidence": 0.92,
+      "action": "auto"
+    },
+    {
+      "id": "claim1",
+      "verdict": "verified",
+      "confidence": 0.9,
+      "action": "auto"
+    },
+    {
+      "id": "claim2",
+      "verdict": "verified",
+      "confidence": 0.96,
+      "action": "auto"
+    },
+    {
+      "id": "claim3",
+      "verdict": "verified",
+      "confidence": 0.94,
+      "action": "auto"
+    },
+    {
+      "id": "claim4",
+      "verdict": "contradicted",
+      "confidence": 1.0,
+      "action": "auto"
+    }
+  ],
+  "disposition": "First Jev run verified packet facts and rejected visible-thumbnail identity. A second run verified the bounded candidate counts and zero tested full crops, returned low-confidence review on whether every packet was included in the candidate enumeration, and rejected global absence. The script directly generated a unique window index for every pixel-aligned offset in all 150 uploads before matching transformed source prefixes; no universal runtime absence claim is made.",
+  "additional_all_upload_candidate_verification": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13",
+    "provider": "openrouter",
+    "usage_tokens": {
+      "input": 2013,
+      "output": 399
+    },
+    "summary": {
+      "verified": 2,
+      "contradicted": 2,
+      "unsupported": 0,
+      "needs_review": 2
+    },
+    "results": [
+      {
+        "claim": "All 150 32x32 PSMCT32 IMAGE payloads in the menu98 dump were included in the bounded transformed prefix/crop search.",
+        "verdict": "contradicted",
+        "confidence": 0.48,
+        "action": "review",
+        "probabilities": {
+          "supports": 0.33,
+          "contradicts": 0.65,
+          "says_nothing": 0.02
+        }
+      },
+      {
+        "claim": "The search considered 3136 unique PTG tile bodies, 24 component permutations, and four alpha modes, then tested 14220 source-origin crop candidates across 44 payloads.",
+        "verdict": "verified",
+        "confidence": 0.99,
+        "action": "auto"
+      },
+      {
+        "claim": "No tested transformed source-origin crop matched the full in-bounds payload area; the longest initial run before a mismatch was 27 pixels.",
+        "verdict": "verified",
+        "confidence": 1.0,
+        "action": "auto"
+      },
+      {
+        "claim": "The results prove that no transformed or cropped source PTG tile was uploaded anywhere in the menu98 state.",
+        "verdict": "contradicted",
+        "confidence": 0.66,
+        "action": "review"
+      }
+    ],
+    "disposition": "Direct parser execution enumerated 150 upload windows for each distinct transformed prefix, with candidates present in 44 uploads; only 14220 source-origin crop candidates were further tested. Jev returned a low-confidence contradictory disposition for the all-upload candidate-enumeration wording, so retain human/source-code review. Its rejection of global absence is consistent with explicit untested transform and crop limits."
+  }
+}
