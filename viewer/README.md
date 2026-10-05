@@ -15,7 +15,7 @@ Then open <http://localhost:8080/recovered.html> — **the recommended first sto
 
 <http://localhost:8080/> is the earlier procedural silhouette gallery (manifest data, body-style filters, silhouettes shaped by the real handling values); it remains available for comparison.
 
-The viewer uses three.js r182 — the module, core and `OrbitControls` are **shipped in this repository** under `viewer/vendor/`, so it runs offline with no build step and no runtime CDN dependency. A local HTTP server is required for browser ES-module loading (`file://` will not load the modules).
+The viewer uses three.js r182 — the module, core and `OrbitControls` are **shipped in this repository** under `viewer/vendor/`, so it has no build step or runtime CDN dependency. A local HTTP server is required for browser ES-module loading (`file://` will not load the modules).
 
 To regenerate original-data exports from the existing sibling `reverse-engineering` corpus:
 
