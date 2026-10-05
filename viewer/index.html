@@ -12,7 +12,7 @@
     --line: #33383f;
     --text: #e8eaed;
     --muted: #9aa0a8;
-    --faint: #6b7178;
+    --faint: #929aa2;
     --accent: #1c69d4;
     --accent-2: #4d8dff;
   }
@@ -33,6 +33,11 @@
   #sidebar h1 { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
   #sidebar h1 span { color: var(--accent-2); }
   #sidebar .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  #sidebar .jump {
+    display: inline-block; margin-top: 10px; font-size: 12px; font-weight: 600;
+    color: var(--accent-2); text-decoration: none; border-bottom: 1px solid transparent;
+  }
+  #sidebar .jump:hover { border-bottom-color: var(--accent-2); }
   #search {
     margin: 8px 16px 10px; padding: 8px 10px;
     background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px;
@@ -56,8 +61,8 @@
   .car-row.sel { background: #223047; border-color: var(--accent); }
   .swatch { width: 14px; height: 26px; border-radius: 2px; flex: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
   .car-row .nm { font-size: 13px; line-height: 1.2; }
-  .car-row .meta { font-size: 10.5px; color: var(--muted); }
-  .car-row .bhp { margin-left: auto; font-size: 11px; color: var(--faint); }
+  .car-row .meta { font-size: 12px; color: var(--muted); }
+  .car-row .bhp { margin-left: auto; font-size: 12px; color: var(--faint); }
   /* ============ main: viewer ============ */
   #main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   #stage { position: relative; flex: 1; min-height: 0; }
@@ -68,12 +73,12 @@
   #hud .name { font-size: 26px; font-weight: 300; text-transform: uppercase; letter-spacing: .04em; line-height: 1.15; }
   #hud .tag { font-size: 12px; color: var(--muted); margin-top: 2px; }
   #hud .recon {
-    display: inline-block; margin-top: 8px; font-size: 10px; letter-spacing: .08em;
+    display: inline-block; margin-top: 8px; font-size: 11px; letter-spacing: .08em;
     color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 2px 7px;
     text-transform: uppercase;
   }
   #legend {
-    position: absolute; bottom: 12px; left: 16px; font-size: 10.5px; color: var(--faint);
+    position: absolute; bottom: 12px; left: 16px; font-size: 12px; color: var(--faint);
     pointer-events: none;
   }
   #panel {
@@ -92,14 +97,14 @@
   .kv:last-child { border-bottom: none; }
   .kv span { color: var(--muted); }
   #paint-evidence { margin-top: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel-2); }
-  #paint-evidence .paint-head { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
+  #paint-evidence .paint-head { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
   #paint-swatch { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,.25); border-radius: 2px; flex: none; }
-  #paint-rgb { font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); }
-  #paint-caveat { font-size: 9.5px; color: var(--faint); margin-top: 6px; line-height: 1.35; }
+  #paint-rgb { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); }
+  #paint-caveat { font-size: 12px; color: var(--faint); margin-top: 6px; line-height: 1.35; }
   #livery-codes { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
-  .livery-code { font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); border: 1px solid var(--line); padding: 2px 4px; border-radius: 2px; }
+  .livery-code { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); border: 1px solid var(--line); padding: 2px 4px; border-radius: 2px; }
   #hint {
-    position: absolute; bottom: 12px; right: 14px; font-size: 10.5px; color: var(--faint);
+    position: absolute; bottom: 12px; right: 14px; font-size: 12px; color: var(--faint);
     pointer-events: none;
   }
   @media (max-width: 1100px) {
@@ -125,18 +130,29 @@
     .car-row { min-width: 172px; flex: none; }
     #main { height: 60vh; min-height: 0; }
     #panel { width: 170px; max-height: 58%; top: 8px; right: 8px; padding: 8px; }
-    #panel h3 { font-size: 9px; margin-bottom: 6px; }
+    #panel h3 { font-size: 11px; margin-bottom: 6px; }
     .stat { margin-bottom: 5px; }
-    .stat .lbl,.kv { font-size: 10px; }
+    .stat .lbl,.kv { font-size: 12px; }
     #hud { top: 8px; left: 9px; }
     #hud .name { max-width: calc(100% - 180px); font-size: 16px; }
-    #hud .tag, #hud .recon { max-width: calc(100% - 180px); font-size: 9px; }
-    #legend { left: 9px; bottom: 6px; font-size: 9px; }
+    #hud .tag, #hud .recon { max-width: calc(100% - 180px); font-size: 11px; }
+    #legend { left: 9px; bottom: 6px; font-size: 11px; }
   }
   #loading {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     background: var(--bg); color: var(--muted); font-size: 13px; z-index: 10;
     transition: opacity .4s; 
+  }
+  #loading.error {
+    color: var(--text); padding: 24px; text-align: left;
+    align-items: center; justify-content: center;
+  }
+  #loading.error .msg { max-width: 540px; }
+  #loading.error .msg b { display: block; font-size: 15px; margin-bottom: 8px; }
+  #loading.error .msg p { color: var(--muted); line-height: 1.55; margin: 0 0 10px; }
+  #loading.error .msg code {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+    padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text);
   }
 </style>
 </head>
@@ -144,7 +160,8 @@
   <nav id="sidebar">
     <header>
       <h1>FORD RACING <span>2</span> — MODEL EXPLORER</h1>
-      <div class="sub">35 vehicles · PS2 PAL SLES-51705 · extracted corpus</div>
+      <div class="sub">35 vehicles · from the PS2 game disc (PAL SLES-51705)</div>
+      <a class="jump" href="recovered.html">Original recovered models →</a>
     </header>
     <input id="search" placeholder="Search name or year…" autocomplete="off">
     <div id="filters"></div>
@@ -155,7 +172,7 @@
       <div id="hud">
         <div class="name" id="hud-name">—</div>
         <div class="tag" id="hud-tag"></div>
-        <div class="recon">SILHOUETTE: PROCEDURAL RECONSTRUCTION · COLOR: ICON SAMPLE</div>
+        <div class="recon" title="The silhouette is rebuilt from the car's in-game stats, not the original model. The colour is a sample from the car's menu icon, not its real paint texture.">SILHOUETTE: RECONSTRUCTED ILLUSTRATION, NOT THE ORIGINAL MODEL · COLOR: SAMPLE FROM THE MENU ICON</div>
       </div>
       <div id="panel">
         <h3>Performance (in-game)</h3>
@@ -168,18 +185,88 @@
         <div class="kv"><span>Weight</span><b id="k-kg">—</b></div>
         <div class="kv"><span>Top speed</span><b id="k-ts">—</b></div>
         <div class="kv"><span>Liveries</span><b id="k-liv">—</b></div>
-        <div class="kv"><span>Sound bank</span><b id="k-snd" style="font-size:10.5px">—</b></div>
+        <div class="kv"><span>Sound bank</span><b id="k-snd" style="font-size:12px">—</b></div>
         <div id="paint-evidence">
           <div class="paint-head"><div id="paint-swatch"></div><div>Icon paint sample</div><span id="paint-rgb" style="margin-left:auto">—</span></div>
-          <div id="paint-caveat">Best-effort dominant-color estimate from the menu icon bytes, not a decoded texture. Original .ptg upload dimensions are still unresolved.</div>
+          <div id="paint-caveat">Approximate main colour, sampled from the car's menu icon — not the game's decoded texture. The original texture's exact size is still unresolved.</div>
           <div id="livery-codes"></div>
         </div>
       </div>
-      <div id="legend">drag = orbit · wheel = zoom · right-drag = pan</div>
-      <div id="hint">FORMAT RESEARCH · V0.1</div>
+      <div id="legend">drag to rotate · scroll to zoom · right-drag to pan</div>
+      <div id="hint">RESEARCH PREVIEW · V0.1</div>
       <div id="loading">Loading corpus…</div>
     </div>
   </main>
+
+<!-- Startup guard: a classic script so it runs even when the ES module below
+     is blocked (e.g. opened with file:// or served without vendor/). -->
+<script>
+(function () {
+  var state = { loaded: false, failed: false, msg: null };
+  window.__viewerBoot = state;
+  var TIMEOUT_MS = 5000;
+
+  function serverCommand() {
+    return 'python3 -m http.server 8080 --directory viewer';
+  }
+  function showError(html) {
+    if (state.loaded || state.failed) return;
+    state.failed = true;
+    var el = document.getElementById('loading');
+    if (!el) return;
+    el.classList.add('error');
+    el.style.opacity = '1';
+    el.innerHTML = '<div class="msg">' + html + '</div>';
+  }
+
+  // (a) Opened straight from disk: browsers block the module imports, so the
+  //     module body never runs and its own handler can never fire. Detect it here.
+  if (location.protocol === 'file:') {
+    showError(
+      '<b>This page needs to be served, not opened from disk.</b>' +
+      '<p>The interactive viewer loads its 3D library and car data with requests that ' +
+      'browsers block on the file:// scheme, so opening this file directly can never work.</p>' +
+      '<p>From the project folder, run:<br><code>' + serverCommand() + '</code></p>' +
+      '<p>Then open <code>http://localhost:8080/</code> in this browser. ' +
+      'The recovered original-geometry viewer is at <code>http://localhost:8080/recovered.html</code>.</p>'
+    );
+    return;
+  }
+
+  // (b) Something threw before the page could initialise.
+  window.addEventListener('error', function () {
+    if (state.loaded) return;
+    showError(
+      '<b>The viewer could not start.</b>' +
+      '<p>A required file failed to load. Confirm the checkout contains ' +
+      '<code>viewer/vendor/</code> (the 3D library) and <code>viewer/public/cars.json</code>, ' +
+      'then serve the folder with:<br><code>' + serverCommand() + '</code></p>'
+    );
+  });
+  window.addEventListener('unhandledrejection', function () {
+    if (state.loaded) return;
+    showError(
+      '<b>The viewer could not start.</b>' +
+      '<p>A required file failed to load. Confirm the checkout contains ' +
+      '<code>viewer/vendor/</code> and <code>viewer/public/cars.json</code>, then serve the folder with:<br>' +
+      '<code>' + serverCommand() + '</code></p>'
+    );
+  });
+
+  // (c) Nothing threw, but nothing finished loading either (missing files,
+  //     hung request) — don't leave the visitor on an indefinite loading string.
+  window.setTimeout(function () {
+    if (state.loaded || state.failed) return;
+    showError(
+      '<b>The viewer is taking longer than expected.</b>' +
+      '<p>A required file may be missing or a request may have stalled. Check the browser ' +
+      'console for details, confirm <code>viewer/vendor/</code> and ' +
+      '<code>viewer/public/cars.json</code> exist, and serve the folder with:<br>' +
+      '<code>' + serverCommand() + '</code></p>'
+    );
+  }, TIMEOUT_MS);
+})();
+</script>
 
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.js" } }
@@ -195,17 +282,41 @@ let CARS = [];
 let current = null;
 const groups = new Set();
 
+const boot = window.__viewerBoot || (window.__viewerBoot = { loaded: false, failed: false });
+const showBootError = (title, detail) => {
+  if (boot.loaded || boot.failed) return;
+  boot.failed = true;
+  const el = $('loading');
+  if (!el) return;
+  el.classList.add('error');
+  el.style.opacity = '1';
+  el.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'msg';
+  const b = document.createElement('b');
+  b.textContent = title;
+  const p = document.createElement('p');
+  p.textContent = detail;
+  wrap.append(b, p);
+  el.append(wrap);
+};
+
 fetch('./public/cars.json').then(r => r.json()).then(cars => {
   CARS = cars;
   cars.forEach(c => groups.add(c.group || 'OTHER'));
   buildFilters();
   buildList();
   select(cars.find(c => c.code === 'GRAN_TORINO') || cars[0]);
+  boot.loaded = true;
   $('loading').style.opacity = '0';
   setTimeout(() => $('loading').remove(), 450);
 }).catch(error => {
   console.error('Corpus load failed', error);
-  $('loading').textContent = 'Corpus load failed. Re-run tools/build_showcase.py and serve from viewer/.';
+  showBootError(
+    'The car list could not be loaded.',
+    'The vehicle data (viewer/public/cars.json) did not load. Confirm it exists in this ' +
+    'checkout, then serve the folder with: python3 -m http.server 8080 --directory viewer'
+  );
 });
 
 /* ---------- sidebar ---------- */
