@@ -41,6 +41,7 @@ worktree_of() { # $1 branch -> path of the worktree that has it checked out, if 
 git fetch --prune origin
 
 current=$(git branch --show-current)
+primary=$(git worktree list --porcelain | awk 'NR==1{print substr($0,10)}')
 if [ "$current" != "$BASE" ] && [ -n "$current" ] && local_is_merged "$current"; then
   echo "current branch $current is merged; switching to $BASE"
   run git switch "$BASE"
@@ -58,6 +59,10 @@ for b in $(git for-each-ref --format='%(refname:short)' refs/heads); do
   [ "$b" = "$current" ] && continue
   local_is_merged "$b" || continue
   wt=$(worktree_of "$b")
+  if [ -n "$wt" ] && [ "$wt" = "$primary" ]; then
+    echo "skip $b: checked out in the main working tree $wt; run this script from there" >&2
+    continue
+  fi
   if [ -n "$wt" ]; then
     run git worktree remove "$wt" || { echo "skip $b: worktree $wt is not clean" >&2; continue; }
   fi
