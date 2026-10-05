@@ -20,10 +20,12 @@ __pycache__/
 np-venv/
 *-venv/
 
-# Third-party vendor binaries (re-downloadable; Blender exceeds GitHub's 100MB limit)
+# Third-party vendor binaries (Blender exceeds GitHub's 100MB limit and is
+# re-downloadable). viewer/vendor/ IS tracked: the three.js r182 module, core
+# and OrbitControls are the viewer's runtime dependency and must ship in a
+# fresh clone so the viewer runs offline with no manual steps (ticket #6).
 tools/validation-runtime/blender-4.5.14-macos-arm64.dmg
 tools/validation-runtime/blender-mount/
-viewer/vendor/
 
 # Savestates (each ~11MB; re-captured live via PINE + savestate ops)
 *.p2s

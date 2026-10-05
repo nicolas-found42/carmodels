@@ -11,9 +11,11 @@ python3 tools/build_showcase.py
 python3 -m http.server 8080 --directory viewer
 ```
 
-Open <http://localhost:8080/>. The viewer uses the vendored three.js r182 module, core, and `OrbitControls`; it has no build step or runtime CDN dependency. A local HTTP server is required for browser ES-module loading.
+Then open <http://localhost:8080/recovered.html> — **the recommended first stop.** It renders the real recovered original geometry: pick a car, a tree/record and a texture variant, and download the GLB. The 35 GLBs are already generated under `public/recovered/`; each retains independent geometry records and five translated tree candidates. The inspector starts with tree zero and includes car, tree/record, texture, wireframe and row-flip controls.
 
-Open <http://localhost:8080/recovered.html> for original-data experiments. The 35 GLBs are already generated under `public/recovered/`. Each retains independent geometry records and five translated tree candidates. The inspector starts with tree zero and includes car, tree/record, texture, wireframe and row-flip controls, plus a GLB download.
+<http://localhost:8080/> is the earlier procedural silhouette gallery (manifest data, body-style filters, silhouettes shaped by the real handling values); it remains available for comparison.
+
+The viewer uses three.js r182 — the module, core and `OrbitControls` are **shipped in this repository** under `viewer/vendor/`, so it runs offline with no build step and no runtime CDN dependency. A local HTTP server is required for browser ES-module loading (`file://` will not load the modules).
 
 To regenerate original-data exports from the existing sibling `reverse-engineering` corpus:
 
