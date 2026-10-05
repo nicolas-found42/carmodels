@@ -25,14 +25,15 @@ else
 fi
 
 step "verify_recovered_asset_index" python3 tools/verify_recovered_asset_index.py
-step "verify_config_data_sound"     python3 tools/verify_config_data_sound.py
-step "verify_sound_bank_index"      python3 tools/verify_sound_bank_index.py
 step "test_static_inputs"           python3 tools/test_static_inputs.py
+step "test_recovery_inputs"         python3 tools/test_recovery_inputs.py
 
 if python3 tools/static_inputs.py --available; then
+  step "verify_config_data_sound" python3 tools/verify_config_data_sound.py
+  step "verify_sound_bank_index" python3 tools/verify_sound_bank_index.py
   step "verify_vu_dispatch_map" python3 tools/verify_vu_dispatch_map.py
   step "test_vu_dispatch_map"   python3 tools/test_vu_dispatch_map.py
 else
-  echo "skip  verify_vu_dispatch_map, test_vu_dispatch_map  (static inputs not set; see CONTRIBUTING.md, Static inputs)"
+  echo "skip  verify_config_data_sound, verify_sound_bank_index, verify_vu_dispatch_map, test_vu_dispatch_map  (static inputs not set; see CONTRIBUTING.md, Static inputs)"
 fi
 exit $status

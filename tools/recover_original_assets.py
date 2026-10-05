@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Export bounded original level-zero textures and inspect every car container.
 
-Uses the existing loader-derived reverse-engineering parsers without modifying
+Uses the existing repo-owned loader-derived parsers without modifying
 them. Raw alpha is preserved; display PNGs explicitly map alpha a to min(255,2*a).
 Geometry spans are evidence, not a completed original mesh export.
 """
+import static_inputs
 import argparse
 from collections import Counter
 import hashlib
@@ -17,7 +18,7 @@ import sys
 import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = ROOT.parents[1] / 'reverse-engineering'
+DEFAULT_SOURCE = static_inputs.bundle_path()
 
 
 def digest(data):
@@ -38,7 +39,7 @@ def main():
     parser.add_argument('--source', type=Path, default=DEFAULT_SOURCE)
     parser.add_argument('--output', type=Path, default=ROOT/'research/evidence/original-recovery')
     args = parser.parse_args()
-    sys.path.insert(0, str(args.source/'tools'))
+    sys.path.insert(0, str(ROOT/'tools'))
     import ps2_container
     import ps2_sections
     from corpus_binding import Baseline
@@ -46,7 +47,7 @@ def main():
     expected = {e.path.lstrip('/'): e for e in baseline.entries('.ps2;1')}
     out = args.output
     out.mkdir(parents=True, exist_ok=True)
-    code_pins = {n: digest((args.source/'tools'/n).read_bytes()) for n in
+    code_pins = {n: digest((ROOT/'tools'/n).read_bytes()) for n in
                  ['ps2_container.py','ps2_texture_indices.py','ps2_sections.py','format_contracts.py','corpus_binding.py']}
     formats, profiles, header_flags, counts = Counter(), Counter(), Counter(), Counter()
     cars, cards = [], []

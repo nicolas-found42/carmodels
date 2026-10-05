@@ -4,11 +4,12 @@
 Expected labels are kept outside Jev model state. These evaluate this small local
 battery only; they are not calibration of Jev on arbitrary game reverse engineering.
 """
+import static_inputs
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RE = ROOT.parents[1]/'reverse-engineering'
+RE = static_inputs.bundle_path()
 OUT = ROOT/'research/evidence/original-recovery'
 
 
@@ -18,7 +19,7 @@ def main():
         groups.append({'id':name,'source':str(path),'evidence':evidence or path.read_text(),
                        'cases':[{'claim':s,'expected':label} for label,values in
                                 [('verified',supports),('contradicted',contradicts),('unsupported',silent)] for s in values]})
-    add('container-code',RE/'tools/ps2_container.py',[
+    add('container-code',ROOT/'tools/ps2_container.py',[
         'The parser derives texture width from descriptor bits 15 through 18.',
         'The decoder returns the image plane directly for format 1.',
         'The indexed RGBA decoder selects 16 palette entries for format 4.',
@@ -34,7 +35,7 @@ def main():
         'The material-to-mesh UV binding is recovered for every car.',
         'All 171 car PTG files decode into complete icons and liveries.'
     ])
-    add('index-code',RE/'tools/ps2_texture_indices.py',[
+    add('index-code',ROOT/'tools/ps2_texture_indices.py',[
         'Packed format 3 uses unswizzle8; direct format 3 retains the linear image plane.',
         'Direct format 4 expands each byte into its low nibble followed by its high nibble.',
         'Descriptor bit 8 selects packed upload.',
@@ -50,7 +51,7 @@ def main():
         'Every stored mip level is decoded by decode_indices.',
         'The recovered car meshes have been exported as faithful GLBs.'
     ])
-    p=RE/'tools/ps2_sections.py'
+    p=ROOT/'tools/ps2_sections.py'
     source=p.read_text(); source=source[:source.index('\ndef parse(')]
     add('geometry-layout',p,[
         'The geometry table uses 0x34-byte records.',

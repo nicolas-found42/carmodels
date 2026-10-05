@@ -4,6 +4,7 @@
 Run with bundled Python/Pillow. Type-1 previews use Vinetto's substitute JPEG
 tables and channel convention; original pixels and alpha are not established.
 """
+import static_inputs
 import hashlib
 import io
 import json
@@ -13,9 +14,9 @@ import struct
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT.parents[1]/'reverse-engineering'
+SOURCE=static_inputs.bundle_path()
 sys.path.insert(0,str(ROOT/'tools/validation-runtime/olefile'))
-sys.path.insert(0,str(SOURCE/'tools'))
+sys.path.insert(0,str(ROOT/'tools'))
 import olefile
 from PIL import Image
 from corpus_binding import Baseline

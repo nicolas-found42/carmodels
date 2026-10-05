@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Snapshot and byte-check newer read-only decompilation resources for recovery."""
+import static_inputs
 import difflib
 import hashlib
 import json
 from pathlib import Path
 import struct
-import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT.parents[1]/'reverse-engineering'
+SOURCE = static_inputs.bundle_path()
 OUT = ROOT/'research/evidence/continuation/source-refresh'
 EXPORT = SOURCE/'.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po'
 
@@ -70,7 +70,7 @@ def main():
         text = p.read_text();candidates.append({'id':str(p.relative_to(SOURCE)),
                   'text':text if len(text) <= 1950 else text[:1450]+'\n[bounded excerpt; middle omitted]\n'+text[-400:]})
     (OUT/'resource-candidates.json').write_text(json.dumps(candidates,indent=2)+'\n')
-    result = {'source_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=SOURCE,text=True).strip(),
+    result = {'source_head':json.loads((OUT/'refresh-identity.json').read_text())['source_head'],
               'executable_sha256':sha(elf),'inventory_path':str(EXPORT/'inventory.json'),
               'inventory_sha256':sha(inventory_bytes),'manifest_sha256':sha(manifest_bytes),
               'historical_inventory_sha256':sha(old_bytes),'historical_functions':len(old_entries),

@@ -7,7 +7,7 @@ from pathlib import Path
 import struct
 import sys
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT.parents[1]/'reverse-engineering/tools'))
+sys.path.insert(0,str(ROOT/'tools'))
 import ps2_sections
 
 

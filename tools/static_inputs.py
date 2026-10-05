@@ -21,6 +21,27 @@ ROOT = Path(__file__).resolve().parents[1]
 REFRESH = ROOT / 'research/evidence/continuation/source-refresh/refresh-identity.json'
 RESIDENCY = ROOT / 'research/evidence/packet-continuation/vu-overlay-residency.json'
 VARIABLES = {'overlays': 'CARMODELS_OVERLAY_DIR', 'typed_export': 'CARMODELS_TYPED_EXPORT', 'executable': 'CARMODELS_EXECUTABLE'}
+CONFIG = ROOT / '.scratch/input-paths.json'
+
+
+def configuration():
+    """Read explicitly provisioned local paths; environment variables take precedence."""
+    path = Path(os.environ.get('CARMODELS_INPUT_CONFIG', str(CONFIG))).expanduser()
+    if not path.is_file():
+        return {}
+    values = json.loads(path.read_text())
+    if not isinstance(values, dict) or any(not isinstance(v, str) for v in values.values()):
+        missing('input-paths.json must map variable names to paths')
+    return values
+
+
+def configured(variable):
+    return os.environ.get(variable) or configuration().get(variable)
+
+
+def bundle_path():
+    """Legacy data layout in a private local bundle, with no source checkout dependency."""
+    return Path(configured('CARMODELS_BUNDLE') or ROOT / '.scratch/inputs').expanduser()
 
 
 def sha256(data):
@@ -33,13 +54,13 @@ def missing(message):
 
 
 def available():
-    return all(os.environ.get(v) for v in VARIABLES.values())
+    return all(configured(v) for v in VARIABLES.values())
 
 
 def require(kind):
     """Path of one input; exits with a one-line message when it is not configured or not there."""
     variable = VARIABLES[kind]
-    value = os.environ.get(variable)
+    value = configured(variable)
     if not value:
         missing('%s is not set' % variable)
     path = Path(value).expanduser()
@@ -72,7 +93,7 @@ def report():
     expected, problems = pins(), 0
     rows = []
     for kind, variable in VARIABLES.items():
-        value = os.environ.get(variable)
+        value = configured(variable)
         if not value or not Path(value).expanduser().exists():
             rows.append((kind, variable, 'MISSING' if not value else 'NOT FOUND: ' + value))
             problems += 1

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Source-derived post-update visibility presets; no inferred runtime transforms."""
+import static_inputs
 from collections import Counter
 import hashlib
 import json
@@ -8,7 +9,7 @@ import struct
 from recover_assembly_semantics import join
 
 ROOT=Path(__file__).resolve().parents[1]
-RE=ROOT.parents[1]/'reverse-engineering'
+RE=static_inputs.bundle_path()
 EXPORT=RE/'.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po'
 OUT=ROOT/'research/evidence/continuation/source-refresh/visibility-presets.json'
 
@@ -45,7 +46,7 @@ def preset(record, moving=False):
 
 def main():
     import sys
-    sys.path.insert(0,str(RE/'tools'));import ps2_sections
+    sys.path.insert(0,str(ROOT/'tools'));import ps2_sections
     elf=(RE/'games/ford-racing-2/extracted/SLES_517.05').read_bytes()
     invpath=EXPORT/'inventory.json';inv=json.loads(invpath.read_text())
     identity=json.loads((OUT.parent/'refresh-identity.json').read_text())

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Recover source-named child ownership and distance-root inputs without guessing states."""
+import static_inputs
 import argparse
 from collections import Counter
 import hashlib
@@ -10,7 +11,7 @@ import struct
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT.parents[1] / 'reverse-engineering'
+SOURCE = static_inputs.bundle_path()
 OUT = ROOT / 'research/evidence/continuation'
 
 

@@ -7,6 +7,7 @@ smallest source-supported trace plus explicitly unresolved semantic joins.
 """
 from __future__ import annotations
 
+import static_inputs
 import argparse
 import hashlib
 import glob
@@ -19,7 +20,7 @@ import sys
 import zipfile
 import zlib
 
-DEFAULT_RE_ROOT = Path("/Users/Nicolas/Documents/github/hermes/reverse-engineering")
+DEFAULT_INPUT_BUNDLE = static_inputs.bundle_path()
 FUNCTION_DIR = Path(".scratch/mesh/codex-root/decompile-dispatch-all-3837-02/functions")
 VU_DIR = Path(".scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310")
 TYPED_EXPORT = Path(".scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po")
@@ -104,7 +105,7 @@ def linear_r2(features: list[list[float]], target: list[float]) -> float | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--reverse-engineering-root", type=Path, default=DEFAULT_RE_ROOT)
+    parser.add_argument("--input-bundle", type=Path, default=DEFAULT_INPUT_BUNDLE)
     parser.add_argument("--output", type=Path, default=Path("research/evidence/packet-continuation/static-trace.json"))
     parser.add_argument("--runtime-directory", type=Path, default=Path("research/evidence/continuation/runtime"))
     parser.add_argument("--runtime-output", type=Path, default=Path("research/evidence/packet-continuation/runtime-trace.json"))
@@ -115,7 +116,7 @@ def main() -> int:
 
     refresh_identity_path = Path("research/evidence/continuation/source-refresh/refresh-identity.json")
     refresh_identity = json.loads(refresh_identity_path.read_text(encoding="utf-8"))
-    inventory_path = args.reverse_engineering_root / TYPED_EXPORT / "inventory.json"
+    inventory_path = args.input_bundle / TYPED_EXPORT / "inventory.json"
     inventory_bytes = inventory_path.read_bytes()
     inventory_sha256 = hashlib.sha256(inventory_bytes).hexdigest()
     if inventory_sha256 != refresh_identity["inventory_sha256"]:
@@ -156,7 +157,7 @@ def main() -> int:
     }
     if not all(row["pass"] for row in material_instruction_checks.values()):
         raise ValueError("0021bc18 raw material lane/mask anchors changed")
-    cpu_decomp_path = args.reverse_engineering_root / TYPED_EXPORT / "decompilation/functions/0021c3e0.c"
+    cpu_decomp_path = args.input_bundle / TYPED_EXPORT / "decompilation/functions/0021c3e0.c"
     cpu_decomp = cpu_decomp_path.read_text(encoding="utf-8")
     cpu_decomp_sha256 = sha256(cpu_decomp_path)
     expected_cpu_decomp = [
@@ -182,7 +183,7 @@ def main() -> int:
         normal_scale_values.append(recovered)
         if recovered != signed_byte / 128.0:
             raise ValueError("signed V4-8 + 0x47c00000 - 98304 failed exact /128 identity")
-    vif_source_path = args.reverse_engineering_root / ".scratch/mesh/codex-root/github-raw-Vif_Unpack.cpp"
+    vif_source_path = args.input_bundle / ".scratch/mesh/codex-root/github-raw-Vif_Unpack.cpp"
     vif_source_sha256 = sha256(vif_source_path)
     vif_source = vif_source_path.read_text(encoding="utf-8")
     vif_literals = [
@@ -222,7 +223,7 @@ def main() -> int:
     callgraph_function_hashes = {}
     callgraph_decomp = {}
     for entry, needles in callgraph_literals.items():
-        decomp_path = args.reverse_engineering_root / TYPED_EXPORT / f"decompilation/functions/{entry}.c"
+        decomp_path = args.input_bundle / TYPED_EXPORT / f"decompilation/functions/{entry}.c"
         source_text = decomp_path.read_text(encoding="utf-8")
         callgraph_decomp[entry] = source_text
         callgraph_function_hashes[entry] = sha256(decomp_path)
@@ -240,7 +241,7 @@ def main() -> int:
     }
     material_setup_sources = {}
     for entry, needles in material_setup_literals.items():
-        path = args.reverse_engineering_root / TYPED_EXPORT / f"decompilation/functions/{entry}.c"
+        path = args.input_bundle / TYPED_EXPORT / f"decompilation/functions/{entry}.c"
         source_text = path.read_text(encoding="utf-8")
         material_setup_sources[entry] = {
             "decompilation_sha256": sha256(path),
@@ -320,7 +321,7 @@ def main() -> int:
     mismatches = []
     for name, expected in PINS.items():
         base = VU_DIR if name.startswith("overlay-") else FUNCTION_DIR
-        path = args.reverse_engineering_root / base / name
+        path = args.input_bundle / base / name
         actual = sha256(path) if path.is_file() else None
         inputs[name] = {"path": str(path), "expected_sha256": expected, "actual_sha256": actual}
         if actual != expected:
@@ -527,10 +528,10 @@ def main() -> int:
             runtime_checks.append({"name": archive_name, "local_path": str(runtime_dir / local_name), "size": len(local), "savestate_entry_exact_match": match, "crc32": f"0x{crc:08x}", "identity_crc32": f"0x{expected_crc:08x}", "result": "pass" if match else "fail"})
 
     micro = runtime_bytes["vu1MicroMem.bin"]
-    overlay5 = (args.reverse_engineering_root / VU_DIR / "overlay-5.bin").read_bytes()
+    overlay5 = (args.input_bundle / VU_DIR / "overlay-5.bin").read_bytes()
     overlay_offset = 0x2800
     overlay_match = micro[overlay_offset:overlay_offset + len(overlay5)] == overlay5
-    loading_overlay_audit = overlay_residency(micro, args.reverse_engineering_root / VU_DIR, "loading baseline")
+    loading_overlay_audit = overlay_residency(micro, args.input_bundle / VU_DIR, "loading baseline")
     memory = runtime_bytes["vu1Memory.bin"]
     qwords = {}
     for address in (0x208, 0x2C8):
@@ -586,7 +587,7 @@ def main() -> int:
             }
         micro = race_bytes["vu1MicroMem.bin"]
         race_overlay_match = micro[0x2800:0x2800 + len(overlay5)] == overlay5
-        race_overlay_audit = overlay_residency(micro, args.reverse_engineering_root / VU_DIR, "race94 paused state")
+        race_overlay_audit = overlay_residency(micro, args.input_bundle / VU_DIR, "race94 paused state")
         ee_hw = archive.read("eeHwRegs.bin")
         vif1 = 0x3C00
         reg_offsets = {"STAT": 0, "CYCLE": 64, "MODE": 80, "BASE": 160, "OFST": 176, "TOPS": 192, "ITOP": 208, "TOP": 224}
@@ -607,7 +608,7 @@ def main() -> int:
         cobra_obj = cobra["joins"][0]["objects"][0]
         model_path = Path("reference/ford/cars/COBRA/model/COBRA.PS2;1")
         model_bytes = model_path.read_bytes()
-        re_tools = args.reverse_engineering_root / "tools"
+        re_tools = Path(__file__).resolve().parent
         sys.path.insert(0, str(re_tools))
         try:
             import ps2_container  # type: ignore
@@ -1621,7 +1622,7 @@ def main() -> int:
     race97_micro_path = args.race_state.parent.parent / "linux" / "race97-vu1MicroMem.bin"
     race97_overlay_audit = None
     if race97_micro_path.is_file():
-        race97_overlay_audit = overlay_residency(race97_micro_path.read_bytes(), args.reverse_engineering_root / VU_DIR, "race97 advanced state")
+        race97_overlay_audit = overlay_residency(race97_micro_path.read_bytes(), args.input_bundle / VU_DIR, "race97 advanced state")
     overlay_receipt = {
         "schema": "fr2-vu-overlay-residency-audit/v1",
         "method": "byte-exact source overlay search at 8-byte-aligned offsets in 16KiB VU1 micro-memory snapshots; hashes and sizes are recorded for each pinned source binary",

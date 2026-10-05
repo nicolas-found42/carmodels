@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Read source-bound hierarchy and instance state from a paused original EE capture."""
+import static_inputs
 import argparse
 import hashlib
 import json
@@ -31,7 +32,7 @@ def main():
     require(len(memory)==32*1024*1024, 'EE memory must be exactly 32 MiB')
     require(hashlib.sha256(memory).hexdigest()==joins['memory_sha256'], 'EE capture hash differs from joins')
     assembly={c['code']:c for c in json.loads((ROOT/'research/evidence/continuation/assembly-semantics.json').read_text())['cars']}
-    elf=(ROOT.parents[1]/'reverse-engineering/games/ford-racing-2/extracted/SLES_517.05').read_bytes()
+    elf=(static_inputs.bundle_path()/'games/ford-racing-2/extracted/SLES_517.05').read_bytes()
     phoff=struct.unpack_from('<I',elf,28)[0];size,count=struct.unpack_from('<HH',elf,42)
     reginfo=next(struct.unpack_from('<8I',elf,phoff+i*size) for i in range(count)
                  if struct.unpack_from('<I',elf,phoff+i*size)[0]==0x70000000)

@@ -5,6 +5,7 @@ Chain per tile: screenshot pixels <- GS sprite (TEX0 TBP0, UV, XY) <- last IMAGE
 <- exact 4,096-byte substring of a GRAPHICS/GAME/CHALL/*.ptg;1 file.  The screenshot mapping is fitted on
 one half of the tiles and tested on the held-out half, with shifted-mapping and swapped-tile controls.
 """
+import static_inputs
 import collections
 import hashlib
 import json
@@ -15,7 +16,7 @@ import gsdump
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GAME = ROOT.parents[1] / 'reverse-engineering/games/ford-racing-2/extracted/files'
+GAME = static_inputs.bundle_path() / 'games/ford-racing-2/extracted/files'
 DUMP = ROOT / 'research/evidence/continuation/runtime/linux/snaps/Ford Racing 2_SLES-51705_20261005010217.gs.zst'
 DUMP_PIN = '126c9a909501d157d5bab5359a66c63cbb6966bf70504e3f671a9ede5ee01ae9'
 SHOT = ROOT / 'research/evidence/continuation/runtime/linux/menu98-Screenshot.png'

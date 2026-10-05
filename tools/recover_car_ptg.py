@@ -11,6 +11,7 @@ alpha. The raw archive remains the authoritative source.
 
 from __future__ import annotations
 
+import static_inputs
 import argparse
 from collections import Counter
 import hashlib
@@ -21,7 +22,7 @@ import sys
 import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
-REVERSE = ROOT.parents[1] / "reverse-engineering"
+INPUT_BUNDLE = static_inputs.bundle_path()
 REFERENCE = ROOT / "reference" / "ford" / "cars"
 DEFAULT_OUTPUT = ROOT / "research" / "evidence" / "ptg-continuation" / "assets"
 HEADER_SIZE = 32
@@ -270,12 +271,12 @@ def verify_png(path: Path, width: int, height: int, expected: bytes) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=REVERSE / "games" / "ford-racing-2")
+    parser.add_argument("--source", type=Path, default=INPUT_BUNDLE / "games" / "ford-racing-2")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--verify-only", action="store_true", help="verify all archive/manifest/input bounds without writing images")
     args = parser.parse_args()
 
-    sys.path.insert(0, str(args.source.parents[1] / "tools"))
+    sys.path.insert(0, str(ROOT/'tools'))
     from corpus_binding import Baseline
 
     baseline = Baseline(args.source)
@@ -337,7 +338,7 @@ def main() -> int:
         "corpus": {"expected_assets": EXPECTED_CAR_ASSETS, "manifest_assets": len(manifests), "archive_car_graphics_entries": len(archive_car_graphics), "associated_archive_entries": len(corpus_entries), "verified_assets": len(output_entries), "failures": failures},
         "source_code_sha256": {
             "recover_car_ptg.py": sha256(Path(__file__).read_bytes()),
-            "corpus_binding.py": sha256((args.source.parents[1] / "tools" / "corpus_binding.py").read_bytes()),
+            "corpus_binding.py": sha256((ROOT/'tools' / "corpus_binding.py").read_bytes()),
         },
         "pixel_interpretation_status": "channel byte order and record-to-descriptor raster placement are source-supported; source alpha bytes are preserved and a 2x preview is emitted; direct PTG descriptor-to-upload consumer identity and observed game-menu composition remain unresolved",
         "claim_limits": ["A recognizable preview is visual corroboration, not proof of channel order or runtime texture sampling.", "The image outputs are separate menu icon/livery images and do not replace model texture maps.", "No model mesh, UV/material binding, or in-game vehicle assembly claim is made here."],

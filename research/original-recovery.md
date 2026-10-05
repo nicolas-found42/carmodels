@@ -1,6 +1,6 @@
 # Original Ford Racing 2 car recovery
 
-Research and experiments completed 2026-10-04 against the existing PAL `SLES-51705` corpus in `/Users/Nicolas/Documents/github/hermes/reverse-engineering`. This pass used Jev and TypeSafe judgments to screen, retrieve, compare and review evidence. It also commissioned the requested two community researchers: GitHub/Stack Overflow and Reddit/YouTube transcripts. All new recovery outputs are in this carmodels project; the source reverse-engineering project was read without intentional edits.
+Research and experiments completed 2026-10-04 against the existing PAL `SLES-51705` corpus in `../.scratch/inputs`. This pass used Jev and TypeSafe judgments to screen, retrieve, compare and review evidence. It also commissioned the requested two community researchers: GitHub/Stack Overflow and Reddit/YouTube transcripts. All new recovery outputs are in this carmodels project; the source reverse-engineering project was read without intentional edits.
 
 ## Outcome
 
@@ -42,7 +42,7 @@ The 35-car subset must not be confused with the wider 56-model corpus, which has
 
 ## Local position recovery
 
-The geometry table uses 52-byte records with separate group counts at `+0x1c` and `+0x28`, not adjacent halfwords. Bounds are three min/max pairs at `+4/+8`, `+12/+16`, `+20/+24`. Geometry headers lead to aligned six-byte, four-byte and optional additional planes. The existing [section parser](../../../reverse-engineering/tools/ps2_sections.py) supplies these boundaries.
+The geometry table uses 52-byte records with separate group counts at `+0x1c` and `+0x28`, not adjacent halfwords. Bounds are three min/max pairs at `+4/+8`, `+12/+16`, `+20/+24`. Geometry headers lead to aligned six-byte, four-byte and optional additional planes. The existing [section parser](../tools/ps2_sections.py) supplies these boundaries.
 
 The six-byte samples decode as signed little-endian int16 XYZ. For each axis of each record:
 
@@ -90,7 +90,7 @@ Each GLB has sixteen scenes: independent geometry records, five original all-sta
 
 ## Embedded texture recovery and PTG distinction
 
-The current [container decoder](../../../reverse-engineering/tools/ps2_container.py) and [index-address decoder](../../../reverse-engineering/tools/ps2_texture_indices.py) implement the static level-zero model upload path. Format 1 is linear RGBA; format 3/4 requires packed/direct selection, address and palette handling. In this car subset, upload profiles are 567 packed format 3, 51 direct format 3, 78 direct format 1 and four packed format 4 (`WINDOWNET` in the Taurus stock variants).
+The current [container decoder](../tools/ps2_container.py) and [index-address decoder](../tools/ps2_texture_indices.py) implement the static level-zero model upload path. Format 1 is linear RGBA; format 3/4 requires packed/direct selection, address and palette handling. In this car subset, upload profiles are 567 packed format 3, 51 direct format 3, 78 direct format 1 and four packed format 4 (`WINDOWNET` in the Taurus stock variants).
 
 All 700 decoded RGBA hashes match the earlier source-pinned corpus receipt. Independent PNG parsing checks chunk CRCs, dimensions, decompressed bytes and alpha conversion for all 1,400 outputs. The exporter keeps stored-alpha PNGs and display-alpha PNGs using `min(255, 2*a)`, plus hashes of raw decoded RGBA. That conversion is an inspection convention, not a demonstrated reconstruction of GS blending. [Pixel validation](evidence/original-recovery/export-validation.json), [texture gallery](evidence/original-recovery/texture-gallery.html).
 
@@ -166,8 +166,8 @@ python3 tools/recover_original_assets.py
 python3 tools/export_geometry_candidates.py
 python3 tools/validate_geometry_candidates.py
 python3 research/evidence/original-recovery/geometry-experiment/run_geometry_experiment.py \
-  --data-root /Users/Nicolas/Documents/github/hermes/reverse-engineering/games/ford-racing-2/extracted/files/3DDATA/CARS \
-  --tools-root /Users/Nicolas/Documents/github/hermes/reverse-engineering/tools \
+  --data-root ../.scratch/inputs/games/ford-racing-2/extracted/files/3DDATA/CARS \
+  --tools-root ../tools \
   --output research/evidence/original-recovery/geometry-experiment/results.json
 ```
 

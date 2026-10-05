@@ -46,7 +46,7 @@ pins are from PAL executable SHA-256
 `216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95`.
 The separate model-texture research already pins PCSX2 GS sources at
 revision `81526d4dc7cc70e4ae75abb35a789417456c6d43`; see the
-[upload-audit source pins](../../../reverse-engineering/notes/evidence/fr2-texture-upload-audit/source-pins.json).
+[upload-audit source pins](../.scratch/inputs/notes/evidence/fr2-texture-upload-audit/source-pins.json).
 
 ## MATRIX thumbnail PTGs and CLUT lookup
 

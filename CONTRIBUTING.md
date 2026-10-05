@@ -13,12 +13,10 @@ check the result. Two corpora:
 
 ## Prerequisites
 
-- **Static inputs, for some tools.** The recovery scripts (`grep -l ps2_sections tools/*.py` lists
-  them) import five parser modules that are not part of this repository — `ps2_sections.py`,
-  `corpus_binding.py`, `format_contracts.py`, `ps2_container.py`, `ps2_texture_indices.py` — and fail
-  at import without them. The VU1 verifiers read executable-derived inputs. See [Static inputs](#static-inputs).
-  The three minimum verifiers below need neither (checked in a clean clone).
-- **`python3`.** The three verifiers below run on the stock interpreter with no third-party
+- **Repo-owned parsers.** The recovery parsers are in `tools/`. Their corpus regression runs on the
+  committed reference models. Full archive and VU checks need private static inputs; provision them
+  with `tools/provision_static_inputs.py` (see [the input guide](docs/static-inputs.md)).
+- **`python3`.** The basic checks run on the stock interpreter with no third-party
   packages — 3.9.6 and 3.14.7 were the observed runtimes. `tools/check.sh` also runs `ruff` when it
   is installed (`pip install ruff`; CI installs it). Tools that read zstd-compressed savestate members
   (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`, `trace_car_packets.py`, `gsdump.py`,
@@ -31,7 +29,8 @@ check the result. Two corpora:
 
 Some verifiers read inputs derived from the game executable. They are never committed; the
 receipts carry their SHA-256 pins, and a tool refuses an input that differs from its pin. Three
-environment variables name them. There is no default path.
+environment variables or the explicitly provisioned `.scratch/input-paths.json` name them. Environment
+variables override that config. See [input provisioning and regeneration](docs/static-inputs.md).
 
 | Variable | What it points at | Pinned by |
 | --- | --- | --- |
@@ -44,7 +43,8 @@ export CARMODELS_OVERLAY_DIR=… CARMODELS_TYPED_EXPORT=… CARMODELS_EXECUTABLE
 python3 tools/static_inputs.py      # one line per input: found, and equal to its pin
 ```
 
-A tool that needs an input that is not set stops with one line naming the variable. Checks that
+The static-input lookup stops with one line naming a missing variable. Legacy recovery tools also
+need the archive data in the local bundle. Checks that
 need all three skip by name in `tools/check.sh` when they are absent. Captured inputs (savestates,
 GS dumps, unpacked memory under `research/evidence/continuation/runtime/`) are gitignored too and
 pinned by receipt; re-capture them live (see `tools/headless-runtime/`).
@@ -56,20 +56,18 @@ cd projects/carmodels
 python3 tools/verify_recovered_asset_index.py
 ```
 
-Scripts resolve paths from their own location (`Path(__file__).resolve().parents[1]`), and the
-import path for the shared parsers assumes this layout. Run them from the repo root.
+Scripts resolve paths from their own location (`Path(__file__).resolve().parents[1]`), and import the repo-owned parsers. Run them from the repo root.
 
 ## The check to run before a PR
 
-Run `tools/check.sh`: it lints `tools/` with `ruff`, runs the three minimum verifiers, and runs the
-static-input checks when the inputs are set. CI runs the same script. By hand, the minimum —
-offline, no Blender or PINE, about 3.5 seconds in total:
+Run `tools/check.sh`: it lints `tools/` with `ruff`, runs the asset-index verifier and basic tests, and runs the
+archive/executable checks when the inputs are set. CI runs the same script. The checks and their input requirements are:
 
-| Command | What it covers | Observed |
+| Command | What it covers | Inputs |
 | --- | --- | --- |
-| `python3 tools/verify_recovered_asset_index.py` | Derives the expected index from producer receipts, re-hashes 2579 artifacts across 35 cars, and requires corrupt manifests, cross-car record swaps and changed declarations each to be rejected | ~3 s |
-| `python3 tools/verify_config_data_sound.py` | 35 cars × config (11 files) + data DAT + sound chain | <1 s |
-| `python3 tools/verify_sound_bank_index.py` | Sound bank reconciliation | <1 s |
+| `python3 tools/verify_recovered_asset_index.py` | Derives the expected index from producer receipts, re-hashes 2579 artifacts across 35 cars, and requires corrupt manifests, cross-car record swaps and changed declarations each to be rejected | Committed corpus |
+| `python3 tools/verify_config_data_sound.py` | 35 cars × config (11 files) + data DAT + sound chain | Private archive/executable bundle |
+| `python3 tools/verify_sound_bank_index.py` | Sound bank reconciliation | Private archive/executable bundle |
 
 Slower but still offline:
 
@@ -100,9 +98,9 @@ Verifiers write their JSON receipt under `research/evidence/<area>/`. Those rece
 re-running a verifier should reproduce its receipt and leave the tree otherwise unchanged. A run that
 modifies a committed receipt is a finding, not a cleanup.
 
-Some tool scripts are exploratory one-offs kept as provenance rather than as entry points — the
-`battery_*` series, and scripts whose non-stdlib imports point at a research checkout outside this
-repo. They are not expected to run here.
+The `battery_*` scripts are historical model-judgment experiments, not routine check entry points.
+Recovery tools use the local input bundle and repo-owned parsers. Historical receipts preserve their
+original provenance text; it is a record of an earlier run, not a current dependency.
 
 ## Branches and merging
 
@@ -112,7 +110,8 @@ too. Every change reaches `main` through a pull request from a feature branch.
 - Branch off `main` using Conventional Branch names: `feature/…`, `bugfix/…`, `chore/…`, lowercase,
   hyphenated. Commit headers use `<type>: <description>`.
 - Open the PR against `main` with the template filled in. Resolve every review conversation
-  before merging; there is no CI to wait on, so the Evidence section is the review.
+  before merging. CI runs `tools/check.sh`; when Actions is unavailable, an explicitly authorized
+  merge uses the recorded full local run, with the unavailable CI status stated in the PR.
 - **Cleanup after merge is part of merging.** GitHub deletes the remote branch automatically when a
   PR merges. Locally, run `tools/git_cleanup.sh` (`--dry-run` to preview). It fast-forwards
   `main`, then deletes each local and remote branch whose merged PR's head commit equals the

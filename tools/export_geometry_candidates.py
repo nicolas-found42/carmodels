@@ -121,7 +121,7 @@ def build(car, data):
             records.append({'record':record,'node':node,'bounds':list(bounds),'triangles':triangle_count})
     # Additional scenes preserve the serialized hierarchy without choosing a
     # moving/static wheel, light or LOD state. Zero rotation fields are checked.
-    sys.path.insert(0,str(ROOT.parents[1]/'reverse-engineering/tools'))
+    sys.path.insert(0,str(ROOT/'tools'))
     import ps2_sections
     parsed=ps2_sections.parse(data)
     from recover_assembly_semantics import join
