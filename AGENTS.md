@@ -8,6 +8,12 @@ Read `CONTRIBUTING.md` before changing or verifying anything: it lists the prere
 checkout (`../reverse-engineering`), the offline verifiers to run before a PR, and how to read a
 verifier's pass (self-checking against tamper controls, not merely "no exception").
 
+## Branches and merging
+
+`main` is protected; change it only through a PR from a `feature/`, `bugfix/` or `chore/` branch.
+After a PR merges, run `tools/git_cleanup.sh` so no merged branch or worktree is left behind,
+locally or on `origin`. Never push to `main` or force-push.
+
 ## Agent skills
 
 ### Issue tracker

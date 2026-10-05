@@ -77,6 +77,21 @@ Some tool scripts are exploratory one-offs kept as provenance rather than as ent
 `battery_*` series, and scripts whose non-stdlib imports point at a research checkout outside this
 repo. They are not expected to run here.
 
+## Branches and merging
+
+`main` is protected: no direct pushes, no force pushes, no deletion, and the rules apply to admins
+too. Every change reaches `main` through a pull request from a feature branch.
+
+- Branch off `main` using Conventional Branch names: `feature/…`, `bugfix/…`, `chore/…`, lowercase,
+  hyphenated. Commit headers use `<type>: <description>`.
+- Open the PR against `main` with the template filled in. Resolve every review conversation
+  before merging; there is no CI to wait on, so the Evidence section is the review.
+- **Cleanup after merge is part of merging.** GitHub deletes the remote branch automatically when a
+  PR merges. Locally, run `tools/git_cleanup.sh` (`--dry-run` to preview). It fast-forwards
+  `main`, then deletes each local and remote branch whose merged PR's head commit equals the
+  branch tip, and removes its worktree if the worktree is clean. Branches with unmerged work,
+  or with commits added after the merge, are left alone.
+
 ## Issues and PRs
 
 - File issues through the forms in `.github/ISSUE_TEMPLATE/`. Real evidence, ordered reproducible
