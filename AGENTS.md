@@ -5,7 +5,7 @@ Repo configuration for the engineering skills.
 ## Working in this repo
 
 Read `CONTRIBUTING.md` before changing or verifying anything: it lists the prerequisite sibling
-checkout (`../reverse-engineering`), the offline verifiers to run before a PR, and how to read a
+checkout (`../../reverse-engineering`), the offline verifiers to run before a PR, and how to read a
 verifier's pass (self-checking against tamper controls, not merely "no exception").
 
 ## Branches and merging
