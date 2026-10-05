@@ -1,0 +1,350 @@
+{
+ "schema": "fr2-vu-dispatch-map/v1",
+ "scope": "Static map from VIF MSCAL entries and the retained packet header to the VU1 overlay-0 jump table; no code was executed.",
+ "render_fidelity_complete": false,
+ "pins": {
+  "inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+  "elf_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+  "residency_receipt_sha256": "17d538747155a7c69d0301a235212f01577ccab6634c7274ebf2253e52611f70",
+  "overlays": {
+   "0": {
+    "bin_sha256": "44dc920cd4ae5ca3acfb27d75abf5e97977f12671d95782396bb9736e4656f78",
+    "asm_sha256": "f5ade691d5c7de71be42e79adb5981f6b6441b451dc9ca9a181f1e1bda798fec",
+    "micro_memory_offset": 0
+   },
+   "1": {
+    "bin_sha256": "0f538b0e4eb49ed1111b083b5723c6c19dd664db2d8a119bd8b77259fb5c0f3d",
+    "asm_sha256": "b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a",
+    "micro_memory_offset": 2048
+   },
+   "2": {
+    "bin_sha256": "afbaaa5303b7b41f32cf58c4c83fa3610a13dc89f66bd056361bd9ff98fc0326",
+    "asm_sha256": "45e0758862839e56034f9f35ab6fb21528522e8386d24119eec9c5e67d8ba9b4",
+    "micro_memory_offset": 4096
+   },
+   "3": {
+    "bin_sha256": "555e44d8172793c545f91864b1f868e6568517e727c281a7788560c5b205326b",
+    "asm_sha256": "4732f51dbfa3a9346dfac84631768b82086f01273635851f9576d24aa8b7fce9",
+    "micro_memory_offset": 6144
+   },
+   "4": {
+    "bin_sha256": "1a3f4ad92125a228e8edc0de1307c2cc1d670388fa2ae50a8228d1e446795f97",
+    "asm_sha256": "cfdbfea8160043f73e10bbc519dd8e441acd8f4cceaf0b4cca4abd7f07fdd629",
+    "micro_memory_offset": 8192
+   },
+   "5": {
+    "bin_sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c",
+    "asm_sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5",
+    "micro_memory_offset": 10240
+   },
+   "6": {
+    "bin_sha256": "8fa890c10982c4f03092aea57a77a5f31e140497c5747027c56a67a9daf155d8",
+    "asm_sha256": "c19e1aff3bffba716e30e59e117a6266a4049d20f3c03781d6adc0b972745940",
+    "micro_memory_offset": 12288
+   }
+  }
+ },
+ "jump_table": {
+  "data_memory_base": 20,
+  "written_by_overlay0_pairs": [
+   0,
+   14
+  ],
+  "entries": [
+   {
+    "index": 0,
+    "target_address": 766,
+    "overlay": 2,
+    "local_pair": 254,
+    "target_lower_word": "0x8000033c",
+    "target_upper_word": "0x400002ff",
+    "target_text": "nop[e] \tnop"
+   },
+   {
+    "index": 1,
+    "target_address": 77,
+    "overlay": 0,
+    "local_pair": 77,
+    "target_lower_word": "0x01ff0802",
+    "target_upper_word": "0x000002ff",
+    "target_text": "nop \tlq.xyzw vf31xyzw,2(vi01)"
+   },
+   {
+    "index": 2,
+    "target_address": 163,
+    "overlay": 0,
+    "local_pair": 163,
+    "target_lower_word": "0x01e90008",
+    "target_upper_word": "0x000002ff",
+    "target_text": "nop \tlq.xyzw vf09xyzw,8(vi00)"
+   },
+   {
+    "index": 3,
+    "target_address": 428,
+    "overlay": 1,
+    "local_pair": 172,
+    "target_lower_word": "0x0887003b",
+    "target_upper_word": "0x000002ff",
+    "target_text": "nop \tilw.y vi07,59(vi00)y"
+   },
+   {
+    "index": 4,
+    "target_address": 558,
+    "overlay": 2,
+    "local_pair": 46,
+    "target_lower_word": "0x0887003b",
+    "target_upper_word": "0x000002ff",
+    "target_text": "nop \tilw.y vi07,59(vi00)y"
+   },
+   {
+    "index": 5,
+    "target_address": 469,
+    "overlay": 1,
+    "local_pair": 213,
+    "target_lower_word": "0x01e70005",
+    "target_upper_word": "0x000002ff",
+    "target_text": "nop \tlq.xyzw vf07xyzw,5(vi00)"
+   },
+   {
+    "index": 6,
+    "target_address": 693,
+    "overlay": 2,
+    "local_pair": 181,
+    "target_lower_word": "0x0887003b",
+    "target_upper_word": "0x000002ff",
+    "target_text": "nop \tilw.y vi07,59(vi00)y"
+   }
+  ]
+ },
+ "init_program": {
+  "first_pair": 0,
+  "last_pair_with_e_bit": 24,
+  "delay_slot_pair": 25,
+  "next_entry_address": 26
+ },
+ "dispatch_at_entry_0x1a": {
+  "entry_address": 26,
+  "overlay": 0,
+  "prologue_pairs": [
+   26,
+   59
+  ],
+  "dispatch_pairs": {
+   "xtop": 60,
+   "ilwr_index_x": 61,
+   "table_base_iaddiu": 64,
+   "iadd_index": 65,
+   "ilwr_handler_w": 66,
+   "jr": 73
+  },
+  "index_lane": {
+   "qword_offset_from_top": 0,
+   "lane": "x"
+  },
+  "handler_expression": "DM[0x14 + DM[TOP+0].x].w",
+  "lower_text_by_pair": {
+   "60": "xtop vi01",
+   "61": "ilwr.x vi05,(vi01)x",
+   "62": "ilwr.y vi02,(vi01)y",
+   "63": "ilwr.w vi13,(vi01)w",
+   "64": "iaddiu vi06,vi00,20",
+   "65": "iadd vi06,vi06,vi05",
+   "66": "ilwr.w vi06,(vi06)w",
+   "67": "lq.xyzw vf05xyzw,1(vi01)",
+   "68": "iadd vi09,vi11,vi00",
+   "69": "iadd vi11,vi12,vi00",
+   "70": "iadd vi12,vi09,vi00",
+   "71": "ilwr.z vi03,(vi01)z",
+   "72": "iaddiu vi04,vi11,1",
+   "73": "jr vi06"
+  }
+ },
+ "mscal_entries": [
+  {
+   "name": "mscal0",
+   "global": "gp-0x6df4",
+   "value": 0,
+   "emitters": [
+    "001124c0"
+   ],
+   "overlay": 0,
+   "local_pair": 0
+  },
+  {
+   "name": "main_car_path",
+   "global": "gp-0x6df0",
+   "value": 26,
+   "emitters": [
+    "0021c3e0"
+   ],
+   "overlay": 0,
+   "local_pair": 26
+  },
+  {
+   "name": "overlay5_path",
+   "global": "gp-0x6dec",
+   "value": 1484,
+   "emitters": [
+    "00128ca0"
+   ],
+   "overlay": 5,
+   "local_pair": 204
+  }
+ ],
+ "pass_word_header": {
+  "unpack_code_without_param8": 1812168704,
+  "unpack_decoded": {
+   "format": "V4-32",
+   "num": 3,
+   "tops_relative": true,
+   "address_field": 0
+  },
+  "payload_qword0_lanes": {
+   "x": "param_2",
+   "z": "param_4",
+   "y": "param_3",
+   "w": "param_5"
+  },
+  "eighth_argument_at_call_sites": "move t3,zero",
+  "static_pass_words": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "table_indices_without_stop": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "pass_words_outside_table": [],
+  "table_index_0_is_stop": true,
+  "call_sites": 6,
+  "pseudocode_sha256": {
+   "0021cc88": "580ea851fd7bb30fa98b267450ea1daa6a9e4f02f2a7e7fa739a9eb3c9142233",
+   "0021ced0": "f4d25cf111af7d89c5bd761c1adb24bc5e8277a93374e53c31cb5dfbedbf4054",
+   "0021c3e0": "618edec8f6437d909769be78b61ac3abc1db5aff05a3e9350c6ef670a066bee3"
+  }
+ },
+ "call_graph": {
+  "direct_callers": {
+   "00128e88": [
+    "001288b0"
+   ],
+   "0021ba50": [
+    "0021c3e0"
+   ]
+  },
+  "common_ancestor_count": 9,
+  "lowest_common_ancestors": [
+   "001cf848"
+  ],
+  "direct_chain_either_way": false,
+  "paths": {
+   "00128e88": [
+    "001cf848",
+    "001ce288",
+    "001288b0",
+    "00128e88"
+   ],
+   "0021ba50": [
+    "001cf848",
+    "0021d8c8",
+    "00127fa8",
+    "0021d180",
+    "0021bf28",
+    "0021c3e0",
+    "0021ba50"
+   ]
+  },
+  "shortest_path_counts": {
+   "00128e88": 1,
+   "0021ba50": 1
+  },
+  "edge_scope": "direct JAL edges of the typed export; indirect calls are not represented"
+ },
+ "claim_limits": [
+  "Static derivation only; no VU1 or EE code was executed and no emulator ran. Residency of the overlays in captured micro memory is not execution.",
+  "The pass-word-to-jump-table relationship assumes the UNPACK of the 0021bb48 block is TOPS-relative at address 0 and that VIF MODE/CYCLE write its words unchanged; the live VIF state was not captured.",
+  "Handler identity for any captured GIF tag is not proven. Entry 0x1a is also continued by MSCNT; whether other paths re-enter the table was not traced.",
+  "Dispatch-sequence mnemonics are decoded from the overlay bytes for the subset used here and bound to the pinned disassembly text; other pairs are not decoded.",
+  "Call edges are direct JAL edges of the typed export; typed pseudocode supplies the FUN_0021bb48 argument values and is not an execution trace."
+ ],
+ "controls": [
+  {
+   "mutation": "table value bumped",
+   "rejected": true,
+   "reason": "overlay 0 pair 3: bytes decode to 'iaddiu vi04,vi00,162' but disassembly says 'iaddiu vi04,vi00,0xa3'"
+  },
+  {
+   "mutation": "table base moved",
+   "rejected": true,
+   "reason": "overlay 0 pair 0: bytes decode to 'iaddiu vi01,vi00,21' but disassembly says 'iaddiu vi01,vi00,0x14'"
+  },
+  {
+   "mutation": "init program E bit cleared",
+   "rejected": true,
+   "reason": "the first E-bit pair of overlay 0 is not pair 24"
+  },
+  {
+   "mutation": "jr register changed",
+   "rejected": true,
+   "reason": "overlay 0 pair 73: bytes decode to 'jr vi07' but disassembly says 'jr vi06'"
+  },
+  {
+   "mutation": "overlay 1 residency offset shifted",
+   "rejected": true,
+   "reason": "overlay residency windows overlap"
+  },
+  {
+   "mutation": "overlay 1 and 2 residency offsets swapped",
+   "rejected": true,
+   "reason": "table entry 0 is not an E-bit stop"
+  },
+  {
+   "mutation": "call edge removed from one list",
+   "rejected": true,
+   "reason": "callers and callees lists are not inverses"
+  },
+  {
+   "mutation": "call edge removed from both lists",
+   "rejected": true,
+   "reason": "the two packet emitters do not have exactly one lowest common ancestor: []"
+  },
+  {
+   "mutation": "table entry 0 stop bit cleared",
+   "rejected": true,
+   "reason": "table entry 0 is not an E-bit stop"
+  },
+  {
+   "mutation": "disassembly text of a table pair changed",
+   "rejected": true,
+   "reason": "overlay 0 pair 2: bytes decode to 'iaddiu vi03,vi00,77' but disassembly says 'iaddiu vi03,vi00,0x4e'"
+  },
+  {
+   "mutation": "EE instruction word differs from the ELF",
+   "rejected": true,
+   "reason": "0021bba8: instruction bytes differ from the ELF"
+  },
+  {
+   "mutation": "MSCAL source literal changed",
+   "rejected": true,
+   "reason": "0022fdc0: text 'addiu v0,v0,0xd8' differs from decoded 'addiu v0,v0,0xd0'"
+  },
+  {
+   "mutation": "pass-word store moved to another lane",
+   "rejected": true,
+   "reason": "0021bba8: text 'sw a1,0x4(v1)' differs from decoded 'sw a1,0x0(v1)'"
+  },
+  {
+   "mutation": "a pass word leaves the table",
+   "rejected": true,
+   "reason": "pass words outside the jump table: [7]"
+  }
+ ]
+}

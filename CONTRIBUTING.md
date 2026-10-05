@@ -49,6 +49,7 @@ Slower but still offline:
 
 - `python3 tools/test_car_mips.py` (~12 s)
 - `python3 tools/verify_selector_word.py` (~16 s)
+- `python3 tools/verify_vu_dispatch_map.py` (<1 s; static VU1 dispatch map, 14 mutation controls) and `python3 tools/test_vu_dispatch_map.py` (~1 s)
 
 Not available offline:
 
