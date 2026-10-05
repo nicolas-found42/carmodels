@@ -1,0 +1,382 @@
+{
+ "schema": "fr2-vu-pass-handlers/v1",
+ "scope": "Symbolic decode of the VU1 handlers for pass words 4 and 5 (jump-table entries 4 and 5); no code was executed and no frame was captured.",
+ "render_fidelity_complete": false,
+ "pins": {
+  "dispatch_map_sha256": "f7621ea138be96fbf22335925a4c08eb5aaf485c730f23531ad140389d5e00e2",
+  "overlays": {
+   "0": {
+    "bin_sha256": "44dc920cd4ae5ca3acfb27d75abf5e97977f12671d95782396bb9736e4656f78",
+    "asm_sha256": "f5ade691d5c7de71be42e79adb5981f6b6441b451dc9ca9a181f1e1bda798fec"
+   },
+   "1": {
+    "bin_sha256": "0f538b0e4eb49ed1111b083b5723c6c19dd664db2d8a119bd8b77259fb5c0f3d",
+    "asm_sha256": "b6213e2c175bbb515cd5bbe86da393db65156847ebd233ca48148030acd0486a"
+   },
+   "2": {
+    "bin_sha256": "afbaaa5303b7b41f32cf58c4c83fa3610a13dc89f66bd056361bd9ff98fc0326",
+    "asm_sha256": "45e0758862839e56034f9f35ab6fb21528522e8386d24119eec9c5e67d8ba9b4"
+   },
+   "3": {
+    "bin_sha256": "555e44d8172793c545f91864b1f868e6568517e727c281a7788560c5b205326b",
+    "asm_sha256": "4732f51dbfa3a9346dfac84631768b82086f01273635851f9576d24aa8b7fce9"
+   },
+   "4": {
+    "bin_sha256": "1a3f4ad92125a228e8edc0de1307c2cc1d670388fa2ae50a8228d1e446795f97",
+    "asm_sha256": "cfdbfea8160043f73e10bbc519dd8e441acd8f4cceaf0b4cca4abd7f07fdd629"
+   },
+   "5": {
+    "bin_sha256": "4d9dfc5c917746997f2bf4bd95068deca7fce6c3b447dc591fa74f537798ef0c",
+    "asm_sha256": "f5e195d23ec624026e31caae2c31d7af6cce10ec36158632f8624eeb640499d5"
+   },
+   "6": {
+    "bin_sha256": "8fa890c10982c4f03092aea57a77a5f31e140497c5747027c56a67a9daf155d8",
+    "asm_sha256": "c19e1aff3bffba716e30e59e117a6266a4049d20f3c03781d6adc0b972745940"
+   }
+  }
+ },
+ "decoder": "tools/vu1_decode.py, from the VU1 instruction layout; every pair used here equals the pinned disassembly text",
+ "bound_pairs": 284,
+ "handlers": {
+  "4": {
+   "pass_word": 4,
+   "entry_address": 558,
+   "overlay": 2,
+   "local_pair": 46,
+   "pairs": {
+    "loop_start": 575,
+    "loop_branch": 687,
+    "loop_delay_slot": 688,
+    "tail_kick": 690,
+    "tail_branch": 691,
+    "entry": 558
+   },
+   "loop": {
+    "vertices_per_iteration": 4,
+    "qwords_per_vertex": 3,
+    "counter": "TOP[0].y",
+    "counter_step": -4,
+    "pointer_step_qwords": 12,
+    "pointers": {
+     "P": "plane base TOP[0].z",
+     "B0": "output buffer (vi11)",
+     "B1": "previous output buffer (vi12)"
+    }
+   },
+   "static_kick": {
+    "pair": 690,
+    "dm_address": 37
+   },
+   "dm59_y_write": "DM[59].y = DM[59].y | 1",
+   "exit_target": 758,
+   "output_layout": "B0[0] = TOP[2] (GIF tag); vertex k writes B0[1+3k] STQ, B0[2+3k] RGBA, B0[3+3k] XYZF",
+   "vertex0": {
+    "bindings": [
+     [
+      "t1",
+      "(P[0].x - DM[7].x)*P[0].w"
+     ],
+     [
+      "t2",
+      "(P[0].y - DM[7].y)*P[0].w"
+     ],
+     [
+      "t3",
+      "(P[0].z - DM[7].z)*P[0].w"
+     ],
+     [
+      "t4",
+      "(t1*P[1].x + t2*P[1].y) + t3*P[1].z"
+     ],
+     [
+      "t5",
+      "-t4"
+     ],
+     [
+      "t6",
+      "t5 + t5"
+     ],
+     [
+      "t7",
+      "-(P[1].x*t6 + t1)"
+     ],
+     [
+      "t8",
+      "-(P[1].y*t6 + t2)"
+     ],
+     [
+      "t9",
+      "-(P[1].z*t6 + t3)"
+     ],
+     [
+      "t10",
+      "div(1, -1 - abs((TOP[12].z*t7 + TOP[13].z*t8) + TOP[14].z*t9))"
+     ],
+     [
+      "t11",
+      "min(1 - t4*-0.949999988, 1)"
+     ]
+    ],
+    "stq": [
+     "(((TOP[12].x*t7 + TOP[13].x*t8) + TOP[14].x*t9)*t10*0.5 + 0.5)*B1[1].z",
+     "(-((TOP[12].y*t7 + TOP[13].y*t8) + TOP[14].y*t9)*t10*0.5 + 0.5)*B1[1].z",
+     "B1[1].z",
+     "B1[1].w"
+    ],
+    "rgba": [
+     "ftoi0(TOP[1].x*t11)",
+     "ftoi0(TOP[1].y*t11)",
+     "ftoi0(TOP[1].z*t11)",
+     "t11"
+    ],
+    "xyzf": [
+     "B1[3].x",
+     "B1[3].y",
+     "B1[3].z",
+     "B1[3].w"
+    ]
+   },
+   "vertices_identical_after_shift": true,
+   "inputs": [
+    "B1[1].w",
+    "B1[1].z",
+    "B1[3].w",
+    "B1[3].x",
+    "B1[3].y",
+    "B1[3].z",
+    "DM[7].x",
+    "DM[7].y",
+    "DM[7].z",
+    "P[0].w",
+    "P[0].x",
+    "P[0].y",
+    "P[0].z",
+    "P[1].x",
+    "P[1].y",
+    "P[1].z",
+    "TOP[12].x",
+    "TOP[12].y",
+    "TOP[12].z",
+    "TOP[13].x",
+    "TOP[13].y",
+    "TOP[13].z",
+    "TOP[14].x",
+    "TOP[14].y",
+    "TOP[14].z",
+    "TOP[1].x",
+    "TOP[1].y",
+    "TOP[1].z"
+   ]
+  },
+  "5": {
+   "pass_word": 5,
+   "entry_address": 469,
+   "overlay": 1,
+   "local_pair": 213,
+   "pairs": {
+    "loop_start": 484,
+    "loop_branch": 552,
+    "loop_delay_slot": 553,
+    "tail_kick": 555,
+    "tail_branch": 556,
+    "entry": 469
+   },
+   "loop": {
+    "vertices_per_iteration": 4,
+    "qwords_per_vertex": 3,
+    "counter": "TOP[0].y",
+    "counter_step": -4,
+    "pointer_step_qwords": 12,
+    "pointers": {
+     "P": "plane base TOP[0].z",
+     "B0": "output buffer (vi11)",
+     "B1": "previous output buffer (vi12)"
+    }
+   },
+   "static_kick": {
+    "pair": 555,
+    "dm_address": 28
+   },
+   "dm59_y_write": "DM[59].y = DM[59].y | 1",
+   "exit_target": 758,
+   "output_layout": "B0[0] = TOP[2] (GIF tag); vertex k writes B0[1+3k] STQ, B0[2+3k] RGBA, B0[3+3k] XYZF",
+   "vertex0": {
+    "bindings": [
+     [
+      "t1",
+      "(P[1].x*(DM[6].x + DM[6].x) + P[1].y*(DM[6].y + DM[6].y)) + P[1].z*(DM[6].z + DM[6].z)"
+     ],
+     [
+      "t2",
+      "(DM[7].x - P[0].x)*P[0].w"
+     ],
+     [
+      "t3",
+      "(DM[7].y - P[0].y)*P[0].w"
+     ],
+     [
+      "t4",
+      "(DM[7].z - P[0].z)*P[0].w"
+     ]
+    ],
+    "stq": [
+     "max(((((P[1].x*t1 - DM[6].x) + t2)*0.5*t2 + ((P[1].y*t1 - DM[6].y) + t3)*0.5*t3) + ((P[1].z*t1 - DM[6].z) + t4)*0.5*t4) - 0.5, 0)*B1[1].z",
+     "TOP[1].w*B1[1].z",
+     "B1[1].z",
+     "B1[1].w"
+    ],
+    "rgba": [
+     "ftoi0(min(DM[5].x*TOP[1].x, 128))",
+     "ftoi0(min(DM[5].y*TOP[1].y, 128))",
+     "ftoi0(min(DM[5].z*TOP[1].z, 128))",
+     "ftoi0(min(DM[5].w, 128))"
+    ],
+    "xyzf": [
+     "B1[3].x",
+     "B1[3].y",
+     "B1[3].z",
+     "B1[3].w"
+    ]
+   },
+   "vertices_identical_after_shift": true,
+   "inputs": [
+    "B1[1].w",
+    "B1[1].z",
+    "B1[3].w",
+    "B1[3].x",
+    "B1[3].y",
+    "B1[3].z",
+    "DM[5].w",
+    "DM[5].x",
+    "DM[5].y",
+    "DM[5].z",
+    "DM[6].x",
+    "DM[6].y",
+    "DM[6].z",
+    "DM[7].x",
+    "DM[7].y",
+    "DM[7].z",
+    "P[0].w",
+    "P[0].x",
+    "P[0].y",
+    "P[0].z",
+    "P[1].x",
+    "P[1].y",
+    "P[1].z",
+    "TOP[1].w",
+    "TOP[1].x",
+    "TOP[1].y",
+    "TOP[1].z"
+   ]
+  }
+ },
+ "matrix_prologue": {
+  "pairs": [
+   26,
+   59
+  ],
+  "dm_inputs": {
+   "5": [
+    "TOP[21].x",
+    "TOP[21].y",
+    "TOP[21].z",
+    "TOP[21].w"
+   ],
+   "6": [
+    "-TOP[22].x",
+    "-TOP[22].y",
+    "-TOP[22].z",
+    "TOP[22].w"
+   ],
+   "7": [
+    "TOP[23].x",
+    "TOP[23].y",
+    "TOP[23].z",
+    "TOP[23].w"
+   ]
+  }
+ },
+ "epilogue": {
+  "first_pair": 758,
+  "next_entry_store": {
+   "address": "DM[59].w",
+   "value": 766
+  },
+  "flag_mask_tested_on_vi13": 256,
+  "kick_register": "vi11",
+  "kick_pair": 765,
+  "flag_set_branch": {
+   "pair": 763,
+   "target": 797
+  },
+  "e_bit_pair": 766,
+  "branch_back_pair": 768,
+  "branch_back_target": 60
+ },
+ "numeric_cross_check_values": {
+  "4": 1920,
+  "5": 1920
+ },
+ "claim_limits": [
+  "Static derivation of the microcode only. Captured packet comparisons and retained matrix inputs are checked separately by verify_vu_handler_dump.py; the per-vertex working planes and live dispatch are not established here.",
+  "Host numeric reconstruction is not bit-exact VU arithmetic. Formulas treat Q and P results as available to the next pair, ignore FMAC latency, flags and denormal timing, and assume finite inputs where a product with zero is folded to zero.",
+  "The producer of the static kick packets (DM 0x25 for pass 4, 0x1c for pass 5) and the flag-0x100 clip path at the epilogue branch target were not decoded.",
+  "Interpreting the formulas (reflection-map coordinates, specular intensity, colour factors) is a reading of the arithmetic; this static receipt does not compare a frame."
+ ],
+ "controls": [
+  {
+   "mutation": "matrix prologue DM5 store moved",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "matrix prologue DM5/6/7 input mapping differs"
+  },
+  {
+   "mutation": "handler lower word bit flipped",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "pair 600: bytes decode to 'move.w vf17w,vf19w' but the disassembly says 'mr32.w vf17w,vf19w'"
+  },
+  {
+   "mutation": "handler upper word op changed",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "pair 600: bytes decode to 'opmsub.x vf16x,vf00x,vf19x' but the disassembly says 'sub.x vf16x,vf00x,vf19x'"
+  },
+  {
+   "mutation": "dispatch entry for pass 4 moved",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "unexpected DM[59] write: [((None, 59), 'y', ['1'])]"
+  },
+  {
+   "mutation": "loop counter step changed, text rewritten to match",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "loop pointer or counter update is not 12 qwords and 4 vertices: {'P': 'P+12', 'B0': 'B0+13', 'B1': 'B1+13'}"
+  },
+  {
+   "mutation": "vertex 2 plane offset changed, text rewritten to match",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "the four unrolled vertices do not compute the same formulas"
+  },
+  {
+   "mutation": "colour factor constant changed, text rewritten to match",
+   "rejected": true,
+   "by": "receipt differs",
+   "reason": "the derived receipt differs from the clean one"
+  },
+  {
+   "mutation": "static kick address changed, text rewritten to match",
+   "rejected": true,
+   "by": "receipt differs",
+   "reason": "the derived receipt differs from the clean one"
+  },
+  {
+   "mutation": "pass 5 colour clamp constant changed, text rewritten to match",
+   "rejected": true,
+   "by": "receipt differs",
+   "reason": "the derived receipt differs from the clean one"
+  }
+ ]
+}

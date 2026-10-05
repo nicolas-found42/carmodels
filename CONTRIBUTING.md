@@ -74,6 +74,14 @@ Slower but still offline:
 - `python3 tools/test_car_mips.py` (~12 s)
 - `python3 tools/verify_selector_word.py` (~16 s)
 - `python3 tools/verify_vu_dispatch_map.py` (<1 s; static VU1 dispatch map, 14 mutation controls) and `python3 tools/test_vu_dispatch_map.py` (~1 s) — both need the static inputs
+- `python3 tools/verify_vu_pass_handlers.py`, `python3 tools/test_vu1_decode.py` and
+  `python3 tools/test_vu_pass_handlers.py` — decoded static pass-4/5 handlers, numeric cross-checks
+  and mutation controls; need the configured overlays.
+
+Captured-input checks (no live emulator run):
+
+- `python3 tools/verify_vu_handler_dump.py` and `python3 tools/test_vu_handler_dump.py` compare
+  100 pass-4/5 draws; need the pinned race94 GSDump and race95 retained EE/VU captures.
 
 Not available offline:
 
