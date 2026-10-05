@@ -1,0 +1,86 @@
+name: Feature request
+description: A capability this project does not have yet, with its user problem and acceptance criteria.
+title: "[Feature]: "
+labels: ["needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A feature request describes a capability that does not exist yet, so there is no
+        reproduction path. Describe the **current workflow** and its friction instead of inventing
+        steps to reproduce a feature that isn't there. If a field does not apply, write
+        **Not applicable — reason**.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem and current workflow
+      description: |
+        Who needs this, the task they are trying to complete, and exactly how they do it today
+        (including any manual workaround) — with the friction that motivates the request.
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired
+    attributes:
+      label: Desired behavior
+      description: What the user should be able to observe or do once this exists, stated as observable behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Concrete example
+      description: A specific real invocation, input, or scenario and the result it should produce.
+      placeholder: |
+        e.g. tools/verify_recovered_asset_index.py --car COBRA should print one line per
+        verified artifact and exit non-zero if any sha256 pin disagrees.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed, and why this one. Include "do nothing" when relevant.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and exclusions
+      description: What is in scope, what is explicitly out of scope, and any constraints on the implementation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: |
+        Screenshots of the existing friction are useful; label any proposed mockup clearly as a
+        mockup. Link the research note or receipt that motivates the request. State gaps.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Unchecked, externally observable pass/fail conditions that define "done".
+      placeholder: |
+        - [ ] <observable end state reachable through the tool or viewer>
+        - [ ] <adjacent behavior that must not regress>
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Developer notes
+      description: Evidence-backed leads (file:line), labelled hypotheses, related issues, and remaining unknowns.
+    validations:
+      required: true

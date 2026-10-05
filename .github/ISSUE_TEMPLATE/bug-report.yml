@@ -1,0 +1,142 @@
+name: Bug report
+description: A defect with a reproducible path, real evidence, and testable acceptance criteria.
+title: "[Bug]: "
+labels: ["needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill in every field. If a field does not apply, write **Not applicable — reason**.
+        If you could not determine it, write **Unknown — reason and how to obtain it**.
+        Never invent a fact to fill a field.
+
+        For a visual defect, attach a **genuine** screenshot in Evidence — never a mockup or a
+        re-rendered illustration of what you think the failure looked like.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Affected component, trigger, and observable outcome, in one or two sentences.
+      placeholder: |
+        e.g. tools/recover_car_ptg.py emits a 4-bit car texture whose alpha plane is fully
+        opaque for LIGHTNING_SVT, where the disc's own plane is not.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: |
+        Task blocked or degraded, user harm, severity and proposed priority with reasons,
+        occurrence evidence, any workaround, and whether this is a regression.
+      placeholder: |
+        Blocks viewer/public/recovered rebuild for this car; downstream GLB shows wrong
+        alpha. Severity: minor visual. No workaround. Not a regression — never correct.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Tested commit SHA and date, platform/OS, toolchain versions (Python, Blender, PINE/
+        PCSX2), the input artifact and its sha256, and whether the run was live capture or a
+        replay of an existing dump. Record unknown versions honestly.
+      placeholder: |
+        commit 65111a8, 2026-10-05. macOS 26.4.1 arm64, python 3.14.
+        Input: reference/ford/cars/LIGHTNING_SVT/model/*.PS2;1 (sha256 ...)
+        Mode: offline decode of the extracted disc tree (no live capture).
+    validations:
+      required: true
+
+  - type: textarea
+    id: preconditions
+    attributes:
+      label: Preconditions
+      description: |
+        Starting state, required corpus files, access or configuration, and the exact synthetic
+        input. Include setup commands or a stable setup reference when needed.
+      placeholder: |
+        From projects/carmodels/: python3 tools/build_reference.py must have run so that
+        reference/ford/ is populated. No credentials required.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Numbered, shortest complete path from the stated preconditions, with exact commands and
+        the point at which the defect becomes visible. One numbered list per distinct variant.
+      placeholder: |
+        1. cd projects/carmodels
+        2. python3 tools/recover_car_ptg.py --car LIGHTNING_SVT
+        3. Inspect recovered/cars/LIGHTNING_SVT/graphics/liveries/*.png
+        4. Observe the alpha plane is opaque where the disc's is not.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What the user or caller should observe, stated as product behavior — not your proposed fix.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: |
+        What was observed, with any error text quoted verbatim, the state after waiting for
+        asynchronous completion, and the scope of reproduction (how many times, which inputs).
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: |
+        For visual defects: the minimum set of screenshots that proves the complaint, each with a
+        meaningful alt text and a caption naming the step and the visible symptom. For nonvisual
+        defects: the smallest useful log, request/response, or executable reproduction, and say why
+        a screenshot is inapplicable. State the coverage and any gap explicitly.
+      placeholder: |
+        ![Opaque alpha plane in the recovered livery PNG after step 3](./evidence/alpha.png)
+
+        Caption: step 3 — recovered livery renders opaque over the glass region.
+        Coverage: alpha plane inspected; the colour plane was not compared.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: |
+        Unchecked, externally observable pass/fail conditions. Cover the defect, the correction or
+        recovery path, and relevant adjacent behavior. Every bullet must be reachable through the
+        product's own interface — do not describe the implementation you have in mind.
+      placeholder: |
+        - [ ] Recovered livery PNG for LIGHTNING_SVT has a non-opaque alpha plane matching the disc's plane
+        - [ ] python3 tools/validate_car_mips.py passes for all 35 cars
+        - [ ] viewer/public/recovered GLB for this car still loads in the viewer
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Scope and developer notes
+      description: |
+        Observed facts separated from hypotheses, pinned code leads (file:line), constraints and
+        exclusions, related issues, and anything still unknown. Source inspection is a lead, not
+        proof of runtime causality — label it as such.
+    validations:
+      required: true
