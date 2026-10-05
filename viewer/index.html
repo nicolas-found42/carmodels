@@ -204,7 +204,7 @@
 (function () {
   var state = { loaded: false, failed: false, msg: null };
   window.__viewerBoot = state;
-  var TIMEOUT_MS = 8000;
+  var TIMEOUT_MS = 5000;
 
   function serverCommand() {
     return 'python3 -m http.server 8080 --directory viewer';
