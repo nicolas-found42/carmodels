@@ -5,6 +5,7 @@ Scope: bytes retained in a saved EE image.  A match here proves a producer-shape
 source-plane bindings; it does not prove that a CPU/VU path executed or that GIF transfer 5906 came
 from it.  The decompilation is read only to pin literals; all comparisons are done here on bytes.
 """
+import static_inputs
 import hashlib
 import json
 import struct
@@ -12,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RT = ROOT / 'research/evidence/continuation/runtime'
-SRC = Path('/Users/Nicolas/Documents/github/hermes/reverse-engineering')
+SRC = static_inputs.bundle_path()
 EXPORT = SRC / '.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po/decompilation/functions'
 ELF = SRC / 'games/ford-racing-2/extracted/SLES_517.05'
 CENSUS = ROOT / 'research/evidence/original-recovery/car-asset-census.json'

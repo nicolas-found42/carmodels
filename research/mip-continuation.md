@@ -28,7 +28,7 @@ The source identity is PAL `SLES-51705`, corpus ID `e69a2afbd6db606d166e40bae32c
 
 Primary loader evidence is the existing static trace of `FUN_0022ba30`, which reads the mip count and descriptor records, lays out the image planes, halves dimensions per level, and fills the runtime source-pointer slot. `FUN_00222358` follows those records for uploads, uses the static format choice and consumes the per-level TBW/DBW fields. The all-56 archive-bound mip upload audit checks instruction bytes against the executable and finds equal source-plane and predicted transfer byte totals. The 16 packed car mappings were also checked against the pinned PCSX2 `GSTables.cpp` revision `81526d4dc7cc70e4ae75abb35a789417456c6d43`, SHA-256 `a9a226297ede32b89177d7bdb04e9d8e21728e7d55799405f6112e97fe4969e8`. These are source and table calculations, not an execution of the game's uploader.
 
-Reusable primary evidence lives in the sibling reverse-engineering project:
+Reusable primary evidence lives in the private input bundle:
 
 - `notes/evidence/fr2-texture-upload-audit/mip-upload-static-audit/README.md` — uploader byte-count and loader-field trace.
 - `notes/evidence/fr2-texture-mip-field-audit/README.md` and `conditional-address-intersections.json` — mip record field measurements and the conditional small-mip address gap.

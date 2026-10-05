@@ -7,6 +7,7 @@ always retained with their exact offsets and hashes.
 """
 from __future__ import annotations
 
+import static_inputs
 from collections import Counter
 import hashlib
 import json
@@ -17,7 +18,7 @@ import sys
 import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = ROOT.parents[1] / "reverse-engineering"
+DEFAULT_SOURCE = static_inputs.bundle_path()
 OUT = ROOT / "research/evidence/mip-continuation"
 
 
@@ -91,7 +92,7 @@ def main() -> None:
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
     parser.add_argument("--output", type=Path, default=OUT)
     args = parser.parse_args()
-    sys.path.insert(0, str(args.source / "tools"))
+    sys.path.insert(0, str(ROOT/'tools'))
     import ps2_container
     import ps2_sections
     import ps2_texture_indices
@@ -103,7 +104,7 @@ def main() -> None:
     (args.output / "levels").mkdir(exist_ok=True)
     code_names = ["ps2_container.py", "ps2_texture_indices.py", "ps2_sections.py",
                   "format_contracts.py", "corpus_binding.py"]
-    pins = {name: sha((args.source / "tools" / name).read_bytes()) for name in code_names}
+    pins = {name: sha((ROOT/'tools' / name).read_bytes()) for name in code_names}
     cars = []
     outcomes = Counter()
     profiles = Counter()

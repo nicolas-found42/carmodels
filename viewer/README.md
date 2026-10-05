@@ -17,7 +17,7 @@ Then open <http://localhost:8080/recovered.html> — **the recommended first sto
 
 The viewer uses three.js r182 — the module, core and `OrbitControls` are **shipped in this repository** under `viewer/vendor/`, so it has no build step or runtime CDN dependency. A local HTTP server is required for browser ES-module loading (`file://` will not load the modules).
 
-To regenerate original-data exports from the existing sibling `reverse-engineering` corpus:
+To regenerate original-data exports from the provisioned local input bundle:
 
 ```sh
 python3 tools/recover_original_assets.py

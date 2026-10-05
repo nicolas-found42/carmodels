@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the Ford Racing 2 per-car reference corpus.
 
-Source : reverse-engineering/games/ford-racing-2/extracted/files  (990 files extracted
+Source : private input bundle: games/ford-racing-2/extracted/files  (990 files extracted
          from the PAL PS2 disc's FILES.HDR/FILES.DAT container; serial SLES-51705)
 Dest   : projects/carmodels/reference/ford
 
@@ -30,6 +30,7 @@ Nested occurrences indented inside blocks (e.g. CARSOUND's :SOUND_INFO
 "\\t:TYPE WIND_NOISE", BODYDATA spoilers, TYREDATA skid groups) must NOT split
 a block, so patterns are ^:TYPE / ^:CAR_TYPE with no leading whitespace class.
 """
+import static_inputs
 import hashlib
 import json
 import re
@@ -38,8 +39,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-SRC = Path("/Users/Nicolas/documents/github/hermes/reverse-engineering/games/ford-racing-2/extracted/files")
-DST = Path("/Users/Nicolas/documents/github/hermes/projects/carmodels/reference/ford")
+SRC = static_inputs.bundle_path() / 'games/ford-racing-2/extracted/files'
+DST = Path(__file__).resolve().parents[1] / 'reference/ford'
 
 CONFIG_DIR = "DATA/ASCII/CARS"
 GAMEPLAY_DIR = "DATA/ASCII/GAMEPLAY"
@@ -333,7 +334,7 @@ def main() -> int:
     readme = f"""# Ford Racing 2 — car reference corpus
 
 Vehicle assets and configuration from the PAL PS2 disc (serial SLES-51705), copied out of
-the `reverse-engineering` extraction tree and organised one folder per car. Filenames keep
+the pinned local extraction and organised one folder per car. Filenames keep
 the disc's verbatim form (including the `;1` version suffix).
 
 ## Layout

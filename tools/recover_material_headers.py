@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Recover original material header fields and lane-specific CPU color recipes."""
+import static_inputs
 from collections import Counter
 import hashlib
 import json
@@ -7,7 +8,7 @@ import math
 from pathlib import Path
 import struct
 ROOT=Path(__file__).resolve().parents[1]
-RE=ROOT.parents[1]/'reverse-engineering'
+RE=static_inputs.bundle_path()
 EXPORT=RE/'.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po'
 OUT=ROOT/'research/evidence/continuation/source-refresh/material-header-contract.json'
 

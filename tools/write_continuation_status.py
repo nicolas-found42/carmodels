@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Write the machine-readable status of the 2026-10-05 retained-packet continuation (hashes of receipts/tools, source freshness, runtime state)."""
+import static_inputs
 import hashlib
 import json
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT.parents[1] / 'reverse-engineering'
+SRC = static_inputs.bundle_path()
 OUT = ROOT / 'research/evidence/continuation/continuation-2026-10-05-status.json'
 
 
@@ -33,9 +34,8 @@ def main():
     status = {
         'scope': 'Status of the retained display-list and menu98 PTG continuation; not a whole-recovery completion gate.',
         'render_fidelity_complete': False,
-        'source_checkout': {'head': sh('git', 'rev-parse', 'HEAD', cwd=SRC), 'dirty_paths_unchanged_from_handoff': sh('git', 'status', '--short', cwd=SRC).splitlines(),
-                            'typed_inventory_sha256': sha(SRC / '.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po/inventory.json'),
-                            'edited_by_this_continuation': False},
+        'static_inputs': {'bundle_identity': json.loads((SRC / 'bundle-identity.json').read_text()),
+                          'typed_inventory_sha256': sha(static_inputs.typed_export() / 'inventory.json')},
         'canonical_index_sha256': sha(ROOT / 'recovered/index.json'),
         'runtime': {'container': sh('docker', 'ps', '--filter', 'name=fr2-recovery-headless', '--format', '{{.ID}} {{.Status}}'),
                     'pine_identity': sh('docker', 'exec', 'fr2-recovery-headless', 'python3', '/data/pine_control.py', 'identity'),

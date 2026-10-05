@@ -5,6 +5,7 @@ Source TEX0 uses PSMT8/CPSM32/CSM=0/CSA0: swap CLUT address bits3/4.
 Keep the unpermuted palette output as a negative control, never as an asset.
 Observed game consumer/blending remain separate from byte recovery.
 """
+import static_inputs
 import hashlib
 import json
 from pathlib import Path
@@ -13,8 +14,8 @@ import sys
 
 from recover_car_ptg import png_bytes, verify_png, manifest_assets
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT.parents[1]/'reverse-engineering'
-sys.path.insert(0,str(SOURCE/'tools'))
+SOURCE=static_inputs.bundle_path()
+sys.path.insert(0,str(ROOT/'tools'))
 from corpus_binding import Baseline
 from ps2_texture_indices import decode_indices
 

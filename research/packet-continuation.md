@@ -1,6 +1,6 @@
 # Original car packet continuation: VIF, VU, GIF, and GS
 
-Snapshot: 2026-10-04. This continuation follows the existing source-pinned geometry work in [original-geometry-research.md](original-geometry-research.md) and its linked evidence. It reads source artifacts from the sibling reverse-engineering tree but does not modify them. It combines pinned static exports and VU assembly with a byte-validated in-game PCSX2 save state and a complete one-frame GSDump decode. The GSDump supplies actual GS-bound GIF transfers; the save state supplies paused runtime memory. Neither alone traces a particular car object all the way to a particular GS draw.
+Snapshot: 2026-10-04. This continuation follows the existing source-pinned geometry work in [original-geometry-research.md](original-geometry-research.md) and its linked evidence. It reads source artifacts from the private input bundle but does not modify them. It combines pinned static exports and VU assembly with a byte-validated in-game PCSX2 save state and a complete one-frame GSDump decode. The GSDump supplies actual GS-bound GIF transfers; the save state supplies paused runtime memory. Neither alone traces a particular car object all the way to a particular GS draw.
 
 ## What the pinned packet sources establish
 

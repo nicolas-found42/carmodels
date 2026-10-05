@@ -4,6 +4,7 @@
 This is a host numerical reconstruction, not a claim of bit-exact EE/VU hardware.
 The VCALLMS polynomial model and original instruction bytes remain explicit inputs.
 """
+import static_inputs
 import hashlib
 import importlib.util
 import json
@@ -13,7 +14,7 @@ import random
 import struct
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT.parents[1]/'reverse-engineering'
+SOURCE = static_inputs.bundle_path()
 EXPORT = SOURCE/'.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po'
 ELF = SOURCE/'games/ford-racing-2/extracted/SLES_517.05'
 REGISTERS = 'zero at v0 v1 a0 a1 a2 a3 t0 t1 t2 t3 t4 t5 t6 t7 s0 s1 s2 s3 s4 s5 s6 s7 t8 t9 k0 k1 gp sp fp ra'.split()
@@ -145,7 +146,7 @@ def main():
     elf=ELF.read_bytes()
     if hashlib.sha256(elf).hexdigest()!=receipt['executable_sha256']:raise ValueError('ELF changed')
     bind_elf(span+mutable_span,elf)
-    model_path=SOURCE/'tools/vu/vu268_reference.py'
+    model_path=ROOT/'tools/vu/vu268_reference.py'
     spec=importlib.util.spec_from_file_location('source_vu_reference',model_path)
     model=importlib.util.module_from_spec(spec);spec.loader.exec_module(model)
     rng=random.Random(51705)

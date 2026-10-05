@@ -2,6 +2,7 @@
 """Independently validate archive-backed mip planes and decoded PNG pixels."""
 from __future__ import annotations
 
+import static_inputs
 import hashlib
 import json
 from pathlib import Path
@@ -11,7 +12,7 @@ import sys
 import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT.parents[1] / "reverse-engineering"
+SOURCE = static_inputs.bundle_path()
 OUT = ROOT / "research/evidence/mip-continuation"
 PNG_SIG = b"\x89PNG\r\n\x1a\n"
 GS_TABLES = SOURCE / ".scratch/mesh/codex-root/github-raw-GSTables.cpp"
@@ -223,7 +224,7 @@ def main() -> None:
                         help="mip evidence directory containing mip-index.json and extracted levels")
     args = parser.parse_args()
     output_dir = args.output_dir
-    sys.path.insert(0, str(SOURCE / "tools"))
+    sys.path.insert(0, str(ROOT/'tools'))
     import ps2_sections
     from corpus_binding import Baseline
     index = json.loads((output_dir / "mip-index.json").read_text())

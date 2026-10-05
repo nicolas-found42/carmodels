@@ -1,6 +1,8 @@
 ---
 status: accepted
 ---
-# Executable-derived inputs are pinned by hash, not committed
+# Executable-derived inputs are pinned by hash and provisioned separately
 
-Inputs derived from the game executable (the overlay microcode and its disassembly, the typed decompilation export, the executable) stay out of the repository; receipts carry their sha256 and `tools/static_inputs.py` locates them through environment variables and refuses an input that differs from its pin. Committing them would make every verifier runnable from a clean clone, but published executable-derived material cannot be taken back. The cost is that checks needing them skip in CI and on any machine without the inputs, so `tools/check.sh` runs those checks only when the three `CARMODELS_*` variables are set.
+The executable, overlay microcode and disassembly, and typed decompilation export are private static inputs. They are provisioned in a local input bundle outside tracked files. Receipts carry their SHA-256 pins, and verifiers reject changed bytes. Repo-owned parser code and tools consume the inputs; no source checkout is required.
+
+This records the existing storage and reproducibility arrangement. It does not establish a legal or publication policy. Committing the inputs is an alternative that could make more checks run from a fresh clone, but that choice has not been made. Checks requiring inputs skip when none are configured; a complete local check must provision them first. Configuration and provisioning are documented in `docs/static-inputs.md`.

@@ -98,7 +98,7 @@ def check(elf_bytes=None, corpus_map=None):
             raise ValueError(f"{code}: manifest bank {bank} != executable {exe.get(inherit)}")
         chains += 1
     return {
-        "elf_path": str(ELF),
+        "elf_path": "static-input:executable",
         "elf_sha256": hashlib.sha256(data).hexdigest(),
         "config_table_va": hex(CONFIG_TABLE_VA),
         "descriptor_table_va": hex(DESC_TABLE_VA),

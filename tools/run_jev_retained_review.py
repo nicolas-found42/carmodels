@@ -4,6 +4,7 @@
 Jev advises only: byte comparisons, counts and hashes in the receipts come from the deterministic validators.
 Usage: run_jev_retained_review.py STAGE   (stage1 | stage2 | stage3)
 """
+import static_inputs
 import hashlib
 import json
 import subprocess
@@ -16,7 +17,7 @@ import jev_mcp_call as J
 ROOT = Path(__file__).resolve().parents[1]
 EV = ROOT / 'research/evidence'
 OUT = EV / 'packet-continuation/jev-retained'
-EXPORT = ROOT.parents[1] / 'reverse-engineering/.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po/decompilation/functions'
+EXPORT = static_inputs.bundle_path() / '.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po/decompilation/functions'
 SCRATCH = Path('/private/tmp/claude-502/-Users-Nicolas-Documents-github-hermes-projects-carmodels/38d3722a-26ef-4e1f-9b59-4d16c19bd36e/scratchpad')
 
 GS_REGS = """PS2 GS register ids used as the A+D address byte of a packed A+D qword (standard GS register map):
@@ -81,7 +82,7 @@ def digest():
 def stage1():
     # 1 screen: external TypeSafe documentation text before it influences the plan
     doc = subprocess.run(['curl', '-sS', '-m', '30', 'https://docs.typesafe.ai/model-jaggedness/jev-1.13.md'], capture_output=True, text=True).stdout[:6000]
-    save('01-screen-typesafe-jaggedness', 'jev_screen', {'text': doc, 'purpose': 'Decide how to phrase semantic judgments for the Ford Racing 2 reverse-engineering evidence review; the text is third-party documentation of the judgment model.'})
+    save('01-screen-typesafe-jaggedness', 'jev_screen', {'text': doc, 'purpose': 'Decide how to phrase semantic judgments for the Ford Racing 2 recovery evidence review; the text is third-party documentation of the judgment model.'})
     # 3 compare: older prose claim vs the newer deterministic reading
     old = ('A third helper, 0021c3e0, chooses ALPHA 0x44 in the direct untextured branch when effective bit 0x20 is clear and passes it to 0021ba50, '
            'which writes fixed PRIM 0x4c and that ALPHA value.')

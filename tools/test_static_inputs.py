@@ -18,6 +18,7 @@ import static_inputs  # noqa: E402
 import verifier_common  # noqa: E402
 
 CLEAN_ENV = {k: v for k, v in os.environ.items() if k not in static_inputs.VARIABLES.values()}
+CLEAN_ENV['CARMODELS_INPUT_CONFIG'] = str(HERE / '.absent-input-config.json')
 
 
 def run(*args, env=None):
