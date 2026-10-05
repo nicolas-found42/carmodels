@@ -5,7 +5,6 @@ Source TEX0 uses PSMT8/CPSM32/CSM=0/CSA0: swap CLUT address bits3/4.
 Keep the unpermuted palette output as a negative control, never as an asset.
 Observed game consumer/blending remain separate from byte recovery.
 """
-from collections import Counter
 import hashlib
 import json
 from pathlib import Path

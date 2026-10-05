@@ -1,0 +1,6 @@
+# Lint the repo's own scripts for real bugs only: unused or undefined names and syntax errors.
+# tools/validation-runtime holds vendored third-party code and is not ours to fix.
+extend-exclude = ["tools/validation-runtime"]
+
+[lint]
+select = ["F", "E9"]

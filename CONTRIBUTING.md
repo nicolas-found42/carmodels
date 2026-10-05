@@ -13,17 +13,41 @@ check the result. Two corpora:
 
 ## Prerequisites
 
-- **A sibling checkout of the extraction tree at `../../reverse-engineering`.** Five shared parser
-  modules live in its `tools/` — `ps2_sections.py`, `corpus_binding.py`, `format_contracts.py`,
-  `ps2_container.py`, `ps2_texture_indices.py` — and the scripts here import them from that path.
-  Without it, everything past `build_reference.py` fails at import.
+- **Static inputs, for some tools.** The recovery scripts (`grep -l ps2_sections tools/*.py` lists
+  them) import five parser modules that are not part of this repository — `ps2_sections.py`,
+  `corpus_binding.py`, `format_contracts.py`, `ps2_container.py`, `ps2_texture_indices.py` — and fail
+  at import without them. The VU1 verifiers read executable-derived inputs. See [Static inputs](#static-inputs).
+  The three minimum verifiers below need neither (checked in a clean clone).
 - **`python3`.** The three verifiers below run on the stock interpreter with no third-party
-  packages — 3.9.6 was the observed runtime. Tools that read zstd-compressed savestate members
+  packages — 3.9.6 and 3.14.7 were the observed runtimes. `tools/check.sh` also runs `ruff` when it
+  is installed (`pip install ruff`; CI installs it). Tools that read zstd-compressed savestate members
   (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`, `trace_car_packets.py`, `gsdump.py`,
   `independent_packet_color_check.py`) need a zstd-capable interpreter, which the stock one is not.
 - **Blender 4.5.14** — only for `tools/validate_blender_import.py`. The pinned vendor dmg sits in
   `tools/validation-runtime/` (gitignored; re-download and check it against the pinned sha256).
 - **PINE + PCSX2** — only for live capture, under `tools/headless-runtime/` (container).
+
+## Static inputs
+
+Some verifiers read inputs derived from the game executable. They are never committed; the
+receipts carry their SHA-256 pins, and a tool refuses an input that differs from its pin. Three
+environment variables name them. There is no default path.
+
+| Variable | What it points at | Pinned by |
+| --- | --- | --- |
+| `CARMODELS_OVERLAY_DIR` | A directory with `overlay-N.bin` (raw VU1 microcode) and `overlay-N.s` (its disassembly) for N = 0–6 | `research/evidence/packet-continuation/vu-overlay-residency.json` |
+| `CARMODELS_TYPED_EXPORT` | A directory with `inventory.json` and `decompilation/functions/<entry>.c` (the typed decompilation export) | `research/evidence/continuation/source-refresh/refresh-identity.json` |
+| `CARMODELS_EXECUTABLE` | The PAL executable `SLES_517.05` | the same file |
+
+```sh
+export CARMODELS_OVERLAY_DIR=… CARMODELS_TYPED_EXPORT=… CARMODELS_EXECUTABLE=…
+python3 tools/static_inputs.py      # one line per input: found, and equal to its pin
+```
+
+A tool that needs an input that is not set stops with one line naming the variable. Checks that
+need all three skip by name in `tools/check.sh` when they are absent. Captured inputs (savestates,
+GS dumps, unpacked memory under `research/evidence/continuation/runtime/`) are gitignored too and
+pinned by receipt; re-capture them live (see `tools/headless-runtime/`).
 
 ## Run from the repo root
 
@@ -37,7 +61,9 @@ import path for the shared parsers assumes this layout. Run them from the repo r
 
 ## The check to run before a PR
 
-Minimum, offline, no Blender or PINE — about 3.5 seconds in total:
+Run `tools/check.sh`: it lints `tools/` with `ruff`, runs the three minimum verifiers, and runs the
+static-input checks when the inputs are set. CI runs the same script. By hand, the minimum —
+offline, no Blender or PINE, about 3.5 seconds in total:
 
 | Command | What it covers | Observed |
 | --- | --- | --- |
@@ -49,7 +75,7 @@ Slower but still offline:
 
 - `python3 tools/test_car_mips.py` (~12 s)
 - `python3 tools/verify_selector_word.py` (~16 s)
-- `python3 tools/verify_vu_dispatch_map.py` (<1 s; static VU1 dispatch map, 14 mutation controls) and `python3 tools/test_vu_dispatch_map.py` (~1 s)
+- `python3 tools/verify_vu_dispatch_map.py` (<1 s; static VU1 dispatch map, 14 mutation controls) and `python3 tools/test_vu_dispatch_map.py` (~1 s) — both need the static inputs
 
 Not available offline:
 
@@ -102,3 +128,4 @@ too. Every change reaches `main` through a pull request from a feature branch.
   leaving it implied, and keep failed checks visible.
 - Triage labels are the five canonical roles — see `docs/agents/triage-labels.md`.
 - Agent-facing repo config (issue tracker, labels, domain docs) is in `AGENTS.md` and `docs/agents/`.
+- Code review standards are in `CODING_STANDARDS.md`; vocabulary is in `GLOSSARY-MAP.md` and the glossaries it lists.

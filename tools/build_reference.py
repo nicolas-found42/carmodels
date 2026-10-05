@@ -227,7 +227,7 @@ def main() -> int:
             copy(SRC / LIVERY_DIR / f"{lv.lower()}.ptg;1", cdir / "graphics/liveries" / f"{lv.lower()}.ptg;1", rec)
         copy(SRC / GAMEPLAY_DIR / OWN_GAMEPLAY[code], cdir / "data" / OWN_GAMEPLAY[code], rec)
         # config block extracts: (fname, source rel path, raw bytes)
-        extracts = [(f"cardata.txt", f"{CONFIG_DIR}/CARDATA.DAT;1", cardata_bytes[c["span"][0]:c["span"][1]])]
+        extracts = [("cardata.txt", f"{CONFIG_DIR}/CARDATA.DAT;1", cardata_bytes[c["span"][0]:c["span"][1]])]
         for name, (rel, _, _) in BLOCK_SOURCES.items():
             key = c[name]
             rel, data, spans = parsed[name]
@@ -295,13 +295,13 @@ def main() -> int:
 
         lines = [
             f"# {code} — {name}", "",
-            f"- Ford Racing 2 (PS2 PAL, serial SLES-51705); extracted from FILES.HDR/FILES.DAT container",
+            "- Ford Racing 2 (PS2 PAL, serial SLES-51705); extracted from FILES.HDR/FILES.DAT container",
             f"- Group: {c['group']} | Model year: {c['year']} | Top speed (CAR_APPROXIMATE_TOP_SPEED): {c['top_speed']} | Icon token: {c['icon']}",
             f"- Model: `model/{STEM[code]}.PS2;1` ({rec[0]['bytes']} bytes) — named part tree inside (wheels, hubs, lights, exhausts)",
             f"- Sound: `{c['sound']}`" + (f" → inherits `{inherit}`" if inherit else "")
             + (f" → shared bank hint `{bank}.msb/.msh` (see `_shared/sounds/`)" if bank else ""),
             f"- Liveries ({len(c['liveries'])}): " + ", ".join(f"`{lv}` ({lab})" for lab, lv in c["liveries"]),
-            f"- Config blocks: `config/` — cardata, body, engine, setup, sound, gearbox, brake, tyres_front, tyres_back, control, overlay (11 files)",
+            "- Config blocks: `config/` — cardata, body, engine, setup, sound, gearbox, brake, tyres_front, tyres_back, control, overlay (11 files)",
             f"- Challenge script: `data/{OWN_GAMEPLAY[code]}`",
         ]
         if referenced_by:

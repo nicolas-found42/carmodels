@@ -1,28 +1,26 @@
 #!/usr/bin/env python3
 """Derive and verify the static VU1 dispatch map for the car packet path.
 
-Everything here is read from pinned static sources: the overlay binaries and their disassembly, the
-PS2 ELF, and the typed Ghidra export of the sibling reverse-engineering checkout. Nothing is executed
-and no emulator runs. The receipt is a statically derived relationship, not an execution trace.
+Everything here is read from pinned static inputs (see tools/static_inputs.py): the overlay binaries and
+their disassembly, the PS2 ELF and the typed decompilation export. Nothing is executed and no emulator
+runs. The receipt is a statically derived relationship, not an execution trace.
 
     python3 tools/verify_vu_dispatch_map.py            # derive, run the controls, compare with the receipt
     python3 tools/verify_vu_dispatch_map.py --write    # refresh research/evidence/vu-dispatch/dispatch-map.json
 """
 import copy
-import hashlib
 import json
 import re
 import struct
 import sys
 from pathlib import Path
 
+import static_inputs
+import verifier_common
+
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT.parents[1] / 'reverse-engineering'
-EXPORT = SOURCE / '.scratch/mesh/codex-audit/frontier-3845-01/types-t2/export-5454-po'
-ELF = SOURCE / 'games/ford-racing-2/extracted/SLES_517.05'
-VU_DIR = SOURCE / '.scratch/evidence/vu/private-work-016dac24781c4c9ea7c99aa0fa79c310'
-REFRESH = ROOT / 'research/evidence/continuation/source-refresh/refresh-identity.json'
-RESIDENCY = ROOT / 'research/evidence/packet-continuation/vu-overlay-residency.json'
+REFRESH = static_inputs.REFRESH
+RESIDENCY = static_inputs.RESIDENCY
 RECEIPT = ROOT / 'research/evidence/vu-dispatch/dispatch-map.json'
 SNAPSHOT = ROOT / 'research/evidence/continuation/runtime/race94-vu1MicroMem.bin'  # gitignored; used when present
 
@@ -40,13 +38,8 @@ class DispatchError(ValueError):
     pass
 
 
-def need(condition, message):
-    if not condition:
-        raise DispatchError(message)
-
-
-def sha256(data):
-    return hashlib.sha256(data).hexdigest()
+need = verifier_common.make_need(DispatchError)
+sha256 = verifier_common.sha256
 
 
 # --- VU1 words -------------------------------------------------------------------------------------
@@ -79,8 +72,7 @@ def lower_text(word):
     return '?0x%08x' % word
 
 
-def normalise(text):
-    return re.sub(r'(?<![\w])(0x[0-9a-f]+|\d+)(?![\w])', lambda m: str(int(m.group(1), 0)), text.strip())
+normalise = verifier_common.normalise
 
 
 def pair_words(binary, pair):
@@ -106,10 +98,11 @@ def bound_lower(inp, overlay, pair):
 
 def load_inputs():
     refresh = json.loads(REFRESH.read_text())
-    raw = (EXPORT / 'inventory.json').read_bytes()
+    export, overlay_dir = static_inputs.typed_export(), static_inputs.overlay_dir()
+    raw = (export / 'inventory.json').read_bytes()
     need(sha256(raw) == refresh['inventory_sha256'], 'typed inventory differs from refresh identity')
     inventory = json.loads(raw)
-    elf = ELF.read_bytes()
+    elf = static_inputs.executable().read_bytes()
     need(sha256(elf) == refresh['executable_sha256'], 'ELF differs from refresh identity')
     callees, callers, functions, jal = {}, {}, {}, {}
     for f in inventory['functions']:
@@ -122,7 +115,7 @@ def load_inputs():
                 jal.setdefault(f['entry'], []).append(i['address'])
     decompiled = {}
     for entry in DECOMPILED_CALLERS:
-        data = (EXPORT / 'decompilation/functions' / (entry + '.c')).read_bytes()
+        data = (export / 'decompilation/functions' / (entry + '.c')).read_bytes()
         decompiled[entry] = {'text': data.decode(), 'sha256': sha256(data)}
     residency = json.loads(RESIDENCY.read_text())
     snapshots = residency['snapshots']
@@ -131,8 +124,8 @@ def load_inputs():
         rec = [s['overlays'][n] for s in snapshots]
         need(all(r['sha256'] == rec[0]['sha256'] and r['aligned_exact_offsets'] == rec[0]['aligned_exact_offsets'] for r in rec),
              'overlay %d residency differs between captures' % n)
-        binary = (VU_DIR / ('overlay-%d.bin' % n)).read_bytes()
-        asm_bytes = (VU_DIR / ('overlay-%d.s' % n)).read_bytes()
+        binary = (overlay_dir / ('overlay-%d.bin' % n)).read_bytes()
+        asm_bytes = (overlay_dir / ('overlay-%d.s' % n)).read_bytes()
         need(sha256(binary) == rec[0]['sha256'], 'overlay %d binary differs from the residency receipt pin' % n)
         asm = asm_bytes.decode().split('\n')[1:]
         if asm and asm[-1] == '':
@@ -632,35 +625,17 @@ CONTROLS = make_controls()
 
 def run_controls(inp):
     """Each mutated copy of the inputs must make the derivation raise; a mutation that derives cleanly escaped."""
-    results = []
-    for label, mutate in CONTROLS:
-        mutated = clone_inputs(inp)
-        mutate(mutated)
-        try:
-            derive(mutated)
-        except DispatchError as e:
-            results.append({'mutation': label, 'rejected': True, 'reason': str(e)})
-        else:
-            raise AssertionError('mutation escaped: ' + label)
-    return results
+    return verifier_common.run_controls(inp, CONTROLS, derive, DispatchError, clone=clone_inputs)
 
 
 def main(argv):
     inp = load_inputs()
     receipt = derive(inp)
     receipt['controls'] = run_controls(inp)
-    text = json.dumps(receipt, indent=1) + '\n'
-    if '--write' in argv:
-        RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-        RECEIPT.write_text(text)
-    elif not RECEIPT.exists() or RECEIPT.read_text() != text:
-        print('RECEIPT MISMATCH: %s does not reproduce from the pinned sources (re-run with --write only after reading the diff)' % RECEIPT.relative_to(ROOT))
-        return 1
-    print(json.dumps({'jump_table': [e['target_address'] for e in receipt['jump_table']['entries']], 'mscal': {e['name']: e['value'] for e in receipt['mscal_entries']},
-                      'static_pass_words': receipt['pass_word_header']['static_pass_words'], 'lowest_common_ancestors': receipt['call_graph']['lowest_common_ancestors'],
-                      'controls_rejected': sum(c['rejected'] for c in receipt['controls']), 'controls': len(receipt['controls'])}))
-    print('VERIFY OK')
-    return 0
+    summary = {'jump_table': [e['target_address'] for e in receipt['jump_table']['entries']], 'mscal': {e['name']: e['value'] for e in receipt['mscal_entries']},
+               'static_pass_words': receipt['pass_word_header']['static_pass_words'], 'lowest_common_ancestors': receipt['call_graph']['lowest_common_ancestors'],
+               'controls_rejected': sum(c['rejected'] for c in receipt['controls']), 'controls': len(receipt['controls'])}
+    return verifier_common.finish(receipt, RECEIPT, argv, ROOT, summary)
 
 
 if __name__ == '__main__':

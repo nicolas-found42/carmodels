@@ -6,7 +6,6 @@ Usage: run_jev_retained_review.py STAGE   (stage1 | stage2 | stage3)
 """
 import hashlib
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -80,7 +79,6 @@ def digest():
 
 
 def stage1():
-    ba = rd(EXPORT / '0021ba50.c')
     # 1 screen: external TypeSafe documentation text before it influences the plan
     doc = subprocess.run(['curl', '-sS', '-m', '30', 'https://docs.typesafe.ai/model-jaggedness/jev-1.13.md'], capture_output=True, text=True).stdout[:6000]
     save('01-screen-typesafe-jaggedness', 'jev_screen', {'text': doc, 'purpose': 'Decide how to phrase semantic judgments for the Ford Racing 2 reverse-engineering evidence review; the text is third-party documentation of the judgment model.'})

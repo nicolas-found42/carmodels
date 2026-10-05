@@ -75,11 +75,11 @@ def parse_calls(els):
         # C head: CNT(STCYCL,STROW)+row 0x44400000 then REF V3_16
         if e['id'] == 1 and e['qwc'] == 1 and (e['v0'], e['v1']) == (0x1000103, 0x30000000) and e['data'][0] == (0x44400000,) * 3 + (0,) \
                 and i + 1 < len(els) and els[i + 1]['id'] == 3 and els[i + 1]['v0'] == 0x5000001 and els[i + 1]['v1'] >> 24 == 0x69:
-            r6 = ref_info(els[i + 1]); j = i + 2; r2 = None; r4 = None; arm = None; row = None
+            r6 = ref_info(els[i + 1]); j = i + 2; r2 = None; r4 = None; arm = None
             if els[j]['id'] == 1 and els[j]['qwc'] == 1 and els[j]['data'][0][0] == 0x45c00000 and els[j + 1]['v1'] >> 24 == 0x65:
                 r2 = ref_info(els[j + 1]); j += 2
             if els[j]['id'] == 1 and els[j]['qwc'] == 1 and els[j]['v1'] == 0x30000000 and els[j]['data'][0][0] == 0x47c00000 and els[j + 1]['v1'] >> 24 == 0x6e:
-                arm, row, r4 = 'bit8_clear_row_0x47c00000', 0x47c00000, ref_info(els[j + 1]); j += 2
+                arm, r4 = 'bit8_clear_row_0x47c00000', ref_info(els[j + 1]); j += 2
             elif els[j]['id'] == 3 and els[j]['v0'] == 0x5000000 and els[j]['v1'] >> 24 == 0x6e:
                 arm, r4 = 'bit8_set_direct_ref', ref_info(els[j]); j += 1
             if r4 is None or r4['count'] != r6['count']:
