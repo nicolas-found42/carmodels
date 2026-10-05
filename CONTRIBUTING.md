@@ -13,7 +13,7 @@ check the result. Two corpora:
 
 ## Prerequisites
 
-- **A sibling checkout of the extraction tree at `../reverse-engineering`.** Five shared parser
+- **A sibling checkout of the extraction tree at `../../reverse-engineering`.** Five shared parser
   modules live in its `tools/` — `ps2_sections.py`, `corpus_binding.py`, `format_contracts.py`,
   `ps2_container.py`, `ps2_texture_indices.py` — and the scripts here import them from that path.
   Without it, everything past `build_reference.py` fails at import.
