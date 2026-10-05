@@ -33,7 +33,16 @@ if python3 tools/static_inputs.py --available; then
   step "verify_sound_bank_index" python3 tools/verify_sound_bank_index.py
   step "verify_vu_dispatch_map" python3 tools/verify_vu_dispatch_map.py
   step "test_vu_dispatch_map"   python3 tools/test_vu_dispatch_map.py
+  step "test_vu1_decode" python3 tools/test_vu1_decode.py
+  step "verify_vu_pass_handlers" python3 tools/verify_vu_pass_handlers.py
+  step "test_vu_pass_handlers" python3 tools/test_vu_pass_handlers.py
 else
-  echo "skip  verify_config_data_sound, verify_sound_bank_index, verify_vu_dispatch_map, test_vu_dispatch_map  (static inputs not set; see CONTRIBUTING.md, Static inputs)"
+  echo "skip  verify_config_data_sound, verify_sound_bank_index, verify_vu_dispatch_map, test_vu_dispatch_map, test_vu1_decode, verify_vu_pass_handlers, test_vu_pass_handlers  (static inputs not set; see CONTRIBUTING.md, Static inputs)"
+fi
+if python3 tools/verify_vu_handler_dump.py --available; then
+  step "verify_vu_handler_dump" python3 tools/verify_vu_handler_dump.py
+  step "test_vu_handler_dump" python3 tools/test_vu_handler_dump.py
+else
+  echo "skip  verify_vu_handler_dump, test_vu_handler_dump  (runtime captures not present; see docs/static-inputs.md)"
 fi
 exit $status
