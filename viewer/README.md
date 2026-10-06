@@ -11,7 +11,7 @@ python3 tools/build_showcase.py
 python3 -m http.server 8080 --directory viewer
 ```
 
-Then open <http://localhost:8080/recovered.html> — **the recommended first stop.** It renders the real recovered original geometry: pick a car, a tree/record and a texture variant, and download the GLB. The 35 GLBs are already generated under `public/recovered/`; each retains independent geometry records and five translated tree candidates. The inspector starts with tree zero and includes car, tree/record, texture, wireframe and row-flip controls.
+Then open <http://localhost:8080/recovered.html> — **the recommended first stop.** It renders the real recovered original geometry: pick a car, a tree/record and a texture variant, and download the GLB. The 35 GLBs are already generated under `public/recovered/`; each retains independent geometry records and five translated tree candidates. Empty source trees (including tree 4 in the current corpus) are retained in the GLBs but disabled and labelled “no geometry” in the Geometry chooser. The inspector starts with tree zero and includes car, tree/record, texture, wireframe and row-flip controls.
 
 <http://localhost:8080/> is the earlier procedural silhouette gallery (manifest data, body-style filters, silhouettes shaped by the real handling values); it remains available for comparison.
 

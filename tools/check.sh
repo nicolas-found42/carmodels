@@ -25,6 +25,11 @@ else
 fi
 
 step "verify_recovered_asset_index" python3 tools/verify_recovered_asset_index.py
+if command -v node >/dev/null 2>&1; then
+  step "test_viewer_scenes" node tools/test_viewer_scenes.mjs
+else
+  echo "skip  test_viewer_scenes  (Node.js is not installed)"
+fi
 step "test_static_inputs"           python3 tools/test_static_inputs.py
 step "test_recovery_inputs"         python3 tools/test_recovery_inputs.py
 
