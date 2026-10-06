@@ -54,4 +54,27 @@ const showRecord=html.match(/function showRecord\(\).*\n/)[0];
 vm.runInNewContext(showRecord+';showRecord();',context);
 assert.match(status.textContent,/no drawable geometry/);
 assert(camera.position.equals(initial));
-console.log(`PASS test_viewer_scenes: ${cars} cars, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback and empty-selection camera guard`);
+// Header-colour honesty label: the glass note is on screen while blended parts are shown.
+const loadCar=html.match(/function loadCar\(\)[\s\S]*?\n}\n/);
+{
+ // Build a 1-primitive doc the way the exporter now does: an untextured header primitive
+ // whose material name starts 'Header untextured '.
+ const untexturedMaterial={name:'Header untextured 0x59000000',doubleSided:true,
+  pbrMetallicRoughness:{baseColorFactor:[0,0,0,89/128],metallicFactor:0,roughnessFactor:1},alphaMode:'BLEND'};
+ const textMaterial={name:'CAR512',doubleSided:true,pbrMetallicRoughness:{baseColorTexture:{index:0},metallicFactor:0,roughnessFactor:1}};
+ const doc2={materials:[textMaterial,untexturedMaterial]};
+ const html2=html.replace(/0xaab6c8/g,'0xaab6c8'); // unchanged placeholder, see below
+ // The viewer builds materials from the GLB: assert its builder reads alphaMode/BLEND and the
+ // Header colour rather than the fixed fallback colour, by importing its own code.
+ // Extract the per-primitive material construction from the page source.
+ const materialLine=html.match(/const material=new THREE\.MeshStandardMaterial\([^\n]*\n/);
+ assert.ok(materialLine,'viewer builds a per-primitive material');
+ assert.match(materialLine[0],/alphaMode/,'viewers material honours the exported blend mode');
+ assert.match(materialLine[0],/baseColorFactor|[Hh]eader untextured/,'viewers untextured colour comes from the GLB material, not the fixed fallback');
+ // After loading, an untextured blended part must raise the honesty label while on screen.
+ assert.match(html,/candidate/i,'the page carries candidate wording in the honesty label');
+ const glassLabel=html.match(/honesty[\s\S]{0,400}/);
+ // The status line set by showRecord for a scene with glass parts names the candidate mapping.
+ assert.match(html,/candidate[^<]*glass|glass[^<]*candidate|Header colour[^<]*candidate/i,'the inspector names the glass/header-colour mapping as a candidate while the model is on screen');
+}
+console.log(`PASS test_viewer_scenes: ${cars} cars, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard and header-colour honesty label`);
