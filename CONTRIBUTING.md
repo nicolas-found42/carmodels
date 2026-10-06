@@ -21,6 +21,8 @@ check the result. Two corpora:
   is installed (`pip install ruff`; CI installs it). Tools that read zstd-compressed savestate members
   (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`, `trace_car_packets.py`, `gsdump.py`,
   `independent_packet_color_check.py`) need a zstd-capable interpreter, which the stock one is not.
+- **Node.js** — for `node tools/test_viewer_scenes.mjs`, which checks Geometry choices against all
+  35 exported GLBs. `tools/check.sh` runs it when Node.js is available.
 - **Blender 4.5.14** — only for `tools/validate_blender_import.py`. The pinned vendor dmg sits in
   `tools/validation-runtime/` (gitignored; re-download and check it against the pinned sha256).
 - **PINE + PCSX2** — only for live capture, under `tools/headless-runtime/` (container).
