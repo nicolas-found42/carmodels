@@ -50,4 +50,10 @@ if python3 tools/verify_vu_handler_dump.py --available; then
 else
   echo "skip  verify_vu_handler_dump, test_vu_handler_dump  (runtime captures not present; see docs/static-inputs.md)"
 fi
+if python3 tools/recover_dump_reference_frame.py --available; then
+  step "recover_dump_reference_frame" python3 tools/recover_dump_reference_frame.py
+  step "test_recover_dump_reference_frame" python3 tools/test_recover_dump_reference_frame.py
+else
+  echo "skip  recover_dump_reference_frame, test_recover_dump_reference_frame  (GS dumps not present; see docs/static-inputs.md)"
+fi
 exit $status

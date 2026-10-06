@@ -29,3 +29,7 @@ single list of what is not yet established; update it when a note closes or open
 - Numeric selector to human livery label bridge; ordinary car and livery selection capture (cars 1, 5, 4 captured, livery cycling not attempted).
 - ChallGlo blend model.
 - 158 unmatched retained descriptors, and descriptors outside the six loaded cars.
+- The GSDump reference frames (`tools/recover_dump_reference_frame.py`) are the
+  screenshots PCSX2 embedded at dump-save time; a replayed-frame cross-check of
+  those frames is still open (replay needs a GUI session on the pinned builds;
+  see the receipt's `claim_limits`), as is the camera/metric work of issue #27.

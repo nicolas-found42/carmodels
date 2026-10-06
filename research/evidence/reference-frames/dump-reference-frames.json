@@ -1,0 +1,75 @@
+{
+ "schema": "fr2-dump-reference-frames/v1",
+ "scope": "Embedded capture-time screenshots of the two pinned GSDumps; raw *-GS.bin savestate memory images carry no screenshot and are excluded.",
+ "rows": [
+  {
+   "dump": "Ford Racing 2_SLES-51705_20261004182459.gs.zst",
+   "compressed_sha256": "fe3cad806c831b6db5577a336a1f92cfc1ac007d0004f3efb99117ae0eb77e88",
+   "decompressed_sha256": "3c599f0956dc84cca72a6013a0a802305db8cdc2d7add54c858d40b99843bf2f",
+   "state_version": 9,
+   "serial": "SLES-51705",
+   "disc_crc": "0x37f695cd",
+   "width": 640,
+   "height": 480,
+   "screenshot_offset": 54,
+   "screenshot_bytes": 1228800,
+   "screenshot_sha256": "828eea6a7ff647e453c75a50c0513df4f77175a1c4e72bf7cdcb05e66ef24fd9",
+   "png_sha256": "f783c3b63365583b3d25c69e33b898e2872cd79b5412b0356c4d06a7565261e7",
+   "png_path": "research/evidence/reference-frames/frames/Ford Racing 2_SLES-51705_20261004182459.gs.png"
+  },
+  {
+   "dump": "Ford Racing 2_SLES-51705_20261005010217.gs.zst",
+   "compressed_sha256": "126c9a909501d157d5bab5359a66c63cbb6966bf70504e3f671a9ede5ee01ae9",
+   "decompressed_sha256": "d5ea85248626d60508d16010cd922ced83787cf425994b8f47797acf35a43f70",
+   "state_version": 9,
+   "serial": "SLES-51705",
+   "disc_crc": "0x37f695cd",
+   "width": 640,
+   "height": 480,
+   "screenshot_offset": 54,
+   "screenshot_bytes": 1228800,
+   "screenshot_sha256": "0fb9ead4a51afabf7d4bcdfe2bee4d93fb83f6ba1c3f6e55020c060cce4f82f0",
+   "png_sha256": "17f832b81385e181ddb57e02341c4dc4e29479bef1699f2ce9607d234a776687",
+   "png_path": "research/evidence/reference-frames/frames/Ford Racing 2_SLES-51705_20261005010217.gs.png"
+  }
+ ],
+ "render_fidelity_complete": false,
+ "claim_limits": [
+  "The frames are the screenshots PCSX2 embedded at dump-save time (capture-time GS output), not frames from a fresh headless replay of the dumps.",
+  "Replaying a dump into a PNG is environment-bound on the pinned builds: PINE refuses savestates during replay, the screenshot hotkey needs a GUI session, and pcsx2-gsrunner is not shipped in the pinned macOS bundle or the pinned Linux image. The replay cross-check of these frames is open.",
+  "One dump is a race chase frame, the other a menu frame; the receipt labels content only through the dump names and does not claim both show car renders.",
+  "PNG encoding uses the stdlib zlib at its default level; determinism across zlib versions is assumed, not proven. screenshot_sha256 pins the source bytes."
+ ],
+ "controls": [
+  {
+   "mutation": "decompressed dump byte changed",
+   "rejected": true,
+   "by": "receipt differs",
+   "reason": "the derived receipt differs from the clean one"
+  },
+  {
+   "mutation": "embedded screenshot byte changed",
+   "rejected": true,
+   "by": "receipt differs",
+   "reason": "the derived receipt differs from the clean one"
+  },
+  {
+   "mutation": "header width word changed",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "screenshot size differs from width*height*4"
+  },
+  {
+   "mutation": "serial changed",
+   "rejected": true,
+   "by": "receipt differs",
+   "reason": "the derived receipt differs from the clean one"
+  },
+  {
+   "mutation": "screenshot truncated",
+   "rejected": true,
+   "by": "derivation error",
+   "reason": "RGBA byte count does not match dimensions"
+  }
+ ]
+}
