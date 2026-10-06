@@ -22,6 +22,10 @@ single list of what is not yet established; update it when a note closes or open
 - ADC-producing pass-1/2 branch and flag-set clip stage; static-kick packet origins.
 - Full pass-4 UV/view-normal factor, pass-5 S, and bit-exact arithmetic (279 measured one-ULP T differences); see `vu-handler-dump.md`.
 - Glass part naming, and whether header 261 is drawn in other states.
+- The untextured-Header colour mapping now drawn in the inspector and GLBs is a candidate
+  (issue #18): the captured draw's RGB lanes are black, so the RGB-lane reading of coloured
+  untextured Headers (0x661a1a1a and 8 similar words, 42 Headers) is evidence-consistent but unproven; opaque-reading
+  Headers keep 0x80808080 grey, and per-Header colours may still need a second reading from a wider capture.
 - Numeric selector to human livery label bridge; ordinary car and livery selection capture (cars 1, 5, 4 captured, livery cycling not attempted).
 - ChallGlo blend model.
 - 158 unmatched retained descriptors, and descriptors outside the six loaded cars.

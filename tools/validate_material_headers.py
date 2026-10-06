@@ -38,6 +38,18 @@ def check(data,headers,doc):
             if r['base_color_word']!=f'0x{base:08x}' or r['base_color_rgba_unscaled']!=[(base>>16)&255,(base>>8)&255,base&255,base>>24]:raise ValueError('packed material color differs')
             wanted={'xyz':'FLOAT_0028f178' if flags&1 else 'unchanged','w':'unchanged' if flags&1 else 'DAT_70003560 * FLOAT_0028f1e8'}
             if r['base_color_scaling']!=wanted:raise ValueError('material color lane recipe differs')
+            # The glTF material an untextured primitive points at must carry the header's
+            # own colour, and below the GS opaque stop (128) it must be alpha-blended at alpha/128.
+            rgba=[(base>>16)&255,(base>>8)&255,base&255,base>>24]
+            if h['third']==0xffff:
+                material=doc['materials'][p['material']]
+                if ('baseColorFactor' not in material.get('pbrMetallicRoughness',{})
+                        or 'baseColorTexture' in material.get('pbrMetallicRoughness',{})):raise ValueError('untextured material has no plain base colour')
+                factor=material['pbrMetallicRoughness']['baseColorFactor']
+                wanted_factor=[c/255 for c in rgba[:3]]+[min(1.0,rgba[3]/128)]
+                if any(abs(a-b)>1e-6 for a,b in zip(factor,wanted_factor)):raise ValueError('material base colour differs from header colour')
+                wanted_mode='BLEND' if rgba[3]<128 else None
+                if material.get('alphaMode')!=wanted_mode:raise ValueError('material blend mode differs from header alpha')
     # Zero-area/ADC-only source headers may not create a glTF primitive.
     if seen!=wanted_offsets:raise ValueError('source material header coverage differs')
     return len(seen)
@@ -62,6 +74,16 @@ def main():
                 try:check(data,c['geometry']['headers'],bad)
                 except ValueError:controls[kind+'_material_header_rejected']=True
                 else:raise ValueError(kind+' material header accepted')
+            for kind,word in [('changed_colour',{'pbrMetallicRoughness':{'baseColorFactor':[0.1,0.9,0.3,1.0]}}),
+                              ('changed_alpha',{'pbrMetallicRoughness':{'baseColorFactor':[0.0,0.0,0.0,1.0]}}),
+                              ('missing',{'pbrMetallicRoughness':{'baseColorFactor':None}})]:
+                bad=copy.deepcopy(doc);primitives=bad['meshes'][0]['primitives']
+                target=next(p for p in primitives if p['extras']['third']==0xffff)
+                if kind=='missing':target['material']=len(bad['materials']);bad['materials'].append({'name':'Validator control extra material'})
+                else:bad['materials'][target['material']]=word
+                try:check(data,c['geometry']['headers'],bad)
+                except ValueError:controls[kind+'_material_rejected']=True
+                else:raise ValueError(kind+' material accepted')
     receipt={'cars':len(rows),'embedded_material_headers':sum(r['primitive_material_headers'] for r in rows),'modified_original_alpha_rejected':negative,'coverage_controls':controls,'failures':0,'results':rows,
              'limits':'Original header/field/packed-color preservation and CPU lane recipe; not glTF material equivalence.'}
     (ROOT/'research/evidence/continuation/source-refresh/material-header-export-validation.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps({k:v for k,v in receipt.items() if k!='results'}))
