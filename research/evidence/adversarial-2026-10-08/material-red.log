@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_export_materials.py", line 40, in <module>
+    main()
+    ~~~~^^
+  File "/Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_export_materials.py", line 35, in main
+    check(doc, car, next(c for c in variants['cars'] if c['car'] == car['code']))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_export_materials.py", line 20, in check
+    texture = doc['textures'][pbr['baseColorTexture']['index']]
+                              ~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'baseColorTexture'

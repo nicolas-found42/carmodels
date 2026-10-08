@@ -43,11 +43,12 @@ def build(car, data):
     doc={'asset':{'version':'2.0','generator':'FR2 bounded coordinate experiment'},
          'scene':0,'scenes':[{'nodes':[]}],'nodes':[],'meshes':[],'accessors':[],
          'bufferViews':[],'buffers':[],'materials':[],'images':[],'textures':[],
-         'samplers':[{'magFilter':9728,'minFilter':9728,'wrapS':10497,'wrapT':10497}],
+         'samplers':[{'magFilter':9729,'minFilter':9729,'wrapS':10497,'wrapT':10497}],
          'extras':{'car':car['code'],'originalModelSha256':car['sha256'],
                    'status':'Original coordinate candidates with independent records and translated tree candidates.',
                    'limits':['Source-named ownership joined; runtime state and observed LOD selection unresolved; tree scenes retain all states.',
                              'Normals, UV, texture-index and ADC triangle semantics are candidate interpretations.',
+                             'Linear/no-mip filtering is a candidate default informed by 106 captured COBRA draws; other cars and game states are unverified.',
                              'Display alpha min(255,2*a); glTF shading differs from original GS rendering.',
                              'Untextured headers use their stored Header colour with GS-scale alpha, opacity alpha/128 below 128; the lane reading is a candidate, not proven shading.']}}
     doc['extras']['textureVariantContractSha256']=hashlib.sha256(contract_path.read_bytes()).hexdigest()
@@ -59,16 +60,6 @@ def build(car, data):
     untextured_colours=sorted({h['base_color_word'] for h in material_headers.values()
                                if h['texture_index']==65535})
     untextured_material={}
-    for colour in untextured_colours:
-        rgba=material_headers[next(k for k,v in material_headers.items()
-                                   if v['texture_index']==65535 and v['base_color_word']==colour)]['base_color_rgba_unscaled']
-        alpha=rgba[3]
-        material={'name':'Header untextured '+colour,'doubleSided':True,
-                  'pbrMetallicRoughness':{'baseColorFactor':[c/255 for c in rgba[:3]]+[min(1.0,alpha/128)],
-                                          'metallicFactor':0,'roughnessFactor':1}}
-        if alpha<128:
-            material['alphaMode']='BLEND'
-        untextured_material[colour]=len(doc['materials']);doc['materials'].append(material)
     if variant['variants']:
         doc['extensionsUsed']=['KHR_materials_variants']
         doc['extensions']={'KHR_materials_variants':{'variants':[{'name':f'Original selector {v["selector"]}','extras':{'originalSelector':v['selector']}} for v in variant['variants']]}}
@@ -92,6 +83,17 @@ def build(car, data):
         doc['textures'].append({'sampler':0,'source':image})
         doc['materials'].append({'name':t['name'],'doubleSided':True,
                                  'pbrMetallicRoughness':{'baseColorTexture':{'index':image},'metallicFactor':0,'roughnessFactor':1}})
+    # Keep original texture indices stable for primitives and selector remaps.
+    for colour in untextured_colours:
+        rgba=material_headers[next(k for k,v in material_headers.items()
+                                   if v['texture_index']==65535 and v['base_color_word']==colour)]['base_color_rgba_unscaled']
+        alpha=rgba[3]
+        material={'name':'Header untextured '+colour,'doubleSided':True,
+                  'pbrMetallicRoughness':{'baseColorFactor':[c/255 for c in rgba[:3]]+[min(1.0,alpha/128)],
+                                          'metallicFactor':0,'roughnessFactor':1}}
+        if alpha<128:
+            material['alphaMode']='BLEND'
+        untextured_material[colour]=len(doc['materials']);doc['materials'].append(material)
     table=car['geometry']['table'];cursor=0; stats=Counter(); records=[]
     for record,pair in enumerate(car['geometry']['group_header_counts']):
         bounds=struct.unpack_from('<6f',data,table['offset']+record*52+4)

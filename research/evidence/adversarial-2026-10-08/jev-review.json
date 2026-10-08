@@ -1,0 +1,771 @@
+{
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "truncated": false,
+  "mode": "per-file",
+  "action": "escalate",
+  "composite": 0.7689772727272729,
+  "safe_to_apply": 0.49,
+  "reason_codes": [
+    "confidence_below_review",
+    "safe_to_apply_below_review"
+  ],
+  "limiting": [
+    {
+      "file": "tools/export_geometry_candidates.py",
+      "rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "file": "tools/test_export_materials.py",
+      "rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "file": "viewer/recovered.html",
+      "rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "file": "viewer/materials.mjs",
+      "rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "file": "viewer/model-load.mjs",
+      "rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "file": "viewer/index.html",
+      "rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "file": "tools/test_viewer_materials.mjs",
+      "rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "file": "tools/test_viewer_loading.mjs",
+      "rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "file": "tools/test_model_load.mjs",
+      "rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "file": "tools/test_viewer_scenes.mjs",
+      "rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "file": "tools/check.sh",
+      "rubrics": [
+        "blast_radius"
+      ]
+    }
+  ],
+  "weights": {
+    "correctness": 0.4,
+    "spec_match": 0.3,
+    "test_gap": 0.15,
+    "blast_radius": 0.15
+  },
+  "thresholds": {
+    "auto_accept": 0.8,
+    "review_at": 0.5,
+    "composite_floor": 0.7
+  },
+  "files": [
+    {
+      "path": "tools/export_geometry_candidates.py",
+      "safe_to_apply": 0.61,
+      "scores": {
+        "correctness": {
+          "score": 1.83,
+          "confidence": 0.74,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.09,
+            "2": 0.87
+          }
+        },
+        "spec_match": {
+          "score": 1.65,
+          "confidence": 0.47,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.29,
+            "2": 0.68
+          }
+        },
+        "test_gap": {
+          "score": 0.44,
+          "confidence": 0.34,
+          "probabilities": {
+            "0": 0.67,
+            "1": 0.22,
+            "2": 0.11
+          }
+        },
+        "blast_radius": {
+          "score": 0.49,
+          "confidence": 0.27,
+          "probabilities": {
+            "0": 0.64,
+            "1": 0.23,
+            "2": 0.13
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.84375,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "path": "tools/test_export_materials.py",
+      "safe_to_apply": 0.68,
+      "scores": {
+        "correctness": {
+          "score": 1.74,
+          "confidence": 0.61,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.16,
+            "2": 0.79
+          }
+        },
+        "spec_match": {
+          "score": 1.62,
+          "confidence": 0.43,
+          "probabilities": {
+            "0": 0.07,
+            "1": 0.24,
+            "2": 0.69
+          }
+        },
+        "test_gap": {
+          "score": 0.48,
+          "confidence": 0.28,
+          "probabilities": {
+            "0": 0.6,
+            "1": 0.32,
+            "2": 0.08
+          }
+        },
+        "blast_radius": {
+          "score": 0.29,
+          "confidence": 0.56,
+          "probabilities": {
+            "0": 0.78,
+            "1": 0.15,
+            "2": 0.07
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.8332499999999999,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "path": "viewer/recovered.html",
+      "safe_to_apply": 0.49,
+      "scores": {
+        "correctness": {
+          "score": 1.73,
+          "confidence": 0.59,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.21,
+            "2": 0.76
+          }
+        },
+        "spec_match": {
+          "score": 1.65,
+          "confidence": 0.47,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.33,
+            "2": 0.66
+          }
+        },
+        "test_gap": {
+          "score": 0.94,
+          "confidence": 0.44,
+          "probabilities": {
+            "0": 0.21,
+            "1": 0.63,
+            "2": 0.16
+          }
+        },
+        "blast_radius": {
+          "score": 1.96,
+          "confidence": 0.93,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.03,
+            "2": 0.96
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.676,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "path": "viewer/materials.mjs",
+      "safe_to_apply": 0.64,
+      "scores": {
+        "correctness": {
+          "score": 1.48,
+          "confidence": 0.23,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.23,
+            "2": 0.63
+          }
+        },
+        "spec_match": {
+          "score": 1.79,
+          "confidence": 0.68,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.17,
+            "2": 0.81
+          }
+        },
+        "test_gap": {
+          "score": 0.47,
+          "confidence": 0.31,
+          "probabilities": {
+            "0": 0.59,
+            "1": 0.36,
+            "2": 0.05
+          }
+        },
+        "blast_radius": {
+          "score": 1.33,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.17,
+            "1": 0.33,
+            "2": 0.5
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7295,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "path": "viewer/model-load.mjs",
+      "safe_to_apply": 0.65,
+      "scores": {
+        "correctness": {
+          "score": 1.84,
+          "confidence": 0.76,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.1,
+            "2": 0.87
+          }
+        },
+        "spec_match": {
+          "score": 1.68,
+          "confidence": 0.51,
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.21,
+            "2": 0.73
+          }
+        },
+        "test_gap": {
+          "score": 0.66,
+          "confidence": 0.22,
+          "probabilities": {
+            "0": 0.43,
+            "1": 0.48,
+            "2": 0.09
+          }
+        },
+        "blast_radius": {
+          "score": 1.45,
+          "confidence": 0.17,
+          "probabilities": {
+            "0": 0.11,
+            "1": 0.33,
+            "2": 0.56
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7617500000000001,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "path": "viewer/index.html",
+      "safe_to_apply": 0.67,
+      "scores": {
+        "correctness": {
+          "score": 1.76,
+          "confidence": 0.62,
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.15,
+            "2": 0.8
+          }
+        },
+        "spec_match": {
+          "score": 1.64,
+          "confidence": 0.44,
+          "probabilities": {
+            "0": 0.07,
+            "1": 0.23,
+            "2": 0.7
+          }
+        },
+        "test_gap": {
+          "score": 0.92,
+          "confidence": 0.25,
+          "probabilities": {
+            "0": 0.29,
+            "1": 0.5,
+            "2": 0.21
+          }
+        },
+        "blast_radius": {
+          "score": 1.46,
+          "confidence": 0.19,
+          "probabilities": {
+            "0": 0.2,
+            "1": 0.14,
+            "2": 0.66
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7194999999999999,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "path": "tools/test_viewer_materials.mjs",
+      "safe_to_apply": 0.63,
+      "scores": {
+        "correctness": {
+          "score": 1.69,
+          "confidence": 0.53,
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.19,
+            "2": 0.75
+          }
+        },
+        "spec_match": {
+          "score": 1.63,
+          "confidence": 0.44,
+          "probabilities": {
+            "0": 0.07,
+            "1": 0.23,
+            "2": 0.7
+          }
+        },
+        "test_gap": {
+          "score": 0.94,
+          "confidence": 0.28,
+          "probabilities": {
+            "0": 0.27,
+            "1": 0.52,
+            "2": 0.21
+          }
+        },
+        "blast_radius": {
+          "score": 1.23,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.27,
+            "1": 0.22,
+            "2": 0.51
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.71975,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "path": "tools/test_viewer_loading.mjs",
+      "safe_to_apply": 0.7,
+      "scores": {
+        "correctness": {
+          "score": 1.66,
+          "confidence": 0.49,
+          "probabilities": {
+            "0": 0.09,
+            "1": 0.16,
+            "2": 0.75
+          }
+        },
+        "spec_match": {
+          "score": 1.6,
+          "confidence": 0.41,
+          "probabilities": {
+            "0": 0.11,
+            "1": 0.17,
+            "2": 0.72
+          }
+        },
+        "test_gap": {
+          "score": 0.64,
+          "confidence": 0.05,
+          "probabilities": {
+            "0": 0.5,
+            "1": 0.37,
+            "2": 0.13
+          }
+        },
+        "blast_radius": {
+          "score": 0.8,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.48,
+            "1": 0.24,
+            "2": 0.28
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.764,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    },
+    {
+      "path": "tools/test_model_load.mjs",
+      "safe_to_apply": 0.7,
+      "scores": {
+        "correctness": {
+          "score": 1.72,
+          "confidence": 0.56,
+          "probabilities": {
+            "0": 0.07,
+            "1": 0.15,
+            "2": 0.78
+          }
+        },
+        "spec_match": {
+          "score": 1.56,
+          "confidence": 0.35,
+          "probabilities": {
+            "0": 0.11,
+            "1": 0.21,
+            "2": 0.68
+          }
+        },
+        "test_gap": {
+          "score": 0.64,
+          "confidence": 0.02,
+          "probabilities": {
+            "0": 0.48,
+            "1": 0.39,
+            "2": 0.13
+          }
+        },
+        "blast_radius": {
+          "score": 0.63,
+          "confidence": 0.05,
+          "probabilities": {
+            "0": 0.54,
+            "1": 0.29,
+            "2": 0.17
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7827500000000001,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "path": "tools/test_viewer_scenes.mjs",
+      "safe_to_apply": 0.73,
+      "scores": {
+        "correctness": {
+          "score": 1.72,
+          "confidence": 0.58,
+          "probabilities": {
+            "0": 0.07,
+            "1": 0.14,
+            "2": 0.79
+          }
+        },
+        "spec_match": {
+          "score": 1.59,
+          "confidence": 0.37,
+          "probabilities": {
+            "0": 0.11,
+            "1": 0.2,
+            "2": 0.69
+          }
+        },
+        "test_gap": {
+          "score": 0.61,
+          "confidence": 0.1,
+          "probabilities": {
+            "0": 0.52,
+            "1": 0.36,
+            "2": 0.12
+          }
+        },
+        "blast_radius": {
+          "score": 0.5,
+          "confidence": 0.25,
+          "probabilities": {
+            "0": 0.64,
+            "1": 0.22,
+            "2": 0.14
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.79925,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    {
+      "path": "tools/check.sh",
+      "safe_to_apply": 0.74,
+      "scores": {
+        "correctness": {
+          "score": 1.81,
+          "confidence": 0.71,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.11,
+            "2": 0.85
+          }
+        },
+        "spec_match": {
+          "score": 1.66,
+          "confidence": 0.49,
+          "probabilities": {
+            "0": 0.09,
+            "1": 0.16,
+            "2": 0.75
+          }
+        },
+        "test_gap": {
+          "score": 0.51,
+          "confidence": 0.23,
+          "probabilities": {
+            "0": 0.6,
+            "1": 0.29,
+            "2": 0.11
+          }
+        },
+        "blast_radius": {
+          "score": 0.58,
+          "confidence": 0.14,
+          "probabilities": {
+            "0": 0.58,
+            "1": 0.27,
+            "2": 0.15
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.82925,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ]
+    }
+  ],
+  "usage": {
+    "input_tokens": 19674,
+    "output_tokens": 1010
+  }
+}
