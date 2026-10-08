@@ -56,4 +56,10 @@ if python3 tools/recover_dump_reference_frame.py --available; then
 else
   echo "skip  recover_dump_reference_frame, test_recover_dump_reference_frame  (GS dumps not present; see docs/static-inputs.md)"
 fi
+if python3 tools/verify_pass_source_join.py --available; then
+  step "verify_pass_source_join" python3 tools/verify_pass_source_join.py
+  step "test_pass_source_join" python3 tools/test_pass_source_join.py
+else
+  echo "skip  verify_pass_source_join, test_pass_source_join  (pinned captures or static inputs not present; see CONTRIBUTING.md)"
+fi
 exit $status

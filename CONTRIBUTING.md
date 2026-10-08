@@ -85,6 +85,12 @@ Captured-input checks (no live emulator run):
 - `python3 tools/verify_vu_handler_dump.py` and `python3 tools/test_vu_handler_dump.py` compare
   100 pass-4/5 draws; need the pinned race94 GSDump and race95 retained EE/VU captures.
 
+- `python3 tools/verify_pass_source_join.py` and `python3 tools/test_pass_source_join.py` join
+  all 37 aligned pass-4 and 63 pass-5 draws to source Headers and the pass-4 view render target,
+  reproduce its committed capture-time GS PNG, and reject wrong-Header/wrong-texture controls.
+  They need the same runtime captures, `race95-GS.bin`, and the configured executable/typed export.
+  Use `--write` only to establish/review an intentional new receipt and PNG; normal runs verify both.
+
 Not available offline:
 
 - `tools/validate_blender_import.py` — run through Blender:
