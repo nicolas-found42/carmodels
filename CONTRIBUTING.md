@@ -21,9 +21,9 @@ check the result. Two corpora:
   is installed (`pip install ruff`; CI installs it). Tools that read zstd-compressed savestate members
   (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`, `trace_car_packets.py`, `gsdump.py`,
   `independent_packet_color_check.py`) need a zstd-capable interpreter, which the stock one is not.
-- **Node.js** — for `node tools/test_viewer_scenes.mjs`, which checks Geometry choices against all
-  35 exported GLBs. `tools/check.sh` runs it when Node.js is available.
-- **Blender 4.5.14** — only for `tools/validate_blender_import.py`. The pinned vendor dmg sits in
+- **Node.js 22** — explicitly provisioned in CI for the viewer regressions. Missing Node is a CI failure;
+  local runs record a skip when it is unavailable.
+- **Blender 4.5.14** — for the dealership import/edit/export regression and `tools/validate_blender_import.py`. The pinned vendor dmg sits in
   `tools/validation-runtime/` (gitignored; re-download and check it against the pinned sha256).
 - **PINE + PCSX2** — only for live capture, under `tools/headless-runtime/` (container).
 
@@ -65,9 +65,27 @@ Scripts resolve paths from their own location (`Path(__file__).resolve().parents
 Run `tools/check.sh`: it lints `tools/` with `ruff`, runs the asset-index verifier and basic tests, and runs the
 archive/executable checks when the inputs are set. CI runs the same script. The checks and their input requirements are:
 
+`tools/check.sh --list` lists stable check names. Use `--only name1,name2` for a focused run.
+Every run retains complete per-command logs, exit codes, durations and pass/fail/skip states
+in `results.json`; the printed evidence directory defaults to a unique `.scratch/checks/run-*`.
+Pass `--evidence-dir <empty-directory>` to choose the location. Existing logs are preserved.
+A later successful command cannot mask an earlier failure. CI uploads this evidence even
+when checks fail. Optional private-input skips remain visible and do not count as passes.
+
+The `dealership_roundtrip` check uses `CARMODELS_BLENDER`, `blender` on PATH, or the locally
+mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender`.
+CI downloads and hash-checks the pinned Linux Blender release. The check operates entirely
+on temporary model copies; production dealership/source GLBs are verified unchanged.
+
 | Command | What it covers | Inputs |
 | --- | --- | --- |
 | `python3 tools/verify_recovered_asset_index.py` | Derives the expected index from producer receipts, re-hashes 2579 artifacts across 35 cars, and requires corrupt manifests, cross-car record swaps and changed declarations each to be rejected | Committed corpus |
+| `python3 tools/test_export_materials.py` | Source texture/selector ownership across 35 GLBs, with an in-range wrong-material mutation | Committed corpus |
+| `python3 tools/build_dealership.py --check` | Read-only equality of compiled dealership data against current editable GLBs/catalog; stale geometry, metadata and missing output fail | Committed dealership inputs |
+| `tools/check.sh --only dealership_roundtrip` | Real Gran Torino import, 20% geometry edit, export, rebuild and source preservation | Pinned Blender 4.5.14 |
+| `python3 tools/test_model_png.py`, `python3 tools/test_run_checks.py`, `python3 tools/test_review_payload.py` | PNG filters/RGB conversion and corrupt textures; failure aggregation/logs/runtime controls; raw review scope, budgets and escalation controls | Python |
+| `node tools/test_dealership.mjs`, `python3 tools/test_build_dealership.py`, `python3 tools/test_build_showcase.py`, `python3 tools/test_bake_models.py` | Independent editable dealership GLBs/catalog and rebuild preservation; 35 source-bake triangle/normal/transform/hub checks; bounded GPU resources, malformed meshes and load timeouts; source icon/GLB pins with corruption controls | Node.js + Python + committed reference corpus; no npm install |
+| `node tools/test_viewer_materials.mjs`, `node tools/test_model_load.mjs`, `node tools/test_viewer_loading.mjs` | Linear material factors, separate index namespaces, malformed containers, stalled reads, actual viewer load callback and recovery | Node.js + committed corpus; no npm install |
 | `python3 tools/verify_config_data_sound.py` | 35 cars × config (11 files) + data DAT + sound chain | Private archive/executable bundle |
 | `python3 tools/verify_sound_bank_index.py` | Sound bank reconciliation | Private archive/executable bundle |
 
@@ -85,7 +103,7 @@ Captured-input checks (no live emulator run):
 - `python3 tools/verify_vu_handler_dump.py` and `python3 tools/test_vu_handler_dump.py` compare
   100 pass-4/5 draws; need the pinned race94 GSDump and race95 retained EE/VU captures.
 
-Not available offline:
+Additional runtime checks:
 
 - `tools/validate_blender_import.py` — run through Blender:
   `blender --background --python tools/validate_blender_import.py`
@@ -138,3 +156,4 @@ too. Every change reaches `main` through a pull request from a feature branch.
 - Triage labels are the five canonical roles — see `docs/agents/triage-labels.md`.
 - Agent-facing repo config (issue tracker, labels, domain docs) is in `AGENTS.md` and `docs/agents/`.
 - Code review standards are in `CODING_STANDARDS.md`; vocabulary is in `GLOSSARY-MAP.md` and the glossaries it lists.
+- For task-baseline review inputs, bounded Jev calls and independent escalation resolution, see [the review workflow](docs/agents/review-workflow.md).

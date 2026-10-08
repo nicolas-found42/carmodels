@@ -6,6 +6,11 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `retro-implementation-2026-10-08.md` | Real dealership Blender edit/export regression, display freshness, retained check evidence, bounded review tooling and explicit CI runtimes |
+| `adversarial-teardown-2026-10-08.md` | Executed offline viewer/export teardown, material ownership repairs, failure/keyboard/layout probes, sampling improvement and verification evidence |
+| `dealership-split-2026-10-08.md` | Independent editable dealership models/catalog, separate source showcase, rebuild preservation and source hash evidence |
+| `silhouette-models-2026-10-08.md` | Source-derived silhouette replacement, all-car geometry checks, browser comparisons and fidelity limits |
+| `silhouettes-teardown-2026-10-08.md` | Silhouette-only teardown, resource/literal-text/layout repairs, stationary inspection, decoded icon samples and browser re-attack |
 | `original-recovery.md` | Synthesis of the original car recovery: what is decoded, what is a candidate |
 | `original-geometry-research.md` | Geometry and texture recovery status, superseded notes, evidence route |
 | `format-notes.md` | Car container format: name pool, geometry records, planes, embedded textures |
@@ -17,6 +22,8 @@ single list of what is not yet established; update it when a note closes or open
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
 ## Open items
+
+- Dealership surface tones use vertex sampling rather than semantic glass/paint segmentation; residual decals and dark details are approximate. Full game-render fidelity remains open.
 
 - Execution trace of CPU, DMA, VIF and VU1 for the dumped frame.
 - ADC-producing pass-1/2 branch and flag-set clip stage; static-kick packet origins.

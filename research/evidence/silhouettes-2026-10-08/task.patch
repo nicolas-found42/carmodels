@@ -1,0 +1,1854 @@
+--- a/viewer/index.html
++++ b/viewer/index.html
+@@ -3,7 +3,7 @@
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-<title>Ford Racing 2 — Car Model Explorer</title>
++<title>Ford Racing 2 — Silhouette Gallery</title>
+ <style>
+   :root {
+     --bg: #14161a;
+@@ -105,41 +105,6 @@
+   #paint-caveat { font-size: 12px; color: var(--faint); margin-top: 6px; line-height: 1.35; }
+   #livery-codes { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+   .livery-code { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); border: 1px solid var(--line); padding: 2px 4px; border-radius: 2px; }
+-  #hint {
+-    position: absolute; bottom: 12px; right: 14px; font-size: 12px; color: var(--faint);
+-    pointer-events: none;
+-  }
+-  @media (max-width: 1100px) {
+-    #sidebar { width: 260px; min-width: 260px; }
+-    #panel { width: 215px; padding: 10px; right: 10px; }
+-    #hud .name { max-width: calc(100% - 240px); font-size: 22px; }
+-    #hud .tag, #hud .recon { max-width: calc(100% - 240px); }
+-  }
+-  @media (max-width: 760px) {
+-    #sidebar { width: 220px; min-width: 220px; }
+-    #panel { width: 184px; max-height: 54%; overflow-y: auto; }
+-    #hud .name { max-width: calc(100% - 198px); font-size: 18px; }
+-    #hud .tag, #hud .recon { max-width: calc(100% - 198px); }
+-    #paint-evidence { padding: 7px; }
+-  }
+-  @media (max-width: 700px) {
+-    body { flex-direction: column; }
+-    #sidebar { width: 100%; min-width: 0; height: 40vh; border-right: 0; border-bottom: 1px solid var(--line); }
+-    #sidebar header { padding: 9px 12px 4px; }
+-    #search { margin: 4px 12px 6px; }
+-    #filters { flex-wrap: nowrap; overflow-x: auto; padding: 0 12px 6px; }
+-    #list { display: flex; overflow-x: auto; overflow-y: hidden; padding: 2px 8px 7px; }
+-    .car-row { width:auto; min-width:172px; flex:none; }
+-    #main { height: 60vh; min-height: 0; }
+-    #panel { width: 170px; max-height: 58%; top: 8px; right: 8px; padding: 8px; }
+-    #panel h3 { font-size: 11px; margin-bottom: 6px; }
+-    .stat { margin-bottom: 5px; }
+-    .stat .lbl,.kv { font-size: 12px; }
+-    #hud { top: 8px; left: 9px; }
+-    #hud .name { max-width: calc(100% - 180px); font-size: 16px; }
+-    #hud .tag, #hud .recon { max-width: calc(100% - 180px); font-size: 11px; }
+-    #legend { left: 9px; bottom: 6px; font-size: 11px; }
+-  }
+   #loading {
+     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+     background: var(--bg); color: var(--muted); font-size: 13px; z-index: 10;
+@@ -156,25 +121,78 @@
+     background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+     padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text);
+   }
++
++  /* Keep the silhouette viewport clear of details at every width. */
++  [hidden] { display: none !important; }
++  #main { display: grid; grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: auto minmax(0, 1fr) auto auto; }
++  #hud { position: static; grid-column: 1 / -1; padding: 14px 16px; pointer-events: auto; }
++  #hud .name, #hud .tag, #hud .recon { max-width: 100%; }
++  #hud .recon { letter-spacing: .02em; text-transform: none; }
++  #stage { grid-column: 1; grid-row: 2; overflow: hidden; }
++  #panel { position: static; grid-column: 2; grid-row: 2 / 5; width: auto; max-height: none; overflow-y: auto; margin: 0 10px 10px 0; }
++  #view-controls { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 16px; }
++  button, #view-controls label { font: inherit; font-size: 12px; }
++  #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
++  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
++  #legend { position: static; padding: 0 16px 10px; grid-column: 1; }
++  #results, #empty { padding: 0 16px 8px; font-size: 12px; color: var(--muted); }
++  #clear-filters { margin: 0 16px 10px; }
++  .kv b { overflow-wrap: anywhere; min-width: 0; text-align: right; }
++  .paint-head { flex-wrap: wrap; }
++  #loading { transition: none; }
++  @media (max-width: 1100px) { #main { grid-template-columns: minmax(0, 1fr) 215px; } }
++  @media (max-width: 900px) {
++    body { overflow: auto; }
++    #sidebar { width: 250px; min-width: 250px; position: sticky; top: 0; height: 100dvh; }
++    #main { display: flex; min-height: 100dvh; }
++    #stage { flex: none; height: 50dvh; min-height: 340px; }
++    #panel { margin: 0 12px 12px; }
++  }
++  @media (max-width: 700px) {
++    body { display: block; height: auto; }
++    #sidebar { position: static; width: 100%; min-width: 0; height: auto; }
++    #filters { flex-wrap: wrap; overflow: visible; }
++    .chip { min-height: 30px; }
++    #list { height: 92px; flex: none; }
++    #main { height: auto; min-height: 0; }
++    #hud { padding: 12px; }
++    #hud .name { font-size: 22px; }
++    #stage { height: 360px; min-height: 0; }
++    #view-controls { padding: 10px 12px; }
++    #view-controls button, #view-controls label { min-height: 36px; }
++    #panel { overflow: visible; }
++  }
+ </style>
+ </head>
+ <body>
+   <nav id="sidebar">
+     <header>
+-      <h1>FORD RACING <span>2</span> — MODEL EXPLORER</h1>
++      <h1>FORD RACING <span>2</span> — SILHOUETTES</h1>
+       <div class="sub">35 vehicles · from the PS2 game disc (PAL SLES-51705)</div>
+       <a class="jump" href="recovered.html">Original recovered models →</a>
+     </header>
+     <input aria-label="Search cars by name or year" id="search" placeholder="Search name or year…" autocomplete="off">
+     <div id="filters"></div>
++    <div id="results" role="status" aria-live="polite"></div>
++    <button id="clear-filters" type="button">Clear search and filters</button>
++    <div id="empty" hidden>No cars match. Clear search and filters to see the corpus.</div>
+     <div id="list"></div>
+   </nav>
+   <main id="main">
+-    <div id="stage">
+-      <div id="hud">
++    <div id="hud">
+         <div class="name" id="hud-name">—</div>
+         <div class="tag" id="hud-tag"></div>
+-        <div class="recon" title="The silhouette is rebuilt from the car's in-game stats, not the original model. The colour is a sample from the car's menu icon, not its real paint texture.">SILHOUETTE: RECONSTRUCTED ILLUSTRATION, NOT THE ORIGINAL MODEL · COLOR: SAMPLE FROM THE MENU ICON</div>
++        <div class="recon" title="The silhouette is rebuilt from the car's in-game stats, not the original model. The colour is a sample from the car's menu icon, not its real paint texture.">Procedural illustration · proportions vary with handling ratings · approximate icon color</div>
++      </div>
++      <div id="stage">
++        <div id="loading" role="status" aria-live="polite">Loading corpus…</div>
++      </div>
++      <div id="view-controls" aria-label="Silhouette inspection controls">
++        <label><input type="checkbox" id="auto-rotate"> Auto rotate</label>
++        <button type="button" data-view="reset">Reset view</button>
++        <button type="button" data-view="side">Side</button>
++        <button type="button" data-view="front">Front</button>
++        <button type="button" data-view="top">Top</button>
+       </div>
+       <div id="panel">
+         <h3>Performance (in-game)</h3>
+@@ -190,14 +208,12 @@
+         <div class="kv"><span>Sound bank</span><b id="k-snd" style="font-size:12px">—</b></div>
+         <div id="paint-evidence">
+           <div class="paint-head"><div id="paint-swatch"></div><div>Icon paint sample</div><span id="paint-rgb" style="margin-left:auto">—</span></div>
+-          <div id="paint-caveat">Approximate main colour, sampled from the car's menu icon — not the game's decoded texture. The original texture's exact size is still unresolved.</div>
++          <div id="paint-caveat">Approximate icon colour. The sample comes from decoded menu-icon pixels; it does not identify the car’s real paint.</div>
+           <div id="livery-codes"></div>
+         </div>
+       </div>
+       <div id="legend">drag to rotate · scroll to zoom · right-drag to pan</div>
+-      <div id="hint">RESEARCH PREVIEW · V0.1</div>
+-      <div id="loading">Loading corpus…</div>
+-    </div>
++
+   </main>
+ 
+ <!-- Startup guard: a classic script so it runs even when the ES module below
+@@ -219,6 +235,10 @@
+     el.classList.add('error');
+     el.style.opacity = '1';
+     el.innerHTML = '<div class="msg">' + html + '</div>';
++    var retry = document.createElement('button');
++    retry.type = 'button'; retry.textContent = 'Reload viewer';
++    retry.onclick = function () { location.reload(); };
++    el.querySelector('.msg').append(retry);
+   }
+ 
+   // (a) Opened straight from disk: browsers block the module imports, so the
+@@ -258,7 +278,7 @@
+   // (c) Nothing threw, but nothing finished loading either (missing files,
+   //     hung request) — don't leave the visitor on an indefinite loading string.
+   window.setTimeout(function () {
+-    if (state.loaded || state.failed) return;
++    if (state.loaded || state.failed || state.pending) return;
+     showError(
+       '<b>The viewer is taking longer than expected.</b>' +
+       '<p>A required file may be missing or a request may have stalled. Check the browser ' +
+@@ -276,12 +296,14 @@
+ <script type="module">
+ import * as THREE from 'three';
+ import { OrbitControls } from './vendor/OrbitControls.js';
++import { makeCar, disposeCar, fetchCars } from './silhouette.mjs';
+ 
+ const $ = id => document.getElementById(id);
+ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
+ 
+ let CARS = [];
+ let current = null;
++let carMesh = null;
+ const groups = new Set();
+ 
+ const boot = window.__viewerBoot || (window.__viewerBoot = { loaded: false, failed: false });
+@@ -303,23 +325,35 @@
+   el.append(wrap);
+ };
+ 
+-fetch('./public/cars.json').then(r => r.json()).then(cars => {
+-  CARS = cars;
+-  cars.forEach(c => groups.add(c.group || 'OTHER'));
+-  buildFilters();
+-  buildList();
+-  select(cars.find(c => c.code === 'GRAN_TORINO') || cars[0]);
+-  boot.loaded = true;
+-  $('loading').style.opacity = '0';
+-  setTimeout(() => $('loading').remove(), 450);
+-}).catch(error => {
+-  console.error('Corpus load failed', error);
+-  showBootError(
+-    'The car list could not be loaded.',
+-    'The vehicle data (viewer/public/cars.json) did not load. Confirm it exists in this ' +
+-    'checkout, then serve the folder with: python3 -m http.server 8080 --directory viewer'
+-  );
+-});
++async function loadCorpus() {
++  boot.failed = false;
++  boot.pending = true;
++  $('loading').classList.remove('error');
++  $('loading').style.opacity = '1';
++  $('loading').textContent = 'Loading corpus…';
++  try {
++    CARS = await fetchCars('./public/cars.json');
++    groups.clear();
++    CARS.forEach(c => groups.add(c.group || 'OTHER'));
++    $('filters').replaceChildren();
++    $('list').replaceChildren();
++    buildFilters();
++    buildList();
++    select(CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
++    applyFilters();
++    boot.loaded = true;
++    boot.failed = false;
++    $('loading').hidden = true;
++  } catch (error) {
++    console.error('Corpus load failed', error);
++    showBootError('The car list could not be loaded.', error.message + ' Check viewer/public/cars.json and the local server.');
++    const retry = document.createElement('button');
++    retry.type = 'button';
++    retry.textContent = 'Retry loading cars';
++    retry.onclick = loadCorpus;
++    $('loading').querySelector('.msg').append(retry);
++  } finally { boot.pending = false; }
++}
+ 
+ /* ---------- sidebar ---------- */
+ function buildFilters() {
+@@ -343,6 +377,7 @@
+   const q = $('search').value.trim().toLowerCase();
+   const active = activePreds();
+   const kinds = ['group', 'style'];
++  let visible = 0;
+   document.querySelectorAll('.car-row').forEach(row => {
+     const c = CARS.find(x => x.code === row._code);
+     const matchQ = !q || (c.name + ' ' + c.code + ' ' + c.year).toLowerCase().includes(q);
+@@ -350,10 +385,20 @@
+       const ps = active.filter(el => el.dataset.kind === kind).map(el => el._pred);
+       return !ps.length || ps.some(pred => pred(c));
+     });
+-    row.style.display = matchQ && matchF ? '' : 'none';
++    const matches = matchQ && matchF;
++    row.hidden = !matches;
++    if (matches) visible++;
+   });
++  $('results').textContent = `${visible} of ${CARS.length} cars` + (current ? ` · Preview: ${current.name}` : '');
++  $('empty').hidden = visible > 0;
+ }
+ $('search').addEventListener('input', applyFilters);
++$('clear-filters').onclick = () => {
++  $('search').value = '';
++  document.querySelectorAll('.chip').forEach(chip => { chip.classList.remove('on'); chip.setAttribute('aria-pressed', 'false'); });
++  applyFilters();
++  $('search').focus();
++};
+ 
+ function buildList() {
+   const list = $('list');
+@@ -366,8 +411,11 @@
+     const p = c.paint ? c.paint.rgb : [90,90,90];
+     sw.style.background = `rgb(${p[0]},${p[1]},${p[2]})`;
+     const txt = document.createElement('span');
+-    txt.innerHTML = `<span class="nm">${c.name}</span>
+-      <span class="meta">${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.bodyStyle}</span>`;
++    const name = document.createElement('span');
++    name.className = 'nm'; name.textContent = c.name;
++    const meta = document.createElement('span');
++    meta.className = 'meta'; meta.textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.bodyStyle}`;
++    txt.append(name, meta);
+     const bhp = document.createElement('span');
+     bhp.className = 'bhp'; bhp.textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '';
+     row.append(sw, txt, bhp);
+@@ -425,157 +473,23 @@
+ scene.add(ring);
+ 
+ function resize() {
+-  const w = stage.clientWidth, h = stage.clientHeight;
++  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+   renderer.setSize(w, h);
+   camera.aspect = w / h;
+   camera.updateProjectionMatrix();
++  if (carMesh) setView('reset');
+ }
+ window.addEventListener('resize', resize);
++new ResizeObserver(resize).observe(stage);
+ resize();
+ 
+ /* ---------- procedural stat-shaped car ---------- */
+-function makeCar(c) {
+-  const g = new THREE.Group();
+-  const paint = c.paint ? c.paint.rgb : [110, 110, 110];
+-  const bodyMat = new THREE.MeshStandardMaterial({
+-    color: new THREE.Color(paint[0]/255, paint[1]/255, paint[2]/255),
+-    roughness: 0.32, metalness: 0.55,
+-  });
+-  const darkMat = new THREE.MeshStandardMaterial({ color: 0x14161a, roughness: 0.58, metalness: 0.18 });
+-  const trimMat = new THREE.MeshStandardMaterial({ color: 0x737b84, roughness: 0.38, metalness: 0.8 });
+-  const glassMat = new THREE.MeshStandardMaterial({
+-    color: 0x7fa8cc, roughness: 0.12, metalness: 0.08, transparent: true, opacity: 0.72, side: THREE.DoubleSide,
+-  });
+-  const lampMat = new THREE.MeshStandardMaterial({ color: 0xe8d9a4, emissive: 0x241b0b, roughness: 0.3 });
+-  const tailMat = new THREE.MeshStandardMaterial({ color: 0xc42d32, emissive: 0x260607, roughness: 0.3 });
+-
+-  const style = c.bodyStyle;
+-  const speed = Math.max(0, Math.min(1, c.speed || 0.5));
+-  const accel = Math.max(0, Math.min(1, c.accel || 0.5));
+-  const agility = Math.max(0, Math.min(1, c.agility || 0.5));
+-  const weight = Math.max(0, Math.min(1, c.weight || 0.5));
+-  const L = 3.8 + 1.25 * speed;   // in-game speed rating modestly stretches wheelbase
+-  const W = 1.65 + 0.45 * weight;
+-  const H = 0.55 + 0.25 * (1 - speed);
+-  const nose = 0.22 + 0.34 * accel;
+-
+-  const add = (geo, mat, x, y, z) => {
+-    const m = new THREE.Mesh(geo, mat);
+-    m.position.set(x, y, z);
+-    m.castShadow = true;
+-    m.receiveShadow = true;
+-    g.add(m);
+-    return m;
+-  };
+-  const box = (x, y, z, sx, sy, sz, mat) => add(new THREE.BoxGeometry(sx, sy, sz), mat, x, y, z);
+-  const profile = (points, depth, mat, yOffset = 0) => {
+-    const shape = new THREE.Shape();
+-    shape.moveTo(points[0][0], points[0][1]);
+-    for (const [x, y] of points.slice(1)) shape.lineTo(x, y);
+-    shape.closePath();
+-    const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.045, bevelSize: 0.04, bevelSegments: 2 });
+-    geo.translate(0, 0, -depth / 2);
+-    return add(geo, mat, 0, yOffset, 0);
+-  };
+-  const sideWindow = (points) => {
+-    const shape = new THREE.Shape();
+-    shape.moveTo(points[0][0], points[0][1]);
+-    for (const [x, y] of points.slice(1)) shape.lineTo(x, y);
+-    shape.closePath();
+-    const geo = new THREE.ShapeGeometry(shape);
+-    for (const side of [-1, 1]) {
+-      const pane = new THREE.Mesh(geo, glassMat);
+-      pane.position.z = side * (W / 2 + 0.012);
+-      pane.castShadow = true;
+-      g.add(pane);
+-    }
+-  };
+-
+-  if (style === 'pickup' || style === 'suv') {
+-    // All dimensions use x=length, y=height, z=width.
+-    box(0, 0.54, 0, L, 0.55, W * 0.94, bodyMat);
+-    const cabL = style === 'pickup' ? L * 0.40 : L * 0.68;
+-    const cabX = style === 'pickup' ? 0.18 : 0.05;
+-    box(cabX, 0.88 + H * 0.34, 0, cabL, H * 0.92, W * 0.88, bodyMat);
+-    if (style === 'pickup') {
+-      const bedL = L * 0.36;
+-      const bedX = -L * 0.30;
+-      box(bedX, 0.76, 0, bedL, 0.10, W * 0.77, darkMat); // open bed floor
+-      for (const side of [-1, 1]) box(bedX, 0.91, side * W * 0.40, bedL, 0.35, 0.08, bodyMat);
+-      box(bedX, 0.91, -bedL / 2, 0.08, 0.35, W * 0.78, bodyMat);
+-    }
+-    box(L * 0.36, 0.74, 0, L * 0.24, 0.34, W * 0.90, bodyMat); // hood
+-    const wx = cabX + cabL * 0.10;
+-    sideWindow([[wx - cabL * 0.40, 0.92], [wx - cabL * 0.27, 1.22], [wx + cabL * 0.24, 1.22], [wx + cabL * 0.39, 0.92]]);
+-  } else {
+-    let pts;
+-    if (style === 'racecar') {
+-      pts = [[-L/2,0.18],[L/2,0.18],[L/2-0.10,0.60],[L*0.18,0.82],[L*0.10,1.18],[-L*0.16,1.20],[-L*0.28,0.84],[-L/2+0.08,0.62]];
+-    } else if (style === 'concept') {
+-      pts = [[-L/2,0.20],[L/2,0.20],[L/2-0.04,0.48],[L*0.28,0.60],[L*0.08,0.62+H],[-L*0.22,0.67+H*0.92],[-L/2+0.08,0.57]];
+-    } else {
+-      const rearTop = style === 'hatchback' ? 0.74 + H * 0.75 : 0.58;
+-      const roofFront = style === 'sedan' ? L*0.22 : L*0.16;
+-      const roofBack = style === 'sedan' ? -L*0.22 : -L*0.18;
+-      pts = [[-L/2,0.18],[L/2,0.18],[L/2-0.08,0.62+nose*0.18],[roofFront,0.64+H],[roofBack,0.64+H*0.92],[-L/2+0.12,rearTop],[-L/2+0.08,0.58]];
+-    }
+-    profile(pts, W, bodyMat, 0.18);
+-    // Side glass panels track the sloped greenhouse above the beltline.
+-    if (style === 'racecar') {
+-      sideWindow([[-L*0.20,0.95],[-L*0.12,1.27],[L*0.05,1.27],[L*0.15,0.91]]);
+-    } else if (style === 'concept') {
+-      sideWindow([[-L*0.20,0.83],[-L*0.13,0.88+H*0.55],[L*0.04,0.90+H*0.58],[L*0.24,0.73]]);
+-    } else {
+-      const topY = 0.64 + H * 0.90;
+-      sideWindow([[-L*0.14,0.82],[-L*0.10,topY],[L*0.06,topY],[L*0.17,0.82]]);
+-    }
+-    if (style === 'racecar') {
+-      box(-L*0.43, 1.50, 0, 0.42, 0.07, W*1.08, darkMat);
+-      box(-L*0.43, 1.34, -W*0.39, 0.08, 0.30, 0.08, darkMat);
+-      box(-L*0.43, 1.34, W*0.39, 0.08, 0.30, 0.08, darkMat);
+-      box(L/2 + 0.12, 0.72, 0, 0.14, 0.04, W*1.12, trimMat); // front splitter
+-    }
+-  }
+-
+-  // Front/rear bumpers, grille and lights.
+-  box(L/2 + 0.04, 0.54, 0, 0.10, 0.12, W*0.86, trimMat);
+-  box(-L/2 - 0.04, 0.54, 0, 0.10, 0.12, W*0.86, trimMat);
+-  box(L/2 + 0.10, 0.78, 0, 0.05, 0.20, W*0.38, darkMat);
+-  for (const side of [-1, 1]) {
+-    box(L/2 + 0.11, 0.84, side*W*0.32, 0.07, 0.16, 0.25, lampMat);
+-    box(-L/2 - 0.08, 0.80, side*W*0.34, 0.06, 0.18, 0.22, tailMat);
+-  }
+-  // wheels: wheelbase runs along X, tire axles along Z.
+-  const wheelR = 0.29 + 0.15 * agility + (style === 'pickup' || style === 'suv' ? 0.08 : 0);
+-  const wheelW = 0.22 + 0.08 * weight;
+-  const tireGeo = new THREE.CylinderGeometry(wheelR, wheelR, wheelW, 24);
+-  const hubGeo = new THREE.CylinderGeometry(wheelR*0.53, wheelR*0.53, wheelW+0.02, 16);
+-  const tireMat = new THREE.MeshStandardMaterial({ color: 0x121416, roughness: 0.84, metalness: 0.05 });
+-  const hubMat = new THREE.MeshStandardMaterial({ color: 0xaeb5bd, roughness: 0.3, metalness: 0.86 });
+-  g.userData.wheels = [];
+-  for (const x of [-L*0.32, L*0.32]) {
+-    for (const side of [-1,1]) {
+-      const z = side * (W*0.48 + wheelW*0.18);
+-      const tire = new THREE.Mesh(tireGeo, tireMat);
+-      const hub = new THREE.Mesh(hubGeo, hubMat);
+-      tire.rotation.x = hub.rotation.x = Math.PI / 2;
+-      tire.position.set(x, wheelR, z);
+-      hub.position.set(x, wheelR, z + side*0.015);
+-      tire.castShadow = hub.castShadow = true;
+-      g.add(tire, hub);
+-      g.userData.wheels.push(tire, hub);
+-    }
+-  }
+-  return g;
+-}
+-
+ /* ---------- selection ---------- */
+-let carMesh = null;
+ function select(c) {
+   current = c;
+   document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
+   const sel = [...document.querySelectorAll('.car-row')].find(r => r._code === c.code);
+-  if (sel) sel.scrollIntoView({ block: 'nearest' });
++  if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+ 
+   $('hud-name').textContent = c.name;
+   $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.group || ''} · ${c.bodyStyle}`;
+@@ -594,7 +508,8 @@
+   $('k-snd').textContent = (c.sound || '').split(';')[0].replace(' (in _shared/sounds/)', '');
+   const sample = c.paint ? c.paint.rgb : [90, 90, 90];
+   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
+-  $('paint-rgb').textContent = `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
++  $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
++  $('paint-caveat').textContent = c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : 'No usable icon colour sample. The illustration uses neutral grey.';
+   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
+     const el = document.createElement('span');
+     el.className = 'livery-code';
+@@ -602,29 +517,66 @@
+     return el;
+   }));
+ 
+-  if (carMesh) scene.remove(carMesh);
++  if (carMesh) { scene.remove(carMesh); disposeCar(carMesh); }
+   carMesh = makeCar(c);
+   scene.add(carMesh);
+-}
++  setView('reset');
++  applyFilters();
++}
++
++/* ---------- inspection controls ---------- */
++const motion = matchMedia('(prefers-reduced-motion: reduce)');
++$('auto-rotate').checked = !motion.matches;
++controls.autoRotate = $('auto-rotate').checked;
++controls.autoRotateSpeed = 1.2;
++function setRotation(enabled) {
++  controls.autoRotate = enabled;
++  $('auto-rotate').checked = enabled;
++  if (!enabled) {
++    // Flush OrbitControls' residual damping so an explicit pause stays still.
++    controls.enableDamping = false;
++    controls.update();
++    controls.enableDamping = true;
++  }
++}
++$('auto-rotate').onchange = () => setRotation($('auto-rotate').checked);
++motion.addEventListener('change', () => {
++  setRotation(!motion.matches);
++});
++controls.addEventListener('start', () => setRotation(false));
++
++function setView(view) {
++  if (!carMesh) return;
++  const bounds = new THREE.Box3().setFromObject(carMesh);
++  const sphere = bounds.getBoundingSphere(new THREE.Sphere());
++  const vertical = THREE.MathUtils.degToRad(camera.fov / 2);
++  const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
++  const distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
++  const direction = view === 'side' ? new THREE.Vector3(0, 0.08, 1) :
++    view === 'front' ? new THREE.Vector3(1, 0.08, 0) :
++    view === 'top' ? new THREE.Vector3(0.01, 1, 0) : new THREE.Vector3(1, 0.45, 1);
++  controls.target.copy(sphere.center);
++  camera.position.copy(sphere.center).add(direction.normalize().multiplyScalar(distance));
++  controls.maxDistance = Math.max(22, distance * 2);
++  controls.update();
++}
++document.querySelectorAll('[data-view]').forEach(button => button.onclick = () => {
++  setRotation(false);
++  setView(button.dataset.view);
++});
++renderer.domElement.setAttribute('aria-label', 'Procedural car silhouette. Use the view buttons for side, front, and top views.');
+ 
+ /* ---------- animation ---------- */
+ const clock = new THREE.Clock();
+-let spin = true;
+-renderer.domElement.addEventListener('pointerdown', () => spin = false);
+-renderer.domElement.addEventListener('pointerup', () => setTimeout(() => spin = true, 2500));
+-
+ function tick() {
+   requestAnimationFrame(tick);
+-  const dt = clock.getDelta();
+-  if (carMesh && spin) carMesh.rotation.y += dt * 0.35;
+-  if (carMesh) {
+-    const w = carMesh.userData.wheels || [];
+-    w.forEach(t => t.rotateY(dt * 1.2));
+-  }
+-  controls.update();
++  const dt = Math.min(clock.getDelta(), 0.1);
++  if (document.hidden) return;
++  controls.update(dt);
+   renderer.render(scene, camera);
+ }
+ tick();
++loadCorpus();
+ </script>
+ </body>
+ </html>
+
+--- a/viewer/README.md
++++ b/viewer/README.md
+@@ -32,8 +32,35 @@
+ ## What the silhouette gallery shows
+ 
+ - Manifest data: name, year, group, in-game BHP, mass, top speed, handling ratings, liveries, sound bank.
+-- Body-style filters from a batched Jev classification, with the two low-confidence cases resolved from their model names (Explorer Sport Trac → SUV, FR500 → coupe silhouette).
+-- Procedural 3D silhouettes shaped by the real handling values and colored with a best-effort dominant opaque-color sample from each menu-icon `.ptg;1` buffer.
++- Illustration-family filters from a recorded batched Jev classification, with the two low-confidence cases resolved from their model names (Explorer Sport Trac → SUV, FR500 → coupe silhouette).
++- Procedural 3D silhouettes shaped by handling ratings, with an approximate colour sampled from decoded menu-icon pixels.
++
++The silhouette viewport has its own space beside the performance panel on wide screens,
++with details below it on smaller screens. **Side**, **Front**, **Top**, and **Reset view**
++frame the complete illustration. **Auto rotate** can be turned off persistently; reduced
++motion preferences start it off, and dragging also stops it. Wheels stay stationary.
++These native controls support keyboard activation. Drag/zoom still require a pointer.
++
++Search and filters show the result count and identify the retained preview. A zero-result
++search has an explanation and **Clear search and filters** restores the list. Group choices
++combine with OR, style choices with OR, and the two categories combine with AND.
++Vehicle data failures offer **Retry loading cars**. HTTP failures, empty/duplicate records,
++invalid values, and a 15-second header/body timeout are reported before building the list.
++Missing library files and direct `file://` use have separate startup guidance.
++
++Icon samples now come only from the decoded, clipped 165×98 reference icon pixels,
++checked against each manifest's SHA-256. Opaque saturated pixels are preferred, with a
++neutral sample for icons without eligible saturated pixels. Headers and padded tile edges
++are excluded. The data records the source/pixel hashes, dimensions and selection mode.
++Samples use display RGB in the UI and are converted from sRGB for three.js lighting.
++This remains a colour heuristic, not segmentation or a measurement of the vehicle's paint.
++The recorded styles are illustration families: `concept` and `racecar` are not physical
++body-style measurements. Handling-driven dimensions are illustrative, not recovered geometry.
++
++Offline silhouette regressions run with `node tools/test_silhouette.mjs` and
++`python3 tools/test_build_showcase.py`, both included in `tools/check.sh`.
++The executed teardown and browser evidence are in
++[`../research/silhouettes-teardown-2026-10-08.md`](../research/silhouettes-teardown-2026-10-08.md).
+ 
+ **The index.html meshes are procedural reconstructions.** The recovered.html inspector uses original car geometry inputs and decoded embedded model textures, with its remaining fidelity limits displayed explicitly.
+ 
+
+--- a/tools/check.sh
++++ b/tools/check.sh
+@@ -30,10 +30,12 @@
+   step "test_viewer_materials" node tools/test_viewer_materials.mjs
+   step "test_model_load" node tools/test_model_load.mjs
+   step "test_viewer_loading" node tools/test_viewer_loading.mjs
++  step "test_silhouette" node tools/test_silhouette.mjs
+ else
+-  echo "skip  test_viewer_scenes, test_viewer_materials, test_model_load, test_viewer_loading  (Node.js is not installed)"
++  echo "skip  test_viewer_scenes, test_viewer_materials, test_model_load, test_viewer_loading, test_silhouette  (Node.js is not installed)"
+ fi
+ step "test_export_materials" python3 tools/test_export_materials.py
++step "test_build_showcase" python3 tools/test_build_showcase.py
+ step "test_static_inputs"           python3 tools/test_static_inputs.py
+ step "test_recovery_inputs"         python3 tools/test_recovery_inputs.py
+ 
+
+--- a/tools/build_showcase.py
++++ b/tools/build_showcase.py
+@@ -1,11 +1,10 @@
+ #!/usr/bin/env python3
+ """Build the offline viewer data: manifest metadata, Jev silhouette labels, paint samples.
+ 
+-The HTML viewer builds procedural silhouettes from each car's Jev-classified body style and
+-real manifest performance data. Paint chips use a best-effort opaque-color sample from the
+-car's menu-icon payload. The current .ptg width/mip decode and original model geometry remain
+-unresolved, so the viewer labels its bodies as reconstructions and does not display partial
+-texture decodes as if they were finished.
++The HTML viewer builds procedural silhouettes from each car's recorded illustration style
++and manifest performance data. Paint chips sample only decoded menu-icon pixels, pinned
++to the reference manifest. A sample is not identification of the car's paint, and handling
++ratings are not measured body dimensions.
+ """
+ import json
+ from pathlib import Path
+@@ -14,55 +13,42 @@
+ CARS = ROOT / "reference" / "ford" / "cars"
+ OUT = ROOT / "viewer" / "public"
+ 
+-# ---- body paint color extraction (from the car's menu icon = real game livery) ----
+-def body_paint(model_file, icon_file):
+-    """Dominant saturated color from the icon .ptg payload (linear RGBA stream).
+-    Fallback: palette ramps in the model container."""
++def sample_icon_rgba(rgba):
++    """Prefer opaque saturated pixels; neutral icons use their opaque light pixels.
++
++    This is an illustration colour, not segmentation of the car's painted body.
++    Tile padding, headers and clipped edge pixels never enter the sample.
++    """
+     from collections import Counter
+-    paint = None
+-    if icon_file and icon_file.exists():
+-        d = icon_file.read_bytes()
+-        q = Counter()
+-        # payload regions = non-0xdd spans >= 2KB
+-        spans = []
+-        s = None
+-        for o in range(0, len(d) - 16, 16):
+-            nz = any(b != 0xdd for b in d[o:o+16])
+-            if nz and s is None: s = o
+-            if not nz and s is not None:
+-                if o - s >= 2048: spans.append((s, o))
+-                s = None
+-        if s is not None and len(d) - s >= 2048: spans.append((s, len(d)))
+-        for (a, b) in spans:
+-            raw = d[a:b]
+-            for i in range(0, len(raw) - 4, 4):
+-                r, g, bl, al = raw[i], raw[i+1], raw[i+2], raw[i+3]
+-                if al < 0x80:  # transparent background / dithered edges
+-                    continue
+-                mx, mn = max(r, g, bl), min(r, g, bl)
+-                if mx < 40 or mx - mn < 32:  # skip near-black and grey
+-                    continue
+-                # skip the pale-yellow UI background (high R+G, low-ish B, high value)
+-                if r > 216 and g > 216 and bl < 200:
+-                    continue
+-                q[(r >> 4, g >> 4, bl >> 4)] += 1
+-        if q:
+-            (rr, gg, bb), cnt = q.most_common(1)[0]
+-            paint = {"rgb": [rr*16+8, gg*16+8, bb*16+8], "count": cnt, "source": "icon"}
+-    if paint is None and model_file and model_file.exists():
+-        d = model_file.read_bytes()
+-        cands = Counter()
+-        n = len(d)
+-        for o in range(0, n - 4, 4):
+-            r, g, b, a = d[o], d[o+1], d[o+2], d[o+3]
+-            if a == 0x80 and not (abs(r-g) < 6 and abs(g-b) < 6):
+-                if max(r, g, b) > 40 and 4 < o < n - 8:
+-                    cands[(r, g, b)] += 1
+-        if cands:
+-            (rgb, cnt), rest = cands.most_common(1)[0], cands.most_common(4)[1:]
+-            paint = {"rgb": list(rgb), "count": cnt, "source": "model_ramp",
+-                     "runners": [[list(k), v] for k, v in rest]}
++    saturated, neutral = Counter(), Counter()
++    for i in range(0, len(rgba), 4):
++        r, g, b, alpha = rgba[i:i + 4]
++        if alpha < 128 or max(r, g, b) < 40 or (r > 216 and g > 216 and b < 200):
++            continue
++        bucket = (r >> 4, g >> 4, b >> 4)
++        neutral[bucket] += 1
++        if max(r, g, b) - min(r, g, b) >= 32:
++            saturated[bucket] += 1
++    counts = saturated or neutral
++    if not counts:
++        return None
++    rgb, count = counts.most_common(1)[0]
++    return {"rgb": [v * 16 + 8 for v in rgb], "count": count,
++            "source": "decoded_icon", "selection": "saturated" if saturated else "neutral"}
++
++
++def body_paint(icon_file, expected_sha256):
++    from recover_car_ptg import decode_file, sha256
++    data = icon_file.read_bytes()
++    if sha256(data) != expected_sha256:
++        raise ValueError(f"Menu icon differs from manifest pin: {icon_file}")
++    metadata, rgba, _ = decode_file(data, str(icon_file))
++    paint = sample_icon_rgba(rgba)
++    if paint:
++        paint.update({"source_sha256": sha256(data), "rgba_sha256": metadata["source_rgba_sha256"],
++                      "dimensions": [metadata["header"]["width"], metadata["header"]["height"]]})
+     return paint
++
+ 
+ # Jev 1.13 batch classification of the 35 manifest descriptions (33 auto, 2 flagged for review).
+ # The two review cases are resolved from the exact model names: Explorer Sport Trac XLT -> SUV;
+@@ -89,14 +75,13 @@
+         code = m["car_code"]
+         if code not in JEV_STYLE:
+             raise ValueError(f"No Jev body-style classification recorded for {code}")
+-        model_file = None
+         icon_file = None
++        icon_sha256 = None
+         for f in m["files"]:
+-            if "/model/" in f["dst"] and model_file is None:
+-                model_file = CARS.parent / f["dst"]
+             if "/icon/" in f["dst"] and icon_file is None:
+                 icon_file = CARS.parent / f["dst"]
+-        paint = body_paint(model_file, icon_file)
++                icon_sha256 = f["sha256"]
++        paint = body_paint(icon_file, icon_sha256) if icon_file else None
+         perf = m.get("performance", {})
+         cars.append({
+             "code": code,
+
+--- a/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -69,6 +69,7 @@
+ | --- | --- | --- |
+ | `python3 tools/verify_recovered_asset_index.py` | Derives the expected index from producer receipts, re-hashes 2579 artifacts across 35 cars, and requires corrupt manifests, cross-car record swaps and changed declarations each to be rejected | Committed corpus |
+ | `python3 tools/test_export_materials.py` | Source texture/selector ownership across 35 GLBs, with an in-range wrong-material mutation | Committed corpus |
++| `node tools/test_silhouette.mjs`, `python3 tools/test_build_showcase.py` | 35 procedural meshes, shared GPU-resource disposal, rating/colour handling, invalid corpus and load timeouts; decoded icon samples and manifest-pin corruption control | Node.js + Python + committed reference corpus; no npm install |
+ | `node tools/test_viewer_materials.mjs`, `node tools/test_model_load.mjs`, `node tools/test_viewer_loading.mjs` | Linear material factors, separate index namespaces, malformed containers, stalled reads, actual viewer load callback and recovery | Node.js + committed corpus; no npm install |
+ | `python3 tools/verify_config_data_sound.py` | 35 cars × config (11 files) + data DAT + sound chain | Private archive/executable bundle |
+ | `python3 tools/verify_sound_bank_index.py` | Sound bank reconciliation | Private archive/executable bundle |
+
+--- a/research/README.md
++++ b/research/README.md
+@@ -7,6 +7,7 @@
+ | Note | Holds |
+ | --- | --- |
+ | `adversarial-teardown-2026-10-08.md` | Executed offline viewer/export teardown, material ownership repairs, failure/keyboard/layout probes, sampling improvement and verification evidence |
++| `silhouettes-teardown-2026-10-08.md` | Silhouette-only teardown, resource/literal-text/layout repairs, stationary inspection, decoded icon samples and browser re-attack |
+ | `original-recovery.md` | Synthesis of the original car recovery: what is decoded, what is a candidate |
+ | `original-geometry-research.md` | Geometry and texture recovery status, superseded notes, evidence route |
+ | `format-notes.md` | Car container format: name pool, geometry records, planes, embedded textures |
+
+--- a/viewer/public/cars.json
++++ b/viewer/public/cars.json
+@@ -37,7 +37,14 @@
+     184
+    ],
+    "count": 142,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "87cde2058e92ef16a8d283b42b9e24c07d28b2b129740bcc5cdbf130e9326856",
++   "rgba_sha256": "c094b9fb328d69a9f7edae018ee83bc71b8955ca71bd335280920db18915dc42",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car6_snd.msb;1, car6_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -67,7 +74,14 @@
+     184
+    ],
+    "count": 10,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "ee7fbc0e9812bc4ff2deec1d34f9530ef537d50e71c2521aae35c96e7b7690dc",
++   "rgba_sha256": "5858533e13d5c3d90fc27195a1a5f240cb53b531ca99689b2a7491e7742eea9d",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car6_snd.msb;1, car6_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -109,7 +123,14 @@
+     72
+    ],
+    "count": 216,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "96084af4f0b84929a71dc207537d0d9b24bfe4a6024c7fe9aeccbe4a1665f803",
++   "rgba_sha256": "21d074e0799eb0d9208fa6363b8a9b56c5f905c9fbf87ac8083248677beee4bd",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -151,7 +172,14 @@
+     88
+    ],
+    "count": 580,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "5ca5f99bb3657bb491ac49f1de1829792a3407eb7ebaf15f45fcf58140317142",
++   "rgba_sha256": "f9886595b22103f155874b7514e5612d052180751560c1405e92be347e9b9b65",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car4_snd.msb;1, car4_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -193,7 +221,14 @@
+     40
+    ],
+    "count": 23,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "f301849e61cb5e3e3208488e53f9ab27010e19eb1a455c05adac548e2560fde6",
++   "rgba_sha256": "7fc9b10028303396a75c2a51db328a0609dd5ba8298728fcd17a3751231ec569",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car7_snd.msb;1, car7_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -235,7 +270,14 @@
+     88
+    ],
+    "count": 36,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "f2781b1018fde924e537d9bc8ea81cbb14e2499cdeecce8430bec613a89a931d",
++   "rgba_sha256": "14f77e05d3f8ad03729bde5f5d2dcccd43e78a48011e1b8081bef57a891494a9",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -277,7 +319,14 @@
+     72
+    ],
+    "count": 197,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "2d52d900d98e2e0d7004c0174dc67253af6500c5510c01f84e11e3e52a751e97",
++   "rgba_sha256": "2d12d5734738fb2d94ed0f9f6fe468c92731ebd26f1f30e45b52a91bf6f337b7",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car6_snd.msb;1, car6_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -319,7 +368,14 @@
+     88
+    ],
+    "count": 212,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "edd537f9fc0dd9cbe5d4b2fc9d9d1b84749e5ec0d39ae28b3dd68b56a88033cd",
++   "rgba_sha256": "98762fd45736593553279c8fa1392da88969f5e0039b74ad38e655330fa696d3",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car6_snd.msb;1, car6_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -361,7 +417,14 @@
+     88
+    ],
+    "count": 206,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "34deecbe7054ac8c7516fdf43b309335a93bb6c6d9e1555a44511e7d67202b3f",
++   "rgba_sha256": "c43c39b59ac68d27f50674358681b4193bf27640683429e6f4e24e60996bd70f",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car4_snd.msb;1, car4_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -403,7 +466,14 @@
+     88
+    ],
+    "count": 130,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "9e93b254818d6f7e1c9d48f13fa2e45728c297d3e91df6bbf852e89bef3ac8ab",
++   "rgba_sha256": "147325e819c412d7895368b331c590950a198ed6f2a33d453ee181e488e631b6",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car4_snd.msb;1, car4_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -445,7 +515,14 @@
+     216
+    ],
+    "count": 199,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "99243aed2551817281bff75a0e4d3d687e82b9a713223cff7470d11a0c71b22a",
++   "rgba_sha256": "19b74a6ed486146a443f07bd88d15821311d02f8866f441afb1f64f7676e3ead",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car2_snd.msb;1, car2_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -487,7 +564,14 @@
+     88
+    ],
+    "count": 3,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "9003a0c5275b9a7e176ffb48b1e12c43d11871787d8ea95dee37ab211895fe01",
++   "rgba_sha256": "0aaecc44296d868664cb8ddece37676418fc39c51936c2750ef20ff70036caea",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car8_snd.msb;1, car8_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -529,7 +613,14 @@
+     136
+    ],
+    "count": 483,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "9a69d8927cb1976c255d8274dc8e27eb014dba0fdd4002e84bf25c565eb48b78",
++   "rgba_sha256": "7ce4a7af531fceeabdb2eeae7362ad6a68f11fea58121116b0817f04c853e2ba",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car8_snd.msb;1, car8_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -563,7 +654,14 @@
+     200
+    ],
+    "count": 51,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "20dda84e4214be438d5a2821aef6e8b58af9854a5877b2c3c7b42e87f284b672",
++   "rgba_sha256": "6aa076958529f700714061c0bc74f2b71c91a81f26fa820f7851e84bfa5b3f6e",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car7_snd.msb;1, car7_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -605,7 +703,14 @@
+     72
+    ],
+    "count": 256,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "a05816fdb87c5bf732ee4b10a2ff2b93bae67a7c7f5e8fa878961179a96965ce",
++   "rgba_sha256": "d6d56ea07d240986592e8ba2bfd2999e9046e0043965aca22933f8a71032c715",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car5_snd.msb;1, car5_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -647,7 +752,14 @@
+     136
+    ],
+    "count": 108,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "f64ad69decf729d7782cdbe039f8e10c8fb7779cce73f328fdc20a58560ed9f1",
++   "rgba_sha256": "8f6327306190db39879b6f37ff18ec821ac5361f989510213109b9e4d94cbe29",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car4_snd.msb;1, car4_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -689,7 +801,14 @@
+     56
+    ],
+    "count": 4,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "a7a0a32490c98e83ac19fb650eb192f84f873cb66f52754720798832c454e81e",
++   "rgba_sha256": "65c2997099bc5c95fdab94fc6633416bd22cf029c8e9538276764fe8a7ac5448",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car2_snd.msb;1, car2_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -719,7 +838,14 @@
+     88
+    ],
+    "count": 228,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "fc1b7d783e80d2c3d3bb86c61e2ee84b4bd350e41b8243a01be94b948bec2e43",
++   "rgba_sha256": "36443c5c81c2d1d47da4e45ae4ae7f2c38cae528b99143db9a1663ee7f9a4cd3",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car4_snd.msb;1, car4_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -761,7 +887,14 @@
+     152
+    ],
+    "count": 11,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "46c8ca2abbc80425e0d978453c6747bd49fac26ebb59d39b2d1a3a43e0a638b8",
++   "rgba_sha256": "10e7e7ead3052e0de5bda3c07759e2ef0295b8b602a8fc19dc013cde9a42356d",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car7_snd.msb;1, car7_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -803,7 +936,14 @@
+     24
+    ],
+    "count": 476,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "3b8ee9d566292c771fed70dfe9386783793d7d938dce7616e242da58d2ae9027",
++   "rgba_sha256": "11bf3128ac7b14d828fcb24ee7618f208ff75bd2eb6284e732888c64cb7631f3",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car7_snd.msb;1, car7_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -845,7 +985,14 @@
+     104
+    ],
+    "count": 288,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "a3b6edfa2d43c3dd1cddb2408dd6e3426b588a50e01100d9444cab7170706355",
++   "rgba_sha256": "cd599f6c1b6f2dbd6abd1c092db0154080db50288ceab304cf5e57ffc1ca3e7d",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -875,7 +1022,14 @@
+     56
+    ],
+    "count": 616,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "246198e44f142ff5af1eff99cf211f362b164fdde31e87c6b7c6eba9e1149608",
++   "rgba_sha256": "bf3727669657ad88d5909a6fc8bc0b13434924dc768a928735c8a80e7a1313d4",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -905,7 +1059,14 @@
+     104
+    ],
+    "count": 334,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "377256709da08c96981182a4d104024b6fb11d0f0345d18a395cbc058bffe1e3",
++   "rgba_sha256": "75c694d13f35a88408a9d86534c44eb67d3271aaf1bf1df1f1822c16c53d4a01",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -947,7 +1108,14 @@
+     72
+    ],
+    "count": 478,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "86cc249dc238790cdf4118c6e2d772181a6c68662dc15749bada6439ce2198f7",
++   "rgba_sha256": "4ea7c1b1b27c0d5ad9668d6bdb247c81c76d855c526c4d96a82e529a39f6c17c",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -989,7 +1157,14 @@
+     152
+    ],
+    "count": 318,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "f7aeeb2672d489891f4efa890a59aa9a376f98ae4945fd79fa5c4d7a3ff2908a",
++   "rgba_sha256": "1441072cb0f55bf8330016e1280eecd4a9db3a19eb866f40a32410804a62d0fa",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car2_snd.msb;1, car2_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1019,7 +1194,14 @@
+     72
+    ],
+    "count": 201,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "58f27fc3d6d1dcc6a8bd798d03c63b434dc965e42b1e0ea61869f91e611fd7ae",
++   "rgba_sha256": "eec1fb8ea18c7ac884bf6917d52bff011c294e63e9437cb58280c08afc24ca00",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car2_snd.msb;1, car2_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1061,7 +1243,14 @@
+     56
+    ],
+    "count": 2,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "7f1130e9f18b64157f62f125982ae01ff20c69d04213918f39f4dd33938d1c10",
++   "rgba_sha256": "5ec015f4892f9826e397e55658e10bc677277f34758c3320a078726edc8cd741",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car2_snd.msb;1, car2_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1103,7 +1292,14 @@
+     88
+    ],
+    "count": 234,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "ef10f411f64233f299e44f4d715380ec2a58fa9735118b2d386ec2f7ea3b3898",
++   "rgba_sha256": "127fc9c58043207ffce1424742a55c54cb6dc6c31ec4ec3578f46f868d8677fd",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1161,7 +1357,14 @@
+     168
+    ],
+    "count": 26,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "afae4284472165efc395e9f8bfc8f5780025a8a9973513f22b6795c88eb6e3ba",
++   "rgba_sha256": "146477228be550ef3d249352288205bc09fd0cbfeef8909c6ce57422d0aa53f9",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1219,7 +1422,14 @@
+     168
+    ],
+    "count": 41,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "04d1e85481f0d5963c62f1871817cc6bd18f0598de2fcbe56123e5528db4b6a7",
++   "rgba_sha256": "23a1d2f5634067765dbbe38fcdc6780af13b589ed6a79294d4b9cfb348cf9952",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1277,7 +1487,14 @@
+     152
+    ],
+    "count": 39,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "6128f2e18080839a2877232699bb820757aed558cde102177b32ed497616a3c8",
++   "rgba_sha256": "b21ad3fa9af32a25ac8c963d8aa20ca3c406c76e22722c5e916cfeb6654dc52a",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1335,7 +1552,14 @@
+     216
+    ],
+    "count": 8,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "f06bac4157d3f641b3ade96989f77db2f3f6a2b6bda7a4d475de87aef21afc1d",
++   "rgba_sha256": "19ed1f19c4d3f14da6abed1bdbee4e0dfd3141675d48c36d95605c1238750cc3",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car3_snd.msb;1, car3_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1377,7 +1601,14 @@
+     184
+    ],
+    "count": 61,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "4a94ff95072d9d8f7041b8b3dc1d607fa39309b372259ae38100a34940959ffd",
++   "rgba_sha256": "6447dda9c30c516a0c4e500e77947160259497f5b31d97ab2b3605fb55f6d69d",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car6_snd.msb;1, car6_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1414,12 +1645,19 @@
+   ],
+   "paint": {
+    "rgb": [
+-    24,
+-    8,
+-    72
+-   ],
+-   "count": 1,
+-   "source": "icon"
++    216,
++    216,
++    200
++   ],
++   "count": 509,
++   "source": "decoded_icon",
++   "selection": "neutral",
++   "source_sha256": "1eb65a990c61340f5f9da9f010032217fb5ae331c18e505bd8b5cbd4b187f509",
++   "rgba_sha256": "114982f683f80d8f4d3766c2d55221835bdb7aa80280ce5b29a4205bac12a20d",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+  },
+@@ -1449,7 +1687,14 @@
+     56
+    ],
+    "count": 372,
+-   "source": "icon"
++   "source": "decoded_icon",
++   "selection": "saturated",
++   "source_sha256": "8df8baa612835f0eefd5e7cd7f9a5587263c984ae6f8c9665fba31bffcbf2d3e",
++   "rgba_sha256": "7009335b47dc8a989c7ed34a0e35e3cfa9092f9394dba008a71324bb3b3593a2",
++   "dimensions": [
++    165,
++    98
++   ]
+   },
+   "sound": "car1_snd.msb;1, car1_snd.msh;1 (in _shared/sounds/)"
+  }
+
+--- a/viewer/silhouette.mjs
++++ b/viewer/silhouette.mjs
+@@ -0,0 +1,186 @@
++import * as THREE from './vendor/three.module.js';
++
++export function makeCar(c) {
++  const g = new THREE.Group();
++  const paint = c.paint ? c.paint.rgb : [110, 110, 110];
++  const bodyMat = new THREE.MeshStandardMaterial({
++    color: new THREE.Color().setRGB(paint[0]/255, paint[1]/255, paint[2]/255, THREE.SRGBColorSpace),
++    roughness: 0.32, metalness: 0.55,
++  });
++  const darkMat = new THREE.MeshStandardMaterial({ color: 0x14161a, roughness: 0.58, metalness: 0.18 });
++  const trimMat = new THREE.MeshStandardMaterial({ color: 0x737b84, roughness: 0.38, metalness: 0.8 });
++  const glassMat = new THREE.MeshStandardMaterial({
++    color: 0x7fa8cc, roughness: 0.12, metalness: 0.08, transparent: true, opacity: 0.72, side: THREE.DoubleSide,
++  });
++  const lampMat = new THREE.MeshStandardMaterial({ color: 0xe8d9a4, emissive: 0x241b0b, roughness: 0.3 });
++  const tailMat = new THREE.MeshStandardMaterial({ color: 0xc42d32, emissive: 0x260607, roughness: 0.3 });
++
++  const style = c.bodyStyle;
++  const speed = Math.max(0, Math.min(1, c.speed ?? 0.5));
++  const accel = Math.max(0, Math.min(1, c.accel ?? 0.5));
++  const agility = Math.max(0, Math.min(1, c.agility ?? 0.5));
++  const weight = Math.max(0, Math.min(1, c.weight ?? 0.5));
++  const L = 3.8 + 1.25 * speed;   // in-game speed rating modestly stretches wheelbase
++  const W = 1.65 + 0.45 * weight;
++  const H = 0.55 + 0.25 * (1 - speed);
++  const nose = 0.22 + 0.34 * accel;
++
++  const add = (geo, mat, x, y, z) => {
++    const m = new THREE.Mesh(geo, mat);
++    m.position.set(x, y, z);
++    m.castShadow = true;
++    m.receiveShadow = true;
++    g.add(m);
++    return m;
++  };
++  const box = (x, y, z, sx, sy, sz, mat) => add(new THREE.BoxGeometry(sx, sy, sz), mat, x, y, z);
++  const profile = (points, depth, mat, yOffset = 0) => {
++    const shape = new THREE.Shape();
++    shape.moveTo(points[0][0], points[0][1]);
++    for (const [x, y] of points.slice(1)) shape.lineTo(x, y);
++    shape.closePath();
++    const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.045, bevelSize: 0.04, bevelSegments: 2 });
++    geo.translate(0, 0, -depth / 2);
++    return add(geo, mat, 0, yOffset, 0);
++  };
++  const sideWindow = (points, width = W) => {
++    const shape = new THREE.Shape();
++    shape.moveTo(points[0][0], points[0][1]);
++    for (const [x, y] of points.slice(1)) shape.lineTo(x, y);
++    shape.closePath();
++    const geo = new THREE.ShapeGeometry(shape);
++    for (const side of [-1, 1]) {
++      const pane = new THREE.Mesh(geo, glassMat);
++      pane.position.z = side * (width / 2 + 0.012);
++      pane.castShadow = true;
++      g.add(pane);
++    }
++  };
++
++  if (style === 'pickup' || style === 'suv') {
++    // All dimensions use x=length, y=height, z=width.
++    box(0, 0.54, 0, L, 0.55, W * 0.94, bodyMat);
++    const cabL = style === 'pickup' ? L * 0.40 : L * 0.68;
++    const cabX = style === 'pickup' ? 0.18 : 0.05;
++    box(cabX, 0.88 + H * 0.34, 0, cabL, H * 0.92, W * 0.88, bodyMat);
++    if (style === 'pickup') {
++      const bedL = L * 0.36;
++      const bedX = -L * 0.30;
++      box(bedX, 0.76, 0, bedL, 0.10, W * 0.77, darkMat); // open bed floor
++      for (const side of [-1, 1]) box(bedX, 0.91, side * W * 0.40, bedL, 0.35, 0.08, bodyMat);
++      box(bedX - bedL / 2, 0.91, 0, 0.08, 0.35, W * 0.78, bodyMat);
++    }
++    box(L * 0.36, 0.74, 0, L * 0.24, 0.34, W * 0.90, bodyMat); // hood
++    const wx = cabX + cabL * 0.10;
++    sideWindow([[wx - cabL * 0.40, 0.92], [wx - cabL * 0.27, 1.22], [wx + cabL * 0.24, 1.22], [wx + cabL * 0.39, 0.92]], W * 0.88);
++  } else {
++    let pts;
++    if (style === 'racecar') {
++      pts = [[-L/2,0.18],[L/2,0.18],[L/2-0.10,0.60],[L*0.18,0.82],[L*0.10,1.18],[-L*0.16,1.20],[-L*0.28,0.84],[-L/2+0.08,0.62]];
++    } else if (style === 'concept') {
++      pts = [[-L/2,0.20],[L/2,0.20],[L/2-0.04,0.48],[L*0.28,0.60],[L*0.08,0.62+H],[-L*0.22,0.67+H*0.92],[-L/2+0.08,0.57]];
++    } else {
++      const rearTop = style === 'hatchback' ? 0.74 + H * 0.75 : 0.58;
++      const roofFront = style === 'sedan' ? L*0.22 : L*0.16;
++      const roofBack = style === 'sedan' ? -L*0.22 : -L*0.18;
++      pts = [[-L/2,0.18],[L/2,0.18],[L/2-0.08,0.62+nose*0.18],[roofFront,0.64+H],[roofBack,0.64+H*0.92],[-L/2+0.12,rearTop],[-L/2+0.08,0.58]];
++    }
++    profile(pts, W, bodyMat, 0.18);
++    // Side glass panels track the sloped greenhouse above the beltline.
++    if (style === 'racecar') {
++      sideWindow([[-L*0.20,0.95],[-L*0.12,1.27],[L*0.05,1.27],[L*0.15,0.91]]);
++    } else if (style === 'concept') {
++      sideWindow([[-L*0.20,0.83],[-L*0.13,0.88+H*0.55],[L*0.04,0.90+H*0.58],[L*0.24,0.73]]);
++    } else {
++      const topY = 0.64 + H * 0.90;
++      sideWindow([[-L*0.14,0.82],[-L*0.10,topY],[L*0.06,topY],[L*0.17,0.82]]);
++    }
++    if (style === 'racecar') {
++      box(-L*0.43, 1.50, 0, 0.42, 0.07, W*1.08, darkMat);
++      box(-L*0.43, 1.34, -W*0.39, 0.08, 0.30, 0.08, darkMat);
++      box(-L*0.43, 1.34, W*0.39, 0.08, 0.30, 0.08, darkMat);
++      box(L/2 + 0.12, 0.72, 0, 0.14, 0.04, W*1.12, trimMat); // front splitter
++    }
++  }
++
++  // Front/rear bumpers, grille and lights.
++  box(L/2 + 0.04, 0.54, 0, 0.10, 0.12, W*0.86, trimMat);
++  box(-L/2 - 0.04, 0.54, 0, 0.10, 0.12, W*0.86, trimMat);
++  box(L/2 + 0.10, 0.78, 0, 0.05, 0.20, W*0.38, darkMat);
++  for (const side of [-1, 1]) {
++    box(L/2 + 0.11, 0.84, side*W*0.32, 0.07, 0.16, 0.25, lampMat);
++    box(-L/2 - 0.08, 0.80, side*W*0.34, 0.06, 0.18, 0.22, tailMat);
++  }
++  // wheels: wheelbase runs along X, tire axles along Z.
++  const wheelR = 0.29 + 0.15 * agility + (style === 'pickup' || style === 'suv' ? 0.08 : 0);
++  const wheelW = 0.22 + 0.08 * weight;
++  const tireGeo = new THREE.CylinderGeometry(wheelR, wheelR, wheelW, 24);
++  const hubGeo = new THREE.CylinderGeometry(wheelR*0.53, wheelR*0.53, wheelW+0.02, 16);
++  const tireMat = new THREE.MeshStandardMaterial({ color: 0x121416, roughness: 0.84, metalness: 0.05 });
++  const hubMat = new THREE.MeshStandardMaterial({ color: 0xaeb5bd, roughness: 0.3, metalness: 0.86 });
++  g.userData.wheels = [];
++  for (const x of [-L*0.32, L*0.32]) {
++    for (const side of [-1,1]) {
++      const z = side * (W*0.48 + wheelW*0.18);
++      const tire = new THREE.Mesh(tireGeo, tireMat);
++      const hub = new THREE.Mesh(hubGeo, hubMat);
++      tire.rotation.x = hub.rotation.x = Math.PI / 2;
++      tire.position.set(x, wheelR, z);
++      hub.position.set(x, wheelR, z + side*0.015);
++      tire.castShadow = hub.castShadow = true;
++      g.add(tire, hub);
++      g.userData.wheels.push(tire, hub);
++    }
++  }
++  return g;
++}
++
++// Shared geometries/materials belong to the selected car and are disposed once.
++export function disposeCar(car) {
++  if (!car) return;
++  const geometries = new Set(), materials = new Set();
++  car.traverse(node => {
++    if (node.geometry) geometries.add(node.geometry);
++    if (node.material) for (const mat of [node.material].flat()) materials.add(mat);
++  });
++  geometries.forEach(geo => geo.dispose());
++  materials.forEach(mat => mat.dispose());
++}
++
++export function validateCars(cars) {
++  if (!Array.isArray(cars) || !cars.length) throw Error('The vehicle list is empty or is not an array.');
++  const codes = new Set();
++  const styles = new Set(['coupe', 'sedan', 'hatchback', 'pickup', 'suv', 'racecar', 'concept']);
++  for (const c of cars) {
++    if (!c || typeof c.code !== 'string' || !c.code || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
++    codes.add(c.code);
++    if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);
++    for (const key of ['agility', 'accel', 'speed', 'weight']) {
++      if (!Number.isFinite(c[key]) || c[key] < 0 || c[key] > 1) throw Error(`${c.code}: ${key} must be a rating from 0 to 1.`);
++    }
++    for (const key of ['bhp', 'kg']) {
++      if (!Number.isFinite(c[key]) || c[key] < 0) throw Error(`${c.code}: invalid ${key}.`);
++    }
++    if (c.topSpeed != null && (!Number.isFinite(Number(c.topSpeed)) || Number(c.topSpeed) < 0)) throw Error(`${c.code}: invalid top speed.`);
++    if (c.year != null && !['string','number'].includes(typeof c.year)) throw Error(`${c.code}: invalid year.`);
++    if (c.group != null && typeof c.group !== 'string') throw Error(`${c.code}: invalid group.`);
++    if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);
++    if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);
++    if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);
++  }
++  return cars;
++}
++
++// The timeout spans both response headers and JSON body consumption.
++export async function fetchCars(url, {timeoutMs = 15000, fetchImpl = fetch} = {}) {
++  const controller = new AbortController();
++  const timer = setTimeout(() => controller.abort(), timeoutMs);
++  try {
++    const response = await fetchImpl(url, {signal: controller.signal});
++    if (!response.ok) throw Error(`Vehicle data unavailable (HTTP ${response.status}).`);
++    return validateCars(await response.json());
++  } catch (error) {
++    if (controller.signal.aborted) throw Error('Vehicle data timed out. Retry when the local server responds.');
++    throw error;
++  } finally { clearTimeout(timer); }
++}
+
+--- a/tools/test_silhouette.mjs
++++ b/tools/test_silhouette.mjs
+@@ -0,0 +1,54 @@
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++import http from 'node:http';
++import * as THREE from '../viewer/vendor/three.module.js';
++import {makeCar, disposeCar, validateCars, fetchCars} from '../viewer/silhouette.mjs';
++
++const cars = JSON.parse(fs.readFileSync(new URL('../viewer/public/cars.json', import.meta.url)));
++assert.equal(validateCars(cars).length, 35);
++for (const car of cars) {
++  const mesh = makeCar(car);
++  const bounds = new THREE.Box3().setFromObject(mesh);
++  assert(bounds.min.toArray().every(Number.isFinite) && bounds.max.toArray().every(Number.isFinite));
++  assert(bounds.min.y >= -1e-6, `${car.code}: tyres penetrate the floor`);
++  assert(Math.abs(bounds.min.z + bounds.max.z) < 1e-6, `${car.code}: body extends asymmetrically across its width`);
++  assert.equal(mesh.userData.wheels.length, 8);
++  const geometries = new Set(), materials = new Set();
++  mesh.traverse(node => {
++    if (node.geometry) geometries.add(node.geometry);
++    if (node.material) materials.add(node.material);
++  });
++  const counts = new Map();
++  for (const resource of [...geometries, ...materials]) resource.addEventListener('dispose', () => counts.set(resource, (counts.get(resource) || 0) + 1));
++  disposeCar(mesh);
++  assert.equal(counts.size, geometries.size + materials.size);
++  assert([...counts.values()].every(n => n === 1), 'shared resources disposed exactly once');
++}
++const seed = {...cars[0], speed:0, weight:0, agility:0, accel:0, paint:{rgb:[128,64,32]}};
++const zero = makeCar(seed), half = makeCar({...seed, speed:0.5});
++assert(new THREE.Box3().setFromObject(zero).getSize(new THREE.Vector3()).x < new THREE.Box3().setFromObject(half).getSize(new THREE.Vector3()).x, 'zero rating must remain zero');
++assert.equal(zero.children[0].material.color.getHexString(), '804020', 'display RGB sample must round trip through sRGB');
++disposeCar(zero); disposeCar(half);
++for (const data of [[], {}, [cars[0],cars[0]], [{...cars[0],speed:NaN}], [{...cars[0],weight:2}], [{...cars[0],liveries:null}], [{...cars[0],paint:{rgb:[256,0,0]}}], [{...cars[0],bodyStyle:'unknown'}]]) assert.throws(() => validateCars(data));
++assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,35);
++await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:false,status:404,json:async()=>cars})}), /HTTP 404/);
++await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>[]})}), /empty/);
++for (const bodyStall of [false,true]) {
++  await assert.rejects(fetchCars('test', {timeoutMs:20,fetchImpl:async(_url,{signal})=>{
++    const stalled = () => new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(Error('aborted')),{once:true}));
++    return bodyStall ? {ok:true,json:stalled} : stalled();
++  }}), /timed out/);
++}
++// Actual transport: response headers arrive, but JSON body never completes.
++const server = http.createServer((_request, response) => {
++  response.writeHead(200, {'Content-Type':'application/json'});
++  response.write('[');
++});
++await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
++try {
++  await assert.rejects(fetchCars(`http://127.0.0.1:${server.address().port}/`, {timeoutMs:100}), /timed out/);
++} finally {
++  server.closeAllConnections();
++  await new Promise(resolve => server.close(resolve));
++}
++console.log('PASS test_silhouette: 35 finite meshes, floor contact, shared-resource disposal, zero ratings, sRGB, invalid/duplicate corpus, HTTP error, header/body timeouts including stalled real HTTP body');
+
+--- a/tools/test_build_showcase.py
++++ b/tools/test_build_showcase.py
+@@ -0,0 +1,53 @@
++#!/usr/bin/env python3
++"""Check illustration sampling against decoded reference pixels and manifest pins."""
++import hashlib
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++from build_showcase import CARS, body_paint, load_all, sample_icon_rgba
++from recover_car_ptg import decode_file
++
++
++class ShowcaseTests(unittest.TestCase):
++    def test_pixel_selection(self):
++        self.assertEqual(sample_icon_rgba(bytes([255, 0, 0, 0, 32, 128, 208, 128]))["rgb"], [40, 136, 216])
++        self.assertEqual(sample_icon_rgba(bytes([240, 240, 240, 128]))["selection"], "neutral")
++        self.assertIsNone(sample_icon_rgba(bytes([0, 0, 0, 128])))
++
++    def test_corpus_and_pin_control(self):
++        cars = load_all()
++        self.assertEqual(len(cars), 35)
++        for car in cars:
++            m = json.loads((CARS / car["code"] / "manifest.json").read_text())
++            record = next(r for r in m["files"] if "/icon/" in r["dst"])
++            data = (CARS.parent / record["dst"]).read_bytes()
++            metadata, pixels, _ = decode_file(data, record["dst"])
++            paint = car["paint"]
++            self.assertEqual(paint["source_sha256"], record["sha256"])
++            self.assertEqual(paint["rgba_sha256"], hashlib.sha256(pixels).hexdigest())
++            self.assertEqual(paint["dimensions"], [165, 98])
++            self.assertEqual(metadata["rgba_bytes"], 165 * 98 * 4)
++            # Count independently, without using the sampling helper.
++            bucket = tuple(v >> 4 for v in paint["rgb"])
++            count = 0
++            for i in range(0, len(pixels), 4):
++                r, g, b, alpha = pixels[i:i + 4]
++                if tuple(v >> 4 for v in (r, g, b)) != bucket or alpha != 128:
++                    continue
++                if max(r, g, b) < 40 or (r > 216 and g > 216 and b < 200):
++                    continue
++                if paint["selection"] == "saturated" and max(r, g, b) - min(r, g, b) < 32:
++                    continue
++                count += 1
++            self.assertEqual(paint["count"], count)
++        with tempfile.TemporaryDirectory() as temp:
++            path = Path(temp) / "bad.ptg"
++            path.write_bytes(data[:-1])
++            with self.assertRaisesRegex(ValueError, "differs from manifest pin"):
++                body_paint(path, record["sha256"])
++
++
++if __name__ == "__main__":
++    unittest.main()
+
+--- a/research/silhouettes-teardown-2026-10-08.md
++++ b/research/silhouettes-teardown-2026-10-08.md
+@@ -0,0 +1,170 @@
++# Silhouette gallery teardown and repairs — 2026-10-08
++
++Executed against `viewer/index.html` and `tools/build_showcase.py` on
++`bugfix/inspector-load-recovery`, revision `1062c2482d5e9d0becf39ef273cf9b9f104d7655`.
++The initial tree already held substantial recovered-inspector/export changes and an
++earlier teardown. Those are outside this task. A saved initial binary diff was compared
++with the final tree: all **79 pre-existing tracked diffs outside this task's files are
++unchanged** ([receipt](evidence/silhouettes-2026-10-08/preserved-work.json)).
++This work adds local silhouette repairs and verification; it does not publish, merge,
++change the tracker, or claim original-game rendering equivalence.
++
++## Task, baseline and original acceptance
++
++Simulated user: someone browsing this project's illustrated car corpus, selecting several
++cars, inspecting their profiles and reading the associated game stats. That audience is
++inferred from the gallery and its README; no participant preferences or adoption claims
++are implied. Keyboard selection and a 390px viewport are practical constraints. Successful
++inspection means the illustration is visible, can stay stationary, and remains explicitly
++distinct from recovered original geometry. The original recorded illustration families
++and handling-driven dimension formulas remain, with corrections to zero-valued ratings.
++
++Working budget: approximately 45 minutes of investigation/implementation plus a 20-minute
++verification/report reserve. Baseline snapshot was saved at 11:51 EDT. Normal use was
++executed before diagnosis; later probes used source-assisted diagnostic hooks and disposable
++HTTP overrides. A selector mismatch in the first diagnostic harness was corrected before
++the retained baseline run; it was a harness problem, not a gallery finding.
++
++| Requirement | Acceptance fixed before implementation | Checked coverage |
++| --- | --- | --- |
++| R1: corpus correctness | Preserve all 35 names, ordering, stats and labels; finite meshes; zero ratings retain their meaning | 35 records/meshes, invalid values, source/pixel pins; E1/E3/E5 |
++| R2: sustained browsing | Removed cars release their owned geometry/material resources | Shared-resource disposal and 105 real browser selections; E1/E3/E4 |
++| R3: inspection | Details do not cover the canvas; complete model fits; stationary view and keyboard view presets | 320/390/768/1280px, all 35 framed, four presets, motion controls; E2/E4 |
++| R4: selection recovery | Empty search explains zero results; clearing restores the list; filtered preview identity is explicit | Empty search, group OR/style AND/year, native keyboard activation; E1/E4/E6 |
++| R5: failure recovery | Invalid/failed/stalled corpus has an actionable error and retry; slow valid loads do not prematurely fail | Empty, duplicate, malformed, invalid rating, 404, 5.6s response, 15s stall, file/missing-vendor startup; E1/E4/E6 |
++| R6: trustworthy illustration | Names remain literal text; icon sample excludes serialized headers/padding; colour interpretation and limits are explicit | Disposable HTML name, pinned decoded icons, sRGB round trip; E1/E3/E5 |
++| R7: operation | Keep current Python/Node/vendored-three.js path; no added service, key, account, signup or charge | Empty-environment build/browser, external requests blocked; E7 |
++
++macOS 26.4.1 arm64, Python 3.14.7, Node v26.9.0, ruff 0.16.9 and Chromium
++153.0.8010.12. The documented `python3 tools/build_showcase.py` produced 35 records and
++35 samples at baseline; `tools/check.sh` passed all **20** original steps, without skips.
++Local browser execution used `python3 -m http.server 8098 --bind 127.0.0.1 --directory viewer`.
++The browser package was the already installed Jev Browser package's Playwright-core.
++It is diagnostic tooling, not a new required project dependency. The checked-in Node
++regression uses the shipped three.js module and native Node HTTP, without npm install.
++Skill hashes are retained in [skill-hashes.json](evidence/silhouettes-2026-10-08/skill-hashes.json).
++
++## Findings and dispositions
++
++| ID | Problem, evidence and strongest counterevidence | Classification, impact and disposition |
++| --- | --- | --- |
++| S01 / R2 | Cycling cars removed scene nodes without disposing resources. Initial GPU geometry count 13; after three preview selections and a 105-selection loop, 1,387. The active car still worked, so no data loss or crash was demonstrated. Actual renderer counters distinguish it from an invisible scene-node-only concern. | Confirmed defect; sustained-browsing resource burden; **fixed** by disposing each shared geometry/material once. Same 105-selection loop now peaks at 19 and ends at 13, textures stay at 3. |
++| S02 / R3 | At 390×844 the 170×294px performance panel overlays a 390×506px stage and hides the car's front/top; desktop also overlaps its front. Horizontal overflow was already zero. The defect is occlusion, not general mobile nonconformance. Pixel inspection corroborates layout rectangles. | Confirmed visibility defect; recoverable inspection burden; **fixed** by separate viewport/details layout and camera fitting. Four tested widths have zero overlap and zero horizontal overflow. Phone details require vertical scrolling, deliberately trading simultaneous display for visibility. |
++| S03 / R6 | A disposable name `<img src=x onerror="window.injected=true">` becomes an image and executes in the baseline list. The committed corpus is trusted and contains no such payload; no compromise was observed. Injected response plus the `innerHTML` call establishes the precise condition. | Confirmed literal-text handling defect, conditional on modified data; **fixed** with text nodes. Replay produces literal text, zero image nodes and no execution. |
++| S04 / R4 | A nonmatching search hides all rows and leaves a blank list while the previous car remains. Selection itself works. No requirement to auto-select another car was assumed. | Demonstrated friction; minor recoverable burden; **improved** with live result count, retained preview identity, empty explanation and Clear search and filters. |
++| S05 / R3 | Rotation and wheel motion start automatically; there is no persistent pause. Holding a pointer only stops the car temporarily, then release resumes it. Continuous motion is not necessary for profile inspection. | Confirmed inspection/control gap; **fixed** with persistent Auto rotate, reduced-motion default, stationary wheels and keyboard Side/Front/Top/Reset. The first re-attack found residual OrbitControls damping after pause; explicit pause now flushes that residual motion. The failed run is preserved. |
++| S06 / R6 | Paint text says the texture's exact size is unresolved, although the repo already decodes 165×98 icons. The old sample scans serialized spans as RGBA and includes data outside the clipped image. Repeating the sample on decoded pixels changes only Thunderbird 2002: `[24,8,72]` → `[216,216,200]`. Most old samples were already the same. | Confirmed outdated explanation plus bounded sampling improvement; **fixed** using the existing decoder and manifest pin. Samples carry source/pixel hashes, dimensions and saturated/neutral mode. No car-body segmentation or actual-paint accuracy is claimed. |
++| S07 / R5 | A 5.6s valid response receives the generic startup error at 5.1s and then succeeds. Empty/malformed/404 data has a generic error without in-page retry. Counterevidence: slow load ultimately recovers, so permanent blockage would be an overstatement. | Demonstrated transient feedback/retry friction; **improved** by separating module readiness from a 15s header/body timeout, validating the corpus and offering Retry loading cars. |
++| S08 / R1/R6 | `value || 0.5` treats zero ratings as 0.5. Baseline zero/.5 speed lengths are both 4.68. A display sample `804020` round trips as `bc8963` because normalized display RGB was treated as linear. | Confirmed geometry/colour interpretation defects; **fixed** using nullish defaults and explicit sRGB input. Independent red probes and new assertions cover both. |
++| S09 / R1 | Pickup tailgate uses `-bedL/2` on Z instead of rear X. F150 transverse bounds are `[-1.6029,1.18292]` despite symmetric wheels/cab. This is a coordinate error in the intended generic pickup, not a claim about true Ford dimensions. | Confirmed procedural geometry defect; **fixed** with tailgate at the bed's rear X, centered on Z; pickup windows also use cab width. All 35 final meshes have symmetric transverse bounds and tyres at the floor. |
++
++Simulated reaction, not participant evidence: “I want the car to hold still, and I want the
++specs beside it rather than over it.” That sentence generated the inspection probes; the
++measured resource, motion and overlap behavior establishes the findings.
++
++## Alternatives, research and decisions
++
++Primary documents were accessed on 2026-10-08. Normal threejs.org manual URLs returned
++404 here; the matching **r182** source pages were fetched from its official repository.
++The TypeSafe documentation index and current building/citation-check cookbooks were read;
++their narrow judgments keep execution and exact invariants in code. Jev is used for this
++authorized evaluation, with the existing OpenRouter configuration, not in the gallery runtime.
++
++| Candidate | Mechanism, source and prerequisites | Eligibility, limits and decision |
++| --- | --- | --- |
++| Retain shipped three.js r182 and repair internally | Local procedural mesh creation, OrbitControls and explicit owned-resource disposal. Official [cleanup source](https://github.com/mrdoob/three.js/blob/r182/manual/en/cleanup.html) and [colour management](https://github.com/mrdoob/three.js/blob/r182/manual/en/color-management.html). Already vendored; Python/Node/browser on existing hardware. | Existing accountless/keyless path; no new license/service cost or dependency. Real empty-environment build/browser verified. Preserves illustration behavior and fixes measured gaps; **selected**. |
++| Google model-viewer | Model-loading web component; official [README](https://github.com/google/model-viewer/blob/master/packages/model-viewer/README.md) requires coordinated three.js peer version. Would require serializing procedural meshes and adding a component build/vendor surface. | No isolated installation/operation or full transitive eligibility validation performed; **excluded from implementation**. Its model-loading convenience does not solve the procedural resource/data defects by itself. License/authentication eligibility is not asserted. |
++| Babylon Viewer | Official [viewer documentation](https://github.com/BabylonJS/Documentation/blob/master/content/features/featuresDeepDive/babylonViewer.v1.md) presents model-source loading and identifies V1 as deprecated. Replacement would require an engine/component transition and mesh adaptation. | No added dependency. Current V2 installation/offline operation and transitive eligibility remain untested; **excluded**. Do not carry a legacy CDN example into an offline project. |
++| Existing `recover_car_ptg.decode_file` | Parse pinned reference icon descriptors, assemble source pixels and clip to header dimensions; [repo PTG continuation](ptg-continuation.md). Python standard library only. | Reuse, not a new backend. Tested all 35 icons from committed reference files with cleared environment. **Selected** for sampling; menu render/compositing and painted-body segmentation remain unestablished. |
++
++Broader search discovered component viewers, car-viewing examples, community reports about
++mobile overlays and local-viewer external assets. They were leads, not evidence of this
++gallery's behavior or verified eligibility. No optional hosted/account execution path was
++added. Replacing procedural silhouettes with original models, adding an AI runtime classifier,
++photorealistic shading, or reclassifying all physical body shapes would change the gallery's
++purpose; those opportunities were declined for this task. `concept`/`racecar` remain explicit
++illustration families rather than asserted measurements. No user preference was inferred
++to justify a wholesale renderer replacement.
++
++Motion controls follow the relevant principle in [W3C Pause, Stop, Hide](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html).
++This is a bounded keyboard/motion improvement, not an accessibility conformance claim.
++Existing tracker [#9](https://github.com/nicolas-found42/carmodels/issues/9) is the historical
++teardown index, and closed [#7](https://github.com/nicolas-found42/carmodels/issues/7) concerns
++indefinite/silent load failure. Our transient slow-load behavior and retry gap were measured
++independently; no ticket was reopened, commented on, created or closed.
++
++## Evidence and experiments
++
++All retained evidence is under [evidence/silhouettes-2026-10-08/](evidence/silhouettes-2026-10-08/).
++Diagnostic scripts reuse the installed browser path; they are receipts, not required CI tools.
++Baseline scripts require the saved pre-change HTML under `.scratch/silhouettes-2026-10-08/`.
++
++| ID | Hypothesis/control → result | Artifacts |
++| --- | --- | --- |
++| E1 | Core browser workflow then repeated switches, empty search, invalid corpus and disposable HTML name → observed counterexamples | `probe-baseline.cjs`, `baseline-browser.log`, before screenshots |
++| E2 | 390px details overlay obscures preview despite no overflow → confirmed by viewport pixels/rectangles; four-width final measurements show no overlap | `before-mobile.png`, `after-mobile.png`, `after-mobile-full.png`, `browser-final.log` |
++| E3 | Zero defaults, colour transfer and pickup rear coordinate are incorrect → independent red probes fail before, final corpus regressions pass | `geometry-red.log`, `tools/test_silhouette.mjs`, `final-check.log` |
++| E4 | Repairs survive real interaction, complete framing, repeated selection, motion and failures → 105 selections max19/end13 geometry; final pause stationary; five error/retry cases recover; stall15.195s; malicious name literal | `retest.cjs`, `browser-first-retest.log` (failed pause assertion), `browser-final.log`, final screenshots |
++| E5 | Decode/clipping changes sample coverage without changing source stats → all35 pinned; one RGB changes; non-paint fields identical | `paint-baseline.json`, `data-invariants.json`, `tools/test_build_showcase.py`, `final-check.log` |
++| E6 | Slow-load error is transient; missing libraries/file protocol still need guidance; filter composition must remain correct | `slow-before.cjs`, `slow-before.log`, `edge-smoke.cjs`, `edge-smoke.log` |
++| E7 | Existing local runtime works without inherited credentials/account session → empty-environment build and fresh browser context succeed with external requests blocked | `clean-build.log`, `clean-browser.cjs`, `clean-browser.log` |
++
++## Jev judgments and resolutions
++
++The [judgment log](evidence/silhouettes-2026-10-08/jev-log.json) records material outcomes,
++uncertainty and host resolutions. Screen the evidence as data, not tool-use authority.
++The user-provided workflow was flagged `block` (injection0.78/substance0.98/relevance0.80).
++That result was disclosed before continued use; the human's explicit instruction to follow
++the attachment established its task authority. Primary-document screening requested review
++(injection0.27); inspection found ordinary documentation/example instructions, which were
++treated only as source data. Tracker screening passed (injection0.02).
++
++Plan judgments supported measurable criteria and keyboard/phone constraints (0.93/0.91);
++audience fit was uncertain (0.74), so the report labels that audience as inferred.
++Classification accepted S01/S02 as defects; five other items required review. The explicit
++host rule was existing wrong output/control → defect, avoidable feedback/effort → friction;
++the table preserves conditional security impact and transient recovery counterevidence.
++The architecture decision selected internal repairs at1.0 with no contradicted requirements.
++
++An intermediate verifier gave three low-confidence supports and one unsupported slow-load
++claim (confidence0.16). No green completion was inferred. The dedicated 5.1s baseline probe
++was added to supply the missing observation; source inspection and exact disposal/corpus
++tests resolve the other narrow facts. Tracker comparison remained review: related recovery
++requirements but different failure conditions. The final patch gate uses raw per-file diffs
++relative to the saved initial state plus the actual current check/browser logs.
++
++The first full gate request exceeded the provider's token budget; it was an operational
++failure, not a pass. A narrower runtime gate escalated (`safe_to_apply`0.15) and contradicted
++the mesh claim at confidence0.88 while its evidence included the pre-change red controls.
++That claim was stopped and checked with a new **final-only** [35-mesh audit](evidence/silhouettes-2026-10-08/mesh-audit.log).
++The focused runtime gate then verified both the mesh and browser completion claims at
++confidence **0.97/0.95**, with no contradictions or unsupported claims.
++
++Automated patch approval was **not** obtained: the focused runtime gate still escalates
++on test-gap/blast-radius confidence (`safe_to_apply`0.45, composite0.72). The sampling/tests
++review also escalates on confidence (composite0.88475); an earlier accompanying review was
++truncated, so a narrower nontruncated review replaced its coverage. No thresholds were
++relaxed and no unchanged judgment was repeated to obtain approval. The host's source and
++coverage review is recorded in [escalation-resolution.md](evidence/silhouettes-2026-10-08/escalation-resolution.md).
++It resolves the concrete contradictory assertion with executed evidence and records the
++broader coverage uncertainty; it does not represent a Jev `auto` verdict. The tool's final
++automated-review status remains visible as an explicit limitation of this workflow.
++
++## Verification and remaining coverage
++
++`tools/check.sh` passes all **22** steps, including both added silhouette tests, with no
++skips. The available pinned static inputs, handler captures and dump checks ran as well.
++See [final check log](evidence/silhouettes-2026-10-08/final-check.log) and the baseline log.
++`node research/evidence/silhouettes-2026-10-08/retest.cjs` and `edge-smoke.cjs` pass the
++real browser re-attack. `env -i PATH="$PATH" python3 tools/build_showcase.py` and the fresh
++browser diagnostic pass; `git diff --check` passes. Re-running the showcase builder is
++deterministic. The existing verifiers' success includes their tamper controls and only
++their declared scope; it does not prove full game render fidelity.
++
++Coverage excludes Safari/Firefox, physical touch hardware, screen readers, manual free-orbit
++keyboard control, WebGL context-loss recovery, GPU-specific behavior and large non-corpus
++datasets. The phone viewport and full-page screenshots were both inspected; vertical scrolling
++to details/controls is intentional. Model pixel-perfect appearance, correct physical body
++dimensions, faithful menu compositing, and accurate car-paint segmentation remain outside
++these procedural illustrations. All accepted in-scope findings above have an implemented
++change and a check; these stated exclusions are not claimed passes.
+
+--- a/research/evidence/silhouettes-2026-10-08/escalation-resolution.md
++++ b/research/evidence/silhouettes-2026-10-08/escalation-resolution.md
+@@ -0,0 +1,54 @@
++# Final review escalation: disposition and limits
++
++The runtime gate's original `safe_to_apply` was 0.15. It marked the final mesh assertion
++contradicted at confidence 0.88. Completion was stopped; the assertion was checked against
++the actual working-tree module and a new independently logged corpus audit rather than
++inferred from a green summary. `mesh-audit.mjs` constructs every current car, records six
++finite bounds, floor minimum, transverse-center error and every resource's disposal count,
++then asserts each invariant. All 35 pass. The focused runtime gate verifies that exact audit
++claim at 0.97 and the actual browser re-attack at 0.95, without contradictions. No claim about
++the baseline mesh geometry passing is made. The pre-change red probes remain evidence of
++what was wrong, not completion evidence.
++
++The remaining focused runtime gate is `escalate`, `safe_to_apply` 0.45, composite 0.72:
++`viewer/index.html` limits on test-gap confidence 0; `viewer/silhouette.mjs` limits on
++blast-radius confidence 0. It returns numeric distributions, not an identified failing
++line or missing test. The sampling/test review is also `escalate`, composite 0.88475,
++with low confidence in test-gap/blast-radius dimensions. Its file correctness scores are
++1.88–1.92 out of 2, but these do not override the aggregate escalation.
++
++The host inspected the actual source and final evidence as a separate reasoning review:
++
++- The inline geometry factory is relocated to an imported local module. The same shipped
++  THREE URL serves both imports. The dimension formulas and style mapping remain, except
++  nullish zero defaults, sRGB input, rear-tailgate axis and pickup/SUV cab-window width.
++  All 35 final meshes have finite bounds, nonpenetrating tyres and symmetric transverse bounds.
++- Car switching removes the old group then disposes each unique geometry/material exactly
++  once. Shared wheel/window resources are covered by event counters. Actual browser renderer
++  memory stays bounded through 105 selections, unlike the recorded baseline. The test covers
++  resource ownership, not every possible WebGL device or context-loss scenario.
++- The list uses native text nodes for car names and metadata. The actual malicious-name
++  browser reproduction no longer creates an element or executes. The classic guard's
++  remaining HTML strings are fixed local guidance, not corpus input.
++- Corpus values are validated before list/mesh construction; HTTP status is checked before
++  JSON; abort spans headers and JSON body. Same-page retries for five failure classes work.
++  An actual stalled HTTP body is checked with a native local server; the real browser checks
++  header stall and slow success. The library-loading guard remains independent.
++- Motion controls stop automatic rotation and flush residual damping. Reduced motion,
++  persistent pause/resume and keyboard view presets are exercised through actual browser
++  controls. All 35 models fit and the four tested viewport layouts have no panel/canvas overlap.
++- Sampling verifies the manifest hash before PTG decoding and selects from decoded clipped
++  pixels. Every icon's source/pixel hash and counts are checked. A corrupted temporary file
++  triggers the intended hash failure. Regeneration is deterministic. All non-paint fields
++  and ordering remain identical; generated RGB differs for exactly one record.
++- The check-script delta adds two named test commands and updates the missing-Node message.
++  The actual final script passes 22 steps with no skips. No external service or new required
++  package was introduced. Empty-environment build and fresh browser execution succeed with
++  external requests blocked. The 79 unrelated initial tracked diffs remain byte-identical.
++
++These observations justify retaining the implemented local repairs as reviewable changes.
++They do not supply an automated Jev patch approval. Remaining coverage gaps are disclosed:
++Safari/Firefox, physical touch, screen readers, free-orbit keyboard control, context loss,
++GPU-specific failures, large datasets and original-game appearance. No publishing/merge
++decision is inferred from this review. No further model retry is warranted with unchanged
++code/evidence; future evidence or a concrete reviewer concern can justify another judgment.

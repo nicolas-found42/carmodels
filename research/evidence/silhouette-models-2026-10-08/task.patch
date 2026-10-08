@@ -1,0 +1,831 @@
+diff --git a/tools/build_silhouettes.py b/tools/build_silhouettes.py
+new file mode 100644
+index 0000000..cf117cd
+--- /dev/null
++++ b/tools/build_silhouettes.py
+@@ -0,0 +1,200 @@
++#!/usr/bin/env python3
++"""Bake compact, source-derived display silhouettes from pinned recovered GLBs.
++
++Keep the first tree's explicit low-speed scene and its original translations.
++Discard driver helmets and baked shadow planes, not alternative states by guesswork.
++Weld identical position/normal/tone tuples without moving vertices or decimating faces.
++Texture-derived tones are an illustration heuristic, not semantic part segmentation.
++Original triangle/normal/UV interpretations and full game-render fidelity remain open.
++"""
++import base64
++import hashlib
++import json
++import math
++from pathlib import Path
++import struct
++
++from validate_car_mips import parse_png
++
++ROOT = Path(__file__).resolve().parents[1]
++VERTEX = struct.Struct('<6fB')
++
++
++def read_glb(data):
++    if len(data) < 28 or struct.unpack_from('<3I', data) != (0x46546C67, 2, len(data)):
++        raise ValueError('Invalid silhouette source GLB container')
++    size, kind = struct.unpack_from('<2I', data, 12)
++    end = 20 + size
++    if kind != 0x4E4F534A or end + 8 > len(data):
++        raise ValueError('Invalid silhouette source JSON chunk')
++    doc = json.loads(data[20:end])
++    size, kind = struct.unpack_from('<2I', data, end)
++    if kind != 0x004E4942 or end + 8 + size != len(data):
++        raise ValueError('Invalid silhouette source binary chunk')
++    return doc, data[end + 8:]
++
++
++def accessor(doc, binary, index, width, component):
++    a = doc['accessors'][index]
++    if (a['type'], a['componentType']) != ({1: 'SCALAR', 2: 'VEC2', 3: 'VEC3'}[width], component):
++        raise ValueError('Unsupported silhouette accessor type')
++    if a.get('sparse') or a.get('normalized'):
++        raise ValueError('Unsupported silhouette accessor encoding')
++    view = doc['bufferViews'][a['bufferView']]
++    if view['buffer'] != 0:
++        raise ValueError('Silhouette accessor is not in the embedded buffer')
++    fmt = {5126: 'f', 5125: 'I'}[component]
++    step = width * 4
++    stride = view.get('byteStride', step)
++    start = view.get('byteOffset', 0) + a.get('byteOffset', 0)
++    end = start + (a['count'] - 1) * stride + step
++    if a['count'] <= 0 or stride < step or end > view.get('byteOffset', 0) + view['byteLength'] or end > len(binary):
++        raise ValueError('Silhouette accessor exceeds its buffer')
++    values = [struct.unpack_from('<' + fmt * width, binary, start + i * stride) for i in range(a['count'])]
++    if not all(math.isfinite(v) for row in values for v in row):
++        raise ValueError('Non-finite silhouette source attribute')
++    return values
++
++
++def texture_tone(rgb, wheel=False):
++    """Desaturate texture details; strong chroma becomes body tone, not a livery.
++
++    Retain dark texture features at vertices. This approximates windows, grille and
++    tyre detail without shipping texture maps. It cannot remove every decal.
++    """
++    r, g, b = rgb
++    light = 0.2126 * r + 0.7152 * g + 0.0722 * b
++    if not wheel and max(rgb) - min(rgb) > 40 and max(rgb) > 72:
++        light = 230
++    return round((0.06 + 0.94 * (light / 255) ** 0.85) * 255)
++
++
++def bake_car(code, data, expected_sha256):
++    source_sha = hashlib.sha256(data).hexdigest()
++    if source_sha != expected_sha256:
++        raise ValueError(f'{code}: silhouette GLB differs from manifest pin')
++    doc, binary = read_glb(data)
++    if doc.get('extras', {}).get('car') != code:
++        raise ValueError(f'{code}: silhouette source car identity differs')
++    scene_index = doc['scene']
++    scene = doc['scenes'][scene_index]
++    if scene.get('extras', {}).get('visibilityPreset') != 'low_speed' or scene['extras'].get('sourceTree') != 0:
++        raise ValueError(f'{code}: expected first-tree low-speed silhouette scene')
++    images = {}
++
++    def image(index):
++        if index not in images:
++            v = doc['bufferViews'][doc['images'][index]['bufferView']]
++            start = v.get('byteOffset', 0)
++            images[index] = parse_png(binary[start:start + v['byteLength']])
++        return images[index]
++
++    parts = {kind: {'vertices': [], 'indices': [], 'lookup': {}} for kind in ['body', 'wheel', 'detail']}
++    sources, hubs = [], []
++    active = set()
++
++    def walk(index, translation=(0, 0, 0), wheel=False):
++        if index in active:
++            raise ValueError('Cyclic silhouette source scene')
++        active.add(index)
++        node = doc['nodes'][index]
++        if any(k in node for k in ['matrix', 'rotation', 'scale']):
++            raise ValueError('Silhouette source transform is outside translation-only profile')
++        local = node.get('translation', [0, 0, 0])
++        if len(local) != 3 or not all(math.isfinite(v) for v in local):
++            raise ValueError('Invalid silhouette source translation')
++        pos = tuple(a + b for a, b in zip(translation, local))
++        names = node.get('extras', {}).get('sourceNames', [])
++        if 'HELMET' in names:
++            active.remove(index)
++            return
++        wheel = wheel or any(n.startswith('WHEEL_') or n.startswith('HUB_') for n in names)
++        if any(n.startswith('HUB_') for n in names):
++            hubs.append({'name': names[0], 'position': [pos[2], pos[1], -pos[0]]})
++        if 'mesh' in node:
++            sources.append({'node': index, 'record': node['extras']['geometryRecord'], 'names': names})
++            for primitive in doc['meshes'][node['mesh']]['primitives']:
++                material = doc['materials'][primitive['material']]
++                if material['name'] == 'UNDER_SHADOW':
++                    continue
++                if primitive.get('mode', 4) != 4:
++                    raise ValueError('Silhouette requires source triangles')
++                attrs = primitive['attributes']
++                positions = accessor(doc, binary, attrs['POSITION'], 3, 5126)
++                normals = accessor(doc, binary, attrs['NORMAL'], 3, 5126)
++                uv = accessor(doc, binary, attrs['TEXCOORD_0'], 2, 5126) if 'TEXCOORD_0' in attrs else None
++                if len(normals) != len(positions) or (uv is not None and len(uv) != len(positions)):
++                    raise ValueError('Silhouette source attribute counts differ')
++                indices = [v[0] for v in accessor(doc, binary, primitive['indices'], 1, 5125)]
++                if len(indices) % 3 or max(indices) >= len(positions):
++                    raise ValueError('Silhouette source triangle index exceeds vertices')
++                pbr = material.get('pbrMetallicRoughness', {})
++                texture = pbr.get('baseColorTexture')
++                kind = 'wheel' if wheel else 'body' if texture else 'detail'
++                part = parts[kind]
++                pixels = image(doc['textures'][texture['index']]['source']) if texture else None
++                remap = {}
++                for i in sorted(set(indices)):
++                    x, y, z = (v + t for v, t in zip(positions[i], pos))
++                    nx, ny, nz = normals[i]
++                    if pixels:
++                        if uv is None:
++                            raise ValueError('Silhouette textured source has no UVs')
++                        w, h, rgba = pixels
++                        u, v = uv[i]
++                        # glTF UV origin and repeat sampling, same as the recovered viewer.
++                        px, py = math.floor((u % 1) * w), math.floor((v % 1) * h)
++                        offset = (py * w + px) * 4
++                        tone = texture_tone(rgba[offset:offset + 3], wheel)
++                    else:
++                        factor = pbr.get('baseColorFactor', [1, 1, 1, 1])
++                        tone = round(max(0.06, min(1, sum(factor[:3]) / 3)) * 255)
++                    vertex = VERTEX.pack(z, y, -x, nz, ny, -nx, tone)
++                    if vertex not in part['lookup']:
++                        part['lookup'][vertex] = len(part['vertices'])
++                        part['vertices'].append(vertex)
++                    remap[i] = part['lookup'][vertex]
++                part['indices'].extend(remap[i] for i in indices)
++        for child in node.get('children', []):
++            walk(child, pos, wheel)
++        active.remove(index)
++
++    for index in scene['nodes']:
++        walk(index)
++    all_vertices = [VERTEX.unpack(v) for part in parts.values() for v in part['vertices']]
++    if not all_vertices or len(hubs) != 4:
++        raise ValueError(f'{code}: silhouette requires geometry and four source wheel hubs')
++    low = [min(v[i] for v in all_vertices) for i in range(3)]
++    high = [max(v[i] for v in all_vertices) for i in range(3)]
++    origin = [(low[0] + high[0]) / 2, low[1], (low[2] + high[2]) / 2]
++    output = []
++    for kind, part in parts.items():
++        if not part['indices']:
++            continue
++        if len(part['vertices']) > 65535:
++            raise ValueError('Silhouette exceeds compact index capacity')
++        vertices = bytearray()
++        for raw in part['vertices']:
++            x, y, z, nx, ny, nz, tone = VERTEX.unpack(raw)
++            vertices.extend(VERTEX.pack(x - origin[0], y - origin[1], z - origin[2], nx, ny, nz, tone))
++        output.append({'kind': kind, 'vertexCount': len(part['vertices']),
++                       'vertices': base64.b64encode(vertices).decode(),
++                       'indices': base64.b64encode(struct.pack('<' + 'H' * len(part['indices']), *part['indices'])).decode()})
++    for hub in hubs:
++        hub['position'] = [v - o for v, o in zip(hub['position'], origin)]
++    return {'schema': 1, 'parts': output, 'bounds': [0 if i == 1 else low[i] - origin[i] for i in range(3)] + [high[i] - origin[i] for i in range(3)],
++            'wheelHubs': hubs, 'triangleCount': sum(len(p['indices']) // 3 for p in parts.values()),
++            'source': {'glb': f'recovered/{code}.glb', 'sha256': source_sha,
++                       'originalModelSha256': doc['extras']['originalModelSha256'],
++                       'scene': scene_index, 'preset': 'low_speed', 'nodes': sources},
++            'claimLimits': ['Recovered triangle, normal and UV interpretations remain candidates.',
++                            'Texture-derived vertex tones and icon tint are illustrative; no original paint or shader fidelity.',
++                            'Driver helmets and baked shadow planes omitted; no geometry decimation or stat-based stretching.']}
++
++
++def load_silhouette(code):
++    manifest = json.loads((ROOT / 'recovered/cars' / code / 'manifest.json').read_text())
++    entry = next(a for a in manifest['assets'] if a['kind'] == 'glb')
++    if entry['path'] != f'viewer/public/recovered/{code}.glb':
++        raise ValueError(f'{code}: unexpected silhouette source path')
++    return bake_car(code, (ROOT / entry['path']).read_bytes(), entry['sha256'])
+
+diff --git a/tools/test_build_silhouettes.py b/tools/test_build_silhouettes.py
+new file mode 100644
+index 0000000..982ac21
+--- /dev/null
++++ b/tools/test_build_silhouettes.py
+@@ -0,0 +1,157 @@
++#!/usr/bin/env python3
++"""Independent source-scene/triangle checks and corruption controls for all 35 bakes."""
++import base64
++import copy
++import hashlib
++import json
++from pathlib import Path
++import struct
++import unittest
++
++from build_silhouettes import bake_car, texture_tone
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def source_scene(code):
++    data = (ROOT / f'viewer/public/recovered/{code}.glb').read_bytes()
++    size = struct.unpack_from('<I', data, 12)[0]
++    doc = json.loads(data[20:20 + size])
++    binary = data[28 + size:]
++
++    def array(index, width, fmt):
++        a = doc['accessors'][index]
++        v = doc['bufferViews'][a['bufferView']]
++        start = v.get('byteOffset', 0) + a.get('byteOffset', 0)
++        stride = v.get('byteStride', width * 4)
++        return [struct.unpack_from('<' + fmt * width, binary, start + i * stride) for i in range(a['count'])]
++
++    triangles = {'body': [], 'wheel': [], 'detail': []}
++    normals = {'body': [], 'wheel': [], 'detail': []}
++    hubs, nodes = [], []
++
++    def visit(index, parent=(0, 0, 0), wheel=False):
++        node = doc['nodes'][index]
++        names = node.get('extras', {}).get('sourceNames', [])
++        if 'HELMET' in names:
++            return
++        location = tuple(a + b for a, b in zip(parent, node.get('translation', (0, 0, 0))))
++        wheel = wheel or any(n.startswith(('WHEEL_', 'HUB_')) for n in names)
++        if any(n.startswith('HUB_') for n in names):
++            hubs.append((location[2], location[1], -location[0]))
++        if 'mesh' in node:
++            nodes.append(index)
++            for primitive in doc['meshes'][node['mesh']]['primitives']:
++                material = doc['materials'][primitive['material']]
++                if material['name'] == 'UNDER_SHADOW':
++                    continue
++                kind = 'wheel' if wheel else 'body' if 'baseColorTexture' in material.get('pbrMetallicRoughness', {}) else 'detail'
++                xyz = array(primitive['attributes']['POSITION'], 3, 'f')
++                normal = array(primitive['attributes']['NORMAL'], 3, 'f')
++                indices = array(primitive['indices'], 1, 'I')
++                for (i,) in indices:
++                    x, y, z = (v + t for v, t in zip(xyz[i], location))
++                    triangles[kind].append((z, y, -x))
++                    nx, ny, nz = normal[i]
++                    normals[kind].append((nz, ny, -nx))
++        for child in node.get('children', []):
++            visit(child, location, wheel)
++
++    scene = doc['scenes'][doc['scene']]
++    assert scene['extras']['visibilityPreset'] == 'low_speed'
++    for index in scene['nodes']:
++        visit(index)
++    points = [v for rows in triangles.values() for v in rows]
++    low = [min(v[i] for v in points) for i in range(3)]
++    high = [max(v[i] for v in points) for i in range(3)]
++    origin = [(low[0] + high[0]) / 2, low[1], (low[2] + high[2]) / 2]
++    return {'triangles': triangles, 'normals': normals, 'hubs': hubs, 'origin': origin,
++            'dimensions': [b - a for a, b in zip(low, high)], 'nodes': nodes, 'sha': hashlib.sha256(data).hexdigest()}, doc, binary
++
++
++def check_bake(code, silhouette):
++    expected, _, _ = source_scene(code)
++    if silhouette['source']['sha256'] != expected['sha']:
++        raise AssertionError('source pin differs')
++    if [n['node'] for n in silhouette['source']['nodes']] != expected['nodes']:
++        raise AssertionError('visible source nodes differ')
++    if len(silhouette['wheelHubs']) != 4:
++        raise AssertionError('source wheel hub count differs')
++    for actual, source in zip(silhouette['wheelHubs'], expected['hubs']):
++        if any(abs(a - (v - o)) > 1e-6 for a, v, o in zip(actual['position'], source, expected['origin'])):
++            raise AssertionError('source wheel placement differs')
++    triangle_count = 0
++    for part in silhouette['parts']:
++        vertices = list(struct.iter_unpack('<6fB', base64.b64decode(part['vertices'], validate=True)))
++        indices = [v[0] for v in struct.iter_unpack('<H', base64.b64decode(part['indices'], validate=True))]
++        triangle_count += len(indices) // 3
++        rows = expected['triangles'][part['kind']]
++        if len(rows) != len(indices):
++            raise AssertionError('source triangle count differs')
++        for j, i in enumerate(indices):
++            actual = vertices[i]
++            if any(abs(a - (v - o)) > 1e-6 for a, v, o in zip(actual[:3], rows[j], expected['origin'])):
++                raise AssertionError('source triangle coordinates differ')
++            if any(abs(a - n) > 1e-6 for a, n in zip(actual[3:6], expected['normals'][part['kind']][j])):
++                raise AssertionError('source triangle normals differ')
++    if triangle_count != silhouette['triangleCount']:
++        raise AssertionError('declared triangle count differs')
++    dimensions = [b - a for a, b in zip(silhouette['bounds'][:3], silhouette['bounds'][3:])]
++    if any(abs(a - b) > 1e-6 for a, b in zip(dimensions, expected['dimensions'])):
++        raise AssertionError('source bounds differ')
++
++
++class SilhouetteBakeTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.cars = json.loads((ROOT / 'viewer/public/cars.json').read_text())
++
++    def test_all_source_triangles_transforms_normals_and_hubs(self):
++        self.assertEqual(len(self.cars), 35)
++        for car in self.cars:
++            with self.subTest(car=car['code']):
++                check_bake(car['code'], car['silhouette'])
++
++    def test_in_bounds_position_and_in_range_index_controls(self):
++        code, source = self.cars[0]['code'], self.cars[0]['silhouette']
++        changed = copy.deepcopy(source)
++        raw = bytearray(base64.b64decode(changed['parts'][0]['vertices']))
++        x = struct.unpack_from('<f', raw)[0]
++        struct.pack_into('<f', raw, 0, x + 0.01)
++        changed['parts'][0]['vertices'] = base64.b64encode(raw).decode()
++        with self.assertRaisesRegex(AssertionError, 'source triangle coordinates differ'):
++            check_bake(code, changed)
++        changed = copy.deepcopy(source)
++        raw = bytearray(base64.b64decode(changed['parts'][0]['indices']))
++        i = struct.unpack_from('<H', raw)[0]
++        struct.pack_into('<H', raw, 0, (i + 1) % changed['parts'][0]['vertexCount'])
++        changed['parts'][0]['indices'] = base64.b64encode(raw).decode()
++        with self.assertRaisesRegex(AssertionError, 'source triangle coordinates differ'):
++            check_bake(code, changed)
++
++    def test_pin_identity_and_wrong_scene_controls(self):
++        code = self.cars[0]['code']
++        data = (ROOT / f'viewer/public/recovered/{code}.glb').read_bytes()
++        pin = hashlib.sha256(data).hexdigest()
++        with self.assertRaisesRegex(ValueError, 'differs from manifest pin'):
++            bake_car(code, data[:-1], pin)
++        with self.assertRaisesRegex(ValueError, 'car identity differs'):
++            bake_car('OTHER', data, pin)
++        _, doc, binary = source_scene(code)
++        doc['scene'] = 1  # All alternative wheel/light states: must not become a silhouette.
++        encoded = json.dumps(doc).encode()
++        encoded += b' ' * (-len(encoded) % 4)
++        mutated = struct.pack('<3I', 0x46546C67, 2, 28 + len(encoded) + len(binary))
++        mutated += struct.pack('<2I', len(encoded), 0x4E4F534A) + encoded
++        mutated += struct.pack('<2I', len(binary), 0x004E4942) + binary
++        with self.assertRaisesRegex(ValueError, 'first-tree low-speed silhouette scene'):
++            bake_car(code, mutated, hashlib.sha256(mutated).hexdigest())
++
++    def test_tone_is_illustrative_and_bounded(self):
++        self.assertLess(texture_tone((0, 0, 0)), texture_tone((220, 220, 220)))
++        self.assertEqual(texture_tone((255, 0, 0)), texture_tone((0, 255, 0)))
++        self.assertNotEqual(texture_tone((255, 0, 0), wheel=True), texture_tone((0, 255, 0), wheel=True))
++
++
++if __name__ == '__main__':
++    unittest.main()
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/tools/build_showcase.py b/tools/build_showcase.py
+index 3542689..7049406 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/tools/build_showcase.py
++++ b/tools/build_showcase.py
+@@ -1,14 +1,14 @@
+ #!/usr/bin/env python3
+-"""Build the offline viewer data: manifest metadata, Jev silhouette labels, paint samples.
++"""Build offline metadata, recorded Jev filters, source-derived meshes and icon tints.
+ 
+-The HTML viewer builds procedural silhouettes from each car's recorded illustration style
+-and manifest performance data. Paint chips sample only decoded menu-icon pixels, pinned
+-to the reference manifest. A sample is not identification of the car's paint, and handling
+-ratings are not measured body dimensions.
++Silhouettes bake the recovered static scene without changing car-specific contours.
++Handling ratings do not affect geometry. Icon colours and vertex tones are illustrative.
+ """
+ import json
+ from pathlib import Path
+ 
++from build_silhouettes import load_silhouette
++
+ ROOT = Path(__file__).resolve().parent.parent
+ CARS = ROOT / "reference" / "ford" / "cars"
+ OUT = ROOT / "viewer" / "public"
+@@ -99,6 +99,7 @@ def load_all():
+             "liveries": m.get("liveries", []),
+             "paint": paint,
+             "sound": m.get("sound", {}).get("shared_bank_hint", ""),
++            "silhouette": load_silhouette(code),
+         })
+     return cars
+ 
+@@ -106,4 +107,4 @@ if __name__ == "__main__":
+     cars = load_all()
+     out = OUT / "cars.json"
+     out.write_text(json.dumps(cars, indent=1))
+-    print(f"{len(cars)} cars -> {out}; paint samples: {sum(1 for c in cars if c.get('paint'))}")
+\ No newline at end of file
++    print(f"{len(cars)} cars -> {out}; paint samples: {sum(1 for c in cars if c.get('paint'))}")
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/tools/test_silhouette.mjs b/tools/test_silhouette.mjs
+index 1ed2713..a3a9d8d 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/tools/test_silhouette.mjs
++++ b/tools/test_silhouette.mjs
+@@ -12,7 +12,11 @@ for (const car of cars) {
+   assert(bounds.min.toArray().every(Number.isFinite) && bounds.max.toArray().every(Number.isFinite));
+   assert(bounds.min.y >= -1e-6, `${car.code}: tyres penetrate the floor`);
+   assert(Math.abs(bounds.min.z + bounds.max.z) < 1e-6, `${car.code}: body extends asymmetrically across its width`);
+-  assert.equal(mesh.userData.wheels.length, 8);
++  assert.equal(car.silhouette.wheelHubs.length, 4);
++  assert.equal(mesh.userData.wheels.length, 1, 'four static wheels merged into one mesh');
++  assert(mesh.children.length <= 3, 'compact body, wheel and detail meshes');
++  assert.equal(mesh.children.reduce((sum,n)=>sum+n.geometry.index.count/3,0),car.silhouette.triangleCount);
++  for (const node of mesh.children) assert.equal(node.material.map, null, 'no runtime texture dependency');
+   const geometries = new Set(), materials = new Set();
+   mesh.traverse(node => {
+     if (node.geometry) geometries.add(node.geometry);
+@@ -26,10 +30,29 @@ for (const car of cars) {
+ }
+ const seed = {...cars[0], speed:0, weight:0, agility:0, accel:0, paint:{rgb:[128,64,32]}};
+ const zero = makeCar(seed), half = makeCar({...seed, speed:0.5});
+-assert(new THREE.Box3().setFromObject(zero).getSize(new THREE.Vector3()).x < new THREE.Box3().setFromObject(half).getSize(new THREE.Vector3()).x, 'zero rating must remain zero');
++assert.deepEqual(zero.children[0].geometry.attributes.position.array,half.children[0].geometry.attributes.position.array,'handling ratings must not stretch geometry');
+ assert.equal(zero.children[0].material.color.getHexString(), '804020', 'display RGB sample must round trip through sRGB');
+ disposeCar(zero); disposeCar(half);
+ for (const data of [[], {}, [cars[0],cars[0]], [{...cars[0],speed:NaN}], [{...cars[0],weight:2}], [{...cars[0],liveries:null}], [{...cars[0],paint:{rgb:[256,0,0]}}], [{...cars[0],bodyStyle:'unknown'}]]) assert.throws(() => validateCars(data));
++for (const mutate of [
++  c=>delete c.silhouette,
++  c=>c.silhouette.source.glb='recovered/OTHER.glb',
++  c=>c.silhouette.parts[0].vertices='bad',
++  c=>c.silhouette.parts[0].vertexCount++,
++  c=>c.silhouette.triangleCount++,
++  c=>{const b=Buffer.from(c.silhouette.parts[0].vertices,'base64');b.writeFloatLE(NaN,0);c.silhouette.parts[0].vertices=b.toString('base64');},
++  c=>{const b=Buffer.from(c.silhouette.parts[0].vertices,'base64');b.writeFloatLE(0,12);b.writeFloatLE(0,16);b.writeFloatLE(0,20);c.silhouette.parts[0].vertices=b.toString('base64');},
++  c=>{const b=Buffer.from(c.silhouette.parts[0].indices,'base64');b.writeUInt16LE(65535,0);c.silhouette.parts[0].indices=b.toString('base64');},
++]) {
++  const corrupted=structuredClone(cars[0]);mutate(corrupted);
++  assert.throws(()=>validateCars([corrupted]),/silhouette/);
++}
++const dimensions = code => {
++  const car=makeCar(cars.find(c=>c.code===code));
++  const size=new THREE.Box3().setFromObject(car).getSize(new THREE.Vector3());disposeCar(car);return size;
++};
++assert(dimensions('F150').y>dimensions('FORD_GT').y*1.5,'pickup must preserve its distinct source height');
++assert(dimensions('GRAN_TORINO').x>dimensions('FORD_GT').x,'source-specific body lengths');
+ assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,35);
+ await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:false,status:404,json:async()=>cars})}), /HTTP 404/);
+ await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>[]})}), /empty/);
+@@ -51,4 +74,4 @@ try {
+   server.closeAllConnections();
+   await new Promise(resolve => server.close(resolve));
+ }
+-console.log('PASS test_silhouette: 35 finite meshes, floor contact, shared-resource disposal, zero ratings, sRGB, invalid/duplicate corpus, HTTP error, header/body timeouts including stalled real HTTP body');
++console.log('PASS test_silhouette: 35 source-derived meshes, 4 source hubs each, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, source proportions, corpus errors and real HTTP body timeout');
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/tools/check.sh b/tools/check.sh
+old mode 100644
+new mode 100755
+index 4cec661..e8dfd16
+--- a/.scratch/silhouettes-replacement-2026-10-08/tools/check.sh
++++ b/tools/check.sh
+@@ -36,6 +36,7 @@ else
+ fi
+ step "test_export_materials" python3 tools/test_export_materials.py
+ step "test_build_showcase" python3 tools/test_build_showcase.py
++step "test_build_silhouettes" python3 tools/test_build_silhouettes.py
+ step "test_static_inputs"           python3 tools/test_static_inputs.py
+ step "test_recovery_inputs"         python3 tools/test_recovery_inputs.py
+ 
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/viewer/silhouette.mjs b/viewer/silhouette.mjs
+index 43566f7..5d15c17 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/viewer/silhouette.mjs
++++ b/viewer/silhouette.mjs
+@@ -1,137 +1,80 @@
+ import * as THREE from './vendor/three.module.js';
+ 
+-export function makeCar(c) {
+-  const g = new THREE.Group();
+-  const paint = c.paint ? c.paint.rgb : [110, 110, 110];
+-  const bodyMat = new THREE.MeshStandardMaterial({
+-    color: new THREE.Color().setRGB(paint[0]/255, paint[1]/255, paint[2]/255, THREE.SRGBColorSpace),
+-    roughness: 0.32, metalness: 0.55,
+-  });
+-  const darkMat = new THREE.MeshStandardMaterial({ color: 0x14161a, roughness: 0.58, metalness: 0.18 });
+-  const trimMat = new THREE.MeshStandardMaterial({ color: 0x737b84, roughness: 0.38, metalness: 0.8 });
+-  const glassMat = new THREE.MeshStandardMaterial({
+-    color: 0x7fa8cc, roughness: 0.12, metalness: 0.08, transparent: true, opacity: 0.72, side: THREE.DoubleSide,
+-  });
+-  const lampMat = new THREE.MeshStandardMaterial({ color: 0xe8d9a4, emissive: 0x241b0b, roughness: 0.3 });
+-  const tailMat = new THREE.MeshStandardMaterial({ color: 0xc42d32, emissive: 0x260607, roughness: 0.3 });
+-
+-  const style = c.bodyStyle;
+-  const speed = Math.max(0, Math.min(1, c.speed ?? 0.5));
+-  const accel = Math.max(0, Math.min(1, c.accel ?? 0.5));
+-  const agility = Math.max(0, Math.min(1, c.agility ?? 0.5));
+-  const weight = Math.max(0, Math.min(1, c.weight ?? 0.5));
+-  const L = 3.8 + 1.25 * speed;   // in-game speed rating modestly stretches wheelbase
+-  const W = 1.65 + 0.45 * weight;
+-  const H = 0.55 + 0.25 * (1 - speed);
+-  const nose = 0.22 + 0.34 * accel;
+-
+-  const add = (geo, mat, x, y, z) => {
+-    const m = new THREE.Mesh(geo, mat);
+-    m.position.set(x, y, z);
+-    m.castShadow = true;
+-    m.receiveShadow = true;
+-    g.add(m);
+-    return m;
+-  };
+-  const box = (x, y, z, sx, sy, sz, mat) => add(new THREE.BoxGeometry(sx, sy, sz), mat, x, y, z);
+-  const profile = (points, depth, mat, yOffset = 0) => {
+-    const shape = new THREE.Shape();
+-    shape.moveTo(points[0][0], points[0][1]);
+-    for (const [x, y] of points.slice(1)) shape.lineTo(x, y);
+-    shape.closePath();
+-    const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.045, bevelSize: 0.04, bevelSegments: 2 });
+-    geo.translate(0, 0, -depth / 2);
+-    return add(geo, mat, 0, yOffset, 0);
+-  };
+-  const sideWindow = (points, width = W) => {
+-    const shape = new THREE.Shape();
+-    shape.moveTo(points[0][0], points[0][1]);
+-    for (const [x, y] of points.slice(1)) shape.lineTo(x, y);
+-    shape.closePath();
+-    const geo = new THREE.ShapeGeometry(shape);
+-    for (const side of [-1, 1]) {
+-      const pane = new THREE.Mesh(geo, glassMat);
+-      pane.position.z = side * (width / 2 + 0.012);
+-      pane.castShadow = true;
+-      g.add(pane);
+-    }
+-  };
++// Compact offline mesh: little-endian XYZ + normal XYZ float32, then a tone byte.
++function bytes(encoded) {
++  if (typeof encoded !== 'string' || !encoded.length || encoded.length % 4 || !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) throw Error('Invalid silhouette mesh encoding.');
++  return Uint8Array.from(atob(encoded), c => c.charCodeAt(0));
++}
+ 
+-  if (style === 'pickup' || style === 'suv') {
+-    // All dimensions use x=length, y=height, z=width.
+-    box(0, 0.54, 0, L, 0.55, W * 0.94, bodyMat);
+-    const cabL = style === 'pickup' ? L * 0.40 : L * 0.68;
+-    const cabX = style === 'pickup' ? 0.18 : 0.05;
+-    box(cabX, 0.88 + H * 0.34, 0, cabL, H * 0.92, W * 0.88, bodyMat);
+-    if (style === 'pickup') {
+-      const bedL = L * 0.36;
+-      const bedX = -L * 0.30;
+-      box(bedX, 0.76, 0, bedL, 0.10, W * 0.77, darkMat); // open bed floor
+-      for (const side of [-1, 1]) box(bedX, 0.91, side * W * 0.40, bedL, 0.35, 0.08, bodyMat);
+-      box(bedX - bedL / 2, 0.91, 0, 0.08, 0.35, W * 0.78, bodyMat);
++export function decodeSilhouette(c) {
++  const s = c.silhouette;
++  const fail = () => { throw Error(`${c.code}: invalid source-derived silhouette.`); };
++  if (!s || s.schema !== 1 || !Array.isArray(s.parts) || s.parts.length < 1 || s.parts.length > 3 ||
++      !Array.isArray(s.bounds) || s.bounds.length !== 6 || !s.bounds.every(Number.isFinite) ||
++      !s.source || s.source.glb !== `recovered/${c.code}.glb` || !/^[a-f0-9]{64}$/.test(s.source.sha256) ||
++      s.source.preset !== 'low_speed' || !Array.isArray(s.wheelHubs) || s.wheelHubs.length !== 4) fail();
++  if (s.bounds.some((v,i) => i < 3 && v >= s.bounds[i+3]) || Math.abs(s.bounds[1]) > 1e-5) fail();
++  if (s.wheelHubs.some(h => !h || !Array.isArray(h.position) || h.position.length !== 3 || !h.position.every(Number.isFinite))) fail();
++  let triangles = 0;
++  const kinds = new Set();
++  const parts = s.parts.map(part => {
++    if (!['body','wheel','detail'].includes(part.kind) || kinds.has(part.kind) || !Number.isInteger(part.vertexCount) || part.vertexCount <= 0 || part.vertexCount > 65535) fail();
++    kinds.add(part.kind);
++    const raw = bytes(part.vertices), faces = bytes(part.indices);
++    if (raw.byteLength !== part.vertexCount * 25 || !faces.byteLength || faces.byteLength % 6) fail();
++    const view = new DataView(raw.buffer), faceView = new DataView(faces.buffer);
++    const positions = new Float32Array(part.vertexCount * 3), normals = new Float32Array(positions.length), colors = new Float32Array(positions.length);
++    for (let i = 0; i < part.vertexCount; i++) {
++      for (let axis = 0; axis < 3; axis++) {
++        const p = view.getFloat32(i*25+axis*4,true), n = view.getFloat32(i*25+12+axis*4,true);
++        if (!Number.isFinite(p) || !Number.isFinite(n) || p < s.bounds[axis]-1e-4 || p > s.bounds[axis+3]+1e-4) fail();
++        positions[i*3+axis] = p; normals[i*3+axis] = n;
++      }
++      const length = Math.hypot(...normals.subarray(i*3,i*3+3));
++      if (Math.abs(length-1) > 0.01) fail();
++      const tone = view.getUint8(i*25+24)/255;
++      const linear = tone <= 0.04045 ? tone/12.92 : ((tone+0.055)/1.055)**2.4;
++      colors.fill(linear,i*3,i*3+3);
+     }
+-    box(L * 0.36, 0.74, 0, L * 0.24, 0.34, W * 0.90, bodyMat); // hood
+-    const wx = cabX + cabL * 0.10;
+-    sideWindow([[wx - cabL * 0.40, 0.92], [wx - cabL * 0.27, 1.22], [wx + cabL * 0.24, 1.22], [wx + cabL * 0.39, 0.92]], W * 0.88);
+-  } else {
+-    let pts;
+-    if (style === 'racecar') {
+-      pts = [[-L/2,0.18],[L/2,0.18],[L/2-0.10,0.60],[L*0.18,0.82],[L*0.10,1.18],[-L*0.16,1.20],[-L*0.28,0.84],[-L/2+0.08,0.62]];
+-    } else if (style === 'concept') {
+-      pts = [[-L/2,0.20],[L/2,0.20],[L/2-0.04,0.48],[L*0.28,0.60],[L*0.08,0.62+H],[-L*0.22,0.67+H*0.92],[-L/2+0.08,0.57]];
+-    } else {
+-      const rearTop = style === 'hatchback' ? 0.74 + H * 0.75 : 0.58;
+-      const roofFront = style === 'sedan' ? L*0.22 : L*0.16;
+-      const roofBack = style === 'sedan' ? -L*0.22 : -L*0.18;
+-      pts = [[-L/2,0.18],[L/2,0.18],[L/2-0.08,0.62+nose*0.18],[roofFront,0.64+H],[roofBack,0.64+H*0.92],[-L/2+0.12,rearTop],[-L/2+0.08,0.58]];
++    const indices = new Uint16Array(faces.byteLength/2);
++    for (let i = 0; i < indices.length; i++) {
++      indices[i] = faceView.getUint16(i*2,true);
++      if (indices[i] >= part.vertexCount) fail();
+     }
+-    profile(pts, W, bodyMat, 0.18);
+-    // Side glass panels track the sloped greenhouse above the beltline.
+-    if (style === 'racecar') {
+-      sideWindow([[-L*0.20,0.95],[-L*0.12,1.27],[L*0.05,1.27],[L*0.15,0.91]]);
+-    } else if (style === 'concept') {
+-      sideWindow([[-L*0.20,0.83],[-L*0.13,0.88+H*0.55],[L*0.04,0.90+H*0.58],[L*0.24,0.73]]);
+-    } else {
+-      const topY = 0.64 + H * 0.90;
+-      sideWindow([[-L*0.14,0.82],[-L*0.10,topY],[L*0.06,topY],[L*0.17,0.82]]);
+-    }
+-    if (style === 'racecar') {
+-      box(-L*0.43, 1.50, 0, 0.42, 0.07, W*1.08, darkMat);
+-      box(-L*0.43, 1.34, -W*0.39, 0.08, 0.30, 0.08, darkMat);
+-      box(-L*0.43, 1.34, W*0.39, 0.08, 0.30, 0.08, darkMat);
+-      box(L/2 + 0.12, 0.72, 0, 0.14, 0.04, W*1.12, trimMat); // front splitter
+-    }
+-  }
++    triangles += indices.length / 3;
++    return {kind:part.kind, positions, normals, colors, indices};
++  });
++  if (!kinds.has('body') || !kinds.has('wheel') || triangles !== s.triangleCount) fail();
++  return parts;
++}
+ 
+-  // Front/rear bumpers, grille and lights.
+-  box(L/2 + 0.04, 0.54, 0, 0.10, 0.12, W*0.86, trimMat);
+-  box(-L/2 - 0.04, 0.54, 0, 0.10, 0.12, W*0.86, trimMat);
+-  box(L/2 + 0.10, 0.78, 0, 0.05, 0.20, W*0.38, darkMat);
+-  for (const side of [-1, 1]) {
+-    box(L/2 + 0.11, 0.84, side*W*0.32, 0.07, 0.16, 0.25, lampMat);
+-    box(-L/2 - 0.08, 0.80, side*W*0.34, 0.06, 0.18, 0.22, tailMat);
+-  }
+-  // wheels: wheelbase runs along X, tire axles along Z.
+-  const wheelR = 0.29 + 0.15 * agility + (style === 'pickup' || style === 'suv' ? 0.08 : 0);
+-  const wheelW = 0.22 + 0.08 * weight;
+-  const tireGeo = new THREE.CylinderGeometry(wheelR, wheelR, wheelW, 24);
+-  const hubGeo = new THREE.CylinderGeometry(wheelR*0.53, wheelR*0.53, wheelW+0.02, 16);
+-  const tireMat = new THREE.MeshStandardMaterial({ color: 0x121416, roughness: 0.84, metalness: 0.05 });
+-  const hubMat = new THREE.MeshStandardMaterial({ color: 0xaeb5bd, roughness: 0.3, metalness: 0.86 });
++export function makeCar(c) {
++  // Decode completely before allocating GPU resources, so malformed data cannot leak.
++  const parts = decodeSilhouette(c);
++  const g = new THREE.Group();
++  const paint = c.paint?.rgb || [150,155,165];
++  const bodyColor = new THREE.Color().setRGB(paint[0]/255,paint[1]/255,paint[2]/255,THREE.SRGBColorSpace);
++  const materials = {
++    body: new THREE.MeshStandardMaterial({color:bodyColor, vertexColors:true, roughness:0.52, metalness:0.16, side:THREE.DoubleSide}),
++    wheel: new THREE.MeshStandardMaterial({color:0xb4bac2, vertexColors:true, roughness:0.64, metalness:0.28, side:THREE.DoubleSide}),
++    detail: new THREE.MeshStandardMaterial({color:0x9aa6b3, vertexColors:true, roughness:0.35, metalness:0.2, side:THREE.DoubleSide}),
++  };
+   g.userData.wheels = [];
+-  for (const x of [-L*0.32, L*0.32]) {
+-    for (const side of [-1,1]) {
+-      const z = side * (W*0.48 + wheelW*0.18);
+-      const tire = new THREE.Mesh(tireGeo, tireMat);
+-      const hub = new THREE.Mesh(hubGeo, hubMat);
+-      tire.rotation.x = hub.rotation.x = Math.PI / 2;
+-      tire.position.set(x, wheelR, z);
+-      hub.position.set(x, wheelR, z + side*0.015);
+-      tire.castShadow = hub.castShadow = true;
+-      g.add(tire, hub);
+-      g.userData.wheels.push(tire, hub);
+-    }
++  g.userData.source = c.silhouette.source;
++  for (const part of parts) {
++    const geo = new THREE.BufferGeometry();
++    geo.setAttribute('position',new THREE.BufferAttribute(part.positions,3));
++    geo.setAttribute('normal',new THREE.BufferAttribute(part.normals,3));
++    geo.setAttribute('color',new THREE.BufferAttribute(part.colors,3));
++    geo.setIndex(new THREE.BufferAttribute(part.indices,1));
++    geo.computeBoundingBox(); geo.computeBoundingSphere();
++    const mesh = new THREE.Mesh(geo,materials[part.kind]);
++    mesh.name = part.kind; mesh.castShadow = mesh.receiveShadow = true;
++    g.add(mesh);
++    if (part.kind === 'wheel') g.userData.wheels.push(mesh);
+   }
++  // Dispose only resources actually attached to the car.
++  for (const [kind,material] of Object.entries(materials)) if (!parts.some(p=>p.kind===kind)) material.dispose();
+   return g;
+ }
+ 
+@@ -152,7 +95,7 @@ export function validateCars(cars) {
+   const codes = new Set();
+   const styles = new Set(['coupe', 'sedan', 'hatchback', 'pickup', 'suv', 'racecar', 'concept']);
+   for (const c of cars) {
+-    if (!c || typeof c.code !== 'string' || !c.code || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
++    if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
+     codes.add(c.code);
+     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);
+     for (const key of ['agility', 'accel', 'speed', 'weight']) {
+@@ -167,6 +110,7 @@ export function validateCars(cars) {
+     if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);
+     if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);
+     if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);
++    decodeSilhouette(c);
+   }
+   return cars;
+ }
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/viewer/index.html b/viewer/index.html
+index c9ec248..164dfb3 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/viewer/index.html
++++ b/viewer/index.html
+@@ -182,7 +182,7 @@
+     <div id="hud">
+         <div class="name" id="hud-name">—</div>
+         <div class="tag" id="hud-tag"></div>
+-        <div class="recon" title="The silhouette is rebuilt from the car's in-game stats, not the original model. The colour is a sample from the car's menu icon, not its real paint texture.">Procedural illustration · proportions vary with handling ratings · approximate icon color</div>
++        <div class="recon" title="Car-specific contours and static wheel placement come from recovered geometry. Surface tones and icon colour are illustrative; full game-render fidelity remains incomplete.">Source-derived 3D silhouette · static wheels · illustrative surface tones</div>
+       </div>
+       <div id="stage">
+         <div id="loading" role="status" aria-live="polite">Loading corpus…</div>
+@@ -450,6 +450,9 @@ const key = new THREE.DirectionalLight(0xffffff, 2.2);
+ key.position.set(6, 9, 5);
+ key.castShadow = true;
+ key.shadow.mapSize.set(2048, 2048);
++// Thin recovered surfaces need an offset to avoid self-shadow striping.
++key.shadow.normalBias = 0.035;
++key.shadow.bias = -0.00015;
+ key.shadow.camera.left = -8; key.shadow.camera.right = 8;
+ key.shadow.camera.top = 8; key.shadow.camera.bottom = -8;
+ scene.add(key);
+@@ -483,7 +486,7 @@ window.addEventListener('resize', resize);
+ new ResizeObserver(resize).observe(stage);
+ resize();
+ 
+-/* ---------- procedural stat-shaped car ---------- */
++/* ---------- source-derived silhouette ---------- */
+ /* ---------- selection ---------- */
+ function select(c) {
+   current = c;
+@@ -564,7 +567,7 @@ document.querySelectorAll('[data-view]').forEach(button => button.onclick = () =
+   setRotation(false);
+   setView(button.dataset.view);
+ });
+-renderer.domElement.setAttribute('aria-label', 'Procedural car silhouette. Use the view buttons for side, front, and top views.');
++renderer.domElement.setAttribute('aria-label', 'Source-derived 3D car silhouette. Use the view buttons for side, front, and top views.');
+ 
+ /* ---------- animation ---------- */
+ const clock = new THREE.Clock();
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/viewer/README.md b/viewer/README.md
+index 0eb187b..86f8678 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/viewer/README.md
++++ b/viewer/README.md
+@@ -1,6 +1,6 @@
+ # Ford Racing 2 — Car Model Explorer
+ 
+-Static three.js viewers for the 35-car reference corpus. `recovered.html` now displays original-coordinate candidates with embedded model textures and serialized translation trees. `index.html` retains the earlier procedural silhouette gallery.
++Static three.js viewers for the 35-car reference corpus. `recovered.html` now displays original-coordinate candidates with embedded model textures and serialized translation trees. `index.html` displays lightweight silhouettes baked from the recovered static car assemblies.
+ 
+ ## Run
+ 
+@@ -33,7 +33,8 @@ Failed car loads clear the previous preview and download link, disable geometry/
+ 
+ - Manifest data: name, year, group, in-game BHP, mass, top speed, handling ratings, liveries, sound bank.
+ - Illustration-family filters from a recorded batched Jev classification, with the two low-confidence cases resolved from their model names (Explorer Sport Trac → SUV, FR500 → coupe silhouette).
+-- Procedural 3D silhouettes shaped by handling ratings, with an approximate colour sampled from decoded menu-icon pixels.
++- Car-specific 3D silhouettes baked from the recovered first-tree low-speed assembly, preserving source contours, normals and static wheel placement. Driver helmets and baked shadow planes are omitted. Identical vertices are welded; geometry is not decimated or stretched by handling ratings.
++- Up to three meshes per car, no runtime texture or full GLB loading. Desaturated vertex tones approximate dark surface details; icon colour provides an illustrative body tint. This is not semantic glass/paint segmentation or original game shading.
+ 
+ The silhouette viewport has its own space beside the performance panel on wide screens,
+ with details below it on smaller screens. **Side**, **Front**, **Top**, and **Reset view**
+@@ -55,14 +56,16 @@ are excluded. The data records the source/pixel hashes, dimensions and selection
+ Samples use display RGB in the UI and are converted from sRGB for three.js lighting.
+ This remains a colour heuristic, not segmentation or a measurement of the vehicle's paint.
+ The recorded styles are illustration families: `concept` and `racecar` are not physical
+-body-style measurements. Handling-driven dimensions are illustrative, not recovered geometry.
++body-style measurements. Handling ratings are displayed as metadata and no longer change the mesh. The source coordinate/triangle/normal/UV interpretations remain candidates; silhouettes do not establish full game-render fidelity.
+ 
+-Offline silhouette regressions run with `node tools/test_silhouette.mjs` and
+-`python3 tools/test_build_showcase.py`, both included in `tools/check.sh`.
++Rebuild all gallery data with `python3 tools/build_showcase.py`. Each silhouette source GLB is checked against its canonical recovered manifest hash.
++
++Offline silhouette regressions run with `node tools/test_silhouette.mjs`,
++`python3 tools/test_build_showcase.py` and `python3 tools/test_build_silhouettes.py`, all included in `tools/check.sh`. The independent bake check compares every displayed triangle position and normal, source wheel hubs and bounds against all 35 source scenes; in-bounds position and in-range index mutations must fail.
+ The executed teardown and browser evidence are in
+ [`../research/silhouettes-teardown-2026-10-08.md`](../research/silhouettes-teardown-2026-10-08.md).
+ 
+-**The index.html meshes are procedural reconstructions.** The recovered.html inspector uses original car geometry inputs and decoded embedded model textures, with its remaining fidelity limits displayed explicitly.
++**The index.html meshes are simplified source-derived illustrations.** The recovered.html inspector provides the full exported GLBs, original-coordinate candidate scenes and decoded embedded model textures. Both retain the recovery’s fidelity limits. The replacement and browser checks are recorded in [`../research/silhouette-models-2026-10-08.md`](../research/silhouette-models-2026-10-08.md).
+ 
+ ## Research
+ 
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/CONTRIBUTING.md b/CONTRIBUTING.md
+index a5df654..63a8c2d 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -69,7 +69,7 @@ archive/executable checks when the inputs are set. CI runs the same script. The
+ | --- | --- | --- |
+ | `python3 tools/verify_recovered_asset_index.py` | Derives the expected index from producer receipts, re-hashes 2579 artifacts across 35 cars, and requires corrupt manifests, cross-car record swaps and changed declarations each to be rejected | Committed corpus |
+ | `python3 tools/test_export_materials.py` | Source texture/selector ownership across 35 GLBs, with an in-range wrong-material mutation | Committed corpus |
+-| `node tools/test_silhouette.mjs`, `python3 tools/test_build_showcase.py` | 35 procedural meshes, shared GPU-resource disposal, rating/colour handling, invalid corpus and load timeouts; decoded icon samples and manifest-pin corruption control | Node.js + Python + committed reference corpus; no npm install |
++| `node tools/test_silhouette.mjs`, `python3 tools/test_build_showcase.py`, `python3 tools/test_build_silhouettes.py` | 35 source-derived silhouettes: independent triangle/normal/transform/hub checks, bounded GPU resources, rating-independent proportions, malformed meshes and load timeouts; icon and GLB pins with corruption controls | Node.js + Python + committed reference corpus; no npm install |
+ | `node tools/test_viewer_materials.mjs`, `node tools/test_model_load.mjs`, `node tools/test_viewer_loading.mjs` | Linear material factors, separate index namespaces, malformed containers, stalled reads, actual viewer load callback and recovery | Node.js + committed corpus; no npm install |
+ | `python3 tools/verify_config_data_sound.py` | 35 cars × config (11 files) + data DAT + sound chain | Private archive/executable bundle |
+ | `python3 tools/verify_sound_bank_index.py` | Sound bank reconciliation | Private archive/executable bundle |
+
+diff --git a/.scratch/silhouettes-replacement-2026-10-08/research/README.md b/research/README.md
+index 96a082f..e545b0a 100644
+--- a/.scratch/silhouettes-replacement-2026-10-08/research/README.md
++++ b/research/README.md
+@@ -7,6 +7,7 @@ single list of what is not yet established; update it when a note closes or open
+ | Note | Holds |
+ | --- | --- |
+ | `adversarial-teardown-2026-10-08.md` | Executed offline viewer/export teardown, material ownership repairs, failure/keyboard/layout probes, sampling improvement and verification evidence |
++| `silhouette-models-2026-10-08.md` | Source-derived silhouette replacement, all-car geometry checks, browser comparisons and fidelity limits |
+ | `silhouettes-teardown-2026-10-08.md` | Silhouette-only teardown, resource/literal-text/layout repairs, stationary inspection, decoded icon samples and browser re-attack |
+ | `original-recovery.md` | Synthesis of the original car recovery: what is decoded, what is a candidate |
+ | `original-geometry-research.md` | Geometry and texture recovery status, superseded notes, evidence route |
+@@ -20,6 +21,8 @@ single list of what is not yet established; update it when a note closes or open
+ 
+ ## Open items
+ 
++- Silhouette surface tones use vertex sampling rather than semantic glass/paint segmentation; residual decals and dark details are approximate. Full game-render fidelity remains open.
++
+ - Execution trace of CPU, DMA, VIF and VU1 for the dumped frame.
+ - ADC-producing pass-1/2 branch and flag-set clip stage; static-kick packet origins.
+ - Full pass-4 UV/view-normal factor, pass-5 S, and bit-exact arithmetic (279 measured one-ULP T differences); see `vu-handler-dump.md`.
