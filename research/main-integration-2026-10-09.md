@@ -12,7 +12,7 @@ Source inputs and canonical manifests live under `ford-racing-2/`; exported sour
 - `checks-3/results.json` records 32 passes, no skips, exit zero. It includes original asset integrity and tamper controls, material/texture ownership across 35 GLBs, multi-game identity/path controls, load recovery, editable dealership preservation/freshness, actual Blender 4.5.14 import/edit/export, static executable verifiers and captured optional-pass controls. Complete command logs are retained alongside the manifest.
 - `browser.json` records the default redirect, 35 dealership cars, independent editable GLB download path, separate original source GLB download path and no uncaught browser errors. `dealership.png` records the rendered updated app.
 - `export-preservation.json` compares the rebuilt source GLBs to material-fix commit `89ffd39`: all 35 binary chunks (geometry and embedded texture payloads) are unchanged. All source samplers are linear min/mag without mipmaps.
-- `../evidence/continuation/khronos-validation.json` records 35 source GLBs, zero errors and zero warnings, plus malformed-input rejection.
+- `evidence/continuation/khronos-validation.json` records 35 source GLBs, zero errors and zero warnings, plus malformed-input rejection.
 
 These checks establish the bounded behavior above, not complete original game shading, live animation or fidelity for uncaptured game states. Issue 21 covers 100 aligned optional-pass draws, all from COBRA, within six loaded models; it does not establish optional-pass assignment for the other cars. Linear filtering is informed by 106 captured draws; the inspector retains that candidate qualification and its reversible Sharp pixels control.
 

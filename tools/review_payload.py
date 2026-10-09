@@ -129,13 +129,18 @@ def review_status(bundle, implementer, resolution=None):
             if receipt.get('args') != call['args']:
                 raise ValueError('Judge receipt arguments differ from this bundle')
             result = unwrap(receipt)
-            if result.get('tool') != call['tool'] or result.get('action') not in ['auto', 'review', 'escalate']:
+            if result.get('tool') != call['tool']:
                 raise ValueError('Unknown or malformed judge result')
+            action = result.get('action')
             if call['tool'] == 'jev_verify':
                 results = result.get('results', [])
-                if len(results) != len(call['args']['claims']) or any(r.get('claim') != c or r.get('verdict') not in ['verified', 'unsupported', 'contradicted'] for r, c in zip(results, call['args']['claims'])):
+                if len(results) != len(call['args']['claims']) or any(r.get('claim') != c or r.get('verdict') not in ['verified', 'unsupported', 'contradicted'] or r.get('action') not in ['auto', 'review'] for r, c in zip(results, call['args']['claims'])):
                     raise ValueError('Verification results do not account for every claim')
-                if result['action'] == 'auto' and any(r.get('verdict') != 'verified' or r.get('action') != 'auto' for r in results):
+                # jev_verify returns per-claim actions without an aggregate action.
+                # Derive the aggregate only after validating every claim's schema.
+                if action is None:
+                    action = 'review' if any(r['action'] == 'review' for r in results) else 'auto'
+                if action == 'auto' and any(r.get('verdict') != 'verified' or r.get('action') != 'auto' for r in results):
                     raise ValueError('Auto verification contains unresolved claims')
                 if any(not probability(r.get('confidence')) for r in results):
                     raise ValueError('Verification confidence is missing or invalid')
@@ -143,10 +148,12 @@ def review_status(bundle, implementer, resolution=None):
                 scores = result.get('scores', {})
                 if not probability(result.get('safe_to_apply')) or set(scores) != {'correctness', 'spec_match', 'test_gap', 'blast_radius'} or any(not probability(s.get('confidence')) for s in scores.values()):
                     raise ValueError('Patch review scores are missing or invalid')
+            if action not in ['auto', 'review', 'escalate']:
+                raise ValueError('Unknown or malformed judge action')
             if any(r.get('verdict') == 'contradicted' for r in result.get('results', [])):
                 blocked.append(str(path))
-            elif result['action'] != 'auto':
-                unresolved.append({'receipt': str(path), 'action': result['action'],
+            elif action != 'auto':
+                unresolved.append({'receipt': str(path), 'action': action,
                                    'scores': result.get('scores'), 'safe_to_apply': result.get('safe_to_apply')})
         except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError):
             blocked.append(str(path))

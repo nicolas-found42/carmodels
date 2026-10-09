@@ -57,6 +57,33 @@ class ReviewPayloadTests(unittest.TestCase):
             path.write_text(json.dumps({'isError': True, 'content': [{'text': 'max_tokens_exceeded'}]}))
             self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'blocked')
 
+    def test_actual_per_claim_verify_output_and_invalid_controls(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'verify.json'
+            calls = [{'tool': 'jev_verify', 'args': {'claims': ['claim']}, 'out': str(path)}]
+            bundle = {'calls': calls, 'bundle_sha256': digest(calls)}
+            result = {'tool': 'jev_verify', 'results': [
+                {'claim': 'claim', 'verdict': 'verified', 'confidence': 0.76, 'action': 'review'}]}
+            def save():
+                path.write_text(json.dumps({'args': calls[0]['args'], 'result': result}))
+            save()
+            self.assertEqual(review_status(bundle, 'author')['status'], 'needs_independent_review')
+            resolution = {'bundle_sha256': bundle['bundle_sha256'], 'reviewer': 'reviewer',
+                          'verdict': 'approve', 'rationale': 'independently verified'}
+            self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'accepted')
+            result['results'][0].update(confidence=0.99, action='auto')
+            save()
+            self.assertEqual(review_status(bundle, 'author')['status'], 'accepted')
+            for change in [{'verdict': 'contradicted'}, {'action': 'unknown'}, {'confidence': -1}, {'claim': 'other'}]:
+                original = dict(result['results'][0])
+                result['results'][0].update(change)
+                save()
+                self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'blocked')
+                result['results'][0] = original
+            del result['results'][0]['action']
+            save()
+            self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'blocked')
+
     def test_contradicted_or_missing_claims_block_even_with_resolution(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / 'verify.json'
