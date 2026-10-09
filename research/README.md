@@ -42,3 +42,5 @@ single list of what is not yet established; update it when a note closes or open
   screenshots PCSX2 embedded at dump-save time; a replayed-frame cross-check of
   those frames is still open (replay needs a GUI session on the pinned builds;
   see the receipt's `claim_limits`), as is the camera/metric work of issue #27.
+
+- [Branch integration and verification, 2026-10-09](main-integration-2026-10-09.md) — independent dealership/source apps, game-folder migration and complete offline/Blender checks.

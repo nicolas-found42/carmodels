@@ -10,7 +10,7 @@ const sourcePage = fs.readFileSync(new URL('../dealership/recovered.html',import
 assert.match(dealershipPage,/fetchCars\('\.\/public\/dealership\/cars.json'\)/);
 assert(!dealershipPage.includes('silhouette')&&!dealershipPage.includes('Silhouette'),'old visible terminology removed');
 assert.match(dealershipPage,/dealership\/models\/\$\{c.code\}\.glb/,'dealership downloads its own copies');
-assert.match(sourcePage,/public\/recovered\/index.json/,'source showcase retains its own corpus');
+assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
 assert.match(sourcePage,/<h1>Source models<\/h1>/);
 assert.equal(validateCars(cars).length, 35);
 for (const car of cars) {
