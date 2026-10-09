@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "unique_native_packages": 81,
+  "unique_native_members": 3485,
+  "producer_package_instances": 82,
+  "producer_member_instances": 3495,
+  "compared_decoded_bytes": 1340186243,
+  "duplicate_package_instances": {
+    "f8884922a7f55567257daecae38297a9134982f3c6c1bd086eae52a0cddb6263": [
+      {
+        "path": ".scratch/redline/addons/Wipeout ship 1.0.redplug",
+        "members": 10
+      },
+      {
+        "path": ".scratch/redline/addons/car-envelopes/Wipeout_ship_1.0.redplug.zip.extracted/Wipeout ship 1.0.redplug",
+        "members": 10
+      }
+    ]
+  },
+  "native_decode_errors": 0,
+  "excluded_non_native_carriers": [
+    {
+      "path": ".scratch/redline/addons/car-envelopes/Honda_S2000_1.1.python-zip/__MACOSX/Honda S2000 1.1/._Honda S2000 1.1.redplug",
+      "reason": "not native package"
+    }
+  ],
+  "controls": [
+    {
+      "mutation": "hash",
+      "rejected_reason": "decoded SHA256 mismatch"
+    },
+    {
+      "mutation": "length",
+      "rejected_reason": "decoded length mismatch"
+    },
+    {
+      "mutation": "member",
+      "rejected_reason": "member coverage mismatch"
+    },
+    {
+      "mutation": "package",
+      "rejected_reason": "package coverage mismatch"
+    }
+  ],
+  "input_pins": {
+    "independent": "769a349d481214945394ae9ec56ff7adbb0d8044b1e95c3c026a48500131a93a",
+    "producer": "29330ccac00f0be2d86d840e7099d4c8794cd8980c4c27a39541143e0af1867e"
+  },
+  "claim_limits": [
+    "Independent C native-instruction translation compared to Python producer outputs on the supplied static corpus.",
+    "No game execution or rendering claim.",
+    "Unreadable table slots not claimed inactive."
+  ]
+}

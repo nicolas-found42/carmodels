@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, validateCars, fetchCars} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -11,9 +11,53 @@ assert.match(dealershipPage,/fetchCars\('\.\/public\/dealership\/cars.json'\)/);
 assert(!dealershipPage.includes('silhouette')&&!dealershipPage.includes('Silhouette'),'old visible terminology removed');
 assert.match(dealershipPage,/dealership\/models\/\$\{c.code\}\.glb/,'dealership downloads its own copies');
 assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
-assert.match(sourcePage,/<h1>Source models<\/h1>/);
-assert.equal(validateCars(cars).length, 35);
-for (const car of cars) {
+assert.match(sourcePage,/<h1>Source model library<\/h1>/);
+assert.equal(validateCars(cars).length, cars.length);
+const compactCars=cars.filter(c=>c.model.schema===1);
+assert.equal(compactCars.length,35);
+const gtCars=cars.filter(c=>c.game==='gran-turismo');
+for(const c of gtCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');}
+assert.equal(gameId(compactCars[0]),'ford-racing-2');
+const redlineCars=cars.filter(c=>c.game==='redline');
+for(const c of redlineCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'redline');}
+const redlineFixture={...gtCars[0],game:'redline',gameLabel:'Redline',sourceVariant:'base'};
+assert.equal(validateCars([redlineFixture]).length,1);
+assert(matchesVariant(redlineFixture,'base'));
+assert(!matchesVariant(redlineFixture,'addon'));
+assert.match(dealershipPage,/<option value="base">Base game<\/option>/);
+assert.match(dealershipPage,/<option value="addon">Add-on<\/option>/);
+assert.match(sourcePage,/'redline':'Redline'/);
+assert(matchesVariant({sourceVariant:'night'},'night'));
+assert(!matchesVariant({sourceVariant:'day'},'night'));
+assert(matchesVariant({sourceCollection:'arcade'},'arcade'));
+// Run the page's actual semantic handlers with a delayed transport response.
+// Manual controls must invalidate that pending response before it can apply.
+const semanticStart=dealershipPage.indexOf("$('search').addEventListener('input'");
+const semanticEnd=dealershipPage.indexOf('function buildList()',semanticStart);
+const callbacks=dealershipPage.slice(semanticStart,semanticEnd);
+assert(semanticStart>0 && semanticEnd>semanticStart);
+for(const action of ['game','variant','search','query','clear']) {
+  const controls={};
+  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-filter','semantic-status','clear-filters'])controls[id]={value:'',textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback;},focus(){}};
+  controls['game-filter'].value='all';controls['game-filter'].options=[{value:'all'},{value:'gran-turismo'}];
+  controls['variant-filter'].options=['','day','night','arcade'].map(value=>({value}));
+  controls['semantic-query'].value='Gran Turismo night';
+  let resolveResponse, applications=0;
+  const pending=new Promise(resolve=>{resolveResponse=resolve;});
+  new Function('$','document','applyFilters','fetch',`let semanticId=0;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>applications++,()=>pending);
+  const request=controls['semantic-filter'].onclick();
+  if(action==='game'){controls['game-filter'].value='all';controls['game-filter'].onchange();}
+  if(action==='variant'){controls['variant-filter'].value='day';controls['variant-filter'].onchange();}
+  if(action==='search')controls.search.listeners.input();
+  if(action==='query')controls['semantic-query'].listeners.input();
+  if(action==='clear')controls['clear-filters'].onclick();
+  const before={game:controls['game-filter'].value,variant:controls['variant-filter'].value,applications};
+  resolveResponse({ok:true,json:async()=>({status:'ok',filters:{game:'gran-turismo',variant:'night'}})});
+  await request;
+  assert.deepEqual({game:controls['game-filter'].value,variant:controls['variant-filter'].value,applications},before,`stale semantic response overwrote ${action}`);
+}
+assert.match(dealershipPage,/el\.onclick = \(\) => \{ semanticId\+\+;/,'chip changes invalidate semantic requests');
+for (const car of compactCars) {
   const mesh = makeCar(car);
   const bounds = new THREE.Box3().setFromObject(mesh);
   assert(bounds.min.toArray().every(Number.isFinite) && bounds.max.toArray().every(Number.isFinite));
@@ -47,7 +91,7 @@ validateCars([bodyOnly]);
 const custom = makeCar(bodyOnly);
 assert.equal(custom.userData.wheels.length,0,'edited dealership models need not preserve source wheel counts');
 disposeCar(custom);
-for (const data of [[], {}, [cars[0],cars[0]], [{...cars[0],speed:NaN}], [{...cars[0],weight:2}], [{...cars[0],liveries:null}], [{...cars[0],paint:{rgb:[256,0,0]}}], [{...cars[0],bodyStyle:'unknown'}]]) assert.throws(() => validateCars(data));
+for (const data of [[], {}, [cars[0],cars[0]], [{...cars[0],speed:NaN}], [{...cars[0],weight:2}], [{...cars[0],liveries:null}], [{...cars[0],paint:{rgb:[256,0,0]}}], [{...cars[0],bodyStyle:'invalid'}]]) assert.throws(() => validateCars(data));
 for (const mutate of [
   c=>delete c.model,
   c=>c.model.source.glb='dealership/models/OTHER.glb',
@@ -61,7 +105,7 @@ for (const mutate of [
   const corrupted=structuredClone(cars[0]);mutate(corrupted);
   assert.throws(()=>validateCars([corrupted]),/model/);
 }
-assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,35);
+assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,cars.length);
 await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:false,status:404,json:async()=>cars})}), /HTTP 404/);
 await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>[]})}), /empty/);
 for (const bodyStall of [false,true]) {

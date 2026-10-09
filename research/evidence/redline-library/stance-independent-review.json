@@ -1,0 +1,115 @@
+{
+  "reviewer": "/root/redline_library_integration",
+  "verdict": "approve",
+  "scope": [
+    "tools/redline_model.py",
+    "tools/test_redline_model.py",
+    "tools/test_redline_roundtrip.py"
+  ],
+  "source_sha256": {
+    "tools/redline_model.py": "9b451a9f9814303a034e7a836e44f2dcbcd984249aa49cda9986a8d7b4827313",
+    "tools/test_redline_model.py": "3d6ec13e29fc70671f792170524f6b7a6831f746a1a28c14a537501dd314659a",
+    "tools/test_redline_roundtrip.py": "f64a20195a649fda6f2cc4aab8ee2ec0e2b6de37681f5e1808eac67e09e11a9d"
+  },
+  "native_receipt": ".scratch/redline-conversion/mesh/suspension-native-receipt.json",
+  "native_receipt_sha256": "9e0c5b971555d7901cfa5ee1100080d6a007d137296a616b71a3f2d38ca4218f",
+  "native_pins_independently_checked": true,
+  "native_executable_sha256": "b2ac41a4335a1a75f71f9e88a4867c08cc514a74426576733e58aa6a05547e22",
+  "checks": "checks.json",
+  "actual_controls": [
+    "coordinate-probe.json",
+    "viewer-probe.json",
+    "fixed-native-probe.json",
+    "blender-image-probe.json"
+  ],
+  "rationale": [
+    "Independent quaternion/TRS calculation matches every old Mustang baked wheel/body position at emitted float32 precision; direct editable loader preserves source node TRS and applies only a common floor/center translation. Relative wheel placement error originates before these stages.",
+    "Native parser maps wheels.maxSuspension to wheel-record offset0x18; numWheels allocates zero-cleared count*0x58 records; preview initialization multiplies that field by independently checked binary constant0.5 into state offset0x47c; both native render spans subtract it from Y before world transform.",
+    "Correction applies the half-travel Y subtraction to wheel and brake centers, preserves X/Z, dimensions, rotation, texture selector, and defaults missing travel to zero. Finite/nonnegative travel is a project safeguard, not asserted native validation.",
+    "Actual Mustang readonly corrected build yields all wheel Y centers0.25, 1576 triangles, no warnings; after floor translation body clearance changes from0.0413175 to0.1413175.",
+    "Corrected Blender image check forces packed image load via dimensions and pixel access. Independently, all seven actual Mustang packed images changed has_data=false to true and have positive decoded dimensions/pixel counts.",
+    "All eight assembly tests pass on current and system Python; Ruff passes on all three reviewed files."
+  ],
+  "limitations": [
+    "This approves the pinned code and native static preview interpretation, not game physics equilibrium or dynamic suspension.",
+    "No lateral wheel adjustment is supported by the supplied evidence; configured native X coordinates and dimensions remain unchanged.",
+    "Actual regenerated outputs, editable safe upgrade, freshness checks, corrected browser appearance and final full suite require root final evidence.",
+    "Before-fix coordinate/viewer receipts intentionally pin the previous published Mustang GLB; corrected native probe is in-memory only.",
+    "Blender image probe validates lazy decoding but does not establish original shader fidelity; full corrected roundtrip root log is separately retained."
+  ],
+  "no_unresolved_actionable_code_findings": true,
+  "jev_native_evidence": {
+    "suspension-native-verify": {
+      "path": ".scratch/redline-conversion/mesh/suspension-native-verify.json",
+      "sha256": "1f7b358fd601e2a43b48766ee257865408273bbcf5edfc4d05203aab5c42d59c",
+      "model": "typesafe/jev-1.13-20260917",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "In the pinned Redline i386 preview routine, each wheel runtime travel at +0x47c is initialized to 0.5 times configured wheels.maxSuspension (config +0x18); both simple and detailed wheel draw paths subtract this travel from configured wheels.pos.y. A static model matching this native preview therefore uses center [pos.x, pos.y - 0.5*maxSuspension, pos.z]. This is preview pose, not a claim about runtime physics equilibrium.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 1,
+            "contradicts": 0,
+            "says_nothing": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "preview-initialize",
+          "same_subject": 0.82
+        },
+        {
+          "id": "claim1",
+          "claim": "For an omitted wheels.maxSuspension, the native config loader zero-initializes the numWheels * 0x58 allocation with _NewPtrClear; its maxSuspension handler writes wheel +0x18 through sscanf only on the matching field. In this configuration-loading branch the missing-field fallback is therefore 0.0. Finite/nonnegative conversion checks are separate safeguards and are not native loader validation.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 0.99,
+            "contradicts": 0.01,
+            "says_nothing": 0
+          },
+          "confidence": 0.98,
+          "action": "auto",
+          "supporting_evidence": "default-and-parser",
+          "same_subject": 0.62
+        }
+      ]
+    },
+    "suspension-neutral-pose-compare": {
+      "path": ".scratch/redline-conversion/mesh/suspension-neutral-pose-compare.json",
+      "sha256": "c32c88d799d0bd8e7c7825fe6b040d0062171879ba44dcb007a3456337bd24c0",
+      "model": "typesafe/jev-1.13-20260917",
+      "summary": {
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0,
+          "contradicts": 0.99,
+          "different_facts": 0.01
+        },
+        "confidence": 0.98,
+        "margin": 0.98,
+        "decision": "auto"
+      },
+      "results": [
+        {
+          "aspect": "Static showroom wheel center Y for a nonzero maxSuspension",
+          "relation": "contradicts",
+          "probabilities": {
+            "same_fact": 0,
+            "contradicts": 0.98,
+            "different_facts": 0.02
+          },
+          "confidence": 0.97,
+          "margin": 0.96,
+          "decision": "auto"
+        }
+      ]
+    }
+  },
+  "retired_claim": "Prior static translation T(pos) for nonzero suspension travel is contradicted by native preview initialization; not carried into this approval."
+}

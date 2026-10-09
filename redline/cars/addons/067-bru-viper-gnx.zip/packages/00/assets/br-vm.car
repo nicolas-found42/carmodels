@@ -1,0 +1,46 @@
+; from Viper and Viper Racer models, modified by bru
+;carName "Viper Mini"carName "Viper GNX";engineName "3.8 Litre Buick V-6 Turbo"year 2007displacement 3.79price 70000
+
+;---aerodynamics
+
+; from ViperfrontAirResistance 0.665sideAirResistance 1.8topAirResistance 3.0frontLift -0.2rearLift -0.2;---chassis
+
+; from Viper Racermass 1325.0
+inertia {2300,2000,500}massCenter {0.0,0.38,-0.04}numCollBoxes 2# 0coll.tfr {0.955,0.653,1.89}coll.tfl {-0.955,0.653,1.89}coll.trr {0.955,0.653,-2.29}coll.trl {-0.955,0.653,-2.29}coll.bfr {0.955,0.175,1.89}coll.bfl {-0.955,0.175,1.89}coll.brr {0.955,0.175,-2.29}coll.brl {-0.955,0.175,-2.29}# 1coll.tfr {0.85,1.34,0.346}coll.tfl {-0.85,1.34,0.346}coll.trr {0.85,1.34,-0.607}coll.trl {-0.85,1.34,-0.607}coll.bfr {0.955,0.653,0.746}coll.bfl {-0.955,0.653,0.746}coll.brr {0.955,0.653,-1.8}coll.brl {-0.955,0.653,-1.8};---graphics
+model "br-vm.mdl"interiorModel "viper-interior.mdl"driverPos {0.41,0.45,-0.7}steeringWheelPos {0.41,0.65,-0.03}steeringWheelAngle 15steeringWheelTurns 2.4steeringWheelRadius 0.18steeringWheelTexture "Racing_steering_wheel.pct"numColors 6# 0colors {0.8,0.7,0.2}# 1colors {.6,0,0}# 2colors {0.28,0.28,0.4}
+# 3colors {0,.7,0}
+# 4colors {0.2,0.7,0.8}
+# 5colors {.4,.4,.4}
+frontLicensePlatePos {0,0.29,1.7}rearLicensePlatePos {0,0.5,-2.03}exhaust1Pos {-0.45,0.2,-2.04}exhaust2Pos {0.45,0.2,-2.04};--engine; from 87 Buick GNX
+power 205800torque 468;RPM values for the power and torque ratings.powerRPM 4400.0torqueRPM 3000.0;RPM for engine stall, currently unusedjerkRPM 450.0;Engines idle RPMidleRPM 800.0;RPM delimtermaxRPM 5000.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 0.5;currently unusedengineFriction 200engineSample "enginenormal2.wav"hallSample "hallnormal2.wav"zeroRPMSoundGain 0.8fullRPMSoundGain 1.0zeroThrottleSoundGain 0.5fullThrottleSoundGain 1.1zeroRPMSoundPitch 0.3fullRPMSoundPitch 1.2zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.0;---suspension
+supsensionFriction 300damperStrength 40000frontSwayBar 20000rearSwayBar 10000;---drivetrain
+
+; from 87 Buick GNX
+finalDriveRatio 3.42
+;finalDriveRatio 4.3
+maxClutchTorqueTransfer 900differentialLockCoefficient 120shiftUpRPM 4700.0shiftDownRPM 2700.0gearSwitchTime 0.12numGears 6# 0gearRatios -2.88# 1gearRatios 0# 2gearRatios 2.74# 3gearRatios 1.57# 4gearRatios 1.0# 5gearRatios 0.67;---wheels
+
+; diameters from GNX
+numWheels 4# 0wheels.pos {-0.72,0.315,1.07}wheels.inertia 2.2wheels.powered 0.0wheels.friction 10wheels.maxAngle 0.4wheels.maxSuspension 0.15wheels.radius 0.326wheels.width 0.275wheels.braked 4000.0wheels.handbraked 0.0wheels.model "wheel-classic.mdl"wheels.width 0.275wheels.texture 1# 1wheels.pos {0.72,0.315,1.07}wheels.inertia 2.2wheels.powered 0.0wheels.friction 10wheels.maxAngle 0.4wheels.maxSuspension 0.15wheels.radius 0.326wheels.width 0.275
+; 245 on GNXwheels.braked 4000.0wheels.handbraked 0.0wheels.model "wheel-classic.mdl"wheels.width 0.275wheels.texture 1# 2wheels.pos {-0.72,0.32,-1.22}wheels.inertia 2.2wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.15wheels.radius 0.331wheels.width 0.325
+; 255 on GNX, 345 on Viperwheels.braked 1500.0wheels.handbraked 1.0wheels.model "wheel-classic.mdl"wheels.width 0.335wheels.texture 1# 3wheels.pos {0.72,0.32,-1.22}wheels.inertia 2.2wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.15wheels.radius 0.331wheels.width 0.325wheels.braked 1500.0wheels.handbraked 1.0wheels.model "wheel-classic.mdl"wheels.width 0.335wheels.texture 1;---lights
+numLights 18
+
+; rear running# 0lights.pos {-0.56,0.5,-2.03}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.3lights.onFlags 0x01lights.offFlags 0x00# 1lights.pos {0.56,0.5,-2.03}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.3lights.onFlags 0x01lights.offFlags 0x00
+
+; brakes# 2lights.pos {-0.42,0.5,-2.03}lights.dir {0,0,-1}lights.rgb {0.7,0,0}lights.type 2lights.size 0.3lights.onFlags 0x10lights.offFlags 0x00# 3lights.pos {0.42,0.5,-2.03}lights.dir {0,0,-1}lights.rgb {0.7,0,0}lights.type 2lights.size 0.3lights.onFlags 0x10lights.offFlags 0x00
+
+; reverse# 4lights.pos {0.28,0.5,-2.03}lights.dir {0,0,-1}lights.rgb {0.8,0.8,0.8}lights.type 0lights.size 0.3lights.onFlags 0x08lights.offFlags 0x00# 5lights.pos {-0.28,0.5,-2.03}lights.dir {0,0,-1}lights.rgb {0.8,0.8,0.8}lights.type 0lights.size 0.3lights.onFlags 0x08lights.offFlags 0x00
+
+; rear side# 6lights.pos {0.71,0.4,-1.88}lights.dir {1,0,0}lights.rgb {1,0,0}lights.type 0lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00# 7lights.pos {-0.71,0.4,-1.88}lights.dir {-1,0,0}lights.rgb {1,0,0}lights.type 0lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00
+
+; headlights# 8lights.pos {0.58,0.29,1.76}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.36lights.onFlags 0x01lights.offFlags 0x00# 9lights.pos {-0.58,0.29,1.76}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.36lights.onFlags 0x01lights.offFlags 0x00
+
+; front running# 10lights.pos {0.36,0.29,1.76}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 0lights.size 0.16lights.onFlags 0x01lights.offFlags 0x00# 11lights.pos {-0.36,0.29,1.76}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 0lights.size 0.16lights.onFlags 0x01lights.offFlags 0x00
+
+; front side# 12lights.pos {0.8,0.29,1.55}lights.dir {1,0,0}lights.rgb {1,0.5,0}lights.type 0lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00# 13lights.pos {-0.8,0.29,1.55}lights.dir {-1,0,0}lights.rgb {1,0.5,0}lights.type 0lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00
+
+; headlight cones# 14lights.pos {-0.58,0.29,1.7}lights.dir {0,-0.05,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00# 15lights.pos {0.58,0.29,1.7}lights.dir {0,-0.05,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+# 16lights.pos {0.72,0.315,-1.22}lights.dir {1,0,0}lights.rgb {0,0,0.2}lights.type 5
+;lights.type 6lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00# 17lights.pos {-0.72,0.315,-1.22}lights.dir {-1,0,0}lights.rgb {0,0,0.2}lights.type 5
+;lights.type 6lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00

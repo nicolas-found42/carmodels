@@ -1,0 +1,323 @@
+{
+  "schema": 1,
+  "bundle_sha256": "0b34b6c37b459d92a31bc63ab99b97e789811fe66a9603df4652ba7f4a2bc15a",
+  "reviewer": "/root/redline_mesh_conversion independent texture reviewer",
+  "verdict": "approve",
+  "scope": "Only texture.py and test_redline_texture.py patch confidence escalations, and texture.json qualified corpus claim confidence escalation. This record DOES NOT approve the texture-controls.json contradicted compound completion claim.",
+  "pins": {
+    ".scratch/redline-conversion/final-gate-v2/bundle.json": "0b34b6c37b459d92a31bc63ab99b97e789811fe66a9603df4652ba7f4a2bc15a",
+    ".scratch/redline-conversion/final-gate-v2/calls.json": "5f82bd94006cebc7dc096928cbb99483a5fc3f98a291473741400bbe1dfa11ff",
+    ".scratch/redline-conversion/final-gate-v2/texture.json": "602e5f712b3a143d12e978b68f3cbdeafcf3ecf732b81c5fdf31d7ab3a1ecac6",
+    ".scratch/redline-conversion/final-gate-v2/texture-controls.json": "1a62b3299f82de845a46cda84b33012d3516a791f6a579dbd88732093415b85e",
+    "tools/redline_texture.py": "fc17acf7bc1f4a631656ed95277579be90c3435fcfa3ed3a347582cc92d3f27f",
+    "tools/test_redline_texture.py": "b4b72f8d76951926fda096bd417cac992b12bbe5e04dd7c4db1a03eb1e931ff6",
+    ".scratch/redline-conversion/mesh/final-fast-peer-resolution.json": "b9d644846438167610d2b21d603b117bce358df2bd14dfcf913989a20a459901",
+    ".scratch/redline-conversion/mesh/texture-fast-peer-tests.json": "ef19ed6a254b41ff0af5af957be775fa6b9efa5326e4a9f4a091dae672cb34aa",
+    ".scratch/redline-conversion/mesh/texture-fast-peer-adam7.json": "89839406683a5b7ea1f5f823b86b716a68733803fe052b881c03c412f8042edc",
+    ".scratch/redline-conversion/texture/corpus-summary.json": "cb88389db7562e7cb9ab66243a7336ebd6a4cd31a69634c64fa8210eb3c35a1f",
+    ".scratch/redline-conversion/texture/corpus-decoding-fast.json": "5d0be30a2033bf64e480b4996d296a1b51645ea85eda8aebf9232c4618aa7b2d",
+    ".scratch/redline-conversion/texture/corpus_probe_fast.py": "da41874efdda3ec0b90785ebde2e233e714ef10d32cf654eebeacad854492aca",
+    ".scratch/redline-conversion/texture/pict-final-corpus.json": "ad58ce2d887766a0fb3ee3e3f2caaa8db749de07b51ca99970da54c95f97853d",
+    ".scratch/redline-conversion/texture/corpus-verify.json": "35d350a80c777dec1e63c8bf481baea47d08584ebd3fcab0c9dbeb466c79d303",
+    ".scratch/redline-conversion/texture/png-content-audit.json": "2fa5c671d3d49584a501e87a9aa8bd98bce0c7b4a411842867ea47686fde24e2",
+    ".scratch/redline-conversion/texture/png-qualified-verify.json": "5c6dcb498d0f62d03030ef4d569f6812af9f32fe3a51a831d2193f98a1f9868b",
+    ".scratch/redline-conversion/texture/tests-default-fast.log": "767d79b98c050435fce87334bf7e14a8d4887712d20c1c001482e94dd6a2e12c",
+    ".scratch/redline-conversion/texture/tests-pillow-fast.log": "2a636f46c1dbef7c60c162cfddb7ce7b186dd5eb2e47e4e9bdb6063ba105e52e",
+    ".scratch/redline-conversion/final-gate-v2/texture-peer-default.log": "e94870127b7c372dd390e5586e6bab810ed1174ba92f45761cdc3d4d49a28122",
+    ".scratch/redline-conversion/final-gate-v2/texture-peer-stock.log": "bc4099d0c3a17cbb460195bedc6411e9ff1fb5c8fb774142a5543196673e83d7",
+    ".scratch/redline-conversion/final-gate-v2/texture-peer-checks.json": "bb5cf945efb6ee86baeb648cf754c17be33075065e9998e787c08fc19d7dd83b",
+    ".scratch/redline-conversion/final-gate-v2/texture-peer-corpus-check.json": "53340060e3fabebd205414b412101dbbd8ab111959eca3e96f6dfb9afdd9e78f"
+  },
+  "original_gate_results_retained": {
+    "texture": {
+      "tool": "jev_gate",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "action": "escalate",
+      "reason_codes": [
+        "confidence_below_review",
+        "review_escalated",
+        "claim_confidence_low"
+      ],
+      "review": {
+        "mode": "per-file",
+        "action": "escalate",
+        "composite": 0.64,
+        "safe_to_apply": 0.59,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting": [
+          {
+            "file": "tools/redline_texture.py",
+            "rubrics": [
+              "test_gap"
+            ]
+          }
+        ],
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "files": [
+          {
+            "path": "tools/redline_texture.py",
+            "safe_to_apply": 0.59,
+            "scores": {
+              "correctness": {
+                "score": 1.7,
+                "confidence": 0.56,
+                "probabilities": {
+                  "0": 0.04,
+                  "1": 0.21,
+                  "2": 0.75
+                }
+              },
+              "spec_match": {
+                "score": 1.21,
+                "confidence": 0.14,
+                "probabilities": {
+                  "0": 0.18,
+                  "1": 0.43,
+                  "2": 0.39
+                }
+              },
+              "test_gap": {
+                "score": 0.83,
+                "confidence": 0,
+                "probabilities": {
+                  "0": 0.44,
+                  "1": 0.28,
+                  "2": 0.28
+                }
+              },
+              "blast_radius": {
+                "score": 1.59,
+                "confidence": 0.38,
+                "probabilities": {
+                  "0": 0.12,
+                  "1": 0.17,
+                  "2": 0.71
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.64,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "test_gap"
+            ]
+          }
+        ]
+      },
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 1,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full corpus experiment decoded 2297 source image files; a separate final PICT experiment compared all 140 unique PICT inputs.",
+            "verdict": "verified",
+            "confidence": 0.22,
+            "probabilities": {
+              "verified": 0.48,
+              "contradicted": 0.39,
+              "unsupported": 0.13
+            },
+            "action": "escalate"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 14172,
+        "output_tokens": 134
+      }
+    },
+    "texture-controls": {
+      "tool": "jev_gate",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "action": "escalate",
+      "reason_codes": [
+        "confidence_below_review",
+        "review_escalated",
+        "claims_contradicted",
+        "claim_confidence_below_auto_accept"
+      ],
+      "review": {
+        "mode": "per-file",
+        "action": "escalate",
+        "composite": 0.6862499999999999,
+        "safe_to_apply": 0.73,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting": [
+          {
+            "file": "tools/test_redline_texture.py",
+            "rubrics": [
+              "spec_match"
+            ]
+          }
+        ],
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "files": [
+          {
+            "path": "tools/test_redline_texture.py",
+            "safe_to_apply": 0.73,
+            "scores": {
+              "correctness": {
+                "score": 1.44,
+                "confidence": 0.17,
+                "probabilities": {
+                  "0": 0.16,
+                  "1": 0.23,
+                  "2": 0.61
+                }
+              },
+              "spec_match": {
+                "score": 1.01,
+                "confidence": 0,
+                "probabilities": {
+                  "0": 0.36,
+                  "1": 0.28,
+                  "2": 0.36
+                }
+              },
+              "test_gap": {
+                "score": 0.3,
+                "confidence": 0.55,
+                "probabilities": {
+                  "0": 0.78,
+                  "1": 0.14,
+                  "2": 0.08
+                }
+              },
+              "blast_radius": {
+                "score": 0.41,
+                "confidence": 0.4,
+                "probabilities": {
+                  "0": 0.72,
+                  "1": 0.16,
+                  "2": 0.12
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.6862499999999999,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "spec_match"
+            ]
+          }
+        ]
+      },
+      "verification": {
+        "action": "review",
+        "summary": {
+          "verified": 0,
+          "contradicted": 1,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The final test_redline_texture check exited zero; the separate stock-Python test run exercised the optional Pillow path without skips.",
+            "verdict": "contradicted",
+            "confidence": 0.72,
+            "probabilities": {
+              "verified": 0.18,
+              "contradicted": 0.81,
+              "unsupported": 0.01
+            },
+            "action": "review"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 12997,
+        "output_tokens": 137
+      }
+    }
+  },
+  "resolution": {
+    "texture_patch": "approve",
+    "texture_controls_patch": "approve",
+    "texture_corpus_claim": "approve bounded corpus claim with version distinction",
+    "texture_controls_original_compound_claim": "NOT APPROVED; retired by root, original contradiction retained; separate scoped replacement Jev verification required"
+  },
+  "rationale": [
+    "Current whole-file packet diffs reconstruct exactly the two source files at frozen fc17acf7... and b4b72f8d... hashes. Every pin in the earlier final-fast-peer-resolution.json is unchanged. Thus prior complete module/test/native-layout/corpus review and independent Adam7 known-pixel and excess-row controls apply directly to these final packets.",
+    "For texture module test_gap/confidence escalation, the suite covers native raw fixture and nonzero padding, DXT3 all colors/explicit alpha/c0<=c1/partial blocks, raw mips, raw3d plane fallback/preservation, malformed descriptors/counts/extents/dimensions, TGA channel/origin/RLE/grayscale, PNG identity/filter/CRC/row/stdlib controls, bounded decoder failure paths, layered PSD composite and multi-page TIFF rejection. Current reruns under default and stock Python exit zero; stock has no skipped optional Pillow method.",
+    "For texture-controls spec_match/confidence escalation, these tests directly address requested real texture conversion and explicit failure behavior without asserting game-driver shader fidelity. No modifications to these files or threshold changes are made. Earlier independent known-pixel Adam7 tests supplement the committed unit suite; PNG validation is bounded structure/row validation, not exhaustive conformance.",
+    "For the corpus claim low confidence, raw full-corpus receipt contains 2297 decoded file rows and 2159 distinct source hashes, zero failures. I independently rechecked byte length and SHA of every source row and raw-receipt summary pin. The run imported pre-PICT optimization producer 8903e109..., as explicitly recorded; I do not relabel it as a full final-code run.",
+    "Separate final-code PICT receipt pins fc17acf7..., has 140 distinct PICT inputs and 140 exact agreements. I independently checked each source SHA, dimensions and RGBA checksum against prior full-corpus output. This bounds the only intervening decoder change, namely PICT normalized PNG dispatch. Existing qualified corpus Jev verification and prior independent review remain preserved.",
+    "The original texture-controls compound claim is contradicted in its Jev receipt. I do not overturn it. Narrow replacement claims must preserve that default Python exits zero WITH one optional Pillow skip and stock /usr/bin/python3 exits zero with all nine methods and NO skips; root is obtaining separate verification."
+  ],
+  "limits": [
+    "Static source texture conversion only; no native driver/game shader/PBR render equivalence",
+    "PICT depends on installed macOS sips, uncommon images on optional existing Pillow",
+    "No library/GLB/browser completion approval by this component record",
+    "Full corpus and final PICT version scopes remain distinct",
+    "Original contradicted texture-controls claim remains rejected until explicitly retired/replaced in root completion accounting"
+  ]
+}

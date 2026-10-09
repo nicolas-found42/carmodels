@@ -17,11 +17,14 @@ export function sceneHasGeometry(doc, scene) {
 }
 
 export function geometryOptions(doc, records) {
- return [...doc.scenes.slice(1).map((s,i)=>{
+ const recordLayout=doc.nodes.some(n=>n.extras?.geometryRecord!==undefined);
+ return [...doc.scenes.flatMap((s,i)=>{
+  if(i===0&&recordLayout)return [];
   const disabled=!sceneHasGeometry(doc,s);
-  return {value:'scene'+(i+1),textContent:sceneLabel(s.name)+(disabled?' (no geometry)':''),
-   title:s.name+(disabled?' — this source tree contains no drawable geometry':''),disabled};
- }),...records.map(r=>({value:String(r.record),textContent:`Assembly part ${r.record}: ${r.triangles.toLocaleString()} candidate triangles`,disabled:false}))];
+  const name=s.name||`Scene ${i}`;
+  return [{value:'scene'+i,textContent:sceneLabel(name)+(disabled?' (no geometry)':''),
+   title:name+(disabled?' — this source tree contains no drawable geometry':''),disabled}];
+ }),...records.filter(r=>Number.isInteger(r.record)).map(r=>({value:String(r.record),textContent:`Assembly part ${r.record}: ${r.triangles.toLocaleString()} candidate triangles`,disabled:false}))];
 }
 
 export function defaultGeometryValue(doc, options) {

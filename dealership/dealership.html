@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ford Racing 2 — Dealership</title>
+<title>Car Library — Dealership</title>
 <style>
   :root {
     --bg: #14161a;
@@ -169,15 +169,18 @@
 <body>
   <nav id="sidebar">
     <header>
-      <h1>FORD RACING <span>2</span> — DEALERSHIP</h1>
-      <div class="sub">35 vehicles · from the PS2 game disc (PAL SLES-51705)</div>
+      <h1>CAR LIBRARY — <span>DEALERSHIP</span></h1>
+      <div class="sub">Independent editable models · multiple games</div>
       <a class="jump" href="recovered.html">Source models →</a>
     </header>
     <input aria-label="Search cars by name or year" id="search" placeholder="Search name or year…" autocomplete="off">
+    <label style="padding:0 16px 8px;font-size:12px">Game <select id="game-filter" aria-label="Filter by game"><option value="all">All games</option></select></label>
+    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="day">Day</option><option value="night">Night</option><option value="arcade">Arcade</option><option value="base">Base game</option><option value="addon">Add-on</option></select></label>
+    <div style="padding:0 16px 10px"><input id="semantic-query" aria-label="Describe game and variant filters" placeholder="e.g. Gran Turismo night models" maxlength="500" style="width:100%"><button type="button" id="semantic-filter">Find game and variant</button><div id="semantic-status" role="status" style="font-size:12px;color:var(--muted)"></div></div>
     <div id="filters"></div>
     <div id="results" role="status" aria-live="polite"></div>
     <button id="clear-filters" type="button">Clear search and filters</button>
-    <div id="empty" hidden>No cars match. Clear search and filters to see the corpus.</div>
+    <div id="empty" hidden>No entries match. Clear search and filters to see the corpus.</div>
     <div id="list"></div>
   </nav>
   <main id="main">
@@ -216,6 +219,7 @@
         </div>
       </div>
       <div id="legend">drag to rotate · scroll to zoom · right-drag to pan</div>
+      <p id="model-limits" style="grid-column:1;padding:0 16px 10px;color:var(--muted);font-size:12px;line-height:1.4"></p>
 
   </main>
 
@@ -299,7 +303,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { makeCar, disposeCar, fetchCars } from './dealership.mjs';
+import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant } from './dealership.mjs';
 
 const $ = id => document.getElementById(id);
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
@@ -307,6 +311,7 @@ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
 let CARS = [];
 let current = null;
 let carMesh = null;
+let selectionId = 0, selectionController = null, semanticId = 0;
 const groups = new Set();
 
 const boot = window.__viewerBoot || (window.__viewerBoot = { loaded: false, failed: false });
@@ -336,17 +341,18 @@ async function loadCorpus() {
   $('loading').textContent = 'Loading corpus…';
   try {
     CARS = await fetchCars('./public/dealership/cars.json');
+    $('game-filter').replaceChildren(Object.assign(document.createElement('option'),{value:'all',textContent:'All games'}), ...[...new Map(CARS.map(c=>[gameId(c),gameLabel(c)]))].map(([value,textContent])=>Object.assign(document.createElement('option'),{value,textContent})));
     groups.clear();
     CARS.forEach(c => groups.add(c.group || 'OTHER'));
     $('filters').replaceChildren();
     $('list').replaceChildren();
     buildFilters();
     buildList();
-    select(CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
+    await select(CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
     applyFilters();
     boot.loaded = true;
     boot.failed = false;
-    $('loading').hidden = true;
+    $('loading').hidden = Boolean(carMesh);
   } catch (error) {
     console.error('Corpus load failed', error);
     showBootError('The car list could not be loaded.', error.message + ' Check viewer/public/dealership/cars.json and the local server.');
@@ -365,12 +371,12 @@ function buildFilters() {
     const el = document.createElement('button');
     el.type = 'button'; el.setAttribute('aria-pressed','false');
     el.className = 'chip'; el.textContent = label; el.dataset.kind = kind;
-    el.onclick = () => { el.classList.toggle('on'); el.setAttribute('aria-pressed',String(el.classList.contains('on'))); applyFilters(); };
+    el.onclick = () => { semanticId++; el.classList.toggle('on'); el.setAttribute('aria-pressed',String(el.classList.contains('on'))); applyFilters(); };
     el._pred = pred;
     box.appendChild(el);
   };
   [...groups].sort().forEach(g => mk(g, c => (c.group || 'OTHER') === g, 'group'));
-  const shapes = [...new Set(CARS.map(c => c.bodyStyle))].sort();
+  const shapes = [...new Set(CARS.map(c => c.bodyStyle).filter(s=>s!=='unknown'))].sort();
   shapes.forEach(s => mk(s.toUpperCase(), c => c.bodyStyle === s, 'style'));
 }
 function activePreds() {
@@ -388,16 +394,41 @@ function applyFilters() {
       const ps = active.filter(el => el.dataset.kind === kind).map(el => el._pred);
       return !ps.length || ps.some(pred => pred(c));
     });
-    const matches = matchQ && matchF;
+    const matches = matchQ && matchF && ($('game-filter').value==='all' || gameId(c)===$('game-filter').value) && matchesVariant(c,$('variant-filter').value);
     row.hidden = !matches;
     if (matches) visible++;
   });
-  $('results').textContent = `${visible} of ${CARS.length} cars` + (current ? ` · Preview: ${current.name}` : '');
+  $('results').textContent = `${visible} of ${CARS.length} entries` + (current ? ` · Preview: ${current.name}` : '');
   $('empty').hidden = visible > 0;
+  if(visible && current && [...document.querySelectorAll('.car-row')].find(r=>r._code===current.code)?.hidden) {
+    const first=[...document.querySelectorAll('.car-row')].find(r=>!r.hidden);
+    select(CARS.find(c=>c.code===first._code));
+  }
 }
-$('search').addEventListener('input', applyFilters);
+$('search').addEventListener('input', () => {semanticId++;applyFilters();});
+$('game-filter').onchange=()=>{semanticId++;applyFilters();};
+$('variant-filter').onchange=()=>{semanticId++;applyFilters();};
+$('semantic-query').addEventListener('input',()=>{semanticId++;});
+$('semantic-filter').onclick=async()=>{
+  const id=++semanticId, query=$('semantic-query').value.trim();
+  if(!query)return;
+  $('semantic-status').textContent='Interpreting game and variant…';
+  const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),20000);
+  try {
+    const response=await fetch('/api/library-filter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query}),signal:controller.signal});
+    if(!response.ok)throw Error('Semantic filtering is unavailable on this server. Use the game and variant selectors.');
+    const result=await response.json();if(id!==semanticId)return;
+    const game=result.filters?.game, variant=result.filters?.variant??'';
+    if(result.status!=='ok'){$('semantic-status').textContent=result.message||'The request needs review. Use the selectors.';return;}
+    if(![...$('game-filter').options].some(o=>o.value===game) || ![...$('variant-filter').options].some(o=>o.value===variant))throw Error('The suggested filters do not exist in this library.');
+    $('game-filter').value=game;$('variant-filter').value=variant;applyFilters();
+    $('semantic-status').textContent=result.message||'Game and variant filters applied.';
+  } catch(error){if(id===semanticId)$('semantic-status').textContent=error.message;} finally{clearTimeout(timer);}
+};
 $('clear-filters').onclick = () => {
   $('search').value = '';
+  $('game-filter').value='all';$('variant-filter').value='';
+  semanticId++;$('semantic-status').textContent='';
   document.querySelectorAll('.chip').forEach(chip => { chip.classList.remove('on'); chip.setAttribute('aria-pressed', 'false'); });
   applyFilters();
   $('search').focus();
@@ -417,7 +448,7 @@ function buildList() {
     const name = document.createElement('span');
     name.className = 'nm'; name.textContent = c.name;
     const meta = document.createElement('span');
-    meta.className = 'meta'; meta.textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.bodyStyle}`;
+    meta.className = 'meta'; meta.textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.bodyStyle==='unknown'?gameLabel(c)+' · '+c.sourceVariant:c.bodyStyle}`;
     txt.append(name, meta);
     const bhp = document.createElement('span');
     bhp.className = 'bhp'; bhp.textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '';
@@ -491,33 +522,39 @@ resize();
 
 /* ---------- source-derived model ---------- */
 /* ---------- selection ---------- */
-function select(c) {
+async function select(c) {
+  const id=++selectionId;selectionController?.abort();selectionController=new AbortController();
   current = c;
   document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
   const sel = [...document.querySelectorAll('.car-row')].find(r => r._code === c.code);
   if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
   $('hud-name').textContent = c.name;
+  $('model-limits').textContent = (c.claimLimits || c.model.claimLimits || []).join(' ');
   $('download-model').href = `./dealership/models/${c.code}.glb`;
   $('download-model').download = `${c.code}-dealership.glb`;
-  $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.group || ''} · ${c.bodyStyle}`;
-  $('v-ag').textContent = c.agility.toFixed(1);
-  $('v-ac').textContent = c.accel.toFixed(1);
-  $('v-sp').textContent = c.speed.toFixed(1);
-  $('v-we').textContent = c.weight.toFixed(1);
-  $('b-ag').style.width = (c.agility * 100) + '%';
-  $('b-ac').style.width = (c.accel * 100) + '%';
-  $('b-sp').style.width = (c.speed * 100) + '%';
-  $('b-we').style.width = (c.weight * 100) + '%';
+  $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.group || ''} · ${c.bodyStyle==='unknown'?gameLabel(c)+' · '+c.sourceVariant:c.bodyStyle}`;
+  $('v-ag').textContent = c.agility==null?'Not decoded':c.agility.toFixed(1);
+  $('v-ac').textContent = c.accel==null?'Not decoded':c.accel.toFixed(1);
+  $('v-sp').textContent = c.speed==null?'Not decoded':c.speed.toFixed(1);
+  $('v-we').textContent = c.weight==null?'Not decoded':c.weight.toFixed(1);
+  $('b-ag').parentElement.hidden=c.agility==null;
+  $('b-ag').style.width = ((c.agility??0) * 100) + '%';
+  $('b-ac').parentElement.hidden=c.accel==null;
+  $('b-ac').style.width = ((c.accel??0) * 100) + '%';
+  $('b-sp').parentElement.hidden=c.speed==null;
+  $('b-sp').style.width = ((c.speed??0) * 100) + '%';
+  $('b-we').parentElement.hidden=c.weight==null;
+  $('b-we').style.width = ((c.weight??0) * 100) + '%';
   $('k-bhp').textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '—';
   $('k-kg').textContent = c.kg ? fmt(c.kg) + ' kg' : '—';
   $('k-ts').textContent = c.topSpeed ? Math.round(c.topSpeed) + ' mph' : '—';
-  $('k-liv').textContent = c.liveries ? c.liveries.length : '—';
+  $('k-liv').textContent = c.model.schema===2?'Not decoded':c.liveries ? c.liveries.length : '—';
   $('k-snd').textContent = (c.sound || '').split(';')[0].replace(' (in _shared/sounds/)', '');
   const sample = c.paint ? c.paint.rgb : [90, 90, 90];
   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
   $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
-  $('paint-caveat').textContent = c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : 'No usable icon colour sample. The illustration uses neutral grey.';
+  $('paint-caveat').textContent = c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
     const el = document.createElement('span');
     el.className = 'livery-code';
@@ -526,9 +563,17 @@ function select(c) {
   }));
 
   if (carMesh) { scene.remove(carMesh); disposeCar(carMesh); }
-  carMesh = makeCar(c);
-  scene.add(carMesh);
-  setView('reset');
+  carMesh=null;
+  $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';$('loading').textContent='Loading '+c.name+'…';
+  try {
+    const model=await loadCar(c,{signal:selectionController.signal});
+    if(id!==selectionId){disposeCar(model);return;}
+    carMesh=model;scene.add(carMesh);setView('reset');$('loading').hidden=true;
+  } catch(error){
+    if(id!==selectionId)return;
+    $('loading').classList.add('error');$('loading').textContent='This model could not be loaded: '+error.message;
+    const retry=document.createElement('button');retry.textContent='Retry model';retry.onclick=()=>select(c);$('loading').append(retry);
+  }
   applyFilters();
 }
 
@@ -560,8 +605,9 @@ function setView(view) {
   const vertical = THREE.MathUtils.degToRad(camera.fov / 2);
   const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
   const distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
-  const direction = view === 'side' ? new THREE.Vector3(0, 0.08, 1) :
-    view === 'front' ? new THREE.Vector3(1, 0.08, 0) :
+  const nativeZForward = current?.game === 'redline';
+  const direction = view === 'side' ? new THREE.Vector3(nativeZForward ? 1 : 0, 0.08, nativeZForward ? 0 : 1) :
+    view === 'front' ? new THREE.Vector3(nativeZForward ? 0 : 1, 0.08, nativeZForward ? 1 : 0) :
     view === 'top' ? new THREE.Vector3(0.01, 1, 0) : new THREE.Vector3(1, 0.45, 1);
   controls.target.copy(sphere.center);
   camera.position.copy(sphere.center).add(direction.normalize().multiplyScalar(distance));

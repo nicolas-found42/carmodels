@@ -47,6 +47,10 @@ assert.equal(defaultGeometryValue(fixture,geometryOptions(fixture,[])),'');
 const records=geometryOptions(fixture,[{record:7,triangles:1}]);
 assert.equal(defaultGeometryValue(fixture,records),'7');
 assert.match(sceneLabel('Candidate tree 2 — all states'),/^Candidate 2/);
+// GT index records describe LOD provenance rather than separately selectable mesh records.
+const generic={...fixture,scenes:[{name:'LOD0',nodes:[0]}]};generic.accessors[1].count=3;
+const gtOptions=geometryOptions(generic,[{lod:0,triangles:1}]);
+assert.deepEqual(gtOptions.map(o=>o.value),['scene0']);
 // Exercise the actual viewer callback: an empty selection must not reframe the camera.
 const emptyGroup=new THREE.Group();
 emptyGroup.userData={record:'scene5',label:'Candidate tree 4 — all states'};

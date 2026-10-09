@@ -1,0 +1,220 @@
+{
+  "args": {
+    "request": "Complete native Redline static car conversion and import into source and independent editable dealership libraries, preserve prior native/model files and edits, correct preview wheel suspension height using native evidence, retain explicit source omissions, keep TypeSafe judgments conservative and credentials server-side. This packet reviews the named component; other packets cover the remaining task-owned files. Do not claim game shader/animation fidelity or physics equilibrium. No Hopper.",
+    "files": [
+      {
+        "path": "tools/export_redline_models.py",
+        "diff": "--- /dev/null\n+++ b/tools/export_redline_models.py\n@@ -0,0 +1,109 @@\n+#!/usr/bin/env python3\n+\"\"\"Convert hash-pinned Redline configurations into indexed source GLBs.\"\"\"\n+import argparse\n+import json\n+from pathlib import Path\n+import re\n+import tempfile\n+\n+from redline_model import LIMITS, PROFILE, NoDrawableGeometry, build_glb, safe_file, sha\n+\n+ROOT = Path(__file__).resolve().parents[1]\n+SOURCE = ROOT / 'redline/cars'\n+OUTPUT = ROOT / 'dealership/public/redline'\n+\n+\n+def identifier(car):\n+    stem = re.sub(r'[^a-zA-Z0-9_-]', '_', Path(car['file']).stem)[:80] or 'car'\n+    digest = sha(car['id'].encode())[:12]\n+    if car['group'] == 'base':\n+        return 'base/' + stem + '_' + digest\n+    if car['group'] != 'addon':\n+        raise ValueError('Invalid native Redline collection')\n+    parts = car['package'].split('/')\n+    package_name = parts[1] if parts[0] == 'addons' and len(parts) > 1 else parts[-1]\n+    package = re.sub(r'[^a-zA-Z0-9_-]', '_', package_name)[:80] or 'package'\n+    return 'addon/' + package + '/' + stem + '_' + digest\n+\n+\n+def export(source=SOURCE, output=OUTPUT, check=False):\n+    source, output = Path(source), Path(output)\n+    if source.resolve() == output.resolve() or source.resolve() in output.resolve().parents or output.resolve() in source.resolve().parents:\n+        raise ValueError('Redline export overlaps native source')\n+    if source.is_symlink() or output.is_symlink():\n+        raise ValueError('Redline source/output is a symlink')\n+    index_data = safe_file(source, 'index.json').read_bytes()\n+    index = json.loads(index_data)\n+    if index.get('game') != 'redline' or not index.get('cars'):\n+        raise ValueError('Native Redline index has no configurations')\n+    entries, seen, non_drawable = [], set(), []\n+    if not check:\n+        output.parent.mkdir(parents=True, exist_ok=True)\n+    with tempfile.TemporaryDirectory(prefix='redline-models-', dir=output.parent if output.parent.is_dir() else None) as temporary:\n+        stage = Path(temporary) / 'next'\n+        stage.mkdir()\n+        for car in index['cars']:\n+            code = identifier(car)\n+            if code in seen:\n+                raise ValueError('Duplicate Redline export identity')\n+            seen.add(code)\n+            try:\n+                data, records, warnings, name = build_glb(source, index, car, code)\n+            except NoDrawableGeometry as exc:\n+                non_drawable.append({'code': code, 'native_car_id': car['id'], 'display_name': exc.name,\n+                                     'source_variant': car['group'], 'native_config_sha256': car['sha256'],\n+                                     'reason': str(exc), 'native_resources': exc.resources, 'warnings': exc.warnings})\n+                continue\n+            target = safe_file(stage, code + '.glb')\n+            target.parent.mkdir(parents=True, exist_ok=True)\n+            target.write_bytes(data)\n+            entries.append({'code': code, 'file': code + '.glb', 'bytes': len(data), 'sha256': sha(data),\n+                            'records': records, 'display_name': name, 'source_profile': PROFILE,\n+                            'source_variant': car['group'], 'native_car_id': car['id'],\n+                            'warnings': warnings, 'claim_limits': LIMITS + [f\"{w['kind']}: {w['resource']} \u2014 {w['reason']}\" for w in warnings]})\n+        report = {'schema': 1, 'game': 'redline', 'source_index_sha256': sha(index_data),\n+                  'claim_limits': LIMITS, 'cars': entries, 'non_drawable_configurations': non_drawable}\n+        (stage / 'index.json').write_text(json.dumps(report, indent=2, ensure_ascii=True) + '\\n')\n+        if safe_file(source, 'index.json').read_bytes() != index_data:\n+            raise ValueError('Native index changed during conversion')\n+        expected = {p.relative_to(stage).as_posix(): p for p in stage.rglob('*') if p.is_file()}\n+        actual = {p.relative_to(output).as_posix(): p for p in output.rglob('*') if p.is_file()} if output.exists() else {}\n+        if any(p.is_symlink() for p in output.rglob('*')):\n+            raise ValueError('Redline output contains symlink')\n+        if check:\n+            if set(expected) != set(actual):\n+                raise ValueError('Redline export inventory differs')\n+            for name, path in expected.items():\n+                if actual[name].read_bytes() != path.read_bytes():\n+                    raise ValueError('Redline export bytes differ: ' + name)\n+        else:\n+            if set(actual) - set(expected):\n+                raise ValueError('Redline output contains unrelated files')\n+            backup = Path(temporary) / 'previous'\n+            moved = False\n+            try:\n+                if output.exists():\n+                    output.replace(backup)\n+                    moved = True\n+                stage.replace(output)\n+            except BaseException:\n+                if moved:\n+                    backup.replace(output)\n+                raise\n+    return {'configurations': len(seen), 'models': len(entries), 'non_drawable_configurations': len(non_drawable),\n+            'triangles': sum(r['triangles'] for c in entries for r in c['records']),\n+            'bytes': sum(c['bytes'] for c in entries), 'warnings': sum(len(c['warnings']) for c in entries),\n+            'source_index_sha256': sha(index_data)}\n+\n+\n+def main():\n+    parser = argparse.ArgumentParser(description=__doc__)\n+    parser.add_argument('--source', type=Path, default=SOURCE)\n+    parser.add_argument('--output', type=Path, default=OUTPUT)\n+    parser.add_argument('--check', action='store_true')\n+    args = parser.parse_args()\n+    print(('VERIFY OK: ' if args.check else 'EXPORTED: ') + json.dumps(export(args.source, args.output, args.check), sort_keys=True))\n+\n+\n+if __name__ == '__main__':\n+    main()\n"
+      },
+      {
+        "path": "tools/test_export_redline_models.py",
+        "diff": "--- /dev/null\n+++ b/tools/test_export_redline_models.py\n@@ -0,0 +1,93 @@\n+\"\"\"Transactional conversion and repeat verification with tamper controls.\"\"\"\n+import json\n+from pathlib import Path\n+import tempfile\n+import unittest\n+import struct\n+from unittest.mock import patch\n+\n+from export_redline_models import export\n+from test_redline_model import source_fixture\n+from redline_model import sha\n+\n+\n+class ExportTests(unittest.TestCase):\n+    def test_non_drawable_configuration_retains_verified_native_identity(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            source, output = root / 'native', root / 'output'\n+            source.mkdir()\n+            index, _ = source_fixture(source)\n+            config = b'carName \"Invisible native configuration\"\\rmodel \"empty.mdl\"\\rnumWheels 0\\r'\n+            model = struct.pack('>6If', 0, 0, 0, 0, 0, 0, 0)\n+            (source / 'empty.car').write_bytes(config)\n+            (source / 'empty.mdl').write_bytes(model)\n+            index['cars'].append({'id': 'shared/base/empty.car', 'package': 'shared/base', 'file': 'empty.car',\n+                                  'bytes': len(config), 'sha256': sha(config), 'group': 'base'})\n+            index['packages'][0]['members'].append({'name': 'empty.mdl', 'file': 'empty.mdl', 'bytes': len(model), 'sha256': sha(model)})\n+            (source / 'index.json').write_text(json.dumps(index))\n+            result = export(source, output)\n+            self.assertEqual((result['configurations'], result['models'], result['non_drawable_configurations']), (2, 1, 1))\n+            row = json.loads((output / 'index.json').read_text())['non_drawable_configurations'][0]\n+            self.assertEqual(row['native_config_sha256'], sha(config))\n+            self.assertEqual(row['native_resources'][0]['sha256'], sha(model))\n+            self.assertEqual(export(source, output, True), result)\n+\n+    def test_publication_failure_restores_entire_prior_directory(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            source, output = root / 'native', root / 'output'\n+            source.mkdir()\n+            index, _ = source_fixture(source)\n+            (source / 'index.json').write_text(json.dumps(index))\n+            export(source, output)\n+            before = {p.relative_to(output).as_posix(): p.read_bytes() for p in output.rglob('*') if p.is_file()}\n+            original = Path.replace\n+            def fail_publication(path, destination):\n+                if path.name == 'next':\n+                    raise OSError('simulated directory publication failure')\n+                return original(path, destination)\n+            with patch.object(Path, 'replace', fail_publication):\n+                with self.assertRaisesRegex(OSError, 'simulated directory'):\n+                    export(source, output)\n+            self.assertEqual(before, {p.relative_to(output).as_posix(): p.read_bytes() for p in output.rglob('*') if p.is_file()})\n+\n+    def test_repeat_and_tamper(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            source, output = root / 'native', root / 'output'\n+            source.mkdir()\n+            index, _ = source_fixture(source)\n+            (source / 'index.json').write_text(json.dumps(index))\n+            result = export(source, output)\n+            self.assertEqual(result['models'], 1)\n+            self.assertEqual(export(source, output, True), result)\n+            model = next(output.rglob('*.glb'))\n+            original = model.read_bytes()\n+            model.write_bytes(original + b'bad')\n+            with self.assertRaisesRegex(ValueError, 'bytes differ'):\n+                export(source, output, True)\n+            model.write_bytes(original)\n+            (source / 'wheel.mdl').write_bytes(b'bad')\n+            with self.assertRaisesRegex(ValueError, 'extraction pin'):\n+                export(source, output)\n+            self.assertEqual(model.read_bytes(), original)\n+\n+    def test_unrelated_outputs_and_overlap(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, _ = source_fixture(root)\n+            (root / 'index.json').write_text(json.dumps(index))\n+            with self.assertRaisesRegex(ValueError, 'overlaps'):\n+                export(root, root / 'output')\n+            # The output is owned by this fixture and removed by its own context.\n+            with tempfile.TemporaryDirectory() as destination:\n+                output = Path(destination)\n+                (output / 'unrelated.txt').write_text('preserve')\n+                with self.assertRaisesRegex(ValueError, 'unrelated'):\n+                    export(root, output)\n+                self.assertEqual((output / 'unrelated.txt').read_text(), 'preserve')\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n"
+      }
+    ],
+    "claims": [
+      "The final exporter --check regenerated and matched the 128 published models from 129 source configurations."
+    ],
+    "evidence": "{\n  \"asset_verifier_command\": \"python3 .scratch/redline-conversion/verify_final_assets.py\",\n  \"asset_verifier\": {\n    \"protected_models_and_native_files_unchanged\": 8256,\n    \"changed_unexpectedly\": [],\n    \"previous_catalog_entries_preserved\": 763,\n    \"previous_origin_entries_preserved\": 763,\n    \"new_independent_models\": 128,\n    \"source_library_count\": 891,\n    \"dealership_count\": 891,\n    \"export_index_sha256\": \"996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4\",\n    \"wheel_centers_checked\": 487,\n    \"brake_centers_checked\": 40,\n    \"mustang_centers\": [\n      [\n        -0.76,\n        0.24999999999999997,\n        1.47\n      ],\n      [\n        0.76,\n        0.24999999999999997,\n        1.47\n      ],\n      [\n        -0.76,\n        0.24999999999999997,\n        -1.29\n      ],\n      [\n        0.76,\n        0.24999999999999997,\n        -1.29\n      ]\n    ],\n    \"claim_limits\": [\n      \"Static model conversion and catalog preservation; game shaders/animation unverified.\"\n    ]\n  },\n  \"export_summary\": {\n    \"configuration_count\": 129,\n    \"models\": 128,\n    \"game_variants\": {\n      \"base\": 19,\n      \"addon\": 109\n    },\n    \"non_drawable\": [\n      {\n        \"code\": \"addon/034-invisivette_zip/Invisivette_96415078ea09\",\n        \"native_car_id\": \"addons/034-invisivette.zip/packages/00/Invisivette.car\",\n        \"display_name\": \"Invisivette\",\n        \"source_variant\": \"addon\",\n        \"native_config_sha256\": \"e240cd38ed81b32bda3b72705348bbf42fbcc583015367d68b6da1e9dbe8ab14\",\n        \"reason\": \"Native configuration has no drawable geometry\",\n        \"native_resources\": [\n          {\n            \"file\": \"shared/base/assets/null.mdl\",\n            \"bytes\": 108,\n            \"sha256\": \"6232746c9c8c696fd49c0bbbbcb701417ddd70de16a591c9036bc9f64ddcfc45\"\n          }\n        ],\n        \"warnings\": [\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          }\n        ]\n      }\n    ],\n    \"source_index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n    \"export_index_sha256\": \"996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4\",\n    \"triangles\": 598013,\n    \"native_triangles\": 606526,\n    \"derived_corner_normals\": 862,\n    \"omitted_triangles\": 8513,\n    \"model_bytes\": 169074436,\n    \"warnings\": {\n      \"empty-mesh\": 84,\n      \"texture\": 22,\n      \"normal-derivation\": 44,\n      \"optional-mesh\": 5,\n      \"collapsed-wheel\": 4\n    }\n  },\n  \"full_check_results\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.05\n      },\n      {\n        \"name\": \"test_viewer_scenes\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_scenes.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_scenes.log\",\n        \"elapsed_seconds\": 0.132\n      },\n      {\n        \"name\": \"test_viewer_materials\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_materials.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_materials.log\",\n        \"elapsed_seconds\": 0.047\n      },\n      {\n        \"name\": \"test_model_load\",\n        \"command\": [\n          \"node\",\n          \"tools/test_model_load.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_load.log\",\n        \"elapsed_seconds\": 0.042\n      },\n      {\n        \"name\": \"test_viewer_loading\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_loading.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_loading.log\",\n        \"elapsed_seconds\": 0.102\n      },\n      {\n        \"name\": \"test_dealership\",\n        \"command\": [\n          \"node\",\n          \"tools/test_dealership.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_dealership.log\",\n        \"elapsed_seconds\": 1.694\n      },\n      {\n        \"name\": \"test_editable_glb\",\n        \"command\": [\n          \"node\",\n          \"tools/test_editable_glb.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_editable_glb.log\",\n        \"elapsed_seconds\": 1.704\n      },\n      {\n        \"name\": \"verify_recovered_asset_index\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_recovered_asset_index.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_recovered_asset_index.log\",\n        \"elapsed_seconds\": 1.292\n      },\n      {\n        \"name\": \"test_export_materials\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_materials.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_materials.log\",\n        \"elapsed_seconds\": 0.241\n      },\n      {\n        \"name\": \"test_build_showcase\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_build_showcase.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_build_showcase.log\",\n        \"elapsed_seconds\": 0.579\n      },\n      {\n        \"name\": \"test_bake_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_bake_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_bake_models.log\",\n        \"elapsed_seconds\": 2.659\n      },\n      {\n        \"name\": \"test_build_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_build_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_build_dealership.log\",\n        \"elapsed_seconds\": 0.498\n      },\n      {\n        \"name\": \"test_model_catalog\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_catalog.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_catalog.log\",\n        \"elapsed_seconds\": 0.051\n      },\n      {\n        \"name\": \"test_model_png\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_png.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_png.log\",\n        \"elapsed_seconds\": 0.038\n      },\n      {\n        \"name\": \"test_run_checks\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_run_checks.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_run_checks.log\",\n        \"elapsed_seconds\": 0.102\n      },\n      {\n        \"name\": \"test_review_payload\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_review_payload.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_review_payload.log\",\n        \"elapsed_seconds\": 0.048\n      },\n      {\n        \"name\": \"test_static_inputs\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_static_inputs.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_static_inputs.log\",\n        \"elapsed_seconds\": 0.166\n      },\n      {\n        \"name\": \"test_recovery_inputs\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_recovery_inputs.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_recovery_inputs.log\",\n        \"elapsed_seconds\": 3.353\n      },\n      {\n        \"name\": \"test_gt_archive\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_archive.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_archive.log\",\n        \"elapsed_seconds\": 0.15\n      },\n      {\n        \"name\": \"test_gt_asset_judgments\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_asset_judgments.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_asset_judgments.log\",\n        \"elapsed_seconds\": 0.11\n      },\n      {\n        \"name\": \"test_gt_wheels\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_wheels.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_wheels.log\",\n        \"elapsed_seconds\": 0.072\n      },\n      {\n        \"name\": \"test_gt_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_model.log\",\n        \"elapsed_seconds\": 4.287\n      },\n      {\n        \"name\": \"test_import_gt_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_gt_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_gt_dealership.log\",\n        \"elapsed_seconds\": 0.546\n      },\n      {\n        \"name\": \"test_library_filter\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_library_filter.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_library_filter.log\",\n        \"elapsed_seconds\": 0.137\n      },\n      {\n        \"name\": \"test_serve_library\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_serve_library.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_serve_library.log\",\n        \"elapsed_seconds\": 0.696\n      },\n      {\n        \"name\": \"test_redline_archive\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_archive.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_archive.log\",\n        \"elapsed_seconds\": 0.104\n      },\n      {\n        \"name\": \"test_extract_redline_cars\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_extract_redline_cars.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_extract_redline_cars.log\",\n        \"elapsed_seconds\": 0.14\n      },\n      {\n        \"name\": \"test_redline_mesh\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_mesh.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_mesh.log\",\n        \"elapsed_seconds\": 0.06\n      },\n      {\n        \"name\": \"test_redline_texture\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_texture.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_texture.log\",\n        \"elapsed_seconds\": 0.084\n      },\n      {\n        \"name\": \"test_redline_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_model.log\",\n        \"elapsed_seconds\": 0.105\n      },\n      {\n        \"name\": \"test_export_redline_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_redline_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_redline_models.log\",\n        \"elapsed_seconds\": 0.128\n      },\n      {\n        \"name\": \"test_import_redline_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_redline_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_redline_dealership.log\",\n        \"elapsed_seconds\": 1.4\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 32.945\n      },\n      {\n        \"name\": \"verify_config_data_sound\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_config_data_sound.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_config_data_sound.log\",\n        \"elapsed_seconds\": 9.879\n      },\n      {\n        \"name\": \"verify_sound_bank_index\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_sound_bank_index.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_sound_bank_index.log\",\n        \"elapsed_seconds\": 1.538\n      },\n      {\n        \"name\": \"verify_vu_dispatch_map\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_dispatch_map.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_dispatch_map.log\",\n        \"elapsed_seconds\": 14.931\n      },\n      {\n        \"name\": \"test_vu_dispatch_map\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_dispatch_map.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_dispatch_map.log\",\n        \"elapsed_seconds\": 50.863\n      },\n      {\n        \"name\": \"test_vu1_decode\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu1_decode.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu1_decode.log\",\n        \"elapsed_seconds\": 1.575\n      },\n      {\n        \"name\": \"verify_vu_pass_handlers\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_pass_handlers.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_pass_handlers.log\",\n        \"elapsed_seconds\": 11.598\n      },\n      {\n        \"name\": \"test_vu_pass_handlers\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_pass_handlers.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_pass_handlers.log\",\n        \"elapsed_seconds\": 9.263\n      },\n      {\n        \"name\": \"verify_vu_handler_dump\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_handler_dump.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_handler_dump.log\",\n        \"elapsed_seconds\": 14.176\n      },\n      {\n        \"name\": \"test_vu_handler_dump\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_handler_dump.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_handler_dump.log\",\n        \"elapsed_seconds\": 7.732\n      },\n      {\n        \"name\": \"recover_dump_reference_frame\",\n        \"command\": [\n          \"python3\",\n          \"tools/recover_dump_reference_frame.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"recover_dump_reference_frame.log\",\n        \"elapsed_seconds\": 4.731\n      },\n      {\n        \"name\": \"test_recover_dump_reference_frame\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_recover_dump_reference_frame.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_recover_dump_reference_frame.log\",\n        \"elapsed_seconds\": 13.468\n      },\n      {\n        \"name\": \"verify_pass_source_join\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_pass_source_join.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_pass_source_join.log\",\n        \"elapsed_seconds\": 26.335\n      },\n      {\n        \"name\": \"test_pass_source_join\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_pass_source_join.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_pass_source_join.log\",\n        \"elapsed_seconds\": 24.54\n      },\n      {\n        \"name\": \"dealership_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_dealership_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_roundtrip.log\",\n        \"elapsed_seconds\": 25.452\n      },\n      {\n        \"name\": \"redline_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_redline_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"redline_roundtrip.log\",\n        \"elapsed_seconds\": 18.782\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  },\n  \"affected_check_results\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.127\n      },\n      {\n        \"name\": \"test_dealership\",\n        \"command\": [\n          \"node\",\n          \"tools/test_dealership.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_dealership.log\",\n        \"elapsed_seconds\": 6.915\n      },\n      {\n        \"name\": \"test_bake_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_bake_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_bake_models.log\",\n        \"elapsed_seconds\": 12.066\n      },\n      {\n        \"name\": \"test_redline_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_model.log\",\n        \"elapsed_seconds\": 0.242\n      },\n      {\n        \"name\": \"test_export_redline_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_redline_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_redline_models.log\",\n        \"elapsed_seconds\": 0.761\n      },\n      {\n        \"name\": \"test_import_redline_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_redline_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_redline_dealership.log\",\n        \"elapsed_seconds\": 2.93\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 63.782\n      },\n      {\n        \"name\": \"redline_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_redline_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"redline_roundtrip.log\",\n        \"elapsed_seconds\": 42.792\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  },\n  \"export_check\": \"VERIFY OK: {\\\"bytes\\\": 169074436, \\\"configurations\\\": 129, \\\"models\\\": 128, \\\"non_drawable_configurations\\\": 1, \\\"source_index_sha256\\\": \\\"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\\\", \\\"triangles\\\": 598013, \\\"warnings\\\": 159}\\n\"\n}",
+    "tests": "test_export_redline_models.log\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.193s\n\nOK\n"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "mode": "per-file",
+      "action": "escalate",
+      "composite": 0.760125,
+      "safe_to_apply": 0.58,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting": [
+        {
+          "file": "tools/export_redline_models.py",
+          "rubrics": [
+            "test_gap"
+          ]
+        },
+        {
+          "file": "tools/test_export_redline_models.py",
+          "rubrics": [
+            "test_gap"
+          ]
+        }
+      ],
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "files": [
+        {
+          "path": "tools/export_redline_models.py",
+          "safe_to_apply": 0.58,
+          "scores": {
+            "correctness": {
+              "score": 1.72,
+              "confidence": 0.58,
+              "probabilities": {
+                "0": 0.05,
+                "1": 0.18,
+                "2": 0.77
+              }
+            },
+            "spec_match": {
+              "score": 1.52,
+              "confidence": 0.28,
+              "probabilities": {
+                "0": 0.03,
+                "1": 0.42,
+                "2": 0.55
+              }
+            },
+            "test_gap": {
+              "score": 0.75,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.45,
+                "1": 0.35,
+                "2": 0.2
+              }
+            },
+            "blast_radius": {
+              "score": 1.68,
+              "confidence": 0.52,
+              "probabilities": {
+                "0": 0.08,
+                "1": 0.16,
+                "2": 0.76
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.6897500000000001,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "test_gap"
+          ]
+        },
+        {
+          "path": "tools/test_export_redline_models.py",
+          "safe_to_apply": 0.77,
+          "scores": {
+            "correctness": {
+              "score": 1.82,
+              "confidence": 0.73,
+              "probabilities": {
+                "0": 0.03,
+                "1": 0.12,
+                "2": 0.85
+              }
+            },
+            "spec_match": {
+              "score": 1.58,
+              "confidence": 0.37,
+              "probabilities": {
+                "0": 0.08,
+                "1": 0.26,
+                "2": 0.66
+              }
+            },
+            "test_gap": {
+              "score": 0.48,
+              "confidence": 0.28,
+              "probabilities": {
+                "0": 0.62,
+                "1": 0.28,
+                "2": 0.1
+              }
+            },
+            "blast_radius": {
+              "score": 0.46,
+              "confidence": 0.32,
+              "probabilities": {
+                "0": 0.64,
+                "1": 0.27,
+                "2": 0.09
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.8305,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "test_gap"
+          ]
+        }
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 1,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The final exporter --check regenerated and matched the 128 published models from 129 source configurations.",
+          "verdict": "verified",
+          "confidence": 0.92,
+          "probabilities": {
+            "verified": 0.95,
+            "contradicted": 0.02,
+            "unsupported": 0.03
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 10422,
+      "output_tokens": 225
+    }
+  }
+}

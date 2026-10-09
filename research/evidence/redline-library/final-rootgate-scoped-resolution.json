@@ -1,0 +1,114 @@
+{
+  "bundle_sha256": "0b34b6c37b459d92a31bc63ab99b97e789811fe66a9603df4652ba7f4a2bc15a",
+  "reviewer": "/root/redline_texture_conversion",
+  "verdict": "approve",
+  "scope": {
+    "patches": [
+      "tools/redline_mesh.py",
+      "tools/test_redline_mesh.py"
+    ],
+    "claims": [
+      "128 regular independent editable Redline files match their current source model bytes; all 763 pre-existing catalog and origin entries are preserved."
+    ],
+    "excluded": "No approval of the editable-import implementation patch, texture implementation, other packets, or entire task completion."
+  },
+  "source_and_evidence_pins": {
+    ".scratch/redline-conversion/final-gate-v2/bundle.json": "0b34b6c37b459d92a31bc63ab99b97e789811fe66a9603df4652ba7f4a2bc15a",
+    ".scratch/redline-conversion/final-gate-v2/mesh.json": "028373c1d91ba5824178459ded4d07dca786fc0091f4a5625a3335b5cff2b8f4",
+    ".scratch/redline-conversion/final-gate-v2/editable-import.json": "6dcdc777c7c2ff841e1228f98ac812e90c46f3d550f90670b77bbf939a3fe49c",
+    "tools/redline_mesh.py": "f3c8cb5f4517a45730900adad184dede46c6ef654a0a9dbb2324a2a31560daa5",
+    "tools/test_redline_mesh.py": "94ee3df3c7b510ae89f849fd5260036a4f2e05e34f22dc94e32f7a44584e8653",
+    ".scratch/redline-conversion/texture/mesh-peer-native-resolution.json": "ed2061bb8adcbb7e2c259b8228c6a02d0a9e7ceb3a41278fc756a0490b6050fe",
+    ".scratch/redline-conversion/mesh/array-audit.json": "775a6f8a402f9577d32e8989c21fbf0d1c2c8c2b242c437d08d23c5a8cb0e74f",
+    ".scratch/redline-conversion/mesh/header-layout.s": "4ce965d575513ff3b44813e2f5bb44cd324712ce8cd2c57126e2a2ae4d438f81",
+    ".scratch/redline-conversion/mesh/corner-expansion.s": "25f1e88e86c6d435dceae2390b15158df3e0c932631af8511b1abec81b713826",
+    ".scratch/redline-conversion/mesh/draw-grouping.s": "4cc2529f63bfa861c235c1c536dabe4ecdcf5ed3f6c1b6c4d10beb3332f0f013",
+    ".scratch/redline-conversion/verify_final_assets.py": "6978b6ac217048ae7628d5267426c062b616d2724f220f63b242df6f80117e75",
+    ".scratch/redline-conversion/protected-before.json": "4d4188779ae193a2084e2a7f14715207bf857a216dab9437234e85d4629922c2",
+    ".scratch/redline-conversion/library-before/catalog.json": "77fdc50f91bdf7b8dbfb0cf16b4ab63350900851ea961c6b69e4b5fe874a5cd7",
+    ".scratch/redline-conversion/library-before/origins.json": "079fb7d0470fb42924ce032ecb2002bc69bdd6992c7d7ff3b5f4924d99e56425",
+    ".scratch/redline-conversion/preservation-final.json": "738538a662a9666cdf137a2a68aa48eb6fdbd0840cd1c88d6f16dbdfa021699e",
+    "dealership/public/redline/index.json": "996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4",
+    "dealership/dealership/catalog.json": "0211bb10c8e2761c559e8e0475ed89577c42520bd936f0801c04b87bbb85ebd6",
+    "dealership/dealership/origins.json": "e0c745df23abd33bde61a7611c64055cf19e81f0d25cd1603e5e16025c6f45ca",
+    "dealership/public/models.json": "cd281d17f6d5e02e2b63cf1b00a860adfb046dbd0dee8a17249097bc575731af",
+    "dealership/public/dealership/cars.json": "15b35f6be3acd6a8d906f0973b3b5ce3d850bc5a2c3d9e0ee8935d24829f5ec2",
+    ".scratch/redline-conversion/texture/final-assets-review.log": "a00710e2775692e64c0669bd17189f3add0b7f699e2179f91222d6188509e2a1",
+    ".scratch/redline-conversion/texture/final-mesh-review-tests.log": "758bd2aa45ff40ab9c307f6386188e24519899c72d063420067f8e9f715d62bd",
+    ".scratch/redline-conversion/texture/rootgate-independent-assets-and-mesh.json": "a9f3d6b7e3cfba47e2494d3a9062086bfa5f96321aa66b18585f8734828b42fe"
+  },
+  "original_judgments": {
+    "mesh": {
+      "action": "escalate",
+      "composite": 0.790125,
+      "safe_to_apply": 0.58,
+      "limiting": [
+        {
+          "file": "tools/redline_mesh.py",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "tools/test_redline_mesh.py",
+          "rubrics": [
+            "spec_match"
+          ]
+        }
+      ],
+      "test_claim_action": "auto"
+    },
+    "editable_import_claim": {
+      "claim": "128 regular independent editable Redline files match their current source model bytes; all 763 pre-existing catalog and origin entries are preserved.",
+      "verdict": "verified",
+      "confidence": 0.3,
+      "probabilities": {
+        "verified": 0.53,
+        "contradicted": 0.11,
+        "unsupported": 0.36
+      },
+      "action": "escalate"
+    }
+  },
+  "resolution": {
+    "mesh_patch": "approve",
+    "editable_import_completion_claim": "approve",
+    "editable_import_patch": "not reviewed"
+  },
+  "rationale": [
+    "Final mesh source/test bytes exactly match the previously independently reviewed and native-pinned implementation. Header28, positions/normals12, UV8, ordinary triangles52, dual64, material80 and 1-based corner conversion follow retained native assembly. Material-zero omission, high-bit retention, absent channels, normals and unchanged UVs remain correctly bounded in static geometry scope.",
+    "Fresh six verbose controls pass: pinned shipped fixture, expansion offsets, dual/absent channels, count/truncation/flag/numeric mutations, unsafe names and indices, native material-zero and high-bit cases. Direct readonly source reread confirms all641 corpus byte hashes and recorded decoder counts; both exact nonfinite-UV files reject. Together with the prior full array audit this resolves blast-radius and spec-match confidence within the static mesh component.",
+    "Reviewed root verifier source before running it. Fresh command python3 .scratch/redline-conversion/verify_final_assets.py exits zero: all8256 protected native/model files unchanged;763 prior catalog and763 prior origin records compare exactly to captured baseline;128 copies match currentsource/index hashes; both libraries891. The helper writes only scratch receipts, not source/generated model bytes.",
+    "Additional independently written readonly probe verifies all128 source and copy paths are lstat regular files, distinct(dev,inode) pairs, editable nlink1, matching SHA256 acrosssource/index/copy, and128unique paths on each side. It also asserts763 prior entries in each baseline, unique891current codes, and exact dictionary equality for every prior record. This resolves the low-confidence generated-asset preservation claim using executable artifact checks, without approving the importer implementation.",
+    "Original model probabilities/confidences and all receipts are preserved. No valid judgment was rerun for preferred scores and no contradicted claim or operational failure is overridden."
+  ],
+  "commands": [
+    {
+      "command": [
+        "python3",
+        ".scratch/redline-conversion/verify_final_assets.py"
+      ],
+      "exit_code": 0,
+      "log": ".scratch/redline-conversion/texture/final-assets-review.log"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/test_redline_mesh.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": ".scratch/redline-conversion/texture/final-mesh-review-tests.log"
+    },
+    {
+      "description": "Independent generated pair lstat/SHA and baseline-record probe plus native corpus hash/count/rejection checks",
+      "exit_code": 0,
+      "receipt": ".scratch/redline-conversion/texture/rootgate-independent-assets-and-mesh.json"
+    }
+  ],
+  "claim_limits": [
+    "Static native geometry and exact generated-asset preservation only.",
+    "No game shader, GPU draw-order, animation or physics equivalence.",
+    "Approval is scoped to mesh patch and specified generated-asset claim; root must compose remaining packet resolutions."
+  ]
+}

@@ -1,0 +1,306 @@
+;a string with the name of the car
+builtIn 1
+carName "­gwicon-ferrari-v1.0.png­Ferrari 156 (1961)"
+
+;used only for career mode
+year 1961
+displacement 1.477
+
+;---aerodynamics
+
+;the car's frontal air resitance.
+;this equals Cd*S, where Cd is the coefficient of friction 
+;and S is the frontal area of the car in square meters.
+;
+; Cd = 0.320 S = 0.80
+;
+frontAirResistance 0.256
+
+;air resistance of the side and top areas of the car.
+;these values are not that important to be very exact.
+sideAirResistance 2.56
+topAirResistance 2.56
+
+; used to simulate spoilers
+frontLift -0.0
+rearLift 0.0
+
+
+;---chassis
+
+;Car's mass in kg (wet weight 460kg + 75kg driver)
+mass 535.0
+
+;Car's momentum of inertia around the x,y and z axis.
+;Meassured in kg*m^2
+;For those not into physics that much, inertia specifies the car's
+;initial resistance to get accelerated around it's axis. Smaller, lighter
+;cars have much lower values here. A formula-1 car might have an inertia
+;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have
+;4000 kg*m^2.
+;
+; note that if you consider the car as a block of dimensions W H L
+; Ix = mass x ( H^2 + L^2) / 12
+; Iy = mass x ( W^2 + L^2) / 12
+; Iz = mass x ( W^2 + H^2) / 12
+;
+; W = 1.1 H = 0.9 L = 4.3 mass = 535
+;
+inertia {888, 883, 113}
+
+;The car's center of gravity.
+;This vector (as all the others that may follow) uses the following
+;coordinate system: X points to the right, Y points up and Z points to the front.
+;Coordinates are in meters.
+; correcting z towards 0.0 helps balance!
+massCenter {0.0, -0.15, 0.10}
+
+
+;An approximation of the car's borders, used for collision detection.
+;More than two boxes can be used, but if too many are used, performance 
+;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).
+numCollBoxes 2
+; front
+# 0
+coll.tfr {0.350, 0.088, 2.150}
+coll.tfl {-0.350, 0.088, 2.150}
+coll.trr {0.460, 0.400, 0.000}
+coll.trl {-0.460, 0.400, 0.000}
+coll.bfr {0.350, -0.380, 2.150}
+coll.bfl {-0.350, -0.380, 2.150}
+coll.brr {0.460, -0.380, 0.000}
+coll.brl {-0.460, -0.380, 0.000}
+; rear
+# 1
+coll.tfr {0.460, 0.400, 0.000}
+coll.tfl {-0.460, 0.400, 0.000}
+coll.trr {0.345, 0.050, -2.150}
+coll.trl {-0.345, 0.050, -2.150}
+coll.bfr {0.460, -0.380, 0.000}
+coll.bfl {-0.460, -0.380, 0.000}
+coll.brr {0.345, -0.300, -2.150}
+coll.brl {-0.345, -0.300, -2.150}
+
+;---graphics
+
+;Model used to represent the car.
+model "gcw-f156.mdl"
+
+;Model used to represent the car's interior.
+interiorModel "null.mdl"
+
+; driver model set to 0 for standard
+; set to 1 for no model
+; set to 2 for just arms!
+noDriverModel 2
+;Position of driver model
+driverPos {0.0, -0.150, -0.17}
+
+;Position of the steering wheel
+steeringWheelPos {0.00, 0.145, 0.30}
+
+;Angle of the steering wheel
+steeringWheelAngle 15
+
+;Number of turns, lock-to-lock.
+steeringWheelTurns 2.0
+
+steeringWheelRadius 0.16
+
+;Model used to represent the steering wheel
+steeringWheelTexture "gcw-f156-swheel.png"
+
+;Position of left and right exhaust ends. For a car with only
+;one exhaust pipe, use the same coordinates for both.
+exhaust1Pos {0.295, -0.245, -2.02}
+exhaust2Pos {-0.295, -0.245, -2.02}
+;Position of license plates
+;for network player names
+frontLicensePlatePos {0.0, -5.365, -2.0}
+rearLicensePlatePos {0.0, -0.265, -2.0}
+
+numColors 8# 0colors {0.753, 0.0, 0.020}
+# 1colors {0.753, 0.0, 0.020}
+# 2colors {0.902, 0.749, 0.0}
+# 3colors {0.0, 0.0, 0.0}
+# 4colors {0.180, 0.392, 0.631}
+# 5colors {0.063, 0.251, 0.157}
+# 6colors {0.518, 0.518, 0.518}
+# 7colors {0.902, 0.541, 0.0}
+
+hornPitch 1.0
+
+;--engine - 1477cc Ferrari
+;RPM values for the power and torque ratings.;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+; Ferrari 156 1477cc
+; 190bhp @ 9500 rpm
+; = 141683power 141683
+powerRPM 9500.0
+
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.
+; Ferrari 156 1477cc - following figures are guesstimated
+; 165 ftlb @ 6900 rpm
+; = 223.78torque 223.78torqueRPM 6900.0
+
+jerkRPM 300.0
+idleRPM 1250.0
+maxRPM 10450.0
+engineInertia 0.22
+
+; new engine friction params
+engineBaseFriction 12
+engineRPMFriction 0.01
+
+;engine sound sample
+engineSample "gcw-fv6.wav"
+hallSample "gcw-fv6h.wav"
+; multipliers for engine sound volume at idle/max RPM
+zeroRPMSoundGain 1.50
+fullRPMSoundGain 2.00
+zeroThrottleSoundGain 1.00
+fullThrottleSoundGain 2.00
+; multipliers for engine sound speed at idle/max RPM
+zeroRPMSoundPitch 0.167
+fullRPMSoundPitch 1.742
+zeroThrottleSoundPitch 0.9
+fullThrottleSoundPitch 1.1
+
+;---suspension
+
+;These determines the strength of the car's shock absorbers.
+; I tweaked these a lot to correct the initial oversteer - Giles
+supsensionFriction 925
+damperStrength 22000
+frontSwayBar 20900
+rearSwayBar 22000
+
+;---drivetrain
+
+;The maximum amount of torque the car's clutch can transfer (in Nm).
+maxClutchTorqueTransfer 900
+
+;this factor is used to simulate limited slip differentials.
+;0 means free differential. the higher the value, the more differential locking.
+;values around 100 seem to get realistic limited slip differentials.
+differentialLockCoefficient 150
+
+;For automatic transmission: When to shift up and down
+shiftUpRPM 9500.0
+shiftDownRPM 5150.0
+
+;Time it takes to shift gears in seconds
+gearSwitchTime 0.2
+
+;Number of gears, including reverse and neutral.
+numGears 7
+
+;The ratio of the final drive gear in the car's differential.
+finalDriveRatio 5.5
+
+;The gear ratios
+# 0
+gearRatios -3.00
+# 1
+gearRatios 0
+# 2
+gearRatios 3.00
+# 3
+gearRatios 2.20
+# 4
+gearRatios 1.60
+# 5
+gearRatios 1.17
+# 6
+gearRatios 0.85
+
+
+;---wheels
+
+;number of wheels (theoretically you could make vehicles with numWheels!=4. This has not been tested and might cause troubles, though).
+numWheels 4
+
+
+# 0
+wheels.pos {0.600, -0.165, 1.178}
+; 22.5 x width x radius
+wheels.inertia 0.94
+wheels.powered 0.0
+wheels.friction 8
+wheels.maxAngle 0.48
+wheels.maxSuspension 0.05
+wheels.radius 0.329
+wheels.braked 8000.0
+wheels.handbraked 0.0
+wheels.model "gcw-f156-wheel.mdl"
+wheels.width 0.127
+wheels.texture 4
+wheels.tilt -0.02
+; racing slicks... extra grippy!
+wheels.stickyness 0.125
+
+# 1
+wheels.pos {-0.600, -0.165, 1.178}
+wheels.inertia 0.94
+wheels.powered 0.0
+wheels.friction 8
+wheels.maxAngle 0.48
+wheels.maxSuspension 0.05
+wheels.radius 0.329
+wheels.braked 8000.0
+wheels.handbraked 0.0
+wheels.model "gcw-f156-wheel.mdl"
+wheels.width 0.127
+wheels.texture 4
+wheels.tilt -0.02
+; racing slicks... extra grippy!
+wheels.stickyness 0.125
+
+# 2
+wheels.pos {0.600, -0.143, -1.143}
+wheels.inertia 1.19
+wheels.powered 0.5
+wheels.friction 8
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.05
+wheels.radius 0.348
+wheels.braked 3000.0
+wheels.handbraked 1.0
+wheels.model "gcw-f156-wheel.mdl"
+wheels.width 0.1525
+wheels.texture 4
+; racing slicks... extra grippy!
+wheels.stickyness 0.125
+
+# 3
+wheels.pos {-0.600, -0.143, -1.143}
+wheels.inertia 1.19
+wheels.powered 0.5
+wheels.friction 8
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.05
+wheels.radius 0.348
+wheels.braked 3000.0
+wheels.handbraked 1.0
+wheels.model "gcw-f156-wheel.mdl"
+wheels.width 0.1525
+wheels.texture 4
+; racing slicks... extra grippy!
+wheels.stickyness 0.125
+
+
+;---lights
+
+;number of lights on the car (just one)
+numLights 1
+# 0
+lights.pos {0.000, -0.245, -1.939}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.12
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+;-- Add-On optionsnumAddOns 1initialAddOns 0x01
+
+; driver model# 0addOns.hasGraphic 1addOns.model "gcw-f156-driver.mdl"

@@ -1,0 +1,382 @@
+
+;a string with the name of the car
+builtIn 1
+carName "Morgan Aero Super Sports"
+
+;used only for career mode
+year 1933
+displacement 0.996
+
+;---aerodynamics
+
+;the car's frontal air resitance.
+;this equals cw*S, where cw is the coefficient of friction 
+;and S is the frontal area of the car in square meters.
+frontAirResistance 1.0
+
+;air resistance of the side and top areas of the car.
+;these values are not that important to be very exact.
+sideAirResistance 2.0
+topAirResistance 3.0
+
+;used to simulate spoilers
+frontLift -0.0
+rearLift -0.0
+
+
+;---chassis
+
+;Car's mass in kg
+mass 305.0
+
+;Car's momentum of inertia around the x,y and z axis.
+;Meassured in kg*m^2
+;For those not into physics that much, inertia specifies the car's
+;initial resistance to get accelerated around it's axis. Smaller, lighter
+;cars have much lower values here. A formula-1 car might have an inertia
+;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have
+;4000 kg*m^2.
+inertia {220, 220, 165}
+
+;The car's center of gravity.
+;This vector (as all the others that may follow) uses the following
+;coordinate system: X points to the right, Y points up and Z points to the front.
+;Coordinates are in meters.
+massCenter {0.0, 0.0, 0.4}
+
+
+;An approximation of the car's borders, used for collision detection.
+;More than two boxes can be used, but if too many are used, performance 
+;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).
+numCollBoxes 2
+# 0
+coll.tfr {0.680, 0.225, 1.140}
+coll.tfl {-0.680, 0.225, 1.140}
+coll.trr {0.680, 0.225, 0.690}
+coll.trl {-0.680, 0.225, 0.690}
+coll.bfr {0.680, -0.225, 1.140}
+coll.bfl {-0.680, -0.225, 1.140}
+coll.brr {0.680, -0.225, 0.690}
+coll.brl {-0.680, -0.225, 0.690}
+# 1
+coll.tfr {0.400, 0.850, 1.140}
+coll.tfl {-0.400, 0.850, 1.140}
+coll.trr {0.400, 0.850, -1.363}
+coll.trl {-0.400, 0.850, -1.363}
+coll.bfr {0.400, -0.150, 1.140}
+coll.bfl {-0.400, -0.150, 1.140}
+coll.brr {0.400, -0.150, -1.363}
+coll.brl {-0.400, -0.150, -1.363}
+
+;---graphics
+
+;Model used to represent the car.
+model "gcw-mog3w.mdl"
+
+;Model used to represent the car's interior.
+interiorModel "null.mdl"
+
+;Position of driver model
+driverPos {0.20, 0.05, -0.32}
+
+;Position of the steering wheel
+steeringWheelPos {0.20, 0.32, -0.12}
+
+;Angle of the steering wheel
+steeringWheelAngle 20
+
+;Number of turns, lock-to-lock.
+steeringWheelTurns 2.0
+
+steeringWheelRadius 0.150
+
+;Model used to represent the steering wheel
+steeringWheelTexture "old_steering_wheel01.pct"
+
+;Position of left and right exhaust ends. For a car with only
+;one exhaust pipe, use the same coordinates for both.
+exhaust1Pos {-0.41, -0.04, -0.91}
+exhaust2Pos {-0.41, -0.04, -0.91}
+
+;The lower this value, the more the car's exhaust will spit out banging noises and flames;just remove this line to turn this off.exhaustFire 200000;Position of license plates
+;for network player names
+frontLicensePlatePos {0.0, -0.065, 0.98}
+rearLicensePlatePos {0.0, -0.050, -1.38}
+
+numColors 7# 0colors {0.0, 0.0, 0.0}# 1colors {0.0, 0.0, 1.0}# 2colors {0.0, 1.0, 0.0}# 3colors {1.0, 0.0, 0.0}# 4colors {1.0, 1.0, 0.0}
+# 5colors {0.9, 0.9, 0.9}
+# 6colors {0.42, 0.66, 0.78}
+
+hornPitch 1.2
+
+;--engine - Matchless MX4 42HP 990cc
+;power 31320.0
+;torque 62.3
+;powerRPM 4600.0
+;torqueRPM 4200.0
+;jerkRPM 150.0
+;idleRPM 300.0
+;maxRPM 5200.0
+;engineInertia 0.08
+;engineFriction 75
+
+;--engine - J.A.P. JTOR 55HP 996cc
+power 41013.5
+torque 68.77
+powerRPM 5800.0
+torqueRPM 4800.0
+jerkRPM 150.0
+idleRPM 550.0
+maxRPM 6400.0
+engineInertia 0.08
+
+; unused...
+;engineFriction 25
+
+;engine sound sample
+engineSample "gcw-v2engine.wav"
+hallSample "gcw-v2engine2.wav"
+; multipliers for engine sound volume at idle/max RPM
+zeroRPMSoundGain 1.00
+fullRPMSoundGain 1.50
+zeroThrottleSoundGain 0.75
+fullThrottleSoundGain 1.50
+; multipliers for engine sound speed at idle/max RPM
+zeroRPMSoundPitch 0.44
+fullRPMSoundPitch 5.12
+zeroThrottleSoundPitch 1.0
+fullThrottleSoundPitch 1.0
+
+;---suspension
+
+;These determines the strength of the car's shock absorbers.
+supsensionFriction 300
+damperStrength 44000
+frontSwayBar 12000
+rearSwayBar 8000
+
+;---drivetrain
+
+;The ratio of the final drive gear in the car's differential.
+finalDriveRatio 4.20
+
+;The maximum amount of torque the car's clutch can transfer (in Nm).
+maxClutchTorqueTransfer 900
+
+;this factor is used to simulate limited slip differentials.
+;0 means free differential. the higher the value, the more differential locking.
+;values around 100 seem to get realistic limited slip differentials.
+differentialLockCoefficient 0
+
+;For automatic transmission: When to shift up and down
+shiftUpRPM 5200.0
+shiftDownRPM 3500.0
+
+;Time it takes to shift gears in seconds
+gearSwitchTime 0.5
+
+;Number of gears, including reverse and neutral.
+numGears 5
+
+;The gear ratios
+# 0
+gearRatios -2.5
+# 1
+gearRatios 0
+# 2
+gearRatios 2.5
+# 3
+gearRatios 1.6
+# 4
+gearRatios 1.0
+
+
+;---wheels
+
+;number of wheels (theoretically you could make vehicles with numWheels!=4. This has not been tested and might cause troubles, though).
+numWheels 3
+
+
+# 0
+;Wheel's position
+wheels.pos {-0.64, 0.0, 0.915}
+
+;Wheel's inertia in kg*m^2.
+wheels.inertia 0.52
+
+;Fraction of engine power lead to this wheel.
+wheels.powered 0.0
+
+;Friction caused by rotating the wheel in Nm.
+wheels.friction 4
+
+;Maximal steering angle of this wheel in radians.
+wheels.maxAngle 0.40
+
+;Suspension travel of this wheel in meters.
+wheels.maxSuspension 0.15
+
+;Wheel's radius in meters.
+wheels.radius 0.225
+
+;Torque of the brakes on this wheel (in Nm).
+wheels.braked 1000.0
+
+;How much of the braking torque is generated by pulling the handbrake (between 0 and 1).
+wheels.handbraked 1.0
+
+;model used to represent the wheel
+wheels.model "wheel-classic-disc.mdl"
+
+wheels.width 0.08
+wheels.texture 4
+
+# 1
+wheels.pos {0.64, 0.0, 0.915}
+wheels.inertia 0.52
+wheels.powered 0.0
+wheels.friction 4
+wheels.maxAngle 0.40
+wheels.maxSuspension 0.15
+wheels.radius 0.225
+wheels.braked 1000.0
+wheels.handbraked 1.0
+wheels.model "wheel-classic-disc.mdl"
+wheels.width 0.08
+wheels.texture 4
+
+# 2
+wheels.pos {0.0, -0.05, -0.915}
+wheels.inertia 0.56
+wheels.powered 1.0
+wheels.friction 4
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.10
+wheels.radius 0.225
+wheels.braked 3200.0
+wheels.handbraked 0.0
+wheels.model "wheel-classic.mdl"
+wheels.width 0.08
+wheels.texture 4
+
+;---lights
+
+;number of lights on the car (just headlights/taillights/brakelight for now)
+numLights 10
+
+;the light's position
+;>> lights.pos {-0.52, 0.25, 0.86}
+;direction the light is pointing to
+;>> lights.dir {0.0, -0.1, 1.0}
+;RGB color of the light
+;>> lights.rgb {1, 1, 1}
+;light type: either 0 for a glowing dot, 1 for a light cone
+;(visible at night only) or 2 for a dot which reflects on wet streets.
+; 0 = glowing RED dot
+; 1 = light cone
+; 2 = reflected red dot (apparently)
+; 3 = white sphere (visible 360 degrees)
+; 4 = white sphere (visible 360 degrees)
+; 5 = nothing
+;>> lights.type 1
+;lights size, - length of light cone, or diameter of dot
+;>> lights.size 25
+;what is the light used for:
+;0x01: normal driving light. 
+;0x08: reverse gear light.
+;0x10: brake light
+;0x20: left indicator
+;0x40: right indicator
+;>> lights.onFlags 0x01
+;tell the light to turn OFF, when one of the above mentioned lights turns on.
+;>> lights.offFlags 0x00
+
+
+# 0
+lights.pos {-0.52, 0.25, 0.86}
+lights.dir {0.0, -0.15, 1.0}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 1
+lights.size 20
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 1
+lights.pos {0.52, 0.25, 0.86}
+lights.dir {0.0, -0.15, 1.0}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 1
+lights.size 20
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 2
+lights.pos {-0.52, 0.25, 0.86}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.5
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 3
+lights.pos {0.52, 0.25, 0.86}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.5
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; rear lights
+# 4
+lights.pos {0.185, 0.17, -1.35}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 5
+lights.pos {0.185, 0.17, -1.35}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 6
+lights.pos {-0.185, 0.17, -1.35}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 7
+lights.pos {-0.185, 0.17, -1.35}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; brake lights
+# 8
+lights.pos {-0.185, 0.17, -1.35}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.3
+lights.onFlags 0x10
+lights.offFlags 0x00
+; brake lights
+# 9
+lights.pos {0.185, 0.17, -1.35}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.3
+lights.onFlags 0x10
+lights.offFlags 0x00

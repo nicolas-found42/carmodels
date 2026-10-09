@@ -1,0 +1,330 @@
+{
+  "schema": 1,
+  "status": "complete; final patches and effective completion claims accepted through scoped independent reviews",
+  "bundle_sha256": "0b34b6c37b459d92a31bc63ab99b97e789811fe66a9603df4652ba7f4a2bc15a",
+  "source_pins": {
+    "tools/redline_mesh.py": "f3c8cb5f4517a45730900adad184dede46c6ef654a0a9dbb2324a2a31560daa5",
+    "tools/test_redline_mesh.py": "94ee3df3c7b510ae89f849fd5260036a4f2e05e34f22dc94e32f7a44584e8653",
+    "tools/redline_texture.py": "fc17acf7bc1f4a631656ed95277579be90c3435fcfa3ed3a347582cc92d3f27f",
+    "tools/test_redline_texture.py": "b4b72f8d76951926fda096bd417cac992b12bbe5e04dd7c4db1a03eb1e931ff6",
+    "tools/redline_model.py": "9b451a9f9814303a034e7a836e44f2dcbcd984249aa49cda9986a8d7b4827313",
+    "tools/test_redline_model.py": "3d6ec13e29fc70671f792170524f6b7a6831f746a1a28c14a537501dd314659a",
+    "tools/test_redline_roundtrip.py": "f64a20195a649fda6f2cc4aab8ee2ec0e2b6de37681f5e1808eac67e09e11a9d",
+    "tools/bake_models.py": "6d38a0cf2003ea9497fa953b96aa733478d5706eb9d32d992d74eb07bd4e13c0",
+    "tools/test_bake_models.py": "6df58bebb1773f08951d5eb92d8578eda5a42445b441e99b6677bbc5972b19d4",
+    "tools/run_checks.py": "574d46737a5196f201b6f3bbc4f39546a23fe1046e157dc2b85be6b649734c3b",
+    "tools/export_redline_models.py": "b5265822f78c40202e9f022f5e36a5fc498f973aa9678444fdccfe9e3ecd45cf",
+    "tools/test_export_redline_models.py": "09e6fb83178d12a931c2910be089e5e7eceb3193c00a2a5d071ad852c7042396",
+    "tools/import_redline_dealership.py": "1a6004877839a533f0eb8317f1896644c3d8f9689638f70a03c9f624c8e2d521",
+    "tools/test_import_redline_dealership.py": "033d492842c22f173270070fdb08cfbabb4c736af27dfdb8fb096d5478b35d64",
+    "dealership/dealership.html": "fffdff9b76913fd922d9aa4189e59585160843d5a2b68917eabe21209d7a9c88",
+    "dealership/dealership.mjs": "b36ea039738a5d067c6a581c118bfeeded8457f5cfbce59b069f3a6e7554d912",
+    "dealership/recovered.html": "bdeae8250e89ff9cc8a2859765f85482b19e8684b9730ef9c0397bc3af7d8c7a",
+    "tools/build_dealership.py": "a0c92579a7b184d3f56c0340acc575e34132d517c0c62d80b0547a789da27e76",
+    "tools/test_build_dealership.py": "b25b061b7d5da2f49f893908b13a60c97e80ca3bee558ffe30f2ac9f12ececd7",
+    "tools/test_dealership.mjs": "98bde1ccd958384749f1da6985393b333b869eff078e30ea94b38045a49ff7f7",
+    "tools/library_filter.py": "991df42614e0e4e56ba7b0a4fc050a38532bd308fa026cc7d2dc220769d419ba",
+    "tools/test_library_filter.py": "70349d81a4609bef61ebca343828c3b9a9a47e619acd93592cbaab5f098c7226",
+    "redline/README.md": "c84fd5601789b691bfbf5d3f1f2b73d65f7f38649aef3472cde0cfad9b8ea2ce",
+    "research/README.md": "efaf339c337533467bba3bd6b9abe26509ab9bfb7f3152be1b5029d2e2432219",
+    "research/redline-library.md": "659575e97fd2511816e902cdc5f1168e0bc93f598805967056ad9fe788e3b93d",
+    "dealership/dealership/README.md": "61589b401f78c5816e41f51451942c42dc31870649d5790bd740a8215352dbf3"
+  },
+  "packets": [
+    {
+      "packet": "mesh.json",
+      "receipt_sha256": "028373c1d91ba5824178459ded4d07dca786fc0091f4a5625a3335b5cff2b8f4",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.58,
+      "original_composite": 0.790125,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The check manifest records test_redline_mesh passing with exit code zero.",
+          "original_verdict": "verified",
+          "original_confidence": 0.98,
+          "disposition": "auto"
+        }
+      ]
+    },
+    {
+      "packet": "texture.json",
+      "receipt_sha256": "602e5f712b3a143d12e978b68f3cbdeafcf3ecf732b81c5fdf31d7ab3a1ecac6",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.59,
+      "original_composite": 0.64,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The full corpus experiment decoded 2297 source image files; a separate final PICT experiment compared all 140 unique PICT inputs.",
+          "original_verdict": "verified",
+          "original_confidence": 0.22,
+          "disposition": "independently resolved using scoped evidence review"
+        }
+      ]
+    },
+    {
+      "packet": "texture-controls.json",
+      "receipt_sha256": "1a62b3299f82de845a46cda84b33012d3516a791f6a579dbd88732093415b85e",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.73,
+      "original_composite": 0.6862499999999999,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The final test_redline_texture check exited zero; the separate stock-Python test run exercised the optional Pillow path without skips.",
+          "original_verdict": "contradicted",
+          "original_confidence": 0.72,
+          "disposition": "retired; replaced by two explicitly scoped runtime claims"
+        }
+      ]
+    },
+    {
+      "packet": "assembly.json",
+      "receipt_sha256": "dc16b29b5768c6c609e2c3e17f5e8c100783ce4b603559c709a7958fc7db7dd6",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.29,
+      "original_composite": 0.6190000000000001,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The final published Mustang wheel centers are Y0.25, from configured Y0.35 minus half of maximum suspension0.2.",
+          "original_verdict": "verified",
+          "original_confidence": 0.95,
+          "disposition": "auto"
+        }
+      ]
+    },
+    {
+      "packet": "assembly-controls.json",
+      "receipt_sha256": "b1b1dd2744b2dee661fbf057308495f74349dc6dbc1ee7d27cd328c96f92ddd4",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.48,
+      "original_composite": 0.7832999999999999,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The corrected suspension regression passes, after failing before the fix.",
+          "original_verdict": "verified",
+          "original_confidence": 0.88,
+          "disposition": "auto"
+        },
+        {
+          "claim": "The post-fix Blender test imported, edited and exported static four-, three- and six-wheel cars.",
+          "original_verdict": "verified",
+          "original_confidence": 0.88,
+          "disposition": "auto"
+        }
+      ]
+    },
+    {
+      "packet": "export.json",
+      "receipt_sha256": "82134126789189fa2110a2bf5bd29184e5c9372309d103883f85676c886d807c",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.58,
+      "original_composite": 0.760125,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The final exporter --check regenerated and matched the 128 published models from 129 source configurations.",
+          "original_verdict": "verified",
+          "original_confidence": 0.92,
+          "disposition": "auto"
+        }
+      ]
+    },
+    {
+      "packet": "editable-import.json",
+      "receipt_sha256": "6dcdc777c7c2ff841e1228f98ac812e90c46f3d550f90670b77bbf939a3fe49c",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.54,
+      "original_composite": 0.7045,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "128 regular independent editable Redline files match their current source model bytes; all 763 pre-existing catalog and origin entries are preserved.",
+          "original_verdict": "verified",
+          "original_confidence": 0.3,
+          "disposition": "independently resolved using scoped evidence review"
+        }
+      ]
+    },
+    {
+      "packet": "ui-filter.json",
+      "receipt_sha256": "8db00285358e61eb7f66fbec6010796ddeb63452c37dae53848316d020e84ed8",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.6,
+      "original_composite": 0.7974375000000002,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "Both catalog counts are891, and real HTTP semantic-filter requests accepted Redline/base and Gran Turismo/night while the unsupported all-wheels query returned review.",
+          "original_verdict": "verified",
+          "original_confidence": 0.95,
+          "disposition": "auto"
+        }
+      ]
+    },
+    {
+      "packet": "documentation.json",
+      "receipt_sha256": "03acb6112e14e6414f94aa6167edbb0a268aa4311e945b8128a640fe59e66904",
+      "original_review_action": "escalate",
+      "original_safe_to_apply": 0.58,
+      "original_composite": 0.8585,
+      "review_disposition": "approved through the combined scoped independent resolutions; original scores retained",
+      "claims": [
+        {
+          "claim": "The final export contains19 base and109 add-on drawable models, and one non-drawable Invisivette configuration is recorded separately.",
+          "original_verdict": "verified",
+          "original_confidence": 0.97,
+          "disposition": "auto"
+        }
+      ]
+    }
+  ],
+  "resolutions": [
+    {
+      "path": ".scratch/redline-conversion/final-gate-v2/integration-component-resolution.json",
+      "sha256": "cf5a9a5e9dd23f9d1aec030d76b3755ff5c882a5da9538f715bc5ac555a0b41f",
+      "reviewer": "/root, independent reviewer of child-owned integration code",
+      "scope": [
+        "editable-import.json patch only; generated completion claim requires separate independent asset reviewer",
+        "ui-filter.json original integration patch only; root camera delta requires child independent review",
+        "documentation.json dealership/dealership/README.md only; other root docs require child independent review"
+      ]
+    },
+    {
+      "path": ".scratch/redline-conversion/stance-review/final-root-gate-resolution.json",
+      "sha256": "8888f49b53bc477d8f28169923049514cc1392e29b77f2d66d05512c268d398a",
+      "reviewer": "/root/redline_library_integration",
+      "scope": [
+        "tools/redline_model.py",
+        "tools/test_redline_model.py",
+        "tools/test_redline_roundtrip.py",
+        "tools/bake_models.py",
+        "tools/test_bake_models.py",
+        "tools/run_checks.py",
+        "tools/export_redline_models.py",
+        "tools/test_export_redline_models.py",
+        "redline/README.md",
+        "research/README.md",
+        "research/redline-library.md"
+      ]
+    },
+    {
+      "path": ".scratch/redline-conversion/final-gate-v2/texture-component-resolution.json",
+      "sha256": "67e0330ea51e21c629ab745e48442fff19bdc46bb47fd377110ca765a0b51063",
+      "reviewer": "/root/redline_mesh_conversion independent texture reviewer",
+      "scope": "Only texture.py and test_redline_texture.py patch confidence escalations, and texture.json qualified corpus claim confidence escalation. This record DOES NOT approve the texture-controls.json contradicted compound completion claim."
+    },
+    {
+      "path": ".scratch/redline-conversion/texture/final-rootgate-scoped-resolution.json",
+      "sha256": "f8979ce1270a5494ec6eb47215e50ab85e22b64f4aed4726b9ff6f5e177e9797",
+      "reviewer": "/root/redline_texture_conversion",
+      "scope": {
+        "patches": [
+          "tools/redline_mesh.py",
+          "tools/test_redline_mesh.py"
+        ],
+        "claims": [
+          "128 regular independent editable Redline files match their current source model bytes; all 763 pre-existing catalog and origin entries are preserved."
+        ],
+        "excluded": "No approval of the editable-import implementation patch, texture implementation, other packets, or entire task completion."
+      }
+    }
+  ],
+  "verified_effective_claims": 11,
+  "retired_claims": {
+    "schema": 1,
+    "receipt": "texture-controls.json",
+    "claim": "The final test_redline_texture check exited zero; the separate stock-Python test run exercised the optional Pillow path without skips.",
+    "original_verdict": {
+      "action": "review",
+      "summary": {
+        "verified": 0,
+        "contradicted": 1,
+        "unsupported": 0,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The final test_redline_texture check exited zero; the separate stock-Python test run exercised the optional Pillow path without skips.",
+          "verdict": "contradicted",
+          "confidence": 0.72,
+          "probabilities": {
+            "verified": 0.18,
+            "contradicted": 0.81,
+            "unsupported": 0.01
+          },
+          "action": "review"
+        }
+      ]
+    },
+    "disposition": "retired; not counted as an accepted completion claim",
+    "reason": "The original joined claim did not explicitly disclose the one optional Pillow skip in the default interpreter. Replacement statements separately identify each interpreter, skip status and actual verbose output. This retirement does not waive the original contradiction.",
+    "replacement_call": "texture-qualified-claims-call.json",
+    "replacement_receipt": "texture-qualified-claims.json"
+  },
+  "replacement_verification": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The recorded Python 3.14 texture-test invocation exited zero with one skipped optional Pillow test.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.99,
+          "contradicts": 0.01,
+          "says_nothing": 0
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": "python-3.14-verbose",
+        "same_subject": 0.96
+      },
+      {
+        "id": "claim1",
+        "claim": "The recorded /usr/bin/python3 texture-test invocation exited zero; its nine named methods ran without skips, including test_optional_pillow_images.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.99,
+          "contradicts": 0.01,
+          "says_nothing": 0
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": "system-python-verbose",
+        "same_subject": 0.94
+      }
+    ],
+    "usage": {
+      "input_tokens": 1702,
+      "output_tokens": 235
+    }
+  },
+  "final_gate_and_replacement_usage": {
+    "input_tokens": 131724,
+    "output_tokens": 3031
+  },
+  "billed_cost": "not returned by MCP; SDK filter experiment costs are reported separately",
+  "operational_error_history": "Original nine schema-invalid evidence-object calls retained under .scratch/redline-conversion/final-gate; repaired calls use bounded evidence strings. No operational error was approved.",
+  "claim_limits": [
+    "Static native preview assembly; game shaders/animation/physics equilibrium/global plug-in load precedence remain unverified.",
+    "Default interpreter skips one optional Pillow method; stock Python executes all nine texture test methods."
+  ]
+}

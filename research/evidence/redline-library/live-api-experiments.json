@@ -1,0 +1,161 @@
+[
+  {
+    "query": "Redline base game models",
+    "expected_filter": {
+      "game": "redline",
+      "variant": "base"
+    },
+    "http_status": 200,
+    "result": {
+      "status": "ok",
+      "filters": {
+        "game": "redline",
+        "variant": "base"
+      },
+      "message": "Applied the requested game and variant filters.",
+      "signals": {
+        "choice": "redline:base",
+        "probabilities": {
+          "all": 0.0,
+          "ford-racing-2": 0.0,
+          "gran-turismo": 0.0,
+          "gran-turismo:day": 0.0,
+          "gran-turismo:night": 0.0,
+          "gran-turismo:arcade": 0.0,
+          "redline": 0.0,
+          "redline:base": 1.0,
+          "redline:addon": 0.0,
+          "no_match": 0.0
+        },
+        "confidence": 1.0,
+        "support": 0.91,
+        "coverage": 1.95,
+        "coverage_confidence": 0.91
+      },
+      "usage": {
+        "input_tokens": 1241,
+        "output_tokens": 152,
+        "cost": 5.2122e-05
+      },
+      "latency_seconds": 0.24453799999901094
+    },
+    "end_to_end_seconds": 0.45193508400188875
+  },
+  {
+    "query": "all Redline plug-in cars",
+    "expected_filter": {
+      "game": "redline",
+      "variant": "addon"
+    },
+    "http_status": 200,
+    "result": {
+      "status": "review",
+      "filters": null,
+      "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+      "signals": {
+        "choice": "redline:addon",
+        "probabilities": {
+          "all": 0.0,
+          "ford-racing-2": 0.0,
+          "gran-turismo": 0.0,
+          "gran-turismo:day": 0.0,
+          "gran-turismo:night": 0.0,
+          "gran-turismo:arcade": 0.0,
+          "redline": 0.03,
+          "redline:base": 0.0,
+          "redline:addon": 0.77,
+          "no_match": 0.2
+        },
+        "confidence": 0.74,
+        "support": 0.36,
+        "coverage": 1.39,
+        "coverage_confidence": 0.31
+      },
+      "usage": {
+        "input_tokens": 1242,
+        "output_tokens": 153,
+        "cost": 5.2164e-05
+      },
+      "latency_seconds": 0.8819790420020581
+    },
+    "end_to_end_seconds": 0.900529334001476
+  },
+  {
+    "query": "Gran Turismo night versions",
+    "expected_filter": {
+      "game": "gran-turismo",
+      "variant": "night"
+    },
+    "http_status": 200,
+    "result": {
+      "status": "ok",
+      "filters": {
+        "game": "gran-turismo",
+        "variant": "night"
+      },
+      "message": "Applied the requested game and variant filters.",
+      "signals": {
+        "choice": "gran-turismo:night",
+        "probabilities": {
+          "all": 0.0,
+          "ford-racing-2": 0.0,
+          "gran-turismo": 0.0,
+          "gran-turismo:day": 0.0,
+          "gran-turismo:night": 1.0,
+          "gran-turismo:arcade": 0.0,
+          "redline": 0.0,
+          "redline:base": 0.0,
+          "redline:addon": 0.0,
+          "no_match": 0.0
+        },
+        "confidence": 1.0,
+        "support": 0.94,
+        "coverage": 1.98,
+        "coverage_confidence": 0.95
+      },
+      "usage": {
+        "input_tokens": 1240,
+        "output_tokens": 154,
+        "cost": 5.208e-05
+      },
+      "latency_seconds": 0.2659773750019667
+    },
+    "end_to_end_seconds": 0.2796797080009128
+  },
+  {
+    "query": "Redline models with all wheels",
+    "expected_filter": null,
+    "http_status": 200,
+    "result": {
+      "status": "review",
+      "filters": null,
+      "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+      "signals": {
+        "choice": "no_match",
+        "probabilities": {
+          "all": 0.0,
+          "ford-racing-2": 0.0,
+          "gran-turismo": 0.0,
+          "gran-turismo:day": 0.0,
+          "gran-turismo:night": 0.0,
+          "gran-turismo:arcade": 0.0,
+          "redline": 0.43,
+          "redline:base": 0.0,
+          "redline:addon": 0.0,
+          "no_match": 0.5700000000000001
+        },
+        "confidence": 0.52,
+        "support": 0.15,
+        "coverage": 1.25,
+        "coverage_confidence": 0.59
+      },
+      "usage": {
+        "input_tokens": 1242,
+        "output_tokens": 150,
+        "cost": 5.2164e-05
+      },
+      "latency_seconds": 0.2683728330011945
+    },
+    "end_to_end_seconds": 0.2788362089995644
+  }
+]

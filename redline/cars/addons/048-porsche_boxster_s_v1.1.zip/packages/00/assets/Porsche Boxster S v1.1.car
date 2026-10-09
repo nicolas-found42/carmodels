@@ -1,0 +1,874 @@
+;------Credits------
+; 2008
+; Model, textures and .car file created by Andreu
+; Engine sound provided by DonaemouS
+; Please, no alterations or derivatives of this plugin without permission from the author
+; Please contact me (Vicent Estrella) on the Redline forum for any questions
+
+
+;——————General Car Information——————
+carName "≠porsche_logo.png≠ Porsche Boxster S v1.1"
+year 2003
+displacement 3.179
+builtIn 1
+price 45000
+aiSpeedIndex 1.5
+
+
+;——————Aerodynamics——————
+frontAirResistance 0.59
+sideAirResistance 1.412
+topAirResistance 1.964
+frontLift 0.0
+rearLift 0.0
+
+
+;——————Chassis——————
+; wheelbase 2.415 m
+; weight distibution = 46/54
+; W = 1.801 m, 1.64 actual car surfarce
+; H = 1.295 m, 1.201 without hood
+; L = 4.329 m
+
+mass 1360
+massCenter {0.0, 0.45, -0.102}
+inertia {2303,2474,547}
+
+
+;-—————Collision Boxes——————
+numCollBoxes 1
+# 0
+coll.tfr {0.846, 0.822, 2.049}
+coll.tfl {-0.846, 0.822, 2.049}
+coll.trr {0.878, 0.822, -2.159}
+coll.trl {-0.878, 0.822, -2.159}
+coll.bfr {0.846, 0.162, 2.049}
+coll.bfl {-0.846, 0.162, 2.049}
+coll.brr {0.878, 0.162, -2.159}
+coll.brl {-0.878, 0.162, -2.159}
+
+
+;——————Graphics——————
+model "boxster_body.mdl"
+interiorModel "null.mdl"
+shadowModel "boxster_shadow.mdl"
+
+numColors 7
+
+; Yellow
+# 0
+colors {0.96, 0.79, 0}
+
+; Maroon
+# 1
+colors {0.44, 0.015, 0.105}
+
+; Grey
+# 2
+colors {0.12, 0.12, 0.12}
+
+; Black
+# 3
+colors {0,0,0}
+
+; White
+# 4
+colors {1,1,1}
+
+; Blue
+# 5
+colors {0.09, 0.08, 0.38}
+
+; Purple
+# 6
+colors {0.57, 0, 0.87}
+
+
+;——————Driver model——————
+driverPos {0.31, 0.50,-0.215}
+; noDriverModel 2
+
+
+;——————Position of steering wheel model——————
+steeringWheelPos {0.31, 0.72, 0.24}
+steeringWheelAngle 15
+steeringWheelTurns 3
+steeringWheelRadius 0.2
+steeringWheelTexture "boxster_wheel.png"
+
+
+;——————Position of Exhaust——————
+exhaust1Pos {0.0,0.28,-2.0}
+exhaust2Pos {-0.0,0.28,-2.0}
+
+
+;——————Position of License Plates——————
+frontLicensePlatePos {0.0, 0.44, 2.25}
+rearLicensePlatePos {0.0, 0.56, -2.2}
+
+
+;——————Engine——————
+power 190500
+powerRPM 6200
+torque 310
+torqueRPM 4600
+jerkRPM 800
+idleRPM 800
+maxRPM 7400
+engineInertia 0.125
+engineBaseFriction 20
+engineRPMFriction 0.0125
+
+
+;——————Engine Sound——————
+
+engineSample "boxster_engine.wav"
+hallSample "boxster_engine.wav"
+zeroRPMSoundGain 0.8
+fullRPMSoundGain 2.0
+zeroThrottleSoundGain 1.4
+fullThrottleSoundGain 2.1
+zeroRPMSoundPitch 0.4
+fullRPMSoundPitch 1.0
+zeroThrottleSoundPitch 0.6
+fullThrottleSoundPitch 1.0
+
+
+;——————Horn Sound——————
+hornSample "boxster_horn.wav"
+hornPitch 0
+hornSoundgain 1
+
+
+;——————Drivetrain——————
+finalDriveRatio 3.87
+maxClutchTorqueTransfer 310
+shiftUpRPM 6500
+shiftDownRPM 3500
+gearSwitchTime 0.4
+differentialLockCoefficient 110
+
+
+;——————Number of gears——————
+numGears 8
+# 0
+gearRatios -3.33
+# 1
+gearRatios 0
+# 2
+gearRatios 3.67
+# 3
+gearRatios 2.05
+# 4
+gearRatios 1.41
+# 5
+gearRatios 1.13
+# 6
+gearRatios 0.97
+# 7
+gearRatios 0.82
+
+
+;——————Suspension——————
+suspensionFriction 950
+damperStrength 29500
+frontSwayBar 18400
+rearSwayBar 22400
+
+
+;——————Wheels——————
+; Front: 205/50 17 = 65.68 cm, radius = 32.84 cm
+; Rear: 255/40 17 = 63.58 cm, radius = 31.79 cm
+; Front Track = 1.455 m
+; Rear Track = 1.512 m
+
+
+numWheels 4
+
+# 0
+wheels.pos {0.728, 0.3284, 1.136}
+wheels.inertia 2.1
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.5575
+wheels.maxSuspension 0.08
+wheels.radius 0.3284
+wheels.braked 15000
+wheels.handbraked 0.0
+wheels.model "boxster_tire_right.mdl"
+wheels.width 0.205
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "boxster_brake_caliper.mdl"
+
+# 1
+wheels.pos {-0.728, 0.3284, 1.136}
+wheels.inertia 2.1
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.5575
+wheels.maxSuspension 0.08
+wheels.radius 0.3284
+wheels.braked 15000
+wheels.handbraked 0.0
+wheels.model "boxster_tire_left.mdl"
+wheels.width 0.205
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "boxster_brake_caliper.mdl"
+
+# 2
+wheels.pos {0.756, 0.3129, -1.224}
+wheels.inertia 2.196
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.09
+wheels.radius 0.3179
+wheels.braked 5000
+wheels.handbraked 0.8
+wheels.model "boxster_tire_right.mdl"
+wheels.width 0.255
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "boxster_brake_caliper.mdl"
+
+# 3
+wheels.pos {-0.756, 0.3129, -1.224}
+wheels.inertia 2.196
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.09
+wheels.radius 0.3179
+wheels.braked 5000
+wheels.handbraked 0.8
+wheels.model "boxster_tire_left.mdl"
+wheels.width 0.255
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "boxster_brake_caliper.mdl"
+
+
+;------Lights------
+numLights 61
+
+; Front lights
+
+# 0
+; spot
+lights.pos {-0.6,0.73,1.71}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+
+# 1
+; spot
+lights.pos {0.6,0.73,1.71}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+
+# 2
+; spot bulb
+lights.pos {-0.6,0.73,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,1,0.8}
+lights.type 6
+lights.size 0.35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 3
+; spot bulb
+lights.pos {0.6,0.73,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,1,0.8}
+lights.type 6
+lights.size 0.35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 4
+; horn front
+lights.pos {-0.45,0.6,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.45
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 5
+; horn front
+lights.pos {0.45,0.6,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.45
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 6
+; right position
+lights.pos {-0.55,0.53,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.12
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 7
+; left position
+lights.pos {0.55,0.53,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.12
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 8
+; right position
+lights.pos {-0.6,0.53,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.10
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 9
+; left position
+lights.pos {0.6,0.53,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.10
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 10
+; right position
+lights.pos {-0.5,0.53,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.14
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 11
+; left position
+lights.pos {0.5,0.53,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.14
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 12
+; right position
+lights.pos {-0.45,0.54,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.16
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 13
+; left position
+lights.pos {0.45,0.54,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.16
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 14
+; right position
+lights.pos {-0.42,0.54,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.16
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 15
+; left position
+lights.pos {0.42,0.54,1.8}
+lights.dir {0,0,1}
+lights.rgb {1,0.25,0}
+lights.type 0
+lights.size 0.16
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; Rear lights
+
+# 16
+; brakes
+lights.pos {-0.65,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 17
+; brakes
+lights.pos {0.65,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 18
+; brakes
+lights.pos {-0.6,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 19
+; brakes
+lights.pos {0.6,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 20
+; brakes
+lights.pos {-0.55,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 21
+; brakes
+lights.pos {0.55,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 22
+; brakes
+lights.pos {-0.50,0.67,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 23
+; brakes
+lights.pos {0.50,0.67,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 24
+; brakes
+lights.pos {-0.45,0.67,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.11
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 25
+; brakes
+lights.pos {0.45,0.67,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.11
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 26
+; brakes
+lights.pos {-0.72,0.7,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.13
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 27
+; brakes
+lights.pos {0.72,0.7,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.13
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 28
+; center brake
+lights.pos {0,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.075
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 29
+; center brake
+lights.pos {0.025,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.075
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 30
+; center brake
+lights.pos {-0.025,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.075
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 31
+; center brake
+lights.pos {0.05,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.075
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 32
+; center brake
+lights.pos {-0.05,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.075
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 33
+; center brake
+lights.pos {0.075,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.04
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 34
+; center brake
+lights.pos {-0.075,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.04
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 35
+; center brake
+lights.pos {0.1,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.04
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 36
+; center brake
+lights.pos {-0.1,0.914,-1.283}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 0
+lights.size 0.04
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 37
+; reverse
+lights.pos {-0.5,0.7,-1.9}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.2
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 38
+; reverse
+lights.pos {0.5,0.7,-1.9}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.2
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 39
+; reverse
+lights.pos {-0.6,0.75,-1.9}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.2
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 40
+; reverse
+lights.pos {0.6,0.75,-1.9}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.2
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 41
+; rear position
+lights.pos {-0.65,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 2
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 42
+; rear position
+lights.pos {0.65,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 2
+lights.size 0.125
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 43
+; rear position
+lights.pos {-0.6,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 6
+lights.size 0.125
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 44
+; rear position
+lights.pos {0.6,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 6
+lights.size 0.125
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 45
+; rear position
+lights.pos {-0.55,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 6
+lights.size 0.125
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 46
+; rear position
+lights.pos {0.55,0.68,-1.947}
+lights.dir {0,0,-1}
+lights.rgb {1,0.0}
+lights.type 6
+lights.size 0.125
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; Left side position
+
+# 47
+; left side position
+lights.pos {0.836,0.57,1.41}
+lights.dir {1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 48
+; left side position
+lights.pos {0.836,0.57,1.45}
+lights.dir {1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 49
+; left side position
+lights.pos {0.836,0.57,1.49}
+lights.dir {1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 50
+; left side position
+lights.pos {0.826,0.575,1.53}
+lights.dir {1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 51
+; left side position
+lights.pos {0.821,0.58,1.57}
+lights.dir {1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 52
+; left side position
+lights.pos {0.826,0.575,1.53}
+lights.dir {0.5,0,0.5}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 53
+; left side position
+lights.pos {0.821,0.58,1.57}
+lights.dir {0,0,1}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; Right side position
+
+# 54
+; right side position
+lights.pos {-0.836,0.57,1.41}
+lights.dir {-1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 55
+; right side position
+lights.pos {-0.836,0.57,1.45}
+lights.dir {-1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 56
+; right side position
+lights.pos {-0.836,0.57,1.49}
+lights.dir {-1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 2
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 57
+; right side position
+lights.pos {-0.826,0.575,1.53}
+lights.dir {-1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 58
+; right side position
+lights.pos {-0.821,0.58,1.57}
+lights.dir {-1,0,0}
+lights.rgb {1,0.5.0}
+lights.type 2
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 59
+; right side position
+lights.pos {-0.826,0.575,1.53}
+lights.dir {-0.5,0,0.5}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 60
+; right side position
+lights.pos {-0.821,0.58,1.57}
+lights.dir {0,0,1}
+lights.rgb {1,0.5.0}
+lights.type 6
+lights.size 0.085
+lights.onFlags 0x01
+lights.offFlags 0x00
