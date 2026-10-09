@@ -1,0 +1,16 @@
+$ node tools/test_silhouette.mjs
+PASS test_silhouette: 35 source-derived meshes, 4 source hubs each, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, source proportions, corpus errors and real HTTP body timeout
+
+$ python3 tools/test_build_silhouettes.py
+....
+----------------------------------------------------------------------
+Ran 4 tests in 1.460s
+
+OK
+
+$ python3 tools/test_build_showcase.py
+..
+----------------------------------------------------------------------
+Ran 2 tests in 1.996s
+
+OK

@@ -1,0 +1,72 @@
+{
+  "tool": "jev_decide",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "recommendation": {
+    "selected": "linear",
+    "escaped": false,
+    "confidence": 0.99,
+    "probabilities": {
+      "linear": 0.99,
+      "sampleronly": 0.01,
+      "defer": 0,
+      "ask_user": 0,
+      "investigate": 0,
+      "none": 0
+    },
+    "contradicted_requirements": []
+  },
+  "requirements_checked": 3,
+  "checks": [
+    {
+      "candidate": "linear",
+      "requirement": 0,
+      "answer": "supported"
+    },
+    {
+      "candidate": "linear",
+      "requirement": 1,
+      "answer": "supported"
+    },
+    {
+      "candidate": "linear",
+      "requirement": 2,
+      "answer": "supported"
+    },
+    {
+      "candidate": "sampleronly",
+      "requirement": 0,
+      "answer": "supported"
+    },
+    {
+      "candidate": "sampleronly",
+      "requirement": 1,
+      "answer": "supported"
+    },
+    {
+      "candidate": "sampleronly",
+      "requirement": 2,
+      "answer": "supported"
+    },
+    {
+      "candidate": "defer",
+      "requirement": 0,
+      "answer": "supported"
+    },
+    {
+      "candidate": "defer",
+      "requirement": 1,
+      "answer": "supported"
+    },
+    {
+      "candidate": "defer",
+      "requirement": 2,
+      "answer": "supported"
+    }
+  ],
+  "warnings": [],
+  "usage": {
+    "input_tokens": 2085,
+    "output_tokens": 452
+  }
+}

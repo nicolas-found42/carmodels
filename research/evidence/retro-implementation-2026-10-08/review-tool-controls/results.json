@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.039
+    },
+    {
+      "name": "test_run_checks",
+      "command": [
+        "python3",
+        "tools/test_run_checks.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_run_checks.log",
+      "elapsed_seconds": 0.12
+    },
+    {
+      "name": "test_review_payload",
+      "command": [
+        "python3",
+        "tools/test_review_payload.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_review_payload.log",
+      "elapsed_seconds": 0.055
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

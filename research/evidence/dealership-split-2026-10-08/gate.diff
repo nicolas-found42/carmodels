@@ -1,0 +1,900 @@
+--- before/tools/build_silhouettes.py
++++ after/tools/bake_models.py
+@@ -1,7 +1,8 @@
+ #!/usr/bin/env python3
+-"""Bake compact, source-derived display silhouettes from pinned recovered GLBs.
+-
+-Keep the first tree's explicit low-speed scene and its original translations.
++"""Bake compact display meshes from source seeds or independent dealership GLBs.
++
++Source mode enforces the pinned first-tree low-speed scene; dealership mode uses
++the working GLB's own selected scene and static affine transforms.
+ Discard driver helmets and baked shadow planes, not alternative states by guesswork.
+ Weld identical position/normal/tone tuples without moving vertices or decimating faces.
+ Texture-derived tones are an illustration heuristic, not semantic part segmentation.
+@@ -22,37 +23,38 @@
+ 
+ def read_glb(data):
+     if len(data) < 28 or struct.unpack_from('<3I', data) != (0x46546C67, 2, len(data)):
+-        raise ValueError('Invalid silhouette source GLB container')
++        raise ValueError('Invalid model source GLB container')
+     size, kind = struct.unpack_from('<2I', data, 12)
+     end = 20 + size
+     if kind != 0x4E4F534A or end + 8 > len(data):
+-        raise ValueError('Invalid silhouette source JSON chunk')
++        raise ValueError('Invalid model source JSON chunk')
+     doc = json.loads(data[20:end])
+     size, kind = struct.unpack_from('<2I', data, end)
+     if kind != 0x004E4942 or end + 8 + size != len(data):
+-        raise ValueError('Invalid silhouette source binary chunk')
++        raise ValueError('Invalid model source binary chunk')
+     return doc, data[end + 8:]
+ 
+ 
+ def accessor(doc, binary, index, width, component):
+     a = doc['accessors'][index]
+-    if (a['type'], a['componentType']) != ({1: 'SCALAR', 2: 'VEC2', 3: 'VEC3'}[width], component):
+-        raise ValueError('Unsupported silhouette accessor type')
++    allowed = (5121, 5123, 5125) if component == 5125 else (component,)
++    if a['type'] != {1: 'SCALAR', 2: 'VEC2', 3: 'VEC3'}[width] or a['componentType'] not in allowed:
++        raise ValueError('Unsupported model accessor type')
+     if a.get('sparse') or a.get('normalized'):
+-        raise ValueError('Unsupported silhouette accessor encoding')
++        raise ValueError('Unsupported model accessor encoding')
+     view = doc['bufferViews'][a['bufferView']]
+     if view['buffer'] != 0:
+-        raise ValueError('Silhouette accessor is not in the embedded buffer')
+-    fmt = {5126: 'f', 5125: 'I'}[component]
+-    step = width * 4
++        raise ValueError('Model accessor is not in the embedded buffer')
++    fmt = {5126: 'f', 5125: 'I', 5123: 'H', 5121: 'B'}[a['componentType']]
++    step = width * struct.calcsize(fmt)
+     stride = view.get('byteStride', step)
+     start = view.get('byteOffset', 0) + a.get('byteOffset', 0)
+     end = start + (a['count'] - 1) * stride + step
+     if a['count'] <= 0 or stride < step or end > view.get('byteOffset', 0) + view['byteLength'] or end > len(binary):
+-        raise ValueError('Silhouette accessor exceeds its buffer')
++        raise ValueError('Model accessor exceeds its buffer')
+     values = [struct.unpack_from('<' + fmt * width, binary, start + i * stride) for i in range(a['count'])]
+     if not all(math.isfinite(v) for row in values for v in row):
+-        raise ValueError('Non-finite silhouette source attribute')
++        raise ValueError('Non-finite model source attribute')
+     return values
+ 
+ 
+@@ -69,17 +71,58 @@
+     return round((0.06 + 0.94 * (light / 255) ** 0.85) * 255)
+ 
+ 
+-def bake_car(code, data, expected_sha256):
++IDENTITY = ((1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))
++
++
++def node_transform(node):
++    if 'matrix' in node:
++        m = node['matrix']
++        if len(m) != 16:
++            raise ValueError('Invalid dealership node matrix')
++        matrix = tuple(tuple(m[j * 4 + i] for j in range(4)) for i in range(4))
++    else:
++        translation = node.get('translation', [0, 0, 0])
++        scale = node.get('scale', [1, 1, 1])
++        rotation = node.get('rotation', [0, 0, 0, 1])
++        if len(translation) != 3 or len(scale) != 3 or len(rotation) != 4:
++            raise ValueError('Invalid dealership node transform')
++        x, y, z, w = rotation
++        if abs(x*x + y*y + z*z + w*w - 1) > 1e-5:
++            raise ValueError('Dealership node quaternion must be unit length')
++        rows = [[1-2*(y*y+z*z), 2*(x*y-z*w), 2*(x*z+y*w)],
++                [2*(x*y+z*w), 1-2*(x*x+z*z), 2*(y*z-x*w)],
++                [2*(x*z-y*w), 2*(y*z+x*w), 1-2*(x*x+y*y)]]
++        matrix = tuple(tuple(rows[i][j] * scale[j] for j in range(3)) + (translation[i],) for i in range(3)) + ((0, 0, 0, 1),)
++    if not all(math.isfinite(v) for row in matrix for v in row) or matrix[3] != (0, 0, 0, 1):
++        raise ValueError('Invalid dealership affine transform')
++    return matrix
++
++
++def compose(a, b):
++    return tuple(tuple(sum(a[i][k] * b[k][j] for k in range(4)) for j in range(4)) for i in range(4))
++
++
++def normal_transform(matrix):
++    (a, b, c, _), (d, e, f, _), (g, h, i, _), _ = matrix
++    cofactors = ((e*i-f*h, f*g-d*i, d*h-e*g),
++                 (c*h-b*i, a*i-c*g, b*g-a*h), (b*f-c*e, c*d-a*f, a*e-b*d))
++    determinant = a*cofactors[0][0] + b*cofactors[0][1] + c*cofactors[0][2]
++    if abs(determinant) < 1e-12:
++        raise ValueError('Dealership model has a singular transform')
++    return tuple(tuple(v / determinant for v in row) for row in cofactors), determinant
++
++
++def bake_car(code, data, expected_sha256=None, *, source_mode=True):
+     source_sha = hashlib.sha256(data).hexdigest()
+-    if source_sha != expected_sha256:
+-        raise ValueError(f'{code}: silhouette GLB differs from manifest pin')
++    if expected_sha256 is not None and source_sha != expected_sha256:
++        raise ValueError(f'{code}: model GLB differs from manifest pin')
+     doc, binary = read_glb(data)
+-    if doc.get('extras', {}).get('car') != code:
+-        raise ValueError(f'{code}: silhouette source car identity differs')
++    if source_mode and doc.get('extras', {}).get('car') != code:
++        raise ValueError(f'{code}: model source car identity differs')
+     scene_index = doc['scene']
+     scene = doc['scenes'][scene_index]
+-    if scene.get('extras', {}).get('visibilityPreset') != 'low_speed' or scene['extras'].get('sourceTree') != 0:
+-        raise ValueError(f'{code}: expected first-tree low-speed silhouette scene')
++    if source_mode and (scene.get('extras', {}).get('visibilityPreset') != 'low_speed' or scene['extras'].get('sourceTree') != 0):
++        raise ValueError(f'{code}: expected first-tree low-speed model scene')
+     images = {}
+ 
+     def image(index):
+@@ -93,17 +136,18 @@
+     sources, hubs = [], []
+     active = set()
+ 
+-    def walk(index, translation=(0, 0, 0), wheel=False):
++    def walk(index, parent=IDENTITY, wheel=False):
+         if index in active:
+-            raise ValueError('Cyclic silhouette source scene')
++            raise ValueError('Cyclic model source scene')
+         active.add(index)
+         node = doc['nodes'][index]
+-        if any(k in node for k in ['matrix', 'rotation', 'scale']):
+-            raise ValueError('Silhouette source transform is outside translation-only profile')
+-        local = node.get('translation', [0, 0, 0])
+-        if len(local) != 3 or not all(math.isfinite(v) for v in local):
+-            raise ValueError('Invalid silhouette source translation')
+-        pos = tuple(a + b for a, b in zip(translation, local))
++        if source_mode and any(k in node for k in ['matrix', 'rotation', 'scale']):
++            raise ValueError('Model source transform is outside translation-only profile')
++        if 'skin' in node:
++            raise ValueError('Dealership model must be static, not skinned')
++        transform = compose(parent, node_transform(node))
++        normal_matrix, determinant = normal_transform(transform)
++        pos = tuple(transform[i][3] for i in range(3))
+         names = node.get('extras', {}).get('sourceNames', [])
+         if 'HELMET' in names:
+             active.remove(index)
+@@ -112,34 +156,38 @@
+         if any(n.startswith('HUB_') for n in names):
+             hubs.append({'name': names[0], 'position': [pos[2], pos[1], -pos[0]]})
+         if 'mesh' in node:
+-            sources.append({'node': index, 'record': node['extras']['geometryRecord'], 'names': names})
++            sources.append({'node': index, 'record': node.get('extras', {}).get('geometryRecord'), 'names': names})
+             for primitive in doc['meshes'][node['mesh']]['primitives']:
+-                material = doc['materials'][primitive['material']]
+-                if material['name'] == 'UNDER_SHADOW':
++                material = doc['materials'][primitive['material']] if 'material' in primitive else {}
++                if material.get('name') == 'UNDER_SHADOW':
+                     continue
+                 if primitive.get('mode', 4) != 4:
+-                    raise ValueError('Silhouette requires source triangles')
++                    raise ValueError('Model requires source triangles')
+                 attrs = primitive['attributes']
+                 positions = accessor(doc, binary, attrs['POSITION'], 3, 5126)
+                 normals = accessor(doc, binary, attrs['NORMAL'], 3, 5126)
+                 uv = accessor(doc, binary, attrs['TEXCOORD_0'], 2, 5126) if 'TEXCOORD_0' in attrs else None
+                 if len(normals) != len(positions) or (uv is not None and len(uv) != len(positions)):
+-                    raise ValueError('Silhouette source attribute counts differ')
++                    raise ValueError('Model source attribute counts differ')
+                 indices = [v[0] for v in accessor(doc, binary, primitive['indices'], 1, 5125)]
+                 if len(indices) % 3 or max(indices) >= len(positions):
+-                    raise ValueError('Silhouette source triangle index exceeds vertices')
++                    raise ValueError('Model source triangle index exceeds vertices')
+                 pbr = material.get('pbrMetallicRoughness', {})
+                 texture = pbr.get('baseColorTexture')
+-                kind = 'wheel' if wheel else 'body' if texture else 'detail'
++                kind = 'wheel' if wheel else 'body' if texture or (not source_mode and not names) else 'detail'
+                 part = parts[kind]
+                 pixels = image(doc['textures'][texture['index']]['source']) if texture else None
+                 remap = {}
+                 for i in sorted(set(indices)):
+-                    x, y, z = (v + t for v, t in zip(positions[i], pos))
+-                    nx, ny, nz = normals[i]
++                    x, y, z = (sum(transform[j][k] * positions[i][k] for k in range(3)) + transform[j][3] for j in range(3))
++                    normal = [sum(normal_matrix[j][k] * normals[i][k] for k in range(3)) for j in range(3)]
++                    length = math.sqrt(sum(v*v for v in normal))
++                    if not length:
++                        raise ValueError('Model source normal is zero')
++                    nx, ny, nz = [v / length for v in normal]
+                     if pixels:
+                         if uv is None:
+-                            raise ValueError('Silhouette textured source has no UVs')
++                            raise ValueError('Model textured source has no UVs')
+                         w, h, rgba = pixels
+                         u, v = uv[i]
+                         # glTF UV origin and repeat sampling, same as the recovered viewer.
+@@ -154,16 +202,18 @@
+                         part['lookup'][vertex] = len(part['vertices'])
+                         part['vertices'].append(vertex)
+                     remap[i] = part['lookup'][vertex]
++                if determinant < 0:
++                    indices = [v for i in range(0, len(indices), 3) for v in [indices[i], indices[i+2], indices[i+1]]]
+                 part['indices'].extend(remap[i] for i in indices)
+         for child in node.get('children', []):
+-            walk(child, pos, wheel)
++            walk(child, transform, wheel)
+         active.remove(index)
+ 
+     for index in scene['nodes']:
+         walk(index)
+     all_vertices = [VERTEX.unpack(v) for part in parts.values() for v in part['vertices']]
+-    if not all_vertices or len(hubs) != 4:
+-        raise ValueError(f'{code}: silhouette requires geometry and four source wheel hubs')
++    if not all_vertices or (source_mode and len(hubs) != 4):
++        raise ValueError(f'{code}: model requires geometry and four source wheel hubs')
+     low = [min(v[i] for v in all_vertices) for i in range(3)]
+     high = [max(v[i] for v in all_vertices) for i in range(3)]
+     origin = [(low[0] + high[0]) / 2, low[1], (low[2] + high[2]) / 2]
+@@ -172,7 +222,7 @@
+         if not part['indices']:
+             continue
+         if len(part['vertices']) > 65535:
+-            raise ValueError('Silhouette exceeds compact index capacity')
++            raise ValueError('Model exceeds compact index capacity')
+         vertices = bytearray()
+         for raw in part['vertices']:
+             x, y, z, nx, ny, nz, tone = VERTEX.unpack(raw)
+@@ -185,16 +235,16 @@
+     return {'schema': 1, 'parts': output, 'bounds': [0 if i == 1 else low[i] - origin[i] for i in range(3)] + [high[i] - origin[i] for i in range(3)],
+             'wheelHubs': hubs, 'triangleCount': sum(len(p['indices']) // 3 for p in parts.values()),
+             'source': {'glb': f'recovered/{code}.glb', 'sha256': source_sha,
+-                       'originalModelSha256': doc['extras']['originalModelSha256'],
++                       'originalModelSha256': doc.get('extras', {}).get('originalModelSha256'),
+                        'scene': scene_index, 'preset': 'low_speed', 'nodes': sources},
+             'claimLimits': ['Recovered triangle, normal and UV interpretations remain candidates.',
+                             'Texture-derived vertex tones and icon tint are illustrative; no original paint or shader fidelity.',
+                             'Driver helmets and baked shadow planes omitted; no geometry decimation or stat-based stretching.']}
+ 
+ 
+-def load_silhouette(code):
++def load_source_model(code):
+     manifest = json.loads((ROOT / 'recovered/cars' / code / 'manifest.json').read_text())
+     entry = next(a for a in manifest['assets'] if a['kind'] == 'glb')
+     if entry['path'] != f'viewer/public/recovered/{code}.glb':
+-        raise ValueError(f'{code}: unexpected silhouette source path')
++        raise ValueError(f'{code}: unexpected model source path')
+     return bake_car(code, (ROOT / entry['path']).read_bytes(), entry['sha256'])
+--- before/tools/build_showcase.py
++++ after/tools/showcase_metadata.py
+@@ -1,13 +1,12 @@
+ #!/usr/bin/env python3
+-"""Build offline metadata, recorded Jev filters, source-derived meshes and icon tints.
++"""Read source metadata and icon tints for an explicit dealership fork.
+ 
+-Silhouettes bake the recovered static scene without changing car-specific contours.
+-Handling ratings do not affect geometry. Icon colours and vertex tones are illustrative.
++Normal dealership builds do not call this source reader. Existing editable catalogs
++are never replaced from recovered metadata.
+ """
+ import json
+ from pathlib import Path
+ 
+-from build_silhouettes import load_silhouette
+ 
+ ROOT = Path(__file__).resolve().parent.parent
+ CARS = ROOT / "reference" / "ford" / "cars"
+@@ -68,7 +67,7 @@
+ }
+ 
+ # ---- manifest collection ----
+-def load_all():
++def load_source_metadata():
+     cars = []
+     for mf in sorted(CARS.glob("*/manifest.json")):
+         m = json.loads(mf.read_text())
+@@ -99,12 +98,6 @@
+             "liveries": m.get("liveries", []),
+             "paint": paint,
+             "sound": m.get("sound", {}).get("shared_bank_hint", ""),
+-            "silhouette": load_silhouette(code),
+         })
+     return cars
+ 
+-if __name__ == "__main__":
+-    cars = load_all()
+-    out = OUT / "cars.json"
+-    out.write_text(json.dumps(cars, indent=1))
+-    print(f"{len(cars)} cars -> {out}; paint samples: {sum(1 for c in cars if c.get('paint'))}")
+--- before/tools/test_silhouette.mjs
++++ after/tools/test_dealership.mjs
+@@ -2,9 +2,16 @@
+ import fs from 'node:fs';
+ import http from 'node:http';
+ import * as THREE from '../viewer/vendor/three.module.js';
+-import {makeCar, disposeCar, validateCars, fetchCars} from '../viewer/silhouette.mjs';
++import {makeCar, disposeCar, validateCars, fetchCars} from '../viewer/dealership.mjs';
+ 
+-const cars = JSON.parse(fs.readFileSync(new URL('../viewer/public/cars.json', import.meta.url)));
++const cars = JSON.parse(fs.readFileSync(new URL('../viewer/public/dealership/cars.json', import.meta.url)));
++const dealershipPage = fs.readFileSync(new URL('../viewer/dealership.html',import.meta.url),'utf8');
++const sourcePage = fs.readFileSync(new URL('../viewer/recovered.html',import.meta.url),'utf8');
++assert.match(dealershipPage,/fetchCars\('\.\/public\/dealership\/cars.json'\)/);
++assert(!dealershipPage.includes('silhouette')&&!dealershipPage.includes('Silhouette'),'old visible terminology removed');
++assert.match(dealershipPage,/dealership\/models\/\$\{c.code\}\.glb/,'dealership downloads its own copies');
++assert.match(sourcePage,/public\/recovered\/index.json/,'source showcase retains its own corpus');
++assert.match(sourcePage,/<h1>Source models<\/h1>/);
+ assert.equal(validateCars(cars).length, 35);
+ for (const car of cars) {
+   const mesh = makeCar(car);
+@@ -12,10 +19,9 @@
+   assert(bounds.min.toArray().every(Number.isFinite) && bounds.max.toArray().every(Number.isFinite));
+   assert(bounds.min.y >= -1e-6, `${car.code}: tyres penetrate the floor`);
+   assert(Math.abs(bounds.min.z + bounds.max.z) < 1e-6, `${car.code}: body extends asymmetrically across its width`);
+-  assert.equal(car.silhouette.wheelHubs.length, 4);
+-  assert.equal(mesh.userData.wheels.length, 1, 'four static wheels merged into one mesh');
++  assert.equal(mesh.userData.wheels.length, car.model.parts.filter(p=>p.kind==='wheel').length, 'render only the dealership wheel geometry');
+   assert(mesh.children.length <= 3, 'compact body, wheel and detail meshes');
+-  assert.equal(mesh.children.reduce((sum,n)=>sum+n.geometry.index.count/3,0),car.silhouette.triangleCount);
++  assert.equal(mesh.children.reduce((sum,n)=>sum+n.geometry.index.count/3,0),car.model.triangleCount);
+   for (const node of mesh.children) assert.equal(node.material.map, null, 'no runtime texture dependency');
+   const geometries = new Set(), materials = new Set();
+   mesh.traverse(node => {
+@@ -33,26 +39,28 @@
+ assert.deepEqual(zero.children[0].geometry.attributes.position.array,half.children[0].geometry.attributes.position.array,'handling ratings must not stretch geometry');
+ assert.equal(zero.children[0].material.color.getHexString(), '804020', 'display RGB sample must round trip through sRGB');
+ disposeCar(zero); disposeCar(half);
++const bodyOnly = structuredClone(cars[0]);
++bodyOnly.model.parts = bodyOnly.model.parts.filter(p=>p.kind!=='wheel');
++bodyOnly.model.wheelHubs = [];
++bodyOnly.model.triangleCount = bodyOnly.model.parts.reduce((sum,p)=>sum+Buffer.from(p.indices,'base64').length/6,0);
++validateCars([bodyOnly]);
++const custom = makeCar(bodyOnly);
++assert.equal(custom.userData.wheels.length,0,'edited dealership models need not preserve source wheel counts');
++disposeCar(custom);
+ for (const data of [[], {}, [cars[0],cars[0]], [{...cars[0],speed:NaN}], [{...cars[0],weight:2}], [{...cars[0],liveries:null}], [{...cars[0],paint:{rgb:[256,0,0]}}], [{...cars[0],bodyStyle:'unknown'}]]) assert.throws(() => validateCars(data));
+ for (const mutate of [
+-  c=>delete c.silhouette,
+-  c=>c.silhouette.source.glb='recovered/OTHER.glb',
+-  c=>c.silhouette.parts[0].vertices='bad',
+-  c=>c.silhouette.parts[0].vertexCount++,
+-  c=>c.silhouette.triangleCount++,
+-  c=>{const b=Buffer.from(c.silhouette.parts[0].vertices,'base64');b.writeFloatLE(NaN,0);c.silhouette.parts[0].vertices=b.toString('base64');},
+-  c=>{const b=Buffer.from(c.silhouette.parts[0].vertices,'base64');b.writeFloatLE(0,12);b.writeFloatLE(0,16);b.writeFloatLE(0,20);c.silhouette.parts[0].vertices=b.toString('base64');},
+-  c=>{const b=Buffer.from(c.silhouette.parts[0].indices,'base64');b.writeUInt16LE(65535,0);c.silhouette.parts[0].indices=b.toString('base64');},
++  c=>delete c.model,
++  c=>c.model.source.glb='dealership/models/OTHER.glb',
++  c=>c.model.parts[0].vertices='bad',
++  c=>c.model.parts[0].vertexCount++,
++  c=>c.model.triangleCount++,
++  c=>{const b=Buffer.from(c.model.parts[0].vertices,'base64');b.writeFloatLE(NaN,0);c.model.parts[0].vertices=b.toString('base64');},
++  c=>{const b=Buffer.from(c.model.parts[0].vertices,'base64');b.writeFloatLE(0,12);b.writeFloatLE(0,16);b.writeFloatLE(0,20);c.model.parts[0].vertices=b.toString('base64');},
++  c=>{const b=Buffer.from(c.model.parts[0].indices,'base64');b.writeUInt16LE(65535,0);c.model.parts[0].indices=b.toString('base64');},
+ ]) {
+   const corrupted=structuredClone(cars[0]);mutate(corrupted);
+-  assert.throws(()=>validateCars([corrupted]),/silhouette/);
++  assert.throws(()=>validateCars([corrupted]),/model/);
+ }
+-const dimensions = code => {
+-  const car=makeCar(cars.find(c=>c.code===code));
+-  const size=new THREE.Box3().setFromObject(car).getSize(new THREE.Vector3());disposeCar(car);return size;
+-};
+-assert(dimensions('F150').y>dimensions('FORD_GT').y*1.5,'pickup must preserve its distinct source height');
+-assert(dimensions('GRAN_TORINO').x>dimensions('FORD_GT').x,'source-specific body lengths');
+ assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,35);
+ await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:false,status:404,json:async()=>cars})}), /HTTP 404/);
+ await assert.rejects(fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>[]})}), /empty/);
+@@ -74,4 +82,4 @@
+   server.closeAllConnections();
+   await new Promise(resolve => server.close(resolve));
+ }
+-console.log('PASS test_silhouette: 35 source-derived meshes, 4 source hubs each, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, source proportions, corpus errors and real HTTP body timeout');
++console.log('PASS test_dealership: 35 dealership meshes, editable wheel counts, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, editable model data, corpus errors and real HTTP body timeout');
+--- before/tools/check.sh
++++ after/tools/check.sh
+@@ -30,13 +30,14 @@
+   step "test_viewer_materials" node tools/test_viewer_materials.mjs
+   step "test_model_load" node tools/test_model_load.mjs
+   step "test_viewer_loading" node tools/test_viewer_loading.mjs
+-  step "test_silhouette" node tools/test_silhouette.mjs
++  step "test_dealership" node tools/test_dealership.mjs
+ else
+-  echo "skip  test_viewer_scenes, test_viewer_materials, test_model_load, test_viewer_loading, test_silhouette  (Node.js is not installed)"
++  echo "skip  test_viewer_scenes, test_viewer_materials, test_model_load, test_viewer_loading, test_dealership  (Node.js is not installed)"
+ fi
+ step "test_export_materials" python3 tools/test_export_materials.py
+ step "test_build_showcase" python3 tools/test_build_showcase.py
+-step "test_build_silhouettes" python3 tools/test_build_silhouettes.py
++step "test_bake_models" python3 tools/test_bake_models.py
++step "test_build_dealership" python3 tools/test_build_dealership.py
+ step "test_static_inputs"           python3 tools/test_static_inputs.py
+ step "test_recovery_inputs"         python3 tools/test_recovery_inputs.py
+ 
+--- before/viewer/index.html
++++ after/viewer/dealership.html
+@@ -3,7 +3,7 @@
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-<title>Ford Racing 2 — Silhouette Gallery</title>
++<title>Ford Racing 2 — Dealership</title>
+ <style>
+   :root {
+     --bg: #14161a;
+@@ -122,7 +122,7 @@
+     padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text);
+   }
+ 
+-  /* Keep the silhouette viewport clear of details at every width. */
++  /* Keep the model viewport clear of details at every width. */
+   [hidden] { display: none !important; }
+   #main { display: grid; grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: auto minmax(0, 1fr) auto auto; }
+   #hud { position: static; grid-column: 1 / -1; padding: 14px 16px; pointer-events: auto; }
+@@ -133,6 +133,8 @@
+   #view-controls { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 16px; }
+   button, #view-controls label { font: inherit; font-size: 12px; }
+   #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
++  #download-model { font-size: 12px; color: var(--accent-2); padding: 7px 0; }
++  #download-model:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+   button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+   #legend { position: static; padding: 0 16px 10px; grid-column: 1; }
+   #results, #empty { padding: 0 16px 8px; font-size: 12px; color: var(--muted); }
+@@ -167,9 +169,9 @@
+ <body>
+   <nav id="sidebar">
+     <header>
+-      <h1>FORD RACING <span>2</span> — SILHOUETTES</h1>
++      <h1>FORD RACING <span>2</span> — DEALERSHIP</h1>
+       <div class="sub">35 vehicles · from the PS2 game disc (PAL SLES-51705)</div>
+-      <a class="jump" href="recovered.html">Original recovered models →</a>
++      <a class="jump" href="recovered.html">Source models →</a>
+     </header>
+     <input aria-label="Search cars by name or year" id="search" placeholder="Search name or year…" autocomplete="off">
+     <div id="filters"></div>
+@@ -182,17 +184,18 @@
+     <div id="hud">
+         <div class="name" id="hud-name">—</div>
+         <div class="tag" id="hud-tag"></div>
+-        <div class="recon" title="Car-specific contours and static wheel placement come from recovered geometry. Surface tones and icon colour are illustrative; full game-render fidelity remains incomplete.">Source-derived 3D silhouette · static wheels · illustrative surface tones</div>
++        <div class="recon" title="These dealership models are independent editable copies. Changes here do not modify the recovered source models. Surface tones are illustrative.">Dealership edition · editable model copies</div>
+       </div>
+       <div id="stage">
+         <div id="loading" role="status" aria-live="polite">Loading corpus…</div>
+       </div>
+-      <div id="view-controls" aria-label="Silhouette inspection controls">
++      <div id="view-controls" aria-label="Dealership inspection controls">
+         <label><input type="checkbox" id="auto-rotate"> Auto rotate</label>
+         <button type="button" data-view="reset">Reset view</button>
+         <button type="button" data-view="side">Side</button>
+         <button type="button" data-view="front">Front</button>
+         <button type="button" data-view="top">Top</button>
++        <a id="download-model" download>Download dealership model (.glb)</a>
+       </div>
+       <div id="panel">
+         <h3>Performance (in-game)</h3>
+@@ -261,7 +264,7 @@
+     showError(
+       '<b>The viewer could not start.</b>' +
+       '<p>A required file failed to load. Confirm the checkout contains ' +
+-      '<code>viewer/vendor/</code> (the 3D library) and <code>viewer/public/cars.json</code>, ' +
++      '<code>viewer/vendor/</code> (the 3D library) and <code>viewer/public/dealership/cars.json</code>, ' +
+       'then serve the folder with:<br><code>' + serverCommand() + '</code></p>'
+     );
+   });
+@@ -270,7 +273,7 @@
+     showError(
+       '<b>The viewer could not start.</b>' +
+       '<p>A required file failed to load. Confirm the checkout contains ' +
+-      '<code>viewer/vendor/</code> and <code>viewer/public/cars.json</code>, then serve the folder with:<br>' +
++      '<code>viewer/vendor/</code> and <code>viewer/public/dealership/cars.json</code>, then serve the folder with:<br>' +
+       '<code>' + serverCommand() + '</code></p>'
+     );
+   });
+@@ -283,7 +286,7 @@
+       '<b>The viewer is taking longer than expected.</b>' +
+       '<p>A required file may be missing or a request may have stalled. Check the browser ' +
+       'console for details, confirm <code>viewer/vendor/</code> and ' +
+-      '<code>viewer/public/cars.json</code> exist, and serve the folder with:<br>' +
++      '<code>viewer/public/dealership/cars.json</code> exist, and serve the folder with:<br>' +
+       '<code>' + serverCommand() + '</code></p>'
+     );
+   }, TIMEOUT_MS);
+@@ -296,7 +299,7 @@
+ <script type="module">
+ import * as THREE from 'three';
+ import { OrbitControls } from './vendor/OrbitControls.js';
+-import { makeCar, disposeCar, fetchCars } from './silhouette.mjs';
++import { makeCar, disposeCar, fetchCars } from './dealership.mjs';
+ 
+ const $ = id => document.getElementById(id);
+ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
+@@ -332,7 +335,7 @@
+   $('loading').style.opacity = '1';
+   $('loading').textContent = 'Loading corpus…';
+   try {
+-    CARS = await fetchCars('./public/cars.json');
++    CARS = await fetchCars('./public/dealership/cars.json');
+     groups.clear();
+     CARS.forEach(c => groups.add(c.group || 'OTHER'));
+     $('filters').replaceChildren();
+@@ -346,7 +349,7 @@
+     $('loading').hidden = true;
+   } catch (error) {
+     console.error('Corpus load failed', error);
+-    showBootError('The car list could not be loaded.', error.message + ' Check viewer/public/cars.json and the local server.');
++    showBootError('The car list could not be loaded.', error.message + ' Check viewer/public/dealership/cars.json and the local server.');
+     const retry = document.createElement('button');
+     retry.type = 'button';
+     retry.textContent = 'Retry loading cars';
+@@ -486,7 +489,7 @@
+ new ResizeObserver(resize).observe(stage);
+ resize();
+ 
+-/* ---------- source-derived silhouette ---------- */
++/* ---------- source-derived model ---------- */
+ /* ---------- selection ---------- */
+ function select(c) {
+   current = c;
+@@ -495,6 +498,8 @@
+   if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+ 
+   $('hud-name').textContent = c.name;
++  $('download-model').href = `./dealership/models/${c.code}.glb`;
++  $('download-model').download = `${c.code}-dealership.glb`;
+   $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.group || ''} · ${c.bodyStyle}`;
+   $('v-ag').textContent = c.agility.toFixed(1);
+   $('v-ac').textContent = c.accel.toFixed(1);
+@@ -567,7 +572,7 @@
+   setRotation(false);
+   setView(button.dataset.view);
+ });
+-renderer.domElement.setAttribute('aria-label', 'Source-derived 3D car silhouette. Use the view buttons for side, front, and top views.');
++renderer.domElement.setAttribute('aria-label', 'Dealership car model. Use the view buttons for side, front, and top views.');
+ 
+ /* ---------- animation ---------- */
+ const clock = new THREE.Clock();
+--- before/viewer/silhouette.mjs
++++ after/viewer/dealership.mjs
+@@ -2,17 +2,17 @@
+ 
+ // Compact offline mesh: little-endian XYZ + normal XYZ float32, then a tone byte.
+ function bytes(encoded) {
+-  if (typeof encoded !== 'string' || !encoded.length || encoded.length % 4 || !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) throw Error('Invalid silhouette mesh encoding.');
++  if (typeof encoded !== 'string' || !encoded.length || encoded.length % 4 || !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) throw Error('Invalid model mesh encoding.');
+   return Uint8Array.from(atob(encoded), c => c.charCodeAt(0));
+ }
+ 
+-export function decodeSilhouette(c) {
+-  const s = c.silhouette;
+-  const fail = () => { throw Error(`${c.code}: invalid source-derived silhouette.`); };
++export function decodeModel(c) {
++  const s = c.model;
++  const fail = () => { throw Error(`${c.code}: invalid dealership model.`); };
+   if (!s || s.schema !== 1 || !Array.isArray(s.parts) || s.parts.length < 1 || s.parts.length > 3 ||
+       !Array.isArray(s.bounds) || s.bounds.length !== 6 || !s.bounds.every(Number.isFinite) ||
+-      !s.source || s.source.glb !== `recovered/${c.code}.glb` || !/^[a-f0-9]{64}$/.test(s.source.sha256) ||
+-      s.source.preset !== 'low_speed' || !Array.isArray(s.wheelHubs) || s.wheelHubs.length !== 4) fail();
++      !s.source || s.source.glb !== `dealership/models/${c.code}.glb` || !/^[a-f0-9]{64}$/.test(s.source.sha256) ||
++      s.source.preset !== 'dealership' || !Array.isArray(s.wheelHubs) || s.wheelHubs.length > 16) fail();
+   if (s.bounds.some((v,i) => i < 3 && v >= s.bounds[i+3]) || Math.abs(s.bounds[1]) > 1e-5) fail();
+   if (s.wheelHubs.some(h => !h || !Array.isArray(h.position) || h.position.length !== 3 || !h.position.every(Number.isFinite))) fail();
+   let triangles = 0;
+@@ -44,13 +44,13 @@
+     triangles += indices.length / 3;
+     return {kind:part.kind, positions, normals, colors, indices};
+   });
+-  if (!kinds.has('body') || !kinds.has('wheel') || triangles !== s.triangleCount) fail();
++  if (!kinds.has('body') || triangles !== s.triangleCount) fail();
+   return parts;
+ }
+ 
+ export function makeCar(c) {
+   // Decode completely before allocating GPU resources, so malformed data cannot leak.
+-  const parts = decodeSilhouette(c);
++  const parts = decodeModel(c);
+   const g = new THREE.Group();
+   const paint = c.paint?.rgb || [150,155,165];
+   const bodyColor = new THREE.Color().setRGB(paint[0]/255,paint[1]/255,paint[2]/255,THREE.SRGBColorSpace);
+@@ -60,7 +60,7 @@
+     detail: new THREE.MeshStandardMaterial({color:0x9aa6b3, vertexColors:true, roughness:0.35, metalness:0.2, side:THREE.DoubleSide}),
+   };
+   g.userData.wheels = [];
+-  g.userData.source = c.silhouette.source;
++  g.userData.source = c.model.source;
+   for (const part of parts) {
+     const geo = new THREE.BufferGeometry();
+     geo.setAttribute('position',new THREE.BufferAttribute(part.positions,3));
+@@ -110,7 +110,7 @@
+     if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);
+     if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);
+     if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);
+-    decodeSilhouette(c);
++    decodeModel(c);
+   }
+   return cars;
+ }
+--- /dev/null
++++ after/tools/build_dealership.py
+@@ -0,0 +1,63 @@
++#!/usr/bin/env python3
++"""Compile the editable dealership catalog/GLBs; never read or regenerate recovery assets."""
++import argparse
++import json
++from pathlib import Path
++import re
++
++from bake_models import ROOT, bake_car
++
++DEALERSHIP = ROOT / 'viewer/dealership'
++OUTPUT = ROOT / 'viewer/public/dealership/cars.json'
++
++
++def load_all(dealership=DEALERSHIP):
++    dealership = Path(dealership)
++    catalog = json.loads((dealership / 'catalog.json').read_text())
++    if not isinstance(catalog, list) or not catalog:
++        raise ValueError('Dealership catalog is empty or not an array')
++    cars, seen = [], set()
++    for entry in catalog:
++        code = entry.get('code') if isinstance(entry, dict) else None
++        if not isinstance(code, str) or not re.fullmatch(r'[A-Z0-9_]+', code) or code in seen:
++            raise ValueError('Dealership vehicle code is invalid or duplicated')
++        if 'model' in entry or 'silhouette' in entry:
++            raise ValueError('Dealership catalog contains generated geometry; edit the model GLB instead')
++        seen.add(code)
++        model = dealership / 'models' / f'{code}.glb'
++        if model.is_symlink() or model.stat().st_nlink != 1:
++            raise ValueError(f'{code}: dealership model must be an independent file')
++        baked = bake_car(code, model.read_bytes(), source_mode=False)
++        baked['source']['glb'] = f'dealership/models/{code}.glb'
++        baked['source']['preset'] = 'dealership'
++        baked['source'].pop('originalModelSha256', None)
++        baked['claimLimits'] = ['Editable dealership copy; not a recovery artifact or original-game fidelity claim.',
++                                'Surface tones and icon tint are illustrative; static geometry only.']
++        cars.append({**entry, 'model': baked})
++    return cars
++
++
++def build(dealership=DEALERSHIP, output=OUTPUT):
++    output = Path(output)
++    for protected in [ROOT / 'reference', ROOT / 'recovered', ROOT / 'viewer/public/recovered', Path(dealership)]:
++        if output.resolve() == protected.resolve() or protected.resolve() in output.resolve().parents:
++            raise ValueError('Dealership build output must not replace source or editable model files')
++    cars = load_all(dealership)
++    text = json.dumps(cars, indent=1) + '\n'
++    output.parent.mkdir(parents=True, exist_ok=True)
++    temporary = output.with_suffix('.json.tmp')
++    try:
++        temporary.write_text(text)
++        temporary.replace(output)
++    finally:
++        temporary.unlink(missing_ok=True)
++    return cars
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--dealership', type=Path, default=DEALERSHIP)
++    parser.add_argument('--output', type=Path, default=OUTPUT)
++    args = parser.parse_args()
++    cars = build(args.dealership, args.output)
++    print(f'{len(cars)} dealership cars -> {args.output}; editable models preserved')
+--- /dev/null
++++ after/tools/seed_dealership.py
+@@ -0,0 +1,47 @@
++#!/usr/bin/env python3
++"""Fork recovered GLBs and metadata once; never overwrite an existing dealership."""
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import shutil
++import tempfile
++
++from bake_models import ROOT, load_source_model
++from showcase_metadata import load_source_metadata
++
++DEALERSHIP = ROOT / 'viewer/dealership'
++
++
++def seed(destination=DEALERSHIP):
++    destination = Path(destination)
++    if destination.exists():
++        return False  # Check before reading source files; an existing fork is independent.
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.TemporaryDirectory(prefix='.dealership-fork-', dir=destination.parent) as temp:
++        staged = Path(temp) / 'dealership'
++        models = staged / 'models'
++        models.mkdir(parents=True)
++        cars = load_source_metadata()
++        origins = []
++        for car in cars:
++            code = car['code']
++            initial = load_source_model(code)  # Verify source identity and manifest pin first.
++            original = ROOT / f'viewer/public/recovered/{code}.glb'
++            copy = models / f'{code}.glb'
++            shutil.copyfile(original, copy)  # Independent regular files, never symlinks/hardlinks.
++            if hashlib.sha256(copy.read_bytes()).hexdigest() != initial['source']['sha256']:
++                raise ValueError(f'{code}: dealership fork differs from source')
++            origins.append({'code': code, 'initialSource': initial['source']})
++        (staged / 'catalog.json').write_text(json.dumps(cars, indent=1) + '\n')
++        (staged / 'origins.json').write_text(json.dumps({'schema': 1, 'cars': origins}, indent=1) + '\n')
++        staged.rename(destination)
++    return True
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--destination', type=Path, default=DEALERSHIP)
++    args = parser.parse_args()
++    created = seed(args.destination)
++    print(f'{"Created independent dealership" if created else "Preserved existing dealership; no files changed"}: {args.destination}')
+--- /dev/null
++++ after/tools/test_build_dealership.py
+@@ -0,0 +1,155 @@
++#!/usr/bin/env python3
++"""Prove dealership edits/rebuilds are independent of the recovered source corpus."""
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import struct
++import tempfile
++import unittest
++from unittest.mock import patch
++
++from bake_models import ROOT, VERTEX, bake_car, read_glb
++import base64
++import math
++from build_dealership import DEALERSHIP, build, load_all
++from seed_dealership import seed
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def write_glb(path, doc, binary):
++    text = json.dumps(doc).encode()
++    text += b' ' * (-len(text) % 4)
++    result = struct.pack('<3I', 0x46546C67, 2, 28 + len(text) + len(binary))
++    result += struct.pack('<2I', len(text), 0x4E4F534A) + text
++    result += struct.pack('<2I', len(binary), 0x004E4942) + binary
++    path.write_bytes(result)
++
++
++class DealershipBuildTests(unittest.TestCase):
++    def test_static_edited_export_without_recovery_metadata(self):
++        # A replacement static mesh need not retain source extras or material names.
++        positions = [(0, 0, 0), (1, 0, 0), (0, 1, 1)]
++        binary = b''.join(struct.pack('<3f', *p) for p in positions)
++        binary += struct.pack('<9f', *([0, -2**-0.5, 2**-0.5] * 3))
++        binary += struct.pack('<3H', 0, 1, 2) + b'\0\0'
++        doc = {'asset': {'version': '2.0'}, 'scene': 0, 'scenes': [{'nodes': [0]}],
++               'nodes': [{'mesh': 0, 'scale': [2, 3, -4], 'rotation': [0, 0, 2**-0.5, 2**-0.5]}],
++               'meshes': [{'primitives': [{'attributes': {'POSITION': 0, 'NORMAL': 1}, 'indices': 2}]}],
++               'buffers': [{'byteLength': len(binary)}],
++               'bufferViews': [{'buffer': 0, 'byteOffset': offset, 'byteLength': length}
++                               for offset, length in [(0, 36), (36, 36), (72, 6)]],
++               'accessors': [{'bufferView': 0, 'componentType': 5126, 'count': 3, 'type': 'VEC3'},
++                             {'bufferView': 1, 'componentType': 5126, 'count': 3, 'type': 'VEC3'},
++                             {'bufferView': 2, 'componentType': 5123, 'count': 3, 'type': 'SCALAR'}]}
++        with tempfile.TemporaryDirectory() as temp:
++            model = Path(temp) / 'edited.glb'
++            write_glb(model, doc, binary)
++            baked = bake_car('CUSTOM', model.read_bytes(), source_mode=False)
++            self.assertEqual(baked['triangleCount'], 1)
++            self.assertEqual(baked['parts'][0]['kind'], 'body')
++            self.assertEqual(baked['wheelHubs'], [])
++            vertices = list(VERTEX.iter_unpack(base64.b64decode(baked['parts'][0]['vertices'])))
++            self.assertEqual(struct.unpack('<3H', base64.b64decode(baked['parts'][0]['indices'])), (0, 2, 1))
++            for vertex in vertices:
++                self.assertAlmostEqual(math.sqrt(sum(v*v for v in vertex[3:6])), 1, places=6)
++            # Independent inverse-transpose result after rotation, scale and axis conversion.
++            self.assertAlmostEqual(vertices[0][3], -0.6, places=6)
++            self.assertAlmostEqual(vertices[0][4], 0, places=6)
++            self.assertAlmostEqual(vertices[0][5], -0.8, places=6)
++            # The equivalent column-major affine matrix must give identical geometry.
++            doc['nodes'][0] = {'mesh': 0, 'matrix': [0, 2, 0, 0, -3, 0, 0, 0, 0, 0, -4, 0, 0, 0, 0, 1]}
++            write_glb(model, doc, binary)
++            equivalent = bake_car('CUSTOM', model.read_bytes(), source_mode=False)
++            for actual, expected in zip(equivalent['bounds'], baked['bounds']):
++                self.assertAlmostEqual(actual, expected, places=6)
++            doc['nodes'][0]['matrix'][0:4] = [0, 0, 0, 0]
++            write_glb(model, doc, binary)
++            with self.assertRaisesRegex(ValueError, 'singular transform'):
++                bake_car('CUSTOM', model.read_bytes(), source_mode=False)
++
++    def test_all_editable_copies_are_independent_files(self):
++        catalog = json.loads((DEALERSHIP / 'catalog.json').read_text())
++        self.assertEqual(len(catalog), 35)
++        for entry in catalog:
++            code = entry['code']
++            copy = DEALERSHIP / 'models' / f'{code}.glb'
++            source = ROOT / f'viewer/public/recovered/{code}.glb'
++            self.assertFalse(copy.is_symlink())
++            self.assertEqual(copy.stat().st_nlink, 1)
++            self.assertFalse(os.path.samefile(copy, source))
++        # Copies are intentionally editable: equality with source is not an invariant.
++
++    def test_edit_compile_and_repeat_preserve_working_models_and_sources(self):
++        source_hashes = {p: sha(p) for p in (ROOT / 'viewer/public/recovered').glob('*.glb')}
++        code = 'GRAN_TORINO'
++        entry = next(c for c in json.loads((DEALERSHIP / 'catalog.json').read_text()) if c['code'] == code)
++        with tempfile.TemporaryDirectory() as temp:
++            base = Path(temp)
++            work, output = base / 'editable', base / 'compiled/cars.json'
++            (work / 'models').mkdir(parents=True)
++            model = work / 'models' / f'{code}.glb'
++            shutil.copyfile(ROOT / f'viewer/public/recovered/{code}.glb', model)
++            (work / 'catalog.json').write_text(json.dumps([entry]))
++            before = build(work, output)[0]
++            doc, binary = read_glb(model.read_bytes())
++            root = doc['scenes'][doc['scene']]['nodes'][0]
++            doc['nodes'][root]['scale'] = [1, 1, 1.2]  # Change body length in the editable GLB.
++            write_glb(model, doc, binary)
++            entry['name'] = 'Custom Gran Torino'
++            (work / 'catalog.json').write_text(json.dumps([entry]))
++            edited_hash = sha(model)
++            # Normal builds must not use any source seeding/metadata function.
++            with patch('seed_dealership.load_source_metadata', side_effect=AssertionError('source metadata accessed')), patch('bake_models.load_source_model', side_effect=AssertionError('source GLB accessed')):
++                after = build(work, output)[0]
++                compiled_hash = sha(output)
++                repeat = build(work, output)[0]
++            length = lambda car: car['model']['bounds'][3] - car['model']['bounds'][0]
++            self.assertAlmostEqual(length(after), length(before) * 1.2, places=5)
++            self.assertEqual(after['name'], 'Custom Gran Torino')
++            self.assertEqual(after, repeat)
++            self.assertEqual(sha(output), compiled_hash)
++            self.assertEqual(sha(model), edited_hash)
++            self.assertEqual(after['model']['source']['sha256'], edited_hash)
++            with patch('seed_dealership.load_source_metadata', side_effect=AssertionError('source metadata accessed')):
++                self.assertFalse(seed(work))
++            self.assertEqual(sha(model), edited_hash)
++            self.assertEqual(json.loads((work / 'catalog.json').read_text())[0]['name'], 'Custom Gran Torino')
++            for forbidden in [work / 'models' / 'GRAN_TORINO.glb', ROOT / 'viewer/public/recovered/GRAN_TORINO.glb', ROOT / 'reference/unwanted.json']:
++                with self.assertRaisesRegex(ValueError, 'must not replace source or editable'):
++                    build(work, forbidden)
++        self.assertEqual({p: sha(p) for p in source_hashes}, source_hashes)
++
++    def test_link_and_invalid_catalog_controls(self):
++        entry = json.loads((DEALERSHIP / 'catalog.json').read_text())[0]
++        code = entry['code']
++        with tempfile.TemporaryDirectory() as temp:
++            work = Path(temp)
++            (work / 'models').mkdir()
++            catalog = work / 'catalog.json'
++            catalog.write_text(json.dumps([entry]))
++            model = work / 'models' / f'{code}.glb'
++            model.symlink_to(DEALERSHIP / 'models' / f'{code}.glb')
++            with self.assertRaisesRegex(ValueError, 'independent file'):
++                load_all(work)
++            model.unlink()
++            # A hard link is just as unsafe as a symlink for editing.
++            os.link(DEALERSHIP / 'models' / f'{code}.glb', model)
++            try:
++                with self.assertRaisesRegex(ValueError, 'independent file'):
++                    load_all(work)
++            finally:
++                model.unlink()
++            shutil.copyfile(DEALERSHIP / 'models' / f'{code}.glb', model)
++            for bad in [[], {}, [entry, entry], [{**entry, 'code': '../OTHER'}], [{**entry, 'model': {}}]]:
++                catalog.write_text(json.dumps(bad))
++                with self.assertRaises(ValueError):
++                    load_all(work)
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ after/tools/build_showcase.py
+@@ -0,0 +1,7 @@
++#!/usr/bin/env python3
++"""Compatibility entry point: rebuild the dealership from its editable copies."""
++from build_dealership import OUTPUT, build
++
++if __name__ == '__main__':
++    cars = build()
++    print(f'{len(cars)} dealership cars -> {OUTPUT}; editable models preserved')
+--- /dev/null
++++ after/viewer/index.html
+@@ -0,0 +1,8 @@
++<!doctype html>
++<html lang="en">
++<meta charset="utf-8">
++<meta name="viewport" content="width=device-width,initial-scale=1">
++<meta http-equiv="refresh" content="0;url=dealership.html">
++<title>Ford Racing 2 — Dealership</title>
++<p><a href="dealership.html">Open the dealership</a> · <a href="recovered.html">Source models</a></p>
++</html>

@@ -1,0 +1,61 @@
+{
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+    "verified": 3,
+    "contradicted": 0,
+    "unsupported": 0,
+    "needs_review": 1
+  },
+  "results": [
+    {
+      "id": "claim0",
+      "claim": "The inspected browser evidence supports zero material-map mismatches across35 cars and134 selected texture variants, and390px horizontal overflow reduced from92 to0; this does not establish original-game image equivalence.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "contradicts": 0.01,
+        "supports": 0.99
+      },
+      "confidence": 0.98,
+      "action": "auto",
+      "supporting_evidence": "browser",
+      "same_subject": 0.94
+    },
+    {
+      "id": "claim1",
+      "claim": "Applying linear filtering across all exported cars is a candidate default informed by a bounded106-draw COBRA interval; filtering for all other cars/states remains unverified, as now labelled in every exported GLB.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0,
+        "contradicts": 0.01,
+        "supports": 0.99
+      },
+      "confidence": 0.98,
+      "action": "auto",
+      "supporting_evidence": "packet",
+      "same_subject": 0.91
+    },
+    {
+      "id": "claim2",
+      "claim": "The final artifact's binary geometry/PNG payloads and scene-related metadata equal the baseline for all35 cars even though material references, samplers, claim limits and hashes changed.",
+      "verdict": "verified",
+      "probabilities": {
+        "says_nothing": 0.01,
+        "contradicts": 0.48,
+        "supports": 0.51
+      },
+      "confidence": 0.27,
+      "action": "review",
+      "supporting_evidence": "invariants",
+      "same_subject": 0.91
+    }
+  ],
+  "usage": {
+    "input_tokens": 2420,
+    "output_tokens": 326
+  }
+}

@@ -1,87 +1,41 @@
 # carmodels
 
-A recovered **Ford Racing 2 car-asset corpus** — the 35-car reference models,
-textures and sounds extracted from the game, with the tools and verifiers used
-to recover them. Two static three.js viewers let you inspect the recovered
-geometry in a browser, offline.
+Recovered Ford Racing 2 assets and two independent static three.js apps. The dealership is the default app, with 35 editable display models. The source inspector displays the recovered original geometry and embedded textures. The earlier procedural silhouette gallery has been removed.
 
-The interesting part is `dealership/recovered.html`: it renders the **real
-recovered original geometry** with the embedded model textures, straight from
-the decoded game data. `dealership/index.html` is an earlier procedural silhouette
-gallery that stays available for comparison.
-
-## View the car models
+## Open the apps
 
 From the repository root:
 
 ```sh
-python3 tools/build_showcase.py
+python3 tools/build_dealership.py
+python3 tools/build_model_catalog.py
 python3 -m http.server 8080 --directory dealership
 ```
 
-1. `tools/build_showcase.py` regenerates `dealership/public/cars.json` and the shared
-   `dealership/public/models.json` catalog.
-2. The HTTP server serves the viewer.
+- [Dealership](http://localhost:8080/) redirects to `dealership.html`. Edit its independent GLBs and metadata, then rebuild its display data.
+- [Source models](http://localhost:8080/recovered.html) lets you select a game and car, inspect geometry and texture variants, toggle filtering and wireframe, and download the source GLB.
 
-Then open the viewers:
+All model data and three.js r182 are committed, so a fresh clone runs offline without npm installation. A local HTTP server is required for ES modules.
 
-- **<http://localhost:8080/recovered.html>** — recommended first stop. The
-  recovered-geometry inspector: pick a car, a tree/record and a texture
-  variant, flip rows, toggle wireframe, download the GLB.
-- <http://localhost:8080/> — the procedural silhouette gallery.
+## Repository layout
 
-A local HTTP server is required because the viewers load ES modules; opening
-the files over `file://` will not work. Everything is offline — three.js r182
-(module, core and `OrbitControls`) is **shipped in this repository** under
-`dealership/vendor/`, with no build step and no runtime CDN dependency. The 35 GLBs
-under `dealership/public/ford-racing-2/` and `dealership/public/cars.json` are committed
-too, so the viewer runs from a fresh clone with no manual download.
+- `dealership/` — both app entry points, shared vendor libraries and compiled browser data. See [the app guide](dealership/README.md).
+- `dealership/dealership/` — independent editable GLBs, catalog and initial-fork provenance. See [the editing guide](dealership/dealership/README.md).
+- `ford-racing-2/` — original models, textures, sounds and configuration; `recovered/` beneath it holds canonical manifests.
+- `dealership/public/ford-racing-2/` — exported source GLBs and their per-game index.
+- `research/` — recovery notes and evidence receipts.
+- `tools/` — recovery, export, build and verifier scripts.
 
-## What is in here
-
-- `dealership/` — the two static three.js viewers and their data (see
-  [`dealership/README.md`](dealership/README.md)).
-- `ford-racing-2/recovered/` — the canonical recovered index and per-car manifests.
-- `ford-racing-2/` — the per-car reference corpus: models, textures, sounds.
-- `research/` — format notes, original-recovery synthesis and evidence receipts.
-- `tools/` — recovery, export and **verifier** scripts.
+`tools/build_dealership.py` reads the editable dealership inputs and preserves edits. `tools/build_showcase.py` remains a compatibility entry point for that build. Recovery/export commands update source outputs without replacing dealership models.
 
 ## Adding games
 
-Source assets belong in a root folder named after their game, such as `ford-racing-2/`.
-Use lowercase game folder names with hyphens between words.
-Keep original models, textures, configuration, sound files and recovery manifests together there.
-The shared browser dealership lives in `dealership/`; its exported GLBs and per-game export
-index belong under `dealership/public/<game>/`. Each export index uses the same `cars` record
-format as Ford Racing 2, including `code`, `file`, `bytes`, `sha256` and `records`.
-Run `python3 tools/build_showcase.py` after adding exports to rebuild the shared model catalog.
-The recovered inspector lists every game in that catalog and identifies cars by game plus code.
-The procedural silhouette gallery currently uses Ford Racing 2 metadata.
+Put source assets in a root folder named for the game, using lowercase words separated by hyphens. Keep original models, textures, configuration, sounds and recovery manifests together. Put exported source GLBs and an `index.json` under `dealership/public/<game>/`. Each index has `cars` records with `code`, `file`, `bytes`, `sha256` and `records`.
 
-Recovery evidence and tooling stay in `research/` and `tools/`.
+Run `python3 tools/build_model_catalog.py` to rebuild `dealership/public/models.json`. The source inspector identifies models by game plus code, so different games can share a car code. The dealership remains an independently edited edition; source catalog updates do not replace it.
 
-## Honesty labels
+## Fidelity and verification
 
-Two things in the viewer are candidates, not proven originals, and are labelled
-as such in the interface:
+The original-coordinate mapping reproduces all 1,837 nonempty geometry records' bounds. Triangle-strip, normal, UV and texture-selector interpretations retain their documented candidate limits. The dealership's baked display geometry and illustrative body tint do not establish original game shading. Full game-render equivalence remains open. See [the recovery report](research/original-recovery.md) and [the app guide](dealership/README.md).
 
-- the **silhouette gallery** (`index.html`) meshes are **procedural
-  reconstructions**, not the game models;
-- the recovered inspector's triangle-strip, normal, UV and texture-selector
-  interpretations are **candidate** mappings, and its per-car colors come from a
-  **best-effort paint sample** off the menu-icon buffer.
-
-The recovered geometry bounds, however, are verified: the original-coordinate
-mapping reproduces all 1,837 nonempty geometry records' bounds. See
-[`research/original-recovery.md`](research/original-recovery.md) and
-[`dealership/README.md`](dealership/README.md) for the full fidelity discussion.
-
-## Verify
-
-The repo ships offline verifiers (they do not need the viewer or the game):
-
-```sh
-python3 tools/verify_recovered_asset_index.py
-python3 tools/verify_config_data_sound.py
-python3 tools/verify_sound_bank_index.py
-```
+Run `tools/check.sh` before a PR. It retains complete logs and pass/fail/skip states, verifies corpus integrity using tamper controls, checks app load recovery and dealership independence, and runs the Blender edit/export regression when its runtime is available. Read [CONTRIBUTING.md](CONTRIBUTING.md) for inputs and the scope of each check.

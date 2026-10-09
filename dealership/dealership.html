@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ford Racing 2 — Dealership</title>
+<style>
+  :root {
+    --bg: #14161a;
+    --panel: #1d2026;
+    --panel-2: #242830;
+    --line: #33383f;
+    --text: #e8eaed;
+    --muted: #9aa0a8;
+    --faint: #929aa2;
+    --accent: #1c69d4;
+    --accent-2: #4d8dff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; overflow: hidden;
+  }
+  /* ============ sidebar: car list ============ */
+  #sidebar {
+    width: 300px; min-width: 300px; height: 100%;
+    background: var(--panel); border-right: 1px solid var(--line);
+    display: flex; flex-direction: column;
+  }
+  #sidebar header { padding: 18px 16px 10px; }
+  #sidebar h1 { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+  #sidebar h1 span { color: var(--accent-2); }
+  #sidebar .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  #sidebar .jump {
+    display: inline-block; margin-top: 10px; font-size: 12px; font-weight: 600;
+    color: var(--accent-2); text-decoration: none; border-bottom: 1px solid transparent;
+  }
+  #sidebar .jump:hover { border-bottom-color: var(--accent-2); }
+  #search {
+    margin: 8px 16px 10px; padding: 8px 10px;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px;
+    color: var(--text); font: inherit; font-size: 13px; outline: none;
+  }
+  #search:focus { border-color: var(--accent); }
+  #filters { padding: 0 16px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 11px; padding: 3px 9px; border-radius: 3px; cursor: pointer;
+    background: var(--panel-2); color: var(--muted); border: 1px solid var(--line);
+    user-select: none;
+  }
+  .chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  #list { flex: 1; overflow-y: auto; padding: 4px 8px 12px; }
+  .car-row {
+    width:100%; background:transparent; color:inherit; font:inherit; text-align:left;
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 8px; border-radius: 4px; cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .car-row:focus-visible, .chip:focus-visible { outline:2px solid var(--accent-2); outline-offset:-2px; }
+  .car-row:hover { background: var(--panel-2); }
+  .car-row.sel { background: #223047; border-color: var(--accent); }
+  .swatch { width: 14px; height: 26px; border-radius: 2px; flex: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+  .car-row .nm { display:block; font-size: 13px; line-height: 1.2; }
+  .car-row .meta { display:block; font-size: 12px; color: var(--muted); }
+  .car-row .bhp { margin-left: auto; font-size: 12px; color: var(--faint); }
+  /* ============ main: viewer ============ */
+  #main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  #stage { position: relative; flex: 1; min-height: 0; }
+  canvas { display: block; }
+  #hud {
+    position: absolute; top: 14px; left: 16px; pointer-events: none;
+  }
+  #hud .name { font-size: 26px; font-weight: 300; text-transform: uppercase; letter-spacing: .04em; line-height: 1.15; }
+  #hud .tag { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  #hud .recon {
+    display: inline-block; margin-top: 8px; font-size: 11px; letter-spacing: .08em;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 2px 7px;
+    text-transform: uppercase;
+  }
+  #legend {
+    position: absolute; bottom: 12px; left: 16px; font-size: 12px; color: var(--faint);
+    pointer-events: none;
+  }
+  #panel {
+    position: absolute; top: 14px; right: 14px; width: 250px;
+    background: rgba(29,32,38,.92); border: 1px solid var(--line); border-radius: 4px;
+    padding: 14px; backdrop-filter: blur(4px);
+  }
+  #panel h3 { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .stat { margin-bottom: 9px; }
+  .stat .lbl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+  .stat .lbl b { font-weight: 700; }
+  .stat .lbl span { color: var(--muted); }
+  .bar { height: 6px; background: var(--panel-2); border-radius: 2px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 2px; }
+  .kv { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid var(--line); }
+  .kv:last-child { border-bottom: none; }
+  .kv span { color: var(--muted); }
+  #paint-evidence { margin-top: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel-2); }
+  #paint-evidence .paint-head { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
+  #paint-swatch { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,.25); border-radius: 2px; flex: none; }
+  #paint-rgb { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); }
+  #paint-caveat { font-size: 12px; color: var(--faint); margin-top: 6px; line-height: 1.35; }
+  #livery-codes { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+  .livery-code { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); border: 1px solid var(--line); padding: 2px 4px; border-radius: 2px; }
+  #loading {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--bg); color: var(--muted); font-size: 13px; z-index: 10;
+    transition: opacity .4s;
+  }
+  #loading.error {
+    color: var(--text); padding: 24px; text-align: left;
+    align-items: center; justify-content: center;
+  }
+  #loading.error .msg { max-width: 540px; }
+  #loading.error .msg b { display: block; font-size: 15px; margin-bottom: 8px; }
+  #loading.error .msg p { color: var(--muted); line-height: 1.55; margin: 0 0 10px; }
+  #loading.error .msg code {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+    padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text);
+  }
+
+  /* Keep the model viewport clear of details at every width. */
+  [hidden] { display: none !important; }
+  #main { display: grid; grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: auto minmax(0, 1fr) auto auto; }
+  #hud { position: static; grid-column: 1 / -1; padding: 14px 16px; pointer-events: auto; }
+  #hud .name, #hud .tag, #hud .recon { max-width: 100%; }
+  #hud .recon { letter-spacing: .02em; text-transform: none; }
+  #stage { grid-column: 1; grid-row: 2; overflow: hidden; }
+  #panel { position: static; grid-column: 2; grid-row: 2 / 5; width: auto; max-height: none; overflow-y: auto; margin: 0 10px 10px 0; }
+  #view-controls { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 16px; }
+  button, #view-controls label { font: inherit; font-size: 12px; }
+  #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
+  #download-model { font-size: 12px; color: var(--accent-2); padding: 7px 0; }
+  #download-model:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+  #legend { position: static; padding: 0 16px 10px; grid-column: 1; }
+  #results, #empty { padding: 0 16px 8px; font-size: 12px; color: var(--muted); }
+  #clear-filters { margin: 0 16px 10px; }
+  .kv b { overflow-wrap: anywhere; min-width: 0; text-align: right; }
+  .paint-head { flex-wrap: wrap; }
+  #loading { transition: none; }
+  @media (max-width: 1100px) { #main { grid-template-columns: minmax(0, 1fr) 215px; } }
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    #sidebar { width: 250px; min-width: 250px; position: sticky; top: 0; height: 100dvh; }
+    #main { display: flex; min-height: 100dvh; }
+    #stage { flex: none; height: 50dvh; min-height: 340px; }
+    #panel { margin: 0 12px 12px; }
+  }
+  @media (max-width: 700px) {
+    body { display: block; height: auto; }
+    #sidebar { position: static; width: 100%; min-width: 0; height: auto; }
+    #filters { flex-wrap: wrap; overflow: visible; }
+    .chip { min-height: 30px; }
+    #list { height: 92px; flex: none; }
+    #main { height: auto; min-height: 0; }
+    #hud { padding: 12px; }
+    #hud .name { font-size: 22px; }
+    #stage { height: 360px; min-height: 0; }
+    #view-controls { padding: 10px 12px; }
+    #view-controls button, #view-controls label { min-height: 36px; }
+    #panel { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <header>
+      <h1>FORD RACING <span>2</span> — DEALERSHIP</h1>
+      <div class="sub">35 vehicles · from the PS2 game disc (PAL SLES-51705)</div>
+      <a class="jump" href="recovered.html">Source models →</a>
+    </header>
+    <input aria-label="Search cars by name or year" id="search" placeholder="Search name or year…" autocomplete="off">
+    <div id="filters"></div>
+    <div id="results" role="status" aria-live="polite"></div>
+    <button id="clear-filters" type="button">Clear search and filters</button>
+    <div id="empty" hidden>No cars match. Clear search and filters to see the corpus.</div>
+    <div id="list"></div>
+  </nav>
+  <main id="main">
+    <div id="hud">
+        <div class="name" id="hud-name">—</div>
+        <div class="tag" id="hud-tag"></div>
+        <div class="recon" title="These dealership models are independent editable copies. Changes here do not modify the recovered source models. Surface tones are illustrative.">Dealership edition · editable model copies</div>
+      </div>
+      <div id="stage">
+        <div id="loading" role="status" aria-live="polite">Loading corpus…</div>
+      </div>
+      <div id="view-controls" aria-label="Dealership inspection controls">
+        <label><input type="checkbox" id="auto-rotate"> Auto rotate</label>
+        <button type="button" data-view="reset">Reset view</button>
+        <button type="button" data-view="side">Side</button>
+        <button type="button" data-view="front">Front</button>
+        <button type="button" data-view="top">Top</button>
+        <a id="download-model" download>Download dealership model (.glb)</a>
+      </div>
+      <div id="panel">
+        <h3>Performance (in-game)</h3>
+        <div class="stat"><div class="lbl"><b>Agility</b><span id="v-ag"></span></div><div class="bar"><i id="b-ag"></i></div></div>
+        <div class="stat"><div class="lbl"><b>Acceleration</b><span id="v-ac"></span></div><div class="bar"><i id="b-ac"></i></div></div>
+        <div class="stat"><div class="lbl"><b>Speed</b><span id="v-sp"></span></div><div class="bar"><i id="b-sp"></i></div></div>
+        <div class="stat"><div class="lbl"><b>Weight</b><span id="v-we"></span></div><div class="bar"><i id="b-we"></i></div></div>
+        <div style="height:8px"></div>
+        <div class="kv"><span>Power</span><b id="k-bhp">—</b></div>
+        <div class="kv"><span>Weight</span><b id="k-kg">—</b></div>
+        <div class="kv"><span>Top speed</span><b id="k-ts">—</b></div>
+        <div class="kv"><span>Liveries</span><b id="k-liv">—</b></div>
+        <div class="kv"><span>Sound bank</span><b id="k-snd" style="font-size:12px">—</b></div>
+        <div id="paint-evidence">
+          <div class="paint-head"><div id="paint-swatch"></div><div>Icon paint sample</div><span id="paint-rgb" style="margin-left:auto">—</span></div>
+          <div id="paint-caveat">Approximate icon colour. The sample comes from decoded menu-icon pixels; it does not identify the car’s real paint.</div>
+          <div id="livery-codes"></div>
+        </div>
+      </div>
+      <div id="legend">drag to rotate · scroll to zoom · right-drag to pan</div>
+
+  </main>
+
+<!-- Startup guard: a classic script so it runs even when the ES module below
+     is blocked (e.g. opened with file:// or served without vendor/). -->
+<script>
+(function () {
+  var state = { loaded: false, failed: false, msg: null };
+  window.__viewerBoot = state;
+  var TIMEOUT_MS = 5000;
+
+  function serverCommand() {
+    return 'python3 -m http.server 8080 --directory dealership';
+  }
+  function showError(html) {
+    if (state.loaded || state.failed) return;
+    state.failed = true;
+    var el = document.getElementById('loading');
+    if (!el) return;
+    el.classList.add('error');
+    el.style.opacity = '1';
+    el.innerHTML = '<div class="msg">' + html + '</div>';
+    var retry = document.createElement('button');
+    retry.type = 'button'; retry.textContent = 'Reload viewer';
+    retry.onclick = function () { location.reload(); };
+    el.querySelector('.msg').append(retry);
+  }
+
+  // (a) Opened straight from disk: browsers block the module imports, so the
+  //     module body never runs and its own handler can never fire. Detect it here.
+  if (location.protocol === 'file:') {
+    showError(
+      '<b>This page needs to be served, not opened from disk.</b>' +
+      '<p>The interactive viewer loads its 3D library and car data with requests that ' +
+      'browsers block on the file:// scheme, so opening this file directly can never work.</p>' +
+      '<p>From the project folder, run:<br><code>' + serverCommand() + '</code></p>' +
+      '<p>Then open <code>http://localhost:8080/</code> in this browser. ' +
+      'The recovered original-geometry viewer is at <code>http://localhost:8080/recovered.html</code>.</p>'
+    );
+    return;
+  }
+
+  // (b) Something threw before the page could initialise.
+  window.addEventListener('error', function () {
+    if (state.loaded) return;
+    showError(
+      '<b>The viewer could not start.</b>' +
+      '<p>A required file failed to load. Confirm the checkout contains ' +
+      '<code>viewer/vendor/</code> (the 3D library) and <code>viewer/public/dealership/cars.json</code>, ' +
+      'then serve the folder with:<br><code>' + serverCommand() + '</code></p>'
+    );
+  });
+  window.addEventListener('unhandledrejection', function () {
+    if (state.loaded) return;
+    showError(
+      '<b>The viewer could not start.</b>' +
+      '<p>A required file failed to load. Confirm the checkout contains ' +
+      '<code>viewer/vendor/</code> and <code>viewer/public/dealership/cars.json</code>, then serve the folder with:<br>' +
+      '<code>' + serverCommand() + '</code></p>'
+    );
+  });
+
+  // (c) Nothing threw, but nothing finished loading either (missing files,
+  //     hung request) — don't leave the visitor on an indefinite loading string.
+  window.setTimeout(function () {
+    if (state.loaded || state.failed || state.pending) return;
+    showError(
+      '<b>The viewer is taking longer than expected.</b>' +
+      '<p>A required file may be missing or a request may have stalled. Check the browser ' +
+      'console for details, confirm <code>viewer/vendor/</code> and ' +
+      '<code>viewer/public/dealership/cars.json</code> exist, and serve the folder with:<br>' +
+      '<code>' + serverCommand() + '</code></p>'
+    );
+  }, TIMEOUT_MS);
+})();
+</script>
+
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from './vendor/OrbitControls.js';
+import { makeCar, disposeCar, fetchCars } from './dealership.mjs';
+
+const $ = id => document.getElementById(id);
+const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
+
+let CARS = [];
+let current = null;
+let carMesh = null;
+const groups = new Set();
+
+const boot = window.__viewerBoot || (window.__viewerBoot = { loaded: false, failed: false });
+const showBootError = (title, detail) => {
+  if (boot.loaded || boot.failed) return;
+  boot.failed = true;
+  const el = $('loading');
+  if (!el) return;
+  el.classList.add('error');
+  el.style.opacity = '1';
+  el.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'msg';
+  const b = document.createElement('b');
+  b.textContent = title;
+  const p = document.createElement('p');
+  p.textContent = detail;
+  wrap.append(b, p);
+  el.append(wrap);
+};
+
+async function loadCorpus() {
+  boot.failed = false;
+  boot.pending = true;
+  $('loading').classList.remove('error');
+  $('loading').style.opacity = '1';
+  $('loading').textContent = 'Loading corpus…';
+  try {
+    CARS = await fetchCars('./public/dealership/cars.json');
+    groups.clear();
+    CARS.forEach(c => groups.add(c.group || 'OTHER'));
+    $('filters').replaceChildren();
+    $('list').replaceChildren();
+    buildFilters();
+    buildList();
+    select(CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
+    applyFilters();
+    boot.loaded = true;
+    boot.failed = false;
+    $('loading').hidden = true;
+  } catch (error) {
+    console.error('Corpus load failed', error);
+    showBootError('The car list could not be loaded.', error.message + ' Check viewer/public/dealership/cars.json and the local server.');
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.textContent = 'Retry loading cars';
+    retry.onclick = loadCorpus;
+    $('loading').querySelector('.msg').append(retry);
+  } finally { boot.pending = false; }
+}
+
+/* ---------- sidebar ---------- */
+function buildFilters() {
+  const box = $('filters');
+  const mk = (label, pred, kind) => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.setAttribute('aria-pressed','false');
+    el.className = 'chip'; el.textContent = label; el.dataset.kind = kind;
+    el.onclick = () => { el.classList.toggle('on'); el.setAttribute('aria-pressed',String(el.classList.contains('on'))); applyFilters(); };
+    el._pred = pred;
+    box.appendChild(el);
+  };
+  [...groups].sort().forEach(g => mk(g, c => (c.group || 'OTHER') === g, 'group'));
+  const shapes = [...new Set(CARS.map(c => c.bodyStyle))].sort();
+  shapes.forEach(s => mk(s.toUpperCase(), c => c.bodyStyle === s, 'style'));
+}
+function activePreds() {
+  return [...document.querySelectorAll('.chip.on')];
+}
+function applyFilters() {
+  const q = $('search').value.trim().toLowerCase();
+  const active = activePreds();
+  const kinds = ['group', 'style'];
+  let visible = 0;
+  document.querySelectorAll('.car-row').forEach(row => {
+    const c = CARS.find(x => x.code === row._code);
+    const matchQ = !q || (c.name + ' ' + c.code + ' ' + c.year).toLowerCase().includes(q);
+    const matchF = kinds.every(kind => {
+      const ps = active.filter(el => el.dataset.kind === kind).map(el => el._pred);
+      return !ps.length || ps.some(pred => pred(c));
+    });
+    const matches = matchQ && matchF;
+    row.hidden = !matches;
+    if (matches) visible++;
+  });
+  $('results').textContent = `${visible} of ${CARS.length} cars` + (current ? ` · Preview: ${current.name}` : '');
+  $('empty').hidden = visible > 0;
+}
+$('search').addEventListener('input', applyFilters);
+$('clear-filters').onclick = () => {
+  $('search').value = '';
+  document.querySelectorAll('.chip').forEach(chip => { chip.classList.remove('on'); chip.setAttribute('aria-pressed', 'false'); });
+  applyFilters();
+  $('search').focus();
+};
+
+function buildList() {
+  const list = $('list');
+  CARS.forEach(c => {
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'car-row'; row._code = c.code;
+    const sw = document.createElement('span');
+    sw.className = 'swatch';
+    const p = c.paint ? c.paint.rgb : [90,90,90];
+    sw.style.background = `rgb(${p[0]},${p[1]},${p[2]})`;
+    const txt = document.createElement('span');
+    const name = document.createElement('span');
+    name.className = 'nm'; name.textContent = c.name;
+    const meta = document.createElement('span');
+    meta.className = 'meta'; meta.textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.bodyStyle}`;
+    txt.append(name, meta);
+    const bhp = document.createElement('span');
+    bhp.className = 'bhp'; bhp.textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '';
+    row.append(sw, txt, bhp);
+    row.onclick = () => select(c);
+    list.appendChild(row);
+  });
+}
+
+/* ---------- three.js scene ---------- */
+const stage = $('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x14161a);
+scene.fog = new THREE.Fog(0x14161a, 30, 90);
+
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 200);
+camera.position.set(6.5, 3.2, 7.5);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 0.7, 0);
+controls.minDistance = 3.5; controls.maxDistance = 22;
+controls.maxPolarAngle = Math.PI * 0.49;
+
+scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x1a1c20, 0.9));
+const key = new THREE.DirectionalLight(0xffffff, 2.2);
+key.position.set(6, 9, 5);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+// Thin recovered surfaces need an offset to avoid self-shadow striping.
+key.shadow.normalBias = 0.035;
+key.shadow.bias = -0.00015;
+key.shadow.camera.left = -8; key.shadow.camera.right = 8;
+key.shadow.camera.top = 8; key.shadow.camera.bottom = -8;
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x9ec3ff, 1.0);
+rim.position.set(-7, 4, -6);
+scene.add(rim);
+
+// floor
+const floor = new THREE.Mesh(
+  new THREE.CircleGeometry(28, 64),
+  new THREE.MeshStandardMaterial({ color: 0x1b1e23, roughness: 0.95, metalness: 0.0 })
+);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+const ring = new THREE.Mesh(
+  new THREE.RingGeometry(5.4, 5.5, 96),
+  new THREE.MeshBasicMaterial({ color: 0x1c69d4, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
+);
+ring.rotation.x = -Math.PI / 2; ring.position.y = 0.012;
+scene.add(ring);
+
+function resize() {
+  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  if (carMesh) setView('reset');
+}
+window.addEventListener('resize', resize);
+new ResizeObserver(resize).observe(stage);
+resize();
+
+/* ---------- source-derived model ---------- */
+/* ---------- selection ---------- */
+function select(c) {
+  current = c;
+  document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
+  const sel = [...document.querySelectorAll('.car-row')].find(r => r._code === c.code);
+  if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+
+  $('hud-name').textContent = c.name;
+  $('download-model').href = `./dealership/models/${c.code}.glb`;
+  $('download-model').download = `${c.code}-dealership.glb`;
+  $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.group || ''} · ${c.bodyStyle}`;
+  $('v-ag').textContent = c.agility.toFixed(1);
+  $('v-ac').textContent = c.accel.toFixed(1);
+  $('v-sp').textContent = c.speed.toFixed(1);
+  $('v-we').textContent = c.weight.toFixed(1);
+  $('b-ag').style.width = (c.agility * 100) + '%';
+  $('b-ac').style.width = (c.accel * 100) + '%';
+  $('b-sp').style.width = (c.speed * 100) + '%';
+  $('b-we').style.width = (c.weight * 100) + '%';
+  $('k-bhp').textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '—';
+  $('k-kg').textContent = c.kg ? fmt(c.kg) + ' kg' : '—';
+  $('k-ts').textContent = c.topSpeed ? Math.round(c.topSpeed) + ' mph' : '—';
+  $('k-liv').textContent = c.liveries ? c.liveries.length : '—';
+  $('k-snd').textContent = (c.sound || '').split(';')[0].replace(' (in _shared/sounds/)', '');
+  const sample = c.paint ? c.paint.rgb : [90, 90, 90];
+  $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
+  $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
+  $('paint-caveat').textContent = c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : 'No usable icon colour sample. The illustration uses neutral grey.';
+  $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
+    const el = document.createElement('span');
+    el.className = 'livery-code';
+    el.textContent = `${l.label}: ${l.code}`;
+    return el;
+  }));
+
+  if (carMesh) { scene.remove(carMesh); disposeCar(carMesh); }
+  carMesh = makeCar(c);
+  scene.add(carMesh);
+  setView('reset');
+  applyFilters();
+}
+
+/* ---------- inspection controls ---------- */
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+$('auto-rotate').checked = !motion.matches;
+controls.autoRotate = $('auto-rotate').checked;
+controls.autoRotateSpeed = 1.2;
+function setRotation(enabled) {
+  controls.autoRotate = enabled;
+  $('auto-rotate').checked = enabled;
+  if (!enabled) {
+    // Flush OrbitControls' residual damping so an explicit pause stays still.
+    controls.enableDamping = false;
+    controls.update();
+    controls.enableDamping = true;
+  }
+}
+$('auto-rotate').onchange = () => setRotation($('auto-rotate').checked);
+motion.addEventListener('change', () => {
+  setRotation(!motion.matches);
+});
+controls.addEventListener('start', () => setRotation(false));
+
+function setView(view) {
+  if (!carMesh) return;
+  const bounds = new THREE.Box3().setFromObject(carMesh);
+  const sphere = bounds.getBoundingSphere(new THREE.Sphere());
+  const vertical = THREE.MathUtils.degToRad(camera.fov / 2);
+  const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
+  const distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
+  const direction = view === 'side' ? new THREE.Vector3(0, 0.08, 1) :
+    view === 'front' ? new THREE.Vector3(1, 0.08, 0) :
+    view === 'top' ? new THREE.Vector3(0.01, 1, 0) : new THREE.Vector3(1, 0.45, 1);
+  controls.target.copy(sphere.center);
+  camera.position.copy(sphere.center).add(direction.normalize().multiplyScalar(distance));
+  controls.maxDistance = Math.max(22, distance * 2);
+  controls.update();
+}
+document.querySelectorAll('[data-view]').forEach(button => button.onclick = () => {
+  setRotation(false);
+  setView(button.dataset.view);
+});
+renderer.domElement.setAttribute('aria-label', 'Dealership car model. Use the view buttons for side, front, and top views.');
+
+/* ---------- animation ---------- */
+const clock = new THREE.Clock();
+function tick() {
+  requestAnimationFrame(tick);
+  const dt = Math.min(clock.getDelta(), 0.1);
+  if (document.hidden) return;
+  controls.update(dt);
+  renderer.render(scene, camera);
+}
+tick();
+loadCorpus();
+</script>
+</body>
+</html>

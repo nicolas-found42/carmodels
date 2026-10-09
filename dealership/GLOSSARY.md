@@ -4,13 +4,25 @@ The two static three.js pages that display the recovered car corpus in a browser
 
 ## Language
 
-**Recovered inspector**:
-`recovered.html`, which renders the recovered original geometry of one car with its embedded model textures.
-_Avoid_: Model viewer, main viewer
+**Source-model showcase**:
+The showcase of recovered original assets, preserving their provenance and experimental recovery interpretations.
+_Avoid_: Dealership, model viewer, main viewer
 
-**Silhouette gallery**:
-`index.html`, which shows procedural silhouette meshes shaped by each car's handling values; the meshes are reconstructions, not the game models.
-_Avoid_: Car gallery, model gallery
+**Dealership**:
+The editable vehicle showcase with its own model copies and catalog. A dealership model can diverge from its source without changing that source.
+_Avoid_: Silhouette gallery, source-model showcase
+
+**Dealership model**:
+An independently editable vehicle edition, initially copied from a recovered source model.
+_Avoid_: Source model, recovery artifact
+
+**Source model**:
+A recovered vehicle asset belonging to the source corpus and its verification evidence.
+_Avoid_: Dealership model, editable edition
+
+**Dealership catalog**:
+The names, vehicle information and presentation choices owned by the dealership.
+_Avoid_: Source manifest, recovery index
 
 **Tree**:
 One of the five translated object-tree candidates retained per car; tree zero is the default.
@@ -33,5 +45,5 @@ The on-screen note that marks an item as a candidate or a procedural reconstruct
 _Avoid_: Disclaimer, warning
 
 **Showcase data**:
-`public/cars.json`, the manifest-derived data the silhouette gallery reads; `tools/build_showcase.py` regenerates it.
-_Avoid_: Car list, manifest
+Display data compiled from a showcase’s own model and catalog inputs.
+_Avoid_: Source manifest, recovery index

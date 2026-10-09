@@ -10,7 +10,7 @@ import provision_static_inputs as provision
 import ps2_container
 import ps2_sections
 import static_inputs
-import build_showcase
+import build_model_catalog
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -96,12 +96,12 @@ def test_dealership_catalog():
             folder.mkdir()
             (folder / 'car.glb').write_bytes(raw)
             (folder / 'index.json').write_text(json.dumps({'cars': [entry]}))
-        cars = build_showcase.model_catalog(public)['cars']
+        cars = build_model_catalog.model_catalog(public)['cars']
         assert {c['id'] for c in cars} == {'ford-racing-2/SHARED_CAR', 'another game/SHARED_CAR'}
         assert {c['file'] for c in cars} == {'ford-racing-2/car.glb', 'another game/car.glb'}
         (public / 'another game/car.glb').write_bytes(b'changed model')
         try:
-            build_showcase.model_catalog(public)
+            build_model_catalog.model_catalog(public)
         except ValueError as error:
             assert 'hash/size differs' in str(error)
         else:
@@ -111,7 +111,7 @@ def test_dealership_catalog():
                             ([{**entry, 'file': '../ford-racing-2/car.glb'}], 'outside game folder')]:
             (public / 'another game/index.json').write_text(json.dumps({'cars': bad}))
             try:
-                build_showcase.model_catalog(public)
+                build_model_catalog.model_catalog(public)
             except ValueError as error:
                 assert reason in str(error)
             else:
