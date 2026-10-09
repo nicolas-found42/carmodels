@@ -1,0 +1,50 @@
+{
+  "args": {
+    "claims": [
+      "The Ruff check and all review-payload unit tests, including actual per-claim verification format and invalid controls, passed."
+    ],
+    "evidence": [
+      {
+        "id": "check-manifest",
+        "text": "{\n  \"schema\": 1,\n  \"exit_code\": 0,\n  \"checks\": [\n    {\n      \"name\": \"ruff\",\n      \"command\": [\n        \"ruff\",\n        \"check\",\n        \"tools\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"ruff.log\",\n      \"elapsed_seconds\": 0.149\n    },\n    {\n      \"name\": \"test_review_payload\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_review_payload.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_review_payload.log\",\n      \"elapsed_seconds\": 0.15\n    }\n  ],\n  \"claim_limits\": [\n    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n  ]\n}"
+      },
+      {
+        "id": "full-check-logs",
+        "text": "COMMAND ['ruff', 'check', 'tools']\nSTATUS pass EXIT 0\nAll checks passed!\n\nCOMMAND ['python3', 'tools/test_review_payload.py']\nSTATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.015s\n\nOK\n"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 1,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The Ruff check and all review-payload unit tests, including actual per-claim verification format and invalid controls, passed.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.72,
+          "contradicts": 0.13,
+          "says_nothing": 0.15
+        },
+        "confidence": 0.58,
+        "action": "review",
+        "supporting_evidence": "full-check-logs",
+        "same_subject": 0.78
+      }
+    ],
+    "usage": {
+      "input_tokens": 957,
+      "output_tokens": 110
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "args": {
+    "request": "Repair review status parsing for the actual documented Jev verification schema: jev_verify emits per-claim actions and no top-level action. Derive an aggregate only after validating complete claim identities, verdicts, action values and confidences. Retain fail-closed rejection for malformed, mismatched, contradicted or operational-error receipts and independent escalation policy. Original recorded judge results remain immutable. Add regression and negative controls for this real output format.",
+    "diff": "--- a/tools/review_payload.py\n+++ b/tools/review_payload.py\n@@ -129,13 +129,18 @@\n             if receipt.get('args') != call['args']:\n                 raise ValueError('Judge receipt arguments differ from this bundle')\n             result = unwrap(receipt)\n-            if result.get('tool') != call['tool'] or result.get('action') not in ['auto', 'review', 'escalate']:\n+            if result.get('tool') != call['tool']:\n                 raise ValueError('Unknown or malformed judge result')\n+            action = result.get('action')\n             if call['tool'] == 'jev_verify':\n                 results = result.get('results', [])\n-                if len(results) != len(call['args']['claims']) or any(r.get('claim') != c or r.get('verdict') not in ['verified', 'unsupported', 'contradicted'] for r, c in zip(results, call['args']['claims'])):\n+                if len(results) != len(call['args']['claims']) or any(r.get('claim') != c or r.get('verdict') not in ['verified', 'unsupported', 'contradicted'] or r.get('action') not in ['auto', 'review'] for r, c in zip(results, call['args']['claims'])):\n                     raise ValueError('Verification results do not account for every claim')\n-                if result['action'] == 'auto' and any(r.get('verdict') != 'verified' or r.get('action') != 'auto' for r in results):\n+                # jev_verify returns per-claim actions without an aggregate action.\n+                # Derive the aggregate only after validating every claim's schema.\n+                if action is None:\n+                    action = 'review' if any(r['action'] == 'review' for r in results) else 'auto'\n+                if action == 'auto' and any(r.get('verdict') != 'verified' or r.get('action') != 'auto' for r in results):\n                     raise ValueError('Auto verification contains unresolved claims')\n                 if any(not probability(r.get('confidence')) for r in results):\n                     raise ValueError('Verification confidence is missing or invalid')\n@@ -143,10 +148,12 @@\n                 scores = result.get('scores', {})\n                 if not probability(result.get('safe_to_apply')) or set(scores) != {'correctness', 'spec_match', 'test_gap', 'blast_radius'} or any(not probability(s.get('confidence')) for s in scores.values()):\n                     raise ValueError('Patch review scores are missing or invalid')\n+            if action not in ['auto', 'review', 'escalate']:\n+                raise ValueError('Unknown or malformed judge action')\n             if any(r.get('verdict') == 'contradicted' for r in result.get('results', [])):\n                 blocked.append(str(path))\n-            elif result['action'] != 'auto':\n-                unresolved.append({'receipt': str(path), 'action': result['action'],\n+            elif action != 'auto':\n+                unresolved.append({'receipt': str(path), 'action': action,\n                                    'scores': result.get('scores'), 'safe_to_apply': result.get('safe_to_apply')})\n         except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError):\n             blocked.append(str(path))\n--- a/tools/test_review_payload.py\n+++ b/tools/test_review_payload.py\n@@ -57,6 +57,33 @@\n             path.write_text(json.dumps({'isError': True, 'content': [{'text': 'max_tokens_exceeded'}]}))\n             self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'blocked')\n \n+    def test_actual_per_claim_verify_output_and_invalid_controls(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            path = Path(temp) / 'verify.json'\n+            calls = [{'tool': 'jev_verify', 'args': {'claims': ['claim']}, 'out': str(path)}]\n+            bundle = {'calls': calls, 'bundle_sha256': digest(calls)}\n+            result = {'tool': 'jev_verify', 'results': [\n+                {'claim': 'claim', 'verdict': 'verified', 'confidence': 0.76, 'action': 'review'}]}\n+            def save():\n+                path.write_text(json.dumps({'args': calls[0]['args'], 'result': result}))\n+            save()\n+            self.assertEqual(review_status(bundle, 'author')['status'], 'needs_independent_review')\n+            resolution = {'bundle_sha256': bundle['bundle_sha256'], 'reviewer': 'reviewer',\n+                          'verdict': 'approve', 'rationale': 'independently verified'}\n+            self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'accepted')\n+            result['results'][0].update(confidence=0.99, action='auto')\n+            save()\n+            self.assertEqual(review_status(bundle, 'author')['status'], 'accepted')\n+            for change in [{'verdict': 'contradicted'}, {'action': 'unknown'}, {'confidence': -1}, {'claim': 'other'}]:\n+                original = dict(result['results'][0])\n+                result['results'][0].update(change)\n+                save()\n+                self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'blocked')\n+                result['results'][0] = original\n+            del result['results'][0]['action']\n+            save()\n+            self.assertEqual(review_status(bundle, 'author', resolution)['status'], 'blocked')\n+\n     def test_contradicted_or_missing_claims_block_even_with_resolution(self):\n         with tempfile.TemporaryDirectory() as temp:\n             path = Path(temp) / 'verify.json'\n",
+    "tests": "{\"schema\": 1, \"exit_code\": 0, \"checks\": [{\"name\": \"ruff\", \"command\": [\"ruff\", \"check\", \"tools\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"ruff.log\", \"elapsed_seconds\": 0.149}, {\"name\": \"test_review_payload\", \"command\": [\"python3\", \"tools/test_review_payload.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_review_payload.log\", \"elapsed_seconds\": 0.15}], \"claim_limits\": [\"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"]}"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.55,
+    "scores": {
+      "correctness": {
+        "score": 1.32,
+        "confidence": 0,
+        "probabilities": {
+          "0": 0.14,
+          "1": 0.41,
+          "2": 0.45
+        }
+      },
+      "spec_match": {
+        "score": 1.58,
+        "confidence": 0.39,
+        "probabilities": {
+          "0": 0,
+          "1": 0.41,
+          "2": 0.59
+        }
+      },
+      "test_gap": {
+        "score": 0.85,
+        "confidence": 0.56,
+        "probabilities": {
+          "0": 0.22,
+          "1": 0.71,
+          "2": 0.07
+        }
+      },
+      "blast_radius": {
+        "score": 1.03,
+        "confidence": 0.51,
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.67,
+          "2": 0.18
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.66,
+    "reason_codes": [
+      "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+      "correctness"
+    ],
+    "usage": {
+      "input_tokens": 2250,
+      "output_tokens": 79
+    }
+  }
+}
