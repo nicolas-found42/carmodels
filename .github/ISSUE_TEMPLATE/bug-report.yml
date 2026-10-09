@@ -32,7 +32,7 @@ body:
         Task blocked or degraded, user harm, severity and proposed priority with reasons,
         occurrence evidence, any workaround, and whether this is a regression.
       placeholder: |
-        Blocks viewer/public/recovered rebuild for this car; downstream GLB shows wrong
+        Blocks dealership/public/ford-racing-2 rebuild for this car; downstream GLB shows wrong
         alpha. Severity: minor visual. No workaround. Not a regression — never correct.
     validations:
       required: true
@@ -47,7 +47,7 @@ body:
         replay of an existing dump. Record unknown versions honestly.
       placeholder: |
         commit 65111a8, 2026-10-05. macOS 26.4.1 arm64, python 3.14.
-        Input: reference/ford/cars/LIGHTNING_SVT/model/*.PS2;1 (sha256 ...)
+        Input: ford-racing-2/cars/LIGHTNING_SVT/model/*.PS2;1 (sha256 ...)
         Mode: offline decode of the extracted disc tree (no live capture).
     validations:
       required: true
@@ -61,7 +61,7 @@ body:
         input. Include setup commands or a stable setup reference when needed.
       placeholder: |
         From projects/carmodels/: python3 tools/build_reference.py must have run so that
-        reference/ford/ is populated. No credentials required.
+        ford-racing-2/ is populated. No credentials required.
     validations:
       required: true
 
@@ -126,7 +126,7 @@ body:
       placeholder: |
         - [ ] Recovered livery PNG for LIGHTNING_SVT has a non-opaque alpha plane matching the disc's plane
         - [ ] python3 tools/validate_car_mips.py passes for all 35 cars
-        - [ ] viewer/public/recovered GLB for this car still loads in the viewer
+        - [ ] dealership/public/ford-racing-2 GLB for this car still loads in the viewer
     validations:
       required: true
 

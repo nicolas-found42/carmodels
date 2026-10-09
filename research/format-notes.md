@@ -32,7 +32,7 @@ All 171 original CARS/LIVERY PTGs are decoded and PNG-validated: 35 icons at 165
 
 ## Artifacts and next work
 
-- [Recovered geometry inspector](../viewer/recovered.html) and [35-car GLB index](../viewer/public/recovered/index.json).
+- [Recovered geometry inspector](../dealership/recovered.html) and [35-car GLB index](../dealership/public/ford-racing-2/index.json).
 - [Texture contact sheet](evidence/original-recovery/texture-gallery.html).
 - [Research synthesis and experiment ledger](original-recovery.md), including Jev failures and manual dispositions.
 - [GitHub/Stack Overflow research](community-github-stackoverflow.md) and [Reddit/YouTube research](community-reddit-youtube.md).

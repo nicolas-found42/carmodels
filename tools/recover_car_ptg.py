@@ -23,7 +23,7 @@ import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_BUNDLE = static_inputs.bundle_path()
-REFERENCE = ROOT / "reference" / "ford" / "cars"
+REFERENCE = ROOT / "ford-racing-2" / "cars"
 DEFAULT_OUTPUT = ROOT / "research" / "evidence" / "ptg-continuation" / "assets"
 HEADER_SIZE = 32
 PREFIX_END = 80
@@ -92,7 +92,7 @@ def manifest_assets() -> dict[str, dict]:
                 "destination": record["dst"],
                 "bytes": record["bytes"],
                 "sha256": record["sha256"],
-                "reference_path": (ROOT / "reference" / "ford" / record["dst"]).relative_to(ROOT).as_posix(),
+                "reference_path": (ROOT / "ford-racing-2" / record["dst"]).relative_to(ROOT).as_posix(),
             }
     return assets
 

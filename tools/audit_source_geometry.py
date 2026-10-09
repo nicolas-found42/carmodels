@@ -19,7 +19,7 @@ def audit():
     assembly = {c['code']: c for c in json.loads(assembly_path.read_text())['cars']}
     results = []
     for car in census['cars']:
-        path = next((ROOT/'reference/ford/cars'/car['code']/'model').iterdir())
+        path = next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir())
         data = path.read_bytes()
         if hashlib.sha256(data).hexdigest() != car['sha256']:
             raise ValueError('original source identity differs')

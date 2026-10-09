@@ -107,7 +107,7 @@ loading in browsers; do not promise direct `file://` execution.
 **Lighter alternative: `<model-viewer>`** (Google web component wrapping three.js)
 - Repo: https://github.com/google/model-viewer — docs/quickstart at https://modelviewer.dev/
   (as of the research date, the Google Ajax CDN hosts version **4.3.1**:
-  `https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js`).
+  `https://ajax.googleapis.com/ajax/libs/model-dealership/4.3.1/model-viewer.min.js`).
 - Pro: one HTML element, built-in orbit/environment/shadow/AR. Con: heavier default bundle for our
   simple 35-model catalog, harder to vendor the full dependency graph offline, and less control over
   the render loop (we want per-part visibility, livery swapping, and a camera fit per part). Use it
@@ -211,6 +211,6 @@ Justification:
 | vincent-tim | https://github.com/myst6re/vincent-tim |
 | three.js repo + GLTFLoader example | https://github.com/mrdoob/three.js |
 | three.js offline/importmap discussion | https://discourse.threejs.org/t/possible-to-write-offline-3js-after-version-128/86649 |
-| three.js r0.182 importmap pattern | https://discourse.threejs.org/t/how-to-build-a-simple-libre-3d-glb-gltf-viewer/89393 |
+| three.js r0.182 importmap pattern | https://discourse.threejs.org/t/how-to-build-a-simple-libre-3d-glb-gltf-dealership/89393 |
 | model-viewer quickstart + CDN version 4.3.1 | https://modelviewer.dev/ |
 | trimesh GLB exporter docs | https://trimesh.org/trimesh.exchange.gltf.html |

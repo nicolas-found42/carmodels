@@ -3,7 +3,7 @@
 ## Contexts
 
 - [Recovery](./GLOSSARY.md): the recovered car assets, the tools and verifiers that produced them, and the evidence about the draw path
-- [Viewer](./viewer/GLOSSARY.md): the two static pages that display the recovered corpus in a browser
+- [Viewer](./dealership/GLOSSARY.md): the two static pages that display the recovered corpus in a browser
 
 ## Relationships
 

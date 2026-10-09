@@ -32,4 +32,4 @@ The five canonical triage roles, each label string equal to its name. See `docs/
 
 ### Domain docs
 
-Multi-context: `GLOSSARY-MAP.md` lists `GLOSSARY.md` (recovery) and `viewer/GLOSSARY.md`; decisions are in `docs/adr/`. See `docs/agents/domain.md`.
+Multi-context: `GLOSSARY-MAP.md` lists `GLOSSARY.md` (recovery) and `dealership/GLOSSARY.md`; decisions are in `docs/adr/`. See `docs/agents/domain.md`.

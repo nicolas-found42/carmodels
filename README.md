@@ -5,9 +5,9 @@ textures and sounds extracted from the game, with the tools and verifiers used
 to recover them. Two static three.js viewers let you inspect the recovered
 geometry in a browser, offline.
 
-The interesting part is `viewer/recovered.html`: it renders the **real
+The interesting part is `dealership/recovered.html`: it renders the **real
 recovered original geometry** with the embedded model textures, straight from
-the decoded game data. `viewer/index.html` is an earlier procedural silhouette
+the decoded game data. `dealership/index.html` is an earlier procedural silhouette
 gallery that stays available for comparison.
 
 ## View the car models
@@ -16,10 +16,11 @@ From the repository root:
 
 ```sh
 python3 tools/build_showcase.py
-python3 -m http.server 8080 --directory viewer
+python3 -m http.server 8080 --directory dealership
 ```
 
-1. `tools/build_showcase.py` regenerates `viewer/public/cars.json`.
+1. `tools/build_showcase.py` regenerates `dealership/public/cars.json` and the shared
+   `dealership/public/models.json` catalog.
 2. The HTTP server serves the viewer.
 
 Then open the viewers:
@@ -32,18 +33,32 @@ Then open the viewers:
 A local HTTP server is required because the viewers load ES modules; opening
 the files over `file://` will not work. Everything is offline — three.js r182
 (module, core and `OrbitControls`) is **shipped in this repository** under
-`viewer/vendor/`, with no build step and no runtime CDN dependency. The 35 GLBs
-under `viewer/public/recovered/` and `viewer/public/cars.json` are committed
+`dealership/vendor/`, with no build step and no runtime CDN dependency. The 35 GLBs
+under `dealership/public/ford-racing-2/` and `dealership/public/cars.json` are committed
 too, so the viewer runs from a fresh clone with no manual download.
 
 ## What is in here
 
-- `viewer/` — the two static three.js viewers and their data (see
-  [`viewer/README.md`](viewer/README.md)).
-- `recovered/` — the canonical recovered index and per-car manifests.
-- `reference/ford/` — the per-car reference corpus: models, textures, sounds.
+- `dealership/` — the two static three.js viewers and their data (see
+  [`dealership/README.md`](dealership/README.md)).
+- `ford-racing-2/recovered/` — the canonical recovered index and per-car manifests.
+- `ford-racing-2/` — the per-car reference corpus: models, textures, sounds.
 - `research/` — format notes, original-recovery synthesis and evidence receipts.
 - `tools/` — recovery, export and **verifier** scripts.
+
+## Adding games
+
+Source assets belong in a root folder named after their game, such as `ford-racing-2/`.
+Use lowercase game folder names with hyphens between words.
+Keep original models, textures, configuration, sound files and recovery manifests together there.
+The shared browser dealership lives in `dealership/`; its exported GLBs and per-game export
+index belong under `dealership/public/<game>/`. Each export index uses the same `cars` record
+format as Ford Racing 2, including `code`, `file`, `bytes`, `sha256` and `records`.
+Run `python3 tools/build_showcase.py` after adding exports to rebuild the shared model catalog.
+The recovered inspector lists every game in that catalog and identifies cars by game plus code.
+The procedural silhouette gallery currently uses Ford Racing 2 metadata.
+
+Recovery evidence and tooling stay in `research/` and `tools/`.
 
 ## Honesty labels
 
@@ -59,7 +74,7 @@ as such in the interface:
 The recovered geometry bounds, however, are verified: the original-coordinate
 mapping reproduces all 1,837 nonempty geometry records' bounds. See
 [`research/original-recovery.md`](research/original-recovery.md) and
-[`viewer/README.md`](viewer/README.md) for the full fidelity discussion.
+[`dealership/README.md`](dealership/README.md) for the full fidelity discussion.
 
 ## Verify
 

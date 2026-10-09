@@ -235,7 +235,7 @@ def main() -> None:
     cars = {row["car"]: row for row in index["cars"]}
     if len(cars) != 35:
         raise AssertionError(f"expected 35 car index rows, got {len(cars)}")
-    for folder in sorted((ROOT / "reference/ford/cars").iterdir()):
+    for folder in sorted((ROOT / "ford-racing-2/cars").iterdir()):
         manifest_path = folder / "manifest.json"
         if not manifest_path.is_file():
             continue

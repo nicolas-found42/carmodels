@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import * as THREE from '../viewer/vendor/three.module.js';
+import * as THREE from '../dealership/vendor/three.module.js';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {defaultGeometryValue,geometryOptions,sceneHasGeometry,sceneLabel} from '../viewer/scene-options.mjs';
+import {defaultGeometryValue,geometryOptions,sceneHasGeometry,sceneLabel} from '../dealership/scene-options.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const corpus=path.join(root,'viewer/public/recovered');
+const corpus=path.join(root,'dealership/public/ford-racing-2');
 let cars=0,emptyChoices=0;
 for(const file of fs.readdirSync(corpus).filter(f=>f.endsWith('.glb'))) {
  const bytes=fs.readFileSync(path.join(corpus,file));
@@ -49,7 +49,30 @@ const initial=camera.position.clone();
 const context={loaded:{groups:[emptyGroup]},recordSelect:{value:'scene5'},selected:{code:'GRAN_TORINO'},
  status,THREE,camera,sceneLabel,controls:{update(){throw Error('empty scene reached camera controls');}},
  updateMaterials(){throw Error('empty scene reached material update');}};
-const html=fs.readFileSync(path.join(root,'viewer/recovered.html'),'utf8');
+const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
+// The shared catalog must point at the same verified game exports after the move.
+const catalog=JSON.parse(fs.readFileSync(path.join(root,'dealership/public/models.json'),'utf8'));
+assert.equal(catalog.cars.length,35);
+assert.equal(new Set(catalog.cars.map(c=>c.id)).size,35);
+for(const entry of catalog.cars) {
+ assert.equal(entry.game,'ford-racing-2');
+ assert.equal(entry.id,entry.game+'/'+entry.code);
+ assert(fs.existsSync(path.join(root,'dealership/public',entry.file)));
+}
+// Exercise the inspector's real loader with the same car code in two games.
+const loadCarSource=html.match(/async function loadCar\(\)[\s\S]*?\n}\n/)[0];
+const requested=[];
+const error={textContent:''};
+const loaderContext={requestId:0,index:{cars:[
+ {id:'ford-racing-2/SHARED',code:'SHARED',file:'ford-racing-2/car.glb'},
+ {id:'another game/SHARED',code:'SHARED',file:'another game/car.glb'}]},
+ carSelect:{value:''},status:{textContent:''},document:{querySelector(){return error;}},
+ fetch:async url=>{requested.push(url);return {ok:false};}};
+for(const identifier of ['ford-racing-2/SHARED','another game/SHARED']) {
+ loaderContext.carSelect.value=identifier;
+ await vm.runInNewContext(loadCarSource+';loadCar();',loaderContext);
+}
+assert.deepEqual(requested,['public/ford-racing-2/car.glb','public/another%20game/car.glb']);
 const showRecord=html.match(/function showRecord\(\).*\n/)[0];
 vm.runInNewContext(showRecord+';showRecord();',context);
 assert.match(status.textContent,/no drawable geometry/);

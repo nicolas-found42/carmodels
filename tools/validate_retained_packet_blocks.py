@@ -136,7 +136,7 @@ def load_sources():
     census = json.loads(CENSUS.read_text())
     cars = {}
     for c in census['cars']:
-        p = next((ROOT / 'reference/ford/cars' / c['code'] / 'model').iterdir())
+        p = next((ROOT / 'ford-racing-2/cars' / c['code'] / 'model').iterdir())
         d = p.read_bytes()
         need(sha(d) == c['sha256'], f"source identity {c['code']}")
         cars[c['code']] = (d, c['geometry']['headers'])

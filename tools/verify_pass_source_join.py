@@ -56,7 +56,7 @@ def load_inputs():
     census = json.loads(census_path.read_bytes())
     cars = {}
     for car in census['cars']:
-        path = next((ROOT / 'reference/ford/cars' / car['code'] / 'model').iterdir())
+        path = next((ROOT / 'ford-racing-2/cars' / car['code'] / 'model').iterdir())
         data = path.read_bytes()
         need(common.sha256(data) == car['sha256'], 'source model identity differs: ' + car['code'])
         parsed = ps2_container.parse(data)

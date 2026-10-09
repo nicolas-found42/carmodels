@@ -116,7 +116,7 @@ def main():
     census_path=ROOT/'research/evidence/original-recovery/car-asset-census.json';cars=json.loads(census_path.read_text())['cars'];span,helper,identity=instructions()
     contracts=[groups(c) for c in cars];probes=0
     for car,contract in zip(cars,contracts):
-        data=next((ROOT/'reference/ford/cars'/car['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=car['sha256']:raise ValueError('car identity changed')
         for selector in contract['complete_selectors']+[255]:
             for prior in contract['complete_selectors'] or [0]:synthetic(car,contract,span,selector,prior);probes+=1

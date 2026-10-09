@@ -10,7 +10,7 @@ OUT = os.path.join(R, "research/evidence/vehicle-completeness")
 os.makedirs(OUT, exist_ok=True)
 
 EVIDENCE_DOC = (
-    "Canonical index (recovered/index.json) counts: original_model 35, glb 35, model textures "
+    "Canonical index (ford-racing-2/recovered/index.json) counts: original_model 35, glb 35, model textures "
     "700 display + 700 raw, mip planes 94 + stored-alpha 94, original_icon 35 + raw/display 35 each, "
     "original_livery 136 + raw/display 136 each, original_matrix 136 + csm0-swap raw/display 136 each. "
     "Status: 'Asset/index integrity checked. Rendering-fidelity completion not asserted.' "
@@ -19,7 +19,7 @@ EVIDENCE_DOC = (
     "(corrupt manifest hash, cross-car model swap, schema/fidelity/status/limits mutations). "
     "Reference corpus per car (spot-checked 49_COUPE, THUNDERBIRD_2002, FORTYNINE): config/ (11 txt: "
     "cardata, body, engine, gearbox, tyres_front/back, brake, control, overlay, setup, sound), model/*.PS2;1, "
-    "graphics/icon + 4 liveries, data/*.DAT;1; sound banks in reference/ford/_shared/sounds with per-car "
+    "graphics/icon + 4 liveries, data/*.DAT;1; sound banks in ford-racing-2/_shared/sounds with per-car "
     "inheritance chains in manifests. The canonical index does NOT cover config txt, data DAT, or sound chains. "
     "Known open lists (unchanged): 158 unmatched retained descriptors, glass naming, ChallGlo blend, passes 4-5 RGB.")
 

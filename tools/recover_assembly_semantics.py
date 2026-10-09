@@ -200,7 +200,7 @@ def main():
     census = json.loads((ROOT / 'research/evidence/original-recovery/car-asset-census.json').read_text())
     counts, cars = Counter(), []
     for car in census['cars']:
-        data = next((ROOT / 'reference/ford/cars' / car['code'] / 'model').iterdir()).read_bytes()
+        data = next((ROOT / 'ford-racing-2/cars' / car['code'] / 'model').iterdir()).read_bytes()
         if sha(data) != car['sha256'] or data != archive[car['source']].load():
             raise ValueError('car differs from pinned archive')
         result = join(data, ps2_sections.parse(data))

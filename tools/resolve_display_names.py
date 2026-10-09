@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import build_reference as B  # reuse the exact tlate parser + paths
 
-CORPUS = ROOT / "reference/ford"
+CORPUS = ROOT / "ford-racing-2"
 TLATE = B.SRC / "LANGUAGE/tlate_en.dat;1"
 BRIDGE = ROOT / "research/evidence/carselection-2026-10-05/bridge-three-screens.json"
 OUT = ROOT / "research/evidence/vehicle-completeness/t3-display-name-resolution-validation.json"

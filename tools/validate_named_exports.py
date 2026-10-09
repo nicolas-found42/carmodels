@@ -53,12 +53,12 @@ def check(data, document):
 
 def main():
     rows = []
-    for entry in json.loads((ROOT/'viewer/public/recovered/index.json').read_text())['cars']:
-        blob = (ROOT/'viewer/public/recovered'/entry['file']).read_bytes()
+    for entry in json.loads((ROOT/'dealership/public/ford-racing-2/index.json').read_text())['cars']:
+        blob = (ROOT/'dealership/public/ford-racing-2'/entry['file']).read_bytes()
         length, kind = struct.unpack_from('<II', blob, 12)
         assert kind == 0x4e4f534a
         document = json.loads(blob[20:20+length])
-        data = next((ROOT/'reference/ford/cars'/entry['code']/'model').iterdir()).read_bytes()
+        data = next((ROOT/'ford-racing-2/cars'/entry['code']/'model').iterdir()).read_bytes()
         assert hashlib.sha256(data).hexdigest() == document['extras']['originalModelSha256']
         result = check(data, document)
         rows.append({'car': entry['code'], 'glb_sha256': hashlib.sha256(blob).hexdigest(), **result})

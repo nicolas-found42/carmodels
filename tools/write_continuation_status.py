@@ -36,7 +36,7 @@ def main():
         'render_fidelity_complete': False,
         'static_inputs': {'bundle_identity': json.loads((SRC / 'bundle-identity.json').read_text()),
                           'typed_inventory_sha256': sha(static_inputs.typed_export() / 'inventory.json')},
-        'canonical_index_sha256': sha(ROOT / 'recovered/index.json'),
+        'canonical_index_sha256': sha(ROOT / 'ford-racing-2/recovered/index.json'),
         'runtime': {'container': sh('docker', 'ps', '--filter', 'name=fr2-recovery-headless', '--format', '{{.ID}} {{.Status}}'),
                     'pine_identity': sh('docker', 'exec', 'fr2-recovery-headless', 'python3', '/data/pine_control.py', 'identity'),
                     'port': sh('docker', 'port', 'fr2-recovery-headless'),

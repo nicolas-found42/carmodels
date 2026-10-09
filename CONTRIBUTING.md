@@ -5,9 +5,9 @@
 Recovered Ford Racing 2 car assets, plus the tools that recovered them and the verifiers that
 check the result. Two corpora:
 
-- `reference/ford/` — the verbatim extraction from the PAL PS2 disc (serial SLES-51705), one folder
+- `ford-racing-2/` — the verbatim extraction from the PAL PS2 disc (serial SLES-51705), one folder
   per car, provenance and sha256 per file. Joined on the `CARDATA.DAT` `:CAR_TYPE` code.
-- `recovered/` — the canonical outputs, each car carrying a hash-verified `manifest.json`.
+- `ford-racing-2/recovered/` — the canonical outputs, each car carrying a hash-verified `manifest.json`.
 
 `research/evidence/` holds the receipts that back the claims in `research/*.md`.
 

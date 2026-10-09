@@ -10,6 +10,7 @@ import provision_static_inputs as provision
 import ps2_container
 import ps2_sections
 import static_inputs
+import build_showcase
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -20,7 +21,7 @@ def test_parsers():
         assert hashlib.sha256((ROOT / 'tools' / name).read_bytes()).hexdigest() == pin, name
     textures = 0
     for car in census['cars']:
-        raw = next((ROOT / 'reference/ford/cars' / car['code'] / 'model').iterdir()).read_bytes()
+        raw = next((ROOT / 'ford-racing-2/cars' / car['code'] / 'model').iterdir()).read_bytes()
         parsed = ps2_sections.parse(raw)
         assert json.loads(json.dumps(parsed['geometry'])) == car['geometry'], car['code']
         assert len(parsed['textures']['items']) == len(car['textures'])
@@ -84,8 +85,42 @@ def test_local_configuration():
             assert static_inputs.configured('CARMODELS_TYPED_EXPORT') == env['CARMODELS_TYPED_EXPORT']
 
 
+def test_dealership_catalog():
+    with tempfile.TemporaryDirectory() as tmp:
+        public = Path(tmp)
+        raw = b'model fixture'
+        entry = {'code': 'SHARED_CAR', 'file': 'car.glb', 'bytes': len(raw),
+                 'sha256': hashlib.sha256(raw).hexdigest(), 'records': []}
+        for game in ['ford-racing-2', 'another game']:
+            folder = public / game
+            folder.mkdir()
+            (folder / 'car.glb').write_bytes(raw)
+            (folder / 'index.json').write_text(json.dumps({'cars': [entry]}))
+        cars = build_showcase.model_catalog(public)['cars']
+        assert {c['id'] for c in cars} == {'ford-racing-2/SHARED_CAR', 'another game/SHARED_CAR'}
+        assert {c['file'] for c in cars} == {'ford-racing-2/car.glb', 'another game/car.glb'}
+        (public / 'another game/car.glb').write_bytes(b'changed model')
+        try:
+            build_showcase.model_catalog(public)
+        except ValueError as error:
+            assert 'hash/size differs' in str(error)
+        else:
+            raise AssertionError('changed dealership model accepted')
+        (public / 'another game/car.glb').write_bytes(raw)
+        for bad, reason in [([entry, entry], 'Duplicate'),
+                            ([{**entry, 'file': '../ford-racing-2/car.glb'}], 'outside game folder')]:
+            (public / 'another game/index.json').write_text(json.dumps({'cars': bad}))
+            try:
+                build_showcase.model_catalog(public)
+            except ValueError as error:
+                assert reason in str(error)
+            else:
+                raise AssertionError('invalid dealership catalog accepted')
+
+
 if __name__ == '__main__':
     test_parsers()
     test_copy()
     test_local_configuration()
-    print('PASS test_recovery_inputs: 35 models, decoded textures, truncated-model controls, independent copies and configuration')
+    test_dealership_catalog()
+    print('PASS test_recovery_inputs: 35 models, decoded textures, independent copies, configuration and multi-game dealership controls')

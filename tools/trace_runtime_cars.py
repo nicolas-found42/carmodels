@@ -48,7 +48,7 @@ def main():
     count_fields = [0xb4,0xb8,0xc8,0xbc,0xc0,0xc4,0xcc,0xd0,0xd4,0xd8]
     cars = []
     for car in census['cars']:
-        source = next((ROOT/'reference/ford/cars'/car['code']/'model').iterdir()).read_bytes()
+        source = next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
         assert hashlib.sha256(source).hexdigest() == car['sha256']
         tables = source_tables(source)
         anchors = sorted((h['planes']['six_byte'] for h in car['geometry']['headers']),

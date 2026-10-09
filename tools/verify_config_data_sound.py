@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import build_reference as B  # parsing primitives + constants (NOT re-derived)
 
-CORPUS = ROOT / "reference/ford"
+CORPUS = ROOT / "ford-racing-2"
 SRC = B.SRC
 OUT = ROOT / "research/evidence/vehicle-completeness/t2-config-data-sound-validation.json"
 
@@ -61,7 +61,7 @@ def check(root: Path, overrides=None, hide=None):
     def exists(path: Path) -> bool:
         return str(path) not in hide and path.is_file()
 
-    corpus = root / "reference/ford"
+    corpus = root / "ford-racing-2"
     if not SRC.is_dir():
         raise ValueError(f"source tree missing: {SRC}")
 

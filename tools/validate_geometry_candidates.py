@@ -104,7 +104,7 @@ def check(path, expected):
 
 
 def main():
-    folder = ROOT / 'viewer/public/recovered'
+    folder = ROOT / 'dealership/public/ford-racing-2'
     index = json.loads((folder / 'index.json').read_text())
     results = [check(folder / e['file'], e) for e in index['cars']]
     receipt = {'status': 'pass', 'models': len(results), 'textures': sum(r['textures'] for r in results),

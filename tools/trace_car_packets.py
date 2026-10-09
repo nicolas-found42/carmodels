@@ -606,7 +606,7 @@ def main() -> int:
         joins = json.loads(joins_path.read_text(encoding="utf-8"))
         cobra = next(item for item in joins["cars"] if item["car"] == "COBRA")
         cobra_obj = cobra["joins"][0]["objects"][0]
-        model_path = Path("reference/ford/cars/COBRA/model/COBRA.PS2;1")
+        model_path = Path("ford-racing-2/cars/COBRA/model/COBRA.PS2;1")
         model_bytes = model_path.read_bytes()
         re_tools = Path(__file__).resolve().parent
         sys.path.insert(0, str(re_tools))
@@ -990,7 +990,7 @@ def main() -> int:
     joins_doc = json.loads(joins_path.read_text(encoding="utf-8"))
     model_rows = []
     for car in joins_doc["cars"]:
-        candidates = sorted(glob.glob(f"reference/ford/cars/{car['car']}/model/*PS2;1"))
+        candidates = sorted(glob.glob(f"ford-racing-2/cars/{car['car']}/model/*PS2;1"))
         if len(candidates) != 1:
             model_rows.append({"car": car["car"], "model_paths": candidates, "result": "unresolved_model_path"})
             continue
