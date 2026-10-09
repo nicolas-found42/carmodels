@@ -58,9 +58,9 @@ def check(data,headers,doc):
 def main():
     cars=json.loads((ROOT/'research/evidence/original-recovery/car-asset-census.json').read_text())['cars'];rows=[];negative=False;controls={}
     for c in cars:
-        data=next((ROOT/'reference/ford/cars'/c['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=c['sha256']:raise ValueError('original source differs')
-        raw=(ROOT/'viewer/public/recovered'/f'{c["code"]}.glb').read_bytes();length=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+length])
+        raw=(ROOT/'dealership/public/ford-racing-2'/f'{c["code"]}.glb').read_bytes();length=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+length])
         n=check(data,c['geometry']['headers'],doc);rows.append({'car':c['code'],'glb_sha256':hashlib.sha256(raw).hexdigest(),'primitive_material_headers':n})
         if not negative:
             bad=copy.deepcopy(doc);bad['meshes'][0]['primitives'][0]['extras']['originalMaterialHeader']['base_color_rgba_unscaled'][3]^=1

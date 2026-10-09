@@ -43,11 +43,12 @@ def build(car, data):
     doc={'asset':{'version':'2.0','generator':'FR2 bounded coordinate experiment'},
          'scene':0,'scenes':[{'nodes':[]}],'nodes':[],'meshes':[],'accessors':[],
          'bufferViews':[],'buffers':[],'materials':[],'images':[],'textures':[],
-         'samplers':[{'magFilter':9728,'minFilter':9728,'wrapS':10497,'wrapT':10497}],
+         'samplers':[{'magFilter':9729,'minFilter':9729,'wrapS':10497,'wrapT':10497}],
          'extras':{'car':car['code'],'originalModelSha256':car['sha256'],
                    'status':'Original coordinate candidates with independent records and translated tree candidates.',
                    'limits':['Source-named ownership joined; runtime state and observed LOD selection unresolved; tree scenes retain all states.',
                              'Normals, UV, texture-index and ADC triangle semantics are candidate interpretations.',
+                             'Linear/no-mip filtering is a candidate default informed by 106 captured COBRA draws; other cars and game states are unverified.',
                              'Display alpha min(255,2*a); glTF shading differs from original GS rendering.',
                              'Untextured headers use their stored Header colour with GS-scale alpha, opacity alpha/128 below 128; the lane reading is a candidate, not proven shading.']}}
     doc['extras']['textureVariantContractSha256']=hashlib.sha256(contract_path.read_bytes()).hexdigest()
@@ -59,16 +60,6 @@ def build(car, data):
     untextured_colours=sorted({h['base_color_word'] for h in material_headers.values()
                                if h['texture_index']==65535})
     untextured_material={}
-    for colour in untextured_colours:
-        rgba=material_headers[next(k for k,v in material_headers.items()
-                                   if v['texture_index']==65535 and v['base_color_word']==colour)]['base_color_rgba_unscaled']
-        alpha=rgba[3]
-        material={'name':'Header untextured '+colour,'doubleSided':True,
-                  'pbrMetallicRoughness':{'baseColorFactor':[c/255 for c in rgba[:3]]+[min(1.0,alpha/128)],
-                                          'metallicFactor':0,'roughnessFactor':1}}
-        if alpha<128:
-            material['alphaMode']='BLEND'
-        untextured_material[colour]=len(doc['materials']);doc['materials'].append(material)
     if variant['variants']:
         doc['extensionsUsed']=['KHR_materials_variants']
         doc['extensions']={'KHR_materials_variants':{'variants':[{'name':f'Original selector {v["selector"]}','extras':{'originalSelector':v['selector']}} for v in variant['variants']]}}
@@ -87,11 +78,24 @@ def build(car, data):
             row['min']=[min(stored[j::width]) for j in range(width)]
             row['max']=[max(stored[j::width]) for j in range(width)]
         doc['accessors'].append(row);return index
+    texture_materials=[]
     for t in car['textures']:
         image=len(doc['images']);doc['images'].append({'bufferView':view((EVIDENCE/t['png']).read_bytes()),'mimeType':'image/png','name':t['name']})
         doc['textures'].append({'sampler':0,'source':image})
+        texture_materials.append(len(doc['materials']))
         doc['materials'].append({'name':t['name'],'doubleSided':True,
                                  'pbrMetallicRoughness':{'baseColorTexture':{'index':image},'metallicFactor':0,'roughnessFactor':1}})
+    # Keep original texture indices stable for primitives and selector remaps.
+    for colour in untextured_colours:
+        rgba=material_headers[next(k for k,v in material_headers.items()
+                                   if v['texture_index']==65535 and v['base_color_word']==colour)]['base_color_rgba_unscaled']
+        alpha=rgba[3]
+        material={'name':'Header untextured '+colour,'doubleSided':True,
+                  'pbrMetallicRoughness':{'baseColorFactor':[c/255 for c in rgba[:3]]+[min(1.0,alpha/128)],
+                                          'metallicFactor':0,'roughnessFactor':1}}
+        if alpha<128:
+            material['alphaMode']='BLEND'
+        untextured_material[colour]=len(doc['materials']);doc['materials'].append(material)
     table=car['geometry']['table'];cursor=0; stats=Counter(); records=[]
     for record,pair in enumerate(car['geometry']['group_header_counts']):
         bounds=struct.unpack_from('<6f',data,table['offset']+record*52+4)
@@ -122,12 +126,12 @@ def build(car, data):
                 p=h['planes']['third_four_byte'];uvs=list(struct.iter_unpack('<2h',data[p['offset']:p['end']]))
                 if len(uvs)!=n:raise ValueError('UV count mismatch')
                 attrs['TEXCOORD_0']=accessor([component/2048 for uv in uvs for component in uv],2)
-                material=h['third']
+                material=texture_materials[h['third']]
             primitives.append({'attributes':attrs,'indices':accessor(indices,1,'I'),'mode':4,'material':material,
                                'extras':{'headerOffset':h['offset'],'flags':h['flags'],'count':n,'third':h['third'],
                                          'group':0 if hi<pair[0] else 1,'candidateSemantics':True}})
             if str(h['third']) in (variant['variants'][0]['material_remap'] if variant['variants'] else {}):
-                primitives[-1]['extensions']={'KHR_materials_variants':{'mappings':[{'material':v['material_remap'][str(h['third'])],'variants':[vi]} for vi,v in enumerate(variant['variants'])]}}
+                primitives[-1]['extensions']={'KHR_materials_variants':{'mappings':[{'material':texture_materials[v['material_remap'][str(h['third'])]],'variants':[vi]} for vi,v in enumerate(variant['variants'])]}}
             stats['vertices']+=n;stats['triangles']+=len(indices)//3;triangle_count+=len(indices)//3
         if primitives:
             mesh=len(doc['meshes']);doc['meshes'].append({'name':f'record_{record:03d}','primitives':primitives})
@@ -219,11 +223,11 @@ def build(car, data):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',type=Path,default=ROOT/'viewer/public/recovered')
+    parser.add_argument('--output',type=Path,default=ROOT/'dealership/public/ford-racing-2')
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=True)
     census=json.loads((EVIDENCE/'car-asset-census.json').read_text());entries=[]
     for car in census['cars']:
-        data=next((ROOT/'reference/ford/cars'/car['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=car['sha256']:raise ValueError('model hash changed')
         glb,records,stats,assemblies=build(car,data);filename=car['code']+'.glb';(args.output/filename).write_bytes(glb)
         entries.append({'code':car['code'],'file':filename,'sha256':hashlib.sha256(glb).hexdigest(),'bytes':len(glb),'records':records,'assemblies':assemblies,'stats':stats,'textureSelectorIds':json.loads(glb[20:20+struct.unpack_from('<I',glb,12)[0]])['extras']['textureSelectorIds']})

@@ -8,11 +8,11 @@ that backs each claim about how the game draws a car.
 ### Corpora
 
 **Reference tree**:
-The verbatim extraction from the PAL PS2 disc under `reference/ford/`, one folder per car, with provenance and a sha256 for every file.
+The verbatim extraction from the PAL PS2 disc under `ford-racing-2/`, one folder per car, with provenance and a sha256 for every file.
 _Avoid_: Raw dump, original files
 
 **Recovered corpus**:
-The canonical outputs under `recovered/`, each car carrying a hash-verified `manifest.json`.
+The canonical outputs under `ford-racing-2/recovered/`, each car carrying a hash-verified `manifest.json`.
 _Avoid_: Output folder, export
 
 ### Evidence

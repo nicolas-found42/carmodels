@@ -73,7 +73,7 @@ def main():
         strings[hex(va)]=expected
     census=json.loads((ROOT/'research/evidence/original-recovery/car-asset-census.json').read_text());cars=[];counts=Counter()
     for c in census['cars']:
-        data=next((ROOT/'reference/ford/cars'/c['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=c['sha256']:raise ValueError('model identity changed')
         assembly=join(data,ps2_sections.parse(data));record=assembly['records'][0]
         low=preset(record);fast=preset(record,True)

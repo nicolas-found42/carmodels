@@ -3,7 +3,7 @@
 
 Source : private input bundle: games/ford-racing-2/extracted/files  (990 files extracted
          from the PAL PS2 disc's FILES.HDR/FILES.DAT container; serial SLES-51705)
-Dest   : projects/carmodels/reference/ford
+Dest   : projects/carmodels/ford-racing-2
 
 Layout (one folder per car, keyed by the CARDATA.DAT :CAR_TYPE code):
 
@@ -40,7 +40,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SRC = static_inputs.bundle_path() / 'games/ford-racing-2/extracted/files'
-DST = Path(__file__).resolve().parents[1] / 'reference/ford'
+DST = Path(__file__).resolve().parents[1] / 'ford-racing-2'
 
 CONFIG_DIR = "DATA/ASCII/CARS"
 GAMEPLAY_DIR = "DATA/ASCII/GAMEPLAY"

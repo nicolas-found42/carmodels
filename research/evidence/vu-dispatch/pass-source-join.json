@@ -1,0 +1,4905 @@
+{
+ "schema": "fr2-pass-source-join/v1",
+ "scope": "100 retained/GSDump content-aligned draws; no same-frame execution proof.",
+ "pins": {
+  "alignment_sha256": "b37f7a1aff15ea7adba1d692e1375c1c422c05e0fbab681658dc3fe8d8cb31eb",
+  "handler_receipt_sha256": "32babc990332f12dac029e676238e2f16b98891b001d1e2e66f1912b888bc093",
+  "retained_ee_sha256": "eacbcb2e8304957e35e784a927c4c17206ccef363c24eea6c1f6887f00f58355",
+  "dump_compressed_sha256": "fe3cad806c831b6db5577a336a1f92cfc1ac007d0004f3efb99117ae0eb77e88",
+  "dump_decompressed_sha256": "3c599f0956dc84cca72a6013a0a802305db8cdc2d7add54c858d40b99843bf2f",
+  "paused_vu_memory_sha256": "c615877855216e66a3f6aba38cad919f14b2e9b7091991b49ba48f812772e5a3",
+  "retained_gs_sha256": "854147006e377425b3c3ebd93e4754a3cdc9b35e3fb9885bb480ee35cfaa84a9",
+  "census_sha256": "03fb67b1315ab54c4870bade23263c456489035d50ee397d2d4119695740b1ce",
+  "inventory_sha256": "643c07fde51c894c9561192143e15b9da27c60d1f41d1d0895d8e0a8860a1f2b",
+  "executable_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95"
+ },
+ "source_functions": {
+  "0021bf28": {
+   "decompilation_sha256": "8dba1e04bbc99aabff2acdd1300e2e13779c4c513a098fa75120c307911a83e4",
+   "instructions_checked_against_elf": 200
+  },
+  "0021c3e0": {
+   "decompilation_sha256": "618edec8f6437d909769be78b61ac3abc1db5aff05a3e9350c6ef670a066bee3",
+   "instructions_checked_against_elf": 551
+  },
+  "0021b850": {
+   "decompilation_sha256": "bd94c10f33a7b9db1fc65d0401ea83d18ff9efa59e77fa4e294bab4ae5d4a24d",
+   "instructions_checked_against_elf": 127
+  },
+  "00127738": {
+   "decompilation_sha256": "6f557beea56273c17c994e33d3474df222a67e3ff5a4271cb3cc8c49759fab60",
+   "instructions_checked_against_elf": 5
+  },
+  "00127730": {
+   "decompilation_sha256": "029550db2a974f585919addb8db51151a55583fb288e64101e4b9a25852b8570",
+   "instructions_checked_against_elf": 2
+  }
+ },
+ "loaded_car_bases": {
+  "COBRA": "0x143b500",
+  "CROWN_VICTORIA": "0x156bd00",
+  "FOCUS_SVT": "0x1699500",
+  "LIGHTNING_SVT": "0x17cb580",
+  "POWERSTROKE": "0x190ef80",
+  "THUNDERBIRD_MOVIE": "0x1a3bc00"
+ },
+ "by_pass_word": {
+  "4": {
+   "draws": 37,
+   "cars": [
+    "COBRA"
+   ],
+   "header_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    57,
+    58,
+    60,
+    149
+   ]
+  },
+  "5": {
+   "draws": 63,
+   "cars": [
+    "COBRA"
+   ],
+   "header_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    57,
+    58,
+    60,
+    80,
+    81,
+    82,
+    83,
+    101,
+    102,
+    103,
+    104,
+    122,
+    123,
+    124,
+    125,
+    143,
+    144,
+    145,
+    146,
+    149
+   ]
+  }
+ },
+ "flag_rule": {
+  "pass4": "Header bit 0x10 maps to effective 0x80; (effective & 0x88)==0x80 and per-draw global enable required.",
+  "pass5": "Header bit 0x08 maps to effective 0x40; (effective & 0x48)==0x40 and per-draw global enable required.",
+  "checked_target_draws": 100,
+  "sufficient_by_header_flags_alone": false
+ },
+ "pass4_texture": {
+  "identity": "view-render-target-0",
+  "classification": "not a car texture",
+  "car_texture_index": null,
+  "TBP0": 10688,
+  "TBW": 4,
+  "PSM": 10,
+  "width": 256,
+  "height": 128,
+  "TEX0_1": 25243494848,
+  "global_address": 2683312,
+  "view_table_address": 2688944,
+  "ee_object_address": 3906544,
+  "object_64_bytes_sha256": "ec1d06ec8578e3a2095a4618ffd758b4b903690773cc55b0bb5b2d492b744042",
+  "loaded_car_texture_libraries": {
+   "COBRA": [
+    {
+     "index": 0,
+     "name": "COBRA512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 1,
+     "name": "COBRA512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 2,
+     "name": "COBRA512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 3,
+     "name": "COBRA512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 4,
+     "name": "COBRAWHEELBLUR",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 5,
+     "name": "COBRAWHEELBLUR",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 6,
+     "name": "COBRAWHEELBLUR",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 7,
+     "name": "COBRAWHEELBLUR",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 8,
+     "name": "COBRA256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 9,
+     "name": "COBRA256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 10,
+     "name": "COBRA256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 11,
+     "name": "COBRA256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 12,
+     "name": "COBRA128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 13,
+     "name": "COBRA128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 14,
+     "name": "COBRA128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 15,
+     "name": "COBRA128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 16,
+     "name": "COBRA64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 17,
+     "name": "COBRA64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 18,
+     "name": "COBRA64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 19,
+     "name": "COBRA64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 20,
+     "name": "UNDER_SHADOW",
+     "width": 64,
+     "height": 64
+    }
+   ],
+   "CROWN_VICTORIA": [
+    {
+     "index": 0,
+     "name": "CROWNV512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 1,
+     "name": "CROWNV512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 2,
+     "name": "CROWNV512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 3,
+     "name": "CROWNV512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 4,
+     "name": "MOVING_WHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 5,
+     "name": "MOVING_WHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 6,
+     "name": "MOVING_WHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 7,
+     "name": "MOVING_WHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 8,
+     "name": "CROWNV256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 9,
+     "name": "CROWNV256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 10,
+     "name": "CROWNV256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 11,
+     "name": "CROWNV256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 12,
+     "name": "CROWNV128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 13,
+     "name": "CROWNV128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 14,
+     "name": "CROWNV128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 15,
+     "name": "CROWNV128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 16,
+     "name": "CROWNV64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 17,
+     "name": "CROWNV64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 18,
+     "name": "CROWNV64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 19,
+     "name": "CROWNV64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 20,
+     "name": "UNDER_SHADOW",
+     "width": 64,
+     "height": 64
+    }
+   ],
+   "FOCUS_SVT": [
+    {
+     "index": 0,
+     "name": "FOCUSSVT512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 1,
+     "name": "FOCUSSVT512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 2,
+     "name": "FOCUSSVT512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 3,
+     "name": "FOCUSSVT512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 4,
+     "name": "FOCUSSVTBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 5,
+     "name": "FOCUSSVTBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 6,
+     "name": "FOCUSSVTBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 7,
+     "name": "FOCUSSVTBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 8,
+     "name": "FOCUSSVT256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 9,
+     "name": "FOCUSSVT256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 10,
+     "name": "FOCUSSVT256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 11,
+     "name": "FOCUSSVT256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 12,
+     "name": "FOCUSSVT128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 13,
+     "name": "FOCUSSVT128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 14,
+     "name": "FOCUSSVT128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 15,
+     "name": "FOCUSSVT128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 16,
+     "name": "FOCUSSVT64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 17,
+     "name": "FOCUSSVT64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 18,
+     "name": "FOCUSSVT64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 19,
+     "name": "FOCUSSVT64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 20,
+     "name": "UNDER_SHADOW",
+     "width": 64,
+     "height": 64
+    }
+   ],
+   "LIGHTNING_SVT": [
+    {
+     "index": 0,
+     "name": "LIGHTNING_512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 1,
+     "name": "LIGHTNING_512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 2,
+     "name": "LIGHTNING_512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 3,
+     "name": "LIGHTNING_512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 4,
+     "name": "LIGHTNINGBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 5,
+     "name": "LIGHTNINGBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 6,
+     "name": "LIGHTNINGBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 7,
+     "name": "LIGHTNINGBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 8,
+     "name": "LIGHTNING_256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 9,
+     "name": "LIGHTNING_256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 10,
+     "name": "LIGHTNING_256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 11,
+     "name": "LIGHTNING_256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 12,
+     "name": "LIGHTNING_128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 13,
+     "name": "LIGHTNING_128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 14,
+     "name": "LIGHTNING_128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 15,
+     "name": "LIGHTNING_128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 16,
+     "name": "LIGHTNING_64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 17,
+     "name": "LIGHTNING_64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 18,
+     "name": "LIGHTNING_64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 19,
+     "name": "LIGHTNING_64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 20,
+     "name": "UNDER_SHADOW",
+     "width": 64,
+     "height": 64
+    }
+   ],
+   "POWERSTROKE": [
+    {
+     "index": 0,
+     "name": "POWERSTROKE_512X256",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 1,
+     "name": "POWERSTROKE_512X256",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 2,
+     "name": "POWERSTROKE_512X256",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 3,
+     "name": "POWERSTROKE_512X256",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 4,
+     "name": "POWERSTROKEBLURRYWHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 5,
+     "name": "POWERSTROKE256X256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 6,
+     "name": "POWERSTROKE256X256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 7,
+     "name": "POWERSTROKE256X256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 8,
+     "name": "POWERSTROKE256X256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 9,
+     "name": "POWERSTROKE128ALL",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 10,
+     "name": "POWERSTROKE128ALL",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 11,
+     "name": "POWERSTROKE128ALL",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 12,
+     "name": "POWERSTROKE128ALL",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 13,
+     "name": "POWERSTROKE64ALL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 14,
+     "name": "POWERSTROKE64ALL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 15,
+     "name": "POWERSTROKE64ALL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 16,
+     "name": "POWERSTROKE64ALL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 17,
+     "name": "UNDER_SHADOW",
+     "width": 64,
+     "height": 64
+    }
+   ],
+   "THUNDERBIRD_MOVIE": [
+    {
+     "index": 0,
+     "name": "TBIRD_MOVIE_512",
+     "width": 512,
+     "height": 256
+    },
+    {
+     "index": 1,
+     "name": "TBIRD_MOVIE_MOVING_WHEEL",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 2,
+     "name": "TBIRD_MOVIE_256",
+     "width": 256,
+     "height": 256
+    },
+    {
+     "index": 3,
+     "name": "TBIRD_MOVIE_128",
+     "width": 128,
+     "height": 128
+    },
+    {
+     "index": 4,
+     "name": "TBIRD_MOVIE_64",
+     "width": 64,
+     "height": 64
+    },
+    {
+     "index": 5,
+     "name": "UNDER_SHADOW",
+     "width": 64,
+     "height": 64
+    }
+   ]
+  },
+  "preceding_render_target_draws": 905,
+  "first_render_target_draw": {
+   "transfer": 127,
+   "vertices": 3,
+   "FRAME_1": 18374686479839658318,
+   "SCISSOR_1": 35747322058964992
+  },
+  "last_render_target_draw_before_sampling": {
+   "transfer": 5444,
+   "vertices": 44,
+   "FRAME_1": 18374686479839658318,
+   "SCISSOR_1": 35747322058964992
+  },
+  "first_sample_transfer": 5456,
+  "export_origin": "research/evidence/continuation/runtime/linux/race95-GS.bin",
+  "gs_freeze_vram_offset": 425,
+  "packed_row_major_sha256": "4310ae35d47ce6d3ece1b8d13a03754af3844981b9ed7df2ed539d3643a96bc5",
+  "preview_rgba_sha256": "1f43ab42afeb49a7b366056c2f39ca3ccba0314313b76d50fcd723f029b9e59d",
+  "png_sha256": "a23d5073d7100e3735d09d645da641efe098c33da22f8f247ab55012207beb17",
+  "png_path": "research/evidence/vu-dispatch/pass4-retained-target.png",
+  "alpha": "opaque RGB preview; not GS TEXA or framebuffer alpha",
+  "decoder_reference": {
+   "version": "PCSX2 v2.8.2, GPL-3.0+",
+   "freeze": "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSState.cpp",
+   "swizzle": "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSTables.cpp",
+   "rgb_expansion": "https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/GS/GSLocalMemory.h"
+  }
+ },
+ "rows": [
+  {
+   "retained_index": 1287,
+   "transfer": 5456,
+   "pass_word": 4,
+   "chain_address": 8998496,
+   "car": "COBRA",
+   "header_index": 0,
+   "header_offset": 1004524,
+   "header_flags": 49176,
+   "header_raw_hex": "18c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1008128,
+     "sha256": "788564467f6b0943009e3558a9721a1aaf987f3940d0f7e7e84808f5cf3dafaa"
+    },
+    "four_byte": {
+     "offset": 1008512,
+     "sha256": "28a835315404ab1cfbe4d9c45393a4279e8b3adc0acf6e2c93d620c9bea6b45c"
+    },
+    "third_four_byte": {
+     "offset": 1008768,
+     "sha256": "d47deaf76ff54261923f8f7aaa22f87da974a89e6e390e3c997250a7a13aaa62"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5455,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1288,
+   "transfer": 5458,
+   "pass_word": 5,
+   "chain_address": 8998624,
+   "car": "COBRA",
+   "header_index": 0,
+   "header_offset": 1004524,
+   "header_flags": 49176,
+   "header_raw_hex": "18c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1008128,
+     "sha256": "788564467f6b0943009e3558a9721a1aaf987f3940d0f7e7e84808f5cf3dafaa"
+    },
+    "four_byte": {
+     "offset": 1008512,
+     "sha256": "28a835315404ab1cfbe4d9c45393a4279e8b3adc0acf6e2c93d620c9bea6b45c"
+    },
+    "third_four_byte": {
+     "offset": 1008768,
+     "sha256": "d47deaf76ff54261923f8f7aaa22f87da974a89e6e390e3c997250a7a13aaa62"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5457,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1290,
+   "transfer": 5462,
+   "pass_word": 4,
+   "chain_address": 8998960,
+   "car": "COBRA",
+   "header_index": 1,
+   "header_offset": 1004540,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1009024,
+     "sha256": "96d31fbbb74b7dbdbc29d825f0ca11846f1017375725fbdf8a15e9b00fc43edb"
+    },
+    "four_byte": {
+     "offset": 1009408,
+     "sha256": "b30c6fd95a3d82201ae283a1fe13d8199a388b67e47cbc9222e6ca39b864f66d"
+    },
+    "third_four_byte": {
+     "offset": 1009664,
+     "sha256": "ba17f933e19eb1ed49608ef34367d59b724278d5b59545aa0b93e3205493af41"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5461,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1291,
+   "transfer": 5464,
+   "pass_word": 5,
+   "chain_address": 8999088,
+   "car": "COBRA",
+   "header_index": 1,
+   "header_offset": 1004540,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1009024,
+     "sha256": "96d31fbbb74b7dbdbc29d825f0ca11846f1017375725fbdf8a15e9b00fc43edb"
+    },
+    "four_byte": {
+     "offset": 1009408,
+     "sha256": "b30c6fd95a3d82201ae283a1fe13d8199a388b67e47cbc9222e6ca39b864f66d"
+    },
+    "third_four_byte": {
+     "offset": 1009664,
+     "sha256": "ba17f933e19eb1ed49608ef34367d59b724278d5b59545aa0b93e3205493af41"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5463,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1293,
+   "transfer": 5468,
+   "pass_word": 4,
+   "chain_address": 8999424,
+   "car": "COBRA",
+   "header_index": 2,
+   "header_offset": 1004556,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1009920,
+     "sha256": "37c49f13296fb8e00f2f486c08fc72dea938bb46df4a481ab62cedafec8de1b6"
+    },
+    "four_byte": {
+     "offset": 1010304,
+     "sha256": "650d60e0ba611cb3fe46c046df325fac07922b3923906997b70b0504611f4627"
+    },
+    "third_four_byte": {
+     "offset": 1010560,
+     "sha256": "97e97db1c0c3c15ad4083f2ef0633b86514be23f0e3a9c117a12bf147e0e3a76"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5467,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1294,
+   "transfer": 5470,
+   "pass_word": 5,
+   "chain_address": 8999552,
+   "car": "COBRA",
+   "header_index": 2,
+   "header_offset": 1004556,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1009920,
+     "sha256": "37c49f13296fb8e00f2f486c08fc72dea938bb46df4a481ab62cedafec8de1b6"
+    },
+    "four_byte": {
+     "offset": 1010304,
+     "sha256": "650d60e0ba611cb3fe46c046df325fac07922b3923906997b70b0504611f4627"
+    },
+    "third_four_byte": {
+     "offset": 1010560,
+     "sha256": "97e97db1c0c3c15ad4083f2ef0633b86514be23f0e3a9c117a12bf147e0e3a76"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5469,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1296,
+   "transfer": 5474,
+   "pass_word": 4,
+   "chain_address": 8999888,
+   "car": "COBRA",
+   "header_index": 3,
+   "header_offset": 1004572,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1010816,
+     "sha256": "9245e0872763ae81ada886a79a5fe6a4331f0b3704ad0a02f38899c216b6cf6b"
+    },
+    "four_byte": {
+     "offset": 1011200,
+     "sha256": "2e6a6f2357cfe3109372dc4bc1d54e173c963c3593de2675ce768e3e15e7f9c1"
+    },
+    "third_four_byte": {
+     "offset": 1011456,
+     "sha256": "e1c8c868242a3a364961d21d4d80487d56806a6e12c0c1725a19c757f3d650c7"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5473,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1297,
+   "transfer": 5476,
+   "pass_word": 5,
+   "chain_address": 9000016,
+   "car": "COBRA",
+   "header_index": 3,
+   "header_offset": 1004572,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1010816,
+     "sha256": "9245e0872763ae81ada886a79a5fe6a4331f0b3704ad0a02f38899c216b6cf6b"
+    },
+    "four_byte": {
+     "offset": 1011200,
+     "sha256": "2e6a6f2357cfe3109372dc4bc1d54e173c963c3593de2675ce768e3e15e7f9c1"
+    },
+    "third_four_byte": {
+     "offset": 1011456,
+     "sha256": "e1c8c868242a3a364961d21d4d80487d56806a6e12c0c1725a19c757f3d650c7"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5475,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1299,
+   "transfer": 5480,
+   "pass_word": 4,
+   "chain_address": 9000352,
+   "car": "COBRA",
+   "header_index": 4,
+   "header_offset": 1004588,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1011712,
+     "sha256": "0dc57433219a63ee22f9c400f0de63f9421334993f63148b64ac7a4a3cfa2117"
+    },
+    "four_byte": {
+     "offset": 1012096,
+     "sha256": "b38c0bda9d5556243ef2224e97c9e918db4f735de6ab749d6a80edd1b7da0dda"
+    },
+    "third_four_byte": {
+     "offset": 1012352,
+     "sha256": "416e21d39e41e3e5ec19ccc7ca3c9600524e9ce53f4981c6dfaa07faef350d4a"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5479,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1300,
+   "transfer": 5482,
+   "pass_word": 5,
+   "chain_address": 9000480,
+   "car": "COBRA",
+   "header_index": 4,
+   "header_offset": 1004588,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1011712,
+     "sha256": "0dc57433219a63ee22f9c400f0de63f9421334993f63148b64ac7a4a3cfa2117"
+    },
+    "four_byte": {
+     "offset": 1012096,
+     "sha256": "b38c0bda9d5556243ef2224e97c9e918db4f735de6ab749d6a80edd1b7da0dda"
+    },
+    "third_four_byte": {
+     "offset": 1012352,
+     "sha256": "416e21d39e41e3e5ec19ccc7ca3c9600524e9ce53f4981c6dfaa07faef350d4a"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5481,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1302,
+   "transfer": 5486,
+   "pass_word": 4,
+   "chain_address": 9000816,
+   "car": "COBRA",
+   "header_index": 5,
+   "header_offset": 1004604,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03e00000000008080806453535353",
+   "vertices": 62,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1012608,
+     "sha256": "b1d7613bc5188cd4172503c6317782f8f8c041dca4acb0c3ebbbe2d4c5b3132b"
+    },
+    "four_byte": {
+     "offset": 1012992,
+     "sha256": "cd607c5cd5dc4e0e507a36254d62a40b2aa83fe0dbab23554ad118ca99c6802e"
+    },
+    "third_four_byte": {
+     "offset": 1013248,
+     "sha256": "6bd734bb4a8225f1bd60d2f82b6a3c6ccf8b8465d689032b65016226d2302ea9"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5485,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1303,
+   "transfer": 5488,
+   "pass_word": 5,
+   "chain_address": 9000944,
+   "car": "COBRA",
+   "header_index": 5,
+   "header_offset": 1004604,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03e00000000008080806453535353",
+   "vertices": 62,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1012608,
+     "sha256": "b1d7613bc5188cd4172503c6317782f8f8c041dca4acb0c3ebbbe2d4c5b3132b"
+    },
+    "four_byte": {
+     "offset": 1012992,
+     "sha256": "cd607c5cd5dc4e0e507a36254d62a40b2aa83fe0dbab23554ad118ca99c6802e"
+    },
+    "third_four_byte": {
+     "offset": 1013248,
+     "sha256": "6bd734bb4a8225f1bd60d2f82b6a3c6ccf8b8465d689032b65016226d2302ea9"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5487,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1305,
+   "transfer": 5492,
+   "pass_word": 4,
+   "chain_address": 9001280,
+   "car": "COBRA",
+   "header_index": 6,
+   "header_offset": 1004620,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1013504,
+     "sha256": "c4c7d034c07d93fd22a99699dc83df8403e29103c40208096d24564bdb356032"
+    },
+    "four_byte": {
+     "offset": 1013888,
+     "sha256": "630b548a703ed76a481e2c3b4fbcbeb888c9c94b597733fd1c3a9be06b86f711"
+    },
+    "third_four_byte": {
+     "offset": 1014144,
+     "sha256": "d11844e8f859232bdf347b3d4b27c0996802dba0fe2d89cdbce63cc82075a18b"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5491,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1306,
+   "transfer": 5494,
+   "pass_word": 5,
+   "chain_address": 9001408,
+   "car": "COBRA",
+   "header_index": 6,
+   "header_offset": 1004620,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1013504,
+     "sha256": "c4c7d034c07d93fd22a99699dc83df8403e29103c40208096d24564bdb356032"
+    },
+    "four_byte": {
+     "offset": 1013888,
+     "sha256": "630b548a703ed76a481e2c3b4fbcbeb888c9c94b597733fd1c3a9be06b86f711"
+    },
+    "third_four_byte": {
+     "offset": 1014144,
+     "sha256": "d11844e8f859232bdf347b3d4b27c0996802dba0fe2d89cdbce63cc82075a18b"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5493,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1308,
+   "transfer": 5498,
+   "pass_word": 4,
+   "chain_address": 9001744,
+   "car": "COBRA",
+   "header_index": 7,
+   "header_offset": 1004636,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1014400,
+     "sha256": "5f346796d4df3f6df3aa956295f0902b6693bdbadba98fa757d4f303ebc19110"
+    },
+    "four_byte": {
+     "offset": 1014784,
+     "sha256": "837ca96d33bc7d14f07a6d835ddc37376649b4bf7a25f311350d0b9e1c9ef465"
+    },
+    "third_four_byte": {
+     "offset": 1015040,
+     "sha256": "bccf2a5d55722617de79f52b96d9a36ba1eefdc729999a57a97f76ad8961a583"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5497,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1309,
+   "transfer": 5500,
+   "pass_word": 5,
+   "chain_address": 9001872,
+   "car": "COBRA",
+   "header_index": 7,
+   "header_offset": 1004636,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1014400,
+     "sha256": "5f346796d4df3f6df3aa956295f0902b6693bdbadba98fa757d4f303ebc19110"
+    },
+    "four_byte": {
+     "offset": 1014784,
+     "sha256": "837ca96d33bc7d14f07a6d835ddc37376649b4bf7a25f311350d0b9e1c9ef465"
+    },
+    "third_four_byte": {
+     "offset": 1015040,
+     "sha256": "bccf2a5d55722617de79f52b96d9a36ba1eefdc729999a57a97f76ad8961a583"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5499,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1311,
+   "transfer": 5504,
+   "pass_word": 4,
+   "chain_address": 9002208,
+   "car": "COBRA",
+   "header_index": 8,
+   "header_offset": 1004652,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1015296,
+     "sha256": "816fac489c582fb86823ed2c2f72874912879e878fc4f0332db536a179b67fcd"
+    },
+    "four_byte": {
+     "offset": 1015680,
+     "sha256": "26649e98732a2a7f34fbf145f700a80c96a552302742deb13508705366079cf7"
+    },
+    "third_four_byte": {
+     "offset": 1015936,
+     "sha256": "f1b4004dbd95a8b7c5b8cd906f486d9f46f0e92acce2f51a687f01a202d13584"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5503,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1312,
+   "transfer": 5506,
+   "pass_word": 5,
+   "chain_address": 9002336,
+   "car": "COBRA",
+   "header_index": 8,
+   "header_offset": 1004652,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1015296,
+     "sha256": "816fac489c582fb86823ed2c2f72874912879e878fc4f0332db536a179b67fcd"
+    },
+    "four_byte": {
+     "offset": 1015680,
+     "sha256": "26649e98732a2a7f34fbf145f700a80c96a552302742deb13508705366079cf7"
+    },
+    "third_four_byte": {
+     "offset": 1015936,
+     "sha256": "f1b4004dbd95a8b7c5b8cd906f486d9f46f0e92acce2f51a687f01a202d13584"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5505,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1314,
+   "transfer": 5510,
+   "pass_word": 4,
+   "chain_address": 9002672,
+   "car": "COBRA",
+   "header_index": 9,
+   "header_offset": 1004668,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1016192,
+     "sha256": "90b2ba798174f6384032b4494673e6538b6422c6c32fa0cced1be56403bdbf95"
+    },
+    "four_byte": {
+     "offset": 1016576,
+     "sha256": "42a4cf6e1176832555f9b59a1d4d853d0aace3280eefa752ceaa59b97e1a5b09"
+    },
+    "third_four_byte": {
+     "offset": 1016832,
+     "sha256": "4c004df0dbc07080761430047a6a3dad69cbd32f0ca99cb0967d50cec4c0239e"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5509,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1315,
+   "transfer": 5512,
+   "pass_word": 5,
+   "chain_address": 9002800,
+   "car": "COBRA",
+   "header_index": 9,
+   "header_offset": 1004668,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1016192,
+     "sha256": "90b2ba798174f6384032b4494673e6538b6422c6c32fa0cced1be56403bdbf95"
+    },
+    "four_byte": {
+     "offset": 1016576,
+     "sha256": "42a4cf6e1176832555f9b59a1d4d853d0aace3280eefa752ceaa59b97e1a5b09"
+    },
+    "third_four_byte": {
+     "offset": 1016832,
+     "sha256": "4c004df0dbc07080761430047a6a3dad69cbd32f0ca99cb0967d50cec4c0239e"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5511,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1317,
+   "transfer": 5516,
+   "pass_word": 4,
+   "chain_address": 9003136,
+   "car": "COBRA",
+   "header_index": 10,
+   "header_offset": 1004684,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1017088,
+     "sha256": "3db8cab26d733492b52e0109d69688c31a1a16514981f41a3167696bfb97a80a"
+    },
+    "four_byte": {
+     "offset": 1017472,
+     "sha256": "1a82641342c55a586eb42a5b508c410d250f4666df21c4b94fbcf9292b30dd3d"
+    },
+    "third_four_byte": {
+     "offset": 1017728,
+     "sha256": "06db7990eef9f593355b333b8d32b853b15fb23fc01e6fc1bb98133e43dace94"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5515,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1318,
+   "transfer": 5518,
+   "pass_word": 5,
+   "chain_address": 9003264,
+   "car": "COBRA",
+   "header_index": 10,
+   "header_offset": 1004684,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1017088,
+     "sha256": "3db8cab26d733492b52e0109d69688c31a1a16514981f41a3167696bfb97a80a"
+    },
+    "four_byte": {
+     "offset": 1017472,
+     "sha256": "1a82641342c55a586eb42a5b508c410d250f4666df21c4b94fbcf9292b30dd3d"
+    },
+    "third_four_byte": {
+     "offset": 1017728,
+     "sha256": "06db7990eef9f593355b333b8d32b853b15fb23fc01e6fc1bb98133e43dace94"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5517,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1320,
+   "transfer": 5522,
+   "pass_word": 4,
+   "chain_address": 9003600,
+   "car": "COBRA",
+   "header_index": 11,
+   "header_offset": 1004700,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1017984,
+     "sha256": "8c0b6e8551daf6813f2be7563dbd616fc688473a3ce49ab979c82131cf3bcfd5"
+    },
+    "four_byte": {
+     "offset": 1018368,
+     "sha256": "51d67fff42aa45a41536b87fafcfc3a9c7083c32c58d9f0c2919c2aaaad477e9"
+    },
+    "third_four_byte": {
+     "offset": 1018624,
+     "sha256": "5d6b70b0adc8024a3d45ea89a404eafcb5a1376898218ea3010d66d6ce69546e"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5521,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1321,
+   "transfer": 5524,
+   "pass_word": 5,
+   "chain_address": 9003728,
+   "car": "COBRA",
+   "header_index": 11,
+   "header_offset": 1004700,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1017984,
+     "sha256": "8c0b6e8551daf6813f2be7563dbd616fc688473a3ce49ab979c82131cf3bcfd5"
+    },
+    "four_byte": {
+     "offset": 1018368,
+     "sha256": "51d67fff42aa45a41536b87fafcfc3a9c7083c32c58d9f0c2919c2aaaad477e9"
+    },
+    "third_four_byte": {
+     "offset": 1018624,
+     "sha256": "5d6b70b0adc8024a3d45ea89a404eafcb5a1376898218ea3010d66d6ce69546e"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5523,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1323,
+   "transfer": 5528,
+   "pass_word": 4,
+   "chain_address": 9004064,
+   "car": "COBRA",
+   "header_index": 12,
+   "header_offset": 1004716,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1018880,
+     "sha256": "2f261e10408ccf828fc8fb19662a5d1824d667630e62367646a2a76051f26d66"
+    },
+    "four_byte": {
+     "offset": 1019264,
+     "sha256": "4a5400f91871d7aac76b612467d1fef2244ef1adbe8bbdc5c89e7f943caf44e9"
+    },
+    "third_four_byte": {
+     "offset": 1019520,
+     "sha256": "17720bcfe5ffcdfca2c04952932d4abca0931993b00a0499864678adc9318c37"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5527,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1324,
+   "transfer": 5530,
+   "pass_word": 5,
+   "chain_address": 9004192,
+   "car": "COBRA",
+   "header_index": 12,
+   "header_offset": 1004716,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1018880,
+     "sha256": "2f261e10408ccf828fc8fb19662a5d1824d667630e62367646a2a76051f26d66"
+    },
+    "four_byte": {
+     "offset": 1019264,
+     "sha256": "4a5400f91871d7aac76b612467d1fef2244ef1adbe8bbdc5c89e7f943caf44e9"
+    },
+    "third_four_byte": {
+     "offset": 1019520,
+     "sha256": "17720bcfe5ffcdfca2c04952932d4abca0931993b00a0499864678adc9318c37"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5529,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1326,
+   "transfer": 5534,
+   "pass_word": 4,
+   "chain_address": 9004528,
+   "car": "COBRA",
+   "header_index": 13,
+   "header_offset": 1004732,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1019776,
+     "sha256": "2b0cb2c5a795c0aad1c560f9fa9b583e592f90496a125e859f045c525e37f0b5"
+    },
+    "four_byte": {
+     "offset": 1020160,
+     "sha256": "303e797fce3811cec44c57ac94cf357c393d580ddce4bef09aa99600d6cb01e8"
+    },
+    "third_four_byte": {
+     "offset": 1020416,
+     "sha256": "15271365dc679877cdd53e787c0ba4a1eb4438006e70a6043e019c9ab0a4cd69"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5533,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1327,
+   "transfer": 5536,
+   "pass_word": 5,
+   "chain_address": 9004656,
+   "car": "COBRA",
+   "header_index": 13,
+   "header_offset": 1004732,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1019776,
+     "sha256": "2b0cb2c5a795c0aad1c560f9fa9b583e592f90496a125e859f045c525e37f0b5"
+    },
+    "four_byte": {
+     "offset": 1020160,
+     "sha256": "303e797fce3811cec44c57ac94cf357c393d580ddce4bef09aa99600d6cb01e8"
+    },
+    "third_four_byte": {
+     "offset": 1020416,
+     "sha256": "15271365dc679877cdd53e787c0ba4a1eb4438006e70a6043e019c9ab0a4cd69"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5535,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1329,
+   "transfer": 5540,
+   "pass_word": 4,
+   "chain_address": 9004992,
+   "car": "COBRA",
+   "header_index": 14,
+   "header_offset": 1004748,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1020672,
+     "sha256": "82272a2abe6bad0eade0b841abf3d21df507cb32541ae632aeff1c111e75c903"
+    },
+    "four_byte": {
+     "offset": 1021056,
+     "sha256": "650d175189c8d5e5a0499d6f94ae434a01fe45fdb5bc98052596842fd681dd68"
+    },
+    "third_four_byte": {
+     "offset": 1021312,
+     "sha256": "1a6b30f645a117180644f060f7d4682306e3d8df76211c4c64f327362fb90288"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5539,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1330,
+   "transfer": 5542,
+   "pass_word": 5,
+   "chain_address": 9005120,
+   "car": "COBRA",
+   "header_index": 14,
+   "header_offset": 1004748,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1020672,
+     "sha256": "82272a2abe6bad0eade0b841abf3d21df507cb32541ae632aeff1c111e75c903"
+    },
+    "four_byte": {
+     "offset": 1021056,
+     "sha256": "650d175189c8d5e5a0499d6f94ae434a01fe45fdb5bc98052596842fd681dd68"
+    },
+    "third_four_byte": {
+     "offset": 1021312,
+     "sha256": "1a6b30f645a117180644f060f7d4682306e3d8df76211c4c64f327362fb90288"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5541,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1332,
+   "transfer": 5546,
+   "pass_word": 4,
+   "chain_address": 9005456,
+   "car": "COBRA",
+   "header_index": 15,
+   "header_offset": 1004764,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1021568,
+     "sha256": "95853c31e163d9a85ed8f012cd3704672574c32a0ec0ea4c67893c0b2ee3f736"
+    },
+    "four_byte": {
+     "offset": 1021952,
+     "sha256": "25edaf42a4722c2b10dae4b367a7702a2ade9a748759c9536b1e18f979833a6a"
+    },
+    "third_four_byte": {
+     "offset": 1022208,
+     "sha256": "ae0231b2654c437ce986163923d453459f1e9426fdb9e1b49d67315a95309758"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5545,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1333,
+   "transfer": 5548,
+   "pass_word": 5,
+   "chain_address": 9005584,
+   "car": "COBRA",
+   "header_index": 15,
+   "header_offset": 1004764,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1021568,
+     "sha256": "95853c31e163d9a85ed8f012cd3704672574c32a0ec0ea4c67893c0b2ee3f736"
+    },
+    "four_byte": {
+     "offset": 1021952,
+     "sha256": "25edaf42a4722c2b10dae4b367a7702a2ade9a748759c9536b1e18f979833a6a"
+    },
+    "third_four_byte": {
+     "offset": 1022208,
+     "sha256": "ae0231b2654c437ce986163923d453459f1e9426fdb9e1b49d67315a95309758"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5547,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1335,
+   "transfer": 5552,
+   "pass_word": 4,
+   "chain_address": 9005920,
+   "car": "COBRA",
+   "header_index": 16,
+   "header_offset": 1004780,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1022464,
+     "sha256": "5d1eb70974bc858f91fb26f036210a090687d5b773756953d3629a7b791952a9"
+    },
+    "four_byte": {
+     "offset": 1022848,
+     "sha256": "d9f5e07396cade0f283ebda8931bd76d5e81f4028e70ad6f90fda2fc047fce4c"
+    },
+    "third_four_byte": {
+     "offset": 1023104,
+     "sha256": "721952e5c71114f981bf4b280c5bd1609839eac2f74a4df42805896daa574be7"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5551,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1336,
+   "transfer": 5554,
+   "pass_word": 5,
+   "chain_address": 9006048,
+   "car": "COBRA",
+   "header_index": 16,
+   "header_offset": 1004780,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1022464,
+     "sha256": "5d1eb70974bc858f91fb26f036210a090687d5b773756953d3629a7b791952a9"
+    },
+    "four_byte": {
+     "offset": 1022848,
+     "sha256": "d9f5e07396cade0f283ebda8931bd76d5e81f4028e70ad6f90fda2fc047fce4c"
+    },
+    "third_four_byte": {
+     "offset": 1023104,
+     "sha256": "721952e5c71114f981bf4b280c5bd1609839eac2f74a4df42805896daa574be7"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5553,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1338,
+   "transfer": 5558,
+   "pass_word": 4,
+   "chain_address": 9006384,
+   "car": "COBRA",
+   "header_index": 17,
+   "header_offset": 1004796,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1023360,
+     "sha256": "6f4a8fbe94fe157164e062d3a69f509edf0c3ab3f8b652a8087774141115e831"
+    },
+    "four_byte": {
+     "offset": 1023744,
+     "sha256": "4e273d97402f4c7afba6e14c406d2aa117cac7ed2c13d5e9ca763e574d2a7f1f"
+    },
+    "third_four_byte": {
+     "offset": 1024000,
+     "sha256": "e4d43882e0ac8713bb47466e52baf7b56b979e19ec77fe81a7a4c3e625dc6eca"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5557,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1339,
+   "transfer": 5560,
+   "pass_word": 5,
+   "chain_address": 9006512,
+   "car": "COBRA",
+   "header_index": 17,
+   "header_offset": 1004796,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1023360,
+     "sha256": "6f4a8fbe94fe157164e062d3a69f509edf0c3ab3f8b652a8087774141115e831"
+    },
+    "four_byte": {
+     "offset": 1023744,
+     "sha256": "4e273d97402f4c7afba6e14c406d2aa117cac7ed2c13d5e9ca763e574d2a7f1f"
+    },
+    "third_four_byte": {
+     "offset": 1024000,
+     "sha256": "e4d43882e0ac8713bb47466e52baf7b56b979e19ec77fe81a7a4c3e625dc6eca"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5559,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1341,
+   "transfer": 5564,
+   "pass_word": 4,
+   "chain_address": 9006848,
+   "car": "COBRA",
+   "header_index": 18,
+   "header_offset": 1004812,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1024256,
+     "sha256": "dc99f1ac81486c46f8e1b8830e9c7d70b58515d73caa212ac37c0163bd5613be"
+    },
+    "four_byte": {
+     "offset": 1024640,
+     "sha256": "6a90d2870180f9e93a969d3940549bb0984f06a95e3171352a0c8887f234a54d"
+    },
+    "third_four_byte": {
+     "offset": 1024896,
+     "sha256": "eab4994f88b0ea2e2b885cabad883f462020b6014853d12150868dc0aca1a861"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5563,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1342,
+   "transfer": 5566,
+   "pass_word": 5,
+   "chain_address": 9006976,
+   "car": "COBRA",
+   "header_index": 18,
+   "header_offset": 1004812,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1024256,
+     "sha256": "dc99f1ac81486c46f8e1b8830e9c7d70b58515d73caa212ac37c0163bd5613be"
+    },
+    "four_byte": {
+     "offset": 1024640,
+     "sha256": "6a90d2870180f9e93a969d3940549bb0984f06a95e3171352a0c8887f234a54d"
+    },
+    "third_four_byte": {
+     "offset": 1024896,
+     "sha256": "eab4994f88b0ea2e2b885cabad883f462020b6014853d12150868dc0aca1a861"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5565,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1344,
+   "transfer": 5570,
+   "pass_word": 4,
+   "chain_address": 9007312,
+   "car": "COBRA",
+   "header_index": 19,
+   "header_offset": 1004828,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1025152,
+     "sha256": "0d5e8261609be0458a2333036cf927683147b7250cfc0463632973c4b2073aa5"
+    },
+    "four_byte": {
+     "offset": 1025536,
+     "sha256": "18d3ee815d9c3f95cee50c1004ca544d51c76d005190d175d5c58e7b7a29fa68"
+    },
+    "third_four_byte": {
+     "offset": 1025792,
+     "sha256": "e531af40236f3ebecd986dcc0dca294191e4d62412af73f316540bcbe10dffdb"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5569,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1345,
+   "transfer": 5572,
+   "pass_word": 5,
+   "chain_address": 9007440,
+   "car": "COBRA",
+   "header_index": 19,
+   "header_offset": 1004828,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1025152,
+     "sha256": "0d5e8261609be0458a2333036cf927683147b7250cfc0463632973c4b2073aa5"
+    },
+    "four_byte": {
+     "offset": 1025536,
+     "sha256": "18d3ee815d9c3f95cee50c1004ca544d51c76d005190d175d5c58e7b7a29fa68"
+    },
+    "third_four_byte": {
+     "offset": 1025792,
+     "sha256": "e531af40236f3ebecd986dcc0dca294191e4d62412af73f316540bcbe10dffdb"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5571,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1347,
+   "transfer": 5576,
+   "pass_word": 4,
+   "chain_address": 9007776,
+   "car": "COBRA",
+   "header_index": 20,
+   "header_offset": 1004844,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03e00000000008080806453535353",
+   "vertices": 62,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1026048,
+     "sha256": "de2a3618b61528931f5f1caaf51193790f48aca4834ff889ebc6a1f4d3352a19"
+    },
+    "four_byte": {
+     "offset": 1026432,
+     "sha256": "c1e046205024e3e4bcbf71b6057e60680e3d5839e258525eec17bbc2ce694405"
+    },
+    "third_four_byte": {
+     "offset": 1026688,
+     "sha256": "727bfb58ab1ebb16e257cc414b364ad2a78918efcead1bbedb771504b071baf3"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5575,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1348,
+   "transfer": 5578,
+   "pass_word": 5,
+   "chain_address": 9007904,
+   "car": "COBRA",
+   "header_index": 20,
+   "header_offset": 1004844,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03e00000000008080806453535353",
+   "vertices": 62,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1026048,
+     "sha256": "de2a3618b61528931f5f1caaf51193790f48aca4834ff889ebc6a1f4d3352a19"
+    },
+    "four_byte": {
+     "offset": 1026432,
+     "sha256": "c1e046205024e3e4bcbf71b6057e60680e3d5839e258525eec17bbc2ce694405"
+    },
+    "third_four_byte": {
+     "offset": 1026688,
+     "sha256": "727bfb58ab1ebb16e257cc414b364ad2a78918efcead1bbedb771504b071baf3"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5577,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1350,
+   "transfer": 5582,
+   "pass_word": 4,
+   "chain_address": 9008240,
+   "car": "COBRA",
+   "header_index": 21,
+   "header_offset": 1004860,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1026944,
+     "sha256": "11d9457a4b0bd099c6e80b6365c048efa56708675b51f3dc9a2445ea3223431c"
+    },
+    "four_byte": {
+     "offset": 1027328,
+     "sha256": "d3b3924bf4ecb315abf5f4819c6d5515ef09b28bba6c72aaa4fe0f71b889d50c"
+    },
+    "third_four_byte": {
+     "offset": 1027584,
+     "sha256": "21ae89b2032fe9681ec17b8001c1d00b285c24c4da0f10c393f260400712878f"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5581,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1351,
+   "transfer": 5584,
+   "pass_word": 5,
+   "chain_address": 9008368,
+   "car": "COBRA",
+   "header_index": 21,
+   "header_offset": 1004860,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1026944,
+     "sha256": "11d9457a4b0bd099c6e80b6365c048efa56708675b51f3dc9a2445ea3223431c"
+    },
+    "four_byte": {
+     "offset": 1027328,
+     "sha256": "d3b3924bf4ecb315abf5f4819c6d5515ef09b28bba6c72aaa4fe0f71b889d50c"
+    },
+    "third_four_byte": {
+     "offset": 1027584,
+     "sha256": "21ae89b2032fe9681ec17b8001c1d00b285c24c4da0f10c393f260400712878f"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5583,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1353,
+   "transfer": 5588,
+   "pass_word": 4,
+   "chain_address": 9008704,
+   "car": "COBRA",
+   "header_index": 22,
+   "header_offset": 1004876,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1027840,
+     "sha256": "28ee056483258075792746edbc6f32e6a86b59bb70e58df30236d0e858c8952f"
+    },
+    "four_byte": {
+     "offset": 1028224,
+     "sha256": "d838fa7c7e99697f77f7e78ea9cd067821cb27a6c5602177bb1551556fcd6784"
+    },
+    "third_four_byte": {
+     "offset": 1028480,
+     "sha256": "17e0fab71869b7626eae77e9805ac1aa66e74c25c308bf02a533192a488c4fd1"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5587,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1354,
+   "transfer": 5590,
+   "pass_word": 5,
+   "chain_address": 9008832,
+   "car": "COBRA",
+   "header_index": 22,
+   "header_offset": 1004876,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1027840,
+     "sha256": "28ee056483258075792746edbc6f32e6a86b59bb70e58df30236d0e858c8952f"
+    },
+    "four_byte": {
+     "offset": 1028224,
+     "sha256": "d838fa7c7e99697f77f7e78ea9cd067821cb27a6c5602177bb1551556fcd6784"
+    },
+    "third_four_byte": {
+     "offset": 1028480,
+     "sha256": "17e0fab71869b7626eae77e9805ac1aa66e74c25c308bf02a533192a488c4fd1"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5589,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1356,
+   "transfer": 5594,
+   "pass_word": 4,
+   "chain_address": 9009168,
+   "car": "COBRA",
+   "header_index": 23,
+   "header_offset": 1004892,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1028736,
+     "sha256": "5c6a293cfd7489fae30a475f0613f230df7647c01169c77848f64ba42b12a0d0"
+    },
+    "four_byte": {
+     "offset": 1029120,
+     "sha256": "6e64f109ea68d0b6f41920cc27e3be47f9d44eafea4ab373721854f8d1c5afa0"
+    },
+    "third_four_byte": {
+     "offset": 1029376,
+     "sha256": "8c99dc4f2c76d61ed74e1eacbe85bf4e4e464043830ff8be95b518bb115b36ae"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5593,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1357,
+   "transfer": 5596,
+   "pass_word": 5,
+   "chain_address": 9009296,
+   "car": "COBRA",
+   "header_index": 23,
+   "header_offset": 1004892,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1028736,
+     "sha256": "5c6a293cfd7489fae30a475f0613f230df7647c01169c77848f64ba42b12a0d0"
+    },
+    "four_byte": {
+     "offset": 1029120,
+     "sha256": "6e64f109ea68d0b6f41920cc27e3be47f9d44eafea4ab373721854f8d1c5afa0"
+    },
+    "third_four_byte": {
+     "offset": 1029376,
+     "sha256": "8c99dc4f2c76d61ed74e1eacbe85bf4e4e464043830ff8be95b518bb115b36ae"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5595,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1359,
+   "transfer": 5600,
+   "pass_word": 4,
+   "chain_address": 9009632,
+   "car": "COBRA",
+   "header_index": 24,
+   "header_offset": 1004908,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1029632,
+     "sha256": "9ed4dc284828b773870eb1abce65124ab4e85f4e89a6da5d603f00c06125181f"
+    },
+    "four_byte": {
+     "offset": 1030016,
+     "sha256": "184b4b69e1c68a436027ccd59cacf8c97f6f02ef830af4656ec0c02fba049622"
+    },
+    "third_four_byte": {
+     "offset": 1030272,
+     "sha256": "6c1e946085156071e8fc324d8cad14e0d77a5127634bbe255ac1661ddfaa1b37"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5599,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1360,
+   "transfer": 5602,
+   "pass_word": 5,
+   "chain_address": 9009760,
+   "car": "COBRA",
+   "header_index": 24,
+   "header_offset": 1004908,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1029632,
+     "sha256": "9ed4dc284828b773870eb1abce65124ab4e85f4e89a6da5d603f00c06125181f"
+    },
+    "four_byte": {
+     "offset": 1030016,
+     "sha256": "184b4b69e1c68a436027ccd59cacf8c97f6f02ef830af4656ec0c02fba049622"
+    },
+    "third_four_byte": {
+     "offset": 1030272,
+     "sha256": "6c1e946085156071e8fc324d8cad14e0d77a5127634bbe255ac1661ddfaa1b37"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5601,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1362,
+   "transfer": 5606,
+   "pass_word": 4,
+   "chain_address": 9010096,
+   "car": "COBRA",
+   "header_index": 25,
+   "header_offset": 1004924,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1030528,
+     "sha256": "0a415f006f005f5a5b063a85068f88c65e920b55751e6038a2dc997fc9fa3ec9"
+    },
+    "four_byte": {
+     "offset": 1030912,
+     "sha256": "bd13dc7c6558b1aa418cd392c7cc98f1dad48e0f562357d3d0c3204bedfc48da"
+    },
+    "third_four_byte": {
+     "offset": 1031168,
+     "sha256": "9cb21fe0f6c5f316dfe63e5a7679fbd669815558f58143d1dc247a84538ac456"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5605,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1363,
+   "transfer": 5608,
+   "pass_word": 5,
+   "chain_address": 9010224,
+   "car": "COBRA",
+   "header_index": 25,
+   "header_offset": 1004924,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1030528,
+     "sha256": "0a415f006f005f5a5b063a85068f88c65e920b55751e6038a2dc997fc9fa3ec9"
+    },
+    "four_byte": {
+     "offset": 1030912,
+     "sha256": "bd13dc7c6558b1aa418cd392c7cc98f1dad48e0f562357d3d0c3204bedfc48da"
+    },
+    "third_four_byte": {
+     "offset": 1031168,
+     "sha256": "9cb21fe0f6c5f316dfe63e5a7679fbd669815558f58143d1dc247a84538ac456"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5607,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1365,
+   "transfer": 5612,
+   "pass_word": 4,
+   "chain_address": 9010560,
+   "car": "COBRA",
+   "header_index": 26,
+   "header_offset": 1004940,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1031424,
+     "sha256": "2032ac2671b6a52a433ad35b72dd4c4685ee9f588fec2432a27cb1dd3c86e061"
+    },
+    "four_byte": {
+     "offset": 1031808,
+     "sha256": "1687bf08bf973823b056d9124f0208bae9ab5a6c56f2038ae0d425811719b2c5"
+    },
+    "third_four_byte": {
+     "offset": 1032064,
+     "sha256": "bf281005399217f9c10ac76eb3086bbc417a838c9f2189dc6e07f4282b44841b"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5611,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1366,
+   "transfer": 5614,
+   "pass_word": 5,
+   "chain_address": 9010688,
+   "car": "COBRA",
+   "header_index": 26,
+   "header_offset": 1004940,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1031424,
+     "sha256": "2032ac2671b6a52a433ad35b72dd4c4685ee9f588fec2432a27cb1dd3c86e061"
+    },
+    "four_byte": {
+     "offset": 1031808,
+     "sha256": "1687bf08bf973823b056d9124f0208bae9ab5a6c56f2038ae0d425811719b2c5"
+    },
+    "third_four_byte": {
+     "offset": 1032064,
+     "sha256": "bf281005399217f9c10ac76eb3086bbc417a838c9f2189dc6e07f4282b44841b"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5613,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1368,
+   "transfer": 5618,
+   "pass_word": 4,
+   "chain_address": 9011024,
+   "car": "COBRA",
+   "header_index": 27,
+   "header_offset": 1004956,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1032320,
+     "sha256": "316f5fb2521fd06a0a913c33fe0294b9c995f08bc6cc613042ab88eedd5af7ee"
+    },
+    "four_byte": {
+     "offset": 1032704,
+     "sha256": "17f7e40a3a92de06038db1e399a00901e8f7af5ae454642216cb15ac581d1a9a"
+    },
+    "third_four_byte": {
+     "offset": 1032960,
+     "sha256": "901b9e1e19c683fbece5e976a7039ef82de12d5c4f5cef216ae7b51e8b71d447"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5617,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1369,
+   "transfer": 5620,
+   "pass_word": 5,
+   "chain_address": 9011152,
+   "car": "COBRA",
+   "header_index": 27,
+   "header_offset": 1004956,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1032320,
+     "sha256": "316f5fb2521fd06a0a913c33fe0294b9c995f08bc6cc613042ab88eedd5af7ee"
+    },
+    "four_byte": {
+     "offset": 1032704,
+     "sha256": "17f7e40a3a92de06038db1e399a00901e8f7af5ae454642216cb15ac581d1a9a"
+    },
+    "third_four_byte": {
+     "offset": 1032960,
+     "sha256": "901b9e1e19c683fbece5e976a7039ef82de12d5c4f5cef216ae7b51e8b71d447"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5619,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1371,
+   "transfer": 5624,
+   "pass_word": 4,
+   "chain_address": 9011488,
+   "car": "COBRA",
+   "header_index": 28,
+   "header_offset": 1004972,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1033216,
+     "sha256": "1f4951ecae8d76294354d97423e0bada53fa6eb2dfbf7730ede60fee9114dfcf"
+    },
+    "four_byte": {
+     "offset": 1033600,
+     "sha256": "f1ff0c71edbecb883730387c410502ed3277a5df94d59d7b28ff1ffe9357e31a"
+    },
+    "third_four_byte": {
+     "offset": 1033856,
+     "sha256": "b9d7f11c9db8727c98e19a67fcae74e525e56bc070c7c5bef8a0828535ca0f14"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5623,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1372,
+   "transfer": 5626,
+   "pass_word": 5,
+   "chain_address": 9011616,
+   "car": "COBRA",
+   "header_index": 28,
+   "header_offset": 1004972,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1033216,
+     "sha256": "1f4951ecae8d76294354d97423e0bada53fa6eb2dfbf7730ede60fee9114dfcf"
+    },
+    "four_byte": {
+     "offset": 1033600,
+     "sha256": "f1ff0c71edbecb883730387c410502ed3277a5df94d59d7b28ff1ffe9357e31a"
+    },
+    "third_four_byte": {
+     "offset": 1033856,
+     "sha256": "b9d7f11c9db8727c98e19a67fcae74e525e56bc070c7c5bef8a0828535ca0f14"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5625,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1374,
+   "transfer": 5630,
+   "pass_word": 4,
+   "chain_address": 9011952,
+   "car": "COBRA",
+   "header_index": 29,
+   "header_offset": 1004988,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1034112,
+     "sha256": "02a85e4984cc267f0f46ce5434c2dfabf2c0cf9b10f87b1e286f6a5657d78dd2"
+    },
+    "four_byte": {
+     "offset": 1034496,
+     "sha256": "19b3956d1feb85954fc91ce9ac030ff78582c10f8f5e8481756243a9d84da89f"
+    },
+    "third_four_byte": {
+     "offset": 1034752,
+     "sha256": "efdeaa3a022e0de24e27d8ec53c56c6b1555f89f26521448b66cf7c513edbaf5"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5629,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1375,
+   "transfer": 5632,
+   "pass_word": 5,
+   "chain_address": 9012080,
+   "car": "COBRA",
+   "header_index": 29,
+   "header_offset": 1004988,
+   "header_flags": 49208,
+   "header_raw_hex": "38c04000000000008080806453535353",
+   "vertices": 64,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1034112,
+     "sha256": "02a85e4984cc267f0f46ce5434c2dfabf2c0cf9b10f87b1e286f6a5657d78dd2"
+    },
+    "four_byte": {
+     "offset": 1034496,
+     "sha256": "19b3956d1feb85954fc91ce9ac030ff78582c10f8f5e8481756243a9d84da89f"
+    },
+    "third_four_byte": {
+     "offset": 1034752,
+     "sha256": "efdeaa3a022e0de24e27d8ec53c56c6b1555f89f26521448b66cf7c513edbaf5"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5631,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1377,
+   "transfer": 5636,
+   "pass_word": 4,
+   "chain_address": 9012416,
+   "car": "COBRA",
+   "header_index": 30,
+   "header_offset": 1005004,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1035008,
+     "sha256": "a455f8d184ac4b76a908a6890714460f234661bac3e138b1a1c9fc8a5298f017"
+    },
+    "four_byte": {
+     "offset": 1035392,
+     "sha256": "08687800984741a0b3fb2e3122261fb1e92c534fed1d8c78425429d847c756df"
+    },
+    "third_four_byte": {
+     "offset": 1035648,
+     "sha256": "5fed76b099386bdc10d74d5dd3b6d5b9327ac2a74b45335f44627df56e636479"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5635,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1378,
+   "transfer": 5638,
+   "pass_word": 5,
+   "chain_address": 9012544,
+   "car": "COBRA",
+   "header_index": 30,
+   "header_offset": 1005004,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03f00000000008080806453535353",
+   "vertices": 63,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1035008,
+     "sha256": "a455f8d184ac4b76a908a6890714460f234661bac3e138b1a1c9fc8a5298f017"
+    },
+    "four_byte": {
+     "offset": 1035392,
+     "sha256": "08687800984741a0b3fb2e3122261fb1e92c534fed1d8c78425429d847c756df"
+    },
+    "third_four_byte": {
+     "offset": 1035648,
+     "sha256": "5fed76b099386bdc10d74d5dd3b6d5b9327ac2a74b45335f44627df56e636479"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5637,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1380,
+   "transfer": 5642,
+   "pass_word": 4,
+   "chain_address": 9012880,
+   "car": "COBRA",
+   "header_index": 31,
+   "header_offset": 1005020,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03e00000000008080806453535353",
+   "vertices": 62,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1035904,
+     "sha256": "4166c7c72f2c4b516b5ddf6989426c0cc333137ba8ec7aabc90aedd90d59e557"
+    },
+    "four_byte": {
+     "offset": 1036288,
+     "sha256": "fd3a0c1dbd604305afac866d4e04829449aedb1c50cdf7b122b81facff682fb8"
+    },
+    "third_four_byte": {
+     "offset": 1036544,
+     "sha256": "42bb42c4fce1d38d964467064aaec39e22e85ae28b11b0d916edf54588a50476"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5641,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1381,
+   "transfer": 5644,
+   "pass_word": 5,
+   "chain_address": 9013008,
+   "car": "COBRA",
+   "header_index": 31,
+   "header_offset": 1005020,
+   "header_flags": 49208,
+   "header_raw_hex": "38c03e00000000008080806453535353",
+   "vertices": 62,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1035904,
+     "sha256": "4166c7c72f2c4b516b5ddf6989426c0cc333137ba8ec7aabc90aedd90d59e557"
+    },
+    "four_byte": {
+     "offset": 1036288,
+     "sha256": "fd3a0c1dbd604305afac866d4e04829449aedb1c50cdf7b122b81facff682fb8"
+    },
+    "third_four_byte": {
+     "offset": 1036544,
+     "sha256": "42bb42c4fce1d38d964467064aaec39e22e85ae28b11b0d916edf54588a50476"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5643,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1383,
+   "transfer": 5648,
+   "pass_word": 4,
+   "chain_address": 9013344,
+   "car": "COBRA",
+   "header_index": 32,
+   "header_offset": 1005036,
+   "header_flags": 49208,
+   "header_raw_hex": "38c00900000000008080806453535353",
+   "vertices": 9,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1036800,
+     "sha256": "df3e657c93364771bef3d94c9148b90772ab8a45fc697da6a2544c1e768bfb96"
+    },
+    "four_byte": {
+     "offset": 1036864,
+     "sha256": "fcdb4c9e2fd5893648ac4624bbc01f779a53dc2fafc78f5eb6b40d4c97fce3b3"
+    },
+    "third_four_byte": {
+     "offset": 1036912,
+     "sha256": "af7cfd159370fc199674f6e4f6631894557de077ac1adb92c130dae0eb6e45ee"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5647,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 9,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1384,
+   "transfer": 5650,
+   "pass_word": 5,
+   "chain_address": 9013472,
+   "car": "COBRA",
+   "header_index": 32,
+   "header_offset": 1005036,
+   "header_flags": 49208,
+   "header_raw_hex": "38c00900000000008080806453535353",
+   "vertices": 9,
+   "effective_flags": 722,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1036800,
+     "sha256": "df3e657c93364771bef3d94c9148b90772ab8a45fc697da6a2544c1e768bfb96"
+    },
+    "four_byte": {
+     "offset": 1036864,
+     "sha256": "fcdb4c9e2fd5893648ac4624bbc01f779a53dc2fafc78f5eb6b40d4c97fce3b3"
+    },
+    "third_four_byte": {
+     "offset": 1036912,
+     "sha256": "af7cfd159370fc199674f6e4f6631894557de077ac1adb92c130dae0eb6e45ee"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5649,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 9,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1399,
+   "transfer": 5680,
+   "pass_word": 5,
+   "chain_address": 9017248,
+   "car": "COBRA",
+   "header_index": 46,
+   "header_offset": 1005156,
+   "header_flags": 49160,
+   "header_raw_hex": "08c040000000000080808064",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1048112,
+     "sha256": "347a044de88bc9bf6c78065f9f3e3c5da11f5346ec2ac080bea6195b58fc1580"
+    },
+    "four_byte": {
+     "offset": 1048496,
+     "sha256": "1bc74c60cabddb5351c3f176e74ed48de077fd613f7b001fb97d5110ccf40e20"
+    },
+    "third_four_byte": {
+     "offset": 1048752,
+     "sha256": "ae8c405dd7a8b0174a8d3e71c03686d7d7b6f4326dee6e840261a3f9527a4321"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5679,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1401,
+   "transfer": 5684,
+   "pass_word": 5,
+   "chain_address": 9017584,
+   "car": "COBRA",
+   "header_index": 47,
+   "header_offset": 1005168,
+   "header_flags": 49192,
+   "header_raw_hex": "28c040000000000080808064",
+   "vertices": 64,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1049008,
+     "sha256": "e03b217879a6524312be0ecce6b0cf7a9160b6734bf271609274707f47215326"
+    },
+    "four_byte": {
+     "offset": 1049392,
+     "sha256": "6a959965fe9685fdabe14437575e21708b3ffc88cd4d64ab46ca858eef8be713"
+    },
+    "third_four_byte": {
+     "offset": 1049648,
+     "sha256": "b33202d0a0507e17adc642c7dd1c45fa8851c1764eec46492179405cbec263e7"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5683,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1403,
+   "transfer": 5688,
+   "pass_word": 5,
+   "chain_address": 9017920,
+   "car": "COBRA",
+   "header_index": 48,
+   "header_offset": 1005180,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03e000000000080808064",
+   "vertices": 62,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1049904,
+     "sha256": "436f0d3eb674e20ff9d81cc6134b7c194ff998588576b7d8210a6088a64398d6"
+    },
+    "four_byte": {
+     "offset": 1050288,
+     "sha256": "7e506e5a223be28e715831784b99ccba91161cd34003382230313ebdb3579bd2"
+    },
+    "third_four_byte": {
+     "offset": 1050544,
+     "sha256": "c1948039011c5548fa5892f1656db8659eb56d0e4e72372ae4c4e4f579dd0300"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5687,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 62,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1405,
+   "transfer": 5692,
+   "pass_word": 5,
+   "chain_address": 9018256,
+   "car": "COBRA",
+   "header_index": 49,
+   "header_offset": 1005192,
+   "header_flags": 49192,
+   "header_raw_hex": "28c032000000000080808064",
+   "vertices": 50,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1050800,
+     "sha256": "e9659bc0081feb8b2f991282a191cce75d54b7d38ed797599dbe58ce2846221d"
+    },
+    "four_byte": {
+     "offset": 1051104,
+     "sha256": "f90af324e41b6261a01a45f59fad7dd5b089d1ae043c3bf4545e2804bbdd4e5a"
+    },
+    "third_four_byte": {
+     "offset": 1051312,
+     "sha256": "12492171b4337a314dc13b55bc11dec9da16ea093f7ad90695f857f20c00f47b"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5691,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 50,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1407,
+   "transfer": 5696,
+   "pass_word": 5,
+   "chain_address": 9018752,
+   "car": "COBRA",
+   "header_index": 50,
+   "header_offset": 1005204,
+   "header_flags": 49160,
+   "header_raw_hex": "08c04000000000002d2d2d05",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1051520,
+     "sha256": "7f654acb9c8b0d4459f85cae7157bb5a892178f3d23d82df429a1151fc9cdeb7"
+    },
+    "four_byte": {
+     "offset": 1051904,
+     "sha256": "6dcca2bd3494dfcf77ee4129d507b3ccb812b65c2be3a56ae650307632b4a774"
+    },
+    "third_four_byte": {
+     "offset": 1052160,
+     "sha256": "b1b4128ae2027042813729c099056b5bf85f09befc1b4ecc8d58fc5294ef68b5"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5695,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1409,
+   "transfer": 5700,
+   "pass_word": 5,
+   "chain_address": 9019248,
+   "car": "COBRA",
+   "header_index": 51,
+   "header_offset": 1005216,
+   "header_flags": 49160,
+   "header_raw_hex": "08c04000000000002d2d2d05",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1052416,
+     "sha256": "943838b4fc94ade46c1150680d4b85804205bde92a7c54a75f91e07f62eba51f"
+    },
+    "four_byte": {
+     "offset": 1052800,
+     "sha256": "5d063bfc648bc51558f7c433236b2ddea32eb3dad1f2695c556d3b5acfc96759"
+    },
+    "third_four_byte": {
+     "offset": 1053056,
+     "sha256": "26f67ffcee0783d2a8a6d2088402bfbc3563ce0e6db83ae79a2a2b5219aad9a1"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5699,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1411,
+   "transfer": 5704,
+   "pass_word": 5,
+   "chain_address": 9019744,
+   "car": "COBRA",
+   "header_index": 52,
+   "header_offset": 1005228,
+   "header_flags": 49160,
+   "header_raw_hex": "08c04000000000002d2d2d05",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1053312,
+     "sha256": "d790619acd207d45827a767893e3fd5534048571a355f5b3bb97155a8cb5e5ed"
+    },
+    "four_byte": {
+     "offset": 1053696,
+     "sha256": "b5a913f89165c139ad1e47ecc4a7efe27dd791c0caed9ad484116c6d94e80f49"
+    },
+    "third_four_byte": {
+     "offset": 1053952,
+     "sha256": "9519ef15a4ea4db328b95b4eecaade0d3c43227e53e08b5aa3d364c2743f538f"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5703,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1413,
+   "transfer": 5708,
+   "pass_word": 5,
+   "chain_address": 9020240,
+   "car": "COBRA",
+   "header_index": 53,
+   "header_offset": 1005240,
+   "header_flags": 49160,
+   "header_raw_hex": "08c04000000000002d2d2d05",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1054208,
+     "sha256": "c21773cef999314904a22921cd72914f3c04e0481a788a7489a749e2a502e6f9"
+    },
+    "four_byte": {
+     "offset": 1054592,
+     "sha256": "f51930d950dc2d3cd63be546b77f80f0a09de6e78ec8a0fc0333cc7b09cf80e0"
+    },
+    "third_four_byte": {
+     "offset": 1054848,
+     "sha256": "16506381fc2b39cd1649e59ef4261168c5aaf7ecb24832a72d2915609c9956bb"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5707,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1415,
+   "transfer": 5712,
+   "pass_word": 5,
+   "chain_address": 9020736,
+   "car": "COBRA",
+   "header_index": 54,
+   "header_offset": 1005252,
+   "header_flags": 49160,
+   "header_raw_hex": "08c04000000000002d2d2d05",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1055104,
+     "sha256": "d8c322dc83c6137d17b2c01c0b966d92130cd6c4aa86971acc3ed710a2f09b2a"
+    },
+    "four_byte": {
+     "offset": 1055488,
+     "sha256": "2eae1bc5554db65e72581e18a5fd0395755d253a3fcec64daa5bfdd59f194229"
+    },
+    "third_four_byte": {
+     "offset": 1055744,
+     "sha256": "226af36829b0c883dbc51542fc4c155bb67813ee2d3aa13252dc7f8892149e9e"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5711,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1417,
+   "transfer": 5716,
+   "pass_word": 5,
+   "chain_address": 9021232,
+   "car": "COBRA",
+   "header_index": 55,
+   "header_offset": 1005264,
+   "header_flags": 49160,
+   "header_raw_hex": "08c03900000000002d2d2d05",
+   "vertices": 57,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1056000,
+     "sha256": "af7b7e3ea0fe16da4e8efb5e0c3ddd1074952d088059cc63a817865929738264"
+    },
+    "four_byte": {
+     "offset": 1056352,
+     "sha256": "f6bf6855a9dbb991de4d515780c001b4b8880525251d769ccfe2f97970d925fc"
+    },
+    "third_four_byte": {
+     "offset": 1056592,
+     "sha256": "dbdd85232e2dec427360e2c2c3ee8ef40c5a5464c43e7359dffa95d9233edd4b"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5715,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 57,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1420,
+   "transfer": 5722,
+   "pass_word": 4,
+   "chain_address": 9022368,
+   "car": "COBRA",
+   "header_index": 60,
+   "header_offset": 1005340,
+   "header_flags": 49176,
+   "header_raw_hex": "18c00800000000008080806453535353",
+   "vertices": 8,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1058944,
+     "sha256": "a5617fba44cef8f69b76800924b8930556a6e41f7a5ca620b98e76b85acc994e"
+    },
+    "four_byte": {
+     "offset": 1058992,
+     "sha256": "46bce82ddda78a054b3b5a1fcecb4613b0ca76119346b36bdaeb9271be4be343"
+    },
+    "third_four_byte": {
+     "offset": 1059024,
+     "sha256": "04f9cebe68c049469cf51fbe142c63856f4a56a26babca7c4eb7465642adf45f"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5721,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 8,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1421,
+   "transfer": 5724,
+   "pass_word": 5,
+   "chain_address": 9022496,
+   "car": "COBRA",
+   "header_index": 60,
+   "header_offset": 1005340,
+   "header_flags": 49176,
+   "header_raw_hex": "18c00800000000008080806453535353",
+   "vertices": 8,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1058944,
+     "sha256": "a5617fba44cef8f69b76800924b8930556a6e41f7a5ca620b98e76b85acc994e"
+    },
+    "four_byte": {
+     "offset": 1058992,
+     "sha256": "46bce82ddda78a054b3b5a1fcecb4613b0ca76119346b36bdaeb9271be4be343"
+    },
+    "third_four_byte": {
+     "offset": 1059024,
+     "sha256": "04f9cebe68c049469cf51fbe142c63856f4a56a26babca7c4eb7465642adf45f"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5723,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 8,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1431,
+   "transfer": 5744,
+   "pass_word": 5,
+   "chain_address": 9026112,
+   "car": "COBRA",
+   "header_index": 80,
+   "header_offset": 1005524,
+   "header_flags": 49160,
+   "header_raw_hex": "08c040000000000080808064",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1071776,
+     "sha256": "4488d4df2e099b720112767dca0f82e8592e2d0c83afbc2d6c04daa1a93713b1"
+    },
+    "four_byte": {
+     "offset": 1072160,
+     "sha256": "e74d38f850b63723ece24b1ddd8c0684a843e6f0abf5c4eba36fada29a191262"
+    },
+    "third_four_byte": {
+     "offset": 1072416,
+     "sha256": "23e76127d5d35cf12e47b0821547711cac4d78814ff154d6a126757bb5cc0719"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5743,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1433,
+   "transfer": 5748,
+   "pass_word": 5,
+   "chain_address": 9026448,
+   "car": "COBRA",
+   "header_index": 81,
+   "header_offset": 1005536,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03c000000000080808064",
+   "vertices": 60,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1072672,
+     "sha256": "a88ea46155def1cddc102884ffa956867f1e12f67b1ca66732ea036750774cfd"
+    },
+    "four_byte": {
+     "offset": 1073040,
+     "sha256": "000597b6a6b012f7a449fe3840dc9f761afb9c4bfede48884e4863e1c5818347"
+    },
+    "third_four_byte": {
+     "offset": 1073280,
+     "sha256": "649b96145086a0743a7d32dc76b6cc29ef86365a89bfbf9eac8446af8dce2490"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5747,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 60,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1435,
+   "transfer": 5752,
+   "pass_word": 5,
+   "chain_address": 9026784,
+   "car": "COBRA",
+   "header_index": 82,
+   "header_offset": 1005548,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03c000000000080808064",
+   "vertices": 60,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1073520,
+     "sha256": "f2d98c72299fd129fee8bb1afe8b26d32a5d23d25c557704fe62dad3ccb072b9"
+    },
+    "four_byte": {
+     "offset": 1073888,
+     "sha256": "2ada152827be98652b49e035604427001d4ca5b992a611256cfaa0b798e3ab8f"
+    },
+    "third_four_byte": {
+     "offset": 1074128,
+     "sha256": "636501bdcab2fbfba643cf667a480608aeb514bb1aa581a4500a03ec5d6b5cca"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5751,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 60,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1437,
+   "transfer": 5756,
+   "pass_word": 5,
+   "chain_address": 9027120,
+   "car": "COBRA",
+   "header_index": 83,
+   "header_offset": 1005560,
+   "header_flags": 49192,
+   "header_raw_hex": "28c020000000000080808064",
+   "vertices": 32,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1074368,
+     "sha256": "7c5dff6cf3031c7329e37531ae8dcc0f5fa4e82a39ae64d8f472f532945f16b1"
+    },
+    "four_byte": {
+     "offset": 1074560,
+     "sha256": "f1cd82e80d8d48dafaae0dbb8abe8dad398a8666bfe363de1344475b43aedec5"
+    },
+    "third_four_byte": {
+     "offset": 1074688,
+     "sha256": "01c06006aa7d62c1d8b55f6d25de38a7126cc1257806de17123da62bc8312d88"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5755,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 32,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1446,
+   "transfer": 5774,
+   "pass_word": 5,
+   "chain_address": 9030096,
+   "car": "COBRA",
+   "header_index": 101,
+   "header_offset": 1005716,
+   "header_flags": 49160,
+   "header_raw_hex": "08c040000000000080808064",
+   "vertices": 64,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1087088,
+     "sha256": "4488d4df2e099b720112767dca0f82e8592e2d0c83afbc2d6c04daa1a93713b1"
+    },
+    "four_byte": {
+     "offset": 1087472,
+     "sha256": "e74d38f850b63723ece24b1ddd8c0684a843e6f0abf5c4eba36fada29a191262"
+    },
+    "third_four_byte": {
+     "offset": 1087728,
+     "sha256": "23e76127d5d35cf12e47b0821547711cac4d78814ff154d6a126757bb5cc0719"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5773,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1448,
+   "transfer": 5778,
+   "pass_word": 5,
+   "chain_address": 9030432,
+   "car": "COBRA",
+   "header_index": 102,
+   "header_offset": 1005728,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03c000000000080808064",
+   "vertices": 60,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1087984,
+     "sha256": "a88ea46155def1cddc102884ffa956867f1e12f67b1ca66732ea036750774cfd"
+    },
+    "four_byte": {
+     "offset": 1088352,
+     "sha256": "000597b6a6b012f7a449fe3840dc9f761afb9c4bfede48884e4863e1c5818347"
+    },
+    "third_four_byte": {
+     "offset": 1088592,
+     "sha256": "649b96145086a0743a7d32dc76b6cc29ef86365a89bfbf9eac8446af8dce2490"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5777,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 60,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1450,
+   "transfer": 5782,
+   "pass_word": 5,
+   "chain_address": 9030768,
+   "car": "COBRA",
+   "header_index": 103,
+   "header_offset": 1005740,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03c000000000080808064",
+   "vertices": 60,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1088832,
+     "sha256": "25a04b2cdf1ead4ad385c789d8b3715eeb00a98b93609605179fb79f786ff689"
+    },
+    "four_byte": {
+     "offset": 1089200,
+     "sha256": "2ada152827be98652b49e035604427001d4ca5b992a611256cfaa0b798e3ab8f"
+    },
+    "third_four_byte": {
+     "offset": 1089440,
+     "sha256": "636501bdcab2fbfba643cf667a480608aeb514bb1aa581a4500a03ec5d6b5cca"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5781,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 60,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1452,
+   "transfer": 5786,
+   "pass_word": 5,
+   "chain_address": 9031104,
+   "car": "COBRA",
+   "header_index": 104,
+   "header_offset": 1005752,
+   "header_flags": 49192,
+   "header_raw_hex": "28c020000000000080808064",
+   "vertices": 32,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1089680,
+     "sha256": "237e88f533c053b418519f6d68af624ac08349c62b58a0cf56a8ad4061a0e893"
+    },
+    "four_byte": {
+     "offset": 1089872,
+     "sha256": "f1cd82e80d8d48dafaae0dbb8abe8dad398a8666bfe363de1344475b43aedec5"
+    },
+    "third_four_byte": {
+     "offset": 1090000,
+     "sha256": "01c06006aa7d62c1d8b55f6d25de38a7126cc1257806de17123da62bc8312d88"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5785,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 32,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1461,
+   "transfer": 5804,
+   "pass_word": 5,
+   "chain_address": 9034080,
+   "car": "COBRA",
+   "header_index": 122,
+   "header_offset": 1005908,
+   "header_flags": 49160,
+   "header_raw_hex": "08c03f000000000080808064",
+   "vertices": 63,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1102432,
+     "sha256": "8667f47341453e98d9c27b44131ae6249561bdf00c115ef2974344935aa1e074"
+    },
+    "four_byte": {
+     "offset": 1102816,
+     "sha256": "691ff67d6f8332660d58b7deac4ce502482a2371c99a761b53260948258d2a58"
+    },
+    "third_four_byte": {
+     "offset": 1103072,
+     "sha256": "268059206631fb871940cb7c69120f8c15a35bfc846698576cabae6d7a5eb846"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5803,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1463,
+   "transfer": 5808,
+   "pass_word": 5,
+   "chain_address": 9034416,
+   "car": "COBRA",
+   "header_index": 123,
+   "header_offset": 1005920,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03c000000000080808064",
+   "vertices": 60,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1103328,
+     "sha256": "92557c8ed2c3c6a04ba15fd6c2cbbcffb2d696b903f3ed5cd2c3d1c5177cd8bf"
+    },
+    "four_byte": {
+     "offset": 1103696,
+     "sha256": "256043053aed72c2e11dba72a7a9a492140c16f9aab8795266097ea434c34bda"
+    },
+    "third_four_byte": {
+     "offset": 1103936,
+     "sha256": "9c2c98d011a0a0315dff89cadf95d931cddcabcf69983dda4d077f9e0320b01c"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5807,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 60,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1465,
+   "transfer": 5812,
+   "pass_word": 5,
+   "chain_address": 9034752,
+   "car": "COBRA",
+   "header_index": 124,
+   "header_offset": 1005932,
+   "header_flags": 49192,
+   "header_raw_hex": "28c040000000000080808064",
+   "vertices": 64,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1104176,
+     "sha256": "f4cfe509c0814d8d7232be004e46f48222b1ce634ab2c7acf1747cf455bcbc73"
+    },
+    "four_byte": {
+     "offset": 1104560,
+     "sha256": "5fab231269d2ce44e36ac0bfd76745f1b8e8f05035333ebe41e292e63cba3a40"
+    },
+    "third_four_byte": {
+     "offset": 1104816,
+     "sha256": "a14e4d7ac37e91887c4614b4447a53d6c1612d989a64b470c263e7f807605dc2"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5811,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1467,
+   "transfer": 5816,
+   "pass_word": 5,
+   "chain_address": 9035088,
+   "car": "COBRA",
+   "header_index": 125,
+   "header_offset": 1005944,
+   "header_flags": 49192,
+   "header_raw_hex": "28c01b000000000080808064",
+   "vertices": 27,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1105072,
+     "sha256": "b72be4f0671cedc85738521fe5ea05fb35320a8ea86eab28c128d2333e9479d8"
+    },
+    "four_byte": {
+     "offset": 1105248,
+     "sha256": "441f585d47693a9cedfb0fd5a2c066c59fd5c2b6d2e07d7fd7641c51ca58f2cd"
+    },
+    "third_four_byte": {
+     "offset": 1105360,
+     "sha256": "f1f489a7e6dd7d36c952cc9d9f0228e1b1a9eed88e58cd1e96e8fa949bd43f07"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5815,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 27,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1476,
+   "transfer": 5834,
+   "pass_word": 5,
+   "chain_address": 9038064,
+   "car": "COBRA",
+   "header_index": 143,
+   "header_offset": 1006100,
+   "header_flags": 49160,
+   "header_raw_hex": "08c03f000000000080808064",
+   "vertices": 63,
+   "effective_flags": 578,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1117776,
+     "sha256": "5004632107c5de7926e5d055051a5ec9c3bb5ae42c21575bb0355a24a2717626"
+    },
+    "four_byte": {
+     "offset": 1118160,
+     "sha256": "691ff67d6f8332660d58b7deac4ce502482a2371c99a761b53260948258d2a58"
+    },
+    "third_four_byte": {
+     "offset": 1118416,
+     "sha256": "268059206631fb871940cb7c69120f8c15a35bfc846698576cabae6d7a5eb846"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5833,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 63,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1478,
+   "transfer": 5838,
+   "pass_word": 5,
+   "chain_address": 9038400,
+   "car": "COBRA",
+   "header_index": 144,
+   "header_offset": 1006112,
+   "header_flags": 49192,
+   "header_raw_hex": "28c03c000000000080808064",
+   "vertices": 60,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1118672,
+     "sha256": "92557c8ed2c3c6a04ba15fd6c2cbbcffb2d696b903f3ed5cd2c3d1c5177cd8bf"
+    },
+    "four_byte": {
+     "offset": 1119040,
+     "sha256": "256043053aed72c2e11dba72a7a9a492140c16f9aab8795266097ea434c34bda"
+    },
+    "third_four_byte": {
+     "offset": 1119280,
+     "sha256": "9c2c98d011a0a0315dff89cadf95d931cddcabcf69983dda4d077f9e0320b01c"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5837,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 60,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1480,
+   "transfer": 5842,
+   "pass_word": 5,
+   "chain_address": 9038736,
+   "car": "COBRA",
+   "header_index": 145,
+   "header_offset": 1006124,
+   "header_flags": 49192,
+   "header_raw_hex": "28c040000000000080808064",
+   "vertices": 64,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1119520,
+     "sha256": "1140555659f9015d0c8c1447c43a271fd71f06722df9698afdf725895de4088d"
+    },
+    "four_byte": {
+     "offset": 1119904,
+     "sha256": "5fab231269d2ce44e36ac0bfd76745f1b8e8f05035333ebe41e292e63cba3a40"
+    },
+    "third_four_byte": {
+     "offset": 1120160,
+     "sha256": "a14e4d7ac37e91887c4614b4447a53d6c1612d989a64b470c263e7f807605dc2"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5841,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1482,
+   "transfer": 5846,
+   "pass_word": 5,
+   "chain_address": 9039072,
+   "car": "COBRA",
+   "header_index": 146,
+   "header_offset": 1006136,
+   "header_flags": 49192,
+   "header_raw_hex": "28c01b000000000080808064",
+   "vertices": 27,
+   "effective_flags": 594,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1120416,
+     "sha256": "b72be4f0671cedc85738521fe5ea05fb35320a8ea86eab28c128d2333e9479d8"
+    },
+    "four_byte": {
+     "offset": 1120592,
+     "sha256": "441f585d47693a9cedfb0fd5a2c066c59fd5c2b6d2e07d7fd7641c51ca58f2cd"
+    },
+    "third_four_byte": {
+     "offset": 1120704,
+     "sha256": "f1f489a7e6dd7d36c952cc9d9f0228e1b1a9eed88e58cd1e96e8fa949bd43f07"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5845,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 27,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1487,
+   "transfer": 5908,
+   "pass_word": 4,
+   "chain_address": 9041632,
+   "car": "COBRA",
+   "header_index": 149,
+   "header_offset": 1006164,
+   "header_flags": 49178,
+   "header_raw_hex": "1ac00700ffff0000000000668080801e53535353",
+   "vertices": 7,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1122048,
+     "sha256": "48e21c79e09333fecb85987d82ef3d716f1a7f2cd323b4defbf1b99f2be85eb0"
+    },
+    "four_byte": {
+     "offset": 1122096,
+     "sha256": "4057c4239b2701074888f8775b6ff4fb30a386d609d2a1e507848ee16c248759"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5907,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 7,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1488,
+   "transfer": 5910,
+   "pass_word": 5,
+   "chain_address": 9041760,
+   "car": "COBRA",
+   "header_index": 149,
+   "header_offset": 1006164,
+   "header_flags": 49178,
+   "header_raw_hex": "1ac00700ffff0000000000668080801e53535353",
+   "vertices": 7,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1122048,
+     "sha256": "48e21c79e09333fecb85987d82ef3d716f1a7f2cd323b4defbf1b99f2be85eb0"
+    },
+    "four_byte": {
+     "offset": 1122096,
+     "sha256": "4057c4239b2701074888f8775b6ff4fb30a386d609d2a1e507848ee16c248759"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5909,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 7,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1490,
+   "transfer": 5914,
+   "pass_word": 4,
+   "chain_address": 9042368,
+   "car": "COBRA",
+   "header_index": 57,
+   "header_offset": 1005288,
+   "header_flags": 49178,
+   "header_raw_hex": "1ac04000ffff0000000000668080801e53535353",
+   "vertices": 64,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1057104,
+     "sha256": "96e19dcd65c79e5edbad7ff005a75374b681c190f7ecd7fb239982c9ae0f61f3"
+    },
+    "four_byte": {
+     "offset": 1057488,
+     "sha256": "c36b12eefd9bbebbd8d4549ff7a9ce2e2af6f40068158c1129c96f1338ea3d80"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5913,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1491,
+   "transfer": 5916,
+   "pass_word": 5,
+   "chain_address": 9042496,
+   "car": "COBRA",
+   "header_index": 57,
+   "header_offset": 1005288,
+   "header_flags": 49178,
+   "header_raw_hex": "1ac04000ffff0000000000668080801e53535353",
+   "vertices": 64,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1057104,
+     "sha256": "96e19dcd65c79e5edbad7ff005a75374b681c190f7ecd7fb239982c9ae0f61f3"
+    },
+    "four_byte": {
+     "offset": 1057488,
+     "sha256": "c36b12eefd9bbebbd8d4549ff7a9ce2e2af6f40068158c1129c96f1338ea3d80"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5915,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  },
+  {
+   "retained_index": 1493,
+   "transfer": 5920,
+   "pass_word": 4,
+   "chain_address": 9042864,
+   "car": "COBRA",
+   "header_index": 58,
+   "header_offset": 1005308,
+   "header_flags": 49178,
+   "header_raw_hex": "1ac04000ffff0000000000668080801e53535353",
+   "vertices": 64,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1057744,
+     "sha256": "94df59da8175743c2ce196b23a6b73dd588c6977fd84f4eaae3a4399654f51b1"
+    },
+    "four_byte": {
+     "offset": 1058128,
+     "sha256": "6546ff4a549bfaa39296f47ac9ed319542e616f5e9418b53d2cea5d2816d26ff"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25243494848,
+    "tex0_write": {
+     "transfer": 5919,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   },
+   "sampled_texture": {
+    "identity": "view-render-target-0",
+    "car_texture_index": null,
+    "TBP0": 10688,
+    "TBW": 4,
+    "PSM": 10,
+    "width": 256,
+    "height": 128
+   }
+  },
+  {
+   "retained_index": 1494,
+   "transfer": 5922,
+   "pass_word": 5,
+   "chain_address": 9042992,
+   "car": "COBRA",
+   "header_index": 58,
+   "header_offset": 1005308,
+   "header_flags": 49178,
+   "header_raw_hex": "1ac04000ffff0000000000668080801e53535353",
+   "vertices": 64,
+   "effective_flags": 706,
+   "source_planes": {
+    "six_byte": {
+     "offset": 1057744,
+     "sha256": "94df59da8175743c2ce196b23a6b73dd588c6977fd84f4eaae3a4399654f51b1"
+    },
+    "four_byte": {
+     "offset": 1058128,
+     "sha256": "6546ff4a549bfaa39296f47ac9ed319542e616f5e9418b53d2cea5d2816d26ff"
+    }
+   },
+   "gs_binding": {
+    "TEX0_1": 25165867008,
+    "tex0_write": {
+     "transfer": 5921,
+     "payload_offset": 112
+    },
+    "FRAME_1": 18374686479672279120,
+    "vertices": 64,
+    "prim": 92
+   }
+  }
+ ],
+ "render_fidelity_complete": false,
+ "claim_limits": [
+  "Six models are loaded, but these 100 aligned optional-pass draws all join to COBRA. No coverage claim for other cars.",
+  "The Header rule is conditional on runtime enable/context; paused globals are not per-draw history.",
+  "The PNG exports capture-time race95 GS memory at the sampled address. It is not the post-render contents at race94 transfer 5456.",
+  "The dump renders to this address before sampling. This tool does not replay those draws or establish final sampled pixel values.",
+  "No new capture, shading implementation, full pass-4 UV/pass-5 S equivalence, or 158 unmatched-descriptor resolution."
+ ],
+ "controls": [
+  {
+   "mutation": "wrong Header",
+   "rejected": true,
+   "reason": "wrong Header: retained pointers/count do not identify the declared source Header"
+  },
+  {
+   "mutation": "wrong texture",
+   "rejected": true,
+   "reason": "wrong texture: GS TEX0 differs from global pass4 texture object"
+  }
+ ]
+}

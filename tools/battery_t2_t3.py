@@ -32,7 +32,7 @@ REG = rd("research/evidence/vehicle-completeness/t2-t3-regression.log")
 
 T2_REQ = ("Implement tools/verify_config_data_sound.py: per-car config x11 txt set equality vs corpus "
           "manifests, every file sha256 vs manifest, data DAT present per car, sound inheritance chain per car "
-          "resolves to an existing bank in reference/ford/_shared/sounds; plus at least two negative controls "
+          "resolves to an existing bank in ford-racing-2/_shared/sounds; plus at least two negative controls "
           "(mutated hash accepted nowhere; cross-car config swap rejected).")
 T2_DIFF = diff_of("tools/verify_config_data_sound.py")
 T2_EVID = ("Ticket T2 acceptance: " + T2_REQ + "\n\nVerifier run log:\n" + T2_LOG +

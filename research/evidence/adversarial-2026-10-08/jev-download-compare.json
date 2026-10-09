@@ -1,0 +1,50 @@
+{
+  "tool": "jev_compare",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "overall": {
+    "relation": "contradicts",
+    "probabilities": {
+      "contradicts": 1,
+      "same_fact": 0,
+      "different_facts": 0
+    },
+    "confidence": 1,
+    "margin": 1,
+    "decision": "auto"
+  },
+  "aspects": [
+    {
+      "aspect": "Does the download contain this car's geometry?",
+      "relation": "same_fact",
+      "probabilities": {
+        "contradicts": 0.23,
+        "same_fact": 0.54,
+        "different_facts": 0.23
+      },
+      "confidence": 0.31,
+      "margin": 0.31000000000000005,
+      "decision": "review"
+    },
+    {
+      "aspect": "Does download reproduce the active geometry preset and rendering toggles?",
+      "relation": "contradicts",
+      "probabilities": {
+        "contradicts": 0.99,
+        "same_fact": 0,
+        "different_facts": 0.01
+      },
+      "confidence": 0.98,
+      "margin": 0.98,
+      "decision": "auto"
+    }
+  ],
+  "thresholds": {
+    "auto_accept": 0.85,
+    "minimum_margin": 0.5
+  },
+  "usage": {
+    "input_tokens": 791,
+    "output_tokens": 132
+  }
+}

@@ -1,0 +1,70 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: source showcase retains its own corpus
+    at file:///Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_dealership.mjs:13:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '<!doctype html>\n' +
+    '<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+    '<title>Ford Racing 2 — Source models</title>\n' +
+    '<style>body{margin:0;background:#151a22;color:#eef2f8;font:14px system-ui}header{padding:20px 24px;background:#202833}h1{font-size:22px;margin:0 0 8px}p{max-width:960px;color:#b8c6d6;line-height:1.5;margin:8px 0}select,button,a{font:inherit}select{background:#141c28;color:white;border:1px solid #53667c;padding:8px;margin-right:12px;max-width:100%;box-sizing:border-box}label{max-width:100%;margin-right:14px;display:inline-block;padding:5px 0}a{color:#b6daff}#stage{height:calc(100vh - 250px);min-height:360px}#status{margin:10px 24px;font-size:15px;color:#eef2f8}canvas{display:block}#error{color:#ffc0b9;margin:10px 24px;padding:10px 14px;max-width:960px;border:1px solid #a3544a;border-radius:4px;background:#2a1c1c;line-height:1.5}#error:empty{display:none}@media(max-width:600px){header{padding:16px}label,select{margin-right:0}}</style>\n' +
+    '<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>\n' +
+    `<header><h1>Source models</h1><p>Positions come from the original car files and reproduce, exactly, all 1,837 geometry pieces that hold data (each piece's original position and size). Triangle assembly, normals and shading are experimental. Texture variants follow the game's original texture-selection mappings. The presets below follow the game's own visibility routines: &ldquo;all states&rdquo; keeps every body panel, while the wheel presets show the car at low speed and with the wheels turning, headlights off. Live level-of-detail, animated transforms and shader fidelity remain under validation. Choices marked “no geometry” are empty source trees and cannot be displayed.</p><label>Car <select id="car" aria-label="Car"></select></label><label>Geometry <select id="record" aria-label="Geometry"></select></label><label>Texture variant <select id="variant" aria-label="Texture variant"></select></label><label><input type="checkbox" id="textures" checked>Candidate textures</label><label><input type="checkbox" id="sharp" title="Nearest filtering for raw texel inspection. The linear default is a candidate informed by 106 captured COBRA draws; other game states remain unverified.">Sharp pixels</label><label><input type="checkbox" id="wire">Wireframe</label><label><input type="checkbox" id="flip">Flip texture rows</label><button id="retry" hidden>Retry this car</button><a id="download" download title="Complete candidate GLB with all geometry presets and texture variants. It opens with its stored default scene and base materials; inspector selections and display toggles are not baked into the download.">Download source model (.glb; all presets and texture variants)</a> · <a href="dealership.html">Dealership →</a></header>\n` +
+    '<div id="stage"></div><p id="status" role="status">Loading original geometry…</p><p id="error" role="alert"></p>\n' +
+    '<!-- Startup guard: a classic script so it still runs when the ES module below\n' +
+    '     is blocked (opened with file://, or a fresh clone without vendor/). -->\n' +
+    '<script>\n' +
+    '(function(){\n' +
+    '  var done=false;\n' +
+    "  function fail(title,detail){if(done)return;done=true;var st=document.getElementById('status'),er=document.getElementById('error');if(st)st.textContent=title;if(er)er.textContent=detail;}\n" +
+    '  var timer=null;\n' +
+    '  window.__recBoot={ok:function(){done=true;if(timer)clearTimeout(timer);},fail:fail};\n' +
+    "  function missingFile(){return 'A required file failed to load (the 3D library under vendor/, or the recovered data). Check the browser console, confirm the files exist, and serve the folder with: python3 -m http.server 8080 --directory dealership';}\n" +
+    "  window.addEventListener('error',function(){fail('The viewer could not start.',missingFile());});\n" +
+    "  window.addEventListener('unhandledrejection',function(){fail('The viewer could not start.',missingFile());});\n" +
+    "  if(location.protocol==='file:'){fail('This page needs to be served, not opened from disk.','Browsers block the 3D library on the file:// scheme. From the project folder run: python3 -m http.server 8080 --directory dealership — then open http://localhost:8080/recovered.html');return;}\n" +
+    "  timer=setTimeout(function(){fail('The model viewer did not finish starting.','A required file may be missing or a request stalled. Confirm the 3D library (vendor/) and public/models.json are present, check the browser console, and serve the folder with: python3 -m http.server 8080 --directory dealership');},5000);\n" +
+    '})();\n' +
+    '</script>\n' +
+    '<script type="module">\n' +
+    "import * as THREE from 'three';\n" +
+    "import {OrbitControls} from './vendor/OrbitControls.js';\n" +
+    "import {fetchModel,readGLB} from './model-load.mjs';\n" +
+    "import {createMaterial,applyMaterial} from './materials.mjs';\n" +
+    "import {sceneLabel,geometryOptions,defaultGeometryValue} from './scene-options.mjs';\n" +
+    "const stage=document.querySelector('#stage'), carSelect=document.querySelector('#car'), recordSelect=document.querySelector('#record'), status=document.querySelector('#status');\n" +
+    'const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));stage.append(renderer.domElement);\n' +
+    "const scene=new THREE.Scene();scene.background=new THREE.Color('#151a22');\n" +
+    'const camera=new THREE.PerspectiveCamera(40,1,.01,2000);const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;\n' +
+    'scene.add(new THREE.HemisphereLight(0xe8f4ff,0x3c4659,2));const key=new THREE.DirectionalLight(0xffffff,2.4);key.position.set(5,8,4);scene.add(key);\n' +
+    'let loaded=null, selected=null, requestId=0, pendingRequest=null;\n' +
+    'function disposeState(state){if(!state)return;for(const m of state.meshes){m.geometry.dispose();m.material.dispose();}for(const t of state.textures)t.dispose();for(const u of state.urls)URL.revokeObjectURL(u);for(const g of state.groups)scene.remove(g);}\n' +
+    'function dispose(){disposeState(loaded);loaded=null;selected=null;}\n' +
+    "function setLoading(busy){stage.setAttribute('aria-busy',String(busy));recordSelect.disabled=busy||!loaded;document.querySelector('#variant').disabled=busy||!loaded||document.querySelector('#variant').options.length===1;for(const id of ['textures','sharp','wire','flip'])document.querySelector('#'+id).disabled=busy||!loaded;}\n" +
+    'async function loadCar(){\n' +
+    " const id=++requestId;pendingRequest?.abort();const controller=new AbortController();pendingRequest=controller;dispose();setLoading(true);document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=true;let state=null;status.textContent='Loading '+carSelect.value+'…';document.querySelector('#error').textContent='';\n" +
+    " try{const entry=index.cars.find(c=>c.id===carSelect.value);const {doc,bin}=readGLB(await fetchModel(encodeURI('public/'+entry.file),controller.signal));if(id!==requestId)return;\n" +
+    ' state={groups:[],meshes:[],textures:[],urls:[],doc};\n' +
+    ' function values(i){const a=doc.accessors[i],v=doc.bufferViews[a.bufferView],n={SCALAR:1,VEC2:2,VEC3:3}[a.type];const Type=a.componentType===5125?Uint32Array:Float32Array;return new Type(bin,(v.byteOffset||0)+(a.byteOffset||0),a.count*n);}\n' +
+    ' const loader=new THREE.TextureLoader();\n' +
+    " const decoded=await Promise.allSettled(doc.images.map(async image=>{const v=doc.bufferViews[image.bufferView],url=URL.createObjectURL(new Blob([new Uint8Array(bin,v.byteOffset||0,v.byteLength)],{type:'image/png'}));state.urls.push(url);const texture=await loader.loadAsync(url);texture.colorSpace=THREE.SRGBColorSpace;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.flipY=false;return texture;}));\n" +
+    " state.textures=decoded.filter(r=>r.status==='fulfilled').map(r=>r.value);\n" +
+    ' if(id!==requestId){disposeState(state);return;}\n' +
+    " if(decoded.some(r=>r.status==='rejected'))throw Error('Embedded texture could not be decoded');\n" +
+    ' loaded=state;selected=entry;\n' +
+    " for(const node of doc.nodes){if(node.extras.assemblyCandidate)continue;const group=new THREE.Group();group.visible=false;group.userData.record=String(node.extras.geometryRecord);for(const p of doc.meshes[node.mesh].primitives){const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(values(p.attributes.POSITION),3));geometry.setAttribute('normal',new THREE.BufferAttribute(values(p.attributes.NORMAL),3));if(p.attributes.TEXCOORD_0!==undefined)geometry.setAttribute('uv',new THREE.BufferAttribute(values(p.attributes.TEXCOORD_0),2));geometry.setIndex(new THREE.BufferAttribute(values(p.indices),1));const source=doc.materials[p.material];const pbr=source.pbrMetallicRoughness||{};const material=createMaterial(doc,state.textures,p.material);const mesh=new THREE.Mesh(geometry,material);mesh.userData.headerColour=!pbr.baseColorTexture&&source.name?.startsWith('Header untextured ');mesh.userData.baseMaterial=p.material;mesh.userData.variantMappings=p.extensions?.KHR_materials_variants?.mappings||[];group.add(mesh);state.meshes.push(mesh);}scene.add(group);state.groups.push(group);}\n" +
+    ' function treeNode(index){const node=doc.nodes[index];const base=state.groups.find(g=>g.userData.record===String(node.extras.geometryRecord));const group=base?base.clone(true):new THREE.Group();group.visible=true;group.position.fromArray(node.translation||[0,0,0]);for(const child of node.children||[])group.add(treeNode(child));return group;}\n' +
+    " for(const [i,sourceScene] of doc.scenes.entries()){if(i===0)continue;const tree=new THREE.Group();for(const root of sourceScene.nodes)tree.add(treeNode(root));tree.userData.record='scene'+i;tree.userData.label=sourceScene.name;tree.visible=false;scene.add(tree);state.groups.push(tree);}\n" +
+    " const options=geometryOptions(doc,entry.records);recordSelect.replaceChildren(...options.map(choice=>Object.assign(document.createElement('option'),choice)));recordSelect.value=defaultGeometryValue(doc,options);\n" +
+    " const variantSelect=document.querySelector('#variant');variantSelect.replaceChildren();const baseOption=document.createElement('option');baseOption.value='';baseOption.textContent='Original base entries';variantSelect.a"... 4167 more characters,
+  expected: /public\/recovered\/index.json/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v26.9.0

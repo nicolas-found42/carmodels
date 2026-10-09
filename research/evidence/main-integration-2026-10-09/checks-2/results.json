@@ -1,0 +1,367 @@
+{
+  "schema": 1,
+  "exit_code": 1,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.036
+    },
+    {
+      "name": "test_viewer_scenes",
+      "command": [
+        "node",
+        "tools/test_viewer_scenes.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_scenes.log",
+      "elapsed_seconds": 0.123
+    },
+    {
+      "name": "test_viewer_materials",
+      "command": [
+        "node",
+        "tools/test_viewer_materials.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_materials.log",
+      "elapsed_seconds": 0.039
+    },
+    {
+      "name": "test_model_load",
+      "command": [
+        "node",
+        "tools/test_model_load.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_load.log",
+      "elapsed_seconds": 0.038
+    },
+    {
+      "name": "test_viewer_loading",
+      "command": [
+        "node",
+        "tools/test_viewer_loading.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_loading.log",
+      "elapsed_seconds": 0.086
+    },
+    {
+      "name": "test_dealership",
+      "command": [
+        "node",
+        "tools/test_dealership.mjs"
+      ],
+      "status": "fail",
+      "exit_code": 1,
+      "log": "test_dealership.log",
+      "elapsed_seconds": 0.069
+    },
+    {
+      "name": "verify_recovered_asset_index",
+      "command": [
+        "python3",
+        "tools/verify_recovered_asset_index.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_recovered_asset_index.log",
+      "elapsed_seconds": 0.919
+    },
+    {
+      "name": "test_export_materials",
+      "command": [
+        "python3",
+        "tools/test_export_materials.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_export_materials.log",
+      "elapsed_seconds": 0.216
+    },
+    {
+      "name": "test_build_showcase",
+      "command": [
+        "python3",
+        "tools/test_build_showcase.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_build_showcase.log",
+      "elapsed_seconds": 0.489
+    },
+    {
+      "name": "test_bake_models",
+      "command": [
+        "python3",
+        "tools/test_bake_models.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_bake_models.log",
+      "elapsed_seconds": 2.273
+    },
+    {
+      "name": "test_build_dealership",
+      "command": [
+        "python3",
+        "tools/test_build_dealership.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_build_dealership.log",
+      "elapsed_seconds": 0.383
+    },
+    {
+      "name": "test_model_catalog",
+      "command": [
+        "python3",
+        "tools/test_model_catalog.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_catalog.log",
+      "elapsed_seconds": 0.044
+    },
+    {
+      "name": "test_model_png",
+      "command": [
+        "python3",
+        "tools/test_model_png.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_png.log",
+      "elapsed_seconds": 0.036
+    },
+    {
+      "name": "test_run_checks",
+      "command": [
+        "python3",
+        "tools/test_run_checks.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_run_checks.log",
+      "elapsed_seconds": 0.093
+    },
+    {
+      "name": "test_review_payload",
+      "command": [
+        "python3",
+        "tools/test_review_payload.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_review_payload.log",
+      "elapsed_seconds": 0.043
+    },
+    {
+      "name": "test_static_inputs",
+      "command": [
+        "python3",
+        "tools/test_static_inputs.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_static_inputs.log",
+      "elapsed_seconds": 0.136
+    },
+    {
+      "name": "test_recovery_inputs",
+      "command": [
+        "python3",
+        "tools/test_recovery_inputs.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_recovery_inputs.log",
+      "elapsed_seconds": 1.685
+    },
+    {
+      "name": "dealership_freshness",
+      "command": [
+        "python3",
+        "tools/build_dealership.py",
+        "--check"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "dealership_freshness.log",
+      "elapsed_seconds": 1.211
+    },
+    {
+      "name": "verify_config_data_sound",
+      "command": [
+        "python3",
+        "tools/verify_config_data_sound.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_config_data_sound.log",
+      "elapsed_seconds": 0.163
+    },
+    {
+      "name": "verify_sound_bank_index",
+      "command": [
+        "python3",
+        "tools/verify_sound_bank_index.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_sound_bank_index.log",
+      "elapsed_seconds": 0.048
+    },
+    {
+      "name": "verify_vu_dispatch_map",
+      "command": [
+        "python3",
+        "tools/verify_vu_dispatch_map.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_vu_dispatch_map.log",
+      "elapsed_seconds": 0.449
+    },
+    {
+      "name": "test_vu_dispatch_map",
+      "command": [
+        "python3",
+        "tools/test_vu_dispatch_map.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu_dispatch_map.log",
+      "elapsed_seconds": 0.906
+    },
+    {
+      "name": "test_vu1_decode",
+      "command": [
+        "python3",
+        "tools/test_vu1_decode.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu1_decode.log",
+      "elapsed_seconds": 0.058
+    },
+    {
+      "name": "verify_vu_pass_handlers",
+      "command": [
+        "python3",
+        "tools/verify_vu_pass_handlers.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_vu_pass_handlers.log",
+      "elapsed_seconds": 0.466
+    },
+    {
+      "name": "test_vu_pass_handlers",
+      "command": [
+        "python3",
+        "tools/test_vu_pass_handlers.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu_pass_handlers.log",
+      "elapsed_seconds": 0.898
+    },
+    {
+      "name": "verify_vu_handler_dump",
+      "command": [
+        "python3",
+        "tools/verify_vu_handler_dump.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_vu_handler_dump.log",
+      "elapsed_seconds": 1.18
+    },
+    {
+      "name": "test_vu_handler_dump",
+      "command": [
+        "python3",
+        "tools/test_vu_handler_dump.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu_handler_dump.log",
+      "elapsed_seconds": 1.286
+    },
+    {
+      "name": "recover_dump_reference_frame",
+      "command": [
+        "python3",
+        "tools/recover_dump_reference_frame.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "recover_dump_reference_frame.log",
+      "elapsed_seconds": 0.495
+    },
+    {
+      "name": "test_recover_dump_reference_frame",
+      "command": [
+        "python3",
+        "tools/test_recover_dump_reference_frame.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_recover_dump_reference_frame.log",
+      "elapsed_seconds": 0.581
+    },
+    {
+      "name": "verify_pass_source_join",
+      "command": [
+        "python3",
+        "tools/verify_pass_source_join.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_pass_source_join.log",
+      "elapsed_seconds": 1.41
+    },
+    {
+      "name": "test_pass_source_join",
+      "command": [
+        "python3",
+        "tools/test_pass_source_join.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_pass_source_join.log",
+      "elapsed_seconds": 6.563
+    },
+    {
+      "name": "dealership_roundtrip",
+      "command": [
+        "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender",
+        "--background",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "tools/test_dealership_roundtrip.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "dealership_roundtrip.log",
+      "elapsed_seconds": 14.149
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

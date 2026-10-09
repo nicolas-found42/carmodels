@@ -1,0 +1,47 @@
+{
+  "elf_path": "static-input:executable",
+  "elf_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+  "config_table_va": "0x24af68",
+  "descriptor_table_va": "0x24afe8",
+  "exe_mapping": {
+    "CAR_SND_CAR1": "car1_snd",
+    "CAR_SND_CAR2": "car2_snd",
+    "CAR_SND_CAR3": "car3_snd",
+    "CAR_SND_CAR4": "car4_snd",
+    "CAR_SND_CAR5": "car5_snd",
+    "CAR_SND_CAR6": "car6_snd",
+    "CAR_SND_CAR7": "car7_snd",
+    "CAR_SND_CAR8": "car8_snd"
+  },
+  "corpus_mapping": {
+    "CAR_SND_CAR1": "car1_snd",
+    "CAR_SND_CAR2": "car2_snd",
+    "CAR_SND_CAR3": "car3_snd",
+    "CAR_SND_CAR4": "car4_snd",
+    "CAR_SND_CAR5": "car5_snd",
+    "CAR_SND_CAR6": "car6_snd",
+    "CAR_SND_CAR7": "car7_snd",
+    "CAR_SND_CAR8": "car8_snd"
+  },
+  "mappings_equal": true,
+  "cars_checked": 35,
+  "verdict": "consistent",
+  "control_off_by_one_mapping_rejected": true,
+  "control_swapped_table_rejected": true,
+  "descriptor_bank_ordinals": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "descriptor_ordinals_sequential_car1_to_car8": true,
+  "bank_name_source": "literal descriptor stem 'sounds\\\\carN_snd'; the numeric fields (:B:O:C) are not used to build the filename",
+  "render_fidelity_complete": false,
+  "scope": "sound-bank index reconciliation only; no change to the green T2 verifier",
+  "result": "VERIFY OK"
+}
+VERIFY OK

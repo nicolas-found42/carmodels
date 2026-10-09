@@ -1,0 +1,53 @@
+{
+  "tool": "jev_classify",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "summary": {
+    "items": 2,
+    "auto": 1,
+    "review": 1,
+    "invalid_response": 0,
+    "by_class": {
+      "defect": 1,
+      "friction": 1
+    }
+  },
+  "thresholds": {
+    "auto_accept": 0.85,
+    "minimum_margin": 0.5
+  },
+  "results": [
+    {
+      "id": "F05",
+      "classification": "defect",
+      "probabilities": {
+        "defect": 0.91,
+        "friction": 0.06,
+        "opportunity": 0.03,
+        "unresolved": 0
+      },
+      "confidence": 0.86,
+      "margin": 0.8500000000000001,
+      "top_probability": 0.91,
+      "decision": "auto"
+    },
+    {
+      "id": "F06",
+      "classification": "friction",
+      "probabilities": {
+        "defect": 0.47,
+        "friction": 0.5,
+        "opportunity": 0.01,
+        "unresolved": 0.02
+      },
+      "confidence": 0.34,
+      "margin": 0.030000000000000027,
+      "top_probability": 0.5,
+      "decision": "review"
+    }
+  ],
+  "usage": {
+    "input_tokens": 759,
+    "output_tokens": 99
+  }
+}

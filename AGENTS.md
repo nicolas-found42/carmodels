@@ -9,6 +9,8 @@ the static inputs some verifiers need, and how to read a verifier's pass (self-c
 controls, not merely "no exception"). Review against `CODING_STANDARDS.md`. Research notes and their open
 items are indexed in `research/README.md`.
 
+For dealership model or catalog edits, read `dealership/dealership/README.md`.
+
 ## Branches and merging
 
 `main` is protected; change it only through a PR from a `feature/`, `bugfix/` or `chore/` branch.
@@ -19,6 +21,8 @@ locally or on `origin`. Never push to `main` or force-push.
 
 When the `jev_*` MCP tools are not listed, call them with `tools/jev_mcp_call.py` (`--batch` runs several
 calls in one process); argument names are in `docs/agents/jev-tools.md`.
+
+Before work in a dirty checkout, or Jev review/escalation, read `docs/agents/review-workflow.md`.
 
 ## Agent skills
 
@@ -32,4 +36,4 @@ The five canonical triage roles, each label string equal to its name. See `docs/
 
 ### Domain docs
 
-Multi-context: `GLOSSARY-MAP.md` lists `GLOSSARY.md` (recovery) and `viewer/GLOSSARY.md`; decisions are in `docs/adr/`. See `docs/agents/domain.md`.
+Multi-context: `GLOSSARY-MAP.md` lists `GLOSSARY.md` (recovery) and `dealership/GLOSSARY.md`; decisions are in `docs/adr/`. See `docs/agents/domain.md`.

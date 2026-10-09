@@ -3,8 +3,8 @@
 ## Contexts
 
 - [Recovery](./GLOSSARY.md): the recovered car assets, the tools and verifiers that produced them, and the evidence about the draw path
-- [Viewer](./viewer/GLOSSARY.md): the two static pages that display the recovered corpus in a browser
+- [Viewer](./dealership/GLOSSARY.md): the source-model showcase and independently editable dealership
 
 ## Relationships
 
-- **Recovery → Viewer**: Recovery produces the 35 GLBs and the showcase data that the Viewer displays; the Viewer's honesty labels repeat Recovery's candidate status.
+- **Recovery → Viewer**: Recovery supplies original assets for the source-model showcase and the initial dealership fork. The dealership owns its editable models and catalog afterward; dealership edits and rebuilds do not write back into Recovery.

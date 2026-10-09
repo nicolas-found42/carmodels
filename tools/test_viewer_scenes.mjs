@@ -1,17 +1,24 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import * as THREE from '../viewer/vendor/three.module.js';
+import * as THREE from '../dealership/vendor/three.module.js';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {defaultGeometryValue,geometryOptions,sceneHasGeometry,sceneLabel} from '../viewer/scene-options.mjs';
+import {defaultGeometryValue,geometryOptions,sceneHasGeometry,sceneLabel} from '../dealership/scene-options.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const corpus=path.join(root,'viewer/public/recovered');
-let cars=0,emptyChoices=0;
+const corpus=path.join(root,'dealership/public/ford-racing-2');
+let cars=0,emptyChoices=0,materialBindings=0;
 for(const file of fs.readdirSync(corpus).filter(f=>f.endsWith('.glb'))) {
  const bytes=fs.readFileSync(path.join(corpus,file));
  const doc=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)));
+ for(const mesh of doc.meshes)for(const primitive of mesh.primitives) {
+  const sourceTexture=primitive.extras.third;
+  const material=doc.materials[primitive.material];
+  assert.equal(material.pbrMetallicRoughness.baseColorTexture?.index,sourceTexture===65535?undefined:sourceTexture,file+' primitive points at the wrong material');
+  if(sourceTexture!==65535)assert.notEqual(material.alphaMode,'BLEND',file+' body points at glass');
+  materialBindings++;
+ }
  const options=geometryOptions(doc,[]);
  for(const [i,scene] of doc.scenes.entries()) {
   if(i===0)continue;
@@ -49,32 +56,21 @@ const initial=camera.position.clone();
 const context={loaded:{groups:[emptyGroup]},recordSelect:{value:'scene5'},selected:{code:'GRAN_TORINO'},
  status,THREE,camera,sceneLabel,controls:{update(){throw Error('empty scene reached camera controls');}},
  updateMaterials(){throw Error('empty scene reached material update');}};
-const html=fs.readFileSync(path.join(root,'viewer/recovered.html'),'utf8');
+const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
 const showRecord=html.match(/function showRecord\(\).*\n/)[0];
 vm.runInNewContext(showRecord+';showRecord();',context);
 assert.match(status.textContent,/no drawable geometry/);
 assert(camera.position.equals(initial));
-// Header-colour honesty label: the glass note is on screen while blended parts are shown.
-const loadCar=html.match(/function loadCar\(\)[\s\S]*?\n}\n/);
-{
- // Build a 1-primitive doc the way the exporter now does: an untextured header primitive
- // whose material name starts 'Header untextured '.
- const untexturedMaterial={name:'Header untextured 0x59000000',doubleSided:true,
-  pbrMetallicRoughness:{baseColorFactor:[0,0,0,89/128],metallicFactor:0,roughnessFactor:1},alphaMode:'BLEND'};
- const textMaterial={name:'CAR512',doubleSided:true,pbrMetallicRoughness:{baseColorTexture:{index:0},metallicFactor:0,roughnessFactor:1}};
- const doc2={materials:[textMaterial,untexturedMaterial]};
- const html2=html.replace(/0xaab6c8/g,'0xaab6c8'); // unchanged placeholder, see below
- // The viewer builds materials from the GLB: assert its builder reads alphaMode/BLEND and the
- // Header colour rather than the fixed fallback colour, by importing its own code.
- // Extract the per-primitive material construction from the page source.
- const materialLine=html.match(/const material=new THREE\.MeshStandardMaterial\([^\n]*\n/);
- assert.ok(materialLine,'viewer builds a per-primitive material');
- assert.match(materialLine[0],/alphaMode/,'viewers material honours the exported blend mode');
- assert.match(materialLine[0],/baseColorFactor|[Hh]eader untextured/,'viewers untextured colour comes from the GLB material, not the fixed fallback');
- // After loading, an untextured blended part must raise the honesty label while on screen.
- assert.match(html,/candidate/i,'the page carries candidate wording in the honesty label');
- const glassLabel=html.match(/honesty[\s\S]{0,400}/);
- // The status line set by showRecord for a scene with glass parts names the candidate mapping.
- assert.match(html,/candidate[^<]*glass|glass[^<]*candidate|Header colour[^<]*candidate/i,'the inspector names the glass/header-colour mapping as a candidate while the model is on screen');
-}
-console.log(`PASS test_viewer_scenes: ${cars} cars, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard and header-colour honesty label`);
+// Exercise the actual status callback with a visible Header-colour part.
+const glassGroup=new THREE.Group();
+glassGroup.userData={record:'scene6',label:'Tree 0 — Low-speed wheels, lights off'};
+const glass=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
+glass.userData.headerColour=true;
+glassGroup.add(glass);
+const visibleContext={...context,loaded:{groups:[glassGroup]},recordSelect:{value:'scene6'},
+ selected:{code:'GRAN_TORINO',records:[]},controls:{target:new THREE.Vector3(),update(){}},updateMaterials(){}};
+const shownMeshes=html.match(/function shownMeshes\(root\).*\n/)[0];
+vm.runInNewContext(shownMeshes+showRecord+';showRecord();',visibleContext);
+assert.match(status.textContent,/glass\/Header-colour parts \(1 here\)/);
+assert.match(status.textContent,/candidate, not proven shading/);
+console.log(`PASS test_viewer_scenes: ${cars} cars, ${materialBindings} material bindings, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard and visible header-colour honesty label`);

@@ -39,7 +39,7 @@ checks.extend(['camera scale','minimum clamp','upper clamp','two-root lower clam
 reject('nonfinite distance',lambda: distance_root(math.nan, thresholds, 5))
 reject('invalid root count',lambda: distance_root(1, thresholds, 0))
 
-data = next((ROOT / 'reference/ford/cars/GRAN_TORINO/model').iterdir()).read_bytes()
+data = next((ROOT / 'ford-racing-2/cars/GRAN_TORINO/model').iterdir()).read_bytes()
 parsed = ps2_sections.parse(data)
 base = join(data, parsed)
 assert base['records'][0]['nodes'][6]['source_names'] or any(n['source_names'] for n in base['records'][0]['nodes'])

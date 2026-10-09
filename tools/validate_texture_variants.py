@@ -33,6 +33,18 @@ def original_flags(data, textures):
 
 def check(car,doc):
     tex=car['textures'];expected={}
+    def source_texture(material_index):
+        if not 0<=material_index<len(doc['materials']):raise ValueError('material index outside table')
+        material=doc['materials'][material_index]
+        reference=material.get('pbrMetallicRoughness',{}).get('baseColorTexture')
+        if reference is None:raise ValueError('textured primitive points at untextured material')
+        texture_index=reference['index']
+        if not 0<=texture_index<len(doc['textures']):raise ValueError('texture index outside table')
+        image_index=doc['textures'][texture_index]['source']
+        if not 0<=image_index<len(doc['images']):raise ValueError('image index outside table')
+        name=doc['images'][image_index]['name']
+        if image_index>=len(tex) or tex[image_index]['name']!=name:raise ValueError('image identity differs from source texture')
+        return image_index
     refs={p['extras']['third'] for mesh in doc['meshes'] for p in mesh['primitives']}
     for base in refs:
         if base==65535:continue
@@ -48,11 +60,12 @@ def check(car,doc):
     for mesh in doc['meshes']:
         for p in mesh['primitives']:
             base=p['extras']['third'];mappings=p.get('extensions',{}).get('KHR_materials_variants',{}).get('mappings',[])
+            if base!=65535 and source_texture(p['material'])!=base:raise ValueError('base texture descriptor differs')
             actual={}
             for row in mappings:
                 for vi in row['variants']:
                     if vi in actual:raise ValueError('repeated variant index')
-                    actual[vi]=row['material']
+                    actual[vi]=source_texture(row['material'])
             wanted={i:expected[base][s] for i,s in enumerate(complete)} if base in expected else {}
             if actual!=wanted:raise ValueError('primitive selector descriptor differs')
             mappings_count+=len(mappings)
@@ -62,15 +75,15 @@ def check(car,doc):
 def main():
     cars=json.loads((ROOT/'research/evidence/original-recovery/car-asset-census.json').read_text())['cars'];rows=[];negative=None
     for car in cars:
-        raw=(ROOT/'viewer/public/recovered'/f'{car["code"]}.glb').read_bytes();size,kind=struct.unpack_from('<II',raw,12)
+        raw=(ROOT/'dealership/public/ford-racing-2'/f'{car["code"]}.glb').read_bytes();size,kind=struct.unpack_from('<II',raw,12)
         if kind!=0x4e4f534a:raise ValueError('missing JSON chunk')
-        doc=json.loads(raw[20:20+size]);source=next((ROOT/'reference/ford/cars'/car['code']/'model').iterdir()).read_bytes()
+        doc=json.loads(raw[20:20+size]);source=next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(source).hexdigest()!=car['sha256']:raise ValueError('original source hash differs')
         original_flags(source,car['textures']);result=check(car,doc)
         rows.append({'car':car['code'],'glb_sha256':hashlib.sha256(raw).hexdigest(),**result})
         if negative is None and result['mapping_entries']:
             bad=copy.deepcopy(doc);p=next(p for m in bad['meshes'] for p in m['primitives'] if p.get('extensions'))
-            p['extensions']['KHR_materials_variants']['mappings'][0]['material']=len(car['textures'])
+            p['extensions']['KHR_materials_variants']['mappings'][0]['material']=len(doc['materials'])
             try:check(car,bad)
             except ValueError:negative={'wrong_source_material_rejected':True}
             else:raise ValueError('corrupt material accepted')

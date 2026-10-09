@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const validator = require('./validation-runtime/node_modules/gltf-validator');
 const root = path.resolve(__dirname, '..');
-const folder = process.argv[2] ? path.resolve(process.argv[2]) : path.join(root, 'viewer/public/recovered');
+const folder = process.argv[2] ? path.resolve(process.argv[2]) : path.join(root, 'dealership/public/ford-racing-2');
 const out = path.join(root, 'research/evidence/continuation/khronos-validation.json');
 (async () => {
   const files = fs.readdirSync(folder).filter(f => f.endsWith('.glb')).sort();

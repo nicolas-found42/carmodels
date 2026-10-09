@@ -34,6 +34,6 @@ and the check that is still needed. An after-only result must be labelled as suc
 
 **Door:** <!-- one-way or two-way, with the reason. Reverting a commit cannot un-publish a corpus. -->
 
-**Blast Radius:** <!-- Affected consumers: the recovered/ corpus and its manifests, viewer/public
-GLBs, the reference/ extraction tree, downstream research notes. What could go wrong if this
+**Blast Radius:** <!-- Affected consumers: the ford-racing-2/recovered/ corpus and its manifests, dealership/public
+GLBs, the per-game extraction folders, downstream research notes. What could go wrong if this
 merges and is wrong. Keep a small reversible change's risk statement brief. -->

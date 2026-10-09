@@ -44,7 +44,7 @@ def main():
     last_renderer_entity=u32(memory,gp+0x947c-65536)
     results=[]
     for car in joins['cars']:
-        row=assembly[car['car']]; source=next((ROOT/'reference/ford/cars'/car['car']/'model').iterdir()).read_bytes()
+        row=assembly[car['car']]; source=next((ROOT/'ford-racing-2/cars'/car['car']/'model').iterdir()).read_bytes()
         require(hashlib.sha256(source).hexdigest()==row['sha256'], 'original car source hash differs')
         record=row['records'][0];nodes=record['nodes']
         for bound in car['joins']:

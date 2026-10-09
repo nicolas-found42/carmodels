@@ -89,7 +89,7 @@ def main():
     if negative_swapped==0:raise ValueError('omitted PEXEW control not distinguished')
     cars=[];counts=Counter()
     for c in json.loads((ROOT/'research/evidence/original-recovery/car-asset-census.json').read_text())['cars']:
-        data=next((ROOT/'reference/ford/cars'/c['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=c['sha256']:raise ValueError('model differs')
         recipes=[decode(data,h) for h in c['geometry']['headers']]
         for r in recipes:
@@ -97,7 +97,7 @@ def main():
             counts['source_alpha_below_128']+=r['base_color_rgba_unscaled'][3]<128
         cars.append({'car':c['code'],'source_sha256':c['sha256'],'headers':recipes})
     c=next(c for c in json.loads((ROOT/'research/evidence/original-recovery/car-asset-census.json').read_text())['cars'] if c['code']=='COBRA')
-    data=next((ROOT/'reference/ford/cars/COBRA/model').iterdir()).read_bytes();h=dict(c['geometry']['headers'][0]);bad=dict(h,size=h['size']-4)
+    data=next((ROOT/'ford-racing-2/cars/COBRA/model').iterdir()).read_bytes();h=dict(c['geometry']['headers'][0]);bad=dict(h,size=h['size']-4)
     try:decode(data,bad)
     except ValueError:negative=True
     else:raise ValueError('truncated header accepted')

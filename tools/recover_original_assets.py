@@ -51,7 +51,7 @@ def main():
                  ['ps2_container.py','ps2_texture_indices.py','ps2_sections.py','format_contracts.py','corpus_binding.py']}
     formats, profiles, header_flags, counts = Counter(), Counter(), Counter(), Counter()
     cars, cards = [], []
-    for folder in sorted((ROOT/'reference/ford/cars').iterdir()):
+    for folder in sorted((ROOT/'ford-racing-2/cars').iterdir()):
         manifest_path = folder/'manifest.json'
         if not manifest_path.is_file():
             continue

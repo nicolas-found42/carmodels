@@ -81,12 +81,12 @@ def check(data,doc):
 
 
 def main():
-    entries=json.loads((ROOT/'viewer/public/recovered/index.json').read_text())['cars'];results=[];negative={}
+    entries=json.loads((ROOT/'dealership/public/ford-racing-2/index.json').read_text())['cars'];results=[];negative={}
     for c in entries:
-        raw=(ROOT/'viewer/public/recovered'/c['file']).read_bytes()
+        raw=(ROOT/'dealership/public/ford-racing-2'/c['file']).read_bytes()
         if hashlib.sha256(raw).hexdigest()!=c['sha256']:raise ValueError('GLB index identity differs')
         length=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+length])
-        data=next((ROOT/'reference/ford/cars'/c['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=doc['extras']['originalModelSha256']:raise ValueError('original model identity differs')
         checked=check(data,doc);results.append({'car':c['code'],'glb_sha256':c['sha256'],'preset_nodes':checked})
         if not negative:

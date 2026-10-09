@@ -25,7 +25,7 @@ import build_reference as B
 
 SRC = B.SRC
 ELF = SRC.parent / "SLES_517.05"          # games/ford-racing-2/extracted/SLES_517.05
-CORPUS = ROOT / "reference/ford"
+CORPUS = ROOT / "ford-racing-2"
 OUT = ROOT / "research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json"
 
 CONFIG_TABLE_VA = 0x24AF68

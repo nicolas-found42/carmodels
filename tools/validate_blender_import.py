@@ -7,7 +7,7 @@ import struct
 
 ROOT = Path(__file__).resolve().parents[1]
 rows = []
-for path in sorted((ROOT / 'viewer/public/recovered').glob('*.glb')):
+for path in sorted((ROOT / 'dealership/public/ford-racing-2').glob('*.glb')):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     raw = path.read_bytes()
     length, kind = struct.unpack_from('<2I', raw, 12)

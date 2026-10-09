@@ -1,0 +1,75 @@
+{
+  "args": {
+    "request": "Integrate all outstanding branches into main through a PR, preserving issue21 optional-pass joins and game-folder organization, activate independent editable dealership as default, retain separate source-model inspector with game-qualified selection/downloads, preserve corrected body/glass material namespaces and linear/no-mip filtering. This review baseline is the completed dealership branch fbb055b, remapped to current game-folder paths; the independent Standards/Spec review separately examines full diff against1062c24. Generated/binary assets and historical receipts are verified with executable corpus, export and Blender checks rather than model patch input. Preserve edit isolation and all features of both branches; no source model changes outside material assignment and sampler metadata.",
+    "diff": "--- a/tools/verify_recovered_asset_index.py\n+++ b/tools/verify_recovered_asset_index.py\n@@ -16,11 +16,11 @@\n         by_car[car][path]={'path':path,'kind':kind,'sha256':digest,\n                            'bytes':(ROOT/path).stat().st_size,**metadata}\n     for c in receipts['model_census']['cars']:\n-        code=c['code'];models=list((ROOT/'reference/ford/cars'/code/'model').iterdir())\n+        code=c['code'];models=list((ROOT/'ford-racing-2/cars'/code/'model').iterdir())\n         if len(models)!=1:raise ValueError('ambiguous original model')\n         add(code,models[0].relative_to(ROOT).as_posix(),'original_model',c['sha256'])\n         g=next(x for x in receipts['glbs']['cars'] if x['code']==code)\n-        add(code,'viewer/public/recovered/'+g['file'],'glb',g['sha256'])\n+        add(code,'dealership/public/ford-racing-2/'+g['file'],'glb',g['sha256'])\n         for t in c['textures']:\n             for key,kind in [('png','model_texture_display'),('raw_alpha_png','model_texture_raw')]:\n                 add(code,'research/evidence/original-recovery/'+t[key],kind,t[key+'_sha256'],\n@@ -49,8 +49,8 @@\n         raise ValueError('index schema/fidelity declaration mismatch')\n     if index['status']!='Asset/index integrity checked. Rendering-fidelity completion not asserted.':\n         raise ValueError('index status declaration mismatch')\n-    roster=json.loads((ROOT/'reference/ford/inventory.json').read_text())['cars'];names=[x['car'] for x in index['cars']]\n-    disk={p.name for p in (ROOT/'recovered/cars').iterdir() if p.is_dir()}\n+    roster=json.loads((ROOT/'ford-racing-2/inventory.json').read_text())['cars'];names=[x['car'] for x in index['cars']]\n+    disk={p.name for p in (ROOT/'ford-racing-2/recovered/cars').iterdir() if p.is_dir()}\n     if len(names)!=len(set(names)) or set(names)!=set(roster) or disk!=set(names):raise ValueError('roster/index/disk mismatch')\n     for item in index['source_receipts'].values():\n         if hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest()!=item['sha256']:raise ValueError('source receipt changed')\n@@ -92,8 +92,8 @@\n     # Independently derive the complete canonical path set from producer receipts.\n     expected_paths=set()\n     for c in receipts['model_census']['cars']:\n-        expected_paths.add(next((ROOT/'reference/ford/cars'/c['code']/'model').iterdir()).relative_to(ROOT).as_posix())\n-        expected_paths.add('viewer/public/recovered/'+c['code']+'.glb')\n+        expected_paths.add(next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).relative_to(ROOT).as_posix())\n+        expected_paths.add('dealership/public/ford-racing-2/'+c['code']+'.glb')\n         for t in c['textures']:\n             expected_paths.update('research/evidence/original-recovery/'+t[k] for k in ['png','raw_alpha_png'])\n     for c in receipts['mips']['cars']:\n@@ -107,7 +107,7 @@\n \n \n def main():\n-    p=ROOT/'recovered/index.json';index=json.loads(p.read_text());result=check(index)\n+    p=ROOT/'ford-racing-2/recovered/index.json';index=json.loads(p.read_text());result=check(index)\n     bad=copy.deepcopy(index);bad['cars'][0]['manifest_sha256']='0'*64\n     try:check(bad)\n     except ValueError:result['corrupt_manifest_hash_rejected']=True\n--- a/tools/verify_sound_bank_index.py\n+++ b/tools/verify_sound_bank_index.py\n@@ -25,7 +25,7 @@\n \n SRC = B.SRC\n ELF = SRC.parent / \"SLES_517.05\"          # games/ford-racing-2/extracted/SLES_517.05\n-CORPUS = ROOT / \"reference/ford\"\n+CORPUS = ROOT / \"ford-racing-2\"\n OUT = ROOT / \"research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json\"\n \n CONFIG_TABLE_VA = 0x24AF68\n--- a/tools/write_continuation_status.py\n+++ b/tools/write_continuation_status.py\n@@ -36,7 +36,7 @@\n         'render_fidelity_complete': False,\n         'static_inputs': {'bundle_identity': json.loads((SRC / 'bundle-identity.json').read_text()),\n                           'typed_inventory_sha256': sha(static_inputs.typed_export() / 'inventory.json')},\n-        'canonical_index_sha256': sha(ROOT / 'recovered/index.json'),\n+        'canonical_index_sha256': sha(ROOT / 'ford-racing-2/recovered/index.json'),\n         'runtime': {'container': sh('docker', 'ps', '--filter', 'name=fr2-recovery-headless', '--format', '{{.ID}} {{.Status}}'),\n                     'pine_identity': sh('docker', 'exec', 'fr2-recovery-headless', 'python3', '/data/pine_control.py', 'identity'),\n                     'port': sh('docker', 'port', 'fr2-recovery-headless'),\n",
+    "tests": "{\"schema\": 1, \"exit_code\": 0, \"checks\": [{\"name\": \"ruff\", \"command\": [\"ruff\", \"check\", \"tools\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"ruff.log\", \"elapsed_seconds\": 0.063}, {\"name\": \"test_viewer_scenes\", \"command\": [\"node\", \"tools/test_viewer_scenes.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_viewer_scenes.log\", \"elapsed_seconds\": 0.24}, {\"name\": \"test_viewer_materials\", \"command\": [\"node\", \"tools/test_viewer_materials.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_viewer_materials.log\", \"elapsed_seconds\": 0.089}, {\"name\": \"test_model_load\", \"command\": [\"node\", \"tools/test_model_load.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_model_load.log\", \"elapsed_seconds\": 0.07}, {\"name\": \"test_viewer_loading\", \"command\": [\"node\", \"tools/test_viewer_loading.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_viewer_loading.log\", \"elapsed_seconds\": 1.26}, {\"name\": \"test_dealership\", \"command\": [\"node\", \"tools/test_dealership.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_dealership.log\", \"elapsed_seconds\": 4.41}, {\"name\": \"verify_recovered_asset_index\", \"command\": [\"python3\", \"tools/verify_recovered_asset_index.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_recovered_asset_index.log\", \"elapsed_seconds\": 2.29}, {\"name\": \"test_export_materials\", \"command\": [\"python3\", \"tools/test_export_materials.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_export_materials.log\", \"elapsed_seconds\": 0.342}, {\"name\": \"test_build_showcase\", \"command\": [\"python3\", \"tools/test_build_showcase.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_build_showcase.log\", \"elapsed_seconds\": 0.692}, {\"name\": \"test_bake_models\", \"command\": [\"python3\", \"tools/test_bake_models.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_bake_models.log\", \"elapsed_seconds\": 3.863}, {\"name\": \"test_build_dealership\", \"command\": [\"python3\", \"tools/test_build_dealership.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_build_dealership.log\", \"elapsed_seconds\": 4.173}, {\"name\": \"test_model_catalog\", \"command\": [\"python3\", \"tools/test_model_catalog.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_model_catalog.log\", \"elapsed_seconds\": 0.995}, {\"name\": \"test_model_png\", \"command\": [\"python3\", \"tools/test_model_png.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_model_png.log\", \"elapsed_seconds\": 1.379}, {\"name\": \"test_run_checks\", \"command\": [\"python3\", \"tools/test_run_checks.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_run_checks.log\", \"elapsed_seconds\": 5.552}, {\"name\": \"test_review_payload\", \"command\": [\"python3\", \"tools/test_review_payload.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_review_payload.log\", \"elapsed_seconds\": 1.985}, {\"name\": \"test_static_inputs\", \"command\": [\"python3\", \"tools/test_static_inputs.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_static_inputs.log\", \"elapsed_seconds\": 1.712}, {\"name\": \"test_recovery_inputs\", \"command\": [\"python3\", \"tools/test_recovery_inputs.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_recovery_inputs.log\", \"elapsed_seconds\": 17.642}, {\"name\": \"dealership_freshness\", \"command\": [\"python3\", \"tools/build_dealership.py\", \"--check\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"dealership_freshness.log\", \"elapsed_seconds\": 5.345}, {\"name\": \"verify_config_data_sound\", \"command\": [\"python3\", \"tools/verify_config_data_sound.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_config_data_sound.log\", \"elapsed_seconds\": 0.365}, {\"name\": \"verify_sound_bank_index\", \"command\": [\"python3\", \"tools/verify_sound_bank_index.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_sound_bank_index.log\", \"elapsed_seconds\": 0.088}, {\"name\": \"verify_vu_dispatch_map\", \"command\": [\"python3\", \"tools/verify_vu_dispatch_map.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_vu_dispatch_map.log\", \"elapsed_seconds\": 0.689}, {\"name\": \"test_vu_dispatch_map\", \"command\": [\"python3\", \"tools/test_vu_dispatch_map.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu_dispatch_map.log\", \"elapsed_seconds\": 1.654}, {\"name\": \"test_vu1_decode\", \"command\": [\"python3\", \"tools/test_vu1_decode.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu1_decode.log\", \"elapsed_seconds\": 0.125}, {\"name\": \"verify_vu_pass_handlers\", \"command\": [\"python3\", \"tools/verify_vu_pass_handlers.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_vu_pass_handlers.log\", \"elapsed_seconds\": 1.337}, {\"name\": \"test_vu_pass_handlers\", \"command\": [\"python3\", \"tools/test_vu_pass_handlers.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu_pass_handlers.log\", \"elapsed_seconds\": 2.038}, {\"name\": \"verify_vu_handler_dump\", \"command\": [\"python3\", \"tools/verify_vu_handler_dump.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_vu_handler_dump.log\", \"elapsed_seconds\": 2.795}, {\"name\": \"test_vu_handler_dump\", \"command\": [\"python3\", \"tools/test_vu_handler_dump.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu_handler_dump.log\", \"elapsed_seconds\": 2.437}, {\"name\": \"recover_dump_reference_frame\", \"command\": [\"python3\", \"tools/recover_dump_reference_frame.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"recover_dump_reference_frame.log\", \"elapsed_seconds\": 1.003}, {\"name\": \"test_recover_dump_reference_frame\", \"command\": [\"python3\", \"tools/test_recover_dump_reference_frame.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_recover_dump_reference_frame.log\", \"elapsed_seconds\": 1.0}, {\"name\": \"verify_pass_source_join\", \"command\": [\"python3\", \"tools/verify_pass_source_join.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_pass_source_join.log\", \"elapsed_seconds\": 2.276}, {\"name\": \"test_pass_source_join\", \"command\": [\"python3\", \"tools/test_pass_source_join.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_pass_source_join.log\", \"elapsed_seconds\": 3.51}, {\"name\": \"dealership_roundtrip\", \"command\": [\"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\", \"--background\", \"--python-exit-code\", \"1\", \"--python\", \"tools/test_dealership_roundtrip.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"dealership_roundtrip.log\", \"elapsed_seconds\": 7.25}], \"claim_limits\": [\"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"]}"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.67,
+    "scores": {
+      "correctness": {
+        "score": 1.83,
+        "confidence": 0.74,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.13,
+          "2": 0.85
+        }
+      },
+      "spec_match": {
+        "score": 1.38,
+        "confidence": 0.19,
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.46,
+          "2": 0.46
+        }
+      },
+      "test_gap": {
+        "score": 0.18,
+        "confidence": 0.71,
+        "probabilities": {
+          "0": 0.84,
+          "1": 0.13,
+          "2": 0.03
+        }
+      },
+      "blast_radius": {
+        "score": 0.9,
+        "confidence": 0.4,
+        "probabilities": {
+          "0": 0.25,
+          "1": 0.6,
+          "2": 0.15
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.792,
+    "reason_codes": [
+      "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+      "spec_match"
+    ],
+    "usage": {
+      "input_tokens": 4204,
+      "output_tokens": 79
+    }
+  }
+}

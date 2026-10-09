@@ -1,0 +1,27 @@
+Browser 153.0.8010.12
+35 cars × 4 views: all bounds fit; 35 actual rendered captures saved
+105 corpus selections: max GPU geometries 5 final { geometries: 5, textures: 3 } all projected bounds fit
+Reduced motion, explicit rotation pause/resume, keyboard side view and reset/front/top: PASS
+layout 320 { overflow: 0, overlap: 0 }
+layout 390 { overflow: 0, overlap: 0 }
+layout 768 { overflow: 0, overlap: 0 }
+layout 1280 { overflow: 0, overlap: 0 }
+Success-path page errors and external requests: zero
+empty The car list could not be loaded.The vehicle list is empty or is not an array. Check viewer/public/cars.json and the local server.Retry loading cars
+empty same-page retry PASS
+duplicate The car list could not be loaded.A vehicle code is missing or duplicated. Check viewer/public/cars.json and the local server.Retry loading cars
+duplicate same-page retry PASS
+invalid-rating The car list could not be loaded.49_COUPE: speed must be a rating from 0 to 1. Check viewer/public/cars.json and the local server.Retry loading cars
+invalid-rating same-page retry PASS
+missing-mesh The car list could not be loaded.49_COUPE: invalid source-derived silhouette. Check viewer/public/cars.json and the local server.Retry loading cars
+missing-mesh same-page retry PASS
+invalid-mesh The car list could not be loaded.Invalid silhouette mesh encoding. Check viewer/public/cars.json and the local server.Retry loading cars
+invalid-mesh same-page retry PASS
+http-error The car list could not be loaded.Vehicle data unavailable (HTTP 404). Check viewer/public/cars.json and the local server.Retry loading cars
+http-error same-page retry PASS
+malformed The car list could not be loaded.The vehicle list is empty or is not an array. Check viewer/public/cars.json and the local server.Retry loading cars
+malformed same-page retry PASS
+5.6s valid load: no premature error, success
+stalled request fails with retry at 15556 ms
+HTML name remains literal, zero img nodes/execution
+PASS silhouettes browser re-attack
