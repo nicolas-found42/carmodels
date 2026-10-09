@@ -87,9 +87,11 @@ def build(car, data):
             row['min']=[min(stored[j::width]) for j in range(width)]
             row['max']=[max(stored[j::width]) for j in range(width)]
         doc['accessors'].append(row);return index
+    texture_materials=[]
     for t in car['textures']:
         image=len(doc['images']);doc['images'].append({'bufferView':view((EVIDENCE/t['png']).read_bytes()),'mimeType':'image/png','name':t['name']})
         doc['textures'].append({'sampler':0,'source':image})
+        texture_materials.append(len(doc['materials']))
         doc['materials'].append({'name':t['name'],'doubleSided':True,
                                  'pbrMetallicRoughness':{'baseColorTexture':{'index':image},'metallicFactor':0,'roughnessFactor':1}})
     table=car['geometry']['table'];cursor=0; stats=Counter(); records=[]
@@ -122,12 +124,12 @@ def build(car, data):
                 p=h['planes']['third_four_byte'];uvs=list(struct.iter_unpack('<2h',data[p['offset']:p['end']]))
                 if len(uvs)!=n:raise ValueError('UV count mismatch')
                 attrs['TEXCOORD_0']=accessor([component/2048 for uv in uvs for component in uv],2)
-                material=h['third']
+                material=texture_materials[h['third']]
             primitives.append({'attributes':attrs,'indices':accessor(indices,1,'I'),'mode':4,'material':material,
                                'extras':{'headerOffset':h['offset'],'flags':h['flags'],'count':n,'third':h['third'],
                                          'group':0 if hi<pair[0] else 1,'candidateSemantics':True}})
             if str(h['third']) in (variant['variants'][0]['material_remap'] if variant['variants'] else {}):
-                primitives[-1]['extensions']={'KHR_materials_variants':{'mappings':[{'material':v['material_remap'][str(h['third'])],'variants':[vi]} for vi,v in enumerate(variant['variants'])]}}
+                primitives[-1]['extensions']={'KHR_materials_variants':{'mappings':[{'material':texture_materials[v['material_remap'][str(h['third'])]],'variants':[vi]} for vi,v in enumerate(variant['variants'])]}}
             stats['vertices']+=n;stats['triangles']+=len(indices)//3;triangle_count+=len(indices)//3
         if primitives:
             mesh=len(doc['meshes']);doc['meshes'].append({'name':f'record_{record:03d}','primitives':primitives})
