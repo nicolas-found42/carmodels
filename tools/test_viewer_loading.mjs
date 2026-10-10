@@ -5,6 +5,7 @@ import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {createMaterial} from '../dealership/materials.mjs';
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
+import {isNativePackage} from '../dealership/dealership.mjs';
 
 const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
@@ -26,7 +27,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,createMaterial,geometryOptions,defaultGeometryValue,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+ readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
  async fetchModel(url,signal){
   requests.push(url);
   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');
@@ -98,6 +99,17 @@ assert.deepEqual(Array.from(mesh.geometry.attributes.color.array),[1,0,0,0,1,0,0
 context.loaded.groups[0].visible=true;const bounds=new THREE.Box3().setFromObject(context.loaded.groups[0]);
 assert.deepEqual(bounds.min.toArray(),[2,6,0]);assert.deepEqual(bounds.max.toArray(),[4,8,0]);
 assert.equal(elements.download.href,'public/gran-turismo/generic.glb');
+index.cars.push({id:'midnight-club-3-remix/native-fixture',game:'midnight-club-3-remix',code:'vp_fixture',
+  asset_kind:'native-package',file:'midnight-club-3-remix/native/vp_fixture.dat',native_members:3,records:[]});
+const beforeNativeRequests=requests.length;
+elements.car.value='midnight-club-3-remix/native-fixture';await context.loadCar();
+assert.equal(requests.length,beforeNativeRequests,'native selection must not fetch/parse a DAT as GLB');
+assert.equal(context.loaded,null);assert.equal(scene.children.length,0);assert.equal(urls.size,0);
+assert.equal(elements.record.disabled,true);assert.equal(elements.retry.hidden,true);
+assert.match(elements.download.href,/vp_fixture\.dat$/);assert.match(status.textContent,/3D preview unavailable/);
+assert.equal(elements.download.download,'vp_fixture.dat');
+elements.car.value='ford-racing-2/COBRA';await context.loadCar();
+assert.equal(context.selected.code,'COBRA');assert.equal(elements.download.download,'COBRA.glb');
 context.dispose();assert.equal(scene.children.length,0);assert.equal(urls.size,0);
 // Exercise actual library filters and semantic response handling independently of WebGL.
 const control=(value='')=>({value,options:[],events:{},disabled:false,textContent:'',
@@ -121,7 +133,7 @@ const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,inde
 vm.createContext(filterContext);const filters=html.slice(html.indexOf('function filterCars('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
 filterContext.filterCars();assert.equal(carSelect.options.length,4);assert.equal(modelLoads,1);
 gameSelect.value='gran-turismo';sourceVariant.value='night';filterContext.filterCars();assert.equal(carSelect.options.length,1);assert.match(carSelect.value,/night$/);
-search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source models/);
+search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source entries/);
 search.value='night cars from Gran Turismo';await interpret.events.click();assert.equal(search.value,'night cars from Gran Turismo');assert.equal(filterStatus.textContent,'Choose filters directly.');
 responseJSON={status:'ok',filters:{game:'gran-turismo',variant:'day'}};await interpret.events.click();assert.equal(search.value,'');assert.equal(carSelect.options.length,2);assert.match(carSelect.value,/day$/);
 responseJSON={status:'ok',filters:{game:'invented-game',variant:null}};await interpret.events.click();assert.match(filterStatus.textContent,/unknown filter/);assert.equal(gameSelect.value,'gran-turismo');

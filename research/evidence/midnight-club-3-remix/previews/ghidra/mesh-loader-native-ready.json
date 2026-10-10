@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x0024c738",
+    "fields": "entry_point,decompiled_code",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_0024c738\",\"size\":640,\"address\":\"0024c738\",\"entry_point\":\"0024c738\",\"decompiled_code\":\"\\nvoid FUN_0024c738(undefined8 param_1,undefined8 param_2)\\n\\n{\\n  long lVar1;\\n  long lVar2;\\n  undefined8 uVar3;\\n  int iVar4;\\n  undefined4 uVar5;\\n  char acStack_2f0 [256];\\n  undefined1 auStack_1f0 [160];\\n  undefined1 auStack_150 [256];\\n  \\n  lVar1 = (**(code **)(*DAT_006d557c + 0x24))();\\n  if (lVar1 != 0) {\\n    FUN_00435bd8(auStack_1f0,param_2,lVar1);\\n    FUN_00433dd0(auStack_1f0,acStack_2f0,0x100);\\n    if (acStack_2f0[0] != '\\\\0') {\\n      do {\\n        lVar2 = FUN_00432f18(acStack_2f0,0x640fb8);\\n        if (lVar2 == 0) {\\n          FUN_00434630(auStack_1f0);\\n        }\\n        else {\\n          lVar2 = FUN_00432f18(acStack_2f0,0x640fc2);\\n          if (lVar2 == 0) {\\n            FUN_00434758(auStack_1f0,param_1);\\n            uVar5 = FUN_00434690(auStack_1f0);\\n            *(undefined4 *)((int)param_1 + 0xc) = uVar5;\\n          }\\n          else {\\n            lVar2 = FUN_00432f18(acStack_2f0,0x640fd3);\\n            if (lVar2 == 0) {\\n              uVar3 = FUN_00434630(auStack_1f0);\\n              FUN_00434060(auStack_1f0,0x640fab);\\n              FUN_00433dd0(auStack_1f0,acStack_2f0,0x100);\\n              while (lVar2 = FUN_00432f18(acStack_2f0,0x640fad), lVar2 != 0) {\\n                iVar4 = 5;\\n                lVar2 = FUN_00432f18(acStack_2f0,0x640fd7);\\n                if (lVar2 == 0) {\\n                  iVar4 = 0;\\n                }\\n                else {\\n                  lVar2 = FUN_00432f18(acStack_2f0,0x640fdc);\\n                  if (lVar2 == 0) {\\n                    iVar4 = 2;\\n                  }\\n                  else {\\n                    lVar2 = FUN_00432f18(acStack_2f0,0x640fe4);\\n                    if (lVar2 == 0) {\\n                      iVar4 = 1;\\n                    }\\n                    else {\\n                      lVar2 = FUN_00432f18(acStack_2f0,0x640feb);\\n                      if (lVar2 == 0) {\\n                        iVar4 = 3;\\n                      }\\n                      else {\\n                        lVar2 = FUN_00432f18(acStack_2f0,0x640fef);\\n                        if (lVar2 == 0) {\\n                          iVar4 = 4;\\n                        }\\n                      }\\n                    }\\n                  }\\n                }\\n                FUN_004327c8(auStack_150,0x100,0x640ff5,param_2,uVar3,acStack_2f0);\\n                lVar2 = FUN_002a8ca0(auStack_150,0);\\n                if (lVar2 != 0) {\\n                  *(int *)((int)param_1 + iVar4 * 4 + (int)uVar3 * 0x14 + 0x10) = (int)lVar2;\\n                }\\n                FUN_00433dd0(auStack_1f0,acStack_2f0,0x100);\\n              }\\n            }\\n          }\\n        }\\n        FUN_00433dd0(auStack_1f0,acStack_2f0,0x100);\\n      } while (acStack_2f0[0] != '\\\\0');\\n    }\\n    FUN_00399748(lVar1);\\n  }\\n  return;\\n}\\n\\n\",\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.4977386669925181
+}

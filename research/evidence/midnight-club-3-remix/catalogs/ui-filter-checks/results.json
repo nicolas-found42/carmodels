@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.054
+    },
+    {
+      "name": "test_viewer_loading",
+      "command": [
+        "node",
+        "tools/test_viewer_loading.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_loading.log",
+      "elapsed_seconds": 0.124
+    },
+    {
+      "name": "test_dealership",
+      "command": [
+        "node",
+        "tools/test_dealership.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_dealership.log",
+      "elapsed_seconds": 0.797
+    },
+    {
+      "name": "test_native_catalog_ui",
+      "command": [
+        "node",
+        "tools/test_native_catalog_ui.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_native_catalog_ui.log",
+      "elapsed_seconds": 0.052
+    },
+    {
+      "name": "test_library_filter",
+      "command": [
+        "python3",
+        "tools/test_library_filter.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_library_filter.log",
+      "elapsed_seconds": 0.06
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

@@ -1,0 +1,50 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 5 {
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_wheel.shadert 1 va_whl_sedan_01.tex 
+			ambient_body.shadert 1 va_cop_t.tex 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			emissive_headlight.shadert 2 va_cop_t.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 6 neonglow.mesh 2 whl0_H.mesh 4 whl1_H.mesh 5 whl3_H.mesh 6 whl2_H.mesh 7 vroot_body_lod_body_h.mesh 0 2.537613
+		med 4 whl0_M.mesh 4 whl1_M.mesh 5 whl3_M.mesh 6 whl2_M.mesh 7 10.150453
+		low 4 whl0_L.mesh 4 whl1_L.mesh 5 whl3_L.mesh 6 whl2_L.mesh 7 9999.000000
+		vlow none 9999.000000 
+		center 0.000000 0.000000 0.009090
+		radius 3.119990
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_cop_t.skel
+}
+bonetag {
+	drop_shadow	2
+	whl_l0	4
+	whl_r0	5
+	whl_l1	6
+	whl_r1	7
+	glow_headlight0	9
+	glow_headlight1	10
+	glow_taillight0	11
+	glow_taillight1	12
+	glow_brakelight0	13
+	glow_brakelight1	14
+	glow_side0	16
+	glow_side1	17
+	glow_side2	18
+	glow_side3	19
+	glow_coplight0	22
+	glow_coplight2	23
+	glow_coplight3	24
+	glow_coplight1	25
+}

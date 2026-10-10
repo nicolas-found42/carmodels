@@ -1,0 +1,49 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 6 {
+			ambient_wheel.shadert 1 va_whl_truck_drk.tex 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_body.shadert 1 va_cranetruck_share.tex 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			ambient_emissive_brakelight.shadert 2 va_cranetruck_share.tex __envmap__ 
+			emissive_headlight.shadert 2 va_cranetruck_share.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 12 whl0_h.mesh 2 whl1_h.mesh 3 whl2_h.mesh 4 whl3_h.mesh 5 whl4_h.mesh 6 whl5_h.mesh 7 shadow.mesh 9 vroot_lod_group_hlod_shell_h.mesh 0 vroot_lod_group_hlod_swivel_base.mesh 0 vroot_lod_group_hlod_swivel_base_arm_lower.mesh 0 vroot_lod_group_hlod_swivel_base_arm_lower_arm_upper.mesh 0 vroot_lod_group_hlod_swivel_base_arm_lower_arm_upper_bucket.mesh 0 2.069893
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.024456 1.229754 0.299221
+		radius 5.212694
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_cranetruck_sh.skel
+}
+bonetag {
+	whl_l0	2
+	whl_r0	3
+	whl_l1	4
+	whl_r1	5
+	whl_l2	6
+	whl_r2	7
+	drop_shadow	9
+	glow_headlight0	11
+	glow_headlight1	12
+	glow_side0	13
+	glow_side1	14
+	glow_side2	15
+	glow_side3	16
+	glow_brakelight0	17
+	glow_brakelight1	18
+	glow_taillight0	19
+	glow_taillight1	20
+}

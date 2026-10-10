@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 2,\n    \"contradicted\": 0,\n    \"unsupported\": 0,\n    \"needs_review\": 0\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The recovered default 350Z rim is selected through native library handle page143, rather than treating RimMdlIdx136 as the PPF page index; car tire profile6 and TireMdlIdx0 select tire page6.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.98,\n        \"contradicts\": 0.02,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.97,\n      \"action\": \"auto\",\n      \"supporting_evidence\": \"static-native-lookup\",\n      \"same_subject\": 0.93\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The PPF packed page mask is offset=(word & 0x7ffff)<<11 and byte length=(word>>20)<<11, as a static reading of native FUN_0042b690; this is not a runtime capture.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.9,\n        \"contradicts\": 0.1,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.85,\n      \"action\": \"auto\",\n      \"supporting_evidence\": \"static-native-ppf-read\",\n      \"same_subject\": 0.89\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1822,\n    \"output_tokens\": 226\n  }\n}"
+    }
+  ]
+}

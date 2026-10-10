@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x0042d030",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_0042d030\",\"size\":268,\"address\":\"0042d030\",\"decompiled_code\":\"\\nvoid FUN_0042d030(int *param_1,int *param_2,undefined8 param_3)\\n\\n{\\n  undefined4 *puVar1;\\n  int iVar2;\\n  undefined8 uVar3;\\n  undefined4 *puVar4;\\n  int iVar5;\\n  \\n  if (*param_2 == 0x35306670) {\\n    iVar2 = param_2[1];\\n    *param_1 = iVar2;\\n    param_1[1] = param_2[2];\\n    puVar1 = (undefined4 *)FUN_003b1630(iVar2 << 2);\\n    iVar5 = iVar2 + -1;\\n    puVar4 = puVar1;\\n    if (iVar2 != 0) {\\n      do {\\n        *puVar4 = 0;\\n        iVar5 = iVar5 + -1;\\n        puVar4 = puVar4 + 1;\\n      } while (iVar5 != -1);\\n    }\\n    param_1[3] = (int)puVar1;\\n    FUN_004329b0(puVar1,0,*param_1 << 2);\\n    uVar3 = FUN_003b1630(*param_1 << 2);\\n    param_1[4] = (int)uVar3;\\n    FUN_00432b20(uVar3,param_2 + 3,*param_1 << 2);\\n    iVar2 = FUN_00432260(param_3,0);\\n    param_1[5] = iVar2;\\n    return;\\n  }\\n  do {\\n                    // WARNING: Do nothing block with infinite loop\\n  } while( true );\\n}\\n\\n\",\"callee_count\":4,\"callees\":[{\"name\":\"FUN_003b1630\",\"address\":\"003b1630\"},{\"name\":\"FUN_00432260\",\"address\":\"00432260\"},{\"name\":\"FUN_004329b0\",\"address\":\"004329b0\"},{\"name\":\"FUN_00432b20\",\"address\":\"00432b20\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.2466498750000028
+}

@@ -1,0 +1,82 @@
+{
+  "args": {
+    "decision": "Choose how to add editable MC3 GLB previews while preserving the existing extracted native packages and source catalog.",
+    "evidence": "The public MC3 index has94native-package rows and a strict coverage check requiring onlyindex.json plus94DATs. Dealer catalog has985rows;94MC3rows have displayMode native-package and independentDAT copies. Existing textured-glb viewer accepts compiledschema2 GLBs. Nativepackagescontain bounded serialized car meshes. GLB conversion is new and may have static geometry/material/assembly limits. Updating publicnativeindex would require a schema migration. Dealer has separate editablemodels folder and provenance origins.",
+    "priorities": "User requests MC3 car3D previews in thedealership. Preserve exactoriginals and earlier891dealerrecords. Keep chosenPython/GLB/Three stack. Conversions editable with evidence and explicitlimits.",
+    "candidates": [
+      {
+        "id": "separate_glbs",
+        "description": "Export conversions into a separate MC3 recovered-models collection, import independent dealerGLBs into existing94identities, retainDAT download descriptors and originalnativeindex."
+      },
+      {
+        "id": "migrate_native_index",
+        "description": "Replace native publicindex with GLB rows and expand existingstrictcoverage validators."
+      },
+      {
+        "id": "wait_for_full_emulation",
+        "description": "Keep previews unavailable until everytexture and animation is understood."
+      }
+    ],
+    "requirements": [
+      "Supports actual3Dpreview of decoded nativecar geometry.",
+      "Preserves originalnativepackages and existing891entries."
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "separate_glbs",
+      "escaped": false,
+      "confidence": 1,
+      "probabilities": {
+        "separate_glbs": 1,
+        "migrate_native_index": 0,
+        "wait_for_full_emulation": 0,
+        "ask_user": 0,
+        "investigate": 0,
+        "none": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 2,
+    "checks": [
+      {
+        "candidate": "separate_glbs",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "separate_glbs",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "migrate_native_index",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "migrate_native_index",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "wait_for_full_emulation",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "wait_for_full_emulation",
+        "requirement": 1,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 1653,
+      "output_tokens": 332
+    }
+  }
+}

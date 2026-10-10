@@ -2,14 +2,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
 const sourcePage = fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 assert.match(dealershipPage,/fetchCars\('\.\/public\/dealership\/cars.json'\)/);
 assert(!dealershipPage.includes('silhouette')&&!dealershipPage.includes('Silhouette'),'old visible terminology removed');
-assert.match(dealershipPage,/dealership\/models\/\$\{c.code\}\.glb/,'dealership downloads its own copies');
+assert.equal(dealershipDownload(cars[0]).href,`./dealership/models/${cars[0].code}.glb`,'dealership downloads its own copies');
 assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
 assert.match(sourcePage,/<h1>Source model library<\/h1>/);
 assert.equal(validateCars(cars).length, cars.length);

@@ -1,0 +1,28 @@
+{
+  "reviewer": "mc3_packet_probe",
+  "reviewed_claim": "The native version-104 joint parser reads the token euler and writes its three floats at bone offsets0x2c,0x30,0x34. This establishes source Euler metadata, but does not by itself establish runtime rendering or a three-axis rotation order.",
+  "decision": "accept_with_stated_limitations",
+  "independent_checks": [
+    {
+      "source": "packets/bone-token-source.json",
+      "fact": "Retail ELF program-header mapping independently located virtual0x675c6b at file0x4d5ceb and read exact null-terminatedtoken euler."
+    },
+    {
+      "source": "ghidra/bone-layouts.json FUN0058d490",
+      "fact": "Independent decompile inspection shows optionaltoken0x675c6b followed by vectorreader(destinationjoint+0x2c); adjacent initialization covers0x2c,0x30,0x34."
+    },
+    {
+      "source": "shared/assets/18252/vehicle/va_taxi_t/va_taxi_t.skel",
+      "fact": "Shipped version104 traffic skeleton uses offset/euler/DoF channel grammar and radianslike pi onY; not a VPmodel substitution."
+    }
+  ],
+  "claim_limits": [
+    "No source in these checks establishes the native render matrix construction or three-axis rotation order.",
+    "This accepts source-field semantics only, and does not approve the root converter patch."
+  ],
+  "input_hashes": {
+    "research/evidence/midnight-club-3-remix/previews/root-euler-verify.json": "7b119e9b20a1ce6de5a6c34a9bd0036c8567eea887b36f0a894d95caa2fa2d1a",
+    "research/evidence/midnight-club-3-remix/previews/ghidra/bone-layouts.json": "226d24f89ef6bcb22358a7cd2ad2b5c5fe5ac52a250bde6b9f3ef21a9f8ecde3",
+    "research/evidence/midnight-club-3-remix/previews/packets/bone-token-source.json": "ea6b24706a15edc07ab5e7a97fe2ec0a9d1d546f1eefe5aa0810ab429e0f6d53"
+  }
+}

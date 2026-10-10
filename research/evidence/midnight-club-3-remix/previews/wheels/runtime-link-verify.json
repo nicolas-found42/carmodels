@@ -1,0 +1,77 @@
+{
+  "args": {
+    "claims": [
+      "The native package loader reads the0x80-byte PCK header, validates header version1 and expected kind, then returns the payload. For vehicle kind0x38e030, native root relocation adds the relocation delta to payload-root+8 and passes that object to FUN00307400. Thus source file136 is the serialized pointer to the runtime model object.",
+      "Vehicle initialization FUN0050c0a0/FUN00416810 passes the relocated payload-root+8 object as param3 to FUN002f6c48, which stores it in instance+0x14. Native runtime model relocation preserves the byte atobject+0xe4, while relocating skeleton+0xdc and wheel arrays+0x3824/+0x3844. Therefore source object offset0xd0 +0xe4 (file0x1b4) is the renderer kind byte for this profile; source0x1ac is its skeleton pointer. This is a static loader linkage claim, not an emulator execution claim."
+    ],
+    "evidence": [
+      {
+        "id": "native-header-loader",
+        "text": "\nundefined8 FUN_00430cf8(undefined8 param_1,int param_2,undefined4 *param_3,undefined4 *param_4)\n\n{\n  long lVar1;\n  undefined8 uVar2;\n  undefined4 uStack_b0;\n  int iStack_ac;\n  int iStack_a8;\n  undefined4 uStack_a4;\n  \n  lVar1 = (**(code **)(*DAT_006d557c + 0x24))(DAT_006d557c,param_1,PTR_PTR_00618d8c,0,1);\n  if (lVar1 != 0) {\n    FUN_004329b0(&uStack_b0,0,0x80);\n    FUN_003993a8(lVar1,&uStack_b0,0x80);\n    if (iStack_a8 == 1) {\n      *param_3 = uStack_b0;\n      *param_4 = uStack_a4;\n      if (iStack_ac == param_2) {\n        uVar2 = FUN_0042e668(uStack_a4,0x80);\n        FUN_003993a8(lVar1,uVar2,uStack_a4);\n        FUN_00399748(lVar1);\n        return uVar2;\n      }\n    }\n    FUN_00399748(lVar1);\n  }\n  return 0;\n}\n\n"
+      },
+      {
+        "id": "vehicle-kind-and-root",
+        "text": "lVar1 = FUN_0042e810(auStack_d0,0x38e030,&iStack_40,auStack_3c);\n    if (lVar1 == 0) {\n      do {\n                    // WARNING: Do nothing block with infinite loop\n      } while( true );\n    }\n    iStack_50 = (int)lVar1;\n    iStack_4c = iStack_50 - iStack_40;\n    uStack_48 = auStack_3c[0];\n    uStack_44 = DAT_0070e570;\n    DAT_0070e570 = &iStack_50;\n    FUN_002e4b10(lVar1,&iStack_50);\n    DAT_0070e570 = (int *)uStack_44;\n  }\n  return lVar1;\n}\n\n\nundefined8 FUN_002e4850(undefined8 param_1,undefined8 param_2)\n\n{\n  undefined4 uVar1;\n  int iVar2;\n  int iVar3;\n  undefined4 *puVar4;\n  undefined1 *puVar5;\n  \n  puVar5 = (undefined1 *)param_1;\n  *puVar5 = 1;\n  *(undefined4 *)(puVar5 + 0x2c) = DAT_00616250;\n  DAT_00616250 = 0;\n  iVar3 = (int)param_2;\n  if (*(int *)(puVar5 + 8) != 0) {\n    iVar2 = *(int *)(puVar5 + 8) + *(int *)(iVar3 + 4);\n    *(int *)(puVar5 + 8) = iVar2;\n    FUN_00307400(iVar2);\n  }\n  FUN_0024a630(DAT_0062397c,*(undefined4 *)(puVar5 + 8));\n  "
+      },
+      {
+        "id": "native-initialization",
+        "text": "\nvoid FUN_00416810(undefined8 param_1)\n\n{\n  undefined4 uVar1;\n  undefined4 uVar2;\n  int iVar3;\n  int iVar4;\n  undefined8 uVar5;\n  \n  FUN_002a4e30(0,0);\n  iVar3 = FUN_005a14c0(param_1);\n  uVar5 = FUN_003b14d0(0x4b0);\n  uVar5 = FUN_002f6410(uVar5);\n  iVar4 = *(int *)((int)param_1 + 0x4c);\n  uVar1 = *(undefined4 *)(iVar4 + 0x24);\n  uVar2 = *(undefined4 *)(iVar4 + 8);\n  iVar4 = FUN_005a14c0(param_1);\n  FUN_002f6c48(uVar5,param_1,uVar2,uVar1,*(undefined4 *)(iVar4 + 0x68),0,0);\n  iVar4 = (int)uVar5;\n  *(int *)(iVar4 + 4) = iVar3;\n  *(int *)(iVar3 + 8) = iVar4;\n  if (*(int *)(DAT_00619b10 + 4) == 1) {\n    *(undefined1 *)(iVar4 + 0x1c0) = 1;\n  }\n  return;\n}\n\n\nvoid FUN_0050c0a0(undefined8 param_1)\n\n{\n  undefined4 uVar1;\n  undefined4 uVar2;\n  int iVar3;\n  int iVar4;\n  undefined8 uVar5;\n  ulong uVar6;\n  long lVar7;\n  undefined8 uVar8;\n  \n  uVar8 = 0;\n  FUN_002a4e30(0,0);\n  iVar3 = FUN_005a14c0(param_1);\n  uVar5 = FUN_003b14d0(0x4b0);\n  uVar5 = FUN_002f6410(uVar5);\n  uVar6 = FUN_004b7298();\n  if ((uVar6 == *(byte *)(iVar3 + 0x5d)) || (lVar7 = FUN_004b7268(), lVar7 == 0)) {\n    uVar8 = 1;\n    iVar4 = *(int *)((int)param_1 + 0x4c);\n  }\n  else {\n    iVar4 = *(int *)((int)param_1 + 0x4c);\n  }\n  uVar1 = *(undefined4 *)(iVar4 + 0x24);\n  uVar2 = *(undefined4 *)(iVar4 + 8);\n  iVar4 = FUN_005a14c0(param_1);\n  FUN_002f6c48(uVar5,param_1,uVar2,uVar1,*(undefined4 *)(iVar4 + 0x68),uVar8,uVar8);\n  iVar4 = (int)uVar5;\n  *(undefined4 *)(*(int *)(iVar3 + 0x4c) + 8) = *(undefined4 *)(iVar4 + 0x14);\n  *(int *)(iVar3 + 8) = iVar4;\n  *(int *)(iVar4 + 4) = iVar3;\n  if (*(int *)(iVar4 + 0x308) != 0) {\n    FUN_001d7310();\n  }\n  if (DAT_00619b00 == 5) {\n    *(undefined1 *)(iVar4 + 0x1c0) = 0;\n  }\n  else {\n    *(undefined1 *)(iVar4 + 0x1c0) = 1;\n  }\n  return;\n}\n\niVar12 = (int)param_1;\n  *(undefined1 *)(iVar12 + 0x138) = 0;\n  *(undefined1 *)(iVar12 + 0x318) = 1;\n  uStack_70 = param_4;\n  FUN_0024a3e0();\n  iVar11 = (int)param_3;\n  *(int *)(iVar12 + 0x14) = iVar11;\n  lVar5 = FUN_004328a0(param_2,0x64abd4);\n  if (lVar5 == 0) {\n    *(undefined1 *)(iVar12 + 0x131) = 1;\n  }\n  else {\n    *(undefined1 *)(iVar12 + 0x131) = 0;\n  }\n  "
+      },
+      {
+        "id": "complete-runtime-relocation",
+        "text": "\nundefined8 FUN_00307400(undefined8 param_1,undefined8 param_2,int param_3)\n\n{\n  bool bVar1;\n  char cVar2;\n  int iVar3;\n  int iVar4;\n  int *piVar5;\n  undefined4 *puVar6;\n  int iVar7;\n  \n  FUN_0024b260();\n  iVar7 = (int)param_1;\n  *(undefined **)(iVar7 + 0x28) = &DAT_00627fd0;\n  iVar4 = 0x16;\n  do {\n    iVar3 = 0;\n    do {\n      bVar1 = iVar3 != -1;\n      iVar3 = iVar3 + -1;\n    } while (bVar1);\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  iVar4 = 0x16;\n  do {\n    iVar3 = 2;\n    do {\n      bVar1 = iVar3 != -1;\n      iVar3 = iVar3 + -1;\n    } while (bVar1);\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  iVar4 = 0x16;\n  do {\n    iVar3 = 2;\n    do {\n      bVar1 = iVar3 != -1;\n      iVar3 = iVar3 + -1;\n    } while (bVar1);\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  FUN_00307380(iVar7 + 0x315c,param_2);\n  iVar4 = 0x16;\n  do {\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  iVar4 = 3;\n  do {\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  iVar4 = 3;\n  do {\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  iVar4 = 3;\n  do {\n    bVar1 = iVar4 != -1;\n    iVar4 = iVar4 + -1;\n  } while (bVar1);\n  iVar4 = (int)param_2;\n  if (*(int *)(iVar7 + 0x381c) == 0) {\n    *(undefined4 *)(iVar7 + 0xc4) = 0;\n  }\n  else {\n    *(int *)(iVar7 + 0x381c) = *(int *)(iVar7 + 0x381c) + *(int *)(iVar4 + 4);\n    *(undefined4 *)(iVar7 + 0xc4) = 0;\n  }\n  *(undefined4 *)(iVar7 + 200) = 0;\n  *(undefined4 *)(iVar7 + 0xcc) = 0;\n  *(undefined4 *)(iVar7 + 0xd0) = 0;\n  *(undefined4 *)(iVar7 + 0xd4) = 0;\n  FUN_003b5e78(DAT_00618954,*(undefined4 *)(param_3 + 0x1808));\n  FUN_003b5ed8(DAT_00618954,*(undefined4 *)(param_3 + 0x180c));\n  FUN_003b5f38(DAT_00618954,*(undefined4 *)(param_3 + 0x1810));\n  if (*(int *)(iVar7 + 0x3864) != 0) {\n    puVar6 = (undefined4 *)(*(int *)(iVar7 + 0x3864) + *(int *)(iVar4 + 4));\n    *(undefined4 **)(iVar7 + 0x3864) = puVar6;\n    FUN_0055f510(puVar6,param_2);\n    *puVar6 = &DAT_00623fd8;\n  }\n  if (*(int *)(iVar7 + 0xd8) != 0) {\n    iVar3 = *(int *)(iVar7 + 0xd8) + *(int *)(iVar4 + 4);\n    *(int *)(iVar7 + 0xd8) = iVar3;\n    FUN_003b2b68(iVar3,param_2);\n  }\n  if (*(int *)(iVar7 + 0xdc) == 0) {\n    iVar3 = *(int *)(iVar7 + 0xe0);\n  }\n  else {\n    *(int *)(iVar7 + 0xdc) = *(int *)(iVar7 + 0xdc) + *(int *)(iVar4 + 4);\n    iVar3 = *(int *)(iVar7 + 0xe0);\n  }\n  if (iVar3 != 0) {\n    (**(code **)(*DAT_00618954 + 0x24))(DAT_00618954,param_2,iVar7 + 0xe0,1);\n  }\n  if (*(int *)(iVar7 + 0x3868) == 0) {\n    iVar3 = *(int *)(iVar7 + 0x386c);\n  }\n  else {\n    *(int *)(iVar7 + 0x3868) = *(int *)(iVar7 + 0x3868) + *(int *)(iVar4 + 4);\n    iVar3 = *(int *)(iVar7 + 0x386c);\n  }\n  if (iVar3 == 0) {\n    iVar3 = *(int *)(iVar7 + 0x3870);\n  }\n  else {\n    *(int *)(iVar7 + 0x386c) = iVar3 + *(int *)(iVar4 + 4);\n    iVar3 = *(int *)(iVar7 + 0x3870);\n  }\n  if (iVar3 == 0) {\n    iVar3 = *(int *)(iVar7 + 0x3874);\n  }\n  else {\n    *(int *)(iVar7 + 0x3870) = iVar3 + *(int *)(iVar4 + 4);\n    iVar3 = *(int *)(iVar7 + 0x3874);\n  }\n  if (iVar3 != 0) {\n    *(int *)(iVar7 + 0x3874) = iVar3 + *(int *)(iVar4 + 4);\n  }\n  (**(code **)(*DAT_00615e48 + 0x18))(DAT_00615e48,param_2,*(undefined4 *)(iVar7 + 0x3868));\n  cVar2 = FUN_004b2ae0(*(undefined4 *)(iVar7 + 8));\n  iVar3 = *(int *)(iVar7 + 0x3814);\n  *(int *)(iVar7 + 0x3818) = DAT_006e0170 + cVar2 * 0x1c;\n  if ((*(int *)(iVar7 + 0x3810) != 0) &&\n     (*(int *)(iVar7 + 0x3810) = *(int *)(iVar7 + 0x3810) + *(int *)(iVar4 + 4), 0 < iVar3)) {\n    do {\n      iVar3 = iVar3 + -1;\n    } while (iVar3 != 0);\n  }\n  piVar5 = (int *)(iVar7 + 0x3824);\n  iVar3 = 7;\n  do {\n    iVar3 = iVar3 + -1;\n    if (*piVar5 != 0) {\n      *piVar5 = *piVar5 + *(int *)(iVar4 + 4);\n    }\n    piVar5 = piVar5 + 1;\n  } while (-1 < iVar3);\n  piVar5 = (int *)(iVar7 + 0x3844);\n  iVar3 = 7;\n  do {\n    iVar3 = iVar3 + -1;\n    if (*piVar5 != 0) {\n      *piVar5 = *piVar5 + *(int *)(iVar4 + 4);\n    }\n    piVar5 = piVar5 + 1;\n  } while (-1 < iVar3);\n  if (*(int *)(iVar7 + 0x3888) != 0) {\n    iVar4 = *(int *)(iVar7 + 0x3888) + *(int *)(iVar4 + 4);\n    *(int *)(iVar7 + 0x3888) = iVar4;\n    FUN_00308580(iVar4,param_2);\n  }\n  return param_1;\n}\n\n"
+      },
+      {
+        "id": "source-pointer-example",
+        "text": "Actual350Z SHA7666859dd8bba326c8c75e9879b1bc4ee2b12dafc4d9d3a50f21a34be02fd346 has headerbase0x06800000, carrier payloadfileoffset128, pointeru32file136=0x06800050 \u2192 sourcefile0xd0 by pointer-base+128. Object+dc=file1ac matches basic model skeleton pointer. File1b4=0,4physicalwheeljoint slots. Apriliafile1b4=1,2physicalwheeljoint slots."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The native package loader reads the0x80-byte PCK header, validates header version1 and expected kind, then returns the payload. For vehicle kind0x38e030, native root relocation adds the relocation delta to payload-root+8 and passes that object to FUN00307400. Thus source file136 is the serialized pointer to the runtime model object.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.88,
+          "contradicts": 0.08,
+          "says_nothing": 0.04
+        },
+        "confidence": 0.82,
+        "action": "auto",
+        "supporting_evidence": "vehicle-kind-and-root",
+        "same_subject": 0.52
+      },
+      {
+        "id": "claim1",
+        "claim": "Vehicle initialization FUN0050c0a0/FUN00416810 passes the relocated payload-root+8 object as param3 to FUN002f6c48, which stores it in instance+0x14. Native runtime model relocation preserves the byte atobject+0xe4, while relocating skeleton+0xdc and wheel arrays+0x3824/+0x3844. Therefore source object offset0xd0 +0xe4 (file0x1b4) is the renderer kind byte for this profile; source0x1ac is its skeleton pointer. This is a static loader linkage claim, not an emulator execution claim.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.6,
+          "contradicts": 0.19,
+          "says_nothing": 0.21
+        },
+        "confidence": 0.4,
+        "action": "review",
+        "supporting_evidence": "native-initialization",
+        "same_subject": 0.34
+      }
+    ],
+    "usage": {
+      "input_tokens": 5615,
+      "output_tokens": 278
+    }
+  }
+}

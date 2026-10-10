@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x003013e8,0x002ca780,0x002ca758",
+    "fields": "decompiled_code,callers,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791661427007418000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x003013e8\":{\"name\":\"FUN_003013e8\",\"size\":72,\"address\":\"003013e8\",\"decompiled_code\":\"\\nfloat FUN_003013e8(float param_1,int param_2,long param_3)\\n\\n{\\n  float fVar1;\\n  float fVar2;\\n  \\n  if (param_3 == 0) {\\n    fVar2 = *(float *)(*(int *)(param_2 + 0x314) + 0x20);\\n  }\\n  else {\\n    fVar2 = *(float *)(*(int *)(param_2 + 0x314) + 0x1c);\\n  }\\n  fVar1 = 0.0;\\n  if ((fVar2 != 0.0) && (fVar2 < param_1 * 0.5)) {\\n    fVar1 = fVar2 - param_1 * 0.5;\\n  }\\n  return fVar1;\\n}\\n\\n\",\"caller_count\":1,\"callers\":[{\"name\":\"FUN_002c66c8\",\"address\":\"002c66c8\"}],\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x002ca780\":{\"name\":\"FUN_002ca780\",\"size\":72,\"address\":\"002ca780\",\"decompiled_code\":\"\\nfloat FUN_002ca780(int param_1,int param_2)\\n\\n{\\n  int iVar1;\\n  float fVar2;\\n  \\n  if (*(int *)(param_1 + 0x1804) != 0) {\\n    iVar1 = *(int *)(*(int *)(param_1 + 0x1804) + 0x14);\\n    if ((iVar1 != 0) && (iVar1 = *(int *)(iVar1 + param_2 * 4 + 0x3824), iVar1 != 0)) {\\n      fVar2 = *(float *)(iVar1 + 0x14);\\n      return fVar2 + fVar2;\\n    }\\n  }\\n  return -0.3;\\n}\\n\\n\",\"caller_count\":3,\"callers\":[{\"name\":\"FUN_002c66c8\",\"address\":\"002c66c8\"},{\"name\":\"FUN_002e0248\",\"address\":\"002e0248\"},{\"name\":\"FUN_002e3c58\",\"address\":\"002e3c58\"}],\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x002ca758\":{\"name\":\"FUN_002ca758\",\"size\":36,\"address\":\"002ca758\",\"decompiled_code\":\"\\nvoid FUN_002ca758(int param_1,int param_2)\\n\\n{\\n  FUN_004afab0(*(undefined4 *)(param_1 + param_2 * 4 + 0x11b8));\\n  return;\\n}\\n\\n\",\"caller_count\":1,\"callers\":[{\"name\":\"FUN_003042c8\",\"address\":\"003042c8\"}],\"callee_count\":1,\"callees\":[{\"name\":\"FUN_004afab0\",\"address\":\"004afab0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":3,\"requested\":3}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.6920327920088312
+}

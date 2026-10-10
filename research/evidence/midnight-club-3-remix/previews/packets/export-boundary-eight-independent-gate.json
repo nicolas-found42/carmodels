@@ -1,0 +1,129 @@
+{
+  "args": {
+    "request": "Independently review this research-authored exporter test file for authentic temporary source fixture controls: reject escaped member/manifest paths, symlink and hardlink sources, duplicate identities, missing declared or undeclared wheel source occurrences before output; validate repeatability and preserve user-edited output. Scope is adequacy of these eight tests, not approval of entire production exporter.",
+    "diff": "--- /dev/null\n+++ b/tools/test_export_mc3_models.py\n@@ -0,0 +1,144 @@\n+\"\"\"Exporter boundary controls on temporary copies of exact native 350Z members.\"\"\"\n+import copy\n+import json\n+import os\n+from pathlib import Path\n+import shutil\n+import tempfile\n+import unittest\n+\n+from bake_models import ROOT, read_glb\n+from export_mc3_models import export\n+\n+\n+class ExportBoundaryTests(unittest.TestCase):\n+    def fixture(self, base):\n+        native = ROOT / 'midnight-club-3-remix/cars'\n+        index = json.loads((native / 'index.json').read_text())\n+        vehicle = next(v for v in index['vehicles'] if v['id'] == 'vp_350z_04')\n+        manifest = json.loads((native / vehicle['manifest']).read_text())\n+        source = base / 'source'\n+        (source / 'members').mkdir(parents=True)\n+        members = []\n+        for row in manifest['members']:\n+            if row['file'].endswith('.pck'):\n+                target = source / 'members' / Path(row['file']).name\n+                shutil.copyfile(native / row['file'], target)\n+                members.append({**row, 'file': target.relative_to(source).as_posix()})\n+        manifest = {**manifest, 'members': members}\n+        wheel_sources = {vehicle['id'] + '.carcfg', 'decal.pck', 'rim.ppf', 'tire.ppf', 'vehicle.lst'}\n+        shared = [row for row in index['files'] if row['file'].startswith('shared/')\n+                  and Path(row['file']).name in wheel_sources]\n+        self.assertEqual({Path(row['file']).name for row in shared}, wheel_sources)\n+        for row in shared:\n+            target = source / row['file']\n+            target.parent.mkdir(parents=True, exist_ok=True)\n+            shutil.copyfile(native / row['file'], target)\n+        index = {**index, 'vehicles': [{**vehicle, 'manifest': vehicle['id'] + '/manifest.json'}], 'files': shared}\n+        self.write_fixture(source, index, manifest)\n+        return source, index, manifest\n+\n+    def write_fixture(self, source, index, manifest):\n+        manifest_path = source / 'vp_350z_04/manifest.json'\n+        manifest_path.parent.mkdir(parents=True, exist_ok=True)\n+        manifest_path.write_text(json.dumps(manifest))\n+        (source / 'index.json').write_text(json.dumps(index))\n+\n+    def reject(self, source, output, reason):\n+        with self.assertRaisesRegex(ValueError, reason):\n+            export(source, output)\n+        self.assertFalse(output.exists(), 'rejected export must not publish output')\n+\n+    def test_parent_and_absolute_member_paths_reject_before_output(self):\n+        for absolute in (False, True):\n+            with self.subTest(absolute=absolute), tempfile.TemporaryDirectory() as temp:\n+                base = Path(temp).resolve()\n+                source, index, manifest = self.fixture(base)\n+                payload = base / 'payload'\n+                shutil.copytree(source / 'members', payload)\n+                for row in manifest['members']:\n+                    name = Path(row['file']).name\n+                    row['file'] = str(payload / name) if absolute else '../payload/' + name\n+                self.write_fixture(source, index, manifest)\n+                self.reject(source, base / 'output', 'path|relative|outside|boundary')\n+\n+    def test_symlink_member_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, _, manifest = self.fixture(base)\n+            member = source / manifest['members'][0]['file']\n+            outside = base / member.name\n+            member.rename(outside)\n+            member.symlink_to(outside)\n+            self.reject(source, base / 'output', 'symlink|path|outside|boundary')\n+\n+    def test_hardlinked_member_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, _, manifest = self.fixture(base)\n+            member = source / manifest['members'][0]['file']\n+            os.link(member, base / 'linked-member.pck')\n+            self.reject(source, base / 'output', 'independent file')\n+\n+    def test_duplicate_vehicle_identity_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, index, manifest = self.fixture(base)\n+            index['vehicles'].append(copy.deepcopy(index['vehicles'][0]))\n+            self.write_fixture(source, index, manifest)\n+            self.reject(source, base / 'output', 'duplicat|identity|ambiguous')\n+\n+    def test_manifest_parent_path_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, index, manifest = self.fixture(base)\n+            (base / 'manifest.json').write_text(json.dumps(manifest))\n+            index['vehicles'][0]['manifest'] = '../manifest.json'\n+            self.write_fixture(source, index, manifest)\n+            self.reject(source, base / 'output', 'identity')\n+\n+    def test_missing_indexed_wheel_occurrence_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, index, _ = self.fixture(base)\n+            copies = [row for row in index['files'] if Path(row['file']).name == 'rim.ppf']\n+            self.assertEqual(len(copies), 2)\n+            (source / copies[-1]['file']).unlink()\n+            self.reject(source, base / 'output', 'occurrence|coverage|missing')\n+\n+    def test_undeclared_wheel_occurrence_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, index, _ = self.fixture(base)\n+            row = next(row for row in index['files'] if Path(row['file']).name == 'rim.ppf')\n+            extra = source / 'shared/undeclared/rim.ppf'\n+            extra.parent.mkdir()\n+            shutil.copyfile(source / row['file'], extra)\n+            self.reject(source, base / 'output', 'occurrence|coverage|wheel source differs')\n+\n+    def test_valid_export_repeats_and_preserves_changed_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, _, _ = self.fixture(base)\n+            output = base / 'output'\n+            self.assertEqual(export(source, output), 1)\n+            row = json.loads((output / 'index.json').read_text())['cars'][0]\n+            self.assertFalse(row['wheels']['bike'])\n+            self.assertEqual(len(row['wheels']['slots']), 4)\n+            document, _ = read_glb((output / row['file']).read_bytes())\n+            for slot in row['wheels']['slots']:\n+                nodes = [node for node in document['nodes']\n+                         if node['extras'].get('nativeBone') == slot['bone']\n+                         and 'nativeWheelComponent' in node['extras']]\n+                self.assertEqual({node['extras']['nativeWheelComponent'] for node in nodes}, {'rim', 'tire'})\n+            self.assertEqual(export(source, output), 0)\n+            model = output / 'vp_350z_04.glb'\n+            model.write_bytes(model.read_bytes() + b'user edit')\n+            before = {p.name: p.read_bytes() for p in output.iterdir()}\n+            with self.assertRaisesRegex(ValueError, 'differs; nothing overwritten'):\n+                export(source, output)\n+            self.assertEqual({p.name: p.read_bytes() for p in output.iterdir()}, before)\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n",
+    "claims": [
+      "The executed combined suite contains all eight exporter tests and five converter tests; all thirteen passed in 3.184 seconds.",
+      "The eight exporter tests use temporary copies of exact native 350Z assets and shared wheel sources. Their malformed-source cases assert no output, and the repeat/export control preserves all output bytes after a user-edited GLB is rejected."
+    ],
+    "evidence": "{\"executed_tests\": \"test_empty_geometry_rejected (tools.test_mc3_model.PreviewGeometryTest.test_empty_geometry_rejected) ... ok\\ntest_native_xyz_order_parent_rotation_and_invalid_frames (tools.test_mc3_model.PreviewGeometryTest.test_native_xyz_order_parent_rotation_and_invalid_frames) ... ok\\ntest_source_identity_retained (tools.test_mc3_model.PreviewGeometryTest.test_source_identity_retained) ... ok\\ntest_strip_winding_and_degenerate_restart (tools.test_mc3_model.PreviewGeometryTest.test_strip_winding_and_degenerate_restart) ... ok\\ntest_wheel_set_and_inherited_rotation_controls (tools.test_mc3_model.PreviewGeometryTest.test_wheel_set_and_inherited_rotation_controls) ... ok\\ntest_duplicate_vehicle_identity_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_duplicate_vehicle_identity_rejects_before_output) ... ok\\ntest_hardlinked_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_hardlinked_member_rejects_before_output) ... ok\\ntest_manifest_parent_path_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_manifest_parent_path_rejects_before_output) ... ok\\ntest_missing_indexed_wheel_occurrence_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_missing_indexed_wheel_occurrence_rejects_before_output) ... ok\\ntest_parent_and_absolute_member_paths_reject_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_parent_and_absolute_member_paths_reject_before_output) ... ok\\ntest_symlink_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_symlink_member_rejects_before_output) ... ok\\ntest_undeclared_wheel_occurrence_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_undeclared_wheel_occurrence_rejects_before_output) ... ok\\ntest_valid_export_repeats_and_preserves_changed_output (tools.test_export_mc3_models.ExportBoundaryTests.test_valid_export_repeats_and_preserves_changed_output) ... ok\\n\\n----------------------------------------------------------------------\\nRan 13 tests in 3.184s\\n\\nOK\\n\", \"scope\": \"Latest eight tests only; previous six-test review retained as historical. These source fixtures copy local recovered bytes, and do not modify authentic input files.\"}",
+    "tests": "test_empty_geometry_rejected (tools.test_mc3_model.PreviewGeometryTest.test_empty_geometry_rejected) ... ok\ntest_native_xyz_order_parent_rotation_and_invalid_frames (tools.test_mc3_model.PreviewGeometryTest.test_native_xyz_order_parent_rotation_and_invalid_frames) ... ok\ntest_source_identity_retained (tools.test_mc3_model.PreviewGeometryTest.test_source_identity_retained) ... ok\ntest_strip_winding_and_degenerate_restart (tools.test_mc3_model.PreviewGeometryTest.test_strip_winding_and_degenerate_restart) ... ok\ntest_wheel_set_and_inherited_rotation_controls (tools.test_mc3_model.PreviewGeometryTest.test_wheel_set_and_inherited_rotation_controls) ... ok\ntest_duplicate_vehicle_identity_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_duplicate_vehicle_identity_rejects_before_output) ... ok\ntest_hardlinked_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_hardlinked_member_rejects_before_output) ... ok\ntest_manifest_parent_path_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_manifest_parent_path_rejects_before_output) ... ok\ntest_missing_indexed_wheel_occurrence_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_missing_indexed_wheel_occurrence_rejects_before_output) ... ok\ntest_parent_and_absolute_member_paths_reject_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_parent_and_absolute_member_paths_reject_before_output) ... ok\ntest_symlink_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_symlink_member_rejects_before_output) ... ok\ntest_undeclared_wheel_occurrence_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_undeclared_wheel_occurrence_rejects_before_output) ... ok\ntest_valid_export_repeats_and_preserves_changed_output (tools.test_export_mc3_models.ExportBoundaryTests.test_valid_export_repeats_and_preserves_changed_output) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 3.184s\n\nOK\n"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "safe_to_apply_below_auto_accept",
+      "confidence_below_auto_accept",
+      "review_required",
+      "claims_unsupported",
+      "claim_confidence_low"
+    ],
+    "review": {
+      "safe_to_apply": 0.61,
+      "scores": {
+        "correctness": {
+          "score": 1.7,
+          "confidence": 0.55,
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.18,
+            "2": 0.76
+          }
+        },
+        "spec_match": {
+          "score": 1.82,
+          "confidence": 0.71,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.13,
+            "2": 0.84
+          }
+        },
+        "test_gap": {
+          "score": 0.26,
+          "confidence": 0.61,
+          "probabilities": {
+            "0": 0.8,
+            "1": 0.14,
+            "2": 0.06
+          }
+        },
+        "blast_radius": {
+          "score": 0.2,
+          "confidence": 0.69,
+          "probabilities": {
+            "0": 0.82,
+            "1": 0.15,
+            "2": 0.03
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "review",
+      "composite": 0.8785000000000001,
+      "reason_codes": [
+        "safe_to_apply_below_auto_accept",
+        "confidence_below_auto_accept"
+      ],
+      "limiting_rubrics": [
+        "correctness"
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 1,
+        "contradicted": 0,
+        "unsupported": 1,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The executed combined suite contains all eight exporter tests and five converter tests; all thirteen passed in 3.184 seconds.",
+          "verdict": "verified",
+          "confidence": 0.92,
+          "probabilities": {
+            "verified": 0.95,
+            "contradicted": 0.03,
+            "unsupported": 0.02
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The eight exporter tests use temporary copies of exact native 350Z assets and shared wheel sources. Their malformed-source cases assert no output, and the repeat/export control preserves all output bytes after a user-edited GLB is rejected.",
+          "verdict": "unsupported",
+          "confidence": 0.23,
+          "probabilities": {
+            "verified": 0.42,
+            "contradicted": 0.09,
+            "unsupported": 0.49
+          },
+          "action": "escalate"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 4278,
+      "output_tokens": 158
+    }
+  }
+}

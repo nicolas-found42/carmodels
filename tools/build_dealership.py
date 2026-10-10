@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 
 from bake_models import ROOT, bake_car
+from import_mc3_catalogs import native_model
 
 DEALERSHIP = ROOT / 'dealership/dealership'
 OUTPUT = ROOT / 'dealership/public/dealership/cars.json'
@@ -24,6 +25,9 @@ def load_all(dealership=DEALERSHIP):
         if 'model' in entry or 'silhouette' in entry:
             raise ValueError('Dealership catalog contains generated geometry; edit the model GLB instead')
         seen.add(code)
+        if entry.get('displayMode') == 'native-package':
+            cars.append({**entry, 'model': native_model(entry, dealership)})
+            continue
         model = dealership / 'models' / f'{code}.glb'
         if model.is_symlink() or model.stat().st_nlink != 1:
             raise ValueError(f'{code}: dealership model must be an independent file')
@@ -40,6 +44,9 @@ def load_all(dealership=DEALERSHIP):
             baked.update(schema=2, claimLimits=[
                 'Editable static model with its embedded textures; not original-game rendering fidelity.',
                 'Default GLB scene only; source identities and names retain their conversion limits.'])
+            if entry.get('game') == 'midnight-club-3-remix':
+                native_model({**entry, 'displayMode': 'native-package'}, dealership)
+                baked['claimLimits'] = entry.get('claimLimits', [])
         cars.append({**entry, 'model': baked})
     return cars
 
@@ -59,7 +66,7 @@ def check(dealership=DEALERSHIP, output=OUTPUT):
 def build(dealership=DEALERSHIP, output=OUTPUT):
     output = Path(output)
     public = ROOT / 'dealership/public'
-    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'gran-turismo', ROOT / 'redline',
+    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'gran-turismo', ROOT / 'redline', ROOT / 'midnight-club-3-remix',
                        public / 'models.json', Path(dealership)]
     protected_paths.extend(path for path in public.iterdir()
                            if path.is_dir() and path.name != 'dealership')
@@ -92,4 +99,4 @@ if __name__ == '__main__':
         print('PASS dealership freshness: compiled data matches current models and catalog')
     else:
         cars = build(args.dealership, args.output)
-        print(f'{len(cars)} dealership cars -> {args.output}; editable models preserved')
+        print(f'{len(cars)} dealership entries -> {args.output}; existing assets preserved')

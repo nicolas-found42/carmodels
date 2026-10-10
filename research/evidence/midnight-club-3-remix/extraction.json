@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "game": "Midnight Club 3: DUB Edition Remix",
+  "source": {
+    "bytes": 8539963392,
+    "file": "Midnight Club 3 - DUB Edition Remix.iso",
+    "sha256": "de199f7e7f57b7cb603a129217f7482d50644fd66558450dfeb5612857b732f9",
+    "volume": "MC3REMIX"
+  },
+  "vehicle_carriers": 94,
+  "nested_native_members": 4323,
+  "files_including_index": 7283,
+  "bytes_including_index": 569084266,
+  "index_sha256": "821c70352f475e127fdedd538493c91db4dba1e4d039d8e52b36a0d263111354",
+  "source_regeneration_command": [
+    "python3",
+    "tools/extract_mc3_cars.py",
+    "--check"
+  ],
+  "source_regeneration_exit_code": 0,
+  "source_regeneration_stdout": "CHECKED 94 vehicle carriers, 7283 files, 569084266 bytes\n",
+  "claim_limits": [
+    "Native archive extraction only; PCK geometry and PPF texture decoding, GLB conversion and rendering remain unverified.",
+    "Vehicle IDs are source package/path codes, not a verified real-world name catalog or playable roster.",
+    "Selection retains declared vehicle namespaces and root vp_*.dat carriers; runtime dependency closure and load precedence are unknown.",
+    "Duplicate archive names are retained by ordinal; their intended runtime precedence is not inferred.",
+    "TEXTURE.DAT and BANKS.DAT are inventoried; city textures and audio are not extracted. STREAMS.DAT uses a separate Hash format, retained as an ISO inventory fact only.",
+    "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+  ]
+}

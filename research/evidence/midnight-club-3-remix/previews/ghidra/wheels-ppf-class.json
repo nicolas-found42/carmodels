@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x0042be10",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_0042be10\",\"size\":24,\"address\":\"0042be10\",\"decompiled_code\":\"\\nundefined8 FUN_0042be10(undefined8 param_1)\\n\\n{\\n  *(undefined4 *)((int)param_1 + 8) = 0;\\n  *(undefined4 *)((int)param_1 + 0x14) = 0xffffffff;\\n  return param_1;\\n}\\n\\n\",\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.2398884169961093
+}

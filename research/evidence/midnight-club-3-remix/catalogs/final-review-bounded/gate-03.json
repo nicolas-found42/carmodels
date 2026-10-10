@@ -1,0 +1,150 @@
+{
+  "args": {
+    "request": "Add the recovered Midnight Club 3 DUB Edition Remix files to both the source catalog and the dealership. Preserve existing assets/metadata and independent working-copy ownership. The recovered files are native PS2 DAT/PCK packages: catalog/download them honestly with explicit unavailable previews while geometry conversion remains unresolved. Add native game/variant filtering to the existing server-side TypeSafe Choice/Noul/Score behavior. Do not fabricate GLBs, retail names, statistics or a playable roster. Verify corrupt-input controls, UI cleanup, real catalog preservation and actual checks. This diff is scoped to the current catalog follow-up; the prior native extractor and independent preview-readiness note are separately reviewed.",
+    "diff": "--- a/dealership/dealership.html\n+++ b/dealership/dealership.html\n@@ -170,12 +170,12 @@\n   <nav id=\"sidebar\">\n     <header>\n       <h1>CAR LIBRARY \u2014 <span>DEALERSHIP</span></h1>\n-      <div class=\"sub\">Independent editable models \u00b7 multiple games</div>\n+      <div class=\"sub\">Cars and recovered assets \u00b7 multiple games</div>\n       <a class=\"jump\" href=\"recovered.html\">Source models \u2192</a>\n     </header>\n     <input aria-label=\"Search cars by name or year\" id=\"search\" placeholder=\"Search name or year\u2026\" autocomplete=\"off\">\n     <label style=\"padding:0 16px 8px;font-size:12px\">Game <select id=\"game-filter\" aria-label=\"Filter by game\"><option value=\"all\">All games</option></select></label>\n-    <label style=\"padding:0 16px 8px;font-size:12px\">Source variant <select id=\"variant-filter\" aria-label=\"Filter by source variant\"><option value=\"\">All variants</option><option value=\"day\">Day</option><option value=\"night\">Night</option><option value=\"arcade\">Arcade</option><option value=\"base\">Base game</option><option value=\"addon\">Add-on</option></select></label>\n+    <label style=\"padding:0 16px 8px;font-size:12px\">Source variant <select id=\"variant-filter\" aria-label=\"Filter by source variant\"><option value=\"\">All variants</option><option value=\"day\">Day</option><option value=\"night\">Night</option><option value=\"arcade\">Arcade</option><option value=\"base\">Base game</option><option value=\"addon\">Add-on</option><option value=\"native\">Native packages</option></select></label>\n     <div style=\"padding:0 16px 10px\"><input id=\"semantic-query\" aria-label=\"Describe game and variant filters\" placeholder=\"e.g. Gran Turismo night models\" maxlength=\"500\" style=\"width:100%\"><button type=\"button\" id=\"semantic-filter\">Find game and variant</button><div id=\"semantic-status\" role=\"status\" style=\"font-size:12px;color:var(--muted)\"></div></div>\n     <div id=\"filters\"></div>\n     <div id=\"results\" role=\"status\" aria-live=\"polite\"></div>\n@@ -187,7 +187,7 @@\n     <div id=\"hud\">\n         <div class=\"name\" id=\"hud-name\">\u2014</div>\n         <div class=\"tag\" id=\"hud-tag\"></div>\n-        <div class=\"recon\" title=\"These dealership models are independent editable copies. Changes here do not modify the recovered source models. Surface tones are illustrative.\">Dealership edition \u00b7 editable model copies</div>\n+        <div class=\"recon\" title=\"Dealership assets are independent copies. Model editing requires a converted GLB; native packages can be downloaded.\">Dealership edition \u00b7 independent asset copies</div>\n       </div>\n       <div id=\"stage\">\n         <div id=\"loading\" role=\"status\" aria-live=\"polite\">Loading corpus\u2026</div>\n@@ -303,7 +303,7 @@\n <script type=\"module\">\n import * as THREE from 'three';\n import { OrbitControls } from './vendor/OrbitControls.js';\n-import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant } from './dealership.mjs';\n+import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, isNativePackage, dealershipDownload } from './dealership.mjs';\n \n const $ = id => document.getElementById(id);\n const fmt = n => n == null ? '\u2014' : Number(n).toLocaleString('en-US');\n@@ -398,7 +398,7 @@\n     row.hidden = !matches;\n     if (matches) visible++;\n   });\n-  $('results').textContent = `${visible} of ${CARS.length} entries` + (current ? ` \u00b7 Preview: ${current.name}` : '');\n+  $('results').textContent = `${visible} of ${CARS.length} entries` + (current ? ` \u00b7 ${isNativePackage(current)?'Selected':'Preview'}: ${current.name}` : '');\n   $('empty').hidden = visible > 0;\n   if(visible && current && [...document.querySelectorAll('.car-row')].find(r=>r._code===current.code)?.hidden) {\n     const first=[...document.querySelectorAll('.car-row')].find(r=>!r.hidden);\n@@ -531,8 +531,11 @@\n \n   $('hud-name').textContent = c.name;\n   $('model-limits').textContent = (c.claimLimits || c.model.claimLimits || []).join(' ');\n-  $('download-model').href = `./dealership/models/${c.code}.glb`;\n-  $('download-model').download = `${c.code}-dealership.glb`;\n+  const download=dealershipDownload(c);\n+  $('download-model').href=download.href;$('download-model').download=download.filename;\n+  $('download-model').textContent=download.label;\n+  for(const button of document.querySelectorAll('[data-view]'))button.disabled=isNativePackage(c);\n+  $('auto-rotate').disabled=isNativePackage(c);\n   $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' \u00b7 ' : ''}${c.group || ''} \u00b7 ${c.bodyStyle==='unknown'?gameLabel(c)+' \u00b7 '+c.sourceVariant:c.bodyStyle}`;\n   $('v-ag').textContent = c.agility==null?'Not decoded':c.agility.toFixed(1);\n   $('v-ac').textContent = c.accel==null?'Not decoded':c.accel.toFixed(1);\n@@ -549,12 +552,12 @@\n   $('k-bhp').textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '\u2014';\n   $('k-kg').textContent = c.kg ? fmt(c.kg) + ' kg' : '\u2014';\n   $('k-ts').textContent = c.topSpeed ? Math.round(c.topSpeed) + ' mph' : '\u2014';\n-  $('k-liv').textContent = c.model.schema===2?'Not decoded':c.liveries ? c.liveries.length : '\u2014';\n+  $('k-liv').textContent = c.model.schema!==1?'Not decoded':c.liveries ? c.liveries.length : '\u2014';\n   $('k-snd').textContent = (c.sound || '').split(';')[0].replace(' (in _shared/sounds/)', '');\n   const sample = c.paint ? c.paint.rgb : [90, 90, 90];\n   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;\n   $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';\n-  $('paint-caveat').textContent = c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car\u2019s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';\n+  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car\u2019s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';\n   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {\n     const el = document.createElement('span');\n     el.className = 'livery-code';\n@@ -564,6 +567,11 @@\n \n   if (carMesh) { scene.remove(carMesh); disposeCar(carMesh); }\n   carMesh=null;\n+  if(isNativePackage(c)) {\n+    $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';\n+    $('loading').textContent='3D preview unavailable. The native vehicle package is available to download.';\n+    applyFilters();return;\n+  }\n   $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';$('loading').textContent='Loading '+c.name+'\u2026';\n   try {\n     const model=await loadCar(c,{signal:selectionController.signal});\n--- a/dealership/dealership.mjs\n+++ b/dealership/dealership.mjs\n@@ -3,10 +3,16 @@\n \n export const gameId = c => c.game || 'ford-racing-2';\n export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));\n+export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';\n+export function dealershipDownload(c) {\n+  return isNativePackage(c) ? {href:'./'+c.model.source.package, filename:c.code+'-dealership.dat', label:'Download native package (.dat)'} :\n+    {href:`./dealership/models/${c.code}.glb`, filename:c.code+'-dealership.glb', label:'Download dealership model (.glb)'};\n+}\n export function matchesVariant(c, variant) {\n   return !variant || (variant==='arcade' ? c.sourceCollection==='arcade' : c.sourceVariant===variant);\n }\n export async function loadCar(c, options={}) {\n+  if(isNativePackage(c))throw Error('3D preview unavailable for this native package.');\n   return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);\n }\n \n@@ -108,7 +114,7 @@\n   for (const c of cars) {\n     if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');\n     codes.add(c.code);\n-    const unknownSpecs = ['gran-turismo','redline'].includes(c.game);\n+    const unknownSpecs = ['gran-turismo','redline','midnight-club-3-remix'].includes(c.game);\n     if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);\n     if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);\n     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);\n@@ -124,7 +130,16 @@\n     if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);\n     if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);\n     if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);\n-    if(c.model?.schema===2) {\n+    if(isNativePackage(c)!==(c.model?.schema===3))throw Error(`${c.code}: inconsistent native package model.`);\n+    if(c.model?.schema===3) {\n+      const s=c.model.source;\n+      if(c.game!=='midnight-club-3-remix' || c.displayMode!=='native-package' || c.model.previewStatus!=='unavailable' ||\n+         !s || s.package!==`dealership/assets/${c.code}.dat` || s.preset!=='dealership' ||\n+         s.profile!=='mc3-ps2-native-package-v1' || !/^[a-f0-9]{64}$/.test(s.sha256) ||\n+         !Number.isInteger(s.bytes) || s.bytes<=0 || s.bytes>256*1024*1024 ||\n+         !Number.isInteger(s.nativeMembers) || s.nativeMembers<=0 || s.nativeMembers>100000 ||\n+         !/^vp_[a-z0-9_]+$/.test(c.sourceCode) || c.code!=='MC3_'+c.sourceCode.toUpperCase())throw Error(`${c.code}: invalid native dealership package.`);\n+    } else if(c.model?.schema===2) {\n       if(c.displayMode!=='textured-glb' || !c.model.source || c.model.source.glb!==`dealership/models/${c.code}.glb` ||\n          c.model.source.preset!=='dealership' || !/^[a-f0-9]{64}$/.test(c.model.source.sha256) ||\n          !Number.isInteger(c.model.triangleCount) || c.model.triangleCount<=0)throw Error(`${c.code}: invalid textured dealership model.`);\n--- a/tools/test_dealership.mjs\n+++ b/tools/test_dealership.mjs\n@@ -2,14 +2,14 @@\n import fs from 'node:fs';\n import http from 'node:http';\n import * as THREE from '../dealership/vendor/three.module.js';\n-import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant} from '../dealership/dealership.mjs';\n+import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload} from '../dealership/dealership.mjs';\n \n const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));\n const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');\n const sourcePage = fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');\n assert.match(dealershipPage,/fetchCars\\('\\.\\/public\\/dealership\\/cars.json'\\)/);\n assert(!dealershipPage.includes('silhouette')&&!dealershipPage.includes('Silhouette'),'old visible terminology removed');\n-assert.match(dealershipPage,/dealership\\/models\\/\\$\\{c.code\\}\\.glb/,'dealership downloads its own copies');\n+assert.equal(dealershipDownload(cars[0]).href,`./dealership/models/${cars[0].code}.glb`,'dealership downloads its own copies');\n assert.match(sourcePage,/public\\/models.json/,'source showcase retains its own corpus');\n assert.match(sourcePage,/<h1>Source model library<\\/h1>/);\n assert.equal(validateCars(cars).length, cars.length);\n--- a/tools/test_build_dealership.py\n+++ b/tools/test_build_dealership.py\n@@ -77,8 +77,12 @@\n         self.assertEqual(len([c for c in catalog if c.get('game', 'ford-racing-2') == 'ford-racing-2']), 35)\n         for entry in catalog:\n             code = entry['code']\n-            copy = DEALERSHIP / 'models' / f'{code}.glb'\n-            source = ROOT / (f\"dealership/public/{entry['game']}/{entry['sourceCode']}.glb\" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')\n+            if entry.get('displayMode') == 'native-package':\n+                copy = DEALERSHIP / entry['nativePackage']['file']\n+                source = ROOT / f\"dealership/public/{entry['game']}/native/{entry['sourceCode']}.dat\"\n+            else:\n+                copy = DEALERSHIP / 'models' / f'{code}.glb'\n+                source = ROOT / (f\"dealership/public/{entry['game']}/{entry['sourceCode']}.glb\" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')\n             self.assertFalse(copy.is_symlink())\n             self.assertEqual(copy.stat().st_nlink, 1)\n             self.assertFalse(os.path.samefile(copy, source))\n",
+    "claims": [
+      "The dealership native selection clears existing model resources and disables unavailable view controls; the observed browser shows94 of985 entries and a dealership DAT download for MC3_VP_350Z_04.",
+      "The dealership and native UI checks pass; original891 catalog/origin entries and9065 pre-existing asset files are preserved."
+    ],
+    "evidence": [
+      {
+        "id": "ui-filter-checks-manifest",
+        "text": "{\n  \"schema\": 1,\n  \"exit_code\": 0,\n  \"checks\": [\n    {\n      \"name\": \"ruff\",\n      \"command\": [\n        \"ruff\",\n        \"check\",\n        \"tools\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"ruff.log\",\n      \"elapsed_seconds\": 0.054\n    },\n    {\n      \"name\": \"test_viewer_loading\",\n      \"command\": [\n        \"node\",\n        \"tools/test_viewer_loading.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_viewer_loading.log\",\n      \"elapsed_seconds\": 0.124\n    },\n    {\n      \"name\": \"test_dealership\",\n      \"command\": [\n        \"node\",\n        \"tools/test_dealership.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_dealership.log\",\n      \"elapsed_seconds\": 0.797\n    },\n    {\n      \"name\": \"test_native_catalog_ui\",\n      \"command\": [\n        \"node\",\n        \"tools/test_native_catalog_ui.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_native_catalog_ui.log\",\n      \"elapsed_seconds\": 0.052\n    },\n    {\n      \"name\": \"test_library_filter\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_library_filter.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_library_filter.log\",\n      \"elapsed_seconds\": 0.06\n    }\n  ],\n  \"claim_limits\": [\n    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n  ]\n}"
+      },
+      {
+        "id": "ui-filter-checks-complete-logs",
+        "text": "COMMAND ['ruff', 'check', 'tools']\nSTATUS pass EXIT 0\nAll checks passed!\n\nCOMMAND ['node', 'tools/test_viewer_loading.mjs']\nSTATUS pass EXIT 0\nPASS test_viewer_loading: actual callback, success, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup\n\nCOMMAND ['node', 'tools/test_dealership.mjs']\nSTATUS pass EXIT 0\nPASS test_dealership: 35 dealership meshes, editable wheel counts, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, editable model data, corpus errors and real HTTP body timeout\n\nCOMMAND ['node', 'tools/test_native_catalog_ui.mjs']\nSTATUS pass EXIT 0\nPASS native catalog UI: native selection clears prior models, enables DAT downloads, skips GLB/GPU loading, exposes preview state, validates identity and rejects corrupt metadata\n\nCOMMAND ['python3', 'tools/test_library_filter.py']\nSTATUS pass EXIT 0\n.......\n----------------------------------------------------------------------\nRan 7 tests in 0.001s\n\nOK\n"
+      },
+      {
+        "id": "builder-checks-manifest",
+        "text": "{\n  \"schema\": 1,\n  \"exit_code\": 0,\n  \"checks\": [\n    {\n      \"name\": \"ruff\",\n      \"command\": [\n        \"ruff\",\n        \"check\",\n        \"tools\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"ruff.log\",\n      \"elapsed_seconds\": 0.191\n    },\n    {\n      \"name\": \"test_build_dealership\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_build_dealership.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_build_dealership.log\",\n      \"elapsed_seconds\": 5.426\n    },\n    {\n      \"name\": \"test_model_catalog\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_model_catalog.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_model_catalog.log\",\n      \"elapsed_seconds\": 0.578\n    },\n    {\n      \"name\": \"test_import_mc3_catalogs\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_import_mc3_catalogs.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_import_mc3_catalogs.log\",\n      \"elapsed_seconds\": 1.206\n    },\n    {\n      \"name\": \"dealership_freshness\",\n      \"command\": [\n        \"python3\",\n        \"tools/build_dealership.py\",\n        \"--check\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"dealership_freshness.log\",\n      \"elapsed_seconds\": 83.765\n    }\n  ],\n  \"claim_limits\": [\n    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n  ]\n}"
+      },
+      {
+        "id": "builder-checks-complete-logs",
+        "text": "COMMAND ['ruff', 'check', 'tools']\nSTATUS pass EXIT 0\nAll checks passed!\n\nCOMMAND ['python3', 'tools/test_build_dealership.py']\nSTATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 4.675s\n\nOK\n\nCOMMAND ['python3', 'tools/test_model_catalog.py']\nSTATUS pass EXIT 0\n.\n----------------------------------------------------------------------\nRan 1 test in 0.017s\n\nOK\n\nCOMMAND ['python3', 'tools/test_import_mc3_catalogs.py']\nSTATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.851s\n\nOK\n\nCOMMAND ['python3', 'tools/build_dealership.py', '--check']\nSTATUS pass EXIT 0\nPASS dealership freshness: compiled data matches current models and catalog\n"
+      },
+      {
+        "id": "dealership-browser.json",
+        "text": "{\n  \"disabledControls\": [\n    {\n      \"disabled\": true,\n      \"name\": \"auto-rotate\"\n    },\n    {\n      \"disabled\": true,\n      \"name\": \"Reset view\"\n    },\n    {\n      \"disabled\": true,\n      \"name\": \"Side\"\n    },\n    {\n      \"disabled\": true,\n      \"name\": \"Front\"\n    },\n    {\n      \"disabled\": true,\n      \"name\": \"Top\"\n    }\n  ],\n  \"download\": [\n    {\n      \"filename\": \"MC3_VP_350Z_04-dealership.dat\",\n      \"href\": \"./dealership/assets/MC3_VP_350Z_04.dat\",\n      \"text\": \"Download native package (.dat)\"\n    }\n  ],\n  \"previewUnavailable\": true,\n  \"summary\": \"94 of 985 entries \u00b7 Selected: vp_350z_04\",\n  \"url\": \"http://localhost:8081/dealership.html\"\n}\n"
+      },
+      {
+        "id": "preservation.json",
+        "text": "{\n  \"schema\": \"mc3-catalog-preservation-v1\",\n  \"status\": \"pass\",\n  \"checked_prior_asset_files\": 9065,\n  \"changed\": [],\n  \"missing\": [],\n  \"prior_catalog_entries_preserved\": 891,\n  \"prior_origins_preserved\": 891,\n  \"new_source_entries\": 94,\n  \"new_dealership_entries\": 94,\n  \"total_source_entries\": 985,\n  \"total_dealership_entries\": 985,\n  \"independent_native_copies\": 94,\n  \"claim_limits\": [\n    \"Equality checks cover pre-existing working/source asset bytes and prior catalog/origin records. Compiled catalogs intentionally gain native package entries. No MC3 geometry conversion or preview is claimed.\"\n  ]\n}\n"
+      }
+    ],
+    "tests": "Actual manifests and complete logs are supplied in evidence. Full run52 pass; later UI/filter5 pass and builder5 pass. The initial run had3 failed test assumptions, now repaired."
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.65,
+      "scores": {
+        "correctness": {
+          "score": 1.84,
+          "confidence": 0.78,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.09,
+            "2": 0.88
+          }
+        },
+        "spec_match": {
+          "score": 1.73,
+          "confidence": 0.58,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.26,
+            "2": 0.73
+          }
+        },
+        "test_gap": {
+          "score": 0.48,
+          "confidence": 0.29,
+          "probabilities": {
+            "0": 0.56,
+            "1": 0.39,
+            "2": 0.04
+          }
+        },
+        "blast_radius": {
+          "score": 1.78,
+          "confidence": 0.67,
+          "probabilities": {
+            "0": 0,
+            "1": 0.22,
+            "2": 0.78
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.758,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The dealership native selection clears existing model resources and disables unavailable view controls; the observed browser shows94 of985 entries and a dealership DAT download for MC3_VP_350Z_04.",
+          "verdict": "verified",
+          "confidence": 0.97,
+          "probabilities": {
+            "verified": 0.98,
+            "contradicted": 0.01,
+            "unsupported": 0.01
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The dealership and native UI checks pass; original891 catalog/origin entries and9065 pre-existing asset files are preserved.",
+          "verdict": "verified",
+          "confidence": 0.91,
+          "probabilities": {
+            "verified": 0.94,
+            "contradicted": 0.01,
+            "unsupported": 0.05
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 7207,
+      "output_tokens": 158
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "tool": "get_xrefs_to",
+  "args": {
+    "program": "SLUS_213.55",
+    "addresses": "0x00640ff5,0x0065c008,0x0065c02c",
+    "limit": 30
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"references_by_address\":{\"0x00640ff5\":[{\"from_address\":\"0024c904\",\"type\":\"PARAM\",\"from_function\":\"FUN_0024c738\"}],\"0x0065c008\":[{\"from_address\":\"003955d4\",\"type\":\"PARAM\",\"from_function\":\"FUN_00395460\"}],\"0x0065c02c\":[{\"from_address\":\"003956d8\",\"type\":\"PARAM\",\"from_function\":\"FUN_00395460\"}]},\"count\":3}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.03751512499002274
+}

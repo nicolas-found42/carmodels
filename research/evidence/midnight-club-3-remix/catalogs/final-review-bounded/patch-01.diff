@@ -1,0 +1,434 @@
+--- /dev/null
++++ b/tools/import_mc3_catalogs.py
+@@ -0,0 +1,208 @@
++#!/usr/bin/env python3
++"""Publish verified native MC3 packages and add independent dealership copies.
++
++These entries have no decoded geometry. No GLB or preview is synthesized.
++"""
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import re
++import tempfile
++
++from bake_models import ROOT
++from extract_mc3_cars import check_extraction
++from mc3_archive import DaveArchive, byte_reader
++
++GAME = 'midnight-club-3-remix'
++PROFILE = 'mc3-ps2-native-package-v1'
++LIMITS = ['Native PS2 vehicle package; 3D preview and geometry/texture conversion are unavailable.',
++          'Source package identifier; retail vehicle name and playable roster are unverified.',
++          'Package includes its nested members; shared resources and runtime dependency closure are not included in this download.']
++
++
++def sha(data):
++    return hashlib.sha256(data).hexdigest()
++
++
++def text(value):
++    return json.dumps(value, indent=1) + '\n'
++
++
++def regular(path):
++    path = Path(path)
++    if any(p.is_symlink() for p in (path, *path.parents)):
++        raise ValueError('MC3 paths must not contain symlinks')
++    if path.exists() and path.is_file() and path.stat().st_nlink != 1:
++        raise ValueError('MC3 package must be an independent file')
++
++
++def package_data(path, size, digest, members):
++    regular(path)
++    if (not isinstance(size, int) or isinstance(size, bool) or not 0 < size <= 256 * 1024 * 1024
++            or not isinstance(digest, str) or not re.fullmatch(r'[a-f0-9]{64}', digest)
++            or not isinstance(members, int) or isinstance(members, bool) or not 0 < members <= 100000):
++        raise ValueError('Invalid MC3 package metadata')
++    if path.stat().st_size != size:
++        raise ValueError('MC3 package hash/size differs')
++    data = path.read_bytes()
++    if sha(data) != digest:
++        raise ValueError('MC3 package hash/size differs')
++    archive = DaveArchive(byte_reader(data), len(data))
++    if sum(not r['directory'] for r in archive.records) != members:
++        raise ValueError('MC3 package member count differs')
++    for record in archive.records:
++        if not record['directory']:
++            archive.payload(record)  # Validate stored/decoded lengths and DEFLATE, not geometry.
++    return data
++
++
++def source_package(row, source):
++    code = row.get('code') if isinstance(row, dict) else None
++    if (not isinstance(code, str) or not re.fullmatch(r'vp_[a-z0-9_]+', code)
++            or row.get('file') != f'native/{code}.dat' or row.get('asset_kind') != 'native-package'
++            or row.get('source_profile') != PROFILE or row.get('source_variant') != 'native'
++            or row.get('records') != [] or row.get('display_name') != code
++            or row.get('claim_limits') != LIMITS):
++        raise ValueError('Invalid MC3 source package identity/profile')
++    return package_data(Path(source) / row['file'], row['bytes'], row['sha256'], row['native_members'])
++
++
++def export_packages(iso, extraction, output):
++    extraction, output, iso = Path(extraction), Path(output), Path(iso)
++    regular(output)
++    if (output.resolve().is_relative_to(extraction.resolve())
++            or extraction.resolve().is_relative_to(output.resolve())
++            or iso.resolve().is_relative_to(output.resolve())):
++        raise ValueError('MC3 export must be separate from original source files')
++    index, _ = check_extraction(iso, extraction)
++    rows, payloads = [], []
++    for vehicle in index['vehicles']:
++        code = vehicle['id']
++        manifest = json.loads((extraction / vehicle['manifest']).read_text())
++        carrier = manifest['carrier']
++        data = package_data(extraction / carrier['file'], carrier['bytes'], carrier['sha256'], vehicle['native_members'])
++        row = dict(code=code, file=f'native/{code}.dat', bytes=len(data), sha256=sha(data), records=[],
++                   display_name=code, source_profile=PROFILE, source_variant='native',
++                   asset_kind='native-package', native_members=vehicle['native_members'], claim_limits=LIMITS)
++        rows.append(row); payloads.append((row['file'], data))
++    contents = text({'cars': rows, 'source': index['source'], 'claim_limits': LIMITS})
++    if output.exists():
++        if not output.is_dir() or (output / 'index.json').read_text() != contents:
++            raise ValueError('Existing MC3 source export differs; nothing overwritten')
++        expected = {name for name, _ in payloads} | {'index.json'}
++        for path in output.rglob('*'):
++            regular(path)
++        if {p.relative_to(output).as_posix() for p in output.rglob('*') if p.is_file()} != expected:
++            raise ValueError('MC3 source export file coverage differs')
++        for row in rows:
++            source_package(row, output)
++        return 0
++    output.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.TemporaryDirectory(prefix='.mc3-export-', dir=output.parent) as temp:
++        stage = Path(temp) / 'source'; stage.mkdir()
++        for name, data in payloads:
++            path = stage / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(data)
++        (stage / 'index.json').write_text(contents)
++        stage.rename(output)
++    return len(rows)
++
++
++def native_model(entry, dealership):
++    code, package = entry['code'], entry.get('nativePackage', {})
++    if (not isinstance(code, str) or not isinstance(package, dict)
++            or entry.get('game') != GAME or entry.get('displayMode') != 'native-package'
++            or package.get('file') != f'assets/{code}.dat' or package.get('profile') != PROFILE
++            or code != 'MC3_' + str(entry.get('sourceCode', '')).upper()
++            or not re.fullmatch(r'vp_[a-z0-9_]+', str(entry.get('sourceCode', '')))):
++        raise ValueError('Invalid native dealership package identity/profile')
++    data = package_data(Path(dealership) / package['file'], package['bytes'], package['sha256'], package['members'])
++    return {'schema': 3, 'previewStatus': 'unavailable', 'source': {
++        'package': 'dealership/' + package['file'], 'sha256': sha(data), 'bytes': len(data),
++        'nativeMembers': package['members'], 'preset': 'dealership', 'profile': PROFILE}, 'claimLimits': LIMITS}
++
++
++def import_packages(source=ROOT / 'dealership/public' / GAME, destination=ROOT / 'dealership/dealership'):
++    source, destination = Path(source), Path(destination)
++    if (source.resolve().is_relative_to(destination.resolve())
++            or destination.resolve().is_relative_to(source.resolve())):
++        raise ValueError('MC3 source and dealership must be separate')
++    catalog_path, origins_path = destination / 'catalog.json', destination / 'origins.json'
++    for path in (source, destination, catalog_path, origins_path, destination / 'assets'):
++        regular(path)
++    catalog = json.loads(catalog_path.read_text()); origins = json.loads(origins_path.read_text())
++    if (not isinstance(catalog, list) or not catalog or origins.get('schema') != 1
++            or not isinstance(origins.get('cars'), list)):
++        raise ValueError('Existing dealership catalog/origins are invalid')
++    existing = {row['code']: row for row in catalog}
++    origin_codes = {r['code'] for r in origins['cars']}
++    if len(existing) != len(catalog) or len(origin_codes) != len(origins['cars']):
++        raise ValueError('Existing dealership identities are duplicated')
++    rows = json.loads((source / 'index.json').read_text())['cars']
++    if not isinstance(rows, list) or not rows:
++        raise ValueError('MC3 source index has no packages')
++    added, payloads, seen = [], [], set()
++    for row in rows:
++        data = source_package(row, source); code = 'MC3_' + row['code'].upper()
++        if code in seen:
++            raise ValueError('MC3 source identities are duplicated')
++        seen.add(code)
++        if code in existing:
++            old = existing[code]
++            if old.get('sourceCode') != row['code']:
++                raise ValueError('MC3 identity conflicts with dealership entry')
++            native_model(old, destination)
++            continue
++        if code in origin_codes:
++            raise ValueError('MC3 identity conflicts with existing origin record')
++        target = destination / 'assets' / f'{code}.dat'
++        regular(target)
++        if target.exists():
++            raise ValueError('Uncatalogued MC3 dealership package already exists')
++        added.append(dict(code=code, name=row['code'], game=GAME, gameLabel='Midnight Club 3 Remix',
++                          sourceCode=row['code'], sourceCollection='native', sourceVariant='native',
++                          displayMode='native-package', bodyStyle='unknown', group='NATIVE',
++                          year=None, topSpeed=None, bhp=None, kg=None, agility=None, accel=None,
++                          speed=None, weight=None, liveries=[], paint=None, sound=None,
++                          claimLimits=LIMITS, nativePackage={'file': f'assets/{code}.dat',
++                          'profile': PROFILE, 'bytes': len(data), 'sha256': sha(data), 'members': row['native_members']}))
++        payloads.append((target, data))
++        origins['cars'].append({'code': code, 'initialSource': {'game': GAME, 'code': row['code'],
++            'package': f'public/{GAME}/' + row['file'], 'sha256': row['sha256']}})
++    if not added:
++        return 0
++    before_catalog, before_origins = catalog_path.read_bytes(), origins_path.read_bytes()
++    with tempfile.TemporaryDirectory(prefix='.mc3-import-', dir=destination.parent) as temp:
++        stage = Path(temp)
++        for target, data in payloads:
++            (stage / target.name).write_bytes(data)
++        (stage / 'catalog.json').write_text(text(catalog + added))
++        (stage / 'origins.json').write_text(text(origins))
++        (destination / 'assets').mkdir(exist_ok=True)
++        moved = []
++        try:
++            for target, _ in payloads:
++                (stage / target.name).replace(target); moved.append(target)
++            (stage / 'origins.json').replace(origins_path)
++            (stage / 'catalog.json').replace(catalog_path)
++        except BaseException:
++            catalog_path.write_bytes(before_catalog); origins_path.write_bytes(before_origins)
++            for target in moved:
++                target.unlink()
++            raise
++    return len(added)
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--iso', type=Path, default=ROOT / GAME / 'game-files/Midnight Club 3 - DUB Edition Remix.iso')
++    parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')
++    parser.add_argument('--source', type=Path, default=ROOT / 'dealership/public' / GAME)
++    parser.add_argument('--destination', type=Path, default=ROOT / 'dealership/dealership')
++    args = parser.parse_args()
++    try:
++        exported = export_packages(args.iso, args.extraction, args.source)
++        imported = import_packages(args.source, args.destination)
++    except (ValueError, OSError, KeyError, TypeError) as error:
++        parser.exit(1, f'{error}\n')
++    print(f'Published {exported} source packages; added {imported} independent dealership packages. 3D previews unavailable.')
+--- a/tools/build_model_catalog.py
++++ b/tools/build_model_catalog.py
+@@ -3,6 +3,8 @@
+ import hashlib
+ import json
+ from pathlib import Path
++
++from import_mc3_catalogs import GAME as MC3_GAME, source_package
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ PUBLIC=ROOT/'dealership/public'
+@@ -23,17 +25,27 @@
+             model = index_path.parent / entry["file"]
+             if not model.resolve().is_relative_to(index_path.parent.resolve()):
+                 raise ValueError("Model outside game folder: " + identifier)
+-            data = model.read_bytes()
+-            if hashlib.sha256(data).hexdigest() != entry["sha256"] or len(data) != entry["bytes"]:
+-                raise ValueError("Model hash/size differs: " + identifier)
++            if entry.get('asset_kind') == 'native-package' or game == MC3_GAME:
++                if game != MC3_GAME:
++                    raise ValueError('Unsupported native package game: ' + identifier)
++                source_package(entry, index_path.parent)
++            elif entry.get('asset_kind') not in (None, 'glb'):
++                raise ValueError('Unsupported source asset kind: ' + identifier)
++            else:
++                data = model.read_bytes()
++                if hashlib.sha256(data).hexdigest() != entry["sha256"] or len(data) != entry["bytes"]:
++                    raise ValueError("Model hash/size differs: " + identifier)
+             metadata = {key: entry[key] for key in ["code", "sha256", "bytes", "records"]}
+             # Exporters can describe source identities without inventing display names.
+-            for key in ["display_name", "source_profile", "source_variant", "claim_limits"]:
++            for key in ["display_name", "source_profile", "source_variant", "claim_limits", "asset_kind", "native_members"]:
+                 if key in entry:
+                     value = entry[key]
+                     if key == "claim_limits":
+                         if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+                             raise ValueError("Invalid model claim limits: " + identifier)
++                    elif key == 'native_members':
++                        if not isinstance(value, int) or isinstance(value, bool) or value < 1:
++                            raise ValueError('Invalid native member count: ' + identifier)
+                     elif not isinstance(value, str):
+                         raise ValueError("Invalid model metadata: " + identifier)
+                     metadata[key] = entry[key]
+@@ -44,4 +56,4 @@
+ if __name__ == '__main__':
+     catalog=model_catalog()
+     (PUBLIC/'models.json').write_text(json.dumps(catalog,indent=2)+'\n')
+-    print(f"{len(catalog['cars'])} source models -> {PUBLIC/'models.json'}")
++    print(f"{len(catalog['cars'])} source entries -> {PUBLIC/'models.json'}")
+--- a/tools/build_dealership.py
++++ b/tools/build_dealership.py
+@@ -6,6 +6,7 @@
+ import re
+ 
+ from bake_models import ROOT, bake_car
++from import_mc3_catalogs import native_model
+ 
+ DEALERSHIP = ROOT / 'dealership/dealership'
+ OUTPUT = ROOT / 'dealership/public/dealership/cars.json'
+@@ -24,6 +25,9 @@
+         if 'model' in entry or 'silhouette' in entry:
+             raise ValueError('Dealership catalog contains generated geometry; edit the model GLB instead')
+         seen.add(code)
++        if entry.get('displayMode') == 'native-package':
++            cars.append({**entry, 'model': native_model(entry, dealership)})
++            continue
+         model = dealership / 'models' / f'{code}.glb'
+         if model.is_symlink() or model.stat().st_nlink != 1:
+             raise ValueError(f'{code}: dealership model must be an independent file')
+@@ -59,7 +63,7 @@
+ def build(dealership=DEALERSHIP, output=OUTPUT):
+     output = Path(output)
+     public = ROOT / 'dealership/public'
+-    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'gran-turismo', ROOT / 'redline',
++    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'gran-turismo', ROOT / 'redline', ROOT / 'midnight-club-3-remix',
+                        public / 'models.json', Path(dealership)]
+     protected_paths.extend(path for path in public.iterdir()
+                            if path.is_dir() and path.name != 'dealership')
+@@ -92,4 +96,4 @@
+         print('PASS dealership freshness: compiled data matches current models and catalog')
+     else:
+         cars = build(args.dealership, args.output)
+-        print(f'{len(cars)} dealership cars -> {args.output}; editable models preserved')
++        print(f'{len(cars)} dealership entries -> {args.output}; existing assets preserved')
+--- /dev/null
++++ b/tools/test_import_mc3_catalogs.py
+@@ -0,0 +1,136 @@
++"""Native package imports preserve prior catalogs and reject corruption before mutation."""
++import hashlib
++import json
++import os
++from pathlib import Path
++import tempfile
++import unittest
++from unittest.mock import patch
++
++from build_dealership import build, check, load_all
++from build_model_catalog import model_catalog
++from extract_mc3_cars import write_extraction
++from import_mc3_catalogs import GAME, export_packages, import_packages, native_model
++from test_extract_mc3_cars import fixture
++
++
++def snapshot(root):
++    return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
++            for p in root.rglob('*') if p.is_file()}
++
++
++def setup(root):
++    iso = fixture(root / 'source.iso'); cars = root / 'cars'
++    write_extraction(iso, cars)
++    source = root / 'public' / GAME
++    work = root / 'work'; work.mkdir()
++    (work / 'catalog.json').write_text(json.dumps([{'code': 'CUSTOM', 'name': 'Prior user entry'}]))
++    (work / 'origins.json').write_text(json.dumps({'schema': 1, 'cars': [{'code': 'CUSTOM', 'custom': True}]}))
++    return iso, cars, source, work
++
++
++class Tests(unittest.TestCase):
++    def test_real_fixture_import_repeat_and_freshness(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root = Path(temp).resolve(); iso, cars, source, work = setup(root)
++            before = snapshot(cars); disc = iso.read_bytes()
++            self.assertEqual(export_packages(iso, cars, source), 1)
++            self.assertEqual(import_packages(source, work), 1)
++            compiled = model_catalog(root / 'public')['cars'][0]
++            self.assertEqual(compiled['asset_kind'], 'native-package')
++            self.assertEqual(compiled['native_members'], 3)
++            self.assertEqual(compiled['records'], [])
++            catalog = json.loads((work / 'catalog.json').read_text())
++            self.assertEqual(catalog[0], {'code': 'CUSTOM', 'name': 'Prior user entry'})
++            entry = catalog[1]; self.assertEqual(entry['code'], 'MC3_VP_TEST_04')
++            native = work / entry['nativePackage']['file']; public = source / 'native/vp_test_04.dat'
++            self.assertEqual(native.read_bytes(), public.read_bytes())
++            self.assertNotEqual(native.stat().st_ino, public.stat().st_ino)
++            self.assertEqual(native.stat().st_nlink, 1)
++            catalog[1]['name'] = 'My catalog name'; catalog[1]['customField'] = 'keep'
++            (work / 'catalog.json').write_text(json.dumps(catalog))
++            prior = snapshot(work)
++            self.assertEqual(import_packages(source, work), 0)
++            self.assertEqual(export_packages(iso, cars, source), 0)
++            self.assertEqual(snapshot(work), prior)
++            for malformed in (None, [], 'assets/MC3_VP_TEST_04.dat'):
++                with self.assertRaisesRegex(ValueError, 'identity/profile'):
++                    native_model({**catalog[1], 'nativePackage': malformed}, work)
++            # Isolate the native entry to exercise the actual builder, without a fake GLB.
++            (work / 'catalog.json').write_text(json.dumps([catalog[1]]))
++            output = root / 'compiled.json'; build(work, output); check(work, output)
++            self.assertEqual(load_all(work)[0]['model']['schema'], 3)
++            self.assertFalse(list(work.rglob('*.glb')))
++            native.write_bytes(b'changed')
++            with self.assertRaisesRegex(ValueError, 'hash/size'):
++                check(work, output)
++            self.assertEqual(snapshot(cars), before); self.assertEqual(iso.read_bytes(), disc)
++
++    def test_corruption_identity_and_duplicate_controls_before_write(self):
++        for control in ('hash', 'profile', 'path', 'members', 'duplicate', 'kind', 'name', 'source_tamper'):
++            with self.subTest(control=control), tempfile.TemporaryDirectory() as temp:
++                root = Path(temp).resolve(); iso, cars, source, work = setup(root)
++                export_packages(iso, cars, source)
++                index = source / 'index.json'; v = json.loads(index.read_text()); row = v['cars'][0]
++                reason = 'identity/profile'
++                if control == 'hash': row['sha256'] = '0' * 64; reason = 'hash/size'
++                elif control == 'profile': row['source_profile'] = 'glb'
++                elif control == 'path': row['file'] = '../../source.iso'
++                elif control == 'members': row['native_members'] += 1; reason = 'member count'
++                elif control == 'duplicate': v['cars'].append(dict(row)); reason = 'duplicated'
++                elif control == 'kind': row.pop('asset_kind')
++                elif control == 'name': row['display_name'] = 'Invented retail identity'
++                elif control == 'source_tamper':
++                    (source / row['file']).write_bytes(b'changed'); reason = 'hash/size'
++                index.write_text(json.dumps(v)); before = snapshot(work)
++                with self.assertRaisesRegex(ValueError, reason): import_packages(source, work)
++                self.assertEqual(snapshot(work), before)
++                if control != 'duplicate':
++                    with self.assertRaises(ValueError): model_catalog(root / 'public')
++
++    def test_rehashed_extraction_tamper_and_overlap(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root = Path(temp).resolve(); iso, cars, source, work = setup(root)
++            with self.assertRaisesRegex(ValueError, 'separate'):
++                export_packages(iso, cars, cars / 'public')
++            p = cars / 'vp_test_04/original/vp_test_04.dat'; p.write_bytes(b'changed')
++            index = json.loads((cars / 'index.json').read_text()); index['files'] = []
++            (cars / 'index.json').write_text(json.dumps(index))
++            with self.assertRaisesRegex(ValueError, 'byte mismatch'):
++                export_packages(iso, cars, source)
++            self.assertFalse(source.exists())
++
++    def test_links_conflicts_and_transaction_rollback(self):
++        for control in ('symlink', 'hardlink', 'conflict', 'origin_conflict', 'rollback'):
++            with self.subTest(control=control), tempfile.TemporaryDirectory() as temp:
++                root = Path(temp).resolve(); iso, cars, source, work = setup(root)
++                export_packages(iso, cars, source)
++                public = source / 'native/vp_test_04.dat'
++                if control in ('symlink', 'hardlink'):
++                    original = root / 'original.dat'; public.replace(original)
++                    if control == 'symlink': public.symlink_to(original)
++                    else: os.link(original, public)
++                    reason = 'symlinks|independent'
++                elif control == 'conflict':
++                    (work / 'assets').mkdir(); (work / 'assets/MC3_VP_TEST_04.dat').write_bytes(b'custom')
++                    reason = 'Uncatalogued'
++                elif control == 'origin_conflict':
++                    origins = work / 'origins.json'; v = json.loads(origins.read_text())
++                    v['cars'].append({'code': 'MC3_VP_TEST_04', 'custom': True})
++                    origins.write_text(json.dumps(v)); reason = 'existing origin record'
++                else: reason = 'injected installation failure'
++                before = snapshot(work)
++                if control == 'rollback':
++                    real = Path.replace
++                    def reject(path, target):
++                        if str(target).endswith('catalog.json'): raise OSError(reason)
++                        return real(path, target)
++                    with patch.object(Path, 'replace', reject), self.assertRaisesRegex(OSError, reason):
++                        import_packages(source, work)
++                else:
++                    with self.assertRaisesRegex(ValueError, reason): import_packages(source, work)
++                self.assertEqual(snapshot(work), before)
++
++
++if __name__ == '__main__':
++    unittest.main()

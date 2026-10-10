@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x002e40a8,0x002e4b10",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662480895115000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x002e40a8\":{\"name\":\"FUN_002e40a8\",\"size\":316,\"address\":\"002e40a8\",\"decompiled_code\":\"\\nlong FUN_002e40a8(undefined8 param_1,undefined8 param_2,undefined4 param_3,long param_4,long param_5\\n                 )\\n\\n{\\n  long lVar1;\\n  undefined1 auStack_d0 [127];\\n  undefined1 uStack_51;\\n  int iStack_50;\\n  int iStack_4c;\\n  undefined4 uStack_48;\\n  undefined4 uStack_44;\\n  int iStack_40;\\n  undefined4 auStack_3c [3];\\n  \\n  if (*(char *)(DAT_00619b10 + 0x10f) == '\\\\0') {\\n    lVar1 = 0;\\n  }\\n  else {\\n    FUN_004327c8(auStack_d0,0x80,0x649bad,param_1,param_1);\\n    if (param_5 == 0) {\\n      if (param_4 != 0) {\\n        FUN_00432dd0(auStack_d0,0x649bca,0x7f);\\n      }\\n    }\\n    else {\\n      FUN_00432dd0(auStack_d0,0x649bc7,0x7f);\\n    }\\n    uStack_51 = 0;\\n    DAT_00616250 = param_3;\\n    lVar1 = FUN_0042e810(auStack_d0,0x38e030,&iStack_40,auStack_3c);\\n    if (lVar1 == 0) {\\n      do {\\n                    // WARNING: Do nothing block with infinite loop\\n      } while( true );\\n    }\\n    iStack_50 = (int)lVar1;\\n    iStack_4c = iStack_50 - iStack_40;\\n    uStack_48 = auStack_3c[0];\\n    uStack_44 = DAT_0070e570;\\n    DAT_0070e570 = &iStack_50;\\n    FUN_002e4b10(lVar1,&iStack_50);\\n    DAT_0070e570 = (int *)uStack_44;\\n  }\\n  return lVar1;\\n}\\n\\n\",\"callee_count\":4,\"callees\":[{\"name\":\"FUN_002e4b10\",\"address\":\"002e4b10\"},{\"name\":\"FUN_0042e810\",\"address\":\"0042e810\"},{\"name\":\"FUN_004327c8\",\"address\":\"004327c8\"},{\"name\":\"FUN_00432dd0\",\"address\":\"00432dd0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x002e4b10\":{\"name\":\"FUN_002e4b10\",\"size\":28,\"address\":\"002e4b10\",\"decompiled_code\":\"\\nvoid FUN_002e4b10(void)\\n\\n{\\n  FUN_002e4850();\\n  return;\\n}\\n\\n\",\"callee_count\":1,\"callees\":[{\"name\":\"FUN_002e4850\",\"address\":\"002e4850\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":2,\"requested\":2}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.4613189160008915
+}

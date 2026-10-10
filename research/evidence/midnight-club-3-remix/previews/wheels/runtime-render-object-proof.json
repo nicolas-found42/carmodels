@@ -1,0 +1,50 @@
+{
+  "scope": "Static native pointer forwarding; no emulator execution or claim that all runtime mutations are excluded.",
+  "executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "receipt_sha256": {
+    "wheels-pck-header-loader": "1daf17c24d0eaf2f7c092ddc1e947cd787c3bda8e99da33f7d6e7ef8617a160b",
+    "wheels-source-package-init": "83610a97ea499cb8e86c9df9f8eb998a956edce49f2511d257f1499ac46c58bf",
+    "wheels-root-resource-relocation": "6f201a34bc5000e6ac068fa207bc0869561b326ecc56f443c355468d2128be33",
+    "wheels-runtime-model-relocation": "b285323399121254857a449947f23498dadb0eacab419b09d7ae128201e4a2d5",
+    "wheels-model-acquisition-callers": "e7a2d680bb60013b51b36fbc3142cf13e7202fabf7499b35bac3ce9a171c72e8",
+    "wheels-native-assembly-state": "09577bb0cb5c2e0156f403868cf20370ad7c137813e463d09805832b4e66ba6a",
+    "wheels-renderer-object-forwarding": "f64bd4a437d14a8983699b7c19c6de686aa64c3f185400a77f3285591505674c",
+    "wheels-native-dimensions": "28eb9554b3b656e89ca6dab04cf765fdeb92519caf64077d49c71ad89b1d5aea"
+  },
+  "new_forwarding_evidence": [
+    {
+      "function": "FUN_002fd868",
+      "line": 111,
+      "excerpt": "  iVar4 = FUN_002f6bb0(param_1);\n  iStack_b0 = 0;\n  iVar26 = (int)param_1;\n  if (*(char *)(iVar4 + 0x5e) == '\\0') {\n    iStack_b0 = 1;\n    iVar4 = FUN_0051a058(DAT_0061b1e0,*(undefined4 *)(DAT_0061b1e0 + 4));"
+    },
+    {
+      "function": "FUN_002fd868",
+      "line": 129,
+      "excerpt": "    iStack_ac = 1;\n  }\n  iStack_80 = iVar26 + 8;\n  iVar4 = *(int *)(*(int *)(iVar26 + 0x14) + 0xd8);\n  iVar16 = iStack_ac;\n  if (iStack_b0 == 0) {"
+    },
+    {
+      "function": "FUN_002fd868",
+      "line": 815,
+      "excerpt": "  }\n  DAT_006189bc = *(undefined4 *)(iVar19 + 0x1810);\n  FUN_003042c8(*(undefined4 *)(iStack_80 + 0xc),uStack_a4,*(undefined1 *)(iStack_64 + iStack_a0),\n               *(undefined4 *)(iVar26 + 0x134),iVar19,iStack_70,uStack_98,uStack_94);\n  DAT_00615d80 = 0;\n  if (0 < iStack_9c) {"
+    },
+    {
+      "function": "FUN_003042c8",
+      "line": 274,
+      "excerpt": "    }\n  }\n  iVar23 = (int)param_1;\n  iStack_fc = iVar23 + 0x315c;\n  iStack_170 = DAT_70000060;\n  uStack_100 = (uint)(param_3 < 2);"
+    },
+    {
+      "function": "FUN_003042c8",
+      "line": 418,
+      "excerpt": "  } while (bVar1);\n  if (uStack_100 != 0) {\n    if (*(char *)(iVar23 + 0xe4) == '\\0') {\n      iStack_168 = 0;\n      if (*(int *)(iVar23 + 0x3824) != 0) {\n        fVar35 = 0.0;"
+    }
+  ],
+  "chain": [
+    "PCK loader returns body after 128-byte header",
+    "Loaded resource root+8 is relocated and passed to runtime model relocation",
+    "Instance initialization receives that resource root+8 as param3 and stores it at instance+0x14",
+    "Render caller saves instance+8 and passes its +0xc slot: instance+0x14",
+    "Render model argument is tested at +0xe4",
+    "All94 serialized root+8 pointers resolve to source file0xd0, hence +0xe4 is file0x1b4; skeleton +0xdc is file0x1ac"
+  ],
+  "source_corpus": "runtime-object-link-corpus.json"
+}

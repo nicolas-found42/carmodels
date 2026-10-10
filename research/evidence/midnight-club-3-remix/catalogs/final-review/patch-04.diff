@@ -1,0 +1,75 @@
+--- a/tools/library_filter.py
++++ b/tools/library_filter.py
+@@ -12,7 +12,8 @@
+           'Entire request is expressible by one available game/variant filter, with no unsupported restriction.']
+ GAMES = {'ford-racing-2': ('Ford Racing 2 / FR2', (None,)),
+          'gran-turismo': ('Gran Turismo / GT1 / GT', ('day', 'night', 'arcade')),
+-         'redline': ('Redline', ('base', 'addon'))}
++         'redline': ('Redline', ('base', 'addon')),
++         'midnight-club-3-remix': ('Midnight Club 3: DUB Edition Remix / MC3 Remix', ('native',))}
+ MESSAGE = 'This request needs review. Use the game and variant controls, or ask only for those filters.'
+ 
+ 
+@@ -56,7 +57,8 @@
+         else:
+             variant = value['variant']
+             meaning = ('base game / original bundled cars' if variant == 'base' else
+-                       'add-on / addon / mod / plug-in cars' if variant == 'addon' else variant)
++                       'add-on / addon / mod / plug-in cars' if variant == 'addon' else
++                       'native PS2 vehicle packages, with no 3D preview' if variant == 'native' else variant)
+             criteria[key] = (f"Show {GAMES[value['game']][0]} library entries; " +
+                              (f"only source variant {meaning}." if variant else 'all its variants.'))
+     criteria['no_match'] = 'Unsupported restriction, unrelated request, ambiguity, or no matching filter.'
+--- a/tools/test_library_filter.py
++++ b/tools/test_library_filter.py
+@@ -61,6 +61,22 @@
+         self.assertNotIn('gran-turismo', options)
+         self.assertNotIn('PRIVATE', str(options))
+ 
++    def test_mc3_native_filter_and_no_preview_restriction(self):
++        cars = [*CARS, {'game': 'midnight-club-3-remix', 'source_variant': 'native'}]
++        options = options_for(cars)
++        self.assertEqual(options['midnight-club-3-remix:native'], {'game': 'midnight-club-3-remix', 'variant': 'native'})
++        criteria = questions_for(options)['filter']['criteria']
++        self.assertIn('no 3D preview', criteria['midnight-club-3-remix:native'])
++        self.assertIn('all 4 games', criteria['all'])
++        raw = answer()
++        labels = questions_for(options)['filter']['criteria']
++        raw['answers']['filter'].update(choice='midnight-club-3-remix',
++                                        probabilities={k: int(k == 'midnight-club-3-remix') for k in labels})
++        self.assertEqual(interpret('MC3 Remix', cars, Fake(raw))['filters'], options['midnight-club-3-remix'])
++        raw['answers']['filter'].update(choice='no_match', probabilities={k: int(k == 'no_match') for k in labels})
++        self.assertEqual(interpret('MC3 cars with 3D previews', cars, Fake(raw))['status'], 'review')
++        self.assertNotIn('midnight-club-3-remix:night', options)
++
+     def test_malformed_and_conflicting_fail_closed(self):
+         mutations = [lambda r: r.update(warnings=['warning']),
+                      lambda r: r['answers'].pop('supported'),
+--- a/tools/run_checks.py
++++ b/tools/run_checks.py
+@@ -14,11 +14,11 @@
+ def registry():
+     checks = [{'name': 'ruff', 'command': ['ruff', 'check', 'tools'], 'requires': 'ruff'}]
+     checks += [{'name': n, 'command': ['node', f'tools/{n}.mjs'], 'requires': 'node'} for n in
+-               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb']]
++               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui']]
+     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
+              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
+              'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
+-             'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars',
++             'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs',
+              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership']
+     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
+     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
+--- a/tools/test_run_checks.py
++++ b/tools/test_run_checks.py
+@@ -38,7 +38,8 @@
+ 
+     def test_actual_javascript_registry_requires_node(self):
+         checks = [c for c in registry() if c['command'][0] == 'node']
+-        self.assertEqual(len(checks), 6)
++        self.assertEqual(len(checks), 7)
++        self.assertIn('test_native_catalog_ui', {c['name'] for c in checks})
+         self.assertTrue(all(c['requires'] == 'node' for c in checks))
+         with tempfile.TemporaryDirectory() as temp, patch('run_checks.shutil.which', return_value=None):
+             self.assertEqual(run_checks(checks, temp, Path(temp) / 'ci', ci=True), 1)

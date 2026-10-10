@@ -1,0 +1,150 @@
+flex:		0.100000
+damping:	0.250000
+icsBone:	root
+numLinks:	12
+numFixed:	0
+fixedBones:	
+
+bound:	0
+type:		ball
+link:		0
+numBones:	3
+bones:	root	spine_01	pelvis	
+parent:	-1
+initOrient:	0.000000	0.000000	0.000000
+centOrient: 	0.000000	0.000000	0.000000
+angleLimit:	0.100000
+inertia:	0.300000
+flex:		0.030000
+
+bound:	1
+type:		elbow
+link:		1
+numBones:	1
+bones:	spine_02			
+parent:	0
+initAngle: 	0.000000
+centAngle:	0.000000
+angleLimit:	0.200000
+inertia:	0.300000
+flex:		0.001000
+
+bound:	2
+type:		ball
+link:		2
+numBones:	1
+bones:	hip_l
+parent:	0
+initOrient:	0.000000	0.000000	2.700000
+centOrient: 	0.000000	0.000000	3.000000
+angleLimit:	0.500000
+inertia:	0.300000
+flex:		0.100000
+
+bound:	3
+type:		ball
+link:		3
+numBones:	1
+bones:	hip_r
+parent:	0
+initOrient:	0.000000	0.000000	-2.700000
+centOrient: 	0.000000	0.000000	-3.000000
+angleLimit:	0.500000
+inertia:	0.300000
+flex:		0.100000
+
+bound:	4
+type:		elbow
+link:		4
+numBones:	3
+bones:	knee_l	ankle_l	toe_l
+parent:	2
+initAngle:	0.260000
+centAngle:	0.800000
+angleLimit:	0.700000
+inertia:	0.300000
+flex:		0.300000
+
+bound:	5
+type:		elbow
+link:		5
+numBones:	3
+bones:	knee_r	ankle_r	toe_r
+parent:	3
+initAngle:	0.260000
+centAngle:	0.800000
+angleLimit:	0.700000
+inertia:	0.300000
+flex:		0.300000
+
+bound:	6
+type:		ball
+link:		6
+numBones:	5
+bones:	spine_03	clavicle_l	clavicle_r	jacket_l	jacket_r
+parent:	1
+initOrient:	0.000000	0.000000	0.000000
+centOrient: 	0.000000	0.000000	0.000000
+angleLimit:	0.200000
+inertia:	0.300000
+flex:		0.003000
+
+bound:	7
+type:		ball
+link:		7
+numBones:	5
+bones:	neck	head	visor	hair_01 hair_02
+parent:	6
+initOrient:	0.000000	0.000000	0.000000
+centOrient: 	0.000000	0.000000	0.000000
+angleLimit:	0.800000
+inertia:	0.300000
+flex:		0.030000
+
+bound:	8
+type:		ball
+link:		8
+numBones:	1
+bones:	shoulder_l
+parent:	6
+initOrient:	1.000000	0.0000000	2.500000
+centOrient: 	1.000000	0.0000000	1.700000
+angleLimit:	1.000000
+inertia:	0.300000
+flex:		0.200000
+
+bound:	9
+type:		ball
+link:		9
+numBones:	1
+bones:	shoulder_r
+parent:	6
+initOrient:	1.000000	0.000000	-2.500000
+centOrient:	1.000000	0.000000	-1.700000
+angleLimit:	1.000000
+inertia:	0.300000
+flex:		0.200000
+
+bound:	10
+type:		elbow
+link:		10
+numBones:	5
+bones:	elbow_l	wrist_l	thumb_l	index_middle01_l	index_middle02_l
+parent:	8
+initAngle:	-0.100000
+centAngle:	-0.800000
+angleLimit:	0.700000
+inertia:	0.300000
+flex:		0.200000
+
+bound:	11
+type:		elbow
+link:		11
+numBones:	5
+bones:	elbow_r	wrist_r thumb_r	index_middle01_r	index_middle02_r
+parent:	9
+initAngle:	-0.100000
+centAngle:	-0.800000
+angleLimit:	0.700000
+inertia:	0.300000
+flex:		0.200000

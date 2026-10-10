@@ -1,0 +1,31 @@
+{
+  "input": {
+    "decision": "Choose the next bounded design experiment for MC3 preview semantic filters after three changed wording variants have correctly withheld unsupported requests but withheld all controlled ready-preview positives.",
+    "candidates": [
+      {
+        "id": "concise",
+        "description": "Restore original generic Score rubric and make stateful instructions concise: classify whether request is satisfied by candidate entries using explicitly true preview facts; retain Choice/Noul/Score thresholds."
+      },
+      {
+        "id": "decompose",
+        "description": "Add a separate Choice judgment for query restrictions, use ordinary code to test known preview/catalog facts, and keep existing filter confidence gates. More integration/tests needed."
+      },
+      {
+        "id": "retain",
+        "description": "Keep current verbose stateful wording, accept the conservative false negatives and report that semantic preview selection remains unresolved."
+      }
+    ],
+    "evidence": "Initial 19-query grounded/stateful comparison: stateful top19/19, action13/19, applied2, wrong0. Revised explicit per-option facts: stateful top17/19, action15/19, applied4 wrong0. Added explicit each-option preview-property prose: stateful top17/19, action13/19 applied2 wrong0. All three controlled ready preview requests were withheld in every design. Last run Choice confidence .86/.88/.98 and support .87/.89/.91, but coverage confidence .10/.62/.38. Regular all-games was also withheld (.82 Score confidence). Thresholds unchanged .85, coverage >=1.8. Source catalog remains native/pending; dealership needs actual compiled readiness state. No render accuracy is claimed.",
+    "priorities": "Satisfy verified available MC3 preview queries without false positive unsupported texture-fidelity/statistic/mixed-game filters; preserve existing game/variant behavior; use known calculations/policy in code; do not relax thresholds or repeat unchanged judgments.",
+    "escape_hatches": true,
+    "escalate_on_contradiction": true
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_decide\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"recommendation\": {\n    \"selected\": \"decompose\",\n    \"escaped\": false,\n    \"confidence\": 0.68,\n    \"probabilities\": {\n      \"concise\": 0.17,\n      \"decompose\": 0.73,\n      \"retain\": 0.03,\n      \"ask_user\": 0,\n      \"investigate\": 0.06,\n      \"none\": 0.01\n    },\n    \"contradicted_requirements\": []\n  },\n  \"requirements_checked\": 0,\n  \"checks\": [],\n  \"warnings\": [],\n  \"usage\": {\n    \"input_tokens\": 956,\n    \"output_tokens\": 74\n  }\n}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+# Midnight Club 3 Remix preview readiness
+
+The supplied PS2 disc supports catalog entries for **94 recovered source packages**, with native files and provenance available. This investigation does not establish a working geometry and texture conversion route for those packages. Represent their preview as **conversion pending** until an actual assembled model has been decoded, validated and rendered. Do not substitute placeholder geometry or count recovered packages as verified playable or real-world vehicles.
+
+The extraction and independent upstream audit are recorded in [the extraction note](midnight-club-3-remix-extraction.md) and [the format research](midnight-club-3-remix-formats.md). This follow-up examines conversion readiness; it does not change source assets, production tools, catalogs or dealership files.
+
+## Native corpus observations
+
+The read-only probe in `.scratch/mc3-independent/preview_probe.py` checks the existing source index, hashes each plain mesh and TEX file before examining it, and retains per-file observations in [native-probe.json](evidence/midnight-club-3-remix/preview-readiness/native-probe.json). The source count is 7,183 native payloads: 2,860 selected outer files, including 94 original Dave carriers, plus 4,323 decoded nested members. These counts exclude manifests, provenance files and the index itself.
+
+| Native format | Files | What this investigation establishes |
+| --- | ---: | --- |
+| PCK | 4,420 | Header observations only; 4,323 are nested members of the 94 packages, and 97 are outer shared resources. No geometry or texture decoder was validated. |
+| PPF | 14 | The samples start with `pf05`; no texture or package decoder was validated. Duplicate occurrences remain separate. |
+| Plain mesh | 314 | Position arrays, adjacency-to-position references and recognized strip index counts/ranges pass structural checks. These belong to 42 `va_*` shared traffic families, rather than the 94 `vp_*` packages. |
+| Plain TEX | 404 | All have supported dimensions/types and sufficient base-level payload lengths under the published 14-byte header rules. This is format compatibility evidence, not rendered texture fidelity. |
+
+All 4,323 nested package members have the `.pck` extension. Recovering the nested Dave archive therefore stops before the retail PS2 geometry and texture formats are decoded. The corpus does contain plain traffic meshes, but those do not provide substitute geometry for the recovered `vp_*` entries.
+
+The mesh probe checks finite XYZ values, declared position counts, adjacency references, and triangle strip index counts and bounds. It intentionally does not infer component transforms, winding, materials or assembly from these structural checks. A changed position count and an out-of-range strip index each fail for the intended reason. These controls test the structural probe, not a renderer.
+
+The TEX probe finds 92 type-1 files, 111 type-14 files, 92 type-15 files and 109 type-16 files. Of 404 files, 395 have exactly the base-level length expected by the public reader; nine have extra bytes whose interpretation is not established here. Truncating a texture to its header fails with `short base-level payload`. No PNG export, palette permutation, image orientation or render comparison was validated in this investigation.
+
+## Conversion leads and their limits
+
+The retained, screened [TahmidAlam MC3 converter source](https://github.com/TahmidAlam-git/MC3_extraction_tools/blob/main/mesh_to_obj.py) dispatches `mesh.xbck`, `g.xbck` and a San Diego map path. It has no PS2 `.pck` dispatch. The repository provides useful Xbox geometry research; applying its layout to these PS2 files would require independent evidence. The successful follow-up Jev verification assigns support 0.99 and confidence 0.98 to this dispatch distinction, retained in [search-calls.json](evidence/midnight-club-3-remix/preview-readiness/search-calls.json).
+
+The [archived original XeNTaX research thread](https://github.com/XeNTaXBackup/XeNTaXBackup.github.io/blob/main/markdown/Midnight%20Club%203%20Dub%20Edition%20Research%20Thread_12738.md) contains an author-supplied Noesis reader for ordinary `.tex` files and a plain-mesh MaxScript lead. The TEX reader consumes width/height/type/mips/unknown plus four flags, then a palette and pixel indices for types 1, 14, 15 and 16. The local structural checks follow those explicit rules. The thread mixes platforms and packed formats, so its reader is not evidence that PS2 PCK or PPF textures have been decoded.
+
+A fresh, screened [ZenHAX PS2 mesh thread](https://zenhax.com/viewtopic.php@t=15135.html) contains the tool author's April 2021 report of a `.mesh/type` loader in 3D Object Converter 8.001, followed by a TEX loader in 8.004. This is a concrete third-party lead for the **plain traffic files**. It reports neither a PCK nor a PPF decoder, and the converter was not executed on the supplied corpus here. Its advice concerning back-facing geometry and vertex colors also shows that geometry import alone does not settle appearance. The retained scrape and screen are in [primary-leads.json](evidence/midnight-club-3-remix/preview-readiness/primary-leads.json).
+
+The [Hidden Palace prototype page](https://hiddenpalace.org/Midnight_Club_3:_DUB_Edition_(Oct_24,_2004_Prototype)) describes a different, early PS2 build with debug symbols and links symbol maps. The fetched page also reports that its linked download files do not exist. This is a future executable-research lead, not a validated parser or evidence that retail Remix PCK has the same layout. No prototype or symbol archive was downloaded or inspected.
+
+The fresh Firecrawl search yielded these primary leads. The search result wrapper received `review` from Jev because its `agent_hints` contained tool-use suggestions. The root agent independently approved intake of only the URL/title/description fields and ignored those suggestions as instructions; [the resolution](evidence/midnight-club-3-remix/preview-readiness/search-screen-resolution.json) is retained. Both subsequently fetched pages passed screening. Literal `pf05` code search through gh_grep and context-awesome's PS2 model-extractor search received `skip` for relevance and were not used as conversion evidence. These bounded searches do not prove that no other converter exists.
+
+## Catalog readiness recommendation
+
+Use a separate recovery state and preview state. A suitable representation is `recovery_status: native_recovered`, `preview_status: conversion_pending`, with no model, thumbnail or preview URL until one exists. Show the original source code as the stable identity and the phrase **Native files recovered; 3D preview conversion pending**. Expose the source manifest and original package path so the entry is useful immediately.
+
+A catalog may count all 94 recovered package entries while keeping its renderable-preview count unchanged. The dealership may list these entries and show their native-file status, but editing/export actions need an actual editable model. Preserve the existing distinction between source artifacts and editable dealership models. Retail display names and package-to-playable-car identity remain subject to their own source-backed mapping.
+
+An eventual conversion gate should require a validated PCK geometry layout, explicit texture/package handling, material assignments, component transforms and a real assembled render. The 314 plain traffic meshes and 404 TEX files are a bounded, separate prototype candidate; their structural compatibility must not silently promote any of the 94 package entries to preview-ready.
+
+Jev verified the structural-probe/partial-lead limitation at confidence 0.88, support 0.92, and the recommended recovery/preview separation at confidence 0.94, support 0.96. [The receipt](evidence/midnight-club-3-remix/preview-readiness/probe-verify.json) preserves full distributions. Exact byte counts, hashes and parser failure controls stay in code. No labeled render-accuracy measurement is available because no model conversion or texture render was executed.
+
+Root observed `insufficient_credits` errors on semantic-search and `jev_decide` routes during this follow-up. A matching MCP `jev_verify` call succeeded here, and subsequent screening and verification calls also succeeded. Availability is capability/provider-route specific; the successful calls do not resolve or disguise the other operational failures. This note makes no preview-availability claim beyond the actual structural experiment.
