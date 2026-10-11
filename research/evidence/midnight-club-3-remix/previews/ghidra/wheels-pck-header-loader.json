@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x00430cf8",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662523231855000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x00430cf8\":{\"name\":\"FUN_00430cf8\",\"size\":244,\"address\":\"00430cf8\",\"decompiled_code\":\"\\nundefined8 FUN_00430cf8(undefined8 param_1,int param_2,undefined4 *param_3,undefined4 *param_4)\\n\\n{\\n  long lVar1;\\n  undefined8 uVar2;\\n  undefined4 uStack_b0;\\n  int iStack_ac;\\n  int iStack_a8;\\n  undefined4 uStack_a4;\\n  \\n  lVar1 = (**(code **)(*DAT_006d557c + 0x24))(DAT_006d557c,param_1,PTR_PTR_00618d8c,0,1);\\n  if (lVar1 != 0) {\\n    FUN_004329b0(&uStack_b0,0,0x80);\\n    FUN_003993a8(lVar1,&uStack_b0,0x80);\\n    if (iStack_a8 == 1) {\\n      *param_3 = uStack_b0;\\n      *param_4 = uStack_a4;\\n      if (iStack_ac == param_2) {\\n        uVar2 = FUN_0042e668(uStack_a4,0x80);\\n        FUN_003993a8(lVar1,uVar2,uStack_a4);\\n        FUN_00399748(lVar1);\\n        return uVar2;\\n      }\\n    }\\n    FUN_00399748(lVar1);\\n  }\\n  return 0;\\n}\\n\\n\",\"callee_count\":4,\"callees\":[{\"name\":\"FUN_003993a8\",\"address\":\"003993a8\"},{\"name\":\"FUN_00399748\",\"address\":\"00399748\"},{\"name\":\"FUN_0042e668\",\"address\":\"0042e668\"},{\"name\":\"FUN_004329b0\",\"address\":\"004329b0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":1,\"requested\":1}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.2757521250023274
+}

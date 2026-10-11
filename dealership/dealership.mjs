@@ -3,10 +3,16 @@ import {loadEditableGLB} from './editable-glb.mjs';
 
 export const gameId = c => c.game || 'ford-racing-2';
 export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
+export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';
+export function dealershipDownload(c) {
+  return isNativePackage(c) ? {href:'./'+c.model.source.package, filename:c.code+'-dealership.dat', label:'Download native package (.dat)'} :
+    {href:`./dealership/models/${c.code}.glb`, filename:c.code+'-dealership.glb', label:'Download dealership model (.glb)'};
+}
 export function matchesVariant(c, variant) {
   return !variant || (variant==='arcade' ? c.sourceCollection==='arcade' : c.sourceVariant===variant);
 }
 export async function loadCar(c, options={}) {
+  if(isNativePackage(c))throw Error('3D preview unavailable for this native package.');
   return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);
 }
 
@@ -108,7 +114,7 @@ export function validateCars(cars) {
   for (const c of cars) {
     if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
     codes.add(c.code);
-    const unknownSpecs = ['gran-turismo','redline'].includes(c.game);
+    const unknownSpecs = ['gran-turismo','redline','midnight-club-3-remix'].includes(c.game);
     if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);
     if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);
     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);
@@ -124,7 +130,16 @@ export function validateCars(cars) {
     if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);
     if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);
     if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);
-    if(c.model?.schema===2) {
+    if(isNativePackage(c)!==(c.model?.schema===3))throw Error(`${c.code}: inconsistent native package model.`);
+    if(c.model?.schema===3) {
+      const s=c.model.source;
+      if(c.game!=='midnight-club-3-remix' || c.displayMode!=='native-package' || c.model.previewStatus!=='unavailable' ||
+         !s || s.package!==`dealership/assets/${c.code}.dat` || s.preset!=='dealership' ||
+         s.profile!=='mc3-ps2-native-package-v1' || !/^[a-f0-9]{64}$/.test(s.sha256) ||
+         !Number.isInteger(s.bytes) || s.bytes<=0 || s.bytes>256*1024*1024 ||
+         !Number.isInteger(s.nativeMembers) || s.nativeMembers<=0 || s.nativeMembers>100000 ||
+         !/^vp_[a-z0-9_]+$/.test(c.sourceCode) || c.code!=='MC3_'+c.sourceCode.toUpperCase())throw Error(`${c.code}: invalid native dealership package.`);
+    } else if(c.model?.schema===2) {
       if(c.displayMode!=='textured-glb' || !c.model.source || c.model.source.glb!==`dealership/models/${c.code}.glb` ||
          c.model.source.preset!=='dealership' || !/^[a-f0-9]{64}$/.test(c.model.source.sha256) ||
          !Number.isInteger(c.model.triangleCount) || c.model.triangleCount<=0)throw Error(`${c.code}: invalid textured dealership model.`);

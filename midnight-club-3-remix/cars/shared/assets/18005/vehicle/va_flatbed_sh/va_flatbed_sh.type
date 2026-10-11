@@ -1,0 +1,53 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 6 {
+			ambient_wheel.shadert 1 va_whl_truck_drk.tex 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_body.shadert 1 va_flatbed_share.tex 
+			emissive_taillight.shadert 2 va_flatbed_share.tex __envmap__ 
+			emissive_headlight.shadert 2 va_flatbed_share.tex __envmap__ 
+			ambient_chrome.shadert 1 __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 8 whl0_H.mesh 2 whl1_H.mesh 3 whl2_H.mesh 4 whl3_H.mesh 5 whl4_H.mesh 6 whl5_H.mesh 7 vroot_shadow_shadow.mesh 9 vroot_flatbed_sh_LOD_HLOD.mesh 0 9999.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.008068 -0.000049 0.834047
+		radius 7.281500
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_flatbed_sh.skel
+}
+bonetag {
+	whl_l0	2
+	whl_r0	3
+	whl_l1	4
+	whl_r1	5
+	whl_l2	6
+	whl_r2	7
+	drop_shadow	9
+	glow_headlight0	11
+	glow_headlight1	12
+	glow_brakelight0	13
+	glow_brakelight1	14
+	glow_taillight0	15
+	glow_taillight1	16
+	glow_side0	17
+	glow_side1	18
+	glow_side2	19
+	glow_side3	20
+	glow_coplight3	22
+	glow_coplight0	23
+	glow_coplight2	24
+	glow_coplight1	25
+}

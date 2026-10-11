@@ -1,0 +1,144 @@
+"""Exporter boundary controls on temporary copies of exact native 350Z members."""
+import copy
+import json
+import os
+from pathlib import Path
+import shutil
+import tempfile
+import unittest
+
+from bake_models import ROOT, read_glb
+from export_mc3_models import export
+
+
+class ExportBoundaryTests(unittest.TestCase):
+    def fixture(self, base):
+        native = ROOT / 'midnight-club-3-remix/cars'
+        index = json.loads((native / 'index.json').read_text())
+        vehicle = next(v for v in index['vehicles'] if v['id'] == 'vp_350z_04')
+        manifest = json.loads((native / vehicle['manifest']).read_text())
+        source = base / 'source'
+        (source / 'members').mkdir(parents=True)
+        members = []
+        for row in manifest['members']:
+            if row['file'].endswith('.pck'):
+                target = source / 'members' / Path(row['file']).name
+                shutil.copyfile(native / row['file'], target)
+                members.append({**row, 'file': target.relative_to(source).as_posix()})
+        manifest = {**manifest, 'members': members}
+        wheel_sources = {vehicle['id'] + '.carcfg', 'decal.pck', 'rim.ppf', 'tire.ppf', 'vehicle.lst'}
+        shared = [row for row in index['files'] if row['file'].startswith('shared/')
+                  and Path(row['file']).name in wheel_sources]
+        self.assertEqual({Path(row['file']).name for row in shared}, wheel_sources)
+        for row in shared:
+            target = source / row['file']
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(native / row['file'], target)
+        index = {**index, 'vehicles': [{**vehicle, 'manifest': vehicle['id'] + '/manifest.json'}], 'files': shared}
+        self.write_fixture(source, index, manifest)
+        return source, index, manifest
+
+    def write_fixture(self, source, index, manifest):
+        manifest_path = source / 'vp_350z_04/manifest.json'
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(json.dumps(manifest))
+        (source / 'index.json').write_text(json.dumps(index))
+
+    def reject(self, source, output, reason):
+        with self.assertRaisesRegex(ValueError, reason):
+            export(source, output)
+        self.assertFalse(output.exists(), 'rejected export must not publish output')
+
+    def test_parent_and_absolute_member_paths_reject_before_output(self):
+        for absolute in (False, True):
+            with self.subTest(absolute=absolute), tempfile.TemporaryDirectory() as temp:
+                base = Path(temp).resolve()
+                source, index, manifest = self.fixture(base)
+                payload = base / 'payload'
+                shutil.copytree(source / 'members', payload)
+                for row in manifest['members']:
+                    name = Path(row['file']).name
+                    row['file'] = str(payload / name) if absolute else '../payload/' + name
+                self.write_fixture(source, index, manifest)
+                self.reject(source, base / 'output', 'path|relative|outside|boundary')
+
+    def test_symlink_member_rejects_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, _, manifest = self.fixture(base)
+            member = source / manifest['members'][0]['file']
+            outside = base / member.name
+            member.rename(outside)
+            member.symlink_to(outside)
+            self.reject(source, base / 'output', 'symlink|path|outside|boundary')
+
+    def test_hardlinked_member_rejects_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, _, manifest = self.fixture(base)
+            member = source / manifest['members'][0]['file']
+            os.link(member, base / 'linked-member.pck')
+            self.reject(source, base / 'output', 'independent file')
+
+    def test_duplicate_vehicle_identity_rejects_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, index, manifest = self.fixture(base)
+            index['vehicles'].append(copy.deepcopy(index['vehicles'][0]))
+            self.write_fixture(source, index, manifest)
+            self.reject(source, base / 'output', 'duplicat|identity|ambiguous')
+
+    def test_manifest_parent_path_rejects_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, index, manifest = self.fixture(base)
+            (base / 'manifest.json').write_text(json.dumps(manifest))
+            index['vehicles'][0]['manifest'] = '../manifest.json'
+            self.write_fixture(source, index, manifest)
+            self.reject(source, base / 'output', 'identity')
+
+    def test_missing_indexed_wheel_occurrence_rejects_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, index, _ = self.fixture(base)
+            copies = [row for row in index['files'] if Path(row['file']).name == 'rim.ppf']
+            self.assertEqual(len(copies), 2)
+            (source / copies[-1]['file']).unlink()
+            self.reject(source, base / 'output', 'occurrence|coverage|missing')
+
+    def test_undeclared_wheel_occurrence_rejects_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, index, _ = self.fixture(base)
+            row = next(row for row in index['files'] if Path(row['file']).name == 'rim.ppf')
+            extra = source / 'shared/undeclared/rim.ppf'
+            extra.parent.mkdir()
+            shutil.copyfile(source / row['file'], extra)
+            self.reject(source, base / 'output', 'occurrence|coverage|wheel source differs')
+
+    def test_valid_export_repeats_and_preserves_changed_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            source, _, _ = self.fixture(base)
+            output = base / 'output'
+            self.assertEqual(export(source, output), 1)
+            row = json.loads((output / 'index.json').read_text())['cars'][0]
+            self.assertFalse(row['wheels']['bike'])
+            self.assertEqual(len(row['wheels']['slots']), 4)
+            document, _ = read_glb((output / row['file']).read_bytes())
+            for slot in row['wheels']['slots']:
+                nodes = [node for node in document['nodes']
+                         if node['extras'].get('nativeBone') == slot['bone']
+                         and 'nativeWheelComponent' in node['extras']]
+                self.assertEqual({node['extras']['nativeWheelComponent'] for node in nodes}, {'rim', 'tire'})
+            self.assertEqual(export(source, output), 0)
+            model = output / 'vp_350z_04.glb'
+            model.write_bytes(model.read_bytes() + b'user edit')
+            before = {p.name: p.read_bytes() for p in output.iterdir()}
+            with self.assertRaisesRegex(ValueError, 'differs; nothing overwritten'):
+                export(source, output)
+            self.assertEqual({p.name: p.read_bytes() for p in output.iterdir()}, before)
+
+
+if __name__ == '__main__':
+    unittest.main()

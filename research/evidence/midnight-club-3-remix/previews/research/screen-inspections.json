@@ -1,0 +1,25 @@
+{
+  "reviewer": "/root/mc3_research",
+  "scope": "Initial pck-web and followup sdk-types/mc3-nexus review recommendations",
+  "findings": [
+    {
+      "id": "pck-web",
+      "decision": "bounded intake of web URL/title/description task data",
+      "reason": "Review probability .71. agent_hints suggest fetching URLs; ignored as tool-use instructions. Separable excerpts contain no credential request, rule override or unresolved redirection. Treat as leads, not format proof."
+    },
+    {
+      "id": "mc3-nexus",
+      "decision": "discard",
+      "reason": "Review probability .62; tool hints ignored. Sole result is an unrelated guestbook with spam-like snippets. No relevant conversion evidence consumed."
+    },
+    {
+      "id": "sdk-types",
+      "decision": "bounded technical intake",
+      "reason": "Review probability .34. Page contains a documentation-index fetch instruction and a client-side clipboard helper; neither is authority or executed code. Ignored navigation/agent directives; technical Python schema and constructors are task data, no concrete unresolved credential/rule/tool redirection."
+    }
+  ],
+  "skip_outcomes": "Initial SDK usage and OpenRouter fullpage, PS2SDK empty grep, context-awesome result, and ZenHAX texture fullpage were skipped and not used as evidence. A new targeted OpenRouter quote response passed screening.",
+  "claim_limits": [
+    "Agent-side inspection resolves screen-review signals per Jev skill; this does not approve any implementation or preview."
+  ]
+}

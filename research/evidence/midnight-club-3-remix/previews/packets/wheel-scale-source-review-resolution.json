@@ -1,0 +1,138 @@
+{
+  "reviewer": "mc3_packet_probe, independent wheel helper author review requested by mc3_texture_probe",
+  "source_elf_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "source_receipts": [
+    "previews/ghidra/wheels-skeleton-scaling.json",
+    "previews/ghidra/wheels-native-assembly-state.json",
+    "previews/ghidra/wheels-native-dimensions.json",
+    "previews/ghidra/wheels-scale-and-selection.json",
+    "previews/ghidra/wheels-final-size-functions.json"
+  ],
+  "decompilation_excerpts": [
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_002c66c8-wheels-scale-and-selection.txt",
+      "decompile_sha256": "29f1fc6740858d017bfcb2c4385e2b50f6323a60733e0251f0b07be06c42fcdf",
+      "ranges": [
+        {
+          "first_line": 80,
+          "last_line": 117,
+          "text": "  if ((uVar18 & 5) != 0) {\n    uStack_80 = uVar18 & 4;\n    iVar21 = 0;\n    uVar25 = FUN_004afb00(*(undefined1 *)(iVar24 + 0x14));\n    *(undefined4 *)(iVar20 + 0x12d4) = uVar25;\n    puVar23 = (uint *)(iVar20 + 0x11c0);\n    pcVar16 = (char *)(iVar24 + 0x18);\n    piVar17 = (int *)(iVar20 + 0x11b8);\n    uVar25 = FUN_004afb00(*(undefined1 *)(iVar24 + 0x15));\n    *(undefined4 *)(iVar20 + 0x12cc) = uVar25;\n    do {\n      *piVar17 = (int)*pcVar16;\n      *puVar23 = (uint)(byte)pcVar16[-2];\n      fVar26 = (float)FUN_002ca780(param_1,iVar21);\n      if (0.0 < fVar26) {\n        if (*pcVar16 == -1) {\n          FUN_004af910(fVar26,param_2,iVar21);\n          iVar6 = (int)*pcVar16;\n          goto LAB_002c6850;\n        }\n      }\n      else if (*pcVar16 == -1) {\n        iVar6 = FUN_004af950(-fVar26,pcVar16[-2]);\nLAB_002c6850:\n        *piVar17 = iVar6;\n      }\n      if ((uStack_80 != 0) && (*(int *)(iVar20 + 0x1804) != 0)) {\n        *(undefined1 *)(*(int *)(iVar20 + 0x1804) + 0x16b) = 1;\n      }\n      iVar21 = iVar21 + 1;\n      puVar23 = puVar23 + 1;\n      pcVar16 = pcVar16 + 1;\n      piVar17 = piVar17 + 1;\n    } while (iVar21 < 2);\n    uVar25 = FUN_004af9c8(*(undefined1 *)(iVar24 + 0x16),*(undefined4 *)(iVar20 + 0x11b8));\n    *(undefined4 *)(iVar20 + 0x12d8) = uVar25;\n    uVar25 = FUN_004af9c8(*(undefined1 *)(iVar24 + 0x17),*(undefined4 *)(iVar20 + 0x11bc));\n    *(undefined4 *)(iVar20 + 0x12d0) = uVar25;"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_002f85d0-wheels-skeleton-scaling.txt",
+      "decompile_sha256": "aa8dbd2167e70e009e26faf745f5d812e1e76a16c7b218f60d8bceee69de3009",
+      "ranges": [
+        {
+          "first_line": 76,
+          "last_line": 100,
+          "text": "  }\n  if (*(char *)(*(int *)(iVar7 + 0x14) + 0xe4) == '\\0') {\n    fVar11 = *(float *)(*(int *)(iVar7 + 0x304) + 0x12d4);\n    uVar10 = *(undefined4 *)(*(int *)(iVar7 + 0x304) + 0x12d8);\n    *(float *)(iVar7 + 0x1e4) = fVar11 + fVar11;\n    *(undefined4 *)(iVar7 + 0x1ec) = uVar10;\n    *(undefined4 *)(iVar7 + 0x1e8) = uVar10;\n    fVar11 = *(float *)(*(int *)(iVar7 + 0x304) + 0x12cc);\n    uVar10 = *(undefined4 *)(*(int *)(iVar7 + 0x304) + 0x12d0);\n    *(float *)(iVar7 + 0x1f0) = fVar11 + fVar11;\n    *(undefined4 *)(iVar7 + 0x1f8) = uVar10;\n    *(undefined4 *)(iVar7 + 500) = uVar10;\n  }\n  else {\n    *(undefined8 *)(iVar7 + 0x1e4) = *(undefined8 *)(iVar7 + 0x1fc);\n    *(undefined4 *)(iVar7 + 0x1ec) = *(undefined4 *)(iVar7 + 0x204);\n    *(undefined8 *)(iVar7 + 0x1f0) = *(undefined8 *)(iVar7 + 0x208);\n    *(undefined4 *)(iVar7 + 0x1f8) = *(undefined4 *)(iVar7 + 0x210);\n    *(undefined4 *)(iVar7 + 0x1f0) = 0x3f800000;\n    *(undefined4 *)(iVar7 + 0x1e4) = 0x3f800000;\n  }\n  iVar5 = *(int *)(iVar7 + 0x14);\n  iVar9 = 0;\n  if (*(int *)(iVar5 + 0x3824) != 0) {\n    pfStack_ac = &fStack_174;"
+        },
+        {
+          "first_line": 116,
+          "last_line": 129,
+          "text": "        uStack_120 = *(undefined8 *)(iVar7 + 0x1f0);\n        fStack_118 = *(float *)(iVar7 + 0x1f8);\n        iVar2 = *(int *)(iVar3 + 0xdc);\n      }\n      fStack_180 = *(float *)(iVar2 + 0x10);\n      fStack_17c = *(float *)(iVar2 + 0x14);\n      iVar4 = *(int *)(iVar7 + 0x14);\n      fStack_178 = *(float *)(iVar2 + 0x18);\n      fStack_174 = *(float *)(iVar2 + 0x1c);\n      pfStack_ac[1] = *(float *)(iVar2 + 0x20);\n      pfStack_ac[2] = *(float *)(iVar2 + 0x24);\n      fStack_168 = *(float *)(iVar2 + 0x28);\n      pfStack_a8[1] = *(float *)(iVar2 + 0x2c);\n      pfStack_a8[2] = *(float *)(iVar2 + 0x30);"
+        },
+        {
+          "first_line": 325,
+          "last_line": 332,
+          "text": "        fStack_164 = fStack_10c + (fStack_fc - fStack_10c) * fVar12;\n        fStack_160 = fStack_108 + (fStack_f8 - fStack_108) * fVar12;\n      }\n      fStack_180 = fStack_180 * (float)uStack_120;\n      fStack_17c = fStack_17c * (float)uStack_120;\n      fStack_178 = fStack_178 * (float)uStack_120;\n      fStack_174 = fStack_174 * uStack_120._4_4_;\n      fStack_170 = fStack_170 * uStack_120._4_4_;"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_002f6c48-wheels-native-assembly-state.txt",
+      "decompile_sha256": "dc52d0239baace81d127049fc1dcf6be449e1b0fb93202399ec8c6b052d2cb38",
+      "ranges": [
+        {
+          "first_line": 162,
+          "last_line": 187,
+          "text": "    puVar10 = (undefined4 *)\n              (*(int *)(*(int *)(iVar12 + 0xd0) + 8) +\n              *(int *)(*(int *)(*(int *)(iVar12 + 0x14) + 0x3824) + 8) * 0x30);\n    fVar14 = (float)puVar10[10] + (float)puVar10[10];\n    *(float *)(iVar12 + 0x1fc) = fVar14;\n    *(float *)(iVar12 + 0x204) = fVar14;\n    *(float *)(iVar12 + 0x200) = fVar14;\n    puVar9 = (undefined4 *)\n             (*(int *)(*(int *)(iVar12 + 0xd0) + 8) +\n             *(int *)(*(int *)(*(int *)(iVar12 + 0x14) + 0x3828) + 8) * 0x30);\n    *puVar10 = *puVar9;\n    puVar10[1] = puVar9[1];\n    puVar10[2] = puVar9[2];\n    puVar10[3] = puVar9[3];\n    puVar10[4] = puVar9[4];\n    puVar10[5] = puVar9[5];\n    puVar10[6] = puVar9[6];\n    puVar10[7] = puVar9[7];\n    puVar10[8] = puVar9[8];\n    puVar10[9] = puVar9[9];\n    puVar10[10] = puVar9[10];\n    puVar10[0xb] = puVar9[0xb];\n    fVar14 = (float)puVar10[10] + (float)puVar10[10];\n    *(float *)(iVar12 + 0x208) = fVar14;\n    *(float *)(iVar12 + 0x210) = fVar14;\n    *(float *)(iVar12 + 0x20c) = fVar14;"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_003042c8-wheels-native-dimensions.txt",
+      "decompile_sha256": "191d85868a31183573e6ecc6001200e8ce98023f9b52e9eecff645a6a1989c65",
+      "ranges": [
+        {
+          "first_line": 565,
+          "last_line": 607,
+          "text": "            fStack_2e4 = fStack_3a4;\n            fStack_300 = fStack_3c0;\n            in_hi = CONCAT44(iVar26,iStack_16c * 0x30 >> 0x1f);\n            fStack_2fc = fStack_3bc;\n            fStack_2f8 = fStack_3b8;\n            fStack_2f4 = fStack_3b4;\n            fStack_2f0 = fStack_3b0;\n            fStack_2e0 = fStack_3a0;\n            iVar7 = iStack_16c * 0xc;\n            fStack_2dc = fStack_39c;\n            afStack_360[3] = afStack_360[3] * fVar27;\n            fStack_350 = fStack_350 * fVar27;\n            fStack_34c = fStack_34c * fVar27;\n            fStack_348 = fStack_348 * fVar27;\n            fStack_2d8 = fStack_398;\n            fStack_2d4 = fStack_394;\n            fStack_344 = fStack_344 * fVar27;\n            fStack_340 = fStack_340 * fVar27;\n            iVar22 = iStack_16c * 0xc;\n            fVar36 = afStack_360[iStack_16c * 0xc + 5];\n            afStack_360[iStack_16c * 0xc + 3] = afStack_360[iStack_16c * 0xc + 3] * fVar27;\n            afStack_360[iVar4 * 0xc + 4] = afStack_360[iVar22 + 4] * fVar27;\n            afStack_360[iVar4 * 0xc + 5] = fVar36 * fVar27;\n            fVar36 = afStack_360[iVar4 * 0xc + 7];\n            fVar29 = afStack_360[iVar4 * 0xc + 8];\n            afStack_360[iVar7 + 6] = afStack_360[iVar7 + 6] * fVar27;\n            afStack_360[iVar4 * 0xc + 7] = fVar36 * fVar27;\n            afStack_360[iVar4 * 0xc + 8] = fVar29 * fVar27;\n            fVar36 = (float)FUN_002ca758(iVar3,iVar6);\n            fStack_3b4 = fStack_3b4 * fVar36;\n            fStack_3b0 = fStack_3b0 * fVar36;\n            fStack_3ac = fStack_3ac * fVar36;\n            fStack_3a8 = fStack_3a8 * fVar36;\n            fStack_3a4 = fStack_3a4 * fVar36;\n            fStack_3a0 = fStack_3a0 * fVar36;\n            fStack_384 = fStack_384 * fVar36;\n            fStack_380 = fStack_380 * fVar36;\n            fStack_37c = fStack_37c * fVar36;\n            fStack_378 = fStack_378 * fVar36;\n            fStack_374 = fStack_374 * fVar36;\n            fStack_370 = fStack_370 * fVar36;\n            FUN_003033f0(ABS(*(float *)(*(int *)*piVar14 * 0x10 + iStack_19c + 0xc)),param_1,\n                         puStack_194);"
+        },
+        {
+          "first_line": 1200,
+          "last_line": 1213,
+          "text": "        do {\n          iVar17 = iStack_16c;\n          iVar7 = iStack_144 * 4;\n          iVar11 = *(int *)(*(int *)(*(int *)(iVar23 + 0xdc) + 8) +\n                            *(int *)(*(int *)(iVar23 + iVar7 + 0x3824) + 8) * 0x44 + 0x40);\n          pfVar8 = (float *)(iVar11 + 0x24);\n          if (iVar11 == 0) {\n            pfVar8 = (float *)&DAT_00708268;\n          }\n          piVar14 = (int *)(iStack_f8 + iVar7);\n          fVar32 = 0.0;\n          fVar33 = *pfVar8 * 4.0;\n          iVar11 = iStack_16c * 0xc;\n          lVar10 = ((long)(int)uStack_1a4 | CONCAT44((int)(in_hi >> 0x20),iStack_16c * 0x30 >> 0x1f)"
+        },
+        {
+          "first_line": 1297,
+          "last_line": 1344,
+          "text": "          uStack_364 = puVar18[0xb];\n          FUN_0023f1f0(*(undefined4 *)(*piVar14 * 0x10 + iStack_19c + 4),&uStack_390);\n          fVar29 = *(float *)(iStack_198 + 0x11d8);\n          fVar27 = fVar29 * fVar33;\n          fStack_3b8 = fStack_3b8 * fVar27;\n          fStack_3bc = fStack_3bc * fVar27;\n          fStack_3c0 = fStack_3c0 * fVar27;\n          fVar27 = *(float *)(iStack_198 + iVar7 + 0x12f8) * 0.0254;\n          fStack_2f4 = fStack_3b4;\n          fStack_2f0 = fStack_3b0;\n          fStack_2ec = fStack_3ac;\n          fStack_2e8 = fStack_3a8;\n          fStack_2e4 = fStack_3a4;\n          fStack_2e0 = fStack_3a0;\n          fStack_2dc = fStack_39c;\n          fStack_2d8 = fStack_398;\n          fStack_2d4 = fStack_394;\n          *pfStack_130 = *pfStack_130 * fVar27;\n          pfStack_130[1] = pfStack_130[1] * fVar27;\n          pfStack_130[2] = pfStack_130[2] * fVar27;\n          uVar34 = *(undefined4 *)(iVar23 + 0x3818);\n          *pfStack_12c = *pfStack_12c * fVar27;\n          pfStack_12c[1] = pfStack_12c[1] * fVar27;\n          pfStack_12c[2] = pfStack_12c[2] * fVar27;\n          afStack_2d0[0] = afStack_2d0[0] * fVar29;\n          afStack_2d0[1] = afStack_2d0[1] * fVar29;\n          afStack_2d0[2] = afStack_2d0[2] * fVar29;\n          fStack_300 = fStack_3c0;\n          fStack_2fc = fStack_3bc;\n          fStack_2f8 = fStack_3b8;\n          lVar10 = FUN_004b2220(uVar34);\n          if (lVar10 == 0) {\n            fVar27 = *(float *)(iStack_198 + 0x11d0);\n          }\n          else {\n            fVar27 = *(float *)(iStack_198 + 0x11d4);\n          }\n          fStack_3b4 = fStack_3b4 * fVar27;\n          fStack_3b0 = fStack_3b0 * fVar27;\n          fStack_3ac = fStack_3ac * fVar27;\n          fStack_3a8 = fStack_3a8 * fVar27;\n          fStack_3a4 = fStack_3a4 * fVar27;\n          fStack_3a0 = fStack_3a0 * fVar27;\n          fStack_384 = fStack_384 * fVar27;\n          fStack_380 = fStack_380 * fVar27;\n          fStack_37c = fStack_37c * fVar27;\n          fStack_378 = fStack_378 * fVar27;\n          fStack_374 = fStack_374 * fVar27;"
+        },
+        {
+          "first_line": 1507,
+          "last_line": 1520,
+          "text": "                  iVar7 = *(int *)(iVar23 + 0xcc);\n                }\n              }\n              if (iVar7 != 0) {\n                FUN_003b2418(iVar7,puStack_194[1],&fStack_3c0,iVar17,uStack_110,0,0);\n              }\n              if ((iStack_144 == 1) && (*(int *)(iVar23 + 200) != 0)) {\n                FUN_003b2418(*(int *)(iVar23 + 200),puStack_194[2],&fStack_300,iVar17,0,0,0);\n              }\n              else {\n                FUN_003b2418(*(undefined4 *)(iVar23 + 0xc4),puStack_194[2],&fStack_300,iVar17,0,0,0)\n                ;\n              }\n              if (uStack_17c != 0) {"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_002c55f0-wheels-skeleton-scaling.txt",
+      "decompile_sha256": "57bf70cefeaf973eb32b6dd12b55ad49b8b2edeea02f819813eecee65c9206db",
+      "ranges": [
+        {
+          "first_line": 302,
+          "last_line": 304,
+          "text": "  param_1[0x474] = 0x3f333333;\n  param_1[0x475] = 0x3f59999a;\n  param_1[0x476] = 0x3f63d70a;"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_004af9c8-wheels-final-size-functions.txt",
+      "decompile_sha256": "4d58c119f492b6cea7838e0575a4800d656d6997a7f103faccbf179b8ae4c4d5",
+      "ranges": [
+        {
+          "first_line": 1,
+          "last_line": 8,
+          "text": "\nfloat FUN_004af9c8(int param_1,int param_2)\n\n{\n  return *(float *)(&DAT_00669a10 + (param_1 + -0xc) * 4) / (float)(&DAT_00669840)[param_2];\n}\n"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_004afab0-wheels-final-size-functions.txt",
+      "decompile_sha256": "021428f9414b54d5c6667629bc064bd55ab6ff052d826e79530629b580fd4f84",
+      "ranges": [
+        {
+          "first_line": 1,
+          "last_line": 8,
+          "text": "\nundefined4 FUN_004afab0(int param_1)\n\n{\n  return (&DAT_00669840)[param_1];\n}\n"
+        }
+      ]
+    },
+    {
+      "scratch_excerpt": ".scratch/mc3-preview-packets/FUN_004b2220-wheels-final-size-functions.txt",
+      "decompile_sha256": "4f42eaff2ba7f0f1d26a74a97382394a5fb05eeed902891b1d7b10cd9ef6a0dc",
+      "ranges": [
+        {
+          "first_line": 1,
+          "last_line": 8,
+          "text": "\nbool FUN_004b2220(int param_1)\n\n{\n  return *(int *)(param_1 + 8) == 5;\n}\n"
+        }
+      ]
+    }
+  ],
+  "existing_jev_receipt": "previews/wheels/sizing-verify.json",
+  "resolution": "accept the qualified source-derived static scale composition; no runtime fidelity approval",
+  "source_chain_review": {
+    "car": "Config indices write width table values to +12d4(front)/+12cc(rear), profile selectors to +11b8/+11bc and diameter/profile ratios to +12d8/+12d0. FUN002f85d0 writes (2width,ratio,ratio) into axle basis state. FUN003042c8 loads the wheel frame, copies radial columns into the tire draw matrix, then multiplies the rim radial columns by FUN002ca758 which returns profile table value. Thus rim radial scale is ratio*profile; tire radial scale remains ratio.",
+    "bike": "FUN002f6c48 reads pose-frame Y at +0x28, doubles it into both radial scale state locations; FUN002f85d0 selects that state and forces X basis to1. FUN003042c8 reads the own wheel joint auxiliary pointer at joint+0x40, selects transmaxX at auxiliary+0x24, multiplies by4 and constructor +0x11d8 float(.89), and scales rim/tire X before copying the tire matrix. It then multiplies only the rim radial columns by constructor +0x11d0(.7) or+0x11d4(.85), selected by classenum5 in FUN004b2220.",
+    "component_identity": "Native assembly assigns rim handle to +0xcc and front/rear tire handles to +0xc4/+0xc8. Rim drawing uses fStack3c0; tire drawing uses fStack300, which was copied before the rim-specific factor."
+  },
+  "claim_limits": [
+    "This independently resolves the semantic scale chain under a source rest-pose assumption. Native animation, camber, suspension, tire deformation and runtime exact float rounding remain outside this audit.",
+    "Auxiliary transmaxX is a DoF constraint source value consumed as width by the native bike renderer, not a generic geometry bbox.",
+    "The numerical 94-vehicle/346-joint comparison is recorded separately in wheel-scale-independent-composition.json."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"tool\": \"jev_compare\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"overall\": {\n    \"relation\": \"contradicts\",\n    \"probabilities\": {\n      \"same_fact\": 0.01,\n      \"contradicts\": 0.95,\n      \"different_facts\": 0.04\n    },\n    \"confidence\": 0.92,\n    \"margin\": 0.9099999999999999,\n    \"decision\": \"auto\"\n  },\n  \"aspects\": [\n    {\n      \"aspect\": \"typed Python usage.cost preservation\",\n      \"relation\": \"contradicts\",\n      \"probabilities\": {\n        \"same_fact\": 0,\n        \"contradicts\": 0.98,\n        \"different_facts\": 0.02\n      },\n      \"confidence\": 0.97,\n      \"margin\": 0.96,\n      \"decision\": \"auto\"\n    },\n    {\n      \"aspect\": \"raw HTTP access\",\n      \"relation\": \"different_facts\",\n      \"probabilities\": {\n        \"same_fact\": 0,\n        \"contradicts\": 0.04,\n        \"different_facts\": 0.96\n      },\n      \"confidence\": 0.94,\n      \"margin\": 0.9199999999999999,\n      \"decision\": \"auto\"\n    }\n  ],\n  \"thresholds\": {\n    \"auto_accept\": 0.85,\n    \"minimum_margin\": 0.5\n  },\n  \"usage\": {\n    \"input_tokens\": 777,\n    \"output_tokens\": 133\n  }\n}"
+    }
+  ]
+}

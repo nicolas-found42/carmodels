@@ -1,0 +1,662 @@
+{
+  "bundle_sha256": "97d334e0aba25dda62d89ff1ab3d5e19b2591a653f46b50af958a626404a1425",
+  "reviewer": "/root/mc3_research",
+  "verdict": "approve",
+  "rationale": "Independent complete 19-file raw-patch inspection found no actionable correctness/spec defect. All 5 valid Jev gate escalations and unsupported/lowconfidence preservation/import/check claims are resolved by complete code/test inspection, direct current byte/inode/identity/original-record comparisons, recomputed semantic composition/usage, retained full/focused/initial-run manifests and complete logs, and browser receipts. No operational failure or contradicted claim is approved. Source/dealership include 94 native download-only packages honestly; preview/model conversion and real-world/playable identities are excluded. Scope excludes my separately authored preview-readiness note.",
+  "scope": {
+    "files": 19,
+    "patch_chars": 73959,
+    "patch_files_match_current_baseline_exactly": true,
+    "group_order_differs_from_sorted_baseline": true,
+    "sorted_baseline_diff_sha256": "21338a1cfc4ddd9f30e295712a808a32de6983caf10fda316a1c13766b388060",
+    "source_baseline": ".scratch/mc3-catalog/review-baseline.json"
+  },
+  "gate_resolutions": [
+    {
+      "receipt": "research/evidence/midnight-club-3-remix/catalogs/final-review-bounded/gate-01.json",
+      "input_sha256": "48721f2343c9cfcc9c68a7a74db5b892c0d1bb40cc3606f33cd362cff18d407d",
+      "receipt_sha256": "cdee3232f1b581bcf4b20caa1cf6024d6f1f354212a4ed4c881404a6c49b2abc",
+      "diff_sha256": "0edc5244677c3b32457f69cea7de4e5feec86d6b9f11fb3957aca1bc21cbb2b0",
+      "paths": [
+        "tools/import_mc3_catalogs.py",
+        "tools/build_model_catalog.py",
+        "tools/build_dealership.py",
+        "tools/test_import_mc3_catalogs.py"
+      ],
+      "original_action": "escalate",
+      "original_review": {
+        "safe_to_apply": 0.41,
+        "scores": {
+          "correctness": {
+            "score": 1.33,
+            "confidence": 0.01,
+            "probabilities": {
+              "0": 0.15,
+              "1": 0.36,
+              "2": 0.49
+            }
+          },
+          "spec_match": {
+            "score": 1.26,
+            "confidence": 0.51,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.67,
+              "2": 0.29
+            }
+          },
+          "test_gap": {
+            "score": 0.93,
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.25,
+              "1": 0.57,
+              "2": 0.18
+            }
+          },
+          "blast_radius": {
+            "score": 1.9,
+            "confidence": 0.86,
+            "probabilities": {
+              "0": 0,
+              "1": 0.09,
+              "2": 0.91
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.5427500000000001,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "correctness"
+        ]
+      },
+      "original_verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 1,
+          "contradicted": 0,
+          "unsupported": 1,
+          "needs_review": 2,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "Both compiled catalogs contain985 entries including94 MC3 native packages. The preservation check finds891 prior entries/origins unchanged and9065 prior asset files unchanged;94 source/working copies have identical bytes and distinct single-link inodes.",
+            "verdict": "unsupported",
+            "confidence": 0.3,
+            "probabilities": {
+              "verified": 0.4,
+              "contradicted": 0.07,
+              "unsupported": 0.53
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "The actual importer tests and builder checks pass, including native corruption/identity/member/link controls, repeat preservation, conflicting origin records, transaction rollback and actual dealership freshness.",
+            "verdict": "verified",
+            "confidence": 0.66,
+            "probabilities": {
+              "verified": 0.77,
+              "contradicted": 0.01,
+              "unsupported": 0.22
+            },
+            "action": "review"
+          }
+        ]
+      },
+      "verdict": "approve",
+      "rationale": "Correctness/safety and test-gap escalation resolved by complete importer/builder inspection. Source export rederives the extraction from the supplied ISO before publication. Canonical code/profile/variant/file/claim-limit identities, byte sizes, SHA256, independent regular-file paths, native member counts and all payload lengths/DEFLATE termination are checked. Existing source output refuses mismatch. Import validates all rows and conflicts before staged installation, preserves existing user metadata/copies, and rolls back injected installation failure. Four real synthetic ISO/Dave importer tests cover rehashed extraction tampering, path/profile/hash/member/duplicate controls, links, conflicts, repeat preservation, native metadata guards and rollback. Latest builder/freshness five-check logs pass. Spec is recovered native-file inclusion with unavailable previews; no invented GLB. Blast radius is bounded by the explicit native branch and direct preservation. Gate 1 unsupported count/preservation claim is independently established by current original/source/working byte comparison, exact 94 vehicle identities,985 entries in both compiled catalogs,94 distinct single-link inode pairs,891 prior catalog/origin records preserved, and9,065 prior asset files unchanged. The valid unsupported/lowconfidence claims are approved on independent checks, not self-asserted counts."
+    },
+    {
+      "receipt": "research/evidence/midnight-club-3-remix/catalogs/final-review-bounded/gate-02.json",
+      "input_sha256": "65449f647249d398548d8644abad87341cf1b1296856b76d3c5476822fe74313",
+      "receipt_sha256": "b88f44ac5c2d1cec49df1e25b601c0d58f546f9d6dab008d49b2fc4efc1dcf6c",
+      "diff_sha256": "aef7cc844e8a2b1f0f1e855d635d523b8ae07c84dfb0a24d608cd1f263cefd47",
+      "paths": [
+        "dealership/recovered.html",
+        "tools/test_viewer_loading.mjs",
+        "tools/test_native_catalog_ui.mjs"
+      ],
+      "original_action": "escalate",
+      "original_review": {
+        "safe_to_apply": 0.6,
+        "scores": {
+          "correctness": {
+            "score": 1.76,
+            "confidence": 0.62,
+            "probabilities": {
+              "0": 0.05,
+              "1": 0.15,
+              "2": 0.8
+            }
+          },
+          "spec_match": {
+            "score": 1.32,
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.65,
+              "2": 0.33
+            }
+          },
+          "test_gap": {
+            "score": 0.57,
+            "confidence": 0.16,
+            "probabilities": {
+              "0": 0.48,
+              "1": 0.48,
+              "2": 0.04
+            }
+          },
+          "blast_radius": {
+            "score": 1.69,
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.3,
+              "2": 0.69
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6805000000000001,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "original_verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The source viewer selects MC3 native packages without reading them as GLBs, clears prior geometry and exposes the native DAT download with unavailable-preview status and disabled model controls.",
+            "verdict": "verified",
+            "confidence": 0.95,
+            "probabilities": {
+              "verified": 0.97,
+              "contradicted": 0,
+              "unsupported": 0.03
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The actual source-viewer callbacks and native UI checks pass, including returning to a GLB after native selection.",
+            "verdict": "verified",
+            "confidence": 0.88,
+            "probabilities": {
+              "verified": 0.92,
+              "contradicted": 0.01,
+              "unsupported": 0.07
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "verdict": "approve",
+      "rationale": "Source-viewer correctness/spec/test-gap/blast-radius uncertainties resolved by actual loadCar callback inspection: selection increments requestId, aborts pending reads and disposes existing state before native branch sets DAT download and unavailable-preview status without fetchModel/readGLB. setLoading(false) disables geometry/texture controls because loaded is null. Actual callback suites exercise GLB-to-native transition, disposed scene/objectURLs, no native GLB read, disabled controls and return to normal GLB. Full 52-check run and later 5-check UI run pass. Browser receipt corroborates94 source entries, vp_350z_04 DAT download and disabled texture controls. The existing GLB branch remains after the native branch; no placeholder/native mesh is generated."
+    },
+    {
+      "receipt": "research/evidence/midnight-club-3-remix/catalogs/final-review-bounded/gate-03.json",
+      "input_sha256": "d6581e461c3f7a472939fb7ae80a8683cd64d81ef0625b7ad68c1936d5bd807b",
+      "receipt_sha256": "e4f3f54ba36f3e7a8aa29ae324527d2b4ddd07d7ea40ca2f6d33696ec2787f61",
+      "diff_sha256": "6cf731215e5d024bd80cc45d738d23a012655dab24d992ab4c2f7f1538daa7b3",
+      "paths": [
+        "dealership/dealership.html",
+        "dealership/dealership.mjs",
+        "tools/test_dealership.mjs",
+        "tools/test_build_dealership.py"
+      ],
+      "original_action": "escalate",
+      "original_review": {
+        "safe_to_apply": 0.65,
+        "scores": {
+          "correctness": {
+            "score": 1.84,
+            "confidence": 0.78,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.09,
+              "2": 0.88
+            }
+          },
+          "spec_match": {
+            "score": 1.73,
+            "confidence": 0.58,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.26,
+              "2": 0.73
+            }
+          },
+          "test_gap": {
+            "score": 0.48,
+            "confidence": 0.29,
+            "probabilities": {
+              "0": 0.56,
+              "1": 0.39,
+              "2": 0.04
+            }
+          },
+          "blast_radius": {
+            "score": 1.78,
+            "confidence": 0.67,
+            "probabilities": {
+              "0": 0,
+              "1": 0.22,
+              "2": 0.78
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.758,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "original_verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The dealership native selection clears existing model resources and disables unavailable view controls; the observed browser shows94 of985 entries and a dealership DAT download for MC3_VP_350Z_04.",
+            "verdict": "verified",
+            "confidence": 0.97,
+            "probabilities": {
+              "verified": 0.98,
+              "contradicted": 0.01,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The dealership and native UI checks pass; original891 catalog/origin entries and9065 pre-existing asset files are preserved.",
+            "verdict": "verified",
+            "confidence": 0.91,
+            "probabilities": {
+              "verified": 0.94,
+              "contradicted": 0.01,
+              "unsupported": 0.05
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "verdict": "approve",
+      "rationale": "Dealership correctness/spec/test-gap/blast-radius uncertainties resolved by complete select/loadCar/validateCars inspection: selection aborts prior work, clears/disposes old geometry, validates schema3/native identity and source metadata, skips allocation/loading and disables view controls while targeting dealership/assets/MC3_*.dat. Callback tests exercise cleanup, no native model load, correct independent download and metadata corruption rejection. The full 52-check run, final 5-check UI run and latest 5-check builder run passed. Browser receipt shows94 of 985 selected entries, correct DAT download and disabled view controls. Direct preservation independently confirms all891 prior catalog/origin records and9,065 prior asset files unchanged. Native download-only inclusion fulfills catalog inclusion with absent preview explicit."
+    },
+    {
+      "receipt": "research/evidence/midnight-club-3-remix/catalogs/final-review-bounded/gate-04.json",
+      "input_sha256": "adedb9c1535e327d01be7343528668c086b134c84d69fb6dfa40ea6b8ad48e6b",
+      "receipt_sha256": "7b11d6287b6651896c0cb220123c972c04991d42626b6787df7806b9513e5ac4",
+      "diff_sha256": "61d2bc6251f91056df6f3b68506625749b06540b46570c0f948e0284b07a1d98",
+      "paths": [
+        "tools/library_filter.py",
+        "tools/test_library_filter.py",
+        "tools/run_checks.py",
+        "tools/test_run_checks.py"
+      ],
+      "original_action": "escalate",
+      "original_review": {
+        "safe_to_apply": 0.6,
+        "scores": {
+          "correctness": {
+            "score": 1.63,
+            "confidence": 0.43,
+            "probabilities": {
+              "0": 0.06,
+              "1": 0.26,
+              "2": 0.6799999999999999
+            }
+          },
+          "spec_match": {
+            "score": 1.3,
+            "confidence": 0.49,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.66,
+              "2": 0.32
+            }
+          },
+          "test_gap": {
+            "score": 0.5,
+            "confidence": 0.25,
+            "probabilities": {
+              "0": 0.57,
+              "1": 0.36,
+              "2": 0.07
+            }
+          },
+          "blast_radius": {
+            "score": 1.45,
+            "confidence": 0.23,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.49,
+              "2": 0.48
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.67475,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      "original_verification": {
+        "action": "review",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full suite passed all52 named checks after correcting3 affected test assumptions. Final focused UI/filter and builder checks also passed.",
+            "verdict": "verified",
+            "confidence": 0.52,
+            "probabilities": {
+              "verified": 0.6799999999999999,
+              "contradicted": 0.25,
+              "unsupported": 0.07
+            },
+            "action": "review"
+          },
+          {
+            "claim": "In each of two eight-query live semantic experiments,7 top labels were correct,4 filters were applied and0 wrong filters were applied. The incorrect MC3-night top label was withheld; this is a constructed sample, not general accuracy.",
+            "verdict": "verified",
+            "confidence": 0.92,
+            "probabilities": {
+              "verified": 0.95,
+              "contradicted": 0.04,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "verdict": "approve",
+      "rationale": "Semantic/check-registry correctness/spec/test-gap/blast-radius uncertainties resolved by inspection: only MC3/native option and matching criteria are added; no unsupported night/preview variant. Existing Choice/Noul/Score distribution, warning, failure and threshold composition remains. Independent recomputation from16 raw SDK responses reproduces7 of 8 top labels,4 applied,0 wrong per variant and withholding the incorrect MC3 night label. Threshold sweeps/usage agree. Tests cover added option/no-preview/no-match and existing malformed/failure handling plus native viewer regressions. Gate 4 lowconfidence full-check claim resolved by original/durable logs/manifests: initial 52-check run fails exactly test_viewer_loading, test_build_dealership and test_run_checks; repaired full run has52 unique named checks all pass with exit 0; final 5-check UI/filter run and latest 5-check builder run all pass with exit 0. test_run_checks intentionally prints fail/skip controls inside 3 successful unit tests, not a failed namedcheck. test_redline_texture has1 internal skip; claim is52 named command passes, not all possible subtests. Blender roundtrip/preservation checks pass within their stated static scopes."
+    },
+    {
+      "receipt": "research/evidence/midnight-club-3-remix/catalogs/final-review-bounded/gate-05.json",
+      "input_sha256": "6b53f5666626e87509cd552bbf9a6a6da1af6bf6ecb1685531f878ec31b3745c",
+      "receipt_sha256": "fd323002375443299830405aac884d51d10c2fc7c4b5b48a73e6fd466e9d061d",
+      "diff_sha256": "00ac21c90c6f15d4c514a2637e37f0ec051d2205e4eaf000b07c712e18499c70",
+      "paths": [
+        "dealership/dealership/README.md",
+        "midnight-club-3-remix/README.md",
+        "research/README.md",
+        "research/midnight-club-3-remix-catalogs.md"
+      ],
+      "original_action": "escalate",
+      "original_review": {
+        "safe_to_apply": 0.47,
+        "scores": {
+          "correctness": {
+            "score": 1.81,
+            "confidence": 0.7,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.16,
+              "2": 0.82
+            }
+          },
+          "spec_match": {
+            "score": 1.8,
+            "confidence": 0.69,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.19,
+              "2": 0.8
+            }
+          },
+          "test_gap": {
+            "score": 0.38,
+            "confidence": 0.43,
+            "probabilities": {
+              "0": 0.67,
+              "1": 0.28,
+              "2": 0.05
+            }
+          },
+          "blast_radius": {
+            "score": 1.9,
+            "confidence": 0.85,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.08,
+              "2": 0.91
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.7610000000000001,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "original_verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The documentation limits MC3 catalog inclusion to native package downloads/readiness and explicitly leaves PCK/PPF conversion, assembled previews, retail names, playable roster and runtime dependencies unresolved.",
+            "verdict": "verified",
+            "confidence": 0.95,
+            "probabilities": {
+              "verified": 0.97,
+              "contradicted": 0,
+              "unsupported": 0.03
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The retained semantic experiment metrics report25482 input tokens,2964 output tokens and total provider-reported cost0.001070244 USD across16 requests.",
+            "verdict": "verified",
+            "confidence": 0.92,
+            "probabilities": {
+              "verified": 0.95,
+              "contradicted": 0.02,
+              "unsupported": 0.03
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "verdict": "approve",
+      "rationale": "Documentation correctness/spec/test-gap/safety/blast-radius uncertainties resolved by complete docs inspection against implementation, browser receipts, direct preservation and semantic recomputation. Docs claim94 sourcepackages/nativeDATdownloads and leave PCK/PPF conversion, assembled previews, retail names, playable roster, editing and runtime closure unresolved.985catalogentries and prior 891 records and 9,065 assets preserved are supported directly. Semantic totals25,482 input tokens, 2,964 output tokens and $0.001070244 agree with recomputation from16 responses;7 correct top labels, 4 applied filters and 0 wrong applications per 8-query variant is scoped to constructed sample.402 routes remain failures, not approvals. Structural traffic leads do not promote package previews. My preview-readiness note is evidence only and excluded from this19-file patch; root separately reviews it."
+    }
+  ],
+  "check_evidence": [
+    {
+      "directory": "research/evidence/midnight-club-3-remix/catalogs/full-checks",
+      "manifest_sha256": "020101bd3f5fbdec80bc55cb30db0020f732d6787cb12e64ed76f2e0b74a967c",
+      "count": 52,
+      "exit_code": 0,
+      "statuses": {
+        "pass": 52,
+        "fail": 0,
+        "skip": 0
+      },
+      "complete_logs_equal_original": true
+    },
+    {
+      "directory": "research/evidence/midnight-club-3-remix/catalogs/ui-filter-checks",
+      "manifest_sha256": "c6c0dac9eb2f6ff5767fa3c522f057549a716f030ff2838e1b9bf6baba47deb6",
+      "count": 5,
+      "exit_code": 0,
+      "statuses": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      "complete_logs_equal_original": true
+    },
+    {
+      "directory": "research/evidence/midnight-club-3-remix/catalogs/builder-checks",
+      "manifest_sha256": "31031f8b9a9939a53cbb6d8f36619711497b39ce4718b0c0e16d7d0228f2e3cf",
+      "count": 5,
+      "exit_code": 0,
+      "statuses": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      "complete_logs_equal_original": true
+    },
+    {
+      "directory": "research/evidence/midnight-club-3-remix/catalogs/initial-full-checks",
+      "manifest_sha256": "e067b53f62f59477498f68b53694e3f3a77ea2334a006b014c95edcd603700bb",
+      "count": 52,
+      "exit_code": 1,
+      "statuses": {
+        "pass": 49,
+        "fail": 3,
+        "skip": 0
+      },
+      "complete_logs_equal_original": true
+    }
+  ],
+  "independent_evidence": {
+    "research/evidence/midnight-club-3-remix/catalogs/independent-preservation-check.json": "44d29892cd4008bf1500ce4aeb167deb85445855f53b7eb4e71f014997dcb87a",
+    "research/evidence/midnight-club-3-remix/catalogs/independent-semantic-check.json": "4051818f23d66dac3d5992b185d51a5368e610f39eeb70d4ba91ff7e3e220f3d"
+  },
+  "current_file_sha256": {
+    "dealership/dealership.html": "f3ffc87a9f02ef47fbac03deb4a4f2dc2b492f4f1137d4c4f8ec2f30a28259d6",
+    "dealership/dealership.mjs": "3f1fa3bcb0760dd871b43d287144982ab8e8d9d78ccc17223f0f160e66d9ec4b",
+    "dealership/dealership/README.md": "b4d50a4ccd7ad75591ac85ef596bf7c3e86040e65f78d7faa2783f9018d0a428",
+    "dealership/recovered.html": "943ccaf05a27a8f8c4cd964fa45b14f96b7f9e72effed4e8bf0f6a647ac57ef2",
+    "midnight-club-3-remix/README.md": "df87e90576043f1dc9034a1209a89b4349387b7cb8f428ed6bea992c88046e2b",
+    "research/README.md": "872f49910c11dfe428da37085ed7990837d5b2372741d45192d24772332962fd",
+    "research/midnight-club-3-remix-catalogs.md": "2ede4f8a1fbdc36ce2b88e3191e1d0e768039c782612added803bfd7879fabac",
+    "tools/build_dealership.py": "f2a11a0c74dd838150ebc42c79da5d2c5a01e96b4f85ab9979eb96a1ec053c34",
+    "tools/build_model_catalog.py": "3b79822326c3c29dd28ea4b0fe6087b88fd945c88730455704ae0615b7bdf413",
+    "tools/import_mc3_catalogs.py": "b107687f338d13f6ec48e6ae18a8d4f6ee05c71944b08131f62185ef40ba4dc7",
+    "tools/library_filter.py": "cb664563f3ccbcf146e4b598eb4b0fc1ec5a0169e299d2e1993489354603b0d7",
+    "tools/run_checks.py": "3c024192c3caf8633034dc1df0121386a2db95bb02ca5bab627934cac2c0b77c",
+    "tools/test_build_dealership.py": "bf79b2f1a6e5abdbbf4a09e60436e35b7a0538163e2bacc7099a085d6a2fceba",
+    "tools/test_dealership.mjs": "eec24d3f89e931763ad65ede50a9b96aca25c37e5bcb7a71f01f7128435d383c",
+    "tools/test_import_mc3_catalogs.py": "4ce8e16436fbeb9ef64ac395af1dcd8efb1fb3909bb4f27f8a1edfa98dc2b83d",
+    "tools/test_library_filter.py": "d66adf77ad8629ebe8cc8a5725c36c77a9e74da1ffacc761481489296488b3d6",
+    "tools/test_native_catalog_ui.mjs": "8bc1fd07eb096e5857993b652f9de63e0d273e167c941d7db0bd65621efea68e",
+    "tools/test_run_checks.py": "f23e004e0115165631c19763849f1452b9b7cfb9521100c2e13b389cce5b6e22",
+    "tools/test_viewer_loading.mjs": "921f095a066ccd33182c1662f56f309f8fe8c4e151caf26e381eedabe7809707"
+  },
+  "claim_limits": [
+    "No MC3 PCK/PPF conversion,GLB, assembled render, retail identity, playable roster, editable model or runtime closure established.",
+    "Resolution records an independent decision, not reviewer identity authentication.",
+    "No unchanged Jev gate repeated; original receipts preserved."
+  ]
+}

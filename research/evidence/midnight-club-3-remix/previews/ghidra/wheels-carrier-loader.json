@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x0042e928,0x0042e810",
+    "fields": "decompiled_code,callers,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x0042e928\":{\"name\":\"FUN_0042e928\",\"size\":28,\"address\":\"0042e928\",\"decompiled_code\":\"\\nvoid FUN_0042e928(void)\\n\\n{\\n  FUN_0042ccd0();\\n  return;\\n}\\n\\n\",\"caller_count\":3,\"callers\":[{\"name\":\"FUN_001a8ec0\",\"address\":\"001a8ec0\"},{\"name\":\"FUN_0028d448\",\"address\":\"0028d448\"},{\"name\":\"FUN_002cae00\",\"address\":\"002cae00\"}],\"callee_count\":1,\"callees\":[{\"name\":\"FUN_0042ccd0\",\"address\":\"0042ccd0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x0042e810\":{\"name\":\"FUN_0042e810\",\"size\":28,\"address\":\"0042e810\",\"decompiled_code\":\"\\nvoid FUN_0042e810(void)\\n\\n{\\n  FUN_00430cf8();\\n  return;\\n}\\n\\n\",\"caller_count\":13,\"callers\":[{\"name\":\"FUN_001a8ec0\",\"address\":\"001a8ec0\"},{\"name\":\"FUN_001a92f8\",\"address\":\"001a92f8\"},{\"name\":\"FUN_001d3758\",\"address\":\"001d3758\"},{\"name\":\"FUN_0021df88\",\"address\":\"0021df88\"},{\"name\":\"FUN_0028d448\",\"address\":\"0028d448\"},{\"name\":\"FUN_002cae00\",\"address\":\"002cae00\"},{\"name\":\"FUN_002e40a8\",\"address\":\"002e40a8\"},{\"name\":\"FUN_003141c0\",\"address\":\"003141c0\"},{\"name\":\"FUN_00391e10\",\"address\":\"00391e10\"},{\"name\":\"FUN_00393a00\",\"address\":\"00393a00\"},{\"name\":\"FUN_00393cd0\",\"address\":\"00393cd0\"},{\"name\":\"FUN_003b3638\",\"address\":\"003b3638\"},{\"name\":\"FUN_0045deb8\",\"address\":\"0045deb8\"}],\"callee_count\":1,\"callees\":[{\"name\":\"FUN_00430cf8\",\"address\":\"00430cf8\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":2,\"requested\":2}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.45228083299298305
+}

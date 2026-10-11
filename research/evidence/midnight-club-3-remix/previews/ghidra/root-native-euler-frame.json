@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "00240090",
+    "fields": "entry_point,decompiled_code",
+    "program": "SLUS_213.55",
+    "include_call_context": false
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662832232289000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"00240090\":{\"name\":\"FUN_00240090\",\"size\":216,\"address\":\"00240090\",\"entry_point\":\"00240090\",\"decompiled_code\":\"\\nvoid FUN_00240090(float *param_1,undefined8 param_2)\\n\\n{\\n  float fStack_30;\\n  float fStack_2c;\\n  float fStack_28;\\n  float fStack_20;\\n  float fStack_1c;\\n  float fStack_18;\\n  \\n  FUN_0041c6d8(&fStack_30,&fStack_20,param_2);\\n  param_1[2] = -fStack_1c;\\n  param_1[3] = fStack_20 * fStack_1c * fStack_28 - fStack_30 * fStack_18;\\n  *param_1 = fStack_2c * fStack_28;\\n  param_1[1] = fStack_2c * fStack_18;\\n  param_1[4] = fStack_20 * fStack_1c * fStack_18 + fStack_30 * fStack_28;\\n  param_1[5] = fStack_20 * fStack_2c;\\n  param_1[6] = fStack_30 * fStack_1c * fStack_28 + fStack_20 * fStack_18;\\n  param_1[8] = fStack_30 * fStack_2c;\\n  param_1[7] = fStack_30 * fStack_1c * fStack_18 - fStack_20 * fStack_28;\\n  return;\\n}\\n\\n\",\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":1,\"requested\":1}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 8.611694582999917
+}

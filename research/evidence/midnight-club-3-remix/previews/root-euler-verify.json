@@ -1,0 +1,50 @@
+{
+  "args": {
+    "claims": [
+      "The native version-104 joint parser reads the token euler and writes its three floats at bone offsets0x2c,0x30,0x34. This establishes source Euler metadata, but does not by itself establish runtime rendering or a three-axis rotation order."
+    ],
+    "evidence": [
+      {
+        "id": "joint-parser",
+        "text": "\n// WARNING: Type propagation algorithm not settling\n// WARNING: Globals starting with '_' overlap smaller symbols at the same address\n\nundefined4 FUN_0058d490(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4)\n\n{\n  ushort uVar1;\n  char cVar2;\n  undefined4 uVar3;\n  undefined8 *puVar4;\n  long lVar5;\n  int iVar6;\n  undefined8 uVar7;\n  undefined8 uVar8;\n  undefined4 *puVar9;\n  int iVar10;\n  int iVar11;\n  int *piVar12;\n  undefined1 auStack_160 [128];\n  undefined1 auStack_e0 [64];\n  undefined1 auStack_a0 [16];\n  undefined1 auStack_90 [8];\n  undefined4 uStack_88;\n  undefined4 uStack_84;\n  undefined4 uStack_80;\n  undefined4 uStack_7c;\n  undefined1 auStack_78 [8];\n  undefined4 uStack_70;\n  undefined4 uStack_6c;\n  undefined4 uStack_68;\n  undefined4 uStack_64;\n  undefined2 auStack_60 [2];\n  undefined1 auStack_5c [12];\n  \n  piVar12 = (int *)param_4;\n  auStack_60[0] = 0;\n  iVar10 = (int)param_1;\n  *(short *)(iVar10 + 0x38) = (short)*piVar12;\n  iVar11 = (int)param_2;\n  (**(code **)(*(int *)(iVar11 + 0x98) + 0xc))(param_2,auStack_e0,0x40);\n  uVar3 = FUN_00433228(auStack_e0);\n  *(undefined4 *)(iVar10 + 0xc) = uVar3;\n  FUN_00434060(param_2,0x675bfe);\n  *(undefined4 *)(iVar10 + 0x28) = 0;\n  *(undefined4 *)(iVar10 + 0x24) = 0;\n  *(undefined4 *)(iVar10 + 0x20) = 0;\n  lVar5 = FUN_004341b0(param_2,0x675c00,1);\n  if (lVar5 != 0) {\n    (**(code **)(*(int *)(iVar11 + 0x98) + 0x24))(param_2,iVar10 + 0x20);\n  }\n  *(undefined4 *)(iVar10 + 0x34) = 0;\n  *(undefined4 *)(iVar10 + 0x30) = 0;\n  *(undefined4 *)(iVar10 + 0x2c) = 0;\n  lVar5 = FUN_004341b0(param_2,0x675c6b,1);\n  if (lVar5 != 0) {\n    (**(code **)(*(int *)(iVar11 + 0x98) + 0x24))(param_2,iVar10 + 0x2c);\n  }\n  lVar5 = FUN_004341b0(param_2,0x675c71,1);\n  if (lVar5 != 0) {\n    (**(code **)(*(int *)(iVar11 + 0x98) + 0x24))(param_2,auStack_a0);\n  }\n  *(undefined1 *)(iVar10 + 0x3d) = 0;\n  *(undefined2 *)(iVar10 + 0x10) = 0x2000;\n  *(undefined1 *)(iVar10 + 0x3f) = 0;\n  *(undefined1 *)(iVar10 + 0x3e) = 0;\n  auStack_90 = (undefined1  [8])DAT_00708238;\n  uStack_88 = DAT_00708240;\n  uStack_84 = (undefined4)DAT_00708248;\n  uStack_80 = (undefined4)((ulong)DAT_00708248 >> 0x20);\n  uStack_7c = DAT_00708250;\n  auStack_78 = (undefined1  [8])_DAT_00708258;\n  uStack_70 = DAT_00708260;\n  uStack_6c = (undefined4)_DAT_00708268;\n  uStack_68 = (undefined4)((ulong)_DAT_00708268 >> 0x20);\n  uStack_64 = DAT_00708270;\nLAB_0058d658:\n  do {\n    iVar6 = *(int *)(iVar11 + 0x98);\nLAB_0058d65c:\n    while( true ) {\n      (**(code **)(iVar6 + 0xc))(param_2,auStack_160,0x80);\n      lVar5 = FUN_00432968(auStack_160,0x675c15,4);\n      if (lVar5 != 0) break;\n      iVar6 = *(int *)param_3;\n      *(int *)param_3 = iVar6 + 0x44;\n      FUN_0058ca50(param_1,iVar6);\n      *piVar12 = *piVar12 + 1;\n      FUN_0058d490(iVar6,param_2,param_3,param_4);\n      iVar6 = *(int *)(iVar11 + 0x98);\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c1a);\n    if (lVar5 == 0) {\n      if (*(short *)(iVar10 + 0x10) == 0xe) {\n        *(undefined2 *)(iVar10 + 0x10) = 0xf;\n        uVar1 = *(ushort *)(iVar10 + 0x10);\n      }\n      else {\n        uVar1 = *(ushort *)(iVar10 + 0x10);\n      }\n      if ((uVar1 & 0x1c70) != 0) {\n        puVar4 = *(undefined8 **)(iVar10 + 0x40);\n        if (puVar4 == (undefined8 *)0x0) {\n          puVar4 = (undefined8 *)FUN_003b14d0(0x30);\n          uVar3 = DAT_00708240;\n          *puVar4 = DAT_00708238;\n          *(undefined4 *)(puVar4 + 1) = uVar3;\n          uVar3 = DAT_00708250;\n          *(undefined8 *)((int)puVar4 + 0xc) = DAT_00708248;\n          *(undefined4 *)((int)puVar4 + 0x14) = uVar3;\n          uVar3 = DAT_00708260;\n          puVar4[3] = _DAT_00708258;\n          *(undefined4 *)(puVar4 + 4) = uVar3;\n          uVar3 = DAT_00708270;\n          *(undefined8 *)((int)puVar4 + 0x24) = _DAT_00708268;\n          *(undefined4 *)((int)puVar4 + 0x2c) = uVar3;\n          *(undefined8 **)(iVar10 + 0x40) = puVar4;\n          puVar4 = *(undefined8 **)(iVar10 + 0x40);\n        }\n        *puVar4 = auStack_90;\n        puVar4[1] = CONCAT44(uStack_84,uStack_88);\n        puVar4[2] = CONCAT44(uStack_7c,uStack_80);\n        puVar4[3] = auStack_78;\n        puVar4[4] = CONCAT44(uStack_6c,uStack_70);\n        puVar4[5] = CONCAT44(uStack_64,uStack_68);\n      }\n      return 1;\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c27);\n    if (lVar5 == 0) {\n      uVar7 = 2;\n      uVar8 = 0x10;\n      puVar4 = (undefined8 *)auStack_90;\n      puVar9 = &uStack_84;\nLAB_0058d778:\n      cVar2 = FUN_0058cdd0(param_2,iVar10 + 0x10,uVar7,uVar8,auStack_5c,puVar4,puVar9);\n      *(char *)(iVar10 + 0x3e) = *(char *)(iVar10 + 0x3e) + cVar2;\n      goto LAB_0058d658;\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c2c);\n    if (lVar5 == 0) {\n      uVar7 = 4;\n      uVar8 = 0x20;\n      puVar4 = (undefined8 *)((int)auStack_90 + 4);\n      puVar9 = &uStack_80;\n      goto LAB_0058d778;\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c31);\n    if (lVar5 == 0) {\n      uVar7 = 8;\n      uVar8 = 0x40;\n      puVar4 = (undefined8 *)&uStack_88;\n      puVar9 = &uStack_7c;\n      goto LAB_0058d778;\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c36);\n    if (lVar5 == 0) {\n      uVar7 = 0x80;\n      uVar8 = 0x400;\n      puVar4 = (undefined8 *)auStack_78;\n      puVar9 = &uStack_6c;\n      goto LAB_0058d828;\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c3d);\n    if (lVar5 == 0) {\n      uVar7 = 0x100;\n      uVar8 = 0x800;\n      puVar4 = (undefined8 *)((int)auStack_78 + 4);\n      puVar9 = &uStack_68;\n      goto LAB_0058d828;\n    }\n    lVar5 = FUN_004328a0(auStack_160,0x675c44);\n    if (lVar5 != 0) {\n      lVar5 = FUN_004328a0(auStack_160,0x675c4b);\n      if (((lVar5 == 0) || (lVar5 = FUN_004328a0(auStack_160,0x675c52), lVar5 == 0)) ||\n         (lVar5 = FUN_004328a0(auStack_160,0x675c59), lVar5 == 0)) {\n        FUN_0058cdd0(param_2,auStack_60,0,0,auStack_5c,auStack_5c,auStack_5c);\n        iVar6 = *(int *)(iVar11 + 0x98);\n      }\n      else {\n        lVar5 = FUN_004328a0(auStack_160,0x675c60);\n        if (lVar5 == 0) {\n          FUN_0058cee0(param_2,iVar10 + 0x10,0x2000);\n          iVar6 = *(int *)(iVar11 + 0x98);\n        }\n        else {\n          iVar6 = *(int *)(iVar11 + 0x98);\n        }\n      }\n      goto LAB_0058d65c;\n    }\n    uVar7 = 0x200;\n    uVar8 = 0x1000;\n    puVar4 = (undefined8 *)&uStack_70;\n    puVar9 = &uStack_64;\nLAB_0058d828:\n    cVar2 = FUN_0058cdd0(param_2,iVar10 + 0x10,uVar7,uVar8,auStack_5c,puVar4,puVar9);\n    *(char *)(iVar10 + 0x3d) = *(char *)(iVar10 + 0x3d) + cVar2;\n  } while( true );\n}\n\n"
+      },
+      {
+        "id": "exact-ELF-tokens",
+        "text": "{\"source\": {\"file\": \".scratch/mc3/SLUS_213.55\", \"bytes\": 5264872, \"sha256\": \"1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d\"}, \"segment_mapping\": {\"virtual\": 6773760, \"file\": 5069952}, \"tokens\": {\"0x675c00\": \"offset\", \"0x675c6b\": \"euler\", \"0x675c71\": \"scale\"}, \"bytes_hex\": \"6f666673657400726f746d696e00726f746d617800626f6e65007d006c6f636b006c696d697400726f745800726f745900726f745a007472616e7358007472616e7359007472616e735a007363616c6558007363616c6559007363616c655a007669736962696c6974790065756c6572007363616c6500736b656c0076657273\", \"claim_limit\": \"Version104 textual token semantic mapping only; bone rendering rotation order not established\"}"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 1,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The native version-104 joint parser reads the token euler and writes its three floats at bone offsets0x2c,0x30,0x34. This establishes source Euler metadata, but does not by itself establish runtime rendering or a three-axis rotation order.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.85,
+          "contradicts": 0.12,
+          "says_nothing": 0.03
+        },
+        "confidence": 0.77,
+        "action": "review",
+        "supporting_evidence": "joint-parser",
+        "same_subject": 0.64
+      }
+    ],
+    "usage": {
+      "input_tokens": 4435,
+      "output_tokens": 108
+    }
+  }
+}

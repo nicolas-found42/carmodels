@@ -1,0 +1,73 @@
+{
+ "endpoint": "/get_functions",
+ "args": {
+  "function": "0x002b0388",
+  "fields": "entry_point,decompiled_code,callees",
+  "program": "SLUS_213.55"
+ },
+ "result": {
+  "program": "SLUS_213.55",
+  "name": "FUN_002b0388",
+  "size": 372,
+  "address": "002b0388",
+  "entry_point": "002b0388",
+  "decompiled_code": "\nvoid FUN_002b0388(undefined8 param_1,undefined8 param_2,undefined4 *param_3,int param_4,\n                 undefined8 param_5)\n\n{\n  undefined4 uVar1;\n  long lVar2;\n  long lVar3;\n  undefined1 auStack_180 [152];\n  undefined *puStack_e8;\n  undefined4 uStack_e0;\n  undefined2 uStack_dc;\n  undefined2 uStack_da;\n  undefined1 auStack_d0 [128];\n  \n  lVar2 = FUN_0042a510(0x6be6b8,0x615e98,param_2,0x6477b0);\n  if (lVar2 == 0) {\n    FUN_002b0150(param_1,param_2,param_5);\n  }\n  else {\n    FUN_00435bc0(auStack_180);\n    puStack_e8 = &DAT_00627308;\n    uStack_e0 = 0;\n    uStack_dc = 0;\n    uStack_da = 0;\n    FUN_00433b48(auStack_180,param_2,(int)lVar2);\n    if (0 < param_4) {\n      uVar1 = *param_3;\n      while( true ) {\n        param_3 = param_3 + 1;\n        param_4 = param_4 + -1;\n        FUN_002bb4c8(auStack_180,uVar1);\n        if (param_4 == 0) break;\n        uVar1 = *param_3;\n      }\n    }\n    do {\n      FUN_002bb5c0(auStack_180,auStack_d0,0x80);\n      lVar3 = FUN_00432f18(auStack_d0,0x6477b8);\n    } while (lVar3 != 0);\n    FUN_00433330((int)param_1 + 0x28,param_2);\n    FUN_002b06b8(param_1,auStack_180,param_5);\n    FUN_002bb3d0(auStack_180,2);\n  }\n  if ((int)lVar2 != 0) {\n    FUN_00399748();\n  }\n  return;\n}\n\n",
+  "callee_count": 11,
+  "callees": [
+   {
+    "name": "FUN_002b0150",
+    "address": "002b0150"
+   },
+   {
+    "name": "FUN_002b06b8",
+    "address": "002b06b8"
+   },
+   {
+    "name": "FUN_002bb3d0",
+    "address": "002bb3d0"
+   },
+   {
+    "name": "FUN_002bb4c8",
+    "address": "002bb4c8"
+   },
+   {
+    "name": "FUN_002bb5c0",
+    "address": "002bb5c0"
+   },
+   {
+    "name": "FUN_00399748",
+    "address": "00399748"
+   },
+   {
+    "name": "FUN_0042a510",
+    "address": "0042a510"
+   },
+   {
+    "name": "FUN_00432f18",
+    "address": "00432f18"
+   },
+   {
+    "name": "FUN_00433330",
+    "address": "00433330"
+   },
+   {
+    "name": "FUN_00433b48",
+    "address": "00433b48"
+   },
+   {
+    "name": "FUN_00435bc0",
+    "address": "00435bc0"
+   }
+  ],
+  "revision": {
+   "token": "1791659127401:44cbab3e:3",
+   "epoch": "44cbab3e",
+   "modification_number": 3,
+   "saved_time": 1791659127401,
+   "unsaved_changes": false,
+   "decompiled": true
+  }
+ },
+ "elapsed_seconds": 0.256,
+ "server": "GhidraMCP 7.0.0 headless, Ghidra 12.1.4, program SLUS_213.55 (project mc3-ghidra-20261010)"
+}

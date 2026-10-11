@@ -1,0 +1,74 @@
+{
+  "schema": "mc3-semantic-metrics-v1",
+  "variants": [
+    {
+      "receipt": "semantic-experiments.json",
+      "queries": 8,
+      "top_correct": 7,
+      "applied": 4,
+      "wrongly_applied": 0,
+      "elapsed_seconds": 1.8346412499959115,
+      "usage": {
+        "input_tokens": 11501,
+        "output_tokens": 1482,
+        "cost": 0.000483042
+      },
+      "threshold_sweep": [
+        {
+          "threshold": 0.75,
+          "accepted": 4,
+          "wrongly_applied": 0
+        },
+        {
+          "threshold": 0.85,
+          "accepted": 4,
+          "wrongly_applied": 0
+        },
+        {
+          "threshold": 0.95,
+          "accepted": 0,
+          "wrongly_applied": 0
+        }
+      ]
+    },
+    {
+      "receipt": "semantic-explicit-variants.json",
+      "queries": 8,
+      "top_correct": 7,
+      "applied": 4,
+      "wrongly_applied": 0,
+      "elapsed_seconds": 1.5423076660081279,
+      "usage": {
+        "input_tokens": 13981,
+        "output_tokens": 1482,
+        "cost": 0.000587202
+      },
+      "threshold_sweep": [
+        {
+          "threshold": 0.75,
+          "accepted": 4,
+          "wrongly_applied": 0
+        },
+        {
+          "threshold": 0.85,
+          "accepted": 4,
+          "wrongly_applied": 0
+        },
+        {
+          "threshold": 0.95,
+          "accepted": 0,
+          "wrongly_applied": 0
+        }
+      ]
+    }
+  ],
+  "retained_wording": "Original grounded criteria with MC3/native option added. Explicit available-variant clauses had no top-label or accepted-filter accuracy gain and were removed.",
+  "total_usage": {
+    "input_tokens": 25482,
+    "output_tokens": 2964,
+    "cost": 0.001070244
+  },
+  "claim_limits": [
+    "Eight constructed queries per variant; not general accuracy. One incorrect top label for unavailable MC3 night variant was withheld by composition thresholds in both variants. No provider failure is scored as accuracy."
+  ]
+}

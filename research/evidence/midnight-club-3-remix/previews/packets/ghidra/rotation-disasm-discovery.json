@@ -1,0 +1,21 @@
+{
+  "tool": "search_tools",
+  "args": {
+    "query": "disassemble instructions function",
+    "limit": 8
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662725579056000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"query\": \"disassemble instructions function\", \"match_count\": 57, \"returned\": 8, \"matches\": [{\"name\": \"disassemble_function\", \"group\": \"function\", \"status\": \"callable\", \"description\": \"Get assembly listing of function. On programs with multiple address spaces (e.g., embedded targets), prefix addresses with the space name (mem:1000) to avoid am\"}, {\"name\": \"disassemble_bytes\", \"group\": \"function\", \"status\": \"callable\", \"description\": \"Disassemble a range of bytes. On programs with multiple address spaces (e.g., embedded targets), prefix addresses with the space name (mem:1000) to avoid ambigu\"}, {\"name\": \"audit_globals_in_function\", \"group\": \"datatype\", \"status\": \"callable\", \"description\": \"Audit every global variable referenced from within a function in one call. Walks the function's instructions, collects unique data references, and returns the p\"}, {\"name\": \"search_instructions\", \"group\": \"analysis\", \"status\": \"callable\", \"description\": \"Search for instructions by mnemonic and/or operand substring. Complement to /search_byte_patterns (byte-level); this matches after Ghidra has parsed instruction\"}, {\"name\": \"add_function_tag\", \"group\": \"function\", \"status\": \"callable\", \"description\": \"Attach tags to ONE function (function + tags) OR MANY in one transaction (assignments=[{function,tags}, ...]). Tags are comma-separated and created on the fly (\"}, {\"name\": \"analyze_function_complete\", \"group\": \"analysis\", \"status\": \"callable\", \"description\": \"Comprehensive single-call function analysis. Accepts function name or address. For decompile+callers+comments+xrefs in one read prefer /get_functions.\"}, {\"name\": \"analyze_function_completeness\", \"group\": \"analysis\", \"status\": \"callable\", \"description\": \"Check documentation completeness for ONE function (function_address) OR MANY (addresses=comma-separated list). On programs with multiple address spaces, prefix \"}, {\"name\": \"archive_ingest_function\", \"group\": \"documentation\", \"status\": \"callable\", \"description\": \"Ingest a single function's documentation into the cross-version archive (the doc archive service configured via GHIDRA_MCP_ARCHIVE_URL). Idempotent; field-level\"}]}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.04079758300213143
+}

@@ -1,0 +1,37 @@
+{
+ "endpoint": "/get_functions",
+ "args": {
+  "function": "0x002aff88",
+  "fields": "entry_point,decompiled_code,callees",
+  "program": "SLUS_213.55"
+ },
+ "result": {
+  "program": "SLUS_213.55",
+  "name": "FUN_002aff88",
+  "size": 72,
+  "address": "002aff88",
+  "entry_point": "002aff88",
+  "decompiled_code": "\nundefined8 FUN_002aff88(undefined8 param_1)\n\n{\n  undefined4 *puVar1;\n  \n  FUN_002aea50(param_1,1);\n  puVar1 = (undefined4 *)param_1;\n  *puVar1 = &DAT_00626ec8;\n  FUN_002b1b40(puVar1 + 2);\n  puVar1[10] = 0;\n  puVar1[0xb] = 0;\n  return param_1;\n}\n\n",
+  "callee_count": 2,
+  "callees": [
+   {
+    "name": "FUN_002aea50",
+    "address": "002aea50"
+   },
+   {
+    "name": "FUN_002b1b40",
+    "address": "002b1b40"
+   }
+  ],
+  "revision": {
+   "token": "1791659127401:44cbab3e:3",
+   "epoch": "44cbab3e",
+   "modification_number": 3,
+   "saved_time": 1791659127401,
+   "unsaved_changes": false,
+   "decompiled": true
+  }
+ },
+ "elapsed_seconds": 0.225,
+ "server": "GhidraMCP 7.0.0 headless, Ghidra 12.1.4, program SLUS_213.55 (project mc3-ghidra-20261010)"
+}

@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x003b2d20,0x003b2de8",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x003b2d20\":{\"name\":\"FUN_003b2d20\",\"size\":104,\"address\":\"003b2d20\",\"decompiled_code\":\"\\nundefined8 FUN_003b2d20(undefined8 param_1,int param_2)\\n\\n{\\n  int iVar1;\\n  undefined4 *puVar2;\\n  undefined4 *puVar3;\\n  \\n  puVar2 = (undefined4 *)param_1;\\n  puVar3 = puVar2 + 1;\\n  *puVar2 = &DAT_0062e4b0;\\n  if ((puVar2[3] & 0xff800000) != 0) {\\n    puVar2[1] = 0;\\n  }\\n  if ((puVar2[3] & 0xff800000) == 0) {\\n    if (puVar2[1] == 0) {\\n      *puVar3 = 0;\\n    }\\n    else {\\n      iVar1 = puVar2[1] + *(int *)(param_2 + 4);\\n      puVar2[1] = iVar1;\\n      *(undefined4 **)(iVar1 + 8) = puVar3;\\n      *(undefined **)(iVar1 + 4) = &DAT_0070fab0;\\n    }\\n  }\\n  else {\\n    *puVar3 = 0;\\n  }\\n  return param_1;\\n}\\n\\n\",\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x003b2de8\":{\"name\":\"FUN_003b2de8\",\"size\":104,\"address\":\"003b2de8\",\"decompiled_code\":\"\\nundefined8 FUN_003b2de8(undefined8 param_1,int param_2)\\n\\n{\\n  int iVar1;\\n  undefined4 *puVar2;\\n  undefined4 *puVar3;\\n  \\n  puVar2 = (undefined4 *)param_1;\\n  puVar3 = puVar2 + 1;\\n  *puVar2 = &DAT_0062e490;\\n  if ((puVar2[3] & 0xff800000) != 0) {\\n    puVar2[1] = 0;\\n  }\\n  if ((puVar2[3] & 0xff800000) == 0) {\\n    if (puVar2[1] == 0) {\\n      *puVar3 = 0;\\n    }\\n    else {\\n      iVar1 = puVar2[1] + *(int *)(param_2 + 4);\\n      puVar2[1] = iVar1;\\n      *(undefined4 **)(iVar1 + 8) = puVar3;\\n      *(undefined **)(iVar1 + 4) = &DAT_0070fab0;\\n    }\\n  }\\n  else {\\n    *puVar3 = 0;\\n  }\\n  return param_1;\\n}\\n\\n\",\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":2,\"requested\":2}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.46730570899671875
+}

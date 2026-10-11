@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "reviewer": "/root",
+  "implementer": "/root/mc3_research",
+  "verdict": "approve_with_stated_limits",
+  "scope": [
+    "tools/library_filter.py",
+    "tools/test_library_filter.py",
+    "tools/mc3_preview_experiments.py",
+    "tools/test_mc3_preview_experiments.py",
+    "tools/serve_library.py",
+    "tools/test_serve_library.py",
+    "dealership/dealership.html catalog request context only",
+    "dealership/recovered.html catalog request context only"
+  ],
+  "review_map_sha256": "ac5ba619e807059638a5f1e9fe0e4cd6a44e597193c2f711aea4b48816ace924",
+  "code_sha256": {
+    "tools/library_filter.py": "83ce68cdea1cea3e414dfeedcb1fd2d04ae268ccb74c2018c8a3b79de8192505",
+    "tools/test_library_filter.py": "d97f32d2cb4ea3bd202ca6db69fac8ffc4cf4ba75ec7bca8485774559900350b",
+    "tools/mc3_preview_experiments.py": "45d02ddc38841c2c9764acce2007d465e0d2d55d2e7a7cd6e635c92cd2f64599",
+    "tools/test_mc3_preview_experiments.py": "99d3be6867a11848fba5f600a7632ecc9c29cbc5853743b605669bc3fa4c7ee4",
+    "tools/serve_library.py": "9e7a2146c0e62805e0bec20c25042f1ca9fbde2cbe3f4953035172e0c451f9dd",
+    "tools/test_serve_library.py": "a3f84d1a2adacbe8a964b9143331c44076fe193d4c63bc167429a601b961359f"
+  },
+  "rationale": [
+    "Independently reviewed complete current request transport, metadata readiness, Choice/Noul/Score/restriction questions, distribution validation, deterministic readiness veto, tests and experiment summary. The independently found schema2-parts defect is fixed and all94 compiled MC3 descriptors now count ready; source native94remain notready.",
+    "Transport selects actual source versus dealership catalog, validates bounded query/catalog fields, keeps provider credentials and raw envelopes server-side. Current contexts are explicit in both HTML requests. Legacy query-only requests preserve source selection.",
+    "Reviewed schema2-direct-evidence and replacement-verification receipts, including exact literal statuses and manifest exits. Withdrawn contradicted broad experiment assertions are not approved or used as completion evidence.",
+    "The fixed constructed sample and six changed-design comparisons support the reported bounded measurements only. Current action accuracy13/19 and conservative valid-query false negatives remain explicit; no general semantic or rendered-model accuracy is claimed.",
+    "All applicable semantic scoped checks passed. Root converter/HTMLcamera/material-copy changes are outside this independent approval and require their own final review."
+  ],
+  "withdrawn_assertions": "The schema2-gate broad experiment claim remains contradicted and withdrawn; original receipt preserved. This resolution does not approve it."
+}

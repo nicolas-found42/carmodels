@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Repository: PCSX2/pcsx2\nPath: pcsx2/GS/GSRegs.h\nURL: https://github.com/PCSX2/pcsx2/blob/master/pcsx2/GS/GSRegs.h\nLicense: GPL-3.0\n\nSnippets:\n--- Snippet 1 (Line 1046) ---\n\tu32 Z     : 24;\n\tu32 _PAD4 :  4;\n\tu32 _PAD5 :  4;\n\tu32 F     :  8;\n\tu32 _PAD6 :  3;\n\tu32 ADC   :  1;\n\tu32 _PAD7 : 16;\nREG_END2\nu32 Skip() const { return U32[3] & 0x8000; }\nREG_END2\n\n\n\n--- Snippet 2 (Line 1059) ---\n\tu16 _PAD1;\n\tu16 Y;\n\tu16 _PAD2;\n\tu32 Z;\n\tu32 _PAD3 : 15;\n\tu32 ADC   :  1;\n\tu32 _PAD4 : 16;\nREG_END2\n\tu32 Skip() const { return U32[3] & 0x8000; }\n"
+    }
+  ]
+}

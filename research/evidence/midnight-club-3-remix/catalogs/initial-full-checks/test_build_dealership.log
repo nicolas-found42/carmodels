@@ -1,0 +1,17 @@
+E...
+======================================================================
+ERROR: test_all_editable_copies_are_independent_files (__main__.DealershipBuildTests.test_all_editable_copies_are_independent_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_build_dealership.py", line 83, in test_all_editable_copies_are_independent_files
+    self.assertEqual(copy.stat().st_nlink, 1)
+                     ~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 654, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/Nicolas/Documents/github/hermes/projects/carmodels/dealership/dealership/models/MC3_VP_350Z_04.glb'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.686s
+
+FAILED (errors=1)

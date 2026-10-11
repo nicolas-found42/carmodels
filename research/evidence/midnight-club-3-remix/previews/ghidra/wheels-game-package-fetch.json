@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x002e42d8",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662474875092000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x002e42d8\":{\"name\":\"FUN_002e42d8\",\"size\":460,\"address\":\"002e42d8\",\"decompiled_code\":\"\\nint FUN_002e42d8(int *param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,ulong param_5\\n                ,undefined4 param_6,long param_7)\\n\\n{\\n  int *piVar1;\\n  int iVar2;\\n  long lVar3;\\n  int iVar4;\\n  undefined8 uVar5;\\n  int *piVar6;\\n  int *piStack_70;\\n  int iStack_6c;\\n  int iStack_68;\\n  undefined4 uStack_64;\\n  undefined4 uStack_60;\\n  \\n  uStack_60 = param_6;\\n  iVar2 = FUN_004b2ae0(param_2);\\n  iVar4 = 0;\\n  piVar6 = param_1;\\n  do {\\n    if ((*piVar6 == iVar2) && (*(byte *)(piVar6 + 2) == param_5)) {\\n      if (*(char *)((int)piVar6 + 10) != '\\\\0') {\\n        iVar2 = piVar6[3];\\n        DAT_00616250 = (undefined4)param_4;\\n        lVar3 = FUN_0042e8a0(iVar2,1);\\n        if (lVar3 != 0) {\\n          piVar1 = *(int **)(iVar2 + 4);\\n          piStack_70 = piVar1 + 0x20;\\n          piVar6[1] = (int)piStack_70;\\n          iStack_68 = piVar1[3];\\n          iStack_6c = (int)piStack_70 - *piVar1;\\n          uStack_64 = DAT_0070e570;\\n          DAT_0070e570 = &piStack_70;\\n          FUN_002e4b10(piStack_70,&piStack_70);\\n          DAT_0070e570 = (int **)uStack_64;\\n          piVar1[0x1f] = *(int *)(*(int *)(iVar2 + 4) + -4);\\n        }\\n        *(undefined1 *)((int)piVar6 + 10) = 0;\\n        return piVar6[1];\\n      }\\n      if (param_5 != 0) {\\n        *(char *)((int)piVar6 + 9) = *(char *)((int)piVar6 + 9) + '\\\\x01';\\n        return piVar6[1];\\n      }\\n    }\\n    iVar4 = iVar4 + 1;\\n    piVar6 = piVar6 + 4;\\n    if (0xf < iVar4) {\\n      param_1 = param_1 + 1;\\n      iVar4 = 0;\\n      do {\\n        if (param_1[-1] == -1) {\\n          uVar5 = 0;\\n          *(char *)(param_1 + 1) = (char)param_5;\\n          *(undefined1 *)((int)param_1 + 6) = 0;\\n          *(char *)((int)param_1 + 5) = *(char *)((int)param_1 + 5) + '\\\\x01';\\n          param_1[-1] = iVar2;\\n          if ((param_5 != 0) || (param_7 != 0)) {\\n            uVar5 = 1;\\n          }\\n          iVar4 = FUN_002e40a8(param_2,param_3,param_4,uVar5,uStack_60);\\n          *param_1 = iVar4;\\n          *(int *)(iVar4 + 4) = iVar2;\\n          return *param_1;\\n        }\\n        iVar4 = iVar4 + 1;\\n        param_1 = param_1 + 4;\\n      } while (iVar4 < 0x10);\\n      return 0;\\n    }\\n  } while( true );\\n}\\n\\n\",\"callee_count\":4,\"callees\":[{\"name\":\"FUN_002e40a8\",\"address\":\"002e40a8\"},{\"name\":\"FUN_002e4b10\",\"address\":\"002e4b10\"},{\"name\":\"FUN_0042e8a0\",\"address\":\"0042e8a0\"},{\"name\":\"FUN_004b2ae0\",\"address\":\"004b2ae0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":1,\"requested\":1}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.2532360420009354
+}

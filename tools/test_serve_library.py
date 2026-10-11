@@ -16,7 +16,7 @@ class Tests(unittest.TestCase):
     def test_http_controls(self):
         calls = []
         class Handler(LibraryHandler):
-            judgment = staticmethod(lambda q, cars: (calls.append((q, cars)) or
+            judgment = staticmethod(lambda q, cars, catalog='source': (calls.append((q, cars, catalog)) or
                 {'status': 'ok', 'filters': {'game': 'gran-turismo', 'variant': 'night'}, 'message': 'Applied', 'raw_response': 'PRIVATE'}))
             def log_message(self, *args):
                 pass
@@ -24,6 +24,8 @@ class Tests(unittest.TestCase):
             root = Path(folder)
             (root/'public').mkdir()
             (root/'public/models.json').write_text(json.dumps({'cars': [{'game': 'gran-turismo'}]}))
+            (root/'public/dealership').mkdir()
+            (root/'public/dealership/cars.json').write_text(json.dumps([{'game': 'midnight-club-3-remix', 'sourceVariant': 'native'}]))
             server = ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Handler, directory=folder))
             thread = threading.Thread(target=server.serve_forever, daemon=True)
             thread.start()
@@ -35,8 +37,15 @@ class Tests(unittest.TestCase):
                     output = json.load(response)
                 self.assertEqual(output['status'], 'ok')
                 self.assertNotIn('PRIVATE', str(output))
+                self.assertEqual(calls[-1][2], 'source')
+                with request(b'{"query":"MC3 previews","catalog":"dealership"}') as response:
+                    self.assertEqual(json.load(response)['status'], 'ok')
+                self.assertEqual(calls[-1], ('MC3 previews', [{'game': 'midnight-club-3-remix', 'sourceVariant': 'native'}], 'dealership'))
                 for data, headers, status in [
                     (b'{}', None, 400), (b'{bad', None, 400),
+                    (b'{"query":"GT","catalog":"other"}', None, 400),
+                    (b'{"query":"GT","catalog":{}}', None, 400),
+                    (b'{"query":"GT","catalog":"source","extra":true}', None, 400),
                     (b'{"query":"GT"}', {'Content-Type': 'text/plain'}, 400),
                     (b'{"query":"GT"}', {'Content-Type': 'application/json', 'Origin': 'http://untrusted.test'}, 403),
                     (b'{"query":"GT"}', {'Content-Type': 'application/json', 'Host': 'attacker.test'}, 403),
@@ -53,7 +62,7 @@ class Tests(unittest.TestCase):
                     caught.exception.close()
                 finally:
                     Handler.api_lock.release()
-                self.assertEqual(len(calls), 1)
+                self.assertEqual(len(calls), 2)
                 with self.assertRaises(HTTPError) as caught:
                     request(b'{}', path=url+'-unknown')
                 self.assertEqual(caught.exception.code, 404)

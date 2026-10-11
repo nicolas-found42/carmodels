@@ -1,0 +1,520 @@
+{
+  "schema": 1,
+  "status": "complete-with-independent-review",
+  "scope": "Static source-bound dealership previews; textures, native shaders, animation, damage and exact runtime float32 behavior remain unverified.",
+  "bundle_sha256": "e4bf159efb556bd9e463893499f50bc9984e403a0c078131915c47d85fb1d42a",
+  "checked_task_baseline_files": 39,
+  "changed_reviewed_files": 34,
+  "current_file_sha256": {
+    "tools/mc3_pck.py": "817831f14bb4c04acced924514f33c7b6bd6079e1c407b1ab321ea22a5e9a1a3",
+    "tools/mc3_model.py": "15c142f842281e54c7b2180f2af8bf5331d6e239def459a43083567062e257b7",
+    "tools/test_mc3_pck.py": "20b8e6bad9f78b3b37385b42bab97a5550f13a1043855c0690acdf176ff6bc3f",
+    "tools/test_mc3_model.py": "4fc6442580ead40ba25e6c5fca178489d266c17eafe231a3e3eb63599146fba9",
+    "tools/test_mc3_preview.py": "53a241037f5331b640c574975ce0f36a05215d0f34da0aac20647de1add1287d",
+    "tools/export_mc3_models.py": "ba5d41900884d5b707865a4ac3fbb01632046b2a639089733fc21ee122da590a",
+    "tools/import_mc3_previews.py": "1d3cfb0a51e8d7ec6211cb28a561b51214f3441f438618c4a38ff9b3d64590bf",
+    "tools/test_import_mc3_previews.py": "55bd3ccd94ab0ac78d0ad819b10eed93efe7d8c75770b32917ca694e4adb88d2",
+    "tools/build_dealership.py": "c7f0b8a7f8c98a4e9658f2e23752ae9951beb7e62cda909b27cb21a252ca7d31",
+    "tools/import_mc3_catalogs.py": "d78fc350ccb12f263740a86cabeec84e61670ef3cab63db79fcb7b40ebbc201c",
+    "tools/library_filter.py": "83ce68cdea1cea3e414dfeedcb1fd2d04ae268ccb74c2018c8a3b79de8192505",
+    "tools/test_library_filter.py": "d97f32d2cb4ea3bd202ca6db69fac8ffc4cf4ba75ec7bca8485774559900350b",
+    "tools/run_checks.py": "e297544d2659ea1236201a3d4317ffa42519ae4247e56d180d5f023e77981b4e",
+    "tools/test_run_checks.py": "50ad05ce9628829cda534f664515706561bce81f36b109f69050e4df2dfc7009",
+    "tools/test_build_dealership.py": "df7dd20b0bd47c1416d4b9352f7fc6c7090c7d175626ea0e31a54dc07c64b57f",
+    "dealership/dealership.html": "ad2481855b6bcbb4dc24e77e4ebe6af0526454e2634826a516fe15ecc88c7df0",
+    "dealership/recovered.html": "b708dab27a70b8c0bf37ee53858dca086b9324d3d195a85920b5120515f128ee",
+    "dealership/dealership/README.md": "af5bcce954a2b273bbcfb28ce67dacd2315b6b0e99cec6dfed25da1a4866eb99",
+    "midnight-club-3-remix/README.md": "a94390cb76972e98e66900189df8e5c92a0bc4197c7c60317641f843c7365844",
+    "research/README.md": "848ab6b03581a113c4efb880a8f9eb33c2e0b6e66e26c54e2d264b164bf2dfb2",
+    "research/midnight-club-3-remix-previews.md": "de5aad6115a90faa2a1ea4ff29f11d2866be5406ac9458fa718b2859a75634fc",
+    "tools/mc3_materials.py": "00e8a101e7f9b96fe2bc49b4a690191f96f90a31923f8ee6cba72981505f85af",
+    "tools/test_mc3_materials.py": "80b0c08c2d0755c6628570894552a36fc2be1be6e57bd013ea0d6109117cba37",
+    "tools/mc3_preview_experiments.py": "45d02ddc38841c2c9764acce2007d465e0d2d55d2e7a7cd6e635c92cd2f64599",
+    "tools/serve_library.py": "9e7a2146c0e62805e0bec20c25042f1ca9fbde2cbe3f4953035172e0c451f9dd",
+    "tools/test_serve_library.py": "a3f84d1a2adacbe8a964b9143331c44076fe193d4c63bc167429a601b961359f",
+    "tools/test_mc3_preview_ui.mjs": "f025a74dffb9ab8633afab641c1e015b3ba163ab625dca41ad06281a8483cf69",
+    ".gitignore": "17aff338a77b8d466c263a1a326f10139a00736d4067bc8e942e36874b75bf57",
+    "tools/test_mc3_preview_experiments.py": "99d3be6867a11848fba5f600a7632ecc9c29cbc5853743b605669bc3fa4c7ee4",
+    "tools/mc3_wheels.py": "96542e5bc04e34e46deb9c4887ea129f4ffd8c8d7db82eb66b73c9a53f135ff3",
+    "tools/test_mc3_wheels.py": "86419b5dafb3ddd1f0f37a5ecef380403768093cfb53daf8e46c3dbdcd0b1e07",
+    "tools/test_mc3_roundtrip.py": "1bf70932b99891ade5980f4307767b4d95bb0fc81a988738a8130aa4f0be8602",
+    "tools/test_export_mc3_models.py": "89142fb5817e160a1dd2f5eaae19abb4c46a7f545a7b011a2c6ad53b0eab8502",
+    "research/midnight-club-3-remix-preview-research.md": "36b446f4aeb1ae69277db5ea8dd6e0d5458d4e7a14c01f15ae9d1cb1d7b1d14f"
+  },
+  "executed_checks": {
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0,
+    "manifest_sha256": "6dba2d252902b49bcff64a15f0df9a0400ac1c544e58f80788994c8f9ee79217",
+    "log_sha256": {
+      "ruff": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "test_viewer_scenes": "e15fd29c2a65885465093d11e343a0fc65f2e9c3cc6ad3cc2dbc633e685957d2",
+      "test_viewer_materials": "879579e4005eee1a888debe449b9cc67457e2c3d9d17cb248a45df2ae622d645",
+      "test_model_load": "2c43797997a680e588de57da90414bffe1d122de3e0b5be16facdadf8e186ee8",
+      "test_viewer_loading": "2c73202956d77c4794caa8878459bc1132f15e3da1ec7d0c5d0f0655c50fe2a1",
+      "test_dealership": "dfe2f71b7da6bff73fd8f5c7106b264d51599739b796d7055832c9d6a441d6b2",
+      "test_editable_glb": "bc14082147d11831152f6b97d3633834733dee18b75f9d03a9a23b3b3ccdbfdb",
+      "test_native_catalog_ui": "2d6cccee57a1545d04df36bb31854388145aff22f2fad9bce4ea7ee0fd14e57b",
+      "test_mc3_preview_ui": "949f0bfa5ff42d0b6dfb598b7249fe15e29f150ccf0a879768edf29a40785ce8",
+      "verify_recovered_asset_index": "2e75fc25c80e79f290c08aa8e1e02089cbe8d58c72c47dca7547e3e1b15062d4",
+      "test_export_materials": "ff0dae8e17a9bfc710628241f8de53e71010d3f70771af7c24b178303b946362",
+      "test_build_showcase": "12de0e89bbdc25f3accc79fb1eb33ced960db1ea7b94caca1f25cc0af3ac6b06",
+      "test_bake_models": "868617bdadb5012cf4cf62914c4f9d226bc8720148a4b3fe102906a959818f18",
+      "test_build_dealership": "61b0e5972b9776d83921e810f0fff68c475b3d8809370752a29e7abfceefffcf",
+      "test_model_catalog": "46df4f0edcf4a6f9a32504da3478dd3a1a7db82b7890d0c616cbb1a0a9b16b2a",
+      "test_model_png": "a6707d4eff38012da33ddc34bc6dc076a3b17151cfc9aef223c8790cbe64c3da",
+      "test_run_checks": "9fbfa35160d06ffe025e68f024aee19323e0caa3a35b0f8bb804390a97018a84",
+      "test_review_payload": "80144f3bf12d071a1497821467ab02765712cb11da3f547a5e2b5cf79f938e9a",
+      "test_static_inputs": "fe2bdcc2bf8991fb162dd3534562fa9aa4f78e6b9cf91be5e1b6def4331231fd",
+      "test_recovery_inputs": "30e6ba3ad7f5e3b670d87a41063a705c0cb5a8c9160e5a4dc09b2bd0e19a6570",
+      "test_gt_archive": "b52fd2030bf92de4dd39dd804082b2d46694302b3e58cf9795e8231d2f98f7c2",
+      "test_gt_asset_judgments": "75ff54e727b57e4bd7b88956ed0c92c4b9a416e6f0976707e8fb54aa385ac0bd",
+      "test_gt_wheels": "af55efa5c3ceb122f8184c380aa405d3f3b4e7e0c1e892773d0eff31d0645c8a",
+      "test_gt_model": "256504bc2b5436caa66f7e2f18211b36ea6fbae24340b627427218424e00b5c5",
+      "test_import_gt_dealership": "af11697e854a32320d79a61bc05ec2cf2e183bb9ed5e164d3d65b015222612c2",
+      "test_library_filter": "e903102c5cc316b1f367555bb89208a8ef34bd08f3df57f37015ce5b2014dfc3",
+      "test_serve_library": "a8bd99615c9a33015283fc3351b46c7193c6dfd74292df95abb7c3ebfb89417f",
+      "test_redline_archive": "60bb849356ffbc091f601e17fc6ae0b2eb5e26d734d433da020c6e775efbf97f",
+      "test_extract_redline_cars": "fcc79679fd61f1821d24f3ba295f934745f885f074c5b2c3ab08cb808510d5e9",
+      "test_mc3_archive": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad",
+      "test_extract_mc3_cars": "32530a01f9c08a4a138d32af43b2a75edeec9c857d7e2a4e3ab966155a4634a0",
+      "test_import_mc3_catalogs": "13a25477b4b3a1cec4916dd769185716152939ab3e0fccf2e95dd50633b04a70",
+      "test_mc3_pck": "07d1ecbe0e555f6f2994ed24159bbc40620086ce709a2d61555a5499bb3a1574",
+      "test_mc3_wheels": "4fe5f2355d9aa065bb8ad8a202ddac52d10ba52d00cf366d93446005832e749e",
+      "test_mc3_materials": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6",
+      "test_mc3_model": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6",
+      "test_export_mc3_models": "48c6a99f37b8febb6a2556624a82e3559ec17f7c4a3d044ebe4a6aba976042e5",
+      "test_mc3_preview": "764c6d5b539ac8f05a51d63b0dd86d362f6e8ea1534210e545da250859ef8a03",
+      "test_import_mc3_previews": "f31386531a8d257f07b7b06d38fb463be0eab10626b8b782b4c94701a27168cc",
+      "test_mc3_preview_experiments": "921b60a7fd52e978fbb551cacd29df2d6708879400278e1fcc70fceeb0c6f8e0",
+      "test_redline_mesh": "62cfbeb2911bb226088bfb0918eb4b05008ea70b20bce854ee2ca8a564bd37a5",
+      "test_redline_texture": "ec4056311d02b09e7239435fb94a609edc9923a3f3308040812c9b1b54ad52a0",
+      "test_redline_model": "a3368a96609729e1369d057dfefa6cbe072afa751335d84019542cf280c86090",
+      "test_export_redline_models": "a2dbfa860bc4216b895cd20fb36214938dbdb9e6af3778d506b00eaa97d277c0",
+      "test_import_redline_dealership": "d7006290759e8f1e22a2cfb0924175ca18a1e07501476d381a7593f121a52cf1",
+      "dealership_freshness": "28636db8b9b63f15f157a1ebbebd6aa8116df49cb8948074b596aef96d34d399",
+      "verify_config_data_sound": "c7e06c15e7fe6ebdcd3101b32193c01cbdd2782c64336fd87cfd651bf1f29df5",
+      "verify_sound_bank_index": "8863cda4233177575b6349296acd50d2a72d683e6cc5ac69df00d5535d1808ab",
+      "verify_vu_dispatch_map": "38ad3c4fe5844a110503e70e931df1b1da11b09d02a3949175fa996fa7e7da4c",
+      "test_vu_dispatch_map": "6f78e4f96deaf85b4da41b7664ae8618eb4a9076f225184b9336c9bbc2923479",
+      "test_vu1_decode": "45dbd22ae33a9fc69969f62138ad319585a9be3903e78d68b04121622a982dd8",
+      "verify_vu_pass_handlers": "138f4bd1012d647312306c9c51ad2a95e850a90b0324a15697c2e3c7dcabdfd5",
+      "test_vu_pass_handlers": "c8e088078bc55d113683a9e3f21d3bf0d19bff26d8422ee67097e0e03c763770",
+      "verify_vu_handler_dump": "997f28d462688aaf540ec5198c16959afc07079014e3c9bace34d09175c4fb11",
+      "test_vu_handler_dump": "d8effbb9bc68d8d935bc3ac70b985b271a3d6e2bfd42316b0a8c9c9c61c5c42d",
+      "recover_dump_reference_frame": "6cf781430570635ae11df58b60ff3126334c5fd4b249396f6b4ad4ba3a0e2f82",
+      "test_recover_dump_reference_frame": "195591bf03389e45ec92a03a4225251d3a48beaaec2be3bfa815e40421ceeae3",
+      "verify_pass_source_join": "1aeb7e3b799ce2e541e74e8ffeb563328c269377eb0f220e1a86f2baba62e64e",
+      "test_pass_source_join": "9e5f0bae7b4961c89b43de558e98b240b954b8119cff85b6f0e3873eeeb6a7c5",
+      "dealership_roundtrip": "3868b05b7e4d18af5806c3dadb366b2561d282e1d2013ff3970f2f71e5101135",
+      "redline_roundtrip": "d4d970dfb2aff78cc7fc2b3adf580835083f24c9c2f7bb75508ef1922fcef5e3",
+      "mc3_roundtrip": "669e8cd579ffc41e99c2f09c650ebb1221d06d4c0fe6e1bb6b60519d226cd64c"
+    }
+  },
+  "preservation": {
+    "status": "pass",
+    "unchanged_pinned_files": 8363,
+    "unchanged_non_mc3_catalog_entries": 891,
+    "unchanged_non_mc3_origins": 891,
+    "native_mc3_packages_and_initial_provenance_preserved": 94,
+    "independent_preview_copies": 94,
+    "compiled_catalog_entries": 985,
+    "compiled_mc3_ready_previews": 94,
+    "source": "task-start byte/hash/catalog baseline .scratch/mc3-preview/preservation-baseline.json"
+  },
+  "jev": {
+    "valid_gates": 12,
+    "verified_claims": 24,
+    "review_decisions": [
+      {
+        "path": "tools/mc3_pck.py",
+        "action": "escalate",
+        "safe_to_apply": 0.4,
+        "composite": 0.56775,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/mc3_model.py",
+        "action": "escalate",
+        "safe_to_apply": 0.26,
+        "composite": 0.6305,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_pck.py",
+        "action": "escalate",
+        "safe_to_apply": 0.57,
+        "composite": 0.61375,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_model.py",
+        "action": "escalate",
+        "safe_to_apply": 0.55,
+        "composite": 0.66625,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_preview.py",
+        "action": "escalate",
+        "safe_to_apply": 0.45,
+        "composite": 0.6897500000000001,
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/export_mc3_models.py",
+        "action": "escalate",
+        "safe_to_apply": 0.44,
+        "composite": 0.7045,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/import_mc3_previews.py",
+        "action": "escalate",
+        "safe_to_apply": 0.41,
+        "composite": 0.6925,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_import_mc3_previews.py",
+        "action": "escalate",
+        "safe_to_apply": 0.62,
+        "composite": 0.7597500000000001,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/build_dealership.py",
+        "action": "escalate",
+        "safe_to_apply": 0.33,
+        "composite": 0.564,
+        "limiting_rubrics": [
+          "correctness",
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/import_mc3_catalogs.py",
+        "action": "escalate",
+        "safe_to_apply": 0.58,
+        "composite": 0.7492500000000001,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/library_filter.py",
+        "action": "escalate",
+        "safe_to_apply": 0.41,
+        "composite": 0.6107500000000001,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_library_filter.py",
+        "action": "escalate",
+        "safe_to_apply": 0.56,
+        "composite": 0.7437499999999999,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/run_checks.py",
+        "action": "escalate",
+        "safe_to_apply": 0.61,
+        "composite": 0.73925,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/test_run_checks.py",
+        "action": "escalate",
+        "safe_to_apply": 0.5,
+        "composite": 0.70525,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/test_build_dealership.py",
+        "action": "escalate",
+        "safe_to_apply": 0.45,
+        "composite": 0.7310000000000001,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "dealership/dealership.html",
+        "action": "escalate",
+        "safe_to_apply": 0.4,
+        "composite": 0.6377500000000002,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "dealership/recovered.html",
+        "action": "escalate",
+        "safe_to_apply": 0.55,
+        "composite": 0.6605000000000001,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "dealership/dealership/README.md",
+        "action": "escalate",
+        "safe_to_apply": 0.44,
+        "composite": 0.7140000000000001,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "midnight-club-3-remix/README.md",
+        "action": "escalate",
+        "safe_to_apply": 0.48,
+        "composite": 0.7540000000000001,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "research/README.md",
+        "action": "escalate",
+        "safe_to_apply": 0.56,
+        "composite": 0.77125,
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "research/midnight-club-3-remix-previews.md",
+        "action": "escalate",
+        "safe_to_apply": 0.4,
+        "composite": 0.67625,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/mc3_materials.py",
+        "action": "escalate",
+        "safe_to_apply": 0.58,
+        "composite": 0.7822500000000001,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_materials.py",
+        "action": "escalate",
+        "safe_to_apply": 0.71,
+        "composite": 0.8107500000000001,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/mc3_preview_experiments.py",
+        "action": "escalate",
+        "safe_to_apply": 0.48,
+        "composite": 0.5575,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/serve_library.py",
+        "action": "escalate",
+        "safe_to_apply": 0.59,
+        "composite": 0.6320000000000001,
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/test_serve_library.py",
+        "action": "escalate",
+        "safe_to_apply": 0.61,
+        "composite": 0.7182499999999999,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_preview_ui.mjs",
+        "action": "escalate",
+        "safe_to_apply": 0.41,
+        "composite": 0.7040000000000001,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": ".gitignore",
+        "action": "escalate",
+        "safe_to_apply": 0.76,
+        "composite": 0.803,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_preview_experiments.py",
+        "action": "escalate",
+        "safe_to_apply": 0.69,
+        "composite": 0.706,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      {
+        "path": "tools/mc3_wheels.py",
+        "action": "escalate",
+        "safe_to_apply": 0.32,
+        "composite": 0.57975,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_wheels.py",
+        "action": "escalate",
+        "safe_to_apply": 0.6,
+        "composite": 0.66325,
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mc3_roundtrip.py",
+        "action": "escalate",
+        "safe_to_apply": 0.37,
+        "composite": 0.66425,
+        "limiting_rubrics": [
+          "spec_match",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/test_export_mc3_models.py",
+        "action": "escalate",
+        "safe_to_apply": 0.56,
+        "composite": 0.6069999999999999,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "research/midnight-club-3-remix-preview-research.md",
+        "action": "escalate",
+        "safe_to_apply": 0.58,
+        "composite": 0.61375,
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 378343,
+      "output_tokens": 4090
+    },
+    "receipt_sha256": {
+      "../final-gate-repaired/gate-01.json": "17ab575c71150e242bb6c942fb7109f44b7d8f8893706b8e113cddd098c71675",
+      "../final-gate-repaired/gate-02.json": "b2b435d17afd0374b01c316bad9eaf09239ccdcfd863fa36c2b030fc47afc0c3",
+      "../final-gate-repaired/gate-03.json": "8ea5ae24a2cc92bd92bb84d62adbdde70cc234bc5634ad5752bb88520f3ac0d5",
+      "../final-gate-repaired/gate-04.json": "6fd370917b02211a006c78ac55a35b2eb95b71727ad2673e35939d92c4e257cb",
+      "../final-gate-repaired/gate-05.json": "16e9112614a06388c677ace9b59383e41b6587cf639c03a1a230a860b8ed945c",
+      "gate-06a.json": "d531bb15039421c7a4970a8a897a2c0dfa7d539610922b26ab5da6f92fb86d0c",
+      "gate-06b.json": "ef91e76b25578f70ad5fc51ab0be88cab14ef95b42a9ac43649c393961691663",
+      "../final-gate-repaired/gate-07.json": "0c91a23c7809bc89b37d3e8a0b21fb20b9556ef7f1705546bc087204a0d7e602",
+      "../final-gate-repaired/gate-08.json": "f7646836141f1cd927e64dd3e69df7fc71c6a41ab5ba82c3427e097d34dbf8c6",
+      "../final-gate-repaired/gate-09.json": "c1f2e89b43eb8beaf1e281ce629bc7fd10697634125f8277addffbca925e0a53",
+      "../final-gate-repaired/gate-10.json": "abd22b1e1a8defefd3ea78875b298adac50231a9af14e88bff226d91ba2980c4",
+      "../final-gate-repaired/gate-11.json": "755d35aa7d115c53a9ed984fbbd7fc63a9fe6766438e33a01581bc35f5d542d8"
+    },
+    "independent_resolutions": [
+      {
+        "path": "research/evidence/midnight-club-3-remix/previews/final-gate-complete/independent-root-resolution.json",
+        "sha256": "dffea11b5e969553e664a166c265ca4b4c1ee9685d8c5b54734a33452696b534",
+        "reviewer": "/root/mc3_research",
+        "paths": [
+          "tools/mc3_pck.py",
+          "tools/mc3_model.py",
+          "tools/test_mc3_pck.py",
+          "tools/test_mc3_model.py",
+          "tools/test_mc3_preview.py",
+          "tools/export_mc3_models.py",
+          "tools/import_mc3_previews.py",
+          "tools/test_import_mc3_previews.py",
+          "tools/build_dealership.py",
+          "tools/import_mc3_catalogs.py",
+          "tools/run_checks.py",
+          "tools/test_run_checks.py",
+          "tools/test_build_dealership.py",
+          "dealership/dealership/README.md",
+          "midnight-club-3-remix/README.md",
+          "research/README.md",
+          "research/midnight-club-3-remix-previews.md",
+          "tools/mc3_materials.py",
+          "tools/test_mc3_materials.py",
+          "tools/test_mc3_preview_ui.mjs",
+          ".gitignore",
+          "tools/mc3_wheels.py",
+          "tools/test_mc3_wheels.py",
+          "tools/test_mc3_roundtrip.py"
+        ]
+      },
+      {
+        "path": "research/evidence/midnight-club-3-remix/previews/final-gate-complete/packet-scope-independent-resolution.json",
+        "sha256": "df129e3e9ade0358299f40e9bea353561daa34e8226bfbcfd823d0c44508e5bf",
+        "reviewer": "/root/mc3_packet_probe",
+        "paths": [
+          "dealership/dealership.html",
+          "dealership/recovered.html",
+          "research/midnight-club-3-remix-preview-research.md",
+          "tools/library_filter.py",
+          "tools/mc3_preview_experiments.py",
+          "tools/serve_library.py",
+          "tools/test_export_mc3_models.py",
+          "tools/test_library_filter.py",
+          "tools/test_mc3_preview_experiments.py",
+          "tools/test_serve_library.py"
+        ]
+      }
+    ],
+    "retained_failures": [
+      "final-gate/gate-01.json through gate-11.json: evidence schema input errors",
+      "final-gate-repaired/gate-06.json: provider capacity error repaired with two complete scopes"
+    ],
+    "limits": "Valid escalations were independently resolved, not rerun for different scores. Reviewer records document independent agent decisions; they are not cryptographic authentication."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "mc3_roundtrip",
+      "command": [
+        "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender",
+        "--background",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "tools/test_mc3_roundtrip.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "mc3_roundtrip.log",
+      "elapsed_seconds": 20.083
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

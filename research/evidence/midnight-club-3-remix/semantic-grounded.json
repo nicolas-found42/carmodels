@@ -1,0 +1,1062 @@
+{
+  "schema": 1,
+  "status": "ok",
+  "provider": "openrouter",
+  "model_requested": "typesafe/jev-1.13",
+  "claim_limits": [
+    "Advisory inventory interpretation only; not geometry decoding or extraction proof.",
+    "Labels never select offsets, discard, rename, or modify files.",
+    "Thresholds are provisional and require review outside the retained small sample."
+  ],
+  "results": [
+    {
+      "path": "known/car_body.mesh",
+      "label": "car_assets",
+      "decision": "advisory",
+      "probabilities": {
+        "car_assets": 0.97,
+        "car_metadata": 0.0,
+        "other": 0.0,
+        "unknown": 0.03
+      },
+      "confidence": 0.96,
+      "margin": 0.94,
+      "car_support": 0.9,
+      "quality": 1.95,
+      "quality_confidence": 0.94,
+      "quality_probabilities": {
+        "0": 0.0,
+        "1": 0.04,
+        "2": 0.96
+      }
+    },
+    {
+      "path": "known/car_paint.tex",
+      "label": "car_assets",
+      "decision": "advisory",
+      "probabilities": {
+        "car_assets": 0.93,
+        "car_metadata": 0.0,
+        "other": 0.0,
+        "unknown": 0.07
+      },
+      "confidence": 0.91,
+      "margin": 0.8600000000000001,
+      "car_support": 0.86,
+      "quality": 1.95,
+      "quality_confidence": 0.94,
+      "quality_probabilities": {
+        "0": 0.0,
+        "1": 0.04,
+        "2": 0.96
+      }
+    },
+    {
+      "path": "known/car.pck",
+      "label": "car_assets",
+      "decision": "advisory",
+      "probabilities": {
+        "car_assets": 0.97,
+        "car_metadata": 0.0,
+        "other": 0.0,
+        "unknown": 0.03
+      },
+      "confidence": 0.96,
+      "margin": 0.94,
+      "car_support": 0.91,
+      "quality": 1.95,
+      "quality_confidence": 0.94,
+      "quality_probabilities": {
+        "0": 0.0,
+        "1": 0.04,
+        "2": 0.96
+      }
+    },
+    {
+      "path": "known/car_specs.carcfg",
+      "label": "car_metadata",
+      "decision": "advisory",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.99,
+        "other": 0.0,
+        "unknown": 0.01
+      },
+      "confidence": 0.99,
+      "margin": 0.98,
+      "car_support": 0.91,
+      "quality": 1.93,
+      "quality_confidence": 0.9,
+      "quality_probabilities": {
+        "0": 0.0,
+        "1": 0.07,
+        "2": 0.93
+      }
+    },
+    {
+      "path": "known/traffic.vehicle",
+      "label": "car_metadata",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.95,
+        "other": 0.0,
+        "unknown": 0.05
+      },
+      "confidence": 0.93,
+      "margin": 0.8999999999999999,
+      "car_support": 0.86,
+      "quality": 1.84,
+      "quality_confidence": 0.76,
+      "quality_probabilities": {
+        "0": 0.01,
+        "1": 0.14,
+        "2": 0.85
+      }
+    },
+    {
+      "path": "known/car_names.csv",
+      "label": "car_metadata",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.97,
+        "other": 0.0,
+        "unknown": 0.03
+      },
+      "confidence": 0.96,
+      "margin": 0.94,
+      "car_support": 0.88,
+      "quality": 1.83,
+      "quality_confidence": 0.73,
+      "quality_probabilities": {
+        "0": 0.01,
+        "1": 0.16,
+        "2": 0.83
+      }
+    },
+    {
+      "path": "city/atlanta.ppf",
+      "label": "other",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.07,
+        "car_metadata": 0.0,
+        "other": 0.68,
+        "unknown": 0.25
+      },
+      "confidence": 0.57,
+      "margin": 0.43000000000000005,
+      "car_support": 0.06,
+      "quality": 1.91,
+      "quality_confidence": 0.88,
+      "quality_probabilities": {
+        "0": 0.0,
+        "1": 0.08,
+        "2": 0.92
+      }
+    },
+    {
+      "path": "city/barrier.mesh",
+      "label": "other",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.02,
+        "car_metadata": 0.0,
+        "other": 0.93,
+        "unknown": 0.05
+      },
+      "confidence": 0.91,
+      "margin": 0.88,
+      "car_support": 0.08,
+      "quality": 1.9,
+      "quality_confidence": 0.83,
+      "quality_probabilities": {
+        "0": 0.01,
+        "1": 0.09,
+        "2": 0.9
+      }
+    },
+    {
+      "path": "audio/menu.bnk",
+      "label": "other",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.0,
+        "other": 0.99,
+        "unknown": 0.01
+      },
+      "confidence": 0.99,
+      "margin": 0.98,
+      "car_support": 0.05,
+      "quality": 1.76,
+      "quality_confidence": 0.66,
+      "quality_probabilities": {
+        "0": 0.02,
+        "1": 0.19,
+        "2": 0.79
+      }
+    },
+    {
+      "path": "program.bin",
+      "label": "other",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.0,
+        "other": 0.99,
+        "unknown": 0.01
+      },
+      "confidence": 0.99,
+      "margin": 0.98,
+      "car_support": 0.05,
+      "quality": 1.57,
+      "quality_confidence": 0.35,
+      "quality_probabilities": {
+        "0": 0.05,
+        "1": 0.33,
+        "2": 0.62
+      }
+    },
+    {
+      "path": "ui/button.png",
+      "label": "other",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.0,
+        "other": 0.71,
+        "unknown": 0.29
+      },
+      "confidence": 0.61,
+      "margin": 0.42,
+      "car_support": 0.07,
+      "quality": 1.61,
+      "quality_confidence": 0.41,
+      "quality_probabilities": {
+        "0": 0.01,
+        "1": 0.37,
+        "2": 0.62
+      }
+    },
+    {
+      "path": "unidentified/data.bin",
+      "label": "unknown",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.0,
+        "other": 0.0,
+        "unknown": 1.0
+      },
+      "confidence": 1.0,
+      "margin": 1.0,
+      "car_support": 0.07,
+      "quality": 0.14,
+      "quality_confidence": 0.79,
+      "quality_probabilities": {
+        "0": 0.86,
+        "1": 0.14,
+        "2": 0.0
+      }
+    },
+    {
+      "path": "car.pck",
+      "label": "unknown",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.19,
+        "car_metadata": 0.0,
+        "other": 0.0,
+        "unknown": 0.81
+      },
+      "confidence": 0.75,
+      "margin": 0.6200000000000001,
+      "car_support": 0.17,
+      "quality": 0.72,
+      "quality_confidence": 0.55,
+      "quality_probabilities": {
+        "0": 0.29,
+        "1": 0.7,
+        "2": 0.01
+      }
+    },
+    {
+      "path": "cars.dat",
+      "label": "unknown",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.04,
+        "car_metadata": 0.02,
+        "other": 0.0,
+        "unknown": 0.94
+      },
+      "confidence": 0.92,
+      "margin": 0.8999999999999999,
+      "car_support": 0.14,
+      "quality": 0.55,
+      "quality_confidence": 0.31,
+      "quality_probabilities": {
+        "0": 0.46,
+        "1": 0.54,
+        "2": 0.0
+      }
+    },
+    {
+      "path": "mixed/bundle.zip",
+      "label": "unknown",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.04,
+        "car_metadata": 0.0,
+        "other": 0.26,
+        "unknown": 0.7
+      },
+      "confidence": 0.6,
+      "margin": 0.43999999999999995,
+      "car_support": 0.19,
+      "quality": 0.96,
+      "quality_confidence": 0.0,
+      "quality_probabilities": {
+        "0": 0.35,
+        "1": 0.34,
+        "2": 0.31
+      }
+    },
+    {
+      "path": "vehicle/body.mesh",
+      "label": "other",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.05,
+        "car_metadata": 0.0,
+        "other": 0.87,
+        "unknown": 0.08
+      },
+      "confidence": 0.83,
+      "margin": 0.79,
+      "car_support": 0.12,
+      "quality": 0.5,
+      "quality_confidence": 0.25,
+      "quality_probabilities": {
+        "0": 0.63,
+        "1": 0.24,
+        "2": 0.13
+      }
+    },
+    {
+      "path": "vehicle/specs.carcfg",
+      "label": "unknown",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.01,
+        "car_metadata": 0.3,
+        "other": 0.07,
+        "unknown": 0.62
+      },
+      "confidence": 0.49,
+      "margin": 0.32,
+      "car_support": 0.18,
+      "quality": 0.53,
+      "quality_confidence": 0.19,
+      "quality_probabilities": {
+        "0": 0.56,
+        "1": 0.34,
+        "2": 0.1
+      }
+    },
+    {
+      "path": "unidentified/table.bin",
+      "label": "car_metadata",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.02,
+        "car_metadata": 0.52,
+        "other": 0.01,
+        "unknown": 0.45
+      },
+      "confidence": 0.36,
+      "margin": 0.07,
+      "car_support": 0.43,
+      "quality": 1.11,
+      "quality_confidence": 0.0,
+      "quality_probabilities": {
+        "0": 0.26,
+        "1": 0.36,
+        "2": 0.38
+      }
+    },
+    {
+      "path": "unidentified/image.bin",
+      "label": "car_assets",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.79,
+        "car_metadata": 0.11,
+        "other": 0.01,
+        "unknown": 0.09
+      },
+      "confidence": 0.72,
+      "margin": 0.68,
+      "car_support": 0.82,
+      "quality": 1.57,
+      "quality_confidence": 0.35,
+      "quality_probabilities": {
+        "0": 0.09,
+        "1": 0.25,
+        "2": 0.66
+      }
+    },
+    {
+      "path": "vehicle/all.dat",
+      "label": "unknown",
+      "decision": "review",
+      "probabilities": {
+        "car_assets": 0.0,
+        "car_metadata": 0.02,
+        "other": 0.01,
+        "unknown": 0.97
+      },
+      "confidence": 0.96,
+      "margin": 0.95,
+      "car_support": 0.29,
+      "quality": 0.12,
+      "quality_confidence": 0.82,
+      "quality_probabilities": {
+        "0": 0.9,
+        "1": 0.08,
+        "2": 0.02
+      }
+    }
+  ],
+  "raw_response": {
+    "model": "typesafe/jev-1.13-20260917",
+    "answers": {
+      "role_0": {
+        "type": "choice",
+        "choice": "car_assets",
+        "probabilities": {
+          "car_assets": 0.97,
+          "car_metadata": 0,
+          "other": 0,
+          "unknown": 0.03
+        },
+        "confidence": 0.96
+      },
+      "support_0": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "quality_0": {
+        "type": "score",
+        "score": 1.95,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 0.04,
+          "2": 0.96
+        },
+        "confidence": 0.94
+      },
+      "role_1": {
+        "type": "choice",
+        "choice": "car_assets",
+        "probabilities": {
+          "car_assets": 0.93,
+          "car_metadata": 0,
+          "other": 0,
+          "unknown": 0.07
+        },
+        "confidence": 0.91
+      },
+      "support_1": {
+        "type": "noul",
+        "noul": 0.86
+      },
+      "quality_1": {
+        "type": "score",
+        "score": 1.95,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 0.04,
+          "2": 0.96
+        },
+        "confidence": 0.94
+      },
+      "role_2": {
+        "type": "choice",
+        "choice": "car_assets",
+        "probabilities": {
+          "car_assets": 0.97,
+          "car_metadata": 0,
+          "other": 0,
+          "unknown": 0.03
+        },
+        "confidence": 0.96
+      },
+      "support_2": {
+        "type": "noul",
+        "noul": 0.91
+      },
+      "quality_2": {
+        "type": "score",
+        "score": 1.95,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 0.04,
+          "2": 0.96
+        },
+        "confidence": 0.94
+      },
+      "role_3": {
+        "type": "choice",
+        "choice": "car_metadata",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0.99,
+          "other": 0,
+          "unknown": 0.01
+        },
+        "confidence": 0.99
+      },
+      "support_3": {
+        "type": "noul",
+        "noul": 0.91
+      },
+      "quality_3": {
+        "type": "score",
+        "score": 1.93,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 0.07,
+          "2": 0.93
+        },
+        "confidence": 0.9
+      },
+      "role_4": {
+        "type": "choice",
+        "choice": "car_metadata",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0.95,
+          "other": 0,
+          "unknown": 0.05
+        },
+        "confidence": 0.93
+      },
+      "support_4": {
+        "type": "noul",
+        "noul": 0.86
+      },
+      "quality_4": {
+        "type": "score",
+        "score": 1.84,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.14,
+          "2": 0.85
+        },
+        "confidence": 0.76
+      },
+      "role_5": {
+        "type": "choice",
+        "choice": "car_metadata",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0.97,
+          "other": 0,
+          "unknown": 0.03
+        },
+        "confidence": 0.96
+      },
+      "support_5": {
+        "type": "noul",
+        "noul": 0.88
+      },
+      "quality_5": {
+        "type": "score",
+        "score": 1.83,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.16,
+          "2": 0.83
+        },
+        "confidence": 0.73
+      },
+      "role_6": {
+        "type": "choice",
+        "choice": "other",
+        "probabilities": {
+          "car_assets": 0.07,
+          "car_metadata": 0,
+          "other": 0.68,
+          "unknown": 0.25
+        },
+        "confidence": 0.57
+      },
+      "support_6": {
+        "type": "noul",
+        "noul": 0.06
+      },
+      "quality_6": {
+        "type": "score",
+        "score": 1.91,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 0.08,
+          "2": 0.92
+        },
+        "confidence": 0.88
+      },
+      "role_7": {
+        "type": "choice",
+        "choice": "other",
+        "probabilities": {
+          "car_assets": 0.02,
+          "car_metadata": 0,
+          "other": 0.93,
+          "unknown": 0.05
+        },
+        "confidence": 0.91
+      },
+      "support_7": {
+        "type": "noul",
+        "noul": 0.08
+      },
+      "quality_7": {
+        "type": "score",
+        "score": 1.9,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.09,
+          "2": 0.9
+        },
+        "confidence": 0.83
+      },
+      "role_8": {
+        "type": "choice",
+        "choice": "other",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0,
+          "other": 0.99,
+          "unknown": 0.01
+        },
+        "confidence": 0.99
+      },
+      "support_8": {
+        "type": "noul",
+        "noul": 0.05
+      },
+      "quality_8": {
+        "type": "score",
+        "score": 1.76,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.19,
+          "2": 0.79
+        },
+        "confidence": 0.66
+      },
+      "role_9": {
+        "type": "choice",
+        "choice": "other",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0,
+          "other": 0.99,
+          "unknown": 0.01
+        },
+        "confidence": 0.99
+      },
+      "support_9": {
+        "type": "noul",
+        "noul": 0.05
+      },
+      "quality_9": {
+        "type": "score",
+        "score": 1.57,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.05,
+          "1": 0.33,
+          "2": 0.62
+        },
+        "confidence": 0.35
+      },
+      "role_10": {
+        "type": "choice",
+        "choice": "other",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0,
+          "other": 0.71,
+          "unknown": 0.29
+        },
+        "confidence": 0.61
+      },
+      "support_10": {
+        "type": "noul",
+        "noul": 0.07
+      },
+      "quality_10": {
+        "type": "score",
+        "score": 1.61,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.37,
+          "2": 0.62
+        },
+        "confidence": 0.41
+      },
+      "role_11": {
+        "type": "choice",
+        "choice": "unknown",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0,
+          "other": 0,
+          "unknown": 1
+        },
+        "confidence": 1
+      },
+      "support_11": {
+        "type": "noul",
+        "noul": 0.07
+      },
+      "quality_11": {
+        "type": "score",
+        "score": 0.14,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.86,
+          "1": 0.14,
+          "2": 0
+        },
+        "confidence": 0.79
+      },
+      "role_12": {
+        "type": "choice",
+        "choice": "unknown",
+        "probabilities": {
+          "car_assets": 0.19,
+          "car_metadata": 0,
+          "other": 0,
+          "unknown": 0.81
+        },
+        "confidence": 0.75
+      },
+      "support_12": {
+        "type": "noul",
+        "noul": 0.17
+      },
+      "quality_12": {
+        "type": "score",
+        "score": 0.72,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.29,
+          "1": 0.7,
+          "2": 0.01
+        },
+        "confidence": 0.55
+      },
+      "role_13": {
+        "type": "choice",
+        "choice": "unknown",
+        "probabilities": {
+          "car_assets": 0.04,
+          "car_metadata": 0.02,
+          "other": 0,
+          "unknown": 0.94
+        },
+        "confidence": 0.92
+      },
+      "support_13": {
+        "type": "noul",
+        "noul": 0.14
+      },
+      "quality_13": {
+        "type": "score",
+        "score": 0.55,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.46,
+          "1": 0.54,
+          "2": 0
+        },
+        "confidence": 0.31
+      },
+      "role_14": {
+        "type": "choice",
+        "choice": "unknown",
+        "probabilities": {
+          "car_assets": 0.04,
+          "car_metadata": 0,
+          "other": 0.26,
+          "unknown": 0.7
+        },
+        "confidence": 0.6
+      },
+      "support_14": {
+        "type": "noul",
+        "noul": 0.19
+      },
+      "quality_14": {
+        "type": "score",
+        "score": 0.96,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.35,
+          "1": 0.34,
+          "2": 0.31
+        },
+        "confidence": 0
+      },
+      "role_15": {
+        "type": "choice",
+        "choice": "other",
+        "probabilities": {
+          "car_assets": 0.05,
+          "car_metadata": 0,
+          "other": 0.87,
+          "unknown": 0.08
+        },
+        "confidence": 0.83
+      },
+      "support_15": {
+        "type": "noul",
+        "noul": 0.12
+      },
+      "quality_15": {
+        "type": "score",
+        "score": 0.5,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.63,
+          "1": 0.24,
+          "2": 0.13
+        },
+        "confidence": 0.25
+      },
+      "role_16": {
+        "type": "choice",
+        "choice": "unknown",
+        "probabilities": {
+          "car_assets": 0.01,
+          "car_metadata": 0.3,
+          "other": 0.07,
+          "unknown": 0.62
+        },
+        "confidence": 0.49
+      },
+      "support_16": {
+        "type": "noul",
+        "noul": 0.18
+      },
+      "quality_16": {
+        "type": "score",
+        "score": 0.53,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.56,
+          "1": 0.34,
+          "2": 0.1
+        },
+        "confidence": 0.19
+      },
+      "role_17": {
+        "type": "choice",
+        "choice": "car_metadata",
+        "probabilities": {
+          "car_assets": 0.02,
+          "car_metadata": 0.52,
+          "other": 0.01,
+          "unknown": 0.45
+        },
+        "confidence": 0.36
+      },
+      "support_17": {
+        "type": "noul",
+        "noul": 0.43
+      },
+      "quality_17": {
+        "type": "score",
+        "score": 1.11,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.26,
+          "1": 0.36,
+          "2": 0.38
+        },
+        "confidence": 0
+      },
+      "role_18": {
+        "type": "choice",
+        "choice": "car_assets",
+        "probabilities": {
+          "car_assets": 0.79,
+          "car_metadata": 0.11,
+          "other": 0.01,
+          "unknown": 0.09
+        },
+        "confidence": 0.72
+      },
+      "support_18": {
+        "type": "noul",
+        "noul": 0.82
+      },
+      "quality_18": {
+        "type": "score",
+        "score": 1.57,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.09,
+          "1": 0.25,
+          "2": 0.66
+        },
+        "confidence": 0.35
+      },
+      "role_19": {
+        "type": "choice",
+        "choice": "unknown",
+        "probabilities": {
+          "car_assets": 0,
+          "car_metadata": 0.02,
+          "other": 0.01,
+          "unknown": 0.97
+        },
+        "confidence": 0.96
+      },
+      "support_19": {
+        "type": "noul",
+        "noul": 0.29
+      },
+      "quality_19": {
+        "type": "score",
+        "score": 0.12,
+        "legend": {
+          "0": "No substantive role evidence: generic/absent names or magic, or conflicting clues.",
+          "1": "A filename or a single suggestive header supports a candidate role but is unverified.",
+          "2": "A descriptive asset path and corroborating format/header evidence support its role; no relevant conflict. This still does not verify decoding or game execution."
+        },
+        "probabilities": {
+          "0": 0.9,
+          "1": 0.08,
+          "2": 0.02
+        },
+        "confidence": 0.82
+      }
+    },
+    "usage": {
+      "input_tokens": 10571,
+      "output_tokens": 1622,
+      "cost": 0.000443982
+    },
+    "id": "gen-dec-1791587896-uiN98pKKuN6A0V3wUNvn",
+    "provider": "TypeSafe"
+  },
+  "inventory_sha256": "a3b3b860abeefa08b50880071a45d526e8c27af6d91cb8016377ca5259785037",
+  "request_sha256": "7f6aecc5f869af1289a768f95eb3994612542d90297ab20288004884c2371bc2",
+  "wording": "grounded",
+  "thresholds": {
+    "top": 0.85,
+    "margin": 0.5,
+    "support": 0.85,
+    "quality": 1.5
+  },
+  "usage": {
+    "input_tokens": 10571,
+    "output_tokens": 1622,
+    "cost": 0.000443982
+  },
+  "model": "typesafe/jev-1.13-20260917",
+  "request_id": "gen-dec-1791587896-uiN98pKKuN6A0V3wUNvn",
+  "latency_seconds": 0.5923723339947173
+}

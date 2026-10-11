@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x0050bbd8",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662469505408000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x0050bbd8\":{\"name\":\"FUN_0050bbd8\",\"size\":116,\"address\":\"0050bbd8\",\"decompiled_code\":\"\\nvoid FUN_0050bbd8(undefined8 param_1)\\n\\n{\\n  int iVar1;\\n  undefined4 uVar2;\\n  long lVar3;\\n  int iVar4;\\n  bool bVar5;\\n  \\n  bVar5 = false;\\n  lVar3 = FUN_004b7268();\\n  iVar4 = (int)param_1;\\n  if (lVar3 != 0) {\\n    iVar1 = FUN_004b7298();\\n    bVar5 = *(int *)(iVar4 + 0xe8) != iVar1;\\n  }\\n  uVar2 = FUN_002e42d8(DAT_00616254,param_1,*(undefined4 *)(iVar4 + 0x54),\\n                       *(undefined4 *)(iVar4 + 0x50),0,0,bVar5);\\n  *(undefined4 *)(iVar4 + 0x4c) = uVar2;\\n  return;\\n}\\n\\n\",\"callee_count\":3,\"callees\":[{\"name\":\"FUN_002e42d8\",\"address\":\"002e42d8\"},{\"name\":\"FUN_004b7268\",\"address\":\"004b7268\"},{\"name\":\"FUN_004b7298\",\"address\":\"004b7298\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":1,\"requested\":1}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.2725781659974018
+}

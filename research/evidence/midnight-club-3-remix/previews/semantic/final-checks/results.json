@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "tools/test_mc3_preview_experiments.py"
+      ],
+      "exit_code": 0,
+      "status": "pass",
+      "log": "1.log"
+    },
+    {
+      "command": [
+        "ruff",
+        "check",
+        "tools/library_filter.py",
+        "tools/test_library_filter.py",
+        "tools/serve_library.py",
+        "tools/test_serve_library.py",
+        "tools/mc3_preview_experiments.py",
+        "tools/test_mc3_preview_experiments.py"
+      ],
+      "exit_code": 0,
+      "status": "pass",
+      "log": "2.log"
+    }
+  ],
+  "claim_limits": [
+    "Only listed semantic-scope commands ran; decoder/rendering untested."
+  ]
+}

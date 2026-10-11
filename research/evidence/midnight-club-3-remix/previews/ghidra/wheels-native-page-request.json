@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x0042ae38",
+    "fields": "decompiled_code,callers",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_0042ae38\",\"size\":120,\"address\":\"0042ae38\",\"decompiled_code\":\"\\nuint FUN_0042ae38(int param_1)\\n\\n{\\n  bool bVar1;\\n  uint uVar2;\\n  uint *puVar3;\\n  \\n  puVar3 = (uint *)((*(uint *)(param_1 + 8) & 0x7fffff) * 4 +\\n                   *(int *)(*(int *)(&DAT_00714cc0 + (*(uint *)(param_1 + 8) >> 0x17) * 4) + 0xc));\\n  uVar2 = *puVar3;\\n  if ((uVar2 == 0) || (bVar1 = true, (uVar2 & 1) != 0)) {\\n    bVar1 = false;\\n  }\\n  uVar2 = 0;\\n  if (bVar1) {\\n    uVar2 = *puVar3;\\n  }\\n  if (uVar2 != 0) {\\n    return *(int *)(uVar2 + 0x1c) >> 10 & 1;\\n  }\\n  return 0;\\n}\\n\\n\",\"caller_count\":5,\"callers\":[{\"name\":\"FUN_002a7668\",\"address\":\"002a7668\"},{\"name\":\"FUN_002b7f28\",\"address\":\"002b7f28\"},{\"name\":\"FUN_002b8bb8\",\"address\":\"002b8bb8\"},{\"name\":\"FUN_004816e0\",\"address\":\"004816e0\"},{\"name\":\"FUN_00483f98\",\"address\":\"00483f98\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.23301962499681395
+}

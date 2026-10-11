@@ -1,0 +1,36 @@
+{
+ "reviewer": "/root/mc3_research",
+ "verdict": "resolved specific occurrence-coverage defect; final gate pending",
+ "original_control": "independent-missing-wheel-occurrence-control.json",
+ "original_control_sha256": "f0f442b936908b6323cc8e7007cbeb8740763016a19e9493fc42dc77729e82c0",
+ "rationale": "Before the fix, removing one of two declared exact rim.ppf occurrences still exported a preview. Current attach_wheels requires discovered selected resource paths to equal the source-index declared shared occurrence set before checking each row for unique identity/hash/size. Extra unindexed occurrences and missing declared occurrences now reject before output; valid complete source copies export and repeat without overwriting edits.",
+ "checks": {
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+   {
+    "name": "test_export_mc3_models",
+    "command": [
+     "python3",
+     "tools/test_export_mc3_models.py"
+    ],
+    "status": "pass",
+    "exit_code": 0,
+    "log": "test_export_mc3_models.log",
+    "elapsed_seconds": 1.688
+   }
+  ],
+  "claim_limits": [
+   "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+ },
+ "test_count": 8,
+ "code_sha256": {
+  "tools/mc3_model.py": "b52e7b75d06e3545396723117721fd37bd76df2c99d483b19720dc3c03444d15",
+  "tools/test_export_mc3_models.py": "89142fb5817e160a1dd2f5eaae19abb4c46a7f545a7b011a2c6ad53b0eab8502"
+ },
+ "claim_limits": [
+  "This reviewer authored exporter test controls, so an independent reviewer must approve that test patch.",
+  "This receipt resolves source occurrence behavior only; final root geometry/UI/documentation and completion gate are reviewed separately."
+ ]
+}
