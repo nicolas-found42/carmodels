@@ -9,6 +9,9 @@ import unittest
 
 from bake_models import ROOT, read_glb
 from export_mc3_models import export
+from mc3_model import NATIVE_DISC
+
+needs_disc = unittest.skipUnless(NATIVE_DISC.is_file(), 'supplied game disc source input unavailable')
 
 
 class ExportBoundaryTests(unittest.TestCase):
@@ -49,6 +52,7 @@ class ExportBoundaryTests(unittest.TestCase):
             export(source, output)
         self.assertFalse(output.exists(), 'rejected export must not publish output')
 
+    @needs_disc
     def test_parent_and_absolute_member_paths_reject_before_output(self):
         for absolute in (False, True):
             with self.subTest(absolute=absolute), tempfile.TemporaryDirectory() as temp:
@@ -62,6 +66,7 @@ class ExportBoundaryTests(unittest.TestCase):
                 self.write_fixture(source, index, manifest)
                 self.reject(source, base / 'output', 'path|relative|outside|boundary')
 
+    @needs_disc
     def test_symlink_member_rejects_before_output(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp).resolve()
@@ -72,6 +77,7 @@ class ExportBoundaryTests(unittest.TestCase):
             member.symlink_to(outside)
             self.reject(source, base / 'output', 'symlink|path|outside|boundary')
 
+    @needs_disc
     def test_hardlinked_member_rejects_before_output(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp).resolve()
@@ -97,6 +103,7 @@ class ExportBoundaryTests(unittest.TestCase):
             self.write_fixture(source, index, manifest)
             self.reject(source, base / 'output', 'identity')
 
+    @needs_disc
     def test_missing_indexed_wheel_occurrence_rejects_before_output(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp).resolve()
@@ -106,6 +113,7 @@ class ExportBoundaryTests(unittest.TestCase):
             (source / copies[-1]['file']).unlink()
             self.reject(source, base / 'output', 'occurrence|coverage|missing')
 
+    @needs_disc
     def test_undeclared_wheel_occurrence_rejects_before_output(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp).resolve()
@@ -116,6 +124,7 @@ class ExportBoundaryTests(unittest.TestCase):
             shutil.copyfile(source / row['file'], extra)
             self.reject(source, base / 'output', 'occurrence|coverage|wheel source differs')
 
+    @needs_disc
     def test_valid_export_repeats_and_preserves_changed_output(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp).resolve()

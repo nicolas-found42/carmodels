@@ -6,11 +6,14 @@ import unittest
 
 from bake_models import ROOT, bake_car, read_glb
 from export_mc3_models import DEFAULT
-from mc3_model import preview_vehicle, sha, native_executable
+from mc3_model import NATIVE_DISC, preview_vehicle, sha, native_executable
 from mc3_pck import read_vehicle
+
+needs_disc = unittest.skipUnless(NATIVE_DISC.is_file(), 'supplied game disc source input unavailable')
 
 
 class PreviewCorpusTests(unittest.TestCase):
+    @needs_disc
     def test_complete_native_conversion_and_rest_frames(self):
         extraction = ROOT/'midnight-club-3-remix/cars'
         index = json.loads((extraction/'index.json').read_text())
@@ -84,6 +87,12 @@ class PreviewCorpusTests(unittest.TestCase):
         changed['members'].append(copy.deepcopy(main))
         with self.assertRaisesRegex(ValueError, 'main native model.*ambiguous'):
             preview_vehicle(extraction, changed)
+
+    @needs_disc
+    def test_wheel_source_hash_control(self):
+        extraction = ROOT/'midnight-club-3-remix/cars'
+        vehicle = next(v for v in json.loads((extraction/'index.json').read_text())['vehicles'] if v['id'] == 'vp_350z_04')
+        manifest = json.loads((extraction/vehicle['manifest']).read_text())
         index = json.loads((extraction/'index.json').read_text())
         changed = copy.deepcopy(index)
         for row in changed['files']:
