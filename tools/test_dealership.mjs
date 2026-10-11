@@ -91,6 +91,25 @@ validateCars([bodyOnly]);
 const custom = makeCar(bodyOnly);
 assert.equal(custom.userData.wheels.length,0,'edited dealership models need not preserve source wheel counts');
 disposeCar(custom);
+// Display fields the page joins or prints must be validated before a car can be selected.
+for (const [label, patch] of [['string limits',{claimLimits:'not a list'}],['object limits',{claimLimits:{a:1}}],['non-string limit',{claimLimits:[1]}],
+    ['model limits',{model:{...cars[0].model,claimLimits:'x'}}],['unknown style without variant',{bodyStyle:'unknown',sourceVariant:undefined}],
+    ['unknown style with empty variant',{bodyStyle:'unknown',sourceVariant:''}]])
+  assert.throws(()=>validateCars([{...cars[0],...patch}]),/claim limits|source variant/,label);
+assert.equal(validateCars([{...cars[0],claimLimits:['A limit.']}]).length,1);
+assert.equal(validateCars([{...gtCars[0],bodyStyle:'unknown',sourceVariant:'day'}]).length,1);
+// Hiding the preview schedules one deferred selection; it must not load a model per keystroke.
+const filterStart=dealershipPage.indexOf('function applyFilters()');
+const filterBody=dealershipPage.slice(filterStart,dealershipPage.indexOf("$('search').addEventListener('input'",filterStart));
+assert(filterStart>0 && !/\bselect\(/.test(filterBody.slice(0,filterBody.indexOf('function selectFirstVisibleIfHidden'))),'applyFilters selects synchronously');
+assert.match(filterBody,/clearTimeout\(autoSelectTimer\);\s*autoSelectTimer=setTimeout\(selectFirstVisibleIfHidden,300\)/);
+for (const [currentHidden, expected] of [[true,['B']],[false,[]]]) {
+  const selected=[];
+  const rows=[{_code:'A',hidden:currentHidden},{_code:'B',hidden:false}];
+  new Function('document','current','select','CARS','selected',filterBody.slice(filterBody.indexOf('function selectFirstVisibleIfHidden'))+';selectFirstVisibleIfHidden();')(
+    {querySelectorAll:()=>rows},{code:'A'},car=>selected.push(car.code),[{code:'A'},{code:'B'}],selected);
+  assert.deepEqual(selected,expected,`current hidden=${currentHidden}`);
+}
 for (const data of [[], {}, [cars[0],cars[0]], [{...cars[0],speed:NaN}], [{...cars[0],weight:2}], [{...cars[0],liveries:null}], [{...cars[0],paint:{rgb:[256,0,0]}}], [{...cars[0],bodyStyle:'invalid'}]]) assert.throws(() => validateCars(data));
 for (const mutate of [
   c=>delete c.model,
