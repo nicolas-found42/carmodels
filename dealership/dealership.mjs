@@ -118,6 +118,11 @@ export function validateCars(cars) {
     if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);
     if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);
     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);
+    // The unknown style prints the source variant, and the limits are joined for display.
+    if (c.bodyStyle==='unknown' && (typeof c.sourceVariant!=='string' || !c.sourceVariant)) throw Error(`${c.code}: an unknown illustration style needs a source variant.`);
+    for (const limits of [c.claimLimits, c.model?.claimLimits]) {
+      if (limits!=null && (!Array.isArray(limits) || limits.some(l => typeof l!=='string'))) throw Error(`${c.code}: invalid claim limits.`);
+    }
     for (const key of ['agility', 'accel', 'speed', 'weight']) {
       if (!(unknownSpecs && c[key]===null) && (!Number.isFinite(c[key]) || c[key] < 0 || c[key] > 1)) throw Error(`${c.code}: ${key} must be a rating from 0 to 1.`);
     }

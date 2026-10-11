@@ -400,10 +400,15 @@ function applyFilters() {
   });
   $('results').textContent = `${visible} of ${CARS.length} entries` + (current ? ` · ${isNativePackage(current)?'Selected':'Preview'}: ${current.name}` : '');
   $('empty').hidden = visible > 0;
-  if(visible && current && [...document.querySelectorAll('.car-row')].find(r=>r._code===current.code)?.hidden) {
-    const first=[...document.querySelectorAll('.car-row')].find(r=>!r.hidden);
-    select(CARS.find(c=>c.code===first._code));
-  }
+  // Loading a model is expensive, so wait for typing to settle before replacing a hidden preview.
+  clearTimeout(autoSelectTimer);
+  autoSelectTimer=setTimeout(selectFirstVisibleIfHidden,300);
+}
+let autoSelectTimer=0;
+function selectFirstVisibleIfHidden() {
+  const rows=[...document.querySelectorAll('.car-row')];
+  const first=rows.find(r=>!r.hidden);
+  if(first && current && rows.find(r=>r._code===current.code)?.hidden) select(CARS.find(c=>c.code===first._code));
 }
 $('search').addEventListener('input', () => {semanticId++;applyFilters();});
 $('game-filter').onchange=()=>{semanticId++;applyFilters();};
