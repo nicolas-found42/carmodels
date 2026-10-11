@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x002cac70,0x002cc500",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x002cac70\":{\"name\":\"FUN_002cac70\",\"size\":8,\"address\":\"002cac70\",\"decompiled_code\":\"\\nvoid FUN_002cac70(void)\\n\\n{\\n  return;\\n}\\n\\n\",\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x002cc500\":{\"name\":\"FUN_002cc500\",\"size\":28,\"address\":\"002cc500\",\"decompiled_code\":\"\\nvoid FUN_002cc500(void)\\n\\n{\\n  FUN_002cc520();\\n  return;\\n}\\n\\n\",\"callee_count\":1,\"callees\":[{\"name\":\"FUN_002cc520\",\"address\":\"002cc520\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":2,\"requested\":2}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.5360789590049535
+}

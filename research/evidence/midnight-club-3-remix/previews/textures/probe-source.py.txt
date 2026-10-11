@@ -1,0 +1,164 @@
+"""Read-only material and texture-carrier observations, no image fidelity claim."""
+from pathlib import Path
+import collections
+import hashlib
+import json
+import math
+import re
+import struct
+import sys
+
+sys.path.insert(0, 'tools')
+from mc3_materials import read_material_table  # noqa: E402
+from mc3_pck import read_vehicle  # noqa: E402
+
+ROOT = Path('midnight-club-3-remix/cars')
+OUT = Path('research/evidence/midnight-club-3-remix/previews/textures')
+# Table identity is established against native 350Z objects and their nearby
+# shader-name strings. These are class categories, not portable PBR shaders.
+SHADERS = {
+    0x7aa7c8: 'lit_textured', 0x7a10d8: 'black_matte',
+    0x7aa828: 'drop_shadow', 0x7aa2e8: 'masked_chrome',
+    0x7aa588: 'composite_material_wrapper', 0x7a9920: 'carpaint',
+    0x7aa948: 'colored_glass', 0x7aa8e8: 'car_window',
+    0x7aa5e8: 'rubber', 0x7a9740: 'emissive_thirdbrakelight',
+    0x7aa408: 'carbon_fiber', 0x7aa228: 'aa_chrome',
+    0x7aa3a8: 'chrome', 0x7aab90: 'composite_material_wrapper',
+    0x7a1078: 'material_wrapper', 0x7aa288: 'aa_trim',
+    0x7aa468: 'default_shiny', 0x7a96e0: 'emissive_headlight',
+    0x7a9860: 'emissive_taillight', 0x7a9800: 'emissive_reverselight',
+    0x7aaa08: 'licenseplate', 0x7a97a0: 'emissive_brakelight',
+    0x7aab30: 'composite_material_wrapper', 0x7a98c0: 'carpaint_novinyl', 0x7a94e8: 'distort',
+    0x7aaa68: 'shared_distort_aux', 0x7a9e08: 'shared_distort_aux2',
+}
+ORIGINAL_SHADERS = dict(SHADERS)
+for delta in (0x200, 0x1308):
+    SHADERS.update({address + delta: name for address, name in ORIGINAL_SHADERS.items()})
+
+
+def u32(data, pos):
+    return struct.unpack_from('<I', data, pos)[0]
+
+
+def local(data, ptr, size=1):
+    pos = ptr - u32(data, 0) + 0x80
+    if not 0x80 <= pos <= len(data) - size:
+        raise ValueError('pointer outside PCK body')
+    return pos
+
+
+def material_tables(data):
+    result = []
+    pattern = b'|'.join(re.escape(struct.pack('<I', a)) for a in (0x7a1138, 0x7a1338, 0x7a2440))
+    for match in re.finditer(pattern, data):
+        pos = match.start()
+        if pos + 16 > len(data):
+            continue
+        count = struct.unpack_from('<H', data, pos + 8)[0]
+        if not 1 <= count <= 1024:
+            continue
+        try:
+            array = local(data, u32(data, pos + 4), count * 4)
+            objs = [local(data, u32(data, array + i * 4), 64) for i in range(count)]
+        except ValueError:
+            continue
+        kinds = [u32(data, o) for o in objs]
+        if sum(k in SHADERS for k in kinds) < max(1, count * 0.7):
+            continue
+        members = []
+        for i, (obj, kind) in enumerate(zip(objs, kinds)):
+            item = {'index': i, 'file_offset': obj, 'vtable': hex(kind),
+                    'shader_category': SHADERS.get(kind, 'unmapped')}
+            # These bytes are reproducible observations. Executable analysis is
+            # still required before presenting their meaning as native RGBA.
+            if kind in (0x7aa948, 0x7aab48, 0x7abc50):
+                if obj + 0x60 > len(data):
+                    raise ValueError('truncated colored-glass candidate')
+                values = struct.unpack_from('<4f', data, obj + 0x50)
+                if not all(math.isfinite(v) and 0 <= v <= 1 for v in values):
+                    raise ValueError('invalid colored-glass candidate values')
+                item['rgba_candidate_offset'] = obj + 0x50
+                item['rgba_candidate'] = list(values)
+            members.append(item)
+        result.append({'file_offset': pos, 'count': count, 'members': members,
+                       'vtable_profile': {0x7a1138: 'original', 0x7a1338: 'mercedes',
+                                          0x7a2440: 'remix'}[u32(data, pos)]})
+    return result
+
+
+def main():
+    index = json.loads((ROOT / 'index.json').read_text())
+    pins = {x['file']: x for x in index['files']}
+    paths = sorted(p for p in ROOT.glob('vp_*/assets/*/resources/vehicle/*/*.pck')
+                   if p.name == p.parent.name + '.pck')
+    results = []
+    for path in paths:
+        data = path.read_bytes()
+        pin = pins[str(path.relative_to(ROOT))]
+        digest = hashlib.sha256(data).hexdigest()
+        if digest != pin['sha256'] or len(data) != pin['bytes']:
+            raise ValueError('source identity mismatch')
+        tables = material_tables(data)
+        results.append({'code': path.parent.name, 'file': str(path),
+                        'sha256': digest, 'bytes': len(data), 'tables': tables})
+    ppf = []
+    for path in sorted(ROOT.rglob('*.ppf')):
+        data = path.read_bytes()
+        pin = pins[str(path.relative_to(ROOT))]
+        if hashlib.sha256(data).hexdigest() != pin['sha256']:
+            raise ValueError('PPF identity mismatch')
+        ppf.append({'file': str(path), 'sha256': pin['sha256'], 'bytes': len(data),
+                    'header': data[:16].hex(), 'magic': data[:4].decode(),
+                    'count_field_offset4': u32(data, 4)})
+    sample = next(x for x in results if x['code'] == 'vp_350z_04')
+    b = Path(sample['file']).read_bytes()
+    controls = []
+    for label, offset, value in [('nan-color', 0x62d0, 0x7fc00000),
+                                 ('out-of-range-color', 0x62d0, 0x40000000)]:
+        changed = bytearray(b)
+        struct.pack_into('<I', changed, offset, value)
+        try:
+            material_tables(changed)
+            raise AssertionError(label + ' accepted')
+        except ValueError as error:
+            if str(error) != 'invalid colored-glass candidate values':
+                raise
+            controls.append({'control': label, 'rejected': str(error)})
+    classes = collections.Counter(m['shader_category'] for row in results
+                                  for t in row['tables'] for m in t['members'])
+    report = {'main_packages': len(results),
+              'packages_with_material_tables': sum(bool(r['tables']) for r in results),
+              'shader_category_counts': dict(classes), 'ppf_files': ppf,
+              'controls': controls, 'packages': results,
+              'claim_limits': ['Class mapping is a source-string/static-object inference.',
+                               'This standalone corpus probe does not establish executable field usage; Ghidra evidence is separate.',
+                               'No PPF palette, swizzle, pixel or texture association decoder.',
+                               'No rendered or in-game color/transparency fidelity proof.']}
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / 'native-material-probe.json').write_text(json.dumps(report, indent=2) + '\n')
+    bound = []
+    for row in results:
+        path = Path(row['file'])
+        vehicle = read_vehicle(path)
+        materials = read_material_table(path.read_bytes(), vehicle['material_collection_offset'])
+        bound.append({'code': row['code'], 'source_sha256': row['sha256'],
+                      'root': vehicle['model_offset'],
+                      'material_collection_offset': vehicle['material_collection_offset'],
+                      'profile': materials[0]['profile'], 'material_count': len(materials),
+                      'glass_vectors': sum('native_rgba' in m for m in materials),
+                      'unmapped_classes': sum(m['shader_category'] == 'unmapped' for m in materials),
+                      'glass_source_factors_equal': all(m['base_color'] == m['native_rgba']
+                                                        for m in materials if 'native_rgba' in m)})
+    root_report = {'root_bound_packages': len(bound), 'failures': [],
+                   'profiles': dict(collections.Counter(r['profile'] for r in bound)),
+                   'rows': bound,
+                   'module_sha256': hashlib.sha256(Path('tools/mc3_materials.py').read_bytes()).hexdigest(),
+                   'claim_limits': ['No native texture images decoded.',
+                                    'Default inspection factors are not native paint colors.',
+                                    'Native glass factors are a glTF preview translation, not GS shader emulation.']}
+    (OUT / 'root-bound-materials.json').write_text(json.dumps(root_report, indent=2) + '\n')
+    print(json.dumps({k: v for k, v in report.items() if k not in ('packages', 'ppf_files')}, indent=2))
+
+
+if __name__ == '__main__':
+    main()

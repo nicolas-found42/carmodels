@@ -1,0 +1,158 @@
+[
+  {
+    "receipt": "semantic-experiments.json",
+    "top_correct": 7,
+    "applied": 4,
+    "wrongly_applied": 0,
+    "usage": {
+      "input_tokens": 11501,
+      "output_tokens": 1482,
+      "cost": 0.00048304199999999993
+    },
+    "rows": [
+      {
+        "query": "Midnight Club 3 Remix",
+        "top": "midnight-club-3-remix",
+        "expected": "midnight-club-3-remix",
+        "status": "ok"
+      },
+      {
+        "query": "MC3 Remix native packages",
+        "top": "midnight-club-3-remix:native",
+        "expected": "midnight-club-3-remix:native",
+        "status": "ok"
+      },
+      {
+        "query": "MC3 Remix night models",
+        "top": "midnight-club-3-remix",
+        "expected": "no_match",
+        "status": "review"
+      },
+      {
+        "query": "MC3 cars with 3D previews",
+        "top": "no_match",
+        "expected": "no_match",
+        "status": "review"
+      },
+      {
+        "query": "all games",
+        "top": "all",
+        "expected": "all",
+        "status": "ok"
+      },
+      {
+        "query": "Gran Turismo night cars",
+        "top": "gran-turismo:night",
+        "expected": "gran-turismo:night",
+        "status": "ok"
+      },
+      {
+        "query": "both MC3 Remix and Redline",
+        "top": "no_match",
+        "expected": "no_match",
+        "status": "review"
+      },
+      {
+        "query": "Ferrari F355 cars",
+        "top": "no_match",
+        "expected": "no_match",
+        "status": "review"
+      }
+    ],
+    "threshold_sweep": [
+      {
+        "threshold": 0.75,
+        "applied": 4,
+        "wrongly_applied": 0
+      },
+      {
+        "threshold": 0.85,
+        "applied": 4,
+        "wrongly_applied": 0
+      },
+      {
+        "threshold": 0.95,
+        "applied": 0,
+        "wrongly_applied": 0
+      }
+    ]
+  },
+  {
+    "receipt": "semantic-explicit-variants.json",
+    "top_correct": 7,
+    "applied": 4,
+    "wrongly_applied": 0,
+    "usage": {
+      "input_tokens": 13981,
+      "output_tokens": 1482,
+      "cost": 0.000587202
+    },
+    "rows": [
+      {
+        "query": "Midnight Club 3 Remix",
+        "top": "midnight-club-3-remix",
+        "expected": "midnight-club-3-remix",
+        "status": "ok"
+      },
+      {
+        "query": "MC3 Remix native packages",
+        "top": "midnight-club-3-remix:native",
+        "expected": "midnight-club-3-remix:native",
+        "status": "ok"
+      },
+      {
+        "query": "MC3 Remix night models",
+        "top": "midnight-club-3-remix",
+        "expected": "no_match",
+        "status": "review"
+      },
+      {
+        "query": "MC3 cars with 3D previews",
+        "top": "no_match",
+        "expected": "no_match",
+        "status": "review"
+      },
+      {
+        "query": "all games",
+        "top": "all",
+        "expected": "all",
+        "status": "ok"
+      },
+      {
+        "query": "Gran Turismo night cars",
+        "top": "gran-turismo:night",
+        "expected": "gran-turismo:night",
+        "status": "ok"
+      },
+      {
+        "query": "both MC3 Remix and Redline",
+        "top": "no_match",
+        "expected": "no_match",
+        "status": "review"
+      },
+      {
+        "query": "Ferrari F355 cars",
+        "top": "no_match",
+        "expected": "no_match",
+        "status": "review"
+      }
+    ],
+    "threshold_sweep": [
+      {
+        "threshold": 0.75,
+        "applied": 4,
+        "wrongly_applied": 0
+      },
+      {
+        "threshold": 0.85,
+        "applied": 4,
+        "wrongly_applied": 0
+      },
+      {
+        "threshold": 0.95,
+        "applied": 0,
+        "wrongly_applied": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,7 @@
+Repository: jpd002/Play-
+Path: Source/gs/GSHandler.cpp
+URL: https://github.com/jpd002/Play-/blob/master/Source/gs/GSHandler.cpp
+Snippet 1 (Line 1568)
+for(unsigned int i = 0; i < 16; i++) { uint16 color = indexor.GetPixel(i, j); uint8 index = i + (j * 16); index = (index & ~0x18) | ((index & 0x08) << 1) | ((index & 0x10) >> 1); if(m_pCLUT[index] != color) { changed = true; } }
+Snippet 2 (Line 1684)
+uint8 index = i + (j * 16); index = (index & ~0x18) | ((index & 0x08) << 1) | ((index & 0x10) >> 1);

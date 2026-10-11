@@ -1,0 +1,27 @@
+{
+  "input": {
+    "decision": "Choose composition for the new explicitly classified preview-request branch, preserving inherited filter thresholds for every non-preview request.",
+    "candidates": [
+      {
+        "id": "keep",
+        "description": "Keep .85 confidence/support and coverage1.8/confidence.85 everywhere; all three constructed preview-ready requests remain withheld."
+      },
+      {
+        "id": "calibrate_preview",
+        "description": "Only when a confidently classified ordinary preview request selects a real filter whose every entry has preview: retain filter Choice confidence/probability .85 and margin .5; use preview-branch Noul .8, Score >=1.6/confidence.4 and restriction Choice confidence.8/probability.85/margin.5. Keep existing thresholds elsewhere, malformed answers fail closed."
+      }
+    ],
+    "evidence": "24 offline composition configurations over 19 retained stateful labeled query judgments were evaluated. Only support.8/Score1.6/confidence.4/restrictionconfidence.8 accepts all three ready-preview positives. All24 configurations apply zero unsupported cases. Selected config still rejects source pending preview, mixed pending preview, dealer-only request on source, fulltexturefidelity, horsepowerstats, wrongvariant, namedmultiple-games, source-only request on dealership, ambiguous and injected restriction. Code separately requires all_have_preview true. Source/current dealership actual snapshots remain pending; three positive states are controlled in-memory descriptors, not rendered models. Small sample does not establish general safety. Per-option exact readiness counts derive in code; classification of query requirements remains probabilistic.",
+    "priorities": "Provide useful preview requests when all entries are actually preview-ready; preserve non-preview behavior and policy; no unsupported filtering or geometry claim; keep .85 filter selection confidence and margin; report all calibration limits. Avoid unchanged model retries.",
+    "escape_hatches": true,
+    "escalate_on_contradiction": true
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_decide\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"recommendation\": {\n    \"selected\": \"calibrate_preview\",\n    \"escaped\": false,\n    \"confidence\": 0.99,\n    \"probabilities\": {\n      \"keep\": 0,\n      \"calibrate_preview\": 0.99,\n      \"ask_user\": 0,\n      \"investigate\": 0.01,\n      \"none\": 0\n    },\n    \"contradicted_requirements\": []\n  },\n  \"requirements_checked\": 0,\n  \"checks\": [],\n  \"warnings\": [],\n  \"usage\": {\n    \"input_tokens\": 930,\n    \"output_tokens\": 65\n  }\n}"
+      }
+    ]
+  }
+}

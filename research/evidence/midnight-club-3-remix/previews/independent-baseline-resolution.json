@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "bundle_sha256": "78cb0ce4db33f46d1a2501eb277479c7f73f94461ce894ec75c744fbcfb52559",
+  "digest_scope": "Canonical original standalone jev_verify args, since this receipt is not a multi-call review bundle.",
+  "reviewer": "/root/mc3_research",
+  "verdict": "approve",
+  "receipt_sha256": "9cf34e35a331dfdf0b9628cff31e2a0754577fae45cd5754a915bd51d3d6d192",
+  "audit_sha256": "abac4ef30385d987efb7590a8101f6f7d772cc2ed41ee67f82501353930e3038",
+  "original_judgment": {
+    "verdict": "verified",
+    "confidence": 0.59,
+    "supports": 0.73,
+    "contradicts": 0.07,
+    "says_nothing": 0.2
+  },
+  "rationale": "Resolve the initial-state claim only. The preservation snapshot contains exactly94 unique MC3 rows, all displayMode=native-package. The captured builder routes each such row to native_model and continues before the GLB path. I executed the complete captured native_model implementation against every94 original independent DAT files: each produced schema3/previewStatus=unavailable with no parts, triangleCount or GLB source. A replay of the exact repro script in an isolated workspace against these independently rederived baseline descriptors failed for the intended MC3_VP_350Z_04 unavailable-preview assertion. I also rehashed every8363 preserved original file: sizes and SHA256 all match, zero changed/missing files. These direct checks resolve the count and native-versus-GLB evidence uncertainty without a new Jev call. The word currently in the original receipt is scoped to its initial baseline; current dealership rows now use textured-glb and are not claimed unavailable. A separate conversion/import was necessary to leave the initial native-only route; this does not approve that converter or any part transforms.",
+  "claim_limits": [
+    "Approval concerns the recorded initial baseline only, not the final current-preview state.",
+    "The reproduced failure uses an isolated replay; no original execution log was retained at repro.log, so this is not independent proof of the historical shell execution time.",
+    "Original-file preservation is complete for the baseline8363 paths only; newly generated models and full render fidelity require their own checks."
+  ]
+}

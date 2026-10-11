@@ -1,0 +1,581 @@
+{
+  "schema": "mc3-catalog-gate-status-v1",
+  "bundle_sha256": "97d334e0aba25dda62d89ff1ab3d5e19b2591a653f46b50af958a626404a1425",
+  "implementer": "/root",
+  "status": "accepted",
+  "blocked": [],
+  "gates": [
+    {
+      "receipt": "gate-01.json",
+      "receipt_sha256": "cdee3232f1b581bcf4b20caa1cf6024d6f1f354212a4ed4c881404a6c49b2abc",
+      "action": "escalate",
+      "review": {
+        "safe_to_apply": 0.41,
+        "scores": {
+          "correctness": {
+            "score": 1.33,
+            "confidence": 0.01,
+            "probabilities": {
+              "0": 0.15,
+              "1": 0.36,
+              "2": 0.49
+            }
+          },
+          "spec_match": {
+            "score": 1.26,
+            "confidence": 0.51,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.67,
+              "2": 0.29
+            }
+          },
+          "test_gap": {
+            "score": 0.93,
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.25,
+              "1": 0.57,
+              "2": 0.18
+            }
+          },
+          "blast_radius": {
+            "score": 1.9,
+            "confidence": 0.86,
+            "probabilities": {
+              "0": 0,
+              "1": 0.09,
+              "2": 0.91
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.5427500000000001,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "correctness"
+        ]
+      },
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 1,
+          "contradicted": 0,
+          "unsupported": 1,
+          "needs_review": 2,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "Both compiled catalogs contain985 entries including94 MC3 native packages. The preservation check finds891 prior entries/origins unchanged and9065 prior asset files unchanged;94 source/working copies have identical bytes and distinct single-link inodes.",
+            "verdict": "unsupported",
+            "confidence": 0.3,
+            "probabilities": {
+              "verified": 0.4,
+              "contradicted": 0.07,
+              "unsupported": 0.53
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "The actual importer tests and builder checks pass, including native corruption/identity/member/link controls, repeat preservation, conflicting origin records, transaction rollback and actual dealership freshness.",
+            "verdict": "verified",
+            "confidence": 0.66,
+            "probabilities": {
+              "verified": 0.77,
+              "contradicted": 0.01,
+              "unsupported": 0.22
+            },
+            "action": "review"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 8795,
+        "output_tokens": 158
+      }
+    },
+    {
+      "receipt": "gate-02.json",
+      "receipt_sha256": "b88f44ac5c2d1cec49df1e25b601c0d58f546f9d6dab008d49b2fc4efc1dcf6c",
+      "action": "escalate",
+      "review": {
+        "safe_to_apply": 0.6,
+        "scores": {
+          "correctness": {
+            "score": 1.76,
+            "confidence": 0.62,
+            "probabilities": {
+              "0": 0.05,
+              "1": 0.15,
+              "2": 0.8
+            }
+          },
+          "spec_match": {
+            "score": 1.32,
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.65,
+              "2": 0.33
+            }
+          },
+          "test_gap": {
+            "score": 0.57,
+            "confidence": 0.16,
+            "probabilities": {
+              "0": 0.48,
+              "1": 0.48,
+              "2": 0.04
+            }
+          },
+          "blast_radius": {
+            "score": 1.69,
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.3,
+              "2": 0.69
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6805000000000001,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The source viewer selects MC3 native packages without reading them as GLBs, clears prior geometry and exposes the native DAT download with unavailable-preview status and disabled model controls.",
+            "verdict": "verified",
+            "confidence": 0.95,
+            "probabilities": {
+              "verified": 0.97,
+              "contradicted": 0,
+              "unsupported": 0.03
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The actual source-viewer callbacks and native UI checks pass, including returning to a GLB after native selection.",
+            "verdict": "verified",
+            "confidence": 0.88,
+            "probabilities": {
+              "verified": 0.92,
+              "contradicted": 0.01,
+              "unsupported": 0.07
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 9548,
+        "output_tokens": 158
+      }
+    },
+    {
+      "receipt": "gate-03.json",
+      "receipt_sha256": "e4f3f54ba36f3e7a8aa29ae324527d2b4ddd07d7ea40ca2f6d33696ec2787f61",
+      "action": "escalate",
+      "review": {
+        "safe_to_apply": 0.65,
+        "scores": {
+          "correctness": {
+            "score": 1.84,
+            "confidence": 0.78,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.09,
+              "2": 0.88
+            }
+          },
+          "spec_match": {
+            "score": 1.73,
+            "confidence": 0.58,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.26,
+              "2": 0.73
+            }
+          },
+          "test_gap": {
+            "score": 0.48,
+            "confidence": 0.29,
+            "probabilities": {
+              "0": 0.56,
+              "1": 0.39,
+              "2": 0.04
+            }
+          },
+          "blast_radius": {
+            "score": 1.78,
+            "confidence": 0.67,
+            "probabilities": {
+              "0": 0,
+              "1": 0.22,
+              "2": 0.78
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.758,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The dealership native selection clears existing model resources and disables unavailable view controls; the observed browser shows94 of985 entries and a dealership DAT download for MC3_VP_350Z_04.",
+            "verdict": "verified",
+            "confidence": 0.97,
+            "probabilities": {
+              "verified": 0.98,
+              "contradicted": 0.01,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The dealership and native UI checks pass; original891 catalog/origin entries and9065 pre-existing asset files are preserved.",
+            "verdict": "verified",
+            "confidence": 0.91,
+            "probabilities": {
+              "verified": 0.94,
+              "contradicted": 0.01,
+              "unsupported": 0.05
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 7207,
+        "output_tokens": 158
+      }
+    },
+    {
+      "receipt": "gate-04.json",
+      "receipt_sha256": "7b11d6287b6651896c0cb220123c972c04991d42626b6787df7806b9513e5ac4",
+      "action": "escalate",
+      "review": {
+        "safe_to_apply": 0.6,
+        "scores": {
+          "correctness": {
+            "score": 1.63,
+            "confidence": 0.43,
+            "probabilities": {
+              "0": 0.06,
+              "1": 0.26,
+              "2": 0.6799999999999999
+            }
+          },
+          "spec_match": {
+            "score": 1.3,
+            "confidence": 0.49,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.66,
+              "2": 0.32
+            }
+          },
+          "test_gap": {
+            "score": 0.5,
+            "confidence": 0.25,
+            "probabilities": {
+              "0": 0.57,
+              "1": 0.36,
+              "2": 0.07
+            }
+          },
+          "blast_radius": {
+            "score": 1.45,
+            "confidence": 0.23,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.49,
+              "2": 0.48
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.67475,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      "verification": {
+        "action": "review",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full suite passed all52 named checks after correcting3 affected test assumptions. Final focused UI/filter and builder checks also passed.",
+            "verdict": "verified",
+            "confidence": 0.52,
+            "probabilities": {
+              "verified": 0.6799999999999999,
+              "contradicted": 0.25,
+              "unsupported": 0.07
+            },
+            "action": "review"
+          },
+          {
+            "claim": "In each of two eight-query live semantic experiments,7 top labels were correct,4 filters were applied and0 wrong filters were applied. The incorrect MC3-night top label was withheld; this is a constructed sample, not general accuracy.",
+            "verdict": "verified",
+            "confidence": 0.92,
+            "probabilities": {
+              "verified": 0.95,
+              "contradicted": 0.04,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 24833,
+        "output_tokens": 158
+      }
+    },
+    {
+      "receipt": "gate-05.json",
+      "receipt_sha256": "fd323002375443299830405aac884d51d10c2fc7c4b5b48a73e6fd466e9d061d",
+      "action": "escalate",
+      "review": {
+        "safe_to_apply": 0.47,
+        "scores": {
+          "correctness": {
+            "score": 1.81,
+            "confidence": 0.7,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.16,
+              "2": 0.82
+            }
+          },
+          "spec_match": {
+            "score": 1.8,
+            "confidence": 0.69,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.19,
+              "2": 0.8
+            }
+          },
+          "test_gap": {
+            "score": 0.38,
+            "confidence": 0.43,
+            "probabilities": {
+              "0": 0.67,
+              "1": 0.28,
+              "2": 0.05
+            }
+          },
+          "blast_radius": {
+            "score": 1.9,
+            "confidence": 0.85,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.08,
+              "2": 0.91
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.7610000000000001,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The documentation limits MC3 catalog inclusion to native package downloads/readiness and explicitly leaves PCK/PPF conversion, assembled previews, retail names, playable roster and runtime dependencies unresolved.",
+            "verdict": "verified",
+            "confidence": 0.95,
+            "probabilities": {
+              "verified": 0.97,
+              "contradicted": 0,
+              "unsupported": 0.03
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The retained semantic experiment metrics report25482 input tokens,2964 output tokens and total provider-reported cost0.001070244 USD across16 requests.",
+            "verdict": "verified",
+            "confidence": 0.92,
+            "probabilities": {
+              "verified": 0.95,
+              "contradicted": 0.02,
+              "unsupported": 0.03
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 12222,
+        "output_tokens": 158
+      }
+    }
+  ],
+  "patch_unchanged": true,
+  "text_files": 19,
+  "completion_claims": 10,
+  "independent_resolution_required": false,
+  "current_text_sha256": {
+    "tools/import_mc3_catalogs.py": "b107687f338d13f6ec48e6ae18a8d4f6ee05c71944b08131f62185ef40ba4dc7",
+    "tools/build_model_catalog.py": "3b79822326c3c29dd28ea4b0fe6087b88fd945c88730455704ae0615b7bdf413",
+    "tools/build_dealership.py": "f2a11a0c74dd838150ebc42c79da5d2c5a01e96b4f85ab9979eb96a1ec053c34",
+    "tools/test_import_mc3_catalogs.py": "4ce8e16436fbeb9ef64ac395af1dcd8efb1fb3909bb4f27f8a1edfa98dc2b83d",
+    "dealership/recovered.html": "943ccaf05a27a8f8c4cd964fa45b14f96b7f9e72effed4e8bf0f6a647ac57ef2",
+    "tools/test_viewer_loading.mjs": "921f095a066ccd33182c1662f56f309f8fe8c4e151caf26e381eedabe7809707",
+    "tools/test_native_catalog_ui.mjs": "8bc1fd07eb096e5857993b652f9de63e0d273e167c941d7db0bd65621efea68e",
+    "dealership/dealership.html": "f3ffc87a9f02ef47fbac03deb4a4f2dc2b492f4f1137d4c4f8ec2f30a28259d6",
+    "dealership/dealership.mjs": "3f1fa3bcb0760dd871b43d287144982ab8e8d9d78ccc17223f0f160e66d9ec4b",
+    "tools/test_dealership.mjs": "eec24d3f89e931763ad65ede50a9b96aca25c37e5bcb7a71f01f7128435d383c",
+    "tools/test_build_dealership.py": "bf79b2f1a6e5abdbbf4a09e60436e35b7a0538163e2bacc7099a085d6a2fceba",
+    "tools/library_filter.py": "cb664563f3ccbcf146e4b598eb4b0fc1ec5a0169e299d2e1993489354603b0d7",
+    "tools/test_library_filter.py": "d66adf77ad8629ebe8cc8a5725c36c77a9e74da1ffacc761481489296488b3d6",
+    "tools/run_checks.py": "3c024192c3caf8633034dc1df0121386a2db95bb02ca5bab627934cac2c0b77c",
+    "tools/test_run_checks.py": "f23e004e0115165631c19763849f1452b9b7cfb9521100c2e13b389cce5b6e22",
+    "dealership/dealership/README.md": "b4d50a4ccd7ad75591ac85ef596bf7c3e86040e65f78d7faa2783f9018d0a428",
+    "midnight-club-3-remix/README.md": "df87e90576043f1dc9034a1209a89b4349387b7cb8f428ed6bea992c88046e2b",
+    "research/README.md": "872f49910c11dfe428da37085ed7990837d5b2372741d45192d24772332962fd",
+    "research/midnight-club-3-remix-catalogs.md": "2ede4f8a1fbdc36ce2b88e3191e1d0e768039c782612added803bfd7879fabac"
+  },
+  "resolution": {
+    "path": "independent-resolution.json",
+    "sha256": "5c1f8f57b9303af606b46e37c814e0669405f107db76ab55c0c646800a0d92ad",
+    "reviewer": "/root/mc3_research",
+    "verdict": "approve"
+  },
+  "claim_limits": [
+    "Jev automatically verified7 of10 completion claims, required independent resolution for3 and escalated every patch review. Independent reviewer reproduced checks and approved this exact bundle; automatic acceptance is not claimed.",
+    "Native catalog inclusion/download availability only; MC3 GLB conversion, previews, editable geometry, retail names, roster and runtime dependencies remain unverified."
+  ]
+}

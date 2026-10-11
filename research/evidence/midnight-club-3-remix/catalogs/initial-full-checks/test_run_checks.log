@@ -1,0 +1,21 @@
+Ffail  broken  (broken.log)
+first line
+last line
+pass  green  (green.log)
+.skip  node  (node.log)
+fail  node  (node.log)
+Required runtime unavailable: carmodels-runtime-does-not-exist
+.
+======================================================================
+FAIL: test_actual_javascript_registry_requires_node (__main__.CheckRunnerTests.test_actual_javascript_registry_requires_node)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_run_checks.py", line 41, in test_actual_javascript_registry_requires_node
+    self.assertEqual(len(checks), 6)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 7 != 6
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.075s
+
+FAILED (failures=1)

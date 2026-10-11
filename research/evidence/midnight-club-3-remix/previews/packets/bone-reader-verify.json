@@ -1,0 +1,80 @@
+{
+  "args": {
+    "claims": [
+      "The shipped 350Z PCK contains a rest-joint named trunkbone at index16 with native global XYZ (0,1.240475,0.767380), so adding this source translation to its local trunk geometry is evidence-supported for the static preview.",
+      "The generic ELF skeleton loader stores local XYZ at joint+0x20 and sums ancestor local translations to write global XYZ at joint+0, with joint stride0x44.",
+      "All94 recovered main PCKs expose a bone array at modelroot+0x68 via skeletonheader+8, whose first ushort is the array count; the executable corpus probe finds no globalXYZ/localXYZ ancestry mismatches above1e-5."
+    ],
+    "evidence": [
+      {
+        "id": "retail-ELF-Ghidra-FUN0058dc18",
+        "text": "\nlong FUN_0058dc18(undefined8 param_1,undefined8 param_2,undefined8 param_3)\n\n{\n  ushort uVar1;\n  float *pfVar2;\n  long lVar3;\n  long lVar4;\n  int iVar5;\n  int iVar6;\n  uint *puVar7;\n  int iVar8;\n  uint *puVar9;\n  ushort *puVar10;\n  long lVar11;\n  float fVar12;\n  undefined1 auStack_210 [160];\n  undefined1 auStack_170 [256];\n  float fStack_70;\n  float fStack_6c;\n  float fStack_68;\n  uint *puStack_50;\n  undefined4 auStack_4c [3];\n  \n  FUN_00435bd8(auStack_210,param_3,param_2);\n  lVar3 = FUN_004341b0(auStack_210,0x675c7c,1);\n  lVar11 = 100;\n  if (lVar3 != 0) {\n    lVar11 = FUN_00434630(auStack_210);\n  }\n  FUN_00434060(auStack_210,0x675c85);\n  uVar1 = FUN_00434630(auStack_210);\n  puVar10 = (ushort *)param_1;\n  *puVar10 = uVar1;\n  FUN_00433dd0(auStack_210,auStack_170,0x100);\n  lVar3 = FUN_00432968(auStack_170,0x675c8e,4);\n  lVar4 = 0;\n  if (lVar3 == 0) {\n    uVar1 = *puVar10;\n    iVar8 = uVar1 - 1;\n    puStack_50 = (uint *)FUN_003b1630((uint)uVar1 * 0x44 + 0x10);\n    puVar9 = puStack_50 + 4;\n    *puStack_50 = (uint)uVar1;\n    puVar7 = puVar9;\n    if (uVar1 != 0) {\n      do {\n        iVar8 = iVar8 + -1;\n        FUN_0058c970(puVar7);\n        puVar7 = puVar7 + 0x11;\n      } while (iVar8 != -1);\n    }\n    *(uint **)(puVar10 + 4) = puVar9;\n    puStack_50 = puStack_50 + 0x15;\n    lVar4 = 0;\n    auStack_4c[0] = 0;\n    if (lVar11 < 0x68) {\n      if (lVar11 < 0x65) {\n        if (lVar11 == 100) {\n          lVar4 = FUN_0058caa8(puVar9,auStack_210,&puStack_50,auStack_4c);\n        }\n      }\n      else {\n        lVar4 = FUN_0058cf68(puVar9,auStack_210,&puStack_50,auStack_4c);\n      }\n    }\n    else if (lVar11 == 0x68) {\n      lVar4 = FUN_0058d490(puVar9,auStack_210,&puStack_50,auStack_4c);\n    }\n    if (lVar4 != 0) {\n      if (*puVar10 < 0x80) {\n        FUN_0058e118(param_1);\n      }\n      FUN_0058e040(param_1);\n      uVar1 = *puVar10;\n      iVar8 = 0;\n      if (uVar1 != 0) {\n        do {\n          iVar5 = iVar8 * 0x44 + *(int *)(puVar10 + 4);\n          fStack_70 = *(float *)(iVar5 + 0x20);\n          fStack_6c = *(float *)(iVar5 + 0x24);\n          fStack_68 = *(float *)(iVar5 + 0x28);\n          iVar5 = *(int *)(iVar5 + 0x1c);\n          iVar6 = iVar8 + 1;\n          if (iVar5 != 0) {\n            fVar12 = *(float *)(iVar5 + 0x20);\n            while( true ) {\n              fStack_70 = fStack_70 + fVar12;\n              fStack_6c = fStack_6c + *(float *)(iVar5 + 0x24);\n              fStack_68 = fStack_68 + *(float *)(iVar5 + 0x28);\n              iVar5 = *(int *)(iVar5 + 0x1c);\n              if (iVar5 == 0) break;\n              fVar12 = *(float *)(iVar5 + 0x20);\n            }\n          }\n          pfVar2 = (float *)(iVar8 * 0x44 + *(int *)(puVar10 + 4));\n          *pfVar2 = fStack_70;\n          pfVar2[1] = fStack_6c;\n          pfVar2[2] = fStack_68;\n          iVar8 = iVar6;\n        } while (iVar6 < (int)(uint)uVar1);\n      }\n    }\n  }\n  return lVar4;\n}\n\n"
+      },
+      {
+        "id": "executable-source-bone-corpus-probe",
+        "text": "{\"count\": 94, \"total_bones\": 10704, \"nonempty_error_records\": 0, \"350z\": {\"source\": {\"file\": \"midnight-club-3-remix/cars/vp_350z_04/assets/00000/resources/vehicle/vp_350z_04/vp_350z_04.pck\", \"sha256\": \"7666859dd8bba326c8c75e9879b1bc4ee2b12dafc4d9d3a50f21a34be02fd346\", \"bytes\": 319840, \"serialized_base\": 109051904}, \"model_offset\": 15216, \"header_offset\": 109732, \"header_words\": [250, 238, 750, 1], \"count\": 250}, \"350z_bones\": [{\"index\": 2, \"offset\": 256072, \"name\": \"Arm_Front_L\", \"parent\": 1, \"position\": [-0.06199999898672104, 0.32331499457359314, -1.3158730268478394], \"local_position\": [-0.06199999898672104, 0.32331499457359314, -1.3158730268478394], \"euler\": [0.0, -1.570796012878418, 0.0]}, {\"index\": 7, \"offset\": 256412, \"name\": \"axl_0\", \"parent\": 6, \"position\": [-0.7660970091819763, 0.3236590027809143, -1.315412998199463], \"local_position\": [-0.7660970091819763, 0.3236590027809143, -1.315412998199463], \"euler\": [0.0, 0.0, 0.0]}, {\"index\": 8, \"offset\": 256480, \"name\": \"whl_0\", \"parent\": 7, \"position\": [-0.7660970091819763, 0.3236590027809143, -1.315412998199463], \"local_position\": [0.0, 0.0, 0.0], \"euler\": [0.0, 0.0, 0.0]}, {\"index\": 15, \"offset\": 256956, \"name\": \"neon\", \"parent\": 0, \"position\": [0.0, 0.0, 0.0], \"local_position\": [0.0, 0.0, 0.0], \"euler\": [0.0, 0.0, 0.0]}, {\"index\": 16, \"offset\": 257024, \"name\": \"trunkbone\", \"parent\": 0, \"position\": [0.0, 1.240475058555603, 0.7673799991607666], \"local_position\": [0.0, 1.240475058555603, 0.7673799991607666], \"euler\": [0.0, 0.0, 0.0]}, {\"index\": 40, \"offset\": 258656, \"name\": \"hood\", \"parent\": 0, \"position\": [0.0, 0.9128580093383789, -0.6953060030937195], \"local_position\": [0.0, 0.9128580093383789, -0.6953060030937195], \"euler\": [0.0, 0.0, 0.0]}]}"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 3,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The shipped 350Z PCK contains a rest-joint named trunkbone at index16 with native global XYZ (0,1.240475,0.767380), so adding this source translation to its local trunk geometry is evidence-supported for the static preview.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.89,
+          "contradicts": 0.1,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.83,
+        "action": "auto",
+        "supporting_evidence": "executable-source-bone-corpus-probe",
+        "same_subject": 0.89
+      },
+      {
+        "id": "claim1",
+        "claim": "The generic ELF skeleton loader stores local XYZ at joint+0x20 and sums ancestor local translations to write global XYZ at joint+0, with joint stride0x44.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.96,
+          "contradicts": 0.03,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.94,
+        "action": "auto",
+        "supporting_evidence": "retail-ELF-Ghidra-FUN0058dc18",
+        "same_subject": 0.52
+      },
+      {
+        "id": "claim2",
+        "claim": "All94 recovered main PCKs expose a bone array at modelroot+0x68 via skeletonheader+8, whose first ushort is the array count; the executable corpus probe finds no globalXYZ/localXYZ ancestry mismatches above1e-5.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.66,
+          "contradicts": 0.08,
+          "says_nothing": 0.26
+        },
+        "confidence": 0.49,
+        "action": "review",
+        "supporting_evidence": "executable-source-bone-corpus-probe",
+        "same_subject": 0.73
+      }
+    ],
+    "usage": {
+      "input_tokens": 4149,
+      "output_tokens": 411
+    }
+  }
+}

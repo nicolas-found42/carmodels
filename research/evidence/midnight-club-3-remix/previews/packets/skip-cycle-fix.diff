@@ -1,0 +1,55 @@
+--- a/tools/mc3_pck.py
++++ b/tools/mc3_pck.py
+@@ -72,7 +72,9 @@
+     """Expand bounded VIF UNPACK arrays, including STCYCL and row deltas.
+ 
+     Only the commands present in this geometry corpus are accepted. Each plane
+-    retains its source command offset and destination VU address.
++    retains its source command offset, destination VU address and cycle state.
++    Values are UNPACK vectors, not a sparse VU memory image; destination skip
++    cycles are rejected by the contiguous geometry decoder below.
+     """
+     data = pck.data
+     end = pck.bounds(start, size) + size
+@@ -154,6 +156,12 @@
+ 
+ 
+ def decode_batches(planes: list[dict]) -> list[dict]:
++    # CL > WL advances the destination over unwritten VU addresses. Treating
++    # those vectors as contiguous would silently produce different geometry.
++    # No supported source draw uses this mode; retain raw scan state but reject
++    # it before interpreting either a batch header or any attribute array.
++    if any(plane["cl"] > plane["wl"] for plane in planes):
++        raise ValueError("unsupported VIF destination skip cycle")
+     batches = []
+     headers = [i for i, p in enumerate(planes) if p["components"] in {1, 4} and p["bits"] == 32]
+     if not headers or headers[0] != 0:
+--- a/tools/test_mc3_pck.py
++++ b/tools/test_mc3_pck.py
+@@ -40,6 +40,26 @@
+ 
+ 
+ class PacketTests(unittest.TestCase):
++    def test_destination_skip_cycles_do_not_become_contiguous_geometry(self):
++        stream = packet()
++        # CL=2, WL=1 writes VU addresses start, start+2, start+4, ...
++        # It must not produce the contiguous square accepted by the old reader.
++        controls = {
++            "header_and_attributes": command(1, 0, 0x0102) + stream,
++            "attributes_only": stream[:36] + command(1, 0, 0x0102) + stream[36:],
++        }
++        for name, altered in controls.items():
++            with self.subTest(name=name):
++                planes = vif_planes(Pck(carrier(altered)), 128, len(altered))
++                self.assertTrue(any(plane["cl"] > plane["wl"] for plane in planes))
++                self.assertEqual(planes[-1]["count"], 4)
++                with self.assertRaisesRegex(ValueError, "destination skip cycle"):
++                    decode_batches(planes)
++        # A state command without a following UNPACK does not affect geometry.
++        trailing_state = stream + command(1, 0, 0x0102)
++        batch = decode_batches(vif_planes(Pck(carrier(trailing_state)), 128, len(trailing_state)))[0]
++        self.assertEqual(batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)])
++
+     def test_shared_group_recovers_exact_missing_body(self):
+         code = "vp_belair_57"
+         main = read_vehicle(next((ROOT / "midnight-club-3-remix/cars" / code).rglob(code + ".pck")))

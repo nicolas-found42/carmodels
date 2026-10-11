@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "calls_sha256": "a6bf728b0e34986ef00573c58cce37b26717ce502bedeba26953f4085b58c350",
+  "original_bundle": "final-gate-bundle.json",
+  "updated_gate_input": "schema2-gate-input.json",
+  "updated_gate_receipt": "schema2-gate.json",
+  "replacement_claim_receipt": "schema2-replacement-verify.json",
+  "direct_evidence": "schema2-direct-evidence.json",
+  "current_file_review_map": {
+    "tools/library_filter.py": "schema2-gate.json review only",
+    "tools/test_library_filter.py": "schema2-gate.json review only",
+    "tools/mc3_preview_experiments.py": "schema2-gate.json review only",
+    "tools/test_mc3_preview_experiments.py": "final-gate-1.json",
+    "tools/serve_library.py": "final-gate-2.json",
+    "tools/test_serve_library.py": "final-gate-2.json",
+    "dealership/dealership.html": "final-gate-2.json",
+    "dealership/recovered.html": "final-gate-2.json"
+  },
+  "superseded_claims": "schema2-gate.json broad verification claims are withdrawn as completion assertions. The contradicted verdict remains retained and is not approved; replacement verification uses narrowed literal manifest/status/descriptor claims, both auto1.0. Root final whole-project review must use those qualified facts, not superseded assertions.",
+  "claim_limits": [
+    "Patch reviews remain unresolved valid escalations pending independent reviewer.",
+    "This manifest does not mark any contradicted receipt approved or grant final approval."
+  ]
+}

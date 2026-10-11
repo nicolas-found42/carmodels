@@ -1,0 +1,30 @@
+{
+ "reviewer": "/root/mc3_research",
+ "verdict": "resolved specific findings, final implementation review pending",
+ "findings": [
+  {
+   "id": "source-path-boundary",
+   "before": "Exact native 350Z members at ../payload accepted and exported",
+   "after": "Canonical bounded source_path used for index, manifests, members and shared resources; parent/absolute/symlink/hardlink controls reject before output"
+  },
+  {
+   "id": "duplicate-export-identity",
+   "before": "Duplicate source vehicle exported two index rows with one GLB",
+   "after": "Preflight unique canonical vp_code and code/manifest.json; duplicate control rejects before output"
+  }
+ ],
+ "test_file": "tools/test_export_mc3_models.py",
+ "test_count": 6,
+ "test_log": ".scratch/mc3-independent/export-controls-fixed.log",
+ "test_log_sha256": "425c71a56039272591c632ea6371e7b514b83c82e5592c14b99efd157339af7f",
+ "code_sha256": {
+  "tools/mc3_model.py": "35606a83b7127e33c695ca16495cfc597cee0af7e8fae48c6b9a9262452bea57",
+  "tools/export_mc3_models.py": "8e5f37e630e24b28398f4a1413ff476f6d5d12caf715fb5ff2b1aed74ef3151c",
+  "tools/test_export_mc3_models.py": "c861e1bed08204b3a9cc924fab9f7e7d1e6665a4c1eb75f2b0e3ea0e3379c69d"
+ },
+ "claim_limits": [
+  "This resolves two path/identity findings at the pinned code revision; subsequent wheel/pose changes and final full gate still require review.",
+  "Initial export-controls-red.log failed for macOS temporary ancestor symlink fixture setup and is not a red proof for the intended controls.",
+  "Original pre-fix traversal/duplicate evidence retained unchanged in independent-export-boundary-controls.json."
+ ]
+}

@@ -1,0 +1,1203 @@
+{
+  "executable": ".scratch/mc3-preview/SLUS_213.55",
+  "executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "vutext": {
+    "file_offset": 4494992,
+    "address": 6198800,
+    "bytes": 175568,
+    "sha256": "146066aa2778b577a6f616aaa15ae86211fcd98ae73dbe61fdb7b95df20bef0b"
+  },
+  "decoder": "tools/vu1_decode.py",
+  "decoder_sha256": "eb40c5c7920c9baabe5569e3bf6f70ec2e7a888450f33fb9cfb5d0a14f349442",
+  "ghidra_byte_receipt": "research/evidence/midnight-club-3-remix/previews/ghidra/adc-vu-layout-matched-native-bytes.json",
+  "ghidra_bytes_equal": true,
+  "ghidra_byte_receipt_sha256": "d33188d0bb3922eec71a267bc61dfeb0d91813769a399aef3a9a1f3f42337e29",
+  "instructions": [
+    {
+      "address": "0x5eced0",
+      "file_offset": 4509520,
+      "upper": "nop",
+      "lower": "iaddiu vi06,vi00,16384",
+      "raw_lower": "0x11060000",
+      "raw_upper": "0x2ff"
+    },
+    {
+      "address": "0x5eced8",
+      "file_offset": 4509528,
+      "upper": "nop",
+      "lower": "iaddiu vi06,vi06,16384",
+      "raw_lower": "0x11063000",
+      "raw_upper": "0x2ff"
+    },
+    {
+      "address": "0x5ecf38",
+      "file_offset": 4509624,
+      "upper": "nop",
+      "lower": "iaddiu vi03,vi00,1",
+      "raw_lower": "0x10030001",
+      "raw_upper": "0x2ff"
+    },
+    {
+      "address": "0x5ecf78",
+      "file_offset": 4509688,
+      "upper": "muli.z vf07z,vf07z,i",
+      "lower": "lq.xyz vf15xyz,2(vi07)",
+      "raw_lower": "0x1cf3802",
+      "raw_upper": "0x4039de"
+    },
+    {
+      "address": "0x5ecf88",
+      "file_offset": 4509704,
+      "upper": "addi.z vf12z,vf00z,i",
+      "lower": "lq.xyz vf16xyz,86(vi07)",
+      "raw_lower": "0x1d03856",
+      "raw_upper": "0x400322"
+    },
+    {
+      "address": "0x5ecfa0",
+      "file_offset": 4509728,
+      "upper": "itof0.xyz vf15xyz,vf16xyz",
+      "lower": "mtir vi11,vf15x",
+      "raw_lower": "0x800b7bfc",
+      "raw_upper": "0x1cf813c"
+    },
+    {
+      "address": "0x5ecfa8",
+      "file_offset": 4509736,
+      "upper": "nop",
+      "lower": "lq.xyzw vf16xyzw,128(vi07)",
+      "raw_lower": "0x1f03880",
+      "raw_upper": "0x2ff"
+    },
+    {
+      "address": "0x5ed030",
+      "file_offset": 4509872,
+      "upper": "clipw.xyz vf15xyz,vf15w",
+      "lower": "iand vi11,vi11,vi03",
+      "raw_lower": "0x80035af4",
+      "raw_upper": "0x1cf79ff"
+    },
+    {
+      "address": "0x5ed040",
+      "file_offset": 4509888,
+      "upper": "mulz.xyz vf14xyz,vf21xyz,vf12z",
+      "lower": "isub vi11,vi00,vi11",
+      "raw_lower": "0x800b02f1",
+      "raw_upper": "0x1ccab9a"
+    },
+    {
+      "address": "0x5ed048",
+      "file_offset": 4509896,
+      "upper": "mulax.xyzw accxyzw,vf09xyzw,vf12x",
+      "lower": "iand vi10,vi11,vi06",
+      "raw_lower": "0x80065ab4",
+      "raw_upper": "0x1ec49bc"
+    },
+    {
+      "address": "0x5ed0b0",
+      "file_offset": 4510000,
+      "upper": "madday.xyzw accxyzw,vf04xyzw,vf15y",
+      "lower": "mfir.w vf14w,vi10",
+      "raw_lower": "0x802e53fd",
+      "raw_upper": "0x1ef20bd"
+    },
+    {
+      "address": "0x5ed0f8",
+      "file_offset": 4510072,
+      "upper": "ftoi4.xyz vf14xyz,vf18xyz",
+      "lower": "lq.xyz vf18xyz,86(vi07)",
+      "raw_lower": "0x1d23856",
+      "raw_upper": "0x1ce917d"
+    },
+    {
+      "address": "0x5ed140",
+      "file_offset": 4510144,
+      "upper": "mulz.xyz vf14xyz,vf22xyz,vf12z",
+      "lower": "move.xyzw vf18xyzw,vf14xyzw",
+      "raw_lower": "0x81f2733c",
+      "raw_upper": "0x1ccb39a"
+    },
+    {
+      "address": "0x5ed170",
+      "file_offset": 4510192,
+      "upper": "maddz.xy vf14xy,vf05xy,vf14z",
+      "lower": "sq.xyzw vf18xyzw,-2(vi09)",
+      "raw_lower": "0x3e997fe",
+      "raw_upper": "0x18e2b8a"
+    }
+  ],
+  "normal_scale": 0.0078125,
+  "normal_scale_instructions": [
+    {
+      "address": "0x5ecf80",
+      "upper": "muli[i].z vf08z,vf08z,i",
+      "lower": "loi 0.0078125"
+    },
+    {
+      "address": "0x5ecf88",
+      "upper": "addi.z vf12z,vf00z,i",
+      "lower": "lq.xyz vf16xyz,86(vi07)"
+    },
+    {
+      "address": "0x5ecfb0",
+      "upper": "mulz.xyz vf18xyz,vf18xyz,vf12z",
+      "lower": "lq.xyzw vf03xyzw,20(vi00)"
+    }
+  ],
+  "source_attribute_offsets": {
+    "normal_xyz": 2,
+    "position_xyz": 86,
+    "color_rgba": 128
+  },
+  "integer_dependency": "packed_W_ADC = (-(signed_normal_X & 1)) & 0x8000",
+  "exhaustive_signed_byte_cases": 256,
+  "integer_cases": [
+    {
+      "signed_normal_x": -128,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -127,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -126,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -125,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -124,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -123,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -122,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -121,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -120,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -119,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -118,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -117,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -116,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -115,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -114,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -113,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -112,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -111,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -110,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -109,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -108,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -107,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -106,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -105,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -104,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -103,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -102,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -101,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -100,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -99,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -98,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -97,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -96,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -95,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -94,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -93,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -92,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -91,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -90,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -89,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -88,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -87,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -86,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -85,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -84,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -83,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -82,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -81,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -80,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -79,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -78,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -77,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -76,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -75,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -74,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -73,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -72,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -71,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -70,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -69,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -68,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -67,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -66,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -65,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -64,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -63,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -62,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -61,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -60,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -59,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -58,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -57,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -56,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -55,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -54,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -53,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -52,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -51,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -50,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -49,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -48,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -47,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -46,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -45,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -44,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -43,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -42,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -41,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -40,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -39,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -38,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -37,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -36,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -35,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -34,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -33,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -32,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -31,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -30,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -29,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -28,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -27,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -26,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -25,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -24,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -23,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -22,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -21,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -20,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -19,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -18,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -17,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -16,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -15,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -14,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -13,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -12,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -11,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -10,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -9,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -8,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -7,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -6,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -5,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -4,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -3,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": -2,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": -1,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 0,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 1,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 2,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 3,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 4,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 5,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 6,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 7,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 8,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 9,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 10,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 11,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 12,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 13,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 14,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 15,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 16,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 17,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 18,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 19,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 20,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 21,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 22,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 23,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 24,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 25,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 26,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 27,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 28,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 29,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 30,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 31,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 32,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 33,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 34,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 35,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 36,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 37,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 38,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 39,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 40,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 41,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 42,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 43,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 44,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 45,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 46,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 47,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 48,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 49,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 50,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 51,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 52,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 53,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 54,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 55,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 56,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 57,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 58,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 59,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 60,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 61,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 62,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 63,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 64,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 65,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 66,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 67,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 68,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 69,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 70,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 71,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 72,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 73,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 74,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 75,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 76,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 77,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 78,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 79,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 80,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 81,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 82,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 83,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 84,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 85,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 86,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 87,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 88,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 89,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 90,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 91,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 92,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 93,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 94,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 95,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 96,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 97,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 98,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 99,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 100,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 101,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 102,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 103,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 104,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 105,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 106,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 107,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 108,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 109,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 110,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 111,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 112,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 113,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 114,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 115,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 116,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 117,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 118,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 119,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 120,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 121,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 122,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 123,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 124,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 125,
+      "packed_w_adc_mask": 32768
+    },
+    {
+      "signed_normal_x": 126,
+      "packed_w_adc_mask": 0
+    },
+    {
+      "signed_normal_x": 127,
+      "packed_w_adc_mask": 32768
+    }
+  ],
+  "controls": [
+    {
+      "control": "input-mask-change",
+      "reason": "ADC instruction changed at 005ecf38"
+    },
+    {
+      "control": "output-mask-change",
+      "reason": "ADC instruction changed at 005eced0"
+    },
+    {
+      "control": "ADC-gate-change",
+      "reason": "ADC instruction changed at 005ed030"
+    }
+  ],
+  "corpus_normal_lsb_receipt": "research/evidence/midnight-club-3-remix/previews/packets/normal-lsb-probe.json",
+  "corpus_normal_lsb_receipt_sha256": "798f19621037fcebe8f87ed12f2aa68f8108ed1f8050e0e52b16e7eca8f60c7b",
+  "claim_limits": [
+    "Static native instruction and bounded arithmetic evidence; no VU or GS runtime capture.",
+    "The selected kernel matches recovered normal/position/color stream offsets.",
+    "Per-draw shader dispatch, clipping and winding parity are not established here.",
+    "Unknown decoder instructions outside the explicitly checked dependency remain unverified.",
+    "UV scale and full material color behavior are not established by this probe."
+  ]
+}

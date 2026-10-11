@@ -1,0 +1,51 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 6 {
+			ambient_wheel.shadert 1 va_whl_truck_chrm.tex 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_body.shadert 1 va_firetruck_share.tex 
+			default.shadert 1 va_undercar_1.tex 
+			emissive_headlight.shadert 2 va_firetruck_share.tex __envmap__ 
+			emissive_taillight.shadert 2 va_firetruck_share.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 22 whl0_h.mesh 2 whl1_h.mesh 3 whl2_h.mesh 4 whl3_h.mesh 5 shadow.mesh 7 vroot_body_lodgroup_shell_h.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_lg_casing.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_lg_casing_spinner_lg.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_lg_casing_spinner_lg1.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_lg_casing_spinner_lg2.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_lg_casing_spinner_lg3.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_lg_casing_spinner_lg4.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_med_casing_l.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_med_casing_l_spinner_mdl.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_med_casing_l_spinner_mdl1.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_med_casing_r.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_med_casing_r_spinner_mdr.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_med_casing_r_spinner_mdr1.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_sm_casing_r.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_sm_casing_r_spinner_smr.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_sm_casing_l.mesh 0 vroot_body_lodgroup_shell_h_rooflight_set_rooflight_sm_casing_l_spinner_sml.mesh 0 2.069893
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.030234 -0.000064 0.078377
+		radius 5.830752
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_firetruck_sh.skel
+}
+bonetag {
+	whl_l0	2
+	whl_r0	3
+	whl_l1	4
+	whl_r1	5
+	drop_shadow	7
+	glow_headlight0	9
+	glow_headlight1	10
+	glow_side0	11
+	glow_side1	12
+	glow_side2	13
+	glow_side3	14
+	glow_brakelight0	15
+	glow_brakelight1	16
+	glow_taillight0	17
+	glow_taillight1	18
+	glow_coplight1	20
+	glow_coplight2	21
+	glow_coplight3	22
+	glow_coplight0	23
+}

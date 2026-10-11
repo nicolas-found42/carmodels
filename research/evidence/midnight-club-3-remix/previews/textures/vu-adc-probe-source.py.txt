@@ -1,0 +1,136 @@
+"""Pinned, read-only MC3 VU normal-X -> packed-GS ADC static corroboration."""
+from pathlib import Path
+import hashlib
+import json
+import struct
+import sys
+
+sys.path.insert(0, 'tools')
+import vu1_decode as vu  # noqa: E402
+
+EXEC = Path('.scratch/mc3-preview/SLUS_213.55')
+VA, FILE, SIZE = 0x5e9610, 0x449690, 0x2add0
+OUT = Path('research/evidence/midnight-club-3-remix/previews/textures')
+EXPECT = {
+    0x5eced0: {'op': 'iaddiu', 'it': 6, 'is': 0, 'imm15': 0x4000},
+    0x5eced8: {'op': 'iaddiu', 'it': 6, 'is': 6, 'imm15': 0x4000},
+    0x5ecf38: {'op': 'iaddiu', 'it': 3, 'is': 0, 'imm15': 1},
+    0x5ecf78: {'op': 'lq', 'dest': 'xyz', 'it': 15, 'is': 7, 'imm11': 2},
+    0x5ecf88: {'op': 'lq', 'dest': 'xyz', 'it': 16, 'is': 7, 'imm11': 86},
+    0x5ecfa0: {'op': 'mtir', 'it': 11, 'is': 15, 'fsf': 'x'},
+    0x5ecfa8: {'op': 'lq', 'dest': 'xyzw', 'it': 16, 'is': 7, 'imm11': 128},
+    0x5ed030: {'op': 'iand', 'id': 11, 'is': 11, 'it': 3},
+    0x5ed040: {'op': 'isub', 'id': 11, 'is': 0, 'it': 11},
+    0x5ed048: {'op': 'iand', 'id': 10, 'is': 11, 'it': 6},
+    0x5ed0b0: {'op': 'mfir', 'dest': 'w', 'it': 14, 'is': 10},
+    0x5ed0f8: {'op': 'lq', 'dest': 'xyz', 'it': 18, 'is': 7, 'imm11': 86},
+    0x5ed140: {'op': 'move', 'dest': 'xyzw', 'it': 18, 'is': 14},
+    0x5ed170: {'op': 'sq', 'dest': 'xyzw', 'it': 9, 'is': 18, 'imm11': -2},
+}
+
+
+def pair(data, address):
+    offset = FILE + address - VA
+    return vu.decode_pair(*struct.unpack_from('<2I', data, offset))
+
+
+def check(data):
+    for address, fields in EXPECT.items():
+        _, lower = pair(data, address)
+        if any(lower.get(key) != value for key, value in fields.items()):
+            raise ValueError(f'ADC instruction changed at {address:08x}')
+    upper, _ = pair(data, 0x5ed0f8)
+    if upper['op'] != 'ftoi4' or upper['dest'] != 'xyz' or upper['ft'] != 14:
+        raise ValueError('XYZ conversion no longer preserves ADC W lane')
+    upper, lower = pair(data, 0x5ecf80)
+    if lower['op'] != 'loi' or lower['value'] != 1 / 128:
+        raise ValueError('native normal scale changed')
+    upper, _ = pair(data, 0x5ecf88)
+    if (upper['op'], upper['dest'], upper['fd'], upper['fs']) != ('addi', 'z', 12, 0):
+        raise ValueError('native normal scale register changed')
+    upper, _ = pair(data, 0x5ecfb0)
+    if (upper['op'], upper['dest'], upper['fd'], upper['fs'], upper['ft']) != ('mulz', 'xyz', 18, 18, 12):
+        raise ValueError('native normal scale consumer changed')
+    return True
+
+
+def main():
+    data = EXEC.read_bytes()
+    check(data)
+    memory_receipt = Path('research/evidence/midnight-club-3-remix/previews/ghidra/adc-vu-layout-matched-native-bytes.json')
+    memory = json.loads(memory_receipt.read_text())
+    observed = json.loads(memory['result']['result']['content'][0]['text'])
+    address = int(observed['address'], 16)
+    native = bytes(observed['data'])
+    offset = FILE + address - VA
+    if data[offset:offset + len(native)] != native:
+        raise ValueError('Ghidra memory and executable bytes differ')
+    controls = []
+    for label, address in [('input-mask-change', 0x5ecf38),
+                           ('output-mask-change', 0x5eced0),
+                           ('ADC-gate-change', 0x5ed030)]:
+        changed = bytearray(data)
+        offset = FILE + address - VA
+        changed[offset] ^= 1
+        try:
+            check(changed)
+            raise AssertionError(label + ' accepted')
+        except ValueError as error:
+            if str(error) != f'ADC instruction changed at {address:08x}':
+                raise
+            controls.append({'control': label, 'reason': str(error)})
+    # Bounded arithmetic evaluation of the identified integer dependency only;
+    # this is not a VU interpreter, branch replay, or live GS execution.
+    outputs = []
+    for signed_x in range(-128, 128):
+        vi11 = signed_x & 0xffff
+        vi11 &= 1
+        vi11 = (-vi11) & 0xffff
+        vi10 = vi11 & 0x8000
+        if vi10 != (0x8000 if signed_x & 1 else 0):
+            raise AssertionError('ADC integer dependency differs')
+        outputs.append({'signed_normal_x': signed_x, 'packed_w_adc_mask': vi10})
+    rows = []
+    for address in EXPECT:
+        upper, lower = pair(data, address)
+        rows.append({'address': hex(address), 'file_offset': FILE + address - VA,
+                     'upper': vu.render_upper(upper), 'lower': vu.render_lower(lower),
+                     'raw_lower': hex(lower['word']), 'raw_upper': hex(upper['word'])})
+    normal_receipt = Path('research/evidence/midnight-club-3-remix/previews/packets/normal-lsb-probe.json')
+    scale_instructions = []
+    for address in (0x5ecf80, 0x5ecf88, 0x5ecfb0):
+        upper, lower = pair(data, address)
+        scale_instructions.append({'address': hex(address), 'upper': vu.render_upper(upper),
+                                   'lower': vu.render_lower(lower)})
+    report = {
+        'executable': str(EXEC), 'executable_sha256': hashlib.sha256(data).hexdigest(),
+        'vutext': {'file_offset': FILE, 'address': VA, 'bytes': SIZE,
+                   'sha256': hashlib.sha256(data[FILE:FILE + SIZE]).hexdigest()},
+        'decoder': 'tools/vu1_decode.py',
+        'decoder_sha256': hashlib.sha256(Path('tools/vu1_decode.py').read_bytes()).hexdigest(),
+        'ghidra_byte_receipt': str(memory_receipt), 'ghidra_bytes_equal': True,
+        'ghidra_byte_receipt_sha256': hashlib.sha256(memory_receipt.read_bytes()).hexdigest(),
+        'instructions': rows, 'normal_scale': 1 / 128,
+        'normal_scale_instructions': scale_instructions,
+        'source_attribute_offsets': {'normal_xyz': 2, 'position_xyz': 86, 'color_rgba': 128},
+        'integer_dependency': 'packed_W_ADC = (-(signed_normal_X & 1)) & 0x8000',
+        'exhaustive_signed_byte_cases': len(outputs),
+        'integer_cases': outputs, 'controls': controls,
+        'corpus_normal_lsb_receipt': str(normal_receipt),
+        'corpus_normal_lsb_receipt_sha256': hashlib.sha256(normal_receipt.read_bytes()).hexdigest(),
+        'claim_limits': [
+            'Static native instruction and bounded arithmetic evidence; no VU or GS runtime capture.',
+            'The selected kernel matches recovered normal/position/color stream offsets.',
+            'Per-draw shader dispatch, clipping and winding parity are not established here.',
+            'Unknown decoder instructions outside the explicitly checked dependency remain unverified.',
+            'UV scale and full material color behavior are not established by this probe.',
+        ],
+    }
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / 'vu-adc-static-proof.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps({k: v for k, v in report.items()
+                      if k not in ('instructions', 'integer_cases')}, indent=2))
+
+
+if __name__ == '__main__':
+    main()

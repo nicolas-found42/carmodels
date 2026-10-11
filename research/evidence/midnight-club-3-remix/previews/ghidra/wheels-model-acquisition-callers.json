@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x00416810,0x0050c0a0",
+    "fields": "decompiled_code,callers,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791662452019079000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x00416810\":{\"name\":\"FUN_00416810\",\"size\":192,\"address\":\"00416810\",\"decompiled_code\":\"\\nvoid FUN_00416810(undefined8 param_1)\\n\\n{\\n  undefined4 uVar1;\\n  undefined4 uVar2;\\n  int iVar3;\\n  int iVar4;\\n  undefined8 uVar5;\\n  \\n  FUN_002a4e30(0,0);\\n  iVar3 = FUN_005a14c0(param_1);\\n  uVar5 = FUN_003b14d0(0x4b0);\\n  uVar5 = FUN_002f6410(uVar5);\\n  iVar4 = *(int *)((int)param_1 + 0x4c);\\n  uVar1 = *(undefined4 *)(iVar4 + 0x24);\\n  uVar2 = *(undefined4 *)(iVar4 + 8);\\n  iVar4 = FUN_005a14c0(param_1);\\n  FUN_002f6c48(uVar5,param_1,uVar2,uVar1,*(undefined4 *)(iVar4 + 0x68),0,0);\\n  iVar4 = (int)uVar5;\\n  *(int *)(iVar4 + 4) = iVar3;\\n  *(int *)(iVar3 + 8) = iVar4;\\n  if (*(int *)(DAT_00619b10 + 4) == 1) {\\n    *(undefined1 *)(iVar4 + 0x1c0) = 1;\\n  }\\n  return;\\n}\\n\\n\",\"caller_count\":0,\"callers\":[],\"callee_count\":5,\"callees\":[{\"name\":\"FUN_002a4e30\",\"address\":\"002a4e30\"},{\"name\":\"FUN_002f6410\",\"address\":\"002f6410\"},{\"name\":\"FUN_002f6c48\",\"address\":\"002f6c48\"},{\"name\":\"FUN_003b14d0\",\"address\":\"003b14d0\"},{\"name\":\"FUN_005a14c0\",\"address\":\"005a14c0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x0050c0a0\":{\"name\":\"FUN_0050c0a0\",\"size\":280,\"address\":\"0050c0a0\",\"decompiled_code\":\"\\nvoid FUN_0050c0a0(undefined8 param_1)\\n\\n{\\n  undefined4 uVar1;\\n  undefined4 uVar2;\\n  int iVar3;\\n  int iVar4;\\n  undefined8 uVar5;\\n  ulong uVar6;\\n  long lVar7;\\n  undefined8 uVar8;\\n  \\n  uVar8 = 0;\\n  FUN_002a4e30(0,0);\\n  iVar3 = FUN_005a14c0(param_1);\\n  uVar5 = FUN_003b14d0(0x4b0);\\n  uVar5 = FUN_002f6410(uVar5);\\n  uVar6 = FUN_004b7298();\\n  if ((uVar6 == *(byte *)(iVar3 + 0x5d)) || (lVar7 = FUN_004b7268(), lVar7 == 0)) {\\n    uVar8 = 1;\\n    iVar4 = *(int *)((int)param_1 + 0x4c);\\n  }\\n  else {\\n    iVar4 = *(int *)((int)param_1 + 0x4c);\\n  }\\n  uVar1 = *(undefined4 *)(iVar4 + 0x24);\\n  uVar2 = *(undefined4 *)(iVar4 + 8);\\n  iVar4 = FUN_005a14c0(param_1);\\n  FUN_002f6c48(uVar5,param_1,uVar2,uVar1,*(undefined4 *)(iVar4 + 0x68),uVar8,uVar8);\\n  iVar4 = (int)uVar5;\\n  *(undefined4 *)(*(int *)(iVar3 + 0x4c) + 8) = *(undefined4 *)(iVar4 + 0x14);\\n  *(int *)(iVar3 + 8) = iVar4;\\n  *(int *)(iVar4 + 4) = iVar3;\\n  if (*(int *)(iVar4 + 0x308) != 0) {\\n    FUN_001d7310();\\n  }\\n  if (DAT_00619b00 == 5) {\\n    *(undefined1 *)(iVar4 + 0x1c0) = 0;\\n  }\\n  else {\\n    *(undefined1 *)(iVar4 + 0x1c0) = 1;\\n  }\\n  return;\\n}\\n\\n\",\"caller_count\":0,\"callers\":[],\"callee_count\":8,\"callees\":[{\"name\":\"FUN_001d7310\",\"address\":\"001d7310\"},{\"name\":\"FUN_002a4e30\",\"address\":\"002a4e30\"},{\"name\":\"FUN_002f6410\",\"address\":\"002f6410\"},{\"name\":\"FUN_002f6c48\",\"address\":\"002f6c48\"},{\"name\":\"FUN_003b14d0\",\"address\":\"003b14d0\"},{\"name\":\"FUN_004b7268\",\"address\":\"004b7268\"},{\"name\":\"FUN_004b7298\",\"address\":\"004b7298\"},{\"name\":\"FUN_005a14c0\",\"address\":\"005a14c0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":2,\"requested\":2}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.5225700000009965
+}

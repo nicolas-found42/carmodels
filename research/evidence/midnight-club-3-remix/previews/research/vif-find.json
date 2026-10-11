@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"tool\": \"jev_find\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"query\": \"Which implementation best specifies the deterministic PS2 VIF unpack stream state machine needed inside a PS2 native MC3 mesh decoder?\",\n  \"exists\": 0.86,\n  \"exists_verdict\": \"answered\",\n  \"top\": [\n    {\n      \"id\": \"pcsx2-vif\",\n      \"probability\": 0.99,\n      \"text\": \"Primary PCSX2 Vif_Unpack.cpp implements hardware VIF stream unpack: STCYCL fill/skip, STMOD,row/column masks,USN sign extension,NUM0=>256,FLGTOPS,V3/V4Woverlap and boundedVUaddress. Does not parse MC3PCK wrapper.\"\n    },\n    {\n      \"id\": \"ps2sdk-packet2\",\n      \"probability\": 0.01,\n      \"text\": \"Primary ps2dev PS2SDK packet2_vif.h builds VIF commands with immediate|NUM<<16|CMD<<24|IRQ<<31. Documents signed/unsigned,FLGTOPS,address16byte units,mode,UNPACKmask,STCYCL. No MC3PCKwrapper.\"\n    },\n    {\n      \"id\": \"mc3-xbox\",\n      \"probability\": 0,\n      \"text\": \"TahmidAlam mesh_to_obj.py handles MC3 Xbox mesh.xbck/g.xbck geometry and map offsets. No PS2PCKdispatch.\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 807,\n    \"output_tokens\": 89\n  }\n}"
+    }
+  ]
+}

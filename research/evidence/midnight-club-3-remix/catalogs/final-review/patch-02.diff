@@ -1,0 +1,159 @@
+--- a/dealership/recovered.html
++++ b/dealership/recovered.html
+@@ -26,6 +26,7 @@
+ import {fetchModel,readGLB} from './model-load.mjs';
+ import {createMaterial,applyMaterial} from './materials.mjs';
+ import {sceneLabel,geometryOptions,defaultGeometryValue} from './scene-options.mjs';
++import {isNativePackage} from './dealership.mjs';
+ const stage=document.querySelector('#stage'), carSelect=document.querySelector('#car'), recordSelect=document.querySelector('#record'), status=document.querySelector('#status');
+ const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));stage.append(renderer.domElement);
+ const scene=new THREE.Scene();scene.background=new THREE.Color('#151a22');
+@@ -37,7 +38,19 @@
+ function setLoading(busy){stage.setAttribute('aria-busy',String(busy));recordSelect.disabled=busy||!loaded;document.querySelector('#variant').disabled=busy||!loaded||document.querySelector('#variant').options.length===1;for(const id of ['textures','sharp','wire','flip'])document.querySelector('#'+id).disabled=busy||!loaded;}
+ async function loadCar(){
+  const id=++requestId;pendingRequest?.abort();const controller=new AbortController();pendingRequest=controller;dispose();setLoading(true);document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=true;let state=null;status.textContent='Loading '+carSelect.value+'…';document.querySelector('#error').textContent='';
+- try{const entry=index.cars.find(c=>c.id===carSelect.value);const {doc,bin}=readGLB(await fetchModel(encodeURI('public/'+entry.file),controller.signal));if(id!==requestId)return;
++ try{const entry=index.cars.find(c=>c.id===carSelect.value);
++ const download=document.querySelector('#download');
++ download.textContent=isNativePackage(entry)?'Download native package (.dat)':'Download source model (.glb)';
++ download.title=isNativePackage(entry)?'Recovered native vehicle package; shared external resources are separate.':'Source GLB with exported scenes and textures.';
++ if(isNativePackage(entry)) {
++   recordSelect.replaceChildren();document.querySelector('#variant').replaceChildren();
++   download.href=encodeURI('public/'+entry.file);download.download=entry.code+'.dat';selected=entry;
++   setLoading(false);updateDescription(entry);
++   status.textContent=`${entry.code} · ${entry.native_members} native files · 3D preview unavailable. Download the native vehicle package above.`;
++   return;
++ }
++ download.download=entry.code.replaceAll('/','_')+'.glb';
++ const {doc,bin}=readGLB(await fetchModel(encodeURI('public/'+entry.file),controller.signal));if(id!==requestId)return;
+  state={groups:[],meshes:[],textures:[],urls:[],doc};
+  function values(i){const a=doc.accessors[i],v=doc.bufferViews[a.bufferView],n={SCALAR:1,VEC2:2,VEC3:3}[a.type];const Type={5121:Uint8Array,5123:Uint16Array,5125:Uint32Array,5126:Float32Array}[a.componentType];if(!Type||!n||a.sparse)throw Error('Unsupported accessor layout');const offset=(v.byteOffset||0)+(a.byteOffset||0),stride=v.byteStride||n*Type.BYTES_PER_ELEMENT;if(stride!==n*Type.BYTES_PER_ELEMENT)throw Error('Interleaved accessors are outside the source viewer profile');return new Type(bin,offset,a.count*n);}
+  const loader=new THREE.TextureLoader();
+@@ -60,14 +73,14 @@
+ function showRecord(){if(!loaded)return;const n=recordSelect.value;for(const g of loaded.groups)g.visible=g.userData.record===n;const group=loaded.groups.find(g=>g.visible);if(!group)return;const box=new THREE.Box3().setFromObject(group);if(box.isEmpty()){status.textContent=`${selected.code} · ${sceneLabel(group.userData.label||n)} · no drawable geometry in this source tree`;return;}const center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3()),extent=Math.max(size.x,size.y,size.z,.1);controls.target.copy(center);camera.position.copy(center).add(new THREE.Vector3(extent*.95,extent*.55,extent*.95));camera.near=Math.max(extent/10000,.0001);camera.far=extent*100;camera.updateProjectionMatrix();controls.update();updateMaterials();const glass=shownMeshes(group).filter(m=>m.userData.headerColour);const glassNote=glass.length?` · glass/Header-colour parts (${glass.length} here) draw the original stored colour and GS alpha (opacity alpha/128); the mapping is a candidate, not proven shading`:'';const r=selected.records.find(r=>String(r.record)===n);const label=group.userData.label?sceneLabel(group.userData.label):`assembly part ${n} (${r.triangles.toLocaleString()} candidate triangles)`;status.textContent=`${selected.code} · ${label} · size ${size.toArray().map(v=>v.toFixed(2)).join(' × ')} (game units) · exported source scene; runtime rendering fidelity remains under validation${glassNote}`;}
+ function isShown(mesh){for(let node=mesh;node;node=node.parent){if(node.visible===false)return false;}return true;}
+ function shownMeshes(root){const found=[];if(!root||root.visible===false)return found;root.traverse(o=>{if(o.isMesh)found.push(o);});return found;}
+-function updateDescription(entry){const node=document.querySelector('#source-description');if(!node)return;node.textContent=entry.game==='ford-racing-2'?'Ford Racing 2: original coordinates with candidate triangle assembly, normals and shading. Tree presets follow recovered visibility routines; live LOD and runtime fidelity remain under validation.':entry.game==='gran-turismo'?'Gran Turismo: native car and texture conversions, identified by source archive codes. Day, night and arcade exports remain separate. Retail display names and game-render fidelity are unverified.':entry.game==='redline'?'Redline: native car configurations with converted static models and embedded textures. Base and add-on variants remain separate. Names come from source configurations; game-render fidelity is unverified.':'Recovered source model; inspect its exported scenes and textures. Runtime rendering fidelity is unverified.';if(entry.claim_limits?.length)node.textContent+=' '+entry.claim_limits.join(' ');}
++function updateDescription(entry){const node=document.querySelector('#source-description');if(!node)return;node.textContent=entry.game==='ford-racing-2'?'Ford Racing 2: original coordinates with candidate triangle assembly, normals and shading. Tree presets follow recovered visibility routines; live LOD and runtime fidelity remain under validation.':entry.game==='gran-turismo'?'Gran Turismo: native car and texture conversions, identified by source archive codes. Day, night and arcade exports remain separate. Retail display names and game-render fidelity are unverified.':entry.game==='redline'?'Redline: native car configurations with converted static models and embedded textures. Base and add-on variants remain separate. Names come from source configurations; game-render fidelity is unverified.':entry.game==='midnight-club-3-remix'?'Midnight Club 3 Remix: recovered native PS2 vehicle packages. 3D previews are unavailable.':'Recovered source model; inspect its exported scenes and textures. Runtime rendering fidelity is unverified.';if(entry.claim_limits?.length)node.textContent+=' '+entry.claim_limits.join(' ');}
+ const index=await(await fetch('public/models.json',{cache:'no-store'})).json();
+ const gameSelect=document.querySelector('#game'),search=document.querySelector('#search'),sourceVariant=document.querySelector('#source-variant'),filterStatus=document.querySelector('#filter-status');
+-const gameNames={'ford-racing-2':'Ford Racing 2','gran-turismo':'Gran Turismo','redline':'Redline'};
++const gameNames={'ford-racing-2':'Ford Racing 2','gran-turismo':'Gran Turismo','redline':'Redline','midnight-club-3-remix':'Midnight Club 3 Remix'};
+ for(const game of ['all',...new Set(index.cars.map(c=>c.game))])gameSelect.append(Object.assign(document.createElement('option'),{value:game,textContent:game==='all'?'All games':gameNames[game]||game}));
+ for(const variant of [...new Set(index.cars.map(c=>c.source_variant).filter(Boolean))])sourceVariant.append(Object.assign(document.createElement('option'),{value:variant,textContent:variant}));
+ let filterRevision=0;
+-function filterCars(literal=true,preferred=carSelect.value){filterRevision++;const previous=carSelect.value,query=literal?search.value.toLowerCase().trim():'';const cars=index.cars.filter(c=>(gameSelect.value==='all'||c.game===gameSelect.value)&&(!sourceVariant.value||c.source_variant===sourceVariant.value)&&(!query||[c.code,c.display_name||'',c.game,c.source_variant||''].join(' ').toLowerCase().includes(query)));carSelect.replaceChildren(...cars.map(c=>Object.assign(document.createElement('option'),{value:c.id,textContent:(gameNames[c.game]||c.game)+' · '+(c.display_name||c.code)})));carSelect.value=(cars.find(c=>c.id===preferred)||cars.find(c=>c.id==='ford-racing-2/GRAN_TORINO')||cars[0])?.id||'';filterStatus.textContent=`${cars.length} source models`;if(!cars.length){++requestId;pendingRequest?.abort();dispose();setLoading(false);document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=true;status.textContent='No source models match these filters.';}else if(carSelect.value!==previous)loadCar();}
++function filterCars(literal=true,preferred=carSelect.value){filterRevision++;const previous=carSelect.value,query=literal?search.value.toLowerCase().trim():'';const cars=index.cars.filter(c=>(gameSelect.value==='all'||c.game===gameSelect.value)&&(!sourceVariant.value||c.source_variant===sourceVariant.value)&&(!query||[c.code,c.display_name||'',c.game,c.source_variant||''].join(' ').toLowerCase().includes(query)));carSelect.replaceChildren(...cars.map(c=>Object.assign(document.createElement('option'),{value:c.id,textContent:(gameNames[c.game]||c.game)+' · '+(c.display_name||c.code)})));carSelect.value=(cars.find(c=>c.id===preferred)||cars.find(c=>c.id==='ford-racing-2/GRAN_TORINO')||cars[0])?.id||'';filterStatus.textContent=`${cars.length} source entries`;if(!cars.length){++requestId;pendingRequest?.abort();dispose();setLoading(false);document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=true;status.textContent='No source entries match these filters.';}else if(carSelect.value!==previous)loadCar();}
+ for(const control of [gameSelect,sourceVariant])control.addEventListener('change',()=>filterCars());search.addEventListener('input',()=>filterCars());
+ document.querySelector('#interpret').addEventListener('click',async()=>{const button=document.querySelector('#interpret'),revision=filterRevision,query=search.value,controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),20000);button.disabled=true;filterStatus.textContent='Interpreting search…';try{const response=await fetch('/api/library-filter',{method:'POST',headers:{'Content-Type':'application/json'},signal:controller.signal,body:JSON.stringify({query})});if(!response.ok)throw Error('Semantic search is unavailable on this server');const result=await response.json();if(revision!==filterRevision)return;if(result.status!=='ok'){filterStatus.textContent=result.message||'This search needs review; choose game and variant directly.';return;}if(![...gameSelect.options].some(o=>o.value===result.filters.game)||![...sourceVariant.options].some(o=>o.value===(result.filters.variant||'')))throw Error('The server returned an unknown filter');gameSelect.value=result.filters.game;sourceVariant.value=result.filters.variant||'';search.value='';filterCars(false);filterStatus.textContent+=' · semantic filters applied';}catch(error){if(revision!==filterRevision)return;filterStatus.textContent=error.message+'; game, variant and literal search are still available.';}finally{clearTimeout(timeout);button.disabled=false;}});
+ carSelect.addEventListener('change',loadCar);document.querySelector('#retry').addEventListener('click',loadCar);recordSelect.addEventListener('change',showRecord);for(const id of ['textures','sharp','wire','flip','variant'])document.querySelector('#'+id).addEventListener('change',updateMaterials);
+--- a/tools/test_viewer_loading.mjs
++++ b/tools/test_viewer_loading.mjs
+@@ -5,6 +5,7 @@
+ import {readGLB} from '../dealership/model-load.mjs';
+ import {createMaterial} from '../dealership/materials.mjs';
+ import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
++import {isNativePackage} from '../dealership/dealership.mjs';
+ 
+ const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
+ const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
+@@ -26,7 +27,7 @@
+  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
+  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,
+  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
+- readGLB,createMaterial,geometryOptions,defaultGeometryValue,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
++ readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+  async fetchModel(url,signal){
+   requests.push(url);
+   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');
+@@ -98,6 +99,17 @@
+ context.loaded.groups[0].visible=true;const bounds=new THREE.Box3().setFromObject(context.loaded.groups[0]);
+ assert.deepEqual(bounds.min.toArray(),[2,6,0]);assert.deepEqual(bounds.max.toArray(),[4,8,0]);
+ assert.equal(elements.download.href,'public/gran-turismo/generic.glb');
++index.cars.push({id:'midnight-club-3-remix/native-fixture',game:'midnight-club-3-remix',code:'vp_fixture',
++  asset_kind:'native-package',file:'midnight-club-3-remix/native/vp_fixture.dat',native_members:3,records:[]});
++const beforeNativeRequests=requests.length;
++elements.car.value='midnight-club-3-remix/native-fixture';await context.loadCar();
++assert.equal(requests.length,beforeNativeRequests,'native selection must not fetch/parse a DAT as GLB');
++assert.equal(context.loaded,null);assert.equal(scene.children.length,0);assert.equal(urls.size,0);
++assert.equal(elements.record.disabled,true);assert.equal(elements.retry.hidden,true);
++assert.match(elements.download.href,/vp_fixture\.dat$/);assert.match(status.textContent,/3D preview unavailable/);
++assert.equal(elements.download.download,'vp_fixture.dat');
++elements.car.value='ford-racing-2/COBRA';await context.loadCar();
++assert.equal(context.selected.code,'COBRA');assert.equal(elements.download.download,'COBRA.glb');
+ context.dispose();assert.equal(scene.children.length,0);assert.equal(urls.size,0);
+ // Exercise actual library filters and semantic response handling independently of WebGL.
+ const control=(value='')=>({value,options:[],events:{},disabled:false,textContent:'',
+@@ -121,7 +133,7 @@
+ vm.createContext(filterContext);const filters=html.slice(html.indexOf('function filterCars('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
+ filterContext.filterCars();assert.equal(carSelect.options.length,4);assert.equal(modelLoads,1);
+ gameSelect.value='gran-turismo';sourceVariant.value='night';filterContext.filterCars();assert.equal(carSelect.options.length,1);assert.match(carSelect.value,/night$/);
+-search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source models/);
++search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source entries/);
+ search.value='night cars from Gran Turismo';await interpret.events.click();assert.equal(search.value,'night cars from Gran Turismo');assert.equal(filterStatus.textContent,'Choose filters directly.');
+ responseJSON={status:'ok',filters:{game:'gran-turismo',variant:'day'}};await interpret.events.click();assert.equal(search.value,'');assert.equal(carSelect.options.length,2);assert.match(carSelect.value,/day$/);
+ responseJSON={status:'ok',filters:{game:'invented-game',variant:null}};await interpret.events.click();assert.match(filterStatus.textContent,/unknown filter/);assert.equal(gameSelect.value,'gran-turismo');
+--- /dev/null
++++ b/tools/test_native_catalog_ui.mjs
+@@ -0,0 +1,61 @@
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++import {isNativePackage, dealershipDownload, loadCar, validateCars} from '../dealership/dealership.mjs';
++
++const native={code:'MC3_VP_TEST_04',name:'vp_test_04',sourceCode:'vp_test_04',game:'midnight-club-3-remix',
++  gameLabel:'Midnight Club 3 Remix',sourceVariant:'native',displayMode:'native-package',bodyStyle:'unknown',
++  agility:null,accel:null,speed:null,weight:null,bhp:null,kg:null,liveries:[],paint:null,
++  model:{schema:3,previewStatus:'unavailable',source:{package:'dealership/assets/MC3_VP_TEST_04.dat',
++    profile:'mc3-ps2-native-package-v1',preset:'dealership',sha256:'a'.repeat(64),bytes:8192,nativeMembers:3}}};
++assert.equal(validateCars([native]).length,1);
++assert(isNativePackage(native));
++assert.equal(dealershipDownload(native).href,'./dealership/assets/MC3_VP_TEST_04.dat');
++await assert.rejects(loadCar(native),/preview unavailable/);
++for(const change of [c=>c.model.source.package='../wrong.dat',c=>c.model.source.sha256='bad',
++  c=>c.model.source.bytes=0,c=>c.model.source.nativeMembers=0,c=>c.model.previewStatus='ready',
++  c=>c.game='redline',c=>c.sourceCode='vp_other',c=>c.displayMode='textured-glb']) {
++  const c=structuredClone(native);change(c);assert.throws(()=>validateCars([c]),/native/);
++}
++
++function element(){return {textContent:'',hidden:false,disabled:false,value:'',options:[],style:{},attributes:{},
++  classList:{add(){},remove(){}},parentElement:{},replaceChildren(...nodes){this.options=nodes;},
++  removeAttribute(k){delete this.attributes[k];if(k==='href')delete this.href;},setAttribute(k,v){this.attributes[k]=v;}};}
++const sourcePage=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
++const start=sourcePage.indexOf('async function loadCar(){'),end=sourcePage.indexOf('function updateMaterials()',start);
++assert(start>0 && end>start);
++const elements=new Map();const node=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
++const entry={id:'midnight-club-3-remix/vp_test_04',code:'vp_test_04',game:'midnight-club-3-remix',
++  asset_kind:'native-package',file:'midnight-club-3-remix/native/vp_test_04.dat',native_members:3};
++node('#car').value=entry.id;node('#retry').hidden=false;
++let fetches=0,disposals=0;
++const runSource=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
++  'readGLB','dispose','setLoading','updateDescription',
++  `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
++  {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[entry]},isNativePackage,
++  async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
++  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{});
++await runSource();
++assert.equal(fetches,0);assert.equal(disposals,1);assert(node('#record').disabled);assert(node('#retry').hidden);
++assert.equal(node('#download').href,'public/midnight-club-3-remix/native/vp_test_04.dat');
++assert.match(node('#download').textContent,/native package/);assert.match(node('#status').textContent,/3D preview unavailable/);
++assert.equal(node('#error').textContent,'');
++
++const page=fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
++const selectStart=page.indexOf('async function select(c) {'),selectEnd=page.indexOf('/* ---------- inspection controls',selectStart);
++assert(selectStart>0 && selectEnd>selectStart);
++let modelLoads=0,removed=0,disposed=0,filters=0;
++const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerElements.set(id,element());return dealerElements.get(id);};
++const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
++  'loadCar','applyFilters','fmt',
++  `let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
++  $,{querySelectorAll:()=>[]},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
++  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String);
++await select(native);
++assert.equal(modelLoads,0);assert.equal(removed,1);assert.equal(disposed,1);assert.equal(filters,1);
++assert.equal($('download-model').href,dealershipDownload(native).href);
++assert.match($('loading').textContent,/3D preview unavailable/);assert.equal($('loading').hidden,false);
++assert.equal($('v-sp').textContent,'Not decoded');assert.equal($('k-liv').textContent,'Not decoded');
++assert.match($('paint-caveat').textContent,/not been converted/);
++assert.equal($('auto-rotate').disabled,true);
++await select(native);assert.equal(removed,1);assert.equal(modelLoads,0);
++console.log('PASS native catalog UI: native selection clears prior models, enables DAT downloads, skips GLB/GPU loading, exposes preview state, validates identity and rejects corrupt metadata');

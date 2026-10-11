@@ -48,8 +48,11 @@ class LibraryHandler(SimpleHTTPRequestHandler):
             if not 0 < length <= 2048 or self.headers.get('Content-Type', '').split(';')[0] != 'application/json':
                 raise ValueError('Invalid request')
             payload = json.loads(self.rfile.read(length))
-            if not isinstance(payload, dict) or set(payload) != {'query'}:
+            if not isinstance(payload, dict) or set(payload) not in ({'query'}, {'query', 'catalog'}):
                 raise ValueError('Invalid payload')
+            catalog = payload.get('catalog', 'source')
+            if catalog not in ('source', 'dealership'):
+                raise ValueError('Invalid catalog')
             query = payload['query']
             if not isinstance(query, str) or not 1 <= len(query.strip()) <= 500 or any(ord(c) < 32 for c in query):
                 raise ValueError('Invalid query')
@@ -60,8 +63,10 @@ class LibraryHandler(SimpleHTTPRequestHandler):
             self.reply(429, {'status': 'error', 'message': 'A filter request is already running.'})
             return
         try:
-            cars = json.loads((Path(self.directory) / 'public/models.json').read_text())['cars']
-            receipt = self.judgment(query, cars)
+            path = 'public/models.json' if catalog == 'source' else 'public/dealership/cars.json'
+            data = json.loads((Path(self.directory) / path).read_text())
+            cars = data['cars'] if catalog == 'source' else data
+            receipt = self.judgment(query, cars, catalog=catalog)
             # Do not expose raw provider envelopes in the UI; local experiments retain those separately.
             self.reply(200, {key: receipt.get(key) for key in ('status', 'filters', 'message', 'signals', 'usage', 'latency_seconds')})
         except Exception:

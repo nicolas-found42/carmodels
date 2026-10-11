@@ -1,0 +1,23 @@
+{
+  "schema": "mc3-independent-audit-resolution-v1",
+  "reviewer": "/root",
+  "implementer": "/root/mc3_research",
+  "verdict": "approve",
+  "receipt_sha256": "3cc66e59c7b5b0cbb3cab24af2c102df8aeb963d94ad33930eec3b1053422905",
+  "evidence_sha256": "90ddaf158da0ff409f83dd7fddef6220f23d52f3f93cce1578594fe74081bb5a",
+  "rationale": "Independently read the complete audit adapter, retained upstream read_dave source, its output receipt and the source/output index. The metadata observer preserves upstream name/payload decoding, compares all 18,416 records, and asserts each selected source ordinal and all nested ordinals match stored/decoded hashes and actual output file hashes. Direct executable counts confirmed 2,860 selected outer payloads +4,323 nested payloads=7,183 native source outputs across 94 carriers; 99 generated indexed files account for the difference to 7,282 indexed files, and index.json is the 7,283rd disk file. These distinct populations resolve the numerical claim confidence 0.73. Wrong-name and wrong-decoded-hash controls were rejected at their intended assertions. No operational error or contradicted claim is being approved. Selection completeness is separately bounded by the supplemental policy audit; rendering and runtime closure are not claimed.",
+  "direct_count_checks": {
+    "outer": 2860,
+    "nested": 4323,
+    "source_outputs": 7183,
+    "index_files": 7282,
+    "nested_carriers": 94
+  },
+  "claim_limits": [
+    "Validates native extracted bytes, entry metadata and ordinal coverage against the supplied ISO and screened upstream parser.",
+    "Source-carrier payload decoding is preserved from upstream; selection of outer member ordinals is taken from the production index and does not independently prove complete vehicle-resource selection.",
+    "Full ASSETS.DAT directory metadata is checked; unselected payloads are not decoded.",
+    "TEXTURE.DAT/BANKS.DAT inventory contents are hash-checked as indexed files, not independently parsed in this audit.",
+    "PCK geometry, PPF texture conversion, game runtime dependency closure, playable roster and visual fidelity are not established."
+  ]
+}

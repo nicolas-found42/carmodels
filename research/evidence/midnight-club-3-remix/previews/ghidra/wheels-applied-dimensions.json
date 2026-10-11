@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "0x004af890,0x004af8b0,0x004afa00,0x002f7578,0x003032c0",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791661228356579000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"0x004af890\":{\"name\":\"FUN_004af890\",\"size\":32,\"address\":\"004af890\",\"decompiled_code\":\"\\nvoid FUN_004af890(int param_1,int param_2)\\n\\n{\\n  FUN_004afb00(*(undefined1 *)(param_1 + param_2 + 0x14));\\n  return;\\n}\\n\\n\",\"callee_count\":1,\"callees\":[{\"name\":\"FUN_004afb00\",\"address\":\"004afb00\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x004af8b0\":{\"name\":\"FUN_004af8b0\",\"size\":92,\"address\":\"004af8b0\",\"decompiled_code\":\"\\nvoid FUN_004af8b0(int param_1,int param_2)\\n\\n{\\n  char cVar1;\\n  \\n  cVar1 = *(char *)(param_1 + param_2 + 0x18);\\n  if (cVar1 == -1) {\\n    cVar1 = FUN_004af950(*(undefined1 *)(param_1 + param_2 + 0x16));\\n  }\\n  FUN_004af9c8(*(undefined1 *)(param_1 + param_2 + 0x16),cVar1);\\n  return;\\n}\\n\\n\",\"callee_count\":2,\"callees\":[{\"name\":\"FUN_004af950\",\"address\":\"004af950\"},{\"name\":\"FUN_004af9c8\",\"address\":\"004af9c8\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x004afa00\":{\"name\":\"FUN_004afa00\",\"size\":176,\"address\":\"004afa00\",\"decompiled_code\":\"\\nundefined4\\nFUN_004afa00(float param_1,float param_2,float param_3,undefined8 param_4,undefined8 param_5,\\n            int param_6)\\n\\n{\\n  undefined4 uVar1;\\n  float fVar2;\\n  \\n  fVar2 = (float)FUN_004af9c8(param_5,param_4);\\n  fVar2 = fVar2 * 0.5;\\n  uVar1 = 0;\\n  if (((param_1 <= fVar2 + *(float *)(&DAT_00669b48 + param_6 * 4)) &&\\n      (fVar2 - *(float *)(&DAT_00669b48 + param_6 * 4) <= param_2)) && (fVar2 <= param_3)) {\\n    uVar1 = 1;\\n  }\\n  return uVar1;\\n}\\n\\n\",\"callee_count\":1,\"callees\":[{\"name\":\"FUN_004af9c8\",\"address\":\"004af9c8\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x002f7578\":{\"name\":\"FUN_002f7578\",\"size\":8,\"address\":\"002f7578\",\"decompiled_code\":\"\\nvoid FUN_002f7578(void)\\n\\n{\\n  return;\\n}\\n\\n\",\"callee_count\":0,\"callees\":[],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}},\"0x003032c0\":{\"name\":\"FUN_003032c0\",\"size\":300,\"address\":\"003032c0\",\"decompiled_code\":\"\\nvoid FUN_003032c0(void)\\n\\n{\\n  undefined8 *puVar1;\\n  undefined8 *puVar2;\\n  int iVar3;\\n  \\n  puVar2 = DAT_700005ac + 4;\\n  puVar1 = DAT_700005ac;\\n  if (DAT_700005b0 < DAT_700005ac + 4) {\\n    puVar1 = (undefined8 *)FUN_00526900(2);\\n    puVar2 = DAT_700005ac;\\n  }\\n  DAT_700005ac = puVar2;\\n  puVar1[1] = 0x6c01403411000000;\\n  *puVar1 = 0x10000001;\\n  *(undefined4 *)(puVar1 + 2) = 0;\\n  *(undefined4 *)((int)puVar1 + 0x14) = 0x3f800000;\\n  *(undefined4 *)((int)puVar1 + 0x1c) = 0;\\n  *(undefined4 *)(puVar1 + 3) = 0;\\n  puVar2 = DAT_700005ac;\\n  puVar1 = DAT_700005ac + 0x22;\\n  if (DAT_700005b0 < DAT_700005ac + 0x22) {\\n    puVar2 = (undefined8 *)FUN_00526900(0x11);\\n    puVar1 = DAT_700005ac;\\n  }\\n  DAT_700005ac = puVar1;\\n  *puVar2 = 0x10000010;\\n  puVar2[1] = 0x6c10431811000000;\\n  iVar3 = 0xf;\\n  do {\\n    *(undefined4 *)(puVar2 + 2) = 0;\\n    iVar3 = iVar3 + -1;\\n    *(undefined4 *)((int)puVar2 + 0x14) = 0;\\n    *(undefined4 *)(puVar2 + 3) = 0x3f800000;\\n    *(undefined4 *)((int)puVar2 + 0x1c) = 0;\\n    puVar2 = puVar2 + 2;\\n  } while (-1 < iVar3);\\n  return;\\n}\\n\\n\",\"callee_count\":1,\"callees\":[{\"name\":\"FUN_00526900\",\"address\":\"00526900\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":5,\"requested\":5}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 1.1480995419988176
+}

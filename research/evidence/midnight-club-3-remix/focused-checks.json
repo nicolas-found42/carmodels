@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.037
+    },
+    {
+      "name": "test_mc3_archive",
+      "command": [
+        "python3",
+        "tools/test_mc3_archive.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_mc3_archive.log",
+      "elapsed_seconds": 0.061
+    },
+    {
+      "name": "test_extract_mc3_cars",
+      "command": [
+        "python3",
+        "tools/test_extract_mc3_cars.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_extract_mc3_cars.log",
+      "elapsed_seconds": 0.093
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

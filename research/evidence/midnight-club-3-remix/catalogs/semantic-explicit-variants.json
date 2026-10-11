@@ -1,0 +1,822 @@
+{
+  "schema": "mc3-filter-live-experiment-v1",
+  "options": {
+    "all": {
+      "game": "all",
+      "variant": null
+    },
+    "ford-racing-2": {
+      "game": "ford-racing-2",
+      "variant": null
+    },
+    "gran-turismo": {
+      "game": "gran-turismo",
+      "variant": null
+    },
+    "gran-turismo:day": {
+      "game": "gran-turismo",
+      "variant": "day"
+    },
+    "gran-turismo:night": {
+      "game": "gran-turismo",
+      "variant": "night"
+    },
+    "gran-turismo:arcade": {
+      "game": "gran-turismo",
+      "variant": "arcade"
+    },
+    "midnight-club-3-remix": {
+      "game": "midnight-club-3-remix",
+      "variant": null
+    },
+    "midnight-club-3-remix:native": {
+      "game": "midnight-club-3-remix",
+      "variant": "native"
+    },
+    "redline": {
+      "game": "redline",
+      "variant": null
+    },
+    "redline:base": {
+      "game": "redline",
+      "variant": "base"
+    },
+    "redline:addon": {
+      "game": "redline",
+      "variant": "addon"
+    }
+  },
+  "fixtures": [
+    [
+      "Midnight Club 3 Remix",
+      "midnight-club-3-remix"
+    ],
+    [
+      "MC3 Remix native packages",
+      "midnight-club-3-remix:native"
+    ],
+    [
+      "MC3 Remix night models",
+      "no_match"
+    ],
+    [
+      "MC3 cars with 3D previews",
+      "no_match"
+    ],
+    [
+      "all games",
+      "all"
+    ],
+    [
+      "Gran Turismo night cars",
+      "gran-turismo:night"
+    ],
+    [
+      "both MC3 Remix and Redline",
+      "no_match"
+    ],
+    [
+      "Ferrari F355 cars",
+      "no_match"
+    ]
+  ],
+  "results": [
+    {
+      "query": "Midnight Club 3 Remix",
+      "expected": "midnight-club-3-remix",
+      "receipt": {
+        "status": "ok",
+        "filters": {
+          "game": "midnight-club-3-remix",
+          "variant": null
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.98,
+            "midnight-club-3-remix:native": 0.01,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.01
+          },
+          "confidence": 0.98,
+          "support": 0.91,
+          "coverage": 1.96,
+          "coverage_confidence": 0.93
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "midnight-club-3-remix",
+              "probabilities": {
+                "all": 0,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0.98,
+                "midnight-club-3-remix:native": 0.01,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0.01
+              },
+              "confidence": 0.98
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.91
+            },
+            "coverage": {
+              "type": "score",
+              "score": 1.96,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.02,
+                "1": 0.01,
+                "2": 0.97
+              },
+              "confidence": 0.93
+            }
+          },
+          "usage": {
+            "input_tokens": 1749,
+            "output_tokens": 189,
+            "cost": 7.3458e-05
+          },
+          "id": "gen-dec-1791657192-xYlsIv1nSVIo2sMcBAd2",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1749,
+          "output_tokens": 189,
+          "cost": 7.3458e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "6af579a4df587406ecf2e77cf9126e64a50969dc3b48ec56c3eb18d8173b049e",
+        "wording": "grounded",
+        "latency_seconds": 0.22198841700446792
+      }
+    },
+    {
+      "query": "MC3 Remix native packages",
+      "expected": "midnight-club-3-remix:native",
+      "receipt": {
+        "status": "ok",
+        "filters": {
+          "game": "midnight-club-3-remix",
+          "variant": "native"
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix:native",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.01,
+            "midnight-club-3-remix:native": 0.98,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.01
+          },
+          "confidence": 0.98,
+          "support": 0.88,
+          "coverage": 1.9,
+          "coverage_confidence": 0.85
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "midnight-club-3-remix:native",
+              "probabilities": {
+                "all": 0,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0.01,
+                "midnight-club-3-remix:native": 0.98,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0.01
+              },
+              "confidence": 0.98
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.88
+            },
+            "coverage": {
+              "type": "score",
+              "score": 1.9,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.08,
+                "2": 0.91
+              },
+              "confidence": 0.85
+            }
+          },
+          "usage": {
+            "input_tokens": 1747,
+            "output_tokens": 191,
+            "cost": 7.3374e-05
+          },
+          "id": "gen-dec-1791657192-DpxRGKImbSoNukF7Anyn",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1747,
+          "output_tokens": 191,
+          "cost": 7.3374e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "8e279a4833d0ef57141142c7cda7ed0de61af57e39e0c8e9f940c4b3d0a67216",
+        "wording": "grounded",
+        "latency_seconds": 0.15591325001150835
+      }
+    },
+    {
+      "query": "MC3 Remix night models",
+      "expected": "no_match",
+      "receipt": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.01,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.49,
+            "midnight-club-3-remix:native": 0.09,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.41
+          },
+          "confidence": 0.44,
+          "support": 0.41,
+          "coverage": 1.65,
+          "coverage_confidence": 0.47
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "midnight-club-3-remix",
+              "probabilities": {
+                "all": 0,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0.01,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0.49,
+                "midnight-club-3-remix:native": 0.09,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0.41
+              },
+              "confidence": 0.44
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.41
+            },
+            "coverage": {
+              "type": "score",
+              "score": 1.65,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.05,
+                "1": 0.25,
+                "2": 0.7
+              },
+              "confidence": 0.47
+            }
+          },
+          "usage": {
+            "input_tokens": 1747,
+            "output_tokens": 189,
+            "cost": 7.3374e-05
+          },
+          "id": "gen-dec-1791657193-A7Ys0uiMImmCfT4zbQZ7",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1747,
+          "output_tokens": 189,
+          "cost": 7.3374e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "3e9013ebf7593ab36cf97a6cda3a20e06e6a15b630a0a2b05ad8870c4d2132fa",
+        "wording": "grounded",
+        "latency_seconds": 0.1684717079915572
+      }
+    },
+    {
+      "query": "MC3 cars with 3D previews",
+      "expected": "no_match",
+      "receipt": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "no_match",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.06,
+            "midnight-club-3-remix:native": 0.03,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.91
+          },
+          "confidence": 0.9,
+          "support": 0.16,
+          "coverage": 0.94,
+          "coverage_confidence": 0.35
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "no_match",
+              "probabilities": {
+                "all": 0,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0.06,
+                "midnight-club-3-remix:native": 0.03,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0.91
+              },
+              "confidence": 0.9
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.16
+            },
+            "coverage": {
+              "type": "score",
+              "score": 0.94,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.24,
+                "1": 0.57,
+                "2": 0.19
+              },
+              "confidence": 0.35
+            }
+          },
+          "usage": {
+            "input_tokens": 1750,
+            "output_tokens": 182,
+            "cost": 7.35e-05
+          },
+          "id": "gen-dec-1791657193-0nECvN0ejTmaHrK0evc8",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1750,
+          "output_tokens": 182,
+          "cost": 7.35e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "f44f9a9d95d626b9b8be87275aaf9e34330a46b28e496491b020e6a13844f199",
+        "wording": "grounded",
+        "latency_seconds": 0.15641475000302307
+      }
+    },
+    {
+      "query": "all games",
+      "expected": "all",
+      "receipt": {
+        "status": "ok",
+        "filters": {
+          "game": "all",
+          "variant": null
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "all",
+          "probabilities": {
+            "all": 1.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.0,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 1.0,
+          "support": 0.95,
+          "coverage": 1.96,
+          "coverage_confidence": 0.94
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "all",
+              "probabilities": {
+                "all": 1,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0,
+                "midnight-club-3-remix:native": 0,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0
+              },
+              "confidence": 1
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.95
+            },
+            "coverage": {
+              "type": "score",
+              "score": 1.96,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.02,
+                "1": 0,
+                "2": 0.98
+              },
+              "confidence": 0.94
+            }
+          },
+          "usage": {
+            "input_tokens": 1744,
+            "output_tokens": 181,
+            "cost": 7.3248e-05
+          },
+          "id": "gen-dec-1791657193-FEj5AM0bQOtT8y8itqql",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1744,
+          "output_tokens": 181,
+          "cost": 7.3248e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "01e59addef6d668065c7060f69ef37920d2245027773b54dac4f1bfeaa5c4038",
+        "wording": "grounded",
+        "latency_seconds": 0.15436691600189079
+      }
+    },
+    {
+      "query": "Gran Turismo night cars",
+      "expected": "gran-turismo:night",
+      "receipt": {
+        "status": "ok",
+        "filters": {
+          "game": "gran-turismo",
+          "variant": "night"
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "gran-turismo:night",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 1.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.0,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 1.0,
+          "support": 0.87,
+          "coverage": 1.94,
+          "coverage_confidence": 0.9
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "gran-turismo:night",
+              "probabilities": {
+                "all": 0,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 1,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0,
+                "midnight-club-3-remix:native": 0,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0
+              },
+              "confidence": 1
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.87
+            },
+            "coverage": {
+              "type": "score",
+              "score": 1.94,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.02,
+                "1": 0.03,
+                "2": 0.95
+              },
+              "confidence": 0.9
+            }
+          },
+          "usage": {
+            "input_tokens": 1746,
+            "output_tokens": 186,
+            "cost": 7.3332e-05
+          },
+          "id": "gen-dec-1791657193-VTQxvo6PHW9Q5MXVTbpz",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1746,
+          "output_tokens": 186,
+          "cost": 7.3332e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "fd53ca86afcc7fe606866a8d041410d6e183d55f247c2c38e0ce055f669294f3",
+        "wording": "grounded",
+        "latency_seconds": 0.18297987499681767
+      }
+    },
+    {
+      "query": "both MC3 Remix and Redline",
+      "expected": "no_match",
+      "receipt": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "no_match",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.01,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.99
+          },
+          "confidence": 0.99,
+          "support": 0.1,
+          "coverage": 0.47,
+          "coverage_confidence": 0.3
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "no_match",
+              "probabilities": {
+                "all": 0,
+                "ford-racing-2": 0,
+                "gran-turismo": 0,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0.01,
+                "midnight-club-3-remix:native": 0,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0.99
+              },
+              "confidence": 0.99
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.1
+            },
+            "coverage": {
+              "type": "score",
+              "score": 0.47,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.61,
+                "1": 0.31,
+                "2": 0.08
+              },
+              "confidence": 0.3
+            }
+          },
+          "usage": {
+            "input_tokens": 1749,
+            "output_tokens": 182,
+            "cost": 7.3458e-05
+          },
+          "id": "gen-dec-1791657193-pTCSULecm4lJflv9VRHY",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1749,
+          "output_tokens": 182,
+          "cost": 7.3458e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "5951b01a8395c50792443c25fb8cd7610b5870de7f9c54aae99475193c1fc978",
+        "wording": "grounded",
+        "latency_seconds": 0.18897195901081432
+      }
+    },
+    {
+      "query": "Ferrari F355 cars",
+      "expected": "no_match",
+      "receipt": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "no_match",
+          "probabilities": {
+            "all": 0.16,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.01,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.0,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.83
+          },
+          "confidence": 0.81,
+          "support": 0.26,
+          "coverage": 0.67,
+          "coverage_confidence": 0.01
+        },
+        "raw_response": {
+          "model": "typesafe/jev-1.13-20260917",
+          "answers": {
+            "filter": {
+              "type": "choice",
+              "choice": "no_match",
+              "probabilities": {
+                "all": 0.16,
+                "ford-racing-2": 0,
+                "gran-turismo": 0.01,
+                "gran-turismo:day": 0,
+                "gran-turismo:night": 0,
+                "gran-turismo:arcade": 0,
+                "midnight-club-3-remix": 0,
+                "midnight-club-3-remix:native": 0,
+                "redline": 0,
+                "redline:base": 0,
+                "redline:addon": 0,
+                "no_match": 0.83
+              },
+              "confidence": 0.81
+            },
+            "supported": {
+              "type": "noul",
+              "noul": 0.26
+            },
+            "coverage": {
+              "type": "score",
+              "score": 0.67,
+              "legend": {
+                "0": "No supported library filter request, or ambiguous/conflicting instructions.",
+                "1": "Partly supported request, with another requested restriction unavailable in this catalog.",
+                "2": "Entire request is expressible by one available game/variant filter, with no unsupported restriction."
+              },
+              "probabilities": {
+                "0": 0.67,
+                "1": 0,
+                "2": 0.33
+              },
+              "confidence": 0.01
+            }
+          },
+          "usage": {
+            "input_tokens": 1749,
+            "output_tokens": 182,
+            "cost": 7.3458e-05
+          },
+          "id": "gen-dec-1791657193-4i1cRwNyOjW5LrPB4cy5",
+          "provider": "TypeSafe"
+        },
+        "usage": {
+          "input_tokens": 1749,
+          "output_tokens": 182,
+          "cost": 7.3458e-05
+        },
+        "model": "typesafe/jev-1.13-20260917",
+        "request_sha256": "5ccb9862237871ae23248e1f3e13e0fcd54abe8c4c23cc9cc94317bf0293d870",
+        "wording": "grounded",
+        "latency_seconds": 0.15873291599564254
+      }
+    }
+  ],
+  "claim_limits": [
+    "Small eight-query constructed semantic filter sample; not general accuracy. Provider errors do not apply filters and are not correct classifications. No retail identities or geometry are inferred."
+  ],
+  "elapsed_seconds": 1.5423076660081279,
+  "attempted": 8,
+  "top_correct": 7,
+  "applied": 4,
+  "wrongly_applied": 0,
+  "total_usage": {
+    "input_tokens": 13981,
+    "output_tokens": 1482,
+    "cost": 0.000587202
+  }
+}

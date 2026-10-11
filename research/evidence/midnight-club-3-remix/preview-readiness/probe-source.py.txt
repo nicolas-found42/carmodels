@@ -1,0 +1,95 @@
+"""Read-only native corpus structural probe; no complete model converter."""
+import collections
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+import struct
+import time
+
+ROOT = Path(__file__).resolve().parents[2]
+BASE = ROOT / 'midnight-club-3-remix/cars'
+OUT = ROOT / 'research/evidence/midnight-club-3-remix/preview-readiness/native-probe.json'
+
+def block(text, name):
+    match = re.search(r'\b' + re.escape(name) + r'\s+(\d+)\s*\{([^{}]*)\}', text)
+    if not match:
+        raise ValueError('missing block ' + name)
+    return int(match[1]), match[2]
+
+def mesh(text):
+    npos, values = block(text, 'Pos')
+    positions = [float(x) for x in values.split()]
+    if len(positions) != npos * 3 or not all(math.isfinite(x) for x in positions):
+        raise ValueError('position declaration mismatch')
+    nadj, values = block(text, 'Adj')
+    adj = [int(x) for x in re.findall(r'\bP\s+(\d+)', values)]
+    if len(adj) != nadj or not all(0 <= x < npos for x in adj):
+        raise ValueError('adjacency declaration mismatch')
+    strips = re.findall(r'Type\s+(TRISTRIP2?)\s+Priority\s+\d+\s+Idx\s+(\d+)\s*\{([^{}]*)\}', text)
+    if not strips:
+        raise ValueError('no recognized strips')
+    for kind, count, values in strips:
+        indices = [int(x) for x in values.split()]
+        if len(indices) != int(count) or not all(0 <= x < nadj for x in indices):
+            raise ValueError('strip index declaration mismatch')
+    return {'positions': npos, 'adjacency': nadj, 'strips': len(strips), 'types': sorted({x[0] for x in strips})}
+
+def texture(data):
+    if len(data) < 14:
+        raise ValueError('short header')
+    width, height, kind, mips, unknown, *flags = struct.unpack('<HHhhh4B', data[:14])
+    if not width or not height:
+        raise ValueError('zero dimensions')
+    sizes = {1: 1024+width*height, 14: 1024+width*height, 15:64+(width*height+1)//2, 16:64+(width*height+1)//2, 17:width*height*3, 18:width*height*4, 22:((width+3)//4)*((height+3)//4)*8, 26:((width+3)//4)*((height+3)//4)*16}
+    expected = sizes.get(kind)
+    if expected is None:
+        raise ValueError('unknown texture type ' + str(kind))
+    if len(data) < 14+expected:
+        raise ValueError('short base-level payload')
+    return {'width':width,'height':height,'type':kind,'mips':mips,'unknown':unknown,'flags':flags,'base_level_bytes':expected,'extra_bytes':len(data)-14-expected}
+
+def main():
+    start = time.monotonic()
+    index = json.loads((BASE/'index.json').read_text())
+    files = [x for x in index['files'] if 'source' in x]
+    result = {'schema':'mc3-preview-structural-probe-v1','index_sha256':hashlib.sha256((BASE/'index.json').read_bytes()).hexdigest(),'native_files':len(files),'suffix_counts':dict(sorted(collections.Counter(Path(x['file']).suffix for x in files).items())),'rows':[],'controls':{},'claim_limits':['Structural mesh arrays and TEX payload lengths do not validate winding, orientation, material binding, component placement or rendered fidelity.','No PCK/PPF geometry or texture decoder is implemented.','Shared traffic mesh families are not the 94 vp source packages.','No source files are written.']}
+    for row in files:
+        path = BASE/row['file']
+        suffix = path.suffix
+        if suffix not in {'.pck','.ppf','.tex','.mesh'}:
+            continue
+        entry = {'file':row['file'],'bytes':row['bytes'],'sha256':row['sha256'],'nested':bool(row['source'].get('carrier'))}
+        with path.open('rb') as source:
+            header = source.read(16)
+        entry['header16_hex']=header.hex()
+        if suffix in {'.mesh','.tex'}:
+            data=path.read_bytes()
+            if hashlib.sha256(data).hexdigest()!=row['sha256']:
+                raise ValueError('source hash changed')
+            try:
+                entry['structure']=mesh(data.decode('ascii')) if suffix=='.mesh' else texture(data)
+                entry['status']='structurally_compatible'
+            except (ValueError,UnicodeError) as error:
+                entry['status']='unsupported';entry['reason']=str(error)
+        result['rows'].append(entry)
+    firstmesh=next(x for x in result['rows'] if x['file'].endswith('.mesh') and x.get('status')=='structurally_compatible')
+    text=(BASE/firstmesh['file']).read_text()
+    for name, altered in [('position_count',re.sub(r'\bPos\s+\d+', 'Pos 999999',text,count=1)),('strip_index',re.sub(r'(\bIdx\s+\d+\s*\{\s*)\d+',r'\g<1>999999',text,count=1))]:
+        try: mesh(altered)
+        except ValueError as error: result['controls'][name]={'rejected':True,'reason':str(error)}
+        else: raise ValueError('control accepted '+name)
+    firsttex=next(x for x in result['rows'] if x['file'].endswith('.tex'))
+    try: texture((BASE/firsttex['file']).read_bytes()[:14])
+    except ValueError as error: result['controls']['texture_truncation']={'rejected':True,'reason':str(error)}
+    else: raise ValueError('texture truncation accepted')
+    result['summary']={suffix:dict(collections.Counter(x.get('status','header_only') for x in result['rows'] if x['file'].endswith(suffix))) for suffix in ['.mesh','.tex','.pck','.ppf']}
+    result['plain_mesh_families']=sorted({x['file'].split('/vehicle/')[1].split('/')[0] for x in result['rows'] if x['file'].endswith('.mesh')})
+    result['texture_type_counts']=dict(sorted(collections.Counter(str(x['structure']['type']) for x in result['rows'] if x['file'].endswith('.tex') and 'structure' in x).items()))
+    result['elapsed_seconds']=round(time.monotonic()-start,3)
+    OUT.parent.mkdir(parents=True,exist_ok=True)
+    OUT.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
+    print(json.dumps({k:result[k] for k in ['native_files','summary','controls','texture_type_counts','elapsed_seconds']}))
+
+if __name__=='__main__':main()

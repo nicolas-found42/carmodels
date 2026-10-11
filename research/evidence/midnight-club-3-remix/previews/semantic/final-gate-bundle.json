@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "baseline": ".scratch/mc3-preview-semantic-combined-baseline.json",
+  "calls": "final-gate-calls.json",
+  "calls_sha256": "121ac1c0e4efd4d9266c604aadef99ef4c8f98f22f76e026c9b4daac7bedef02",
+  "receipts": [
+    {
+      "call_index": 1,
+      "path": "final-gate-1.json",
+      "sha256": "4cec1fc8357e8710eda4fab039e6e78dbe749a3051e2fb7e78671c06bf555d11"
+    },
+    {
+      "call_index": 2,
+      "path": "final-gate-2.json",
+      "sha256": "f022f601db75327aac638984b4329823c2e352eef61ac534a0a6b54cf42a3bc6"
+    }
+  ],
+  "raw_diffs": "final-diffs.json",
+  "claim_limits": [
+    "Valid per-file gate judgments are escalations; independent resolution required.",
+    "No operational failure/truncation or contradicted verdict exists in these two receipts.",
+    "No changed code after these gate calls; subsequent root changes need a new review scope."
+  ]
+}

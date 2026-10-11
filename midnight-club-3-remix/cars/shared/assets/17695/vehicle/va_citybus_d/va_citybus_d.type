@@ -1,0 +1,46 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 5 {
+			ambient_wheel.shadert 1 va_whl_truck_drk.tex 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_body.shadert 1 va_citybus_d.tex 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			emissive_headlight.shadert 2 va_citybus_d.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 6 whl0_H.mesh 3 whl1_H.mesh 4 whl2_H.mesh 5 whl3_H.mesh 6 shadow_L.mesh 7 vroot_citybus_s_LOD_body_H.mesh 0 9999.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.006130 0.007289 -0.023360
+		radius 6.749743
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_citybus_d.skel
+}
+bonetag {
+	whl_l0	3
+	whl_r0	4
+	whl_l1	5
+	whl_r1	6
+	drop_shadow	7
+	glow_headlight0	9
+	glow_headlight1	10
+	glow_brakelight0	11
+	glow_brakelight1	12
+	glow_side0	13
+	glow_side1	14
+	glow_side2	15
+	glow_side3	16
+	glow_taillight0	17
+	glow_taillight1	18
+}

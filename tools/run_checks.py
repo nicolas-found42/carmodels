@@ -14,11 +14,12 @@ ROOT = Path(__file__).resolve().parents[1]
 def registry():
     checks = [{'name': 'ruff', 'command': ['ruff', 'check', 'tools'], 'requires': 'ruff'}]
     checks += [{'name': n, 'command': ['node', f'tools/{n}.mjs'], 'requires': 'node'} for n in
-               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb']]
+               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui']]
     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
              'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
-             'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars',
+             'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs',
+             'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
@@ -43,6 +44,8 @@ def registry():
     checks.append({'name': 'redline_roundtrip', 'command': [blender or 'blender', '--background', '--python-exit-code', '1',
                                                         '--python', 'tools/test_redline_roundtrip.py'], 'requires': blender or 'blender',
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path('dealership/public/redline/index.json').is_file() else 1)"]})
+    checks.append({'name': 'mc3_roundtrip', 'command': [blender or 'blender', '--background', '--python-exit-code', '1',
+                                                     '--python', 'tools/test_mc3_roundtrip.py'], 'requires': blender or 'blender'})
     return checks
 
 

@@ -1,0 +1,54 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Repository: jpd002/Play-\nPath: Source/iop/ioman/DirectoryDevice.cpp\nURL: https://github.com/jpd002/Play-/blob/master/Source/iop/ioman/DirectoryDevice.cpp\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 27) ---\n{\n\tauto basePath = GetBasePath();\n\tauto path = Iop::PathUtils::MakeHostPath(basePath, devicePath);\n\n\t//Get rid of unwanted flags\n\t//Used by Midnight Club 3\n\taccessType &= ~OPEN_FLAG_NOWAIT;\n\n\tconst char* mode = nullptr;\n\tswitch(accessType)\n\t{\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: EdnessP/scripts\nPath: midnight-club/MclHash.py\nURL: https://github.com/EdnessP/scripts/blob/main/midnight-club/MclHash.py\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 2) ---\n# Midnight Club STMA/RSTM and string lookup hashing functions\n# Written by Edness   v1.2   2022-06-22 - 2022-10-10\n\ndef audio_hash(str):\n    # Reimplemented from the function at  004F9298  in the\n    # PS2 PAL version of Midnight Club 3: DUB Edition Remix\n    # Also found at  00386DB0  in PS2 PAL Midnight Club 2\n\n    # For Midnight Club 2 the sound files are supposed to\n    # end with .STM, but for Midnight Club 3 - with .RSM\n    hash = 0x00000000\n    str = str.upper().replace(\"\\\\\", \"/\")\n    for idx, chr in enumerate(str, 1):\n        hash = (hash << 1 | hash >> 31) + ord(chr) * idx & 0xFFFFFFFF\n    return hash\n\n\n--- Snippet 2 (Line 27) ---\n    return hash\n\ndef string_hash3(str):\n    # Reimplemented from the function at  002BE788  in the\n    # PS2 PAL version of Midnight Club 3: DUB Edition Remix\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: vgmstream/vgmstream\nPath: src/meta/rstm_rockstar.c\nURL: https://github.com/vgmstream/vgmstream/blob/master/src/meta/rstm_rockstar.c\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 1) ---\n#include \"meta.h\"\n#include \"../coding/coding.h\"\n\n/* RSTM - from Rockstar games [Midnight Club 3, Bully - Canis Canim Edit (PS2)] */\nVGMSTREAM* init_vgmstream_rstm_rockstar(STREAMFILE* sf) {\n    VGMSTREAM* vgmstream = NULL;\n    off_t stream_offset, loop_start, loop_end;\n    size_t stream_size;\n    int sample_rate, channels, loop_flag;\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: cieslarmichal/faker-cxx\nPath: src/modules/video_game_data.h\nURL: https://github.com/cieslarmichal/faker-cxx/blob/main/src/modules/video_game_data.h\nLicense: MIT\n\nSnippets:\n--- Snippet 1 (Line 2229) ---\n    \"Metal Stoker\",\n    \"Metal Wolf Chaos\",\n    \"MetamorJupiter\",\n    \"Miami Vice\",\n    \"Micro Machines\",\n    \"Midnight Club 3: DUB Edition\",\n    \"Midnight Club 3: DUB Edition Remix\",\n    \"Midnight Club II\",\n    \"Midtown Madness 3\",\n    \"Midway Arcade Treasures\",\n    \"Midway Arcade Treasures 2\",\n    \"Midway Arcade Treasures 3\",\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: EdnessP/scripts\nPath: midnight-club/strtbl.py\nURL: https://github.com/EdnessP/scripts/blob/main/midnight-club/strtbl.py\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 24) ---\n#   - SpyHunter 2\n#   - Test Drive: Off-Road: Wide Open\n#   - TransWorld Surf (Next Wave)\n#\n#  Version 4 (Hash v1, Table v2)\n#   - Midnight Club 3: DUB Edition\n#   - Midnight Club 3: DUB Edition Remix\n#   - Midnight Club: L.A. Remix\n#\n#  Version 5 (Hash v2, Table v2)\n#   - Midnight Club: Los Angeles\n#   - Red Dead Redemption\n\n\n--- Snippet 2 (Line 56) ---\n            hash ^= mask >> 24 ^ mask\n    return hash\n\ndef hash_v1(str):\n    # Reimplemented from function at  002BE788  in\n    # Midnight Club 3: DUB Edition Remix (PS2 PAL)\n    hash = int()\n    for chr in str.encode(ENC_LABEL):\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: gabboman/wafrn\nPath: packages/frontend/src/app/pages/register/register.component.ts\nURL: https://github.com/gabboman/wafrn/blob/main/packages/frontend/src/app/pages/register/register.component.ts\nLicense: AGPL-3.0\n\nSnippets:\n--- Snippet 1 (Line 203) ---\n    'crossword puzzle',\n    '...---...',\n    'uninhabitated',\n    'translation issue',\n    'audiophile',\n    'Midnight Club 3 DUB Edition killed my PSP´s UMD drive in 2013',\n    'Don´t select this gender',\n    'mean girl',\n    'fluffy boy',\n    'Creeper',\n    'Aw man',\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: EdnessP/scripts\nPath: midnight-club/hash_build.py\nURL: https://github.com/EdnessP/scripts/blob/main/midnight-club/hash_build.py\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 1) ---\n#!/usr/bin/env python3\n# Extract and build Angel Studios / Rockstar San Diego Hash sound archives\n# Midnight Club 2,  Midnight Club 3: DUB Edition,  Bully (Canis Canem Edit)\n\n# Usage:\n#   Extract:  X  (Python 3.8 or newer)\n#       hash_build.py  X  \"/path/to/streams.dat\"\n#     Optional:\n\n\n--- Snippet 2 (Line 43) ---\n    hash = UINT32(hash * 9)\n    return UINT32((hash ^ hash >> 11) * 0x8001)\n\ndef __mclub_hash(str):\n    # Reimplemented from the function at  004F9298  in the\n    # PS2 PAL version of Midnight Club 3: DUB Edition Remix\n    # Also found at  00386DB0  in PS2 PAL Midnight Club 2\n    hash = int()\n    hash_str = str.upper().replace(\"\\\\\", \"/\").encode(\"ASCII\")\n    for idx, chr in enumerate(hash_str, 1):\n        hash = UINT32((hash << 1 | hash >> 31) + chr * idx)\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: Irfanlesnar/PS2-Launcher\nPath: update_game_ids.py\nURL: https://github.com/Irfanlesnar/PS2-Launcher/blob/main/update_game_ids.py\nLicense: AFL-3.0\n\nSnippets:\n--- Snippet 1 (Line 227) ---\n        \"game\": \"Midnight Club II\",\n        \"company\": \"Rockstar Games\",\n        \"game_ids\": [\"SLUS_203.22\", \"SLES_513.56\"]\n    },\n    {\n        \"game\": \"Midnight Club 3: DUB Edition\",\n        \"company\": \"Rockstar Games\",\n        \"game_ids\": [\"SLUS_210.29\", \"SLES_530.36\", \"SLUS_213.55\", \"SLES_538.25\"]\n    },\n    {\n        \"game\": \"Tony Hawk's Pro Skater 3\",\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: EdnessP/scripts\nPath: midnight-club/rstm_build.py\nURL: https://github.com/EdnessP/scripts/blob/main/midnight-club/rstm_build.py\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 1) ---\n#!/usr/bin/env python3\n# Generates an RSTM sound file for Midnight Club 3: DUB Edition and Bully\n# The input type is usually meant to be ADS/SS2 but WAV is also accepted.\n# If the input file is WAV, you must specify a path either for MFAudio or\n# PS2STR from the PS2 SDK.  PS2STR is given priority if both files exist.\n\nMFAUDIO_PATH = r\"X:\\path\\to\\MFAudio.exe\"\n"
+      },
+      {
+        "type": "text",
+        "text": "Repository: EdnessP/scripts\nPath: midnight-club/dave.py\nURL: https://github.com/EdnessP/scripts/blob/main/midnight-club/dave.py\nLicense: Unknown\n\nSnippets:\n--- Snippet 1 (Line 33) ---\n# files that use the (normally) invalid index 0x30 which I assume\n# was a fallback to DEL in their own packer for unsupported chars\nCHARS = \"\\x00 #$()-./?0123456789_abcdefghijklmnopqrstuvwxyz~\\x7F\"\nDAVES = (DAVE := b\"DAVE\", Dave := b\"Dave\")\nPOSIX_SEP = os.sep == \"/\"\n# Midnight Club 3, Midnight Club: L.A. Remix, and Red Dead Revolver\n# seem to expect PCKs and PPFs to always be decompressed; it never\n# checks if it's compressed, just reads the data as-is, and points\n# to it thinking it's completely fine, which causes it to hang...\n#\n# There are some nuances to it too, such as the PCKs in MC3 that are\n"
+      }
+    ]
+  },
+  "screen": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.03,\n    \"substance\": 0.96,\n    \"relevance\": 0.26\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"skip\",\n    \"reason\": \"not relevant to the stated purpose (relevance 0.26)\"\n  },\n  \"usage\": {\n    \"input_tokens\": 2996,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

@@ -75,3 +75,50 @@ limits travel with each entry. Both viewers use the static GLB scene and embedde
 Game, source-variant and literal-name filters work offline. The optional TypeSafe semantic
 filter can interpret Redline base-game or add-on requests, with unsupported restrictions and
 uncertain/provider-failure answers leaving the current filter unchanged.
+
+Midnight Club 3 Remix has 94 native source packages and separate static GLB
+inspection conversions. The source catalog retains the original DAT packages.
+The dealership owns independent editable GLBs under `models/MC3_*.glb` and
+retains independent native DAT copies under `assets/`. Native source codes remain
+the names; retail identities, performance and body categories remain unknown.
+
+The recovery pipeline is:
+
+```sh
+python3 tools/import_mc3_catalogs.py
+python3 tools/export_mc3_models.py
+python3 tools/import_mc3_previews.py --refresh-unedited
+python3 tools/build_model_catalog.py
+python3 tools/build_dealership.py
+```
+
+The exporter reads pinned native PCK geometry, stock-named parts, shared body
+resources and default rims/tires into `midnight-club-3-remix/recovered-models/`. It verifies packet bounds,
+material indices, source hashes and static GLB validity. An existing conversion
+folder must match exactly; differing outputs are never overwritten. Use a separate
+`--output` directory for a different conversion profile.
+
+The preview importer preflights all indexed GLBs and retains the native package
+provenance. Repeat imports preserve working copies and metadata. Explicit
+`--refresh-unedited` replaces a working GLB only when it matches its latest recorded
+source hash; an edited model is preserved. `initialSource` remains historical,
+while `latestSource` and `previewConversion` record the current conversion. A failed
+metadata commit restores previous files. Rebuild after editing a working GLB.
+
+The previews show native static geometry with decoded diffuse textures and
+alpha (embedded PNGs with UVs, shown by the same loader as the other textured
+games), a neutral paint surface and recovered glass tint. Ground shadow planes are
+omitted and runtime-logo decal layers are transparent. Their limitations travel with
+each catalog entry. Paint colours and names, shader passes, default customization
+parts that sit outside the stock-named set, runtime customization, animation,
+damage and full game render fidelity remain unresolved. See the
+[texture note](../../research/midnight-club-3-remix-textures.md). Native XYZ Euler frames use the executable's
+verified `Rz × Ry × Rx` order and parent composition. The front/side camera
+controls follow the MC3 source frame.
+
+Game, native-variant and source-code filters work offline. Optional semantic
+filtering uses Choice, Noul and Score judgments over the current catalog, including
+preview readiness. A deterministic readiness check prevents native DAT-only rows
+from satisfying a preview request; uncertainty or provider failures preserve the
+current filters. See [the preview investigation](../../research/midnight-club-3-remix-previews.md)
+for native-format evidence, experiments and verification limits.

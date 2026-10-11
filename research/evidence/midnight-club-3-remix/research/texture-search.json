@@ -1,0 +1,29 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"data\":{\"web\":[]},\"creditsUsed\":0,\"id\":\"01a122f0-b8fe-76da-b32f-f31656b84a40\",\"agent_hints\":[\"No web results were returned. If the task is still unresolved, use firecrawl_search again with {\\\"query\\\":\\\"<broader or alternative query>\\\",\\\"sources\\\":[\\\"web\\\"]}.\"]}"
+      }
+    ],
+    "structuredContent": {
+      "agent_hints": [
+        "No web results were returned. If the task is still unresolved, use firecrawl_search again with {\"query\":\"<broader or alternative query>\",\"sources\":[\"web\"]}."
+      ],
+      "success": true,
+      "data": {
+        "web": []
+      },
+      "id": "01a122f0-b8fe-76da-b32f-f31656b84a40",
+      "creditsUsed": 0
+    }
+  },
+  "screen": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_screen\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"probabilities\": {\n    \"injection\": 0.05,\n    \"substance\": 0.05,\n    \"relevance\": 0.02\n  },\n  \"thresholds\": {\n    \"block_at\": 0.75,\n    \"review_at\": 0.25\n  },\n  \"recommendation\": {\n    \"action\": \"skip\",\n    \"reason\": \"little substantive content (substance 0.05)\"\n  },\n  \"usage\": {\n    \"input_tokens\": 533,\n    \"output_tokens\": 57\n  }\n}"
+      }
+    ]
+  }
+}

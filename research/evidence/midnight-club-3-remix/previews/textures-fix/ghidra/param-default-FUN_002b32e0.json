@@ -1,0 +1,45 @@
+{
+ "endpoint": "/get_functions",
+ "args": {
+  "function": "0x002b32e0",
+  "fields": "entry_point,decompiled_code,callees",
+  "program": "SLUS_213.55"
+ },
+ "result": {
+  "program": "SLUS_213.55",
+  "name": "FUN_002b32e0",
+  "size": 236,
+  "address": "002b32e0",
+  "entry_point": "002b32e0",
+  "decompiled_code": "\nvoid FUN_002b32e0(undefined4 param_1,int param_2,undefined8 param_3,long param_4)\n\n{\n  int iVar1;\n  undefined4 *puVar2;\n  long lVar3;\n  int *piVar4;\n  undefined1 auStack_80 [64];\n  \n  lVar3 = FUN_002b3238();\n  if (lVar3 == -1) {\n    puVar2 = (undefined4 *)FUN_003b14d0(0xc);\n    puVar2[1] = 0;\n    if (param_4 != -1) {\n      param_3 = FUN_004327c8(auStack_80,0x40,0x647a7d,param_3,param_4);\n    }\n    FUN_00433330(puVar2 + 1,param_3);\n    iVar1 = *(int *)(param_2 + 0xc);\n    piVar4 = (int *)(param_2 + 0xc);\n    puVar2[2] = param_1;\n    *puVar2 = 0;\n    if (iVar1 != 0) {\n      for (piVar4 = (int *)*piVar4; *piVar4 != 0; piVar4 = (int *)*piVar4) {\n      }\n    }\n    *piVar4 = (int)puVar2;\n  }\n  return;\n}\n\n",
+  "callee_count": 4,
+  "callees": [
+   {
+    "name": "FUN_002b3238",
+    "address": "002b3238"
+   },
+   {
+    "name": "FUN_003b14d0",
+    "address": "003b14d0"
+   },
+   {
+    "name": "FUN_004327c8",
+    "address": "004327c8"
+   },
+   {
+    "name": "FUN_00433330",
+    "address": "00433330"
+   }
+  ],
+  "revision": {
+   "token": "1791659127401:44cbab3e:3",
+   "epoch": "44cbab3e",
+   "modification_number": 3,
+   "saved_time": 1791659127401,
+   "unsaved_changes": false,
+   "decompiled": true
+  }
+ },
+ "elapsed_seconds": 0.244,
+ "server": "GhidraMCP 7.0.0 headless, Ghidra 12.1.4, program SLUS_213.55 (project mc3-ghidra-20261010)"
+}

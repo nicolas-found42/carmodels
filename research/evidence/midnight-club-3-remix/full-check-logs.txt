@@ -1,0 +1,646 @@
+COMMAND ['ruff', 'check', 'tools']
+STATUS pass EXIT 0
+All checks passed!
+
+COMMAND ['node', 'tools/test_viewer_scenes.mjs']
+STATUS pass EXIT 0
+PASS test_viewer_scenes: 35 cars, 12080 material bindings, 105 disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard and visible header-colour honesty label
+
+COMMAND ['node', 'tools/test_viewer_materials.mjs']
+STATUS pass EXIT 0
+PASS test_viewer_materials: independent material/texture/image indices, linear factors, alpha, variant changes, toggles, linear/no-mip and Sharp pixels round trip
+
+COMMAND ['node', 'tools/test_model_load.mjs']
+STATUS pass EXIT 0
+PASS test_model_load: corpus GLB, truncations, 404, successful body, stalled body timeout, cancellation
+
+COMMAND ['node', 'tools/test_viewer_loading.mjs']
+STATUS pass EXIT 0
+PASS test_viewer_loading: actual callback, success, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup
+
+COMMAND ['node', 'tools/test_dealership.mjs']
+STATUS pass EXIT 0
+PASS test_dealership: 35 dealership meshes, editable wheel counts, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, editable model data, corpus errors and real HTTP body timeout
+
+COMMAND ['node', 'tools/test_editable_glb.mjs']
+STATUS pass EXIT 0
+PASS test_editable_glb: 728 GT GLBs, embedded textured triangles, MASK alpha, transforms, independent paths, hash mismatch, cancellation and disposal controls
+
+COMMAND ['python3', 'tools/verify_recovered_asset_index.py']
+STATUS pass EXIT 0
+{"cars": 35, "assets": 2579, "counts": {"original_model": 35, "glb": 35, "model_texture_display": 700, "model_texture_raw": 700, "mip_plane": 94, "mip_stored_alpha": 94, "original_icon": 35, "icon_raw_alpha_png": 35, "icon_display_png": 35, "original_livery": 136, "livery_raw_alpha_png": 136, "livery_display_png": 136, "original_matrix": 136, "matrix_csm0-swap-raw": 136, "matrix_csm0-swap-display": 136}, "producer_receipt_set_equality": true, "per_car_producer_record_equality": true, "corrupt_manifest_hash_rejected": true, "rehashed_cross_car_model_swap_rejected": true, "rehashed_schema_fidelity_status_limits_controls_rejected": true, "result": "VERIFY OK", "index_sha256": "84d29e67c80803c89e306ccac14fa53d8209647af8881f4511b3c2990cce9c5b"}
+
+COMMAND ['python3', 'tools/test_export_materials.py']
+STATUS pass EXIT 0
+PASS test_export_materials: 35 cars, source texture and selector bindings, header colour/alpha/blend, linear samplers, three semantic mutations rejected
+
+COMMAND ['python3', 'tools/test_build_showcase.py']
+STATUS pass EXIT 0
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.932s
+
+OK
+
+COMMAND ['python3', 'tools/test_bake_models.py']
+STATUS pass EXIT 0
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 5.427s
+
+OK
+
+COMMAND ['python3', 'tools/test_build_dealership.py']
+STATUS pass EXIT 0
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.665s
+
+OK
+
+COMMAND ['python3', 'tools/test_model_catalog.py']
+STATUS pass EXIT 0
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+OK
+
+COMMAND ['python3', 'tools/test_model_png.py']
+STATUS pass EXIT 0
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+OK
+
+COMMAND ['python3', 'tools/test_run_checks.py']
+STATUS pass EXIT 0
+fail  test_viewer_scenes  (test_viewer_scenes.log)
+Required runtime unavailable: node
+fail  test_viewer_materials  (test_viewer_materials.log)
+Required runtime unavailable: node
+fail  test_model_load  (test_model_load.log)
+Required runtime unavailable: node
+fail  test_viewer_loading  (test_viewer_loading.log)
+Required runtime unavailable: node
+fail  test_dealership  (test_dealership.log)
+Required runtime unavailable: node
+fail  test_editable_glb  (test_editable_glb.log)
+Required runtime unavailable: node
+.fail  broken  (broken.log)
+first line
+last line
+pass  green  (green.log)
+.skip  node  (node.log)
+fail  node  (node.log)
+Required runtime unavailable: carmodels-runtime-does-not-exist
+.
+----------------------------------------------------------------------
+Ran 3 tests in 0.067s
+
+OK
+
+COMMAND ['python3', 'tools/test_review_payload.py']
+STATUS pass EXIT 0
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.009s
+
+OK
+
+COMMAND ['python3', 'tools/test_static_inputs.py']
+STATUS pass EXIT 0
+PASS test_static_inputs
+
+COMMAND ['python3', 'tools/test_recovery_inputs.py']
+STATUS pass EXIT 0
+PASS test_recovery_inputs: 35 models, decoded textures, independent copies, configuration and multi-game dealership controls
+
+COMMAND ['python3', 'tools/test_gt_archive.py']
+STATUS pass EXIT 0
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.026s
+
+OK
+
+COMMAND ['python3', 'tools/test_gt_asset_judgments.py']
+STATUS pass EXIT 0
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+OK
+
+COMMAND ['python3', 'tools/test_gt_wheels.py']
+STATUS pass EXIT 0
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.007s
+
+OK
+
+COMMAND ['python3', 'tools/test_gt_model.py']
+STATUS pass EXIT 0
+......
+----------------------------------------------------------------------
+Ran 6 tests in 4.973s
+
+OK
+
+COMMAND ['python3', 'tools/test_import_gt_dealership.py']
+STATUS pass EXIT 0
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.466s
+
+OK
+
+COMMAND ['python3', 'tools/test_library_filter.py']
+STATUS pass EXIT 0
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK
+
+COMMAND ['python3', 'tools/test_serve_library.py']
+STATUS pass EXIT 0
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.534s
+
+OK
+
+COMMAND ['python3', 'tools/test_redline_archive.py']
+STATUS pass EXIT 0
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.004s
+
+OK
+
+COMMAND ['python3', 'tools/test_extract_redline_cars.py']
+STATUS pass EXIT 0
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.034s
+
+OK
+
+COMMAND ['python3', 'tools/test_mc3_archive.py']
+STATUS pass EXIT 0
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+
+COMMAND ['python3', 'tools/test_extract_mc3_cars.py']
+STATUS pass EXIT 0
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.062s
+
+OK
+
+COMMAND ['python3', 'tools/test_redline_mesh.py']
+STATUS pass EXIT 0
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK
+
+COMMAND ['python3', 'tools/test_redline_texture.py']
+STATUS pass EXIT 0
+....s....
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK (skipped=1)
+
+COMMAND ['python3', 'tools/test_redline_model.py']
+STATUS pass EXIT 0
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.017s
+
+OK
+
+COMMAND ['python3', 'tools/test_export_redline_models.py']
+STATUS pass EXIT 0
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.031s
+
+OK
+
+COMMAND ['python3', 'tools/test_import_redline_dealership.py']
+STATUS pass EXIT 0
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 1.059s
+
+OK
+
+COMMAND ['python3', 'tools/build_dealership.py', '--check']
+STATUS pass EXIT 0
+PASS dealership freshness: compiled data matches current models and catalog
+
+COMMAND ['python3', 'tools/verify_config_data_sound.py']
+STATUS pass EXIT 0
+{
+  "cars": 35,
+  "config_files_checked": 385,
+  "config_set_equality": true,
+  "config_s_derived_content_equality": true,
+  "data_files_checked": 35,
+  "sound_chains_resolved": 35,
+  "shared_config_files_present": 11,
+  "manifest_files_checked": 626,
+  "manifest_disk_parity": true,
+  "result": "VERIFY OK",
+  "control_mutated_config_hash_rejected": true,
+  "control_cross_car_config_swap_rejected": true,
+  "control_missing_shared_banks_rejected": true,
+  "control_manifest_sha_tamper_rejected": true,
+  "controls": [
+    "control_mutated_config_hash_rejected",
+    "control_cross_car_config_swap_rejected",
+    "control_missing_shared_banks_rejected",
+    "control_manifest_sha_tamper_rejected"
+  ],
+  "controls_all_rejected": true,
+  "render_fidelity_complete": false,
+  "scope": "35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out"
+}
+VERIFY OK
+
+COMMAND ['python3', 'tools/verify_sound_bank_index.py']
+STATUS pass EXIT 0
+{
+  "elf_path": "static-input:executable",
+  "elf_sha256": "216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95",
+  "config_table_va": "0x24af68",
+  "descriptor_table_va": "0x24afe8",
+  "exe_mapping": {
+    "CAR_SND_CAR1": "car1_snd",
+    "CAR_SND_CAR2": "car2_snd",
+    "CAR_SND_CAR3": "car3_snd",
+    "CAR_SND_CAR4": "car4_snd",
+    "CAR_SND_CAR5": "car5_snd",
+    "CAR_SND_CAR6": "car6_snd",
+    "CAR_SND_CAR7": "car7_snd",
+    "CAR_SND_CAR8": "car8_snd"
+  },
+  "corpus_mapping": {
+    "CAR_SND_CAR1": "car1_snd",
+    "CAR_SND_CAR2": "car2_snd",
+    "CAR_SND_CAR3": "car3_snd",
+    "CAR_SND_CAR4": "car4_snd",
+    "CAR_SND_CAR5": "car5_snd",
+    "CAR_SND_CAR6": "car6_snd",
+    "CAR_SND_CAR7": "car7_snd",
+    "CAR_SND_CAR8": "car8_snd"
+  },
+  "mappings_equal": true,
+  "cars_checked": 35,
+  "verdict": "consistent",
+  "control_off_by_one_mapping_rejected": true,
+  "control_swapped_table_rejected": true,
+  "descriptor_bank_ordinals": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "descriptor_ordinals_sequential_car1_to_car8": true,
+  "bank_name_source": "literal descriptor stem 'sounds\\\\carN_snd'; the numeric fields (:B:O:C) are not used to build the filename",
+  "render_fidelity_complete": false,
+  "scope": "sound-bank index reconciliation only; no change to the green T2 verifier",
+  "result": "VERIFY OK"
+}
+VERIFY OK
+
+COMMAND ['python3', 'tools/verify_vu_dispatch_map.py']
+STATUS pass EXIT 0
+{"jump_table": [766, 77, 163, 428, 558, 469, 693], "mscal": {"mscal0": 0, "main_car_path": 26, "overlay5_path": 1484}, "static_pass_words": [1, 2, 3, 4, 5, 6], "lowest_common_ancestors": ["001cf848"], "controls_rejected": 14, "controls": 14}
+VERIFY OK
+
+COMMAND ['python3', 'tools/test_vu_dispatch_map.py']
+STATUS pass EXIT 0
+PASS test_vu_dispatch_map
+
+COMMAND ['python3', 'tools/test_vu1_decode.py']
+STATUS pass EXIT 0
+PASS test_vu1_decode (1558 pairs, 76 distinct mnemonics, 656/688 bit flips visible)
+
+COMMAND ['python3', 'tools/verify_vu_pass_handlers.py']
+STATUS pass EXIT 0
+{"handlers": {"4": {"entry": 558, "kick": 37}, "5": {"entry": 469, "kick": 28}}, "epilogue_first_pair": 758, "numeric_cross_check_values": {"4": 1920, "5": 1920}, "controls_rejected": 9, "controls": 9}
+VERIFY OK
+
+COMMAND ['python3', 'tools/test_vu_pass_handlers.py']
+STATUS pass EXIT 0
+PASS test_vu_pass_handlers
+
+COMMAND ['python3', 'tools/verify_vu_handler_dump.py']
+STATUS pass EXIT 0
+{"by_pass_word": {"4": {"draws": 37, "vertices": 2189, "xyzf_equal_draws": 37, "qw_equal_draws": 37, "rgb_from_raw_float_alpha_draws": 37, "finite_unit_alpha_draws": 37}, "5": {"draws": 63, "vertices": 3666, "xyzf_equal_draws": 63, "qw_equal_draws": 63, "uniform_rgba_draws": 63, "rgba_from_retained_dm5_draws": 63, "t_exact_draws": 54, "t_exact_vertices": 3387, "t_one_ulp_vertices": 279, "t_max_ulp": 1, "paused_dm5_mismatching_draws": 63, "t_without_colour_factor_failing_vertices": 512}}, "controls": 8}
+VERIFY OK
+
+COMMAND ['python3', 'tools/test_vu_handler_dump.py']
+STATUS pass EXIT 0
+PASS test_vu_handler_dump: 100 draws, eight intended corruption failures, absent-input and non-finite checks
+
+COMMAND ['python3', 'tools/recover_dump_reference_frame.py']
+STATUS pass EXIT 0
+{"rows": 2, "controls": 5}
+VERIFY OK
+
+COMMAND ['python3', 'tools/test_recover_dump_reference_frame.py']
+STATUS pass EXIT 0
+PASS test_recover_dump_reference_frame: two frames, five intended corruption failures, pin-fired control
+
+COMMAND ['python3', 'tools/verify_pass_source_join.py']
+STATUS pass EXIT 0
+{"draws": 100, "controls": [{"mutation": "wrong Header", "rejected": true, "reason": "wrong Header: retained pointers/count do not identify the declared source Header"}, {"mutation": "wrong texture", "rejected": true, "reason": "wrong texture: GS TEX0 differs from global pass4 texture object"}]}
+VERIFY OK
+
+COMMAND ['python3', 'tools/test_pass_source_join.py']
+STATUS pass EXIT 0
+PASS test_pass_source_join: 100 draws, wrong-Header/wrong-texture reasons, flag, swizzle and GS-pin controls
+
+COMMAND ['/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender', '--background', '--python-exit-code', '1', '--python', 'tools/test_dealership_roundtrip.py']
+STATUS pass EXIT 0
+19:19:45 | INFO: Data are loaded, start creating Blender stuff
+19:19:45 | INFO: Blender create Mesh node record_001
+19:19:45 | INFO: Blender create Mesh node record_002
+19:19:45 | INFO: Blender create Mesh node record_003
+19:19:45 | INFO: Blender create Mesh node record_004
+19:19:45 | INFO: Blender create Mesh node record_005
+19:19:45 | INFO: Blender create Mesh node record_006
+19:19:45 | INFO: Blender create Mesh node record_007
+19:19:45 | INFO: Blender create Mesh node record_008
+19:19:45 | INFO: Blender create Mesh node record_009
+19:19:45 | INFO: Blender create Mesh node record_010
+19:19:45 | INFO: Blender create Mesh node record_011
+19:19:45 | INFO: Blender create Mesh node record_012
+19:19:45 | INFO: Blender create Mesh node record_013
+19:19:45 | INFO: Blender create Mesh node record_014
+19:19:45 | INFO: Blender create Mesh node record_015
+19:19:45 | INFO: Blender create Mesh node record_016
+19:19:45 | INFO: Blender create Mesh node record_017
+19:19:45 | INFO: Blender create Mesh node record_018
+19:19:45 | INFO: Blender create Mesh node record_019
+19:19:45 | INFO: Blender create Mesh node record_020
+19:19:45 | INFO: Blender create Mesh node record_021
+19:19:45 | INFO: Blender create Mesh node record_022
+19:19:45 | INFO: Blender create Mesh node record_023
+19:19:45 | INFO: Blender create Mesh node record_024
+19:19:45 | INFO: Blender create Mesh node record_025
+19:19:45 | INFO: Blender create Mesh node record_026
+19:19:45 | INFO: Blender create Mesh node record_027
+19:19:45 | INFO: Blender create Mesh node record_028
+19:19:45 | INFO: Blender create Mesh node record_029
+19:19:45 | INFO: Blender create Mesh node record_030
+19:19:45 | INFO: Blender create Mesh node record_031
+19:19:45 | INFO: Blender create Mesh node record_032
+19:19:45 | INFO: Blender create Mesh node record_033
+19:19:45 | INFO: Blender create Mesh node record_034
+19:19:45 | INFO: Blender create Mesh node record_035
+19:19:45 | INFO: Blender create Mesh node record_036
+19:19:45 | INFO: Blender create Mesh node record_037
+19:19:45 | INFO: Blender create Mesh node record_038
+19:19:45 | INFO: Blender create Mesh node record_039
+19:19:45 | INFO: Blender create Mesh node record_040
+19:19:45 | INFO: Blender create Mesh node record_041
+19:19:45 | INFO: Blender create Mesh node record_042
+19:19:45 | INFO: glTF import finished in 0.24s
+INFO Draco mesh compression is available, use library at /Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/Resources/4.5/scripts/addons_core/io_scene_gltf2/libextern_draco.dylib
+19:19:45 | INFO: Starting glTF 2.0 export
+19:19:45 | INFO: Extracting primitive: record_001
+19:19:45 | INFO: Primitives created: 2
+19:19:45 | INFO: Extracting primitive: record_003
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_004
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_010
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_008
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_014
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_012
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_005
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Finished glTF 2.0 export in 0.10464191436767578 s
+
+19:19:45 | INFO: Starting glTF 2.0 export
+19:19:45 | INFO: Extracting primitive: record_001
+19:19:45 | INFO: Primitives created: 2
+19:19:45 | INFO: Extracting primitive: record_003
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_004
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_010
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_008
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_014
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_012
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Extracting primitive: record_005
+19:19:45 | INFO: Primitives created: 1
+19:19:45 | INFO: Finished glTF 2.0 export in 0.009474039077758789 s
+
+PASS dealership Blender roundtrip: {"blender": "4.5.14 LTS", "car": "GRAN_TORINO", "claim_limits": ["One static car import/edit/export/rebuild, not all DCC exporters or animation.", "No original-game shading fidelity claim."], "length_multiplier": 1.2, "model_files_preserved": 926, "triangles": 4072}
+Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)
+
+Blender quit
+
+COMMAND ['/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender', '--background', '--python-exit-code', '1', '--python', 'tools/test_redline_roundtrip.py']
+STATUS pass EXIT 0
+19:19:54 | INFO: Data are loaded, start creating Blender stuff
+19:19:54 | INFO: Blender create Mesh node 500gt.mdl
+19:19:54 | INFO: Blender create Mesh node 500gt-interior.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic-disc.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic-disc.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic-disc.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic-disc.mdl
+19:19:54 | INFO: glTF import finished in 0.01s
+INFO Draco mesh compression is available, use library at /Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/Resources/4.5/scripts/addons_core/io_scene_gltf2/libextern_draco.dylib
+19:19:54 | INFO: Starting glTF 2.0 export
+19:19:54 | INFO: Extracting primitive: 500gt.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: 500gt-interior.mdl
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.001
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.002
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.003
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Finished glTF 2.0 export in 0.01300191879272461 s
+
+19:19:54 | INFO: Starting glTF 2.0 export
+19:19:54 | INFO: Extracting primitive: 500gt.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: 500gt-interior.mdl
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.001
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.002
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.003
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Finished glTF 2.0 export in 0.019249916076660156 s
+
+19:19:54 | INFO: Data are loaded, start creating Blender stuff
+19:19:54 | INFO: Blender create Mesh node gcw-mog3w.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic-disc.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic-disc.mdl
+19:19:54 | INFO: Blender create Mesh node wheel-classic.mdl
+19:19:54 | INFO: glTF import finished in 0.01s
+19:19:54 | INFO: Starting glTF 2.0 export
+19:19:54 | INFO: Extracting primitive: gcw-mog3w.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 12
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.001
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 3
+19:19:54 | INFO: Finished glTF 2.0 export in 0.014847993850708008 s
+
+19:19:54 | INFO: Starting glTF 2.0 export
+19:19:54 | INFO: Extracting primitive: gcw-mog3w.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 12
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic-disc.mdl.001
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 4
+19:19:54 | INFO: Extracting primitive: wheel-classic.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 3
+19:19:54 | INFO: Finished glTF 2.0 export in 0.013633012771606445 s
+
+19:19:54 | INFO: Data are loaded, start creating Blender stuff
+19:19:54 | INFO: Blender create Mesh node pimley_mack_cruiseliner.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_interior.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_wheels1.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_wheels1.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl
+19:19:54 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl
+19:19:54 | INFO: glTF import finished in 0.01s
+19:19:54 | INFO: Starting glTF 2.0 export
+19:19:54 | INFO: Extracting primitive: pimley_mack_cruiseliner.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 5
+19:19:54 | INFO: Extracting primitive: pimley_mack_interior.mdl
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Extracting primitive: pimley_mack_wheels1.mdl
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 2
+19:19:54 | INFO: Extracting primitive: pimley_mack_wheels1.mdl.001
+19:19:54 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:54 | INFO: Primitives created: 2
+19:19:54 | INFO: Extracting primitive: pimley_mack_wheels2.mdl
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.001
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.002
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.003
+19:19:54 | INFO: Primitives created: 1
+19:19:54 | INFO: Finished glTF 2.0 export in 0.014270305633544922 s
+
+19:19:55 | INFO: Starting glTF 2.0 export
+19:19:55 | INFO: Extracting primitive: pimley_mack_cruiseliner.mdl
+19:19:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:55 | INFO: Primitives created: 5
+19:19:55 | INFO: Extracting primitive: pimley_mack_interior.mdl
+19:19:55 | INFO: Primitives created: 1
+19:19:55 | INFO: Extracting primitive: pimley_mack_wheels1.mdl
+19:19:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:55 | INFO: Primitives created: 2
+19:19:55 | INFO: Extracting primitive: pimley_mack_wheels1.mdl.001
+19:19:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+19:19:55 | INFO: Primitives created: 2
+19:19:55 | INFO: Extracting primitive: pimley_mack_wheels2.mdl
+19:19:55 | INFO: Primitives created: 1
+19:19:55 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.001
+19:19:55 | INFO: Primitives created: 1
+19:19:55 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.002
+19:19:55 | INFO: Primitives created: 1
+19:19:55 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.003
+19:19:55 | INFO: Primitives created: 1
+19:19:55 | INFO: Finished glTF 2.0 export in 0.013611078262329102 s
+
+PASS Redline Blender roundtrip: {"blender": "4.5.14 LTS", "cars": [{"length_multiplier": 1.1, "native_car_id": "shared/base/500gt.car", "triangles": 1576, "wheels": 4}, {"length_multiplier": 1.1, "native_car_id": "addons/077-gcw-mog3w.v1.10.zip/packages/00/gcw-mog3w.car", "triangles": 4024, "wheels": 3}, {"length_multiplier": 1.1, "native_car_id": "addons/039-mackcruiseliner_1.0.zip/packages/00/pimley_mack_cruiseliner.car", "triangles": 8260, "wheels": 6}], "claim_limits": ["Three static assemblies; original-game shaders and animations unverified."], "model_files_preserved": 256}
+Blender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)
+
+Blender quit
+
+COMMAND ['ruff', 'check', 'tools']
+STATUS pass EXIT 0
+All checks passed!
+
+COMMAND ['python3', 'tools/test_mc3_archive.py']
+STATUS pass EXIT 0
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+
+COMMAND ['python3', 'tools/test_extract_mc3_cars.py']
+STATUS pass EXIT 0
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.040s
+
+OK

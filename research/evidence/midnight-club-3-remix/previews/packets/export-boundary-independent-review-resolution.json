@@ -1,0 +1,32 @@
+{
+  "reviewer": "/root/mc3_packet_probe",
+  "implementer": "/root/mc3_research (test file); /root (exporter/converter)",
+  "verdict": "approve scoped exporter boundary test file",
+  "scope": [
+    "tools/test_export_mc3_models.py"
+  ],
+  "file_sha256": {
+    "tools/test_export_mc3_models.py": "89142fb5817e160a1dd2f5eaae19abb4c46a7f545a7b011a2c6ad53b0eab8502",
+    "tools/export_mc3_models.py": "ba5d41900884d5b707865a4ac3fbb01632046b2a639089733fc21ee122da590a",
+    "tools/mc3_model.py": "b52e7b75d06e3545396723117721fd37bd76df2c99d483b19720dc3c03444d15"
+  },
+  "jev_gate_receipt": "packets/export-boundary-independent-gate.json",
+  "jev_escalation": {
+    "limiting_rubric": "test_gap",
+    "confidence": 0.07,
+    "composite": 0.85975,
+    "safe_to_apply": 0.59,
+    "completion_claims": "both automatically verified"
+  },
+  "independent_resolution": "The complete new test file and current exporter/source_path implementation were read, and all six tests were executed independently. Temporary fixtures copy exact source bytes into an isolated directory; all invalid path/identity controls assert ValueError and absent output, making false-positive partial publication observable. The valid repeated export checks rim/tire nodes by native bone binding in the actual GLB; a user-edited GLB triggers rejection and all existing output bytes remain equal. These establish the requested narrow boundary coverage. Missing broader scene/corpus behavior is outside this test file and is covered by separate parser, converter, corpus and browser checks; this resolution does not approve those files or the whole feature.",
+  "tests": {
+    "file": "packets/export-boundary-independent-tests.txt",
+    "sha256": "c99c591ea2deabe66c52d3395399e30bc66a21a72302f9cbe5f7edda410375d4",
+    "passed": 6,
+    "seconds": 1.548
+  },
+  "claim_limits": [
+    "Approval covers the pinned test file; implementation files are evidence, not this approval scope.",
+    "A future edit to these tests needs another review; broader final integration gate remains required."
+  ]
+}

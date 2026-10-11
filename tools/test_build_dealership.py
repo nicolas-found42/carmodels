@@ -74,11 +74,23 @@ class DealershipBuildTests(unittest.TestCase):
 
     def test_all_editable_copies_are_independent_files(self):
         catalog = json.loads((DEALERSHIP / 'catalog.json').read_text())
+        origins = {r['code']: r for r in json.loads((DEALERSHIP / 'origins.json').read_text())['cars']}
         self.assertEqual(len([c for c in catalog if c.get('game', 'ford-racing-2') == 'ford-racing-2']), 35)
         for entry in catalog:
             code = entry['code']
-            copy = DEALERSHIP / 'models' / f'{code}.glb'
-            source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
+            if entry.get('displayMode') == 'native-package':
+                copy = DEALERSHIP / entry['nativePackage']['file']
+                source = ROOT / f"dealership/public/{entry['game']}/native/{entry['sourceCode']}.dat"
+            else:
+                copy = DEALERSHIP / 'models' / f'{code}.glb'
+                if entry.get('game') == 'midnight-club-3-remix':
+                    source = ROOT / origins[code]['latestSource']['glb']
+                    native = DEALERSHIP / entry['nativePackage']['file']
+                    original = ROOT / f"dealership/public/{entry['game']}/native/{entry['sourceCode']}.dat"
+                    self.assertEqual(native.read_bytes(), original.read_bytes())
+                    self.assertFalse(os.path.samefile(native, original))
+                else:
+                    source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
             self.assertFalse(copy.is_symlink())
             self.assertEqual(copy.stat().st_nlink, 1)
             self.assertFalse(os.path.samefile(copy, source))

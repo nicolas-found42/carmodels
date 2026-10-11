@@ -1,0 +1,250 @@
+{
+  "experiments": [
+    {
+      "wording": "brief",
+      "status": "ok",
+      "latency_seconds": 0.3537668749995646,
+      "usage": {
+        "input_tokens": 8651,
+        "output_tokens": 1622,
+        "cost": 0.000363342
+      },
+      "total": 20,
+      "correct": 20,
+      "accepted": 7,
+      "wrongly_accepted": 0,
+      "errors": [],
+      "threshold_sweep_reusing_answers": [
+        {
+          "thresholds": {
+            "top": 0.75,
+            "margin": 0.4,
+            "support": 0.75,
+            "quality": 1.3
+          },
+          "accepted": 8,
+          "wrongly_accepted": 0
+        },
+        {
+          "thresholds": {
+            "top": 0.85,
+            "margin": 0.5,
+            "support": 0.85,
+            "quality": 1.5
+          },
+          "accepted": 7,
+          "wrongly_accepted": 0
+        },
+        {
+          "thresholds": {
+            "top": 0.95,
+            "margin": 0.7,
+            "support": 0.95,
+            "quality": 1.8
+          },
+          "accepted": 3,
+          "wrongly_accepted": 0
+        }
+      ]
+    },
+    {
+      "wording": "grounded",
+      "status": "ok",
+      "latency_seconds": 0.5923723339947173,
+      "usage": {
+        "input_tokens": 10571,
+        "output_tokens": 1622,
+        "cost": 0.000443982
+      },
+      "total": 20,
+      "correct": 20,
+      "accepted": 4,
+      "wrongly_accepted": 0,
+      "errors": [],
+      "threshold_sweep_reusing_answers": [
+        {
+          "thresholds": {
+            "top": 0.75,
+            "margin": 0.4,
+            "support": 0.75,
+            "quality": 1.3
+          },
+          "accepted": 6,
+          "wrongly_accepted": 0
+        },
+        {
+          "thresholds": {
+            "top": 0.85,
+            "margin": 0.5,
+            "support": 0.85,
+            "quality": 1.5
+          },
+          "accepted": 4,
+          "wrongly_accepted": 0
+        },
+        {
+          "thresholds": {
+            "top": 0.95,
+            "margin": 0.7,
+            "support": 0.95,
+            "quality": 1.8
+          },
+          "accepted": 0,
+          "wrongly_accepted": 0
+        }
+      ]
+    }
+  ],
+  "production": {
+    "items": 24,
+    "status": "ok",
+    "usage": {
+      "input_tokens": 13510,
+      "output_tokens": 1957,
+      "cost": 0.00056742
+    },
+    "sdk_latency_seconds": 0.34626179200131446,
+    "end_to_end_seconds_including_screen": 1.3119255829951726,
+    "labels": [
+      {
+        "path": "vp_350z_04/original/vp_350z_04.dat",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "vp_d_magnum_05/original/vp_d_magnum_05.dat",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "vp_impalass_cop_a_96/original/vp_impalass_cop_a_96.dat",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "vp_z28_81/original/vp_z28_81.dat",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/06471/resources/vehicle/decal.pck",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "vp_d_g35_05/assets/00000/resources/vehicle/vp_d_g35_05/vp_d_g35_05.pck",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "vp_hummer_02/assets/00058/resources/vehicle/vp_hummer_02/vroot_sideskirts_sss4_hum_sss4_hum_geo.mesh.pck",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "vp_z28_81/assets/00124/resources/vehicle/vp_z28_81/vroot_wheelie_bars_wbar6_rkstrsd_z81_wbar6_rkstrsd_z81_geo.mesh.pck",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/06469/resources/vehicle/brake.ppf",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/06475/resources/vehicle/exhaust.ppf",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/06479/resources/vehicle/rim.ppf",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/06484/resources/vehicle/tire.ppf",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/17349/vehicle/shared_stripes/texture/car_window_blank.tex",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/17581/vehicle/va_bus_t/texture/va_bus_t.tex",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/17929/vehicle/va_deliverytruck_s/texture/vp_shadow_ambient.tex",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/18310/vehicle/va_utilityvan_sh/texture/vp_shadow_ambient_proxy.tex",
+        "label": "car_assets",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/15632/tune/vehicle/customdata/hookman_at_worldchamp_1_part_3.carcfg",
+        "label": "car_metadata",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/16175/tune/vehicle/customdata/vp_d_g35_05_2.carcfg",
+        "label": "car_metadata",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/16721/tune/vehicle/customdata/vp_hummer_02_9.carcfg",
+        "label": "car_metadata",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/17270/tune/vehicle/customdata/vp_z28_81_9.carcfg",
+        "label": "car_metadata",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/05634/physicslib/alley.physicst",
+        "label": "other",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/05643/physicslib/gravel.physicst",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/05653/physicslib/road_bumpy.physicst",
+        "label": "unknown",
+        "decision": "review"
+      },
+      {
+        "path": "shared/assets/05663/physicslib/wood.physicst",
+        "label": "unknown",
+        "decision": "review"
+      }
+    ]
+  },
+  "whole_experiment_seconds": 4.988820040998689,
+  "claim_limits": [
+    "Accuracy only on the twenty explicitly labeled constructed cases. Actual MC3 items lack verified semantic labels.",
+    "No judgment changes extraction selection, offsets or bytes.",
+    "Offline failure controls and the shared integration tests cover unavailable/malformed provider responses."
+  ],
+  "total_sdk_usage_including_alternative_descriptor_experiment": {
+    "input_tokens": 46259,
+    "output_tokens": 7159,
+    "cost": 0.0019428779999999999
+  },
+  "enhanced_descriptor_experiment": {
+    "changed_items": 4,
+    "status": "ok",
+    "accepted": 0,
+    "sdk_latency_seconds": 0.33007579099648865,
+    "retained_in_application": false,
+    "reason": "No automatic coverage gain on the actual unlabeled inventory; preserve original bounded byte/header adapter and conservative thresholds."
+  }
+}

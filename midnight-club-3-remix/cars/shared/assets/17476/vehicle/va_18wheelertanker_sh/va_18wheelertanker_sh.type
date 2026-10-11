@@ -1,0 +1,55 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 7 {
+			ambient_body.shadert 1 va_18wheelertanker_share.tex 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			emissive_headlight.shadert 2 va_18wheelertanker_share.tex __envmap__ 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_wheel.shadert 1 va_whl_truck_chrm.tex 
+			ambient_chrome.shadert 1 __envmap__ 
+			ambient_emissive_brakelight.shadert 2 va_18wheelertanker_share.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 13 vroot_body_lod_cab_H.mesh 0 shadow_L.mesh 1 whl_l0_H.mesh 3 whl_r0_H.mesh 4 whl_l1_whl_l3_lod_whl_l3_H.mesh 5 whl_r1_whl_r3_lod_whl_r3_H.mesh 6 whl_l2_whl_l4_lod_whl_l4_H.mesh 7 whl_r2_whl_r4_lod_whl_r4_H.mesh 8 vroot_trailer_trailer_lod_tanker_h.mesh 9 whl_l3_whl_l3_lod_whl_l3_H.mesh 10 whl_r3_whl_r3_lod_whl_r3_H.mesh 11 whl_l4_whl_l4_lod_whl_l4_H.mesh 12 whl_r4_whl_r4_lod_whl_r4_H.mesh 13 100.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.008002 1.143514 2.213060
+		radius 8.337264
+	}
+}
+bound {
+	bound compositeBound.bnd
+}
+skel {
+	skel va_18wheelertanker_sh.skel
+}
+bonetag {
+	drop_shadow	1
+	whl_l0	3
+	whl_r0	4
+	whl_l1	5
+	whl_r1	6
+	whl_l2	7
+	whl_r2	8
+	trailer	9
+	whl_l3	10
+	whl_r3	11
+	whl_l4	12
+	whl_r4	13
+	glow_headlight0	15
+	glow_headlight1	16
+	glow_side2	17
+	glow_side3	18
+	glow_taillight1	19
+	glow_taillight0	20
+	glow_side0	21
+	glow_side1	22
+	glow_brakelight1	23
+	glow_brakelight0	24
+}

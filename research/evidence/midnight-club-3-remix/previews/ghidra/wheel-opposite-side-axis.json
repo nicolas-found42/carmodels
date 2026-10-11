@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "functions": "FUN_0023f320",
+    "fields": "entry_point,decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": "root-1791661715151989000",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"functions\":{\"FUN_0023f320\":{\"name\":\"FUN_0023f320\",\"size\":288,\"address\":\"0023f320\",\"entry_point\":\"0023f320\",\"decompiled_code\":\"\\nvoid FUN_0023f320(float *param_1)\\n\\n{\\n  float fVar1;\\n  float fVar2;\\n  float fVar3;\\n  float fStack_20;\\n  float afStack_1c [3];\\n  \\n  FUN_0041c4c8(&fStack_20,afStack_1c);\\n  fVar1 = param_1[6];\\n  fVar2 = param_1[7];\\n  fVar3 = param_1[8];\\n  param_1[6] = fVar1 * fStack_20;\\n  param_1[7] = param_1[7] * fStack_20;\\n  param_1[8] = param_1[8] * fStack_20;\\n  param_1[6] = param_1[6] + afStack_1c[0] * *param_1;\\n  param_1[7] = param_1[7] + afStack_1c[0] * param_1[1];\\n  param_1[8] = param_1[8] + afStack_1c[0] * param_1[2];\\n  *param_1 = *param_1 * fStack_20 - afStack_1c[0] * fVar1;\\n  param_1[2] = param_1[2] * fStack_20 - afStack_1c[0] * fVar3;\\n  param_1[1] = param_1[1] * fStack_20 - afStack_1c[0] * fVar2;\\n  return;\\n}\\n\\n\",\"callee_count\":1,\"callees\":[{\"name\":\"FUN_0041c4c8\",\"address\":\"0041c4c8\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}},\"count\":1,\"requested\":1}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.2732545840117382
+}

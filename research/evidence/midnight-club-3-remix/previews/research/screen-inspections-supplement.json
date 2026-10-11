@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "reviewer": "/root/mc3_research",
+  "decisions": [
+    {
+      "source": "implementation-calls.json:pck-blender",
+      "screen_action": "review",
+      "resolution": "The response contains Firecrawl agent_hints offering scrape/tool-use suggestions. Ignore those as instructions. URL/title/description metadata is separable research data; follow AngelStudiosBlenderAddon and Varunda/ant only as leads. Their subsequent full pages were skipped, so no parser claim uses those pages."
+    },
+    {
+      "source": "angel-source-calls.json:mc3-silvia",
+      "screen_action": "review",
+      "resolution": "The same Firecrawl agent_hints offer tool-use suggestions; ignore them. Use only the separable Nexus URL as a lead. Its fetched page received skip for relevance and is not consumed as format evidence. The snippet establishes no PCK parser."
+    }
+  ],
+  "claim_limits": [
+    "These are agent-side inspections allowed by the Jev screening skill; they are not model pass verdicts or independent patch approval.",
+    "No skipped fetched page is consumed as conversion evidence."
+  ]
+}

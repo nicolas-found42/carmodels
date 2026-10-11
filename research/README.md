@@ -54,3 +54,24 @@ single list of what is not yet established; update it when a note closes or open
 - [Gran Turismo wheels](gran-turismo-wheels.md): native template recovery, corrected dimension interpretation, wheel textures, neutral assembly and safe editable upgrades.
 
 - [Redline library](redline-library.md): native static mesh/texture conversion, 128 independent editable imports, verification, semantic-filter experiments and source limits.
+
+## Midnight Club 3 Remix
+
+- [Format research](midnight-club-3-remix-formats.md): DAVE/Dave and Hash archive code, Xbox/plain-TEX leads, live TypeSafe contracts and conversion limits.
+- [Native extraction](midnight-club-3-remix-extraction.md): 94 retained vehicle carriers, 4,323 nested members, ordinal-preserving shared resources, independent byte/selection checks and advisory experiments.
+- Open: runtime deformation/customization and animation, complete runtime dependency closure, retail identities and visual fidelity. Static PCK conversion, editable previews and diffuse texture decoding are documented in the preview follow-up below.
+
+### Catalog follow-up
+
+- [Catalog integration](midnight-club-3-remix-catalogs.md): 94 verified native
+  packages added to the source catalog and independent dealership assets;
+  records the native-package catalog state before preview conversion; existing entries were preserved.
+- [Preview readiness](midnight-club-3-remix-preview-readiness.md): shared traffic
+  mesh/plain TEX structural leads do not decode the 94 PS2 vehicle packages.
+  This records the initial failed geometry route; later conversion is documented below. PPF textures and source-backed retail identities remain open.
+
+- [Static previews](midnight-club-3-remix-previews.md): native geometry, source rest frames, shared stock resources, separate GLB conversions, editable dealership integration and retained validation.
+- [Primary decoder research](midnight-club-3-remix-preview-research.md): PS2 VIF implementation sources, bounded semantic selection experiments and live TypeSafe contracts.
+- [Textures, alpha and artifact surfaces](midnight-club-3-remix-textures.md): diagnosis of the reported Esprit, Corvette Z06 and Chingon artifacts, PCK/`.tex`/`pf05` image decoding, exact material-to-texture binding, display policy, controls and receipts.
+- Open (MC3 geometry): default customization parts (hood, bumpers, skirts, lamp lenses, kit libraries) whose meshes sit in the car's own DAT under names without `_stk_` are not attached, so the Corvette Z06 hood opens onto the engine bay and some trim floats. A rule needs the `default.mccarcustom` indices mapped to each car's bone names; see the textures note.
+- Open (MC3 appearance): default paint colour (`m_paintColor1` in `default.mccarcustom`), environment/specular/metal-flake shading, runtime logo, licence-plate and damage textures, the one undecoded Bel Air rim base texture, and numeric UV-orientation evidence.

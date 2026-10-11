@@ -1,0 +1,24 @@
+{
+  "reviewer": "root-independent-of-wheel-helper-author",
+  "verdict": "approve_bounded_static_sizing_formulas",
+  "source_sha256": {
+    "research/evidence/midnight-club-3-remix/previews/wheels/sizing-verify.json": "36312d495789d7a57f4be487de25db2e4371d08b8209398527dc700fb761907a",
+    "research/evidence/midnight-club-3-remix/previews/ghidra/wheels-skeleton-scaling.json": "908895dd99289b64f66c43b1a28debd0d1352d691adc521266caa2cdaa623d88",
+    "research/evidence/midnight-club-3-remix/previews/ghidra/wheels-native-assembly-state.json": "09577bb0cb5c2e0156f403868cf20370ad7c137813e463d09805832b4e66ba6a",
+    "research/evidence/midnight-club-3-remix/previews/ghidra/wheels-native-dimensions.json": "28eb9554b3b656e89ca6dab04cf765fdeb92519caf64077d49c71ad89b1d5aea",
+    "research/evidence/midnight-club-3-remix/previews/ghidra/wheels-diameter-functions.json": "c0003934df5469aa29a76b1c0fc1c829949cc085193d17cf06f6b6cdd02ff2ec",
+    "research/evidence/midnight-club-3-remix/previews/ghidra/wheel-opposite-side-axis.json": "1e0370af0fc854d38a84f44191288209824647295e39be42da1957ddd348242b"
+  },
+  "resolved_uncertainty": "Jev sizing verification review confidence car0.43/bike0.23, not a contradicted claim. Independently read full FUN002f85d0 and FUN002f6c48 plus rim/tire draw-binding and matrix-scaling spans in FUN003042c8; checked FUN004af9c8 and FUN002ca758 table indexing.",
+  "rationale": [
+    "Car FUN002f85d0 duplicates width intoX and ratio intoY/Z. FUN003042c8 copies the wheel frame into fStack300 before multiplying rim-only Y/Z by the profile diameter, and draws rim cc with fStack3c0 versus tire c4/c8 with fStack300. This gives rim=(2width,rimDiameter,rimDiameter), tire=(2width,rimDiameter/profile,rimDiameter/profile).",
+    "Bike FUN002f6c48 initializes front/rear basis scales from twice rest matrixY translation. FUN002f85d0 copies those scales and forcesX1. In FUN003042c8 aux+0x24*4 multipliesX with native default11d8; CHOPPER predicate picks11d4 versus11d0 for rim-onlyY/Z. Tire draw uses the earlier copied frame.",
+    "The initially noticed0.0254 path multiplies brake-frame axes and is not the rim sizing rule. It is excluded from the implementation.",
+    "Opposite car side calls FUN0023f320 with pi. That function mixes X/Zbasis vectors and preservesY, establishing the static Y-axis half turn."
+  ],
+  "limits": [
+    "Approval is source-derived static scale composition only, not dynamic camber, tire deformation, physics suspension offsets, runtime shading or emulator fidelity.",
+    "Native kind and wheel joint bindings must still be validated per source; COPCAR label alone cannot choose the motorcycle branch.",
+    "Final root assembly and code still require actual corpus/renderer/Blender checks and independent final review."
+  ]
+}

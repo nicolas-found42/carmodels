@@ -1,0 +1,34 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 5 {
+			train.shadert 3 va_train_tokyo.tex none none 
+			train_ads.shadert 1 va_train_tokyo.tex 
+			train_inside.shadert 1 va_train_tokyo.tex 
+			train_people.shadert 1 va_train_tokyo.tex 
+			train_shadow.shadert 1 vp_shadow_ambient.tex 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 5 main.mesh 0 florecent_ads.mesh 0 interior.mesh 0 people.mesh 0 shadow_L.mesh 0 9999.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.008001 1.712593 -5.177719
+		radius 5.507513
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_train_tokyo.skel
+}
+bonetag {
+	glow_headlight0	1
+	glow_headlight1	2
+	glow_taillight0	3
+}

@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x002ccd10",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_002ccd10\",\"size\":328,\"address\":\"002ccd10\",\"decompiled_code\":\"\\nundefined8 FUN_002ccd10(undefined8 param_1,undefined8 param_2)\\n\\n{\\n  int iVar1;\\n  int *piVar2;\\n  int iVar3;\\n  int iVar4;\\n  int *piVar5;\\n  int iVar6;\\n  int iVar7;\\n  int iVar8;\\n  \\n  piVar5 = (int *)param_1;\\n  iVar8 = (int)param_2;\\n  if (*piVar5 != 0) {\\n    *piVar5 = *piVar5 + *(int *)(iVar8 + 4);\\n  }\\n  iVar6 = 0;\\n  if (0 < piVar5[1]) {\\n    iVar4 = 0;\\n    do {\\n      iVar1 = *piVar5;\\n      iVar7 = *(int *)(iVar4 + iVar1);\\n      if (iVar7 != 0) {\\n        *(int *)(iVar4 + iVar1) = iVar7 + *(int *)(iVar8 + 4);\\n        iVar1 = *piVar5;\\n      }\\n      FUN_003b2d20(*(undefined4 *)(iVar4 + iVar1),param_2);\\n      piVar2 = (int *)(iVar4 + *piVar5 + 4);\\n      iVar4 = *piVar2;\\n      iVar1 = iVar6 * 0xc0;\\n      if (iVar4 != 0) {\\n        *piVar2 = iVar4 + *(int *)(iVar8 + 4);\\n      }\\n      iVar7 = 0;\\n      iVar6 = iVar6 + 1;\\n      iVar4 = *piVar5;\\n      while( true ) {\\n        iVar3 = iVar7 * 4;\\n        piVar2 = (int *)(iVar3 + *(int *)(iVar1 + iVar4 + 4));\\n        iVar4 = *piVar2;\\n        if (iVar4 == 0) {\\n          iVar4 = *piVar5;\\n        }\\n        else {\\n          *piVar2 = iVar4 + *(int *)(iVar8 + 4);\\n          iVar4 = *piVar5;\\n        }\\n        iVar7 = iVar7 + 1;\\n        FUN_003b2ee0(*(undefined4 *)(iVar3 + *(int *)(iVar1 + iVar4 + 4)),param_2);\\n        if (2 < iVar7) break;\\n        iVar4 = *piVar5;\\n      }\\n      iVar4 = iVar6 * 0xc0;\\n    } while (iVar6 < piVar5[1]);\\n  }\\n  return param_1;\\n}\\n\\n\",\"callee_count\":2,\"callees\":[{\"name\":\"FUN_003b2d20\",\"address\":\"003b2d20\"},{\"name\":\"FUN_003b2ee0\",\"address\":\"003b2ee0\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.23346475001017097
+}

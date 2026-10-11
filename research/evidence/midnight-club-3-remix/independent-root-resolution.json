@@ -1,0 +1,853 @@
+{
+  "actionable_findings": [],
+  "baseline_sha256": "93a0f50080671d85a822e2a645cd216a648a252cff399af7ae1e70a2ea6c8f6d",
+  "bundle_sha256": "3b07c5f997e43eafc640f2bc824e58bce116e474b4ea88384d09404b12ec968d",
+  "check_manifests": [
+    {
+      "failed_named_checks": 0,
+      "passed_named_checks": 50,
+      "path": "research/evidence/midnight-club-3-remix/checks.json",
+      "sha256": "662246835be2e2b11d54c5b3177ac686a701a4bc07731f1b4e0e78a5aa70cdd0",
+      "skipped_named_checks": 0
+    },
+    {
+      "failed_named_checks": 0,
+      "passed_named_checks": 3,
+      "path": "research/evidence/midnight-club-3-remix/focused-checks.json",
+      "sha256": "ee0ebaadbdf304fe19159ab5a78b9542efa7dd4c4df89e5f53f2c72fa28ba9c1",
+      "skipped_named_checks": 0
+    }
+  ],
+  "claim_limits": [
+    "Approval covers native extraction of94 source packages, not94 verified real-world or playable cars.",
+    "PS2 PCK geometry,PPF/native TEX decoding,wheel/part assembly,GLB export,viewer/dealership integration,runtime dependency closure and rendering fidelity remain unverified.",
+    "No contradicted claim or operational-failure receipt is approved."
+  ],
+  "complete_check_logs_sha256": "f2dbdd434a4ebdd1fe80f769beb38d2c319d807292d92fa88f3efae94fc28f86",
+  "completion_bundle_file_sha256": "d3fdcfb86f2d203632975c7366929091e16d3f0cc6dee5ac4e0266c6f2bbaadf",
+  "completion_verifications": [
+    {
+      "input_sha256": "a60f6d9790967704aa1ca5fd82d63170f716d109a3ac7e6ee253f6524eeef41d",
+      "original_result": {
+        "auto_accept": 0.8,
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "results": [
+          {
+            "action": "auto",
+            "claim": "The source rederivation command passed and the output has 94 vehicle carriers, 4323 nested member payloads, 7283 files including index and 569084266 bytes.",
+            "confidence": 0.98,
+            "id": "claim0",
+            "probabilities": {
+              "contradicts": 0.01,
+              "says_nothing": 0,
+              "supports": 0.99
+            },
+            "same_subject": 0.97,
+            "supporting_evidence": "extraction.json",
+            "verdict": "verified"
+          },
+          {
+            "action": "review",
+            "claim": "All 50 named repository checks passed; the final three focused lint/archive/extraction checks also passed.",
+            "confidence": 0.45,
+            "id": "claim1",
+            "probabilities": {
+              "contradicts": 0.33,
+              "says_nothing": 0.04,
+              "supports": 0.63
+            },
+            "same_subject": 0.8,
+            "supporting_evidence": "complete-check-manifest-status-fields",
+            "verdict": "verified"
+          }
+        ],
+        "subject_at": 0.5,
+        "summary": {
+          "contradicted": 0,
+          "needs_review": 1,
+          "unsupported": 0,
+          "verified": 2
+        },
+        "tool": "jev_verify",
+        "usage": {
+          "input_tokens": 5071,
+          "output_tokens": 354
+        }
+      },
+      "rationale": "All50 full and3 focused named checks have pass/exit0 with aggregate exit0; copied manifests equal original .scratch results.json, and complete original53 command/status/output logs equal full-check-logs.txt after only final trailing-blank normalization. Printed fail/skip strings inside test_run_checks are intentional synthetic failure/runtime controls; that suite concludes Ran3 tests/OK and exit0. test_redline_texture has one optional inner unit-test skip while its named suite returns OK/exit0; the claim is about named checks, not absence of all internal skips. This resolves confidence.45,support.63,contradiction.33 without laundering failed named checks.",
+      "receipt_path": "research/evidence/midnight-club-3-remix/completion-verify-1.json",
+      "receipt_sha256": "3a122219eecc1cb2be722f6ac56c1eac7bb9ab286e213be29b1acf4e1947d787",
+      "verdict": "approve"
+    },
+    {
+      "input_sha256": "ae27d92a7d45680812e5631b9fda5d36907323825606e7c81fd567059067141d",
+      "original_result": {
+        "auto_accept": 0.8,
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "results": [
+          {
+            "action": "auto",
+            "claim": "Independent upstream decoding matched the 2860 selected outer payloads and 4323 nested members; the supplemental selection audit independently matched the documented source selection policy.",
+            "confidence": 0.97,
+            "id": "claim0",
+            "probabilities": {
+              "contradicts": 0.02,
+              "says_nothing": 0,
+              "supports": 0.98
+            },
+            "same_subject": 0.94,
+            "supporting_evidence": "independent-output-audit.json_scalar_control_excerpt",
+            "verdict": "verified"
+          },
+          {
+            "action": "auto",
+            "claim": "The preservation receipt found zero changed or missing files among 13280 pre-existing tracked files outside the three task-owned shared text paths.",
+            "confidence": 1,
+            "id": "claim1",
+            "probabilities": {
+              "contradicts": 0,
+              "says_nothing": 0,
+              "supports": 1
+            },
+            "same_subject": 0.97,
+            "supporting_evidence": "preservation.json",
+            "verdict": "verified"
+          }
+        ],
+        "subject_at": 0.5,
+        "summary": {
+          "contradicted": 0,
+          "needs_review": 0,
+          "unsupported": 0,
+          "verified": 2
+        },
+        "tool": "jev_verify",
+        "usage": {
+          "input_tokens": 5063,
+          "output_tokens": 357
+        }
+      },
+      "rationale": "Original claims are auto verified. Actual independent byte/selection/preservation receipts and retained20-case/24-item semantic metrics were cross-checked; native source-package and constructed-case accuracy boundaries remain explicit.",
+      "receipt_path": "research/evidence/midnight-club-3-remix/completion-verify-2.json",
+      "receipt_sha256": "7080b63683b8bcb5f2c34e7daa7ce83791af3e0af1f1fae34b3953df1290b5e9",
+      "verdict": "approve"
+    },
+    {
+      "input_sha256": "5f1a0f6d7b0afc8f559be8b4f4a32522c19e7ec035a22a42db602b5414307855",
+      "original_result": {
+        "auto_accept": 0.8,
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "results": [
+          {
+            "action": "auto",
+            "claim": "Both question wordings selected 20 correct top labels on the twenty explicitly labeled constructed cases; all 24 actual MC3 inventory samples remained under review. No real-corpus semantic accuracy claim is made.",
+            "confidence": 1,
+            "id": "claim0",
+            "probabilities": {
+              "contradicts": 0,
+              "says_nothing": 0,
+              "supports": 1
+            },
+            "same_subject": 0.96,
+            "supporting_evidence": "semantic-experiment-result-fields",
+            "verdict": "verified"
+          }
+        ],
+        "subject_at": 0.5,
+        "summary": {
+          "contradicted": 0,
+          "needs_review": 0,
+          "unsupported": 0,
+          "verified": 1
+        },
+        "tool": "jev_verify",
+        "usage": {
+          "input_tokens": 4625,
+          "output_tokens": 179
+        }
+      },
+      "rationale": "Original claims are auto verified. Actual independent byte/selection/preservation receipts and retained20-case/24-item semantic metrics were cross-checked; native source-package and constructed-case accuracy boundaries remain explicit.",
+      "receipt_path": "research/evidence/midnight-club-3-remix/completion-verify-3.json",
+      "receipt_sha256": "a191baddcdb5fde9bcc89756671bf9f21c7cc25cc1138d10557202dfbef2b2a8",
+      "verdict": "approve"
+    }
+  ],
+  "declared_selection_resolution": {
+    "dropped_ordinal_control": {
+      "control": "dropped_selected_ordinal",
+      "dropped_ordinal": 5634,
+      "reason": "selected ordinal mismatch: missing=[5634], unexpected=[]",
+      "rejected": true
+    },
+    "limit": "The static declared policy is verified; complete runtime dependency closure is not.",
+    "receipt_path": "research/evidence/midnight-club-3-remix/independent-selection-audit.json",
+    "receipt_sha256": "28f798f4f016ad8d0d45c0f8532eb770cea6cb5e9239c94c536fa6f53b31cc12",
+    "scope": "Exact equality against the agreed seven prefixes vehicle/,resources/vehicle/,tune/vehicle/,tune/phys/,tune/traffic/,tune/rider/,physicslib/, anchored root vp_[a-z0-9_]+.dat and vehiclesexported.txt; directory entries excluded. Independent source records, not index ordinals, derive this policy.",
+    "selected_outer_ordinals": 2860,
+    "source_vehicle_packages": 94
+  },
+  "files": [
+    {
+      "gate_input_sha256": "61b446471093af8c6428ea9112bfa85b80a7f85630109c3288c5a6a2fb910406",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-01.json",
+      "gate_receipt_sha256": "166a5c630c68683fca053521c0e184c1b86b3257b68b2bee3b43b943c3ccecd9",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.6945,
+        "limiting_rubrics": [
+          "correctness"
+        ],
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "safe_to_apply": 0.71,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.74,
+            "probabilities": {
+              "0": 0.88,
+              "1": 0.07,
+              "2": 0.05
+            },
+            "score": 0.17
+          },
+          "correctness": {
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.35,
+              "2": 0.61
+            },
+            "score": 1.56
+          },
+          "spec_match": {
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.65,
+              "2": 0.08
+            },
+            "score": 0.8
+          },
+          "test_gap": {
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.78,
+              "1": 0.12,
+              "2": 0.1
+            },
+            "score": 0.33
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": ".gitignore",
+      "rationale": "Correctness/spec uncertainty is resolved by the exact game-specific input and decal paths. The local native decal occurrence is164024320 bytes and remains independently hash-verified; documentation explicitly identifies its Git omission and reproducibility. Only two MC3-specific patterns are added, with no removal or change to prior game paths.",
+      "raw_file_diff_sha256": "c36e04bfc477eb9c5d0b158db153cf3d4140078b328eae541f1403afce941b91",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "cc836f2df4959501421886f1129bfa0f5144588ec8b887b39b3c74fbb1f91a64",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-02.json",
+      "gate_receipt_sha256": "7cbdc8c7ef6022466b1f12a2a002743d4bafed363487ab462b13dd35898a553f",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.7737499999999999,
+        "limiting_rubrics": [
+          "blast_radius"
+        ],
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "safe_to_apply": 0.48,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.44,
+              "1": 0.24,
+              "2": 0.32
+            },
+            "score": 0.89
+          },
+          "correctness": {
+            "confidence": 0.49,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.28,
+              "2": 0.69
+            },
+            "score": 1.66
+          },
+          "spec_match": {
+            "confidence": 0.37,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.34,
+              "2": 0.62
+            },
+            "score": 1.59
+          },
+          "test_gap": {
+            "confidence": 0.4,
+            "probabilities": {
+              "0": 0.67,
+              "1": 0.26,
+              "2": 0.07
+            },
+            "score": 0.4
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "midnight-club-3-remix/README.md",
+      "rationale": "Correctness/spec/test/blast uncertainty is resolved by actual source-rederivation and independent audits:94 source carriers,4323 nested members,7283 disk files,569084266 bytes. The README identifies native formats, excluded164MB decal/ISO, absent-or-empty destination policy and tested check/optional-assessment commands. It makes no playable-roster, conversion or rendering claim. A new game README does not alter execution or existing model apps.",
+      "raw_file_diff_sha256": "3387bf5ce31b2c512cb5bca23d944961e72f92a32495d1d0e0414e6bca631ad6",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "7595ecf57918dba35dc5307b6706e783c56825f5d1021b3957390f57db3d33a1",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-03.json",
+      "gate_receipt_sha256": "e716e75a4f7660de619e5dbb94dee97544926dfd2c66345c63f55679cf4acd0b",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.74575,
+        "limiting_rubrics": [
+          "correctness"
+        ],
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "safe_to_apply": 0.64,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.53,
+            "probabilities": {
+              "0": 0.77,
+              "1": 0.15,
+              "2": 0.08
+            },
+            "score": 0.31
+          },
+          "correctness": {
+            "confidence": 0.37,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.34,
+              "2": 0.62
+            },
+            "score": 1.58
+          },
+          "spec_match": {
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.07,
+              "1": 0.65,
+              "2": 0.28
+            },
+            "score": 1.21
+          },
+          "test_gap": {
+            "confidence": 0.43,
+            "probabilities": {
+              "0": 0.73,
+              "1": 0.16,
+              "2": 0.11
+            },
+            "score": 0.38
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "research/README.md",
+      "rationale": "Correctness/spec/test uncertainty is resolved by checking all added local note references and counts against the actual extraction/independent receipts. The new section explicitly records remaining conversion/runtime work; it adds no execution path and leaves all prior research rows unchanged.",
+      "raw_file_diff_sha256": "e33143ae14ad41b28e21132c64e4741a082f7891e0f603bb5ba2ad6987bdeb2f",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "8c14a6f92d6af462e78c6b4ad83a319c97f67e934819ed23f341b9fd56d9ab24",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-04.json",
+      "gate_receipt_sha256": "d952b4fa31890d9369f521ab448ae4ba9c69951eab92248027b9b4a0431f8dc8",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.84075,
+        "limiting_rubrics": [
+          "blast_radius"
+        ],
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "safe_to_apply": 0.51,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.48,
+              "1": 0.29,
+              "2": 0.23
+            },
+            "score": 0.76
+          },
+          "correctness": {
+            "confidence": 0.59,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.23,
+              "2": 0.75
+            },
+            "score": 1.74
+          },
+          "spec_match": {
+            "confidence": 0.73,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.16,
+              "2": 0.83
+            },
+            "score": 1.82
+          },
+          "test_gap": {
+            "confidence": 0.55,
+            "probabilities": {
+              "0": 0.74,
+              "1": 0.22,
+              "2": 0.04
+            },
+            "score": 0.31
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "research/midnight-club-3-remix-extraction.md",
+      "rationale": "Blast-radius uncertainty is resolved by its documentary-only effect and explicit native-only limits. Correctness is supported by7183 source-derived outputs plus99 indexed generated files=7282 indexed files, plus the self-excluded index=7283 disk files. Every named test status/log and source/audit/semantic metric cited was inspected. It documents small constructed-case semantic accuracy separately from unlabelled real-corpus review and makes no PS2 conversion claim.",
+      "raw_file_diff_sha256": "15b422fa1858a3dbce45b94ae37ea30a91fb843fb616b163693c5c0b2115d173",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "b362b4b4a165dc1d0b45c878bf3b365eafd849e4ba1e03a9c1cea7f9b91bd6b6",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-05.json",
+      "gate_receipt_sha256": "21bf4625cc177160aa940b850a39c7ee6170fbbaa344457329c3c159a2432c14",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.742,
+        "limiting_rubrics": [
+          "test_gap"
+        ],
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "safe_to_apply": 0.47,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.37,
+            "probabilities": {
+              "0": 0.13,
+              "1": 0.58,
+              "2": 0.29
+            },
+            "score": 1.16
+          },
+          "correctness": {
+            "confidence": 0.46,
+            "probabilities": {
+              "0": 0.06,
+              "1": 0.24,
+              "2": 0.7
+            },
+            "score": 1.64
+          },
+          "spec_match": {
+            "confidence": 0.49,
+            "probabilities": {
+              "0": 0,
+              "1": 0.34,
+              "2": 0.66
+            },
+            "score": 1.66
+          },
+          "test_gap": {
+            "confidence": 0.04,
+            "probabilities": {
+              "0": 0.49,
+              "1": 0.38,
+              "2": 0.13
+            },
+            "score": 0.64
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "tools/extract_mc3_cars.py",
+      "rationale": "Test-gap(.04),safe-to-apply(.47),correctness/spec/blast uncertainties are resolved by seven concrete extraction tests, real rederivation and an independently executed upstream reader. Known synthetic payloads cover nested/duplicate/source provenance, rewritten-index tampering, missing/extra/file-directory links, refused overwrite, changed-input rollback, absent carriers and nonpass/provider-error assessment. Independent audits compare all7183 source outputs and every indexed disk file; independent policy selection matches2860 outer ordinals and94 source packages. Source hash pins bracket derivation. Installation stages exclusive files into a new/empty nonsymlink destination, and checks derive expected bytes from ISO rather than trusting output index. Only a new MC3 tree is written;13280 preexisting files were preserved. Optional metadata/header screening fails closed and advisory labels never select offsets/discard/rewrite native assets. Runtime closure and native conversion remain excluded.",
+      "raw_file_diff_sha256": "472cac076d1d4311979b47fe7dc8ce1b89ab8dfcd4d71e7e42ebc0b8ed3af787",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "29b491735e970b2e9fffcfaf301182663ae3b2043d329bfb162e2ebd03aef0c2",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-06.json",
+      "gate_receipt_sha256": "549fe5c5e8a53e99efdc862b12b1b528f4db04e27f2d08cbde9c03c2aa4f533c",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.675,
+        "limiting_rubrics": [
+          "test_gap"
+        ],
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "safe_to_apply": 0.46,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.07,
+              "1": 0.57,
+              "2": 0.36
+            },
+            "score": 1.29
+          },
+          "correctness": {
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.28,
+              "2": 0.7
+            },
+            "score": 1.68
+          },
+          "spec_match": {
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.65,
+              "2": 0.34
+            },
+            "score": 1.33
+          },
+          "test_gap": {
+            "confidence": 0.08,
+            "probabilities": {
+              "0": 0.38,
+              "1": 0.39,
+              "2": 0.23
+            },
+            "score": 0.85
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "tools/mc3_archive.py",
+      "rationale": "Test-gap(.08),safe-to-apply(.46),spec/blast uncertainties are resolved by five synthetic archive/ISO control tests and full real-corpus upstream comparison. Manual fixtures cover plain/packed/compressed names/payloads, prior-prefix/duplicate/directory behavior. Mutations cover unsafe paths, symbol/prefix/table/extent/size errors and truncated/trailing/wrong-length/bomb DEFLATE; ISO endian/truncation and source preservation are exercised. All18416 outer records and94 nested carriers match the screened upstream algorithm. Read-only source methods enforce extents and table/member limits; raw DEFLATE is bounded by declared-size+1 with exact length,eof,unused-data and unconsumed-tail checks. No general engine or PCK geometry behavior is claimed.",
+      "raw_file_diff_sha256": "93aa38ded4d6c3dc076d43473689a5cf1340c728cb6fe7dd6d6e3c64fb8d50f4",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "31740098202cb095eb08bc3cb3371f5c954ac61ade85b7619366640a69b27595",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-07.json",
+      "gate_receipt_sha256": "0842f490f66abdc80e2610d827e90a4cce3e0884d4d8fe387ab9d7ec4766f2df",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.78175,
+        "limiting_rubrics": [
+          "blast_radius"
+        ],
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "safe_to_apply": 0.66,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.34,
+            "probabilities": {
+              "0": 0.64,
+              "1": 0.28,
+              "2": 0.08
+            },
+            "score": 0.43
+          },
+          "correctness": {
+            "confidence": 0.62,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.21,
+              "2": 0.77
+            },
+            "score": 1.76
+          },
+          "spec_match": {
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.08,
+              "1": 0.65,
+              "2": 0.27
+            },
+            "score": 1.19
+          },
+          "test_gap": {
+            "confidence": 0.68,
+            "probabilities": {
+              "0": 0.84,
+              "1": 0.11,
+              "2": 0.05
+            },
+            "score": 0.22
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "tools/run_checks.py",
+      "rationale": "Spec/blast uncertainties are resolved by the exact two registry-name additions using the preexisting Python check machinery. Both scripts exist and ran successfully in full/focused logs;50 full named checks and3 focused checks passed. The registry introduces neither live requests nor a private8.5GB ISO dependency into default checks, and preserves all previous names and requirements.",
+      "raw_file_diff_sha256": "ec522e9825f35ee85863c3b855c555426f4989c802db929e9e4bc0bca7242f76",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "aa5c3e9968ee1cd2f9e5ead11e89da1af25f0999f30ccae894f6d423c96a2397",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-08.json",
+      "gate_receipt_sha256": "72822e09c05a84842534dddf9b0525fc24e24b72d8e6a17ded10f4c747de4b1d",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.73875,
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ],
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "safe_to_apply": 0.55,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.19,
+            "probabilities": {
+              "0": 0.5599999999999999,
+              "1": 0.34,
+              "2": 0.1
+            },
+            "score": 0.53
+          },
+          "correctness": {
+            "confidence": 0.51,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.29,
+              "2": 0.69
+            },
+            "score": 1.68
+          },
+          "spec_match": {
+            "confidence": 0.44,
+            "probabilities": {
+              "0": 0.08,
+              "1": 0.63,
+              "2": 0.29
+            },
+            "score": 1.22
+          },
+          "test_gap": {
+            "confidence": 0.19,
+            "probabilities": {
+              "0": 0.58,
+              "1": 0.3,
+              "2": 0.12
+            },
+            "score": 0.54
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "tools/test_extract_mc3_cars.py",
+      "rationale": "Spec/test-gap/blast uncertainties are resolved by reading all seven tests against production behavior: independent known source payloads, distinct duplicate occurrences, omitted city data, source preservation, rewritten-index corruption, missing/extra/link controls, occupied destination, changed-input rollback and fail-closed nonpass/provider errors. Mutations and mocks are confined to TemporaryDirectory/test scope; no real corpus or live provider is touched. Real byte coverage is independently audited rather than inferred from fixtures alone.",
+      "raw_file_diff_sha256": "3c1077023f82e32d9373df36d1b82386a3c51d5a25a64081d283f056d1cc12dd",
+      "verdict": "approve"
+    },
+    {
+      "gate_input_sha256": "41815f40914a4b7fb8254dcf1dda91281f21670741f85aa95cbd57208f19abcf",
+      "gate_receipt_path": "research/evidence/midnight-club-3-remix/gate-file-09.json",
+      "gate_receipt_sha256": "18c141a8b56a3b579703fcfc83148fcaadd75a57d0943689337cb65951adc68f",
+      "original_review": {
+        "action": "escalate",
+        "composite": 0.7402500000000001,
+        "limiting_rubrics": [
+          "blast_radius"
+        ],
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "safe_to_apply": 0.6,
+        "scores": {
+          "blast_radius": {
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.54,
+              "1": 0.37,
+              "2": 0.09
+            },
+            "score": 0.56
+          },
+          "correctness": {
+            "confidence": 0.58,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.26,
+              "2": 0.73
+            },
+            "score": 1.71
+          },
+          "spec_match": {
+            "confidence": 0.62,
+            "probabilities": {
+              "0": 0.06,
+              "1": 0.75,
+              "2": 0.19
+            },
+            "score": 1.13
+          },
+          "test_gap": {
+            "confidence": 0.41,
+            "probabilities": {
+              "0": 0.69,
+              "1": 0.23,
+              "2": 0.08
+            },
+            "score": 0.39
+          }
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "composite_floor": 0.7,
+          "review_at": 0.5
+        },
+        "weights": {
+          "blast_radius": 0.15,
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15
+        }
+      },
+      "path": "tools/test_mc3_archive.py",
+      "rationale": "Test-gap/blast uncertainties are resolved by manually constructed source tables and known payload assertions across plain/packed/compressed modes, plus targeted intended-failure reasons for unsafe names, malformed tables/symbols/extents and DEFLATE truncation/trailing/wrong-size/bomb cases. ISO preservation/endian/truncation are tested. Synthetic temporary inputs never mutate the supplied corpus; full real-corpus comparison with upstream separately covers format compatibility.",
+      "raw_file_diff_sha256": "1aedb0b4e363dea2e15a0572f43732467032b354ed50fe3fa2326de24f8e1aed",
+      "verdict": "approve"
+    }
+  ],
+  "implementer": "/root",
+  "rationale": "Independently reviewed the complete nine-file current root patch and all12 valid gate/verification inputs and receipts without re-calling Jev. Exact file diffs match original task baseline and concatenate to retained raw diff. Valid patch escalations are resolved using concrete controls, real source rederivation and independent upstream output/selection checks. The low-confidence50+3 named-check claim is resolved against exact original manifests and complete53 retained logs. No actionable production defects found within the native extraction scope. Operational failures are excluded, not approved. This reviewer did not author any of the nine root files; its separate format note/audit judgments are independently reviewed by root.",
+  "raw_diff_sha256": "21f1f32dd8e95d51dba2ca9cf9fa0d08bcc3a8dd00dd4ffbfb27ff12d9c780c3",
+  "reviewer": "/root/mc3_research",
+  "schema": "mc3-independent-root-review-resolution-v1",
+  "separate_audit_claim_resolution": {
+    "count_distinction": "2860 outer native payloads+4323 nested native payloads=7183 source outputs;99 generated indexed files give7282 indexed files; self-excluded index adds1 disk file=7283.",
+    "path": "research/evidence/midnight-club-3-remix/independent-audit-resolution.json",
+    "reviewer": "root independently resolves this reviewer-authored audit claim"
+  },
+  "superseded_operational_errors": [
+    {
+      "path": "research/evidence/midnight-club-3-remix/final-gate.json",
+      "reason": "Oversized input scopes failed operationally. Only the complete nine valid bounded gate inputs are resolved by this review.",
+      "sha256": "9603f861eaec7d210cd4214f0710714b906466626069607e96cde3c983ebb501",
+      "state": "superseded_operational_failure",
+      "verdict": "not_approved"
+    },
+    {
+      "path": "research/evidence/midnight-club-3-remix/final-gate-code.json",
+      "reason": "Oversized input scopes failed operationally. Only the complete nine valid bounded gate inputs are resolved by this review.",
+      "sha256": "9603f861eaec7d210cd4214f0710714b906466626069607e96cde3c983ebb501",
+      "state": "superseded_operational_failure",
+      "verdict": "not_approved"
+    },
+    {
+      "path": "research/evidence/midnight-club-3-remix/final-gate-docs.json",
+      "reason": "Oversized input scopes failed operationally. Only the complete nine valid bounded gate inputs are resolved by this review.",
+      "sha256": "9603f861eaec7d210cd4214f0710714b906466626069607e96cde3c983ebb501",
+      "state": "superseded_operational_failure",
+      "verdict": "not_approved"
+    }
+  ],
+  "verdict": "approve"
+}

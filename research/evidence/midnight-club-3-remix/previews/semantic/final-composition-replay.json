@@ -1,0 +1,845 @@
+{
+  "schema": 1,
+  "source": "final-composition-experiment.json",
+  "scope": "Replay retained raw judgments through final composition; no new provider requests. Non-preview requests keep their original three-signal thresholds; preview requests have the separately calibrated gate and deterministic readiness requirement.",
+  "rows": [
+    {
+      "case": "source-name",
+      "expected": [
+        "midnight-club-3-remix",
+        "midnight-club-3-remix:native"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.98,
+            "midnight-club-3-remix:native": 0.02,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 0.98,
+          "support": 0.86,
+          "coverage": 1.83,
+          "coverage_confidence": 0.73,
+          "restriction": {
+            "choice": "none",
+            "probabilities": {
+              "none": 0.93,
+              "preview": 0.04,
+              "other_catalog": 0.0,
+              "unsupported": 0.0,
+              "unclear": 0.03
+            },
+            "confidence": 0.91
+          }
+        }
+      }
+    },
+    {
+      "case": "source-native",
+      "expected": [
+        "midnight-club-3-remix:native"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix:native",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.01,
+            "midnight-club-3-remix:native": 0.99,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 0.99,
+          "support": 0.85,
+          "coverage": 1.84,
+          "coverage_confidence": 0.74,
+          "restriction": {
+            "choice": "none",
+            "probabilities": {
+              "none": 0.87,
+              "preview": 0.06,
+              "other_catalog": 0.01,
+              "unsupported": 0.03,
+              "unclear": 0.03
+            },
+            "confidence": 0.84
+          }
+        }
+      }
+    },
+    {
+      "case": "source-preview",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.02,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.01,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.74,
+            "midnight-club-3-remix:native": 0.09,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.14
+          },
+          "confidence": 0.72,
+          "support": 0.57,
+          "coverage": 1.41,
+          "coverage_confidence": 0.11,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.03,
+              "preview": 0.8,
+              "other_catalog": 0.0,
+              "unsupported": 0.09,
+              "unclear": 0.08
+            },
+            "confidence": 0.75
+          }
+        }
+      }
+    },
+    {
+      "case": "source-dealer",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.01,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.84,
+            "midnight-club-3-remix:native": 0.07,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.08
+          },
+          "confidence": 0.83,
+          "support": 0.68,
+          "coverage": 1.59,
+          "coverage_confidence": 0.38,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.02,
+              "preview": 0.54,
+              "other_catalog": 0.38,
+              "unsupported": 0.03,
+              "unclear": 0.03
+            },
+            "confidence": 0.42
+          }
+        }
+      }
+    },
+    {
+      "case": "gt-night",
+      "expected": [
+        "gran-turismo:night"
+      ],
+      "result": {
+        "status": "ok",
+        "filters": {
+          "game": "gran-turismo",
+          "variant": "night"
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "gran-turismo:night",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 1.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.0,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 1.0,
+          "support": 0.88,
+          "coverage": 1.95,
+          "coverage_confidence": 0.91,
+          "restriction": {
+            "choice": "none",
+            "probabilities": {
+              "none": 0.83,
+              "preview": 0.14,
+              "other_catalog": 0.0,
+              "unsupported": 0.02,
+              "unclear": 0.01
+            },
+            "confidence": 0.79
+          }
+        }
+      }
+    },
+    {
+      "case": "redline-addon",
+      "expected": [
+        "redline:addon"
+      ],
+      "result": {
+        "status": "ok",
+        "filters": {
+          "game": "redline",
+          "variant": "addon"
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "redline:addon",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.0,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.01,
+            "redline:base": 0.0,
+            "redline:addon": 0.99,
+            "no_match": 0.0
+          },
+          "confidence": 0.99,
+          "support": 0.89,
+          "coverage": 1.91,
+          "coverage_confidence": 0.86,
+          "restriction": {
+            "choice": "none",
+            "probabilities": {
+              "none": 0.91,
+              "preview": 0.08,
+              "other_catalog": 0.0,
+              "unsupported": 0.01,
+              "unclear": 0.0
+            },
+            "confidence": 0.89
+          }
+        }
+      }
+    },
+    {
+      "case": "all-games",
+      "expected": [
+        "all"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "all",
+          "probabilities": {
+            "all": 1.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.0,
+            "midnight-club-3-remix:native": 0.0,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 1.0,
+          "support": 0.85,
+          "coverage": 1.77,
+          "coverage_confidence": 0.67,
+          "restriction": {
+            "choice": "none",
+            "probabilities": {
+              "none": 0.88,
+              "preview": 0.01,
+              "other_catalog": 0.0,
+              "unsupported": 0.01,
+              "unclear": 0.1
+            },
+            "confidence": 0.85
+          }
+        }
+      }
+    },
+    {
+      "case": "ready-preview",
+      "expected": [
+        "midnight-club-3-remix",
+        "midnight-club-3-remix:native"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.01,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.93,
+            "midnight-club-3-remix:native": 0.02,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.03
+          },
+          "confidence": 0.92,
+          "support": 0.8,
+          "coverage": 1.68,
+          "coverage_confidence": 0.53,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.02,
+              "preview": 0.84,
+              "other_catalog": 0.01,
+              "unsupported": 0.11,
+              "unclear": 0.02
+            },
+            "confidence": 0.8
+          }
+        }
+      }
+    },
+    {
+      "case": "ready-dealer",
+      "expected": [
+        "midnight-club-3-remix",
+        "midnight-club-3-remix:native"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.96,
+            "midnight-club-3-remix:native": 0.02,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.02
+          },
+          "confidence": 0.96,
+          "support": 0.79,
+          "coverage": 1.71,
+          "coverage_confidence": 0.55,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.03,
+              "preview": 0.92,
+              "other_catalog": 0.0,
+              "unsupported": 0.01,
+              "unclear": 0.04
+            },
+            "confidence": 0.9
+          }
+        }
+      }
+    },
+    {
+      "case": "ready-native",
+      "expected": [
+        "midnight-club-3-remix:native"
+      ],
+      "result": {
+        "status": "ok",
+        "filters": {
+          "game": "midnight-club-3-remix",
+          "variant": "native"
+        },
+        "message": "Applied the requested game and variant filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix:native",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.04,
+            "midnight-club-3-remix:native": 0.96,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.0
+          },
+          "confidence": 0.96,
+          "support": 0.87,
+          "coverage": 1.86,
+          "coverage_confidence": 0.78,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.02,
+              "preview": 0.93,
+              "other_catalog": 0.01,
+              "unsupported": 0.03,
+              "unclear": 0.01
+            },
+            "confidence": 0.91
+          }
+        }
+      }
+    },
+    {
+      "case": "mixed-preview",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.9,
+            "midnight-club-3-remix:native": 0.04,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.06
+          },
+          "confidence": 0.89,
+          "support": 0.71,
+          "coverage": 1.78,
+          "coverage_confidence": 0.67,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.01,
+              "preview": 0.77,
+              "other_catalog": 0.0,
+              "unsupported": 0.21,
+              "unclear": 0.01
+            },
+            "confidence": 0.71
+          }
+        }
+      }
+    },
+    {
+      "case": "full-textures",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.01,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.57,
+            "midnight-club-3-remix:native": 0.07,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.35
+          },
+          "confidence": 0.53,
+          "support": 0.15,
+          "coverage": 1.02,
+          "coverage_confidence": 0.91,
+          "restriction": {
+            "choice": "unsupported",
+            "probabilities": {
+              "none": 0.01,
+              "preview": 0.0,
+              "other_catalog": 0.0,
+              "unsupported": 0.99,
+              "unclear": 0.0
+            },
+            "confidence": 0.99
+          }
+        }
+      }
+    },
+    {
+      "case": "stats",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "no_match",
+          "probabilities": {
+            "all": 0.02,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.45,
+            "midnight-club-3-remix:native": 0.04,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.49
+          },
+          "confidence": 0.44,
+          "support": 0.09,
+          "coverage": 1.01,
+          "coverage_confidence": 0.68,
+          "restriction": {
+            "choice": "unsupported",
+            "probabilities": {
+              "none": 0.01,
+              "preview": 0.0,
+              "other_catalog": 0.0,
+              "unsupported": 0.99,
+              "unclear": 0.0
+            },
+            "confidence": 0.99
+          }
+        }
+      }
+    },
+    {
+      "case": "mixed-games",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "no_match",
+          "probabilities": {
+            "all": 0.04,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.05,
+            "midnight-club-3-remix:native": 0.01,
+            "redline": 0.01,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.89
+          },
+          "confidence": 0.88,
+          "support": 0.12,
+          "coverage": 0.52,
+          "coverage_confidence": 0.22,
+          "restriction": {
+            "choice": "unsupported",
+            "probabilities": {
+              "none": 0.47,
+              "preview": 0.01,
+              "other_catalog": 0.0,
+              "unsupported": 0.52,
+              "unclear": 0.0
+            },
+            "confidence": 0.4
+          }
+        }
+      }
+    },
+    {
+      "case": "wrong-variant",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.0,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.04,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.75,
+            "midnight-club-3-remix:native": 0.06,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.15
+          },
+          "confidence": 0.73,
+          "support": 0.54,
+          "coverage": 1.46,
+          "coverage_confidence": 0.19,
+          "restriction": {
+            "choice": "none",
+            "probabilities": {
+              "none": 0.65,
+              "preview": 0.04,
+              "other_catalog": 0.0,
+              "unsupported": 0.28,
+              "unclear": 0.02
+            },
+            "confidence": 0.56
+          }
+        }
+      }
+    },
+    {
+      "case": "source-only",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix:native",
+          "probabilities": {
+            "all": 0.01,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.25,
+            "midnight-club-3-remix:native": 0.58,
+            "redline": 0.0,
+            "redline:base": 0.04,
+            "redline:addon": 0.0,
+            "no_match": 0.12
+          },
+          "confidence": 0.54,
+          "support": 0.49,
+          "coverage": 1.34,
+          "coverage_confidence": 0.0,
+          "restriction": {
+            "choice": "other_catalog",
+            "probabilities": {
+              "none": 0.36,
+              "preview": 0.04,
+              "other_catalog": 0.42,
+              "unsupported": 0.12,
+              "unclear": 0.06
+            },
+            "confidence": 0.27
+          }
+        }
+      }
+    },
+    {
+      "case": "ambiguous",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.07,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.13,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.65,
+            "midnight-club-3-remix:native": 0.04,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.11
+          },
+          "confidence": 0.62,
+          "support": 0.53,
+          "coverage": 0.81,
+          "coverage_confidence": 0.0,
+          "restriction": {
+            "choice": "unclear",
+            "probabilities": {
+              "none": 0.4,
+              "preview": 0.02,
+              "other_catalog": 0.01,
+              "unsupported": 0.12,
+              "unclear": 0.45
+            },
+            "confidence": 0.31
+          }
+        }
+      }
+    },
+    {
+      "case": "injection",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.01,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.6,
+            "midnight-club-3-remix:native": 0.19,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.2
+          },
+          "confidence": 0.56,
+          "support": 0.18,
+          "coverage": 1.0,
+          "coverage_confidence": 0.88,
+          "restriction": {
+            "choice": "unsupported",
+            "probabilities": {
+              "none": 0.02,
+              "preview": 0.0,
+              "other_catalog": 0.0,
+              "unsupported": 0.98,
+              "unclear": 0.0
+            },
+            "confidence": 0.97
+          }
+        }
+      }
+    },
+    {
+      "case": "current-dealer-preview",
+      "expected": [
+        "no_match"
+      ],
+      "result": {
+        "status": "review",
+        "filters": null,
+        "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+        "signals": {
+          "choice": "midnight-club-3-remix",
+          "probabilities": {
+            "all": 0.02,
+            "ford-racing-2": 0.0,
+            "gran-turismo": 0.0,
+            "gran-turismo:day": 0.0,
+            "gran-turismo:night": 0.0,
+            "gran-turismo:arcade": 0.0,
+            "midnight-club-3-remix": 0.84,
+            "midnight-club-3-remix:native": 0.09,
+            "redline": 0.0,
+            "redline:base": 0.0,
+            "redline:addon": 0.0,
+            "no_match": 0.05
+          },
+          "confidence": 0.83,
+          "support": 0.65,
+          "coverage": 1.6,
+          "coverage_confidence": 0.38,
+          "restriction": {
+            "choice": "preview",
+            "probabilities": {
+              "none": 0.02,
+              "preview": 0.92,
+              "other_catalog": 0.0,
+              "unsupported": 0.03,
+              "unclear": 0.03
+            },
+            "confidence": 0.9
+          }
+        }
+      }
+    }
+  ],
+  "applied": [
+    "gt-night",
+    "redline-addon",
+    "ready-native"
+  ],
+  "wrongly_applied": 0,
+  "claim_limits": [
+    "Same small constructed sample; not general semantic accuracy or render fidelity."
+  ]
+}

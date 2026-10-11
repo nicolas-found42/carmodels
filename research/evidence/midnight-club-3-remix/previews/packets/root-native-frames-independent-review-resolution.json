@@ -1,0 +1,24 @@
+{
+  "reviewer": "/root/mc3_packet_probe",
+  "verdict": "approve",
+  "scope": "Approve only quaternion_product, rotated_point, native_rest_frames and the source bone-frame assignment in preview_vehicle; other production behavior needs its separately assigned reviews.",
+  "path": "tools/mc3_model.py",
+  "file_sha256": "15c142f842281e54c7b2180f2af8bf5331d6e239def459a43083567062e257b7",
+  "raw_diff_sha256": "d241b3c5b4797fc9cc9fed969317315b807cca657f00035136ca06feb9c4c652",
+  "gate_sha256": "b7a30dce20115fbe252b4172d0316087e3ba263bb4c08f3d87063a11ff54350d",
+  "gate_action": "escalate",
+  "gate_safe_to_apply": 0.29,
+  "gate_composite": 0.7055000000000001,
+  "rationale": "Independent reviewer /root/mc3_packet_probe did not author the converter. Complete contextual new-file diff read. Retail 0058e740 copies joint+2c raw Euler into local pose+30 then invokes00240090; pose vtable635938 resolves update0058e8e8. Retail vehicle initializer002f6c48 calls this pose constructor/initializer and update with the source skeleton. Native00240090 packed basis columns equal Rz*Ry*Rx; source sin/cos uses radians. Native0023e308 full38-instruction affine assembly uses parent columns to rotate each local column and local translation, then adds parent translation. The parent quaternion*local quaternion and parent-rotated local translation in the converter implement that formula. Independent direct matrices, not the converter quaternion formula, match all10704 source bones in94 vehicles: rotation basis6.661338147750939e-16, translation8.881784197001252e-16; quaternion norm error3.3306690738754696e-16. Identity, separate quarter-turn axes, mixed-axis and actual Murcielago vent controls establish column layout and order, and native-source ancestor audit covers all2194 prior rendered-or-omitted records, including both Corvette hood ancestors. Five executable model controls pass, including malformed cycles, out-of-range parent and nonfinite angle. Review escalation correctness/test-gap is resolved for this narrow source-bound frame scope. Does not claim runtime animation or exact float32 sincos polynomial rounding. Broad contextual new-file blast-radius concerns are left to the root feature review.",
+  "evidence": {
+    "root-frames-and-export-independent-tests.txt": "990eabc7cad6b94761c788ecf717ed023ad79a032eef5008690801224ce0de3b",
+    "root-native-frames-independent-comparison.json": "2b368fe7978fd018fcc2846355687243104b9307d26b8ea9dfbcbac2f01c232a",
+    "native-pose-composition-corpus.json": "69a7fb7f479183e3f11ddcedf9d362bc6c8b3a7166484da58df35b1f359e3a0f",
+    "native-pose-verify.json": "e26a52d0736018c81ac9792572a91264047859429a20d76fc74d4b9bb7f5454c",
+    "ghidra/native-rest-pose-source-functions.json": "b70106ce70fd9b3e1b07d31e129d62e5f47c83e0e2d6fb9ec2daa7695db85624",
+    "ghidra/affine-multiply-assembly.json": "a7ddfdcec49a5f39fe64098af5bd558efa19025c618ea809b764acde6764127f",
+    "ghidra/euler-sincos-assembly.json": "3432b81d656fd5ca2ad331651133d7aed7f7a607aeedd77d622e4d01237c2867",
+    "ghidra/pose-vtable-memory.json": "197ad08814915e10aa06834e083ee71abc217618b1de7966a79660e8d989f5be"
+  },
+  "limits": "Independent bounded static source review; no whole-feature completion approval."
+}

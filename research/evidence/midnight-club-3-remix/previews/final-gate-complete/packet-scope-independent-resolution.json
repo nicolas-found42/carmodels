@@ -1,0 +1,762 @@
+{
+  "bundle_sha256": "e4bf159efb556bd9e463893499f50bc9984e403a0c078131915c47d85fb1d42a",
+  "reviewer": "/root/mc3_packet_probe",
+  "verdict": "approve",
+  "scope": [
+    "dealership/dealership.html",
+    "dealership/recovered.html",
+    "research/midnight-club-3-remix-preview-research.md",
+    "tools/library_filter.py",
+    "tools/mc3_preview_experiments.py",
+    "tools/serve_library.py",
+    "tools/test_export_mc3_models.py",
+    "tools/test_library_filter.py",
+    "tools/test_mc3_preview_experiments.py",
+    "tools/test_serve_library.py"
+  ],
+  "ownership": "Reviewer implemented only tools/mc3_pck.py and tools/test_mc3_pck.py; both are excluded. None of these ten prescribed files was authored by this reviewer. This is not approval of the remaining24 files.",
+  "rationale": "Resolved valid per-file patch review/escalation uncertainties through complete source/diff review and independent execution/source evidence. All complete-bundle claim judgments are verified; no operational error or contradicted/unsupported judgment is overridden. Retained original input-validation failures and gate06 provider max_tokens_exceeded remain failures; complete bundle replaces only the failed operation with valid06a/b split calls. No valid judgment was rerolled.",
+  "files": [
+    {
+      "path": "tools/library_filter.py",
+      "file_sha256": "83ce68cdea1cea3e414dfeedcb1fd2d04ae268ccb74c2018c8a3b79de8192505",
+      "raw_diff_sha256": "f4ad54025523ff1c8384682caa05c9b0f187c976935f6f48984208c99da9b86f",
+      "receipt": "final-gate-repaired/gate-05.json",
+      "receipt_sha256": "16e9112614a06388c677ace9b59383e41b6587cf639c03a1a230a860b8ed945c",
+      "original_file_judgment": {
+        "path": "tools/library_filter.py",
+        "safe_to_apply": 0.41,
+        "scores": {
+          "correctness": {
+            "score": 1.55,
+            "confidence": 0.34,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.36,
+              "2": 0.6
+            }
+          },
+          "spec_match": {
+            "score": 1.27,
+            "confidence": 0.3,
+            "probabilities": {
+              "0": 0.1,
+              "1": 0.53,
+              "2": 0.37
+            }
+          },
+          "test_gap": {
+            "score": 0.78,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.41,
+              "1": 0.4,
+              "2": 0.19
+            }
+          },
+          "blast_radius": {
+            "score": 1.75,
+            "confidence": 0.64,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.18,
+              "2": 0.79
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6107500000000001,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Correctness/test-gap and blast-radius escalation resolved for the optional semantic route by independent full-file reading and15 passing semantic/server/experiment controls. The state contains whitelisted catalog counts and available filter facts, not source models or arbitrary asset names. Choice selects only defined filters with no_match; Noul and Score assess game/variant expressibility, while the separate restriction Choice can withhold ordinary-preview, other-catalog or unsupported requests. Distribution, confidence, score arithmetic, coverage, warnings and answer status are validated. Only the ordinary-preview branch uses its calibrated lower Noul/Score thresholds; deterministic all_have_preview remains mandatory and DAT-only or mixed descriptors cannot pass. Other restriction classes and uncertain judgments withhold the mutation. Both current94-ready dealership and native source states are tested. Exceptions are sanitized; credentials stay in the existing server client. The conservative sample failures remain limitations, not hidden accuracy claims."
+    },
+    {
+      "path": "tools/test_library_filter.py",
+      "file_sha256": "d97f32d2cb4ea3bd202ca6db69fac8ffc4cf4ba75ec7bca8485774559900350b",
+      "raw_diff_sha256": "48e09cdc8e2f14c5ab141fcadba7e5e35d54e1d0cd788b7dbebe2eb790e35df5",
+      "receipt": "final-gate-repaired/gate-05.json",
+      "receipt_sha256": "16e9112614a06388c677ace9b59383e41b6587cf639c03a1a230a860b8ed945c",
+      "original_file_judgment": {
+        "path": "tools/test_library_filter.py",
+        "safe_to_apply": 0.56,
+        "scores": {
+          "correctness": {
+            "score": 1.69,
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.06,
+              "1": 0.2,
+              "2": 0.74
+            }
+          },
+          "spec_match": {
+            "score": 1.43,
+            "confidence": 0.16,
+            "probabilities": {
+              "0": 0.11,
+              "1": 0.34,
+              "2": 0.55
+            }
+          },
+          "test_gap": {
+            "score": 0.56,
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.55,
+              "1": 0.35,
+              "2": 0.1
+            }
+          },
+          "blast_radius": {
+            "score": 0.89,
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.33,
+              "1": 0.45,
+              "2": 0.22
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.7437499999999999,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Spec-match uncertainty resolved by full test reading and actual execution. Controls cover four independent question types, current source/dealership descriptors, mixed readiness, confidently incorrect preview support, unsupported/other-catalog/unclear classes, actual94 MC3 entries, malformed schema/triangle/source identities, warnings, missing answers, NaN, inconsistent distributions/scores, failure statuses and sanitized exceptions. Provider outputs are fake only for the policy controls; they do not fabricate geometry. Existing Gran Turismo/Redline selection controls are retained. This demonstrates enforcement, not universal semantic prediction accuracy."
+    },
+    {
+      "path": "dealership/dealership.html",
+      "file_sha256": "ad2481855b6bcbb4dc24e77e4ebe6af0526454e2634826a516fe15ecc88c7df0",
+      "raw_diff_sha256": "81a579553ffc5fe54fe99f6080bb8443d14fc1ee8a503cd67d3bcc5b83f16669",
+      "receipt": "final-gate-complete/gate-06a.json",
+      "receipt_sha256": "d531bb15039421c7a4970a8a897a2c0dfa7d539610922b26ab5da6f92fb86d0c",
+      "original_file_judgment": {
+        "path": "dealership/dealership.html",
+        "safe_to_apply": 0.4,
+        "scores": {
+          "correctness": {
+            "score": 1.58,
+            "confidence": 0.38,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.33,
+              "2": 0.63
+            }
+          },
+          "spec_match": {
+            "score": 1.47,
+            "confidence": 0.2,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.47,
+              "2": 0.5
+            }
+          },
+          "test_gap": {
+            "score": 1.01,
+            "confidence": 0.13,
+            "probabilities": {
+              "0": 0.28,
+              "1": 0.42,
+              "2": 0.3
+            }
+          },
+          "blast_radius": {
+            "score": 1.64,
+            "confidence": 0.46,
+            "probabilities": {
+              "0": 0.1,
+              "1": 0.16,
+              "2": 0.74
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6377500000000002,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Entire task-baseline HTML diff independently reviewed, including mixed ownership camera and semantic transport. Explicit catalog:dealership reaches the whitelisted endpoint; revision checks and known option validation precede filter mutation. The MC3 material caveat matches neutral inspection surfaces and recovered glass tint. Side uses+X and front uses-Z for MC3, while Redline keeps+Z front and existing Ford frame keeps+X front. The actual camera-handler executable control covers all three frames, and earlier350Z front/Aprilia side screenshots confirm the specific camera behavior without claiming latest-pose screenshot coverage. Fresh Node renderer evidence loads all94 actual editable GLBs with749871 triangles, bounds, normals, downloads and changed-asset rejection. These concrete checks resolve test-gap confidence for the HTML changes; existing user controls remain available if a semantic query is withheld."
+    },
+    {
+      "path": "dealership/recovered.html",
+      "file_sha256": "b708dab27a70b8c0bf37ee53858dca086b9324d3d195a85920b5120515f128ee",
+      "raw_diff_sha256": "b5e562de04f954c3da08dc869dcc7dbbeb86c27628e3b404f2d35a41f75804f9",
+      "receipt": "final-gate-complete/gate-06b.json",
+      "receipt_sha256": "ef91e76b25578f70ad5fc51ab0be88cab14ef95b42a9ac43649c393961691663",
+      "original_file_judgment": {
+        "path": "dealership/recovered.html",
+        "safe_to_apply": 0.55,
+        "scores": {
+          "correctness": {
+            "score": 1.54,
+            "confidence": 0.31,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.4,
+              "2": 0.57
+            }
+          },
+          "spec_match": {
+            "score": 1.01,
+            "confidence": 0.32,
+            "probabilities": {
+              "0": 0.22,
+              "1": 0.55,
+              "2": 0.23
+            }
+          },
+          "test_gap": {
+            "score": 0.74,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.5,
+              "1": 0.25,
+              "2": 0.25
+            }
+          },
+          "blast_radius": {
+            "score": 0.58,
+            "confidence": 0.11,
+            "probabilities": {
+              "0": 0.63,
+              "1": 0.15,
+              "2": 0.22
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6605000000000001,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Entire task-baseline source viewer diff independently reviewed: its sole modification explicitly sends catalog:source. The endpoint whitelists that context and still defaults legacy requests to source. Existing filter revision checks, status gating, option validation and no-result disposal remain; no source native DAT becomes a GLB through a semantic result. The actual native-catalog and viewer checks pass. This one-line transport change fixes selection of active source state while preserving the source viewer and its deterministic filters."
+    },
+    {
+      "path": "tools/mc3_preview_experiments.py",
+      "file_sha256": "45d02ddc38841c2c9764acce2007d465e0d2d55d2e7a7cd6e635c92cd2f64599",
+      "raw_diff_sha256": "7c1aaf4ed8173df7c390fccd7df9dd7d3858011eb61a15008d983430fdb551dc",
+      "receipt": "final-gate-repaired/gate-08.json",
+      "receipt_sha256": "f7646836141f1cd927e64dd3e69df7fc71c6a41ab5ba82c3427e097d34dbf8c6",
+      "original_file_judgment": {
+        "path": "tools/mc3_preview_experiments.py",
+        "safe_to_apply": 0.48,
+        "scores": {
+          "correctness": {
+            "score": 1.37,
+            "confidence": 0.05,
+            "probabilities": {
+              "0": 0.09,
+              "1": 0.45,
+              "2": 0.46
+            }
+          },
+          "spec_match": {
+            "score": 0.58,
+            "confidence": 0.13,
+            "probabilities": {
+              "0": 0.55,
+              "1": 0.32,
+              "2": 0.13
+            }
+          },
+          "test_gap": {
+            "score": 0.8,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.47,
+              "1": 0.26,
+              "2": 0.27
+            }
+          },
+          "blast_radius": {
+            "score": 0.58,
+            "confidence": 0.14,
+            "probabilities": {
+              "0": 0.56,
+              "1": 0.31,
+              "2": 0.13
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.5575,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Test-gap/spec uncertainty resolved against the complete opt-in helper and three executed helper controls. The19 cases distinguish actual catalog snapshots from explicitly constructed ready/mixed descriptors; deep copies preserve real inputs and never read/write geometry. Expected outcomes are bounded to game/variant filters and no_match. Independent wording requests share changing state appropriately, raw model usage and latency are retained, unknown provider cost stays null, and provider errors stop further requests and are not counted as successful labels. The output is new-only and input hashes are recorded. The retained six-development-design summary reports228 requests over repeated19-query samples, not228 independent labels; conservative withholding and lack of a generalization claim remain explicit. This supplemental behavior matches the user request to exercise TypeSafe judgments alongside deterministic decoding."
+    },
+    {
+      "path": "tools/serve_library.py",
+      "file_sha256": "9e7a2146c0e62805e0bec20c25042f1ca9fbde2cbe3f4953035172e0c451f9dd",
+      "raw_diff_sha256": "f9d52d1cbd8ca2b10a3d2d130b0107ff0de0478cd8b6ae11973dd05720c0821a",
+      "receipt": "final-gate-repaired/gate-08.json",
+      "receipt_sha256": "f7646836141f1cd927e64dd3e69df7fc71c6a41ab5ba82c3427e097d34dbf8c6",
+      "original_file_judgment": {
+        "path": "tools/serve_library.py",
+        "safe_to_apply": 0.59,
+        "scores": {
+          "correctness": {
+            "score": 1.6,
+            "confidence": 0.4,
+            "probabilities": {
+              "0": 0.05,
+              "1": 0.3,
+              "2": 0.65
+            }
+          },
+          "spec_match": {
+            "score": 1.04,
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.25,
+              "1": 0.45,
+              "2": 0.3
+            }
+          },
+          "test_gap": {
+            "score": 0.55,
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.57,
+              "1": 0.31,
+              "2": 0.12
+            }
+          },
+          "blast_radius": {
+            "score": 1.37,
+            "confidence": 0.04,
+            "probabilities": {
+              "0": 0.14,
+              "1": 0.36,
+              "2": 0.5
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6320000000000001,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Blast-radius escalation resolved against the complete handler and real ephemeral HTTP tests. The only new transport context is a whitelist of source/dealership; query-only requests retain source default. Fixed local catalog paths select source JSON cars versus dealership list, and unknown context/extra fields are rejected before provider invocation. Existing localhost Host/Origin checks, body/query bounds and single-request lock remain. The browser sees only selected receipt fields, without raw provider envelopes or exception text. Actual HTTP fixtures confirm dealership data reaches the model callback and malformed requests do not."
+    },
+    {
+      "path": "tools/test_serve_library.py",
+      "file_sha256": "a3f84d1a2adacbe8a964b9143331c44076fe193d4c63bc167429a601b961359f",
+      "raw_diff_sha256": "4bd832556f9ee037f12c670efb1eaba2d756529d89ec135eff31999ce048c9b9",
+      "receipt": "final-gate-repaired/gate-08.json",
+      "receipt_sha256": "f7646836141f1cd927e64dd3e69df7fc71c6a41ab5ba82c3427e097d34dbf8c6",
+      "original_file_judgment": {
+        "path": "tools/test_serve_library.py",
+        "safe_to_apply": 0.61,
+        "scores": {
+          "correctness": {
+            "score": 1.78,
+            "confidence": 0.67,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.14,
+              "2": 0.82
+            }
+          },
+          "spec_match": {
+            "score": 1.08,
+            "confidence": 0.05,
+            "probabilities": {
+              "0": 0.27,
+              "1": 0.37,
+              "2": 0.36
+            }
+          },
+          "test_gap": {
+            "score": 0.45,
+            "confidence": 0.34,
+            "probabilities": {
+              "0": 0.66,
+              "1": 0.24,
+              "2": 0.1
+            }
+          },
+          "blast_radius": {
+            "score": 0.88,
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.33,
+              "1": 0.45,
+              "2": 0.22
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.7182499999999999,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Spec-match uncertainty resolved by full-file reading and executed HTTP controls. The temporary server supplies genuinely different source and dealership JSON shapes and records callback arguments, proving explicit catalog selection and legacy default. It rejects unknown/object catalog values and extra keys, while retaining Origin/Host, content-type, invalid JSON, concurrency and unknown endpoint controls. Raw provider PRIVATE data is absent from the HTTP response. This test owns only ephemeral fixtures, not native sources."
+    },
+    {
+      "path": "tools/test_mc3_preview_experiments.py",
+      "file_sha256": "99d3be6867a11848fba5f600a7632ecc9c29cbc5853743b605669bc3fa4c7ee4",
+      "raw_diff_sha256": "3f6bd4b975b2f19206c7b7d410d802ec3400b2dacdfb7de898eaeb1ecbc3afef",
+      "receipt": "final-gate-repaired/gate-08.json",
+      "receipt_sha256": "f7646836141f1cd927e64dd3e69df7fc71c6a41ab5ba82c3427e097d34dbf8c6",
+      "original_file_judgment": {
+        "path": "tools/test_mc3_preview_experiments.py",
+        "safe_to_apply": 0.69,
+        "scores": {
+          "correctness": {
+            "score": 1.67,
+            "confidence": 0.5,
+            "probabilities": {
+              "0": 0.05,
+              "1": 0.23,
+              "2": 0.72
+            }
+          },
+          "spec_match": {
+            "score": 0.94,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.38,
+              "1": 0.3,
+              "2": 0.32
+            }
+          },
+          "test_gap": {
+            "score": 0.63,
+            "confidence": 0.07,
+            "probabilities": {
+              "0": 0.59,
+              "1": 0.2,
+              "2": 0.21
+            }
+          },
+          "blast_radius": {
+            "score": 0.29,
+            "confidence": 0.56,
+            "probabilities": {
+              "0": 0.75,
+              "1": 0.21,
+              "2": 0.04
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.706,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Spec-match escalation resolved by independently reading and executing all three controls. They check deep-copy readiness transitions with unchanged input and variant catalogs, one-call stopping/sanitization on provider failure, and separate top-label/application accuracy, wrong applications, errors, unknown total cost, known partial cost and latency arithmetic. Their fake failure and metric fixtures test meaningful error/accounting behavior, not the production model accuracy."
+    },
+    {
+      "path": "tools/test_export_mc3_models.py",
+      "file_sha256": "89142fb5817e160a1dd2f5eaae19abb4c46a7f545a7b011a2c6ad53b0eab8502",
+      "raw_diff_sha256": "156bc65657790a886947ca5388643ec20f1981157786f2bf6c0ce30e180f4f21",
+      "receipt": "final-gate-repaired/gate-10.json",
+      "receipt_sha256": "abd22b1e1a8defefd3ea78875b298adac50231a9af14e88bff226d91ba2980c4",
+      "original_file_judgment": {
+        "path": "tools/test_export_mc3_models.py",
+        "safe_to_apply": 0.56,
+        "scores": {
+          "correctness": {
+            "score": 1.4,
+            "confidence": 0.28,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.52,
+              "2": 0.44
+            }
+          },
+          "spec_match": {
+            "score": 0.96,
+            "confidence": 0.11,
+            "probabilities": {
+              "0": 0.32,
+              "1": 0.41,
+              "2": 0.27
+            }
+          },
+          "test_gap": {
+            "score": 0.76,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.46,
+              "1": 0.31,
+              "2": 0.23
+            }
+          },
+          "blast_radius": {
+            "score": 0.8,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.42,
+              "1": 0.36,
+              "2": 0.22
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6069999999999999,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap",
+          "blast_radius"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Test-gap/blast-radius escalation resolved by the complete current eight-test file, existing independent eight-test resolution and fresh final execution. Exact350Z source files and declared wheel-source occurrences are copied into TemporaryDirectory fixtures. Escaped member/manifest paths, symlink, hardlink, duplicate identity, missing declared rim occurrence and undeclared rim occurrence all require intended ValueErrors before output exists. The successful control checks four native-joint rim/tire node pairs and repeat result0; after a user-edit corruption it compares every output file byte-for-byte. Test source hash89142fb5817e160a1dd2f5eaae19abb4c46a7f545a7b011a2c6ad53b0eab8502 is the latest eight cases, not stale six-test review. These are concrete source-bound controls; they do not approve untested exporter behavior."
+    },
+    {
+      "path": "research/midnight-club-3-remix-preview-research.md",
+      "file_sha256": "36b446f4aeb1ae69277db5ea8dd6e0d5458d4e7a14c01f15ae9d1cb1d7b1d14f",
+      "raw_diff_sha256": "687548f10b8c56035a034fe1f48e4af881d7eebf99ba0051989f7d70a08237ec",
+      "receipt": "final-gate-repaired/gate-11.json",
+      "receipt_sha256": "755d35aa7d115c53a9ed984fbbd7fc63a9fe6766438e33a01581bc35f5d542d8",
+      "original_file_judgment": {
+        "path": "research/midnight-club-3-remix-preview-research.md",
+        "safe_to_apply": 0.58,
+        "scores": {
+          "correctness": {
+            "score": 1.22,
+            "confidence": 0.23,
+            "probabilities": {
+              "0": 0.15,
+              "1": 0.49,
+              "2": 0.36
+            }
+          },
+          "spec_match": {
+            "score": 0.66,
+            "confidence": 0.03,
+            "probabilities": {
+              "0": 0.5,
+              "1": 0.35,
+              "2": 0.15
+            }
+          },
+          "test_gap": {
+            "score": 0.31,
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.82,
+              "1": 0.04,
+              "2": 0.14
+            }
+          },
+          "blast_radius": {
+            "score": 0.08,
+            "confidence": 0.88,
+            "probabilities": {
+              "0": 0.95,
+              "1": 0.02,
+              "2": 0.03
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.61375,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      },
+      "verdict": "approve",
+      "independent_rationale": "Spec-match/correctness escalation resolved by reading the entire primary-source note, its bounded source verification/intake receipts and its relation to the separate executable-derived decoder work. It explicitly distinguishes useful PCSX2/ps2sdk VIF sources, related-engine part transforms and Xbox/traffic-format leads from an unvalidated retail MC3 PCK wrapper. It reports no-match source-selection outcomes and labels mutable branch snapshots. Live TypeSafe primitive/response/provider docs are retained and screened; typed-cost ambiguity is resolved to raw-body handling rather than an unsupported Usage.cost promise. The note is a supporting research artifact, not proof of rendered94 packages or runtime texture/physics fidelity. Current native decoder and completed preview claims are in the separate final preview note."
+    }
+  ],
+  "evidence": {
+    "final-native-frame-checks/results.json": "6dba2d252902b49bcff64a15f0df9a0400ac1c544e58f80788994c8f9ee79217",
+    "independent-final-preservation-audit.json": "005abbcaec2a61a96b17092e3e7e0e0e76202d641de34052dcd061eb348674db",
+    "packets/semantic-server-experiment-independent-tests.txt": "dc4c4bcac40c5ae5b3248b790fe036ea6feaaf0e6ae5a290f71f16eaa291581b",
+    "packets/root-frames-and-export-independent-tests.txt": "990eabc7cad6b94761c788ecf717ed023ad79a032eef5008690801224ce0de3b",
+    "packets/export-boundary-eight-independent-review-resolution.json": "61eb730d8b7720fcfd774760232be81491746304a53418fd64dd7f9a277087c9",
+    "packets/root-native-frames-independent-review-resolution.json": "d1bcfe88939c9e8620d7def99fc7c896d73ba8951bc9eeed6c63006b13489262"
+  },
+  "claim_limits": [
+    "Static source-bound inspection; native textures, shader fidelity, animation and physics are not emulated.",
+    "Independent approval is restricted to the ten frozen source paths and exact complete bundle.",
+    "Conservative semantic withholding remains; constructed development queries do not establish general accuracy."
+  ],
+  "paths": [
+    "dealership/dealership.html",
+    "dealership/recovered.html",
+    "research/midnight-club-3-remix-preview-research.md",
+    "tools/library_filter.py",
+    "tools/mc3_preview_experiments.py",
+    "tools/serve_library.py",
+    "tools/test_export_mc3_models.py",
+    "tools/test_library_filter.py",
+    "tools/test_mc3_preview_experiments.py",
+    "tools/test_serve_library.py"
+  ],
+  "file_sha256": {
+    "tools/library_filter.py": "83ce68cdea1cea3e414dfeedcb1fd2d04ae268ccb74c2018c8a3b79de8192505",
+    "tools/test_library_filter.py": "d97f32d2cb4ea3bd202ca6db69fac8ffc4cf4ba75ec7bca8485774559900350b",
+    "dealership/dealership.html": "ad2481855b6bcbb4dc24e77e4ebe6af0526454e2634826a516fe15ecc88c7df0",
+    "dealership/recovered.html": "b708dab27a70b8c0bf37ee53858dca086b9324d3d195a85920b5120515f128ee",
+    "tools/mc3_preview_experiments.py": "45d02ddc38841c2c9764acce2007d465e0d2d55d2e7a7cd6e635c92cd2f64599",
+    "tools/serve_library.py": "9e7a2146c0e62805e0bec20c25042f1ca9fbde2cbe3f4953035172e0c451f9dd",
+    "tools/test_serve_library.py": "a3f84d1a2adacbe8a964b9143331c44076fe193d4c63bc167429a601b961359f",
+    "tools/test_mc3_preview_experiments.py": "99d3be6867a11848fba5f600a7632ecc9c29cbc5853743b605669bc3fa4c7ee4",
+    "tools/test_export_mc3_models.py": "89142fb5817e160a1dd2f5eaae19abb4c46a7f545a7b011a2c6ad53b0eab8502",
+    "research/midnight-club-3-remix-preview-research.md": "36b446f4aeb1ae69277db5ea8dd6e0d5458d4e7a14c01f15ae9d1cb1d7b1d14f"
+  }
+}

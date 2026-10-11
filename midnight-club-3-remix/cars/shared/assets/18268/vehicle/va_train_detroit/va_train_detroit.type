@@ -1,0 +1,36 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 4 {
+			train_inside.shadert 1 va_train_detroit.tex 
+			train_ads.shadert 1 va_train_detroit.tex 
+			train_people.shadert 1 va_train_detroit.tex 
+			train.shadert 3 va_train_detroit.tex none none 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 2 bodyint.mesh 0 body.mesh 0 9999.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center -0.011675 1.688298 -6.513167
+		radius 6.667921
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_train_detroit.skel
+}
+bonetag {
+	whl_l0	2
+	whl_r0	3
+	whl_l1	4
+	whl_r1	5
+	glow_headlight0	6
+	glow_headlight1	7
+}

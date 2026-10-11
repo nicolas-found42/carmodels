@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "Repository: jpd002/Play-\nPath: Source/gs/GSHandler.cpp\nURL: https://github.com/jpd002/Play-/blob/master/Source/gs/GSHandler.cpp\nSnippet 1 (Line 1568)\nfor(unsigned int i = 0; i < 16; i++) { uint16 color = indexor.GetPixel(i, j); uint8 index = i + (j * 16); index = (index & ~0x18) | ((index & 0x08) << 1) | ((index & 0x10) >> 1); if(m_pCLUT[index] != color) { changed = true; } }\nSnippet 2 (Line 1684)\nuint8 index = i + (j * 16); index = (index & ~0x18) | ((index & 0x08) << 1) | ((index & 0x10) >> 1);",
+    "purpose": "Use a public PS2 emulator source snippet as a cross-check of the CSM1 CLUT index permutation used by an MC3 texture decoder."
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.03,
+      "substance": 0.93,
+      "relevance": 0.94
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 764,
+      "output_tokens": 57
+    }
+  }
+}

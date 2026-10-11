@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x002b8bb8",
+    "fields": "decompiled_code,callees",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_002b8bb8\",\"size\":132,\"address\":\"002b8bb8\",\"decompiled_code\":\"\\nundefined4 FUN_002b8bb8(int param_1)\\n\\n{\\n  int iVar1;\\n  undefined4 uVar2;\\n  long lVar3;\\n  int *piVar4;\\n  \\n  piVar4 = (int *)((uint)*(byte *)(param_1 + 0x86) * 0xc + param_1 + 0x3c);\\n  iVar1 = *piVar4;\\n  if (iVar1 != 0) {\\n    *(uint *)(iVar1 + 0x1c) = *(uint *)(iVar1 + 0x1c) | DAT_00618d08;\\n  }\\n  uVar2 = 1;\\n  if (*piVar4 == 0) {\\n    lVar3 = FUN_0042ae38(piVar4);\\n    if (lVar3 == 0) {\\n      uVar2 = 0;\\n    }\\n    else {\\n      FUN_0042cc80(0xbf800000,piVar4,4);\\n      uVar2 = 1;\\n    }\\n  }\\n  return uVar2;\\n}\\n\\n\",\"callee_count\":2,\"callees\":[{\"name\":\"FUN_0042ae38\",\"address\":\"0042ae38\"},{\"name\":\"FUN_0042cc80\",\"address\":\"0042cc80\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.24039020799682476
+}

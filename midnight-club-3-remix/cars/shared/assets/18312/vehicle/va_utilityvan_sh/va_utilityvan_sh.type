@@ -1,0 +1,48 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 7 {
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_wheel.shadert 1 va_whl_truck_chrm.tex 
+			emissive_headlight.shadert 2 va_utilityvan_share.tex __envmap__ 
+			ambient_body.shadert 1 va_utilityvan_share.tex 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			default.shadert 0 
+			ambient_emissive_brakelight.shadert 2 va_utilityvan_share.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 6 vroot_shadow_shadow.mesh 2 whl0_H.mesh 4 whl1_H.mesh 5 whl2_H.mesh 6 whl3_H.mesh 7 vroot_utilvan_sh_LOD_HLOD.mesh 0 9999.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.006916 -0.000049 0.058333
+		radius 2.976080
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_utilityvan_sh.skel
+}
+bonetag {
+	drop_shadow	2
+	whl_l0	4
+	whl_r0	5
+	whl_l1	6
+	whl_r1	7
+	glow_headlight0	9
+	glow_headlight1	10
+	glow_side0	11
+	glow_side1	12
+	glow_side2	13
+	glow_side3	14
+	glow_taillight0	15
+	glow_taillight1	16
+	glow_brakelight0	17
+	glow_brakelight1	18
+}

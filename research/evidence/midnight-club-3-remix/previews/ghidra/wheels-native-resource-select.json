@@ -1,0 +1,23 @@
+{
+  "tool": "get_functions",
+  "args": {
+    "function": "0x0042abf0",
+    "fields": "decompiled_code,callers",
+    "include_call_context": false,
+    "program": "SLUS_213.55"
+  },
+  "result": {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"program\":\"SLUS_213.55\",\"name\":\"FUN_0042abf0\",\"size\":576,\"address\":\"0042abf0\",\"decompiled_code\":\"\\nvoid FUN_0042abf0(void)\\n\\n{\\n  int *piVar1;\\n  int *piVar2;\\n  uint uVar3;\\n  undefined8 uVar4;\\n  long lVar5;\\n  int iVar6;\\n  int *piVar7;\\n  undefined4 *puVar8;\\n  int iVar9;\\n  float fVar10;\\n  int aiStack_60 [8];\\n  \\n  iVar6 = 7;\\n  piVar2 = aiStack_60 + 7;\\n  do {\\n    *piVar2 = 0;\\n    iVar6 = iVar6 + -1;\\n    piVar2 = piVar2 + -1;\\n  } while (-1 < iVar6);\\n  iVar6 = 0;\\n  if (0 < DAT_00714358) {\\n    iVar9 = 0;\\n    do {\\n      puVar8 = (undefined4 *)(&DAT_00714360 + iVar9);\\n      piVar7 = aiStack_60 + (*(ushort *)(&DAT_0071436a + iVar9) & 0x7f);\\n      piVar2 = (int *)*piVar7;\\n      if (piVar2 == (int *)0x0) {\\n        *piVar7 = (int)puVar8;\\n      }\\n      else if (*(float *)(&DAT_00714364 + iVar9) < 0.0) {\\n        *piVar7 = (int)puVar8;\\n      }\\n      else {\\n        fVar10 = (float)piVar2[1];\\n        while( true ) {\\n          if ((0.0 <= fVar10) && (fVar10 <= *(float *)(&DAT_00714364 + iVar9))) {\\n            *piVar7 = (int)puVar8;\\n            goto LAB_0042acec;\\n          }\\n          piVar1 = (int *)*piVar2;\\n          if (piVar1 == (int *)0x0) break;\\n          fVar10 = (float)piVar1[1];\\n          piVar7 = piVar2;\\n          piVar2 = piVar1;\\n        }\\n        *piVar2 = (int)puVar8;\\n        piVar2 = piVar1;\\n      }\\nLAB_0042acec:\\n      iVar6 = iVar6 + 1;\\n      *puVar8 = piVar2;\\n      iVar9 = iVar6 * 0xc;\\n    } while (iVar6 < DAT_00714358);\\n  }\\n  iVar9 = 0;\\n  iVar6 = 0;\\n  while( true ) {\\n    puVar8 = *(undefined4 **)((int)aiStack_60 + iVar6);\\n    iVar9 = iVar9 + 1;\\n    if (puVar8 != (undefined4 *)0x0) break;\\nLAB_0042adf8:\\n    iVar6 = iVar9 * 4;\\n    if (7 < iVar9) {\\n      DAT_00714358 = 0;\\n      return;\\n    }\\n  }\\n  uVar3 = puVar8[2];\\n  do {\\n    uVar4 = FUN_0042b838(DAT_0070e574,\\n                         *(undefined4 *)(*(int *)(&DAT_00714cc0 + (uVar3 >> 0x17) * 4) + 4),\\n                         (*(uint *)((uint)*(ushort *)(puVar8 + 2) * 4 +\\n                                   *(int *)(*(int *)(&DAT_00714cc0 + (uVar3 >> 0x17) * 4) + 0x10))\\n                          >> 0x13 & 0xfffffffe) << 10);\\n    lVar5 = (**(code **)(*(int *)(DAT_0070e574 + 0x20c4) + 0xc))(DAT_0070e574,uVar4);\\n    if (lVar5 == 0) {\\n      *(int *)((int)uVar4 + 0x14) = *(int *)((int)uVar4 + 0x14) + 1;\\nLAB_0042adec:\\n      puVar8 = (undefined4 *)*puVar8;\\n    }\\n    else {\\n      iVar6 = (int)lVar5;\\n      if ((*(byte *)(iVar6 + 0x1c) & 1) != 0) goto LAB_0042adec;\\n      if (*(int *)(iVar6 + 0x10) == 0) {\\n        if ((*(int *)(iVar6 + 0x1c) >> 10 & 1U) == 0) {\\n          FUN_0042c0e0(puVar8[1],DAT_0070e574,lVar5,(uint)puVar8[2] >> 0x17,\\n                       *(undefined2 *)(puVar8 + 2),(uint)puVar8[2] >> 0x10 & 0x7f);\\n          puVar8 = (undefined4 *)*puVar8;\\n        }\\n        else {\\n          puVar8 = (undefined4 *)*puVar8;\\n        }\\n      }\\n      else {\\n        puVar8 = (undefined4 *)*puVar8;\\n      }\\n    }\\n    if (puVar8 == (undefined4 *)0x0) goto LAB_0042adf8;\\n    uVar3 = puVar8[2];\\n  } while( true );\\n}\\n\\n\",\"caller_count\":1,\"callers\":[{\"name\":\"FUN_0042b1c8\",\"address\":\"0042b1c8\"}],\"revision\":{\"token\":\"1791659127401:efe1ce27:3\",\"epoch\":\"efe1ce27\",\"modification_number\":3,\"saved_time\":1791659127401,\"unsaved_changes\":false,\"decompiled\":true}}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "elapsed_seconds": 0.24002229199686553
+}

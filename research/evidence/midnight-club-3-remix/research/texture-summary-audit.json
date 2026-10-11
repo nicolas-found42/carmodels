@@ -1,0 +1,10 @@
+{
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_audit\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"action\": \"pass\",\n  \"wrong_at\": 0.7,\n  \"truncated\": false,\n  \"summary\": {\n    \"records\": 2,\n    \"flagged\": 0,\n    \"invalid\": 0\n  },\n  \"records\": [\n    {\n      \"id\": \"header\",\n      \"value\": \"width u16, height u16, type i16, mip count i16, unknown i16, four u8 flags; 14 bytes total.\",\n      \"checks\": {\n        \"hallucinated\": 0.27,\n        \"off_target\": 0.1,\n        \"incomplete\": 0.37,\n        \"format\": 0.23\n      },\n      \"p_wrong\": 0.37,\n      \"action\": \"ok\"\n    },\n    {\n      \"id\": \"pixel_types\",\n      \"value\": \"1=P8,14=PA8,15=P4_MC,16=PA4_MC,17=RGB888,18=RGBA8888.\",\n      \"checks\": {\n        \"hallucinated\": 0.03,\n        \"off_target\": 0.05,\n        \"incomplete\": 0.43,\n        \"format\": 0.1\n      },\n      \"p_wrong\": 0.43,\n      \"action\": \"ok\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 2479,\n    \"output_tokens\": 168\n  }\n}"
+      }
+    ]
+  }
+}

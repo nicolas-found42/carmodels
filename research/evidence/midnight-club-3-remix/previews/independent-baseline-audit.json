@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "reviewer": "/root/mc3_research",
+  "baseline_paths": [
+    ".scratch/mc3-preview/preservation-baseline.json",
+    ".scratch/mc3-preview/review-baseline.json"
+  ],
+  "baseline_sha256": {
+    ".scratch/mc3-preview/preservation-baseline.json": "1111cccbf63399970edfeca5fcb03051ca497854dbeff0c8126f1b0e8aeec63b",
+    ".scratch/mc3-preview/review-baseline.json": "f7046b449cfa92f8c492c634e9fbf56ad409e15a118d0c4ca80046381e36ecc8"
+  },
+  "baseline_mc3_rows": 94,
+  "unique_codes": 94,
+  "baseline_native_models_unavailable": 94,
+  "baseline_native_glb_models": 0,
+  "baseline_model_code_sha256": "b107687f338d13f6ec48e6ae18a8d4f6ee05c71944b08131f62185ef40ba4dc7",
+  "baseline_builder_code_sha256": "f2a11a0c74dd838150ebc42c79da5d2c5a01e96b4f85ab9979eb96a1ec053c34",
+  "repro_scope": "Replay of the original script in an isolated workspace against independently rederived original native descriptors; not a claim that current converted dealership repro fails.",
+  "repro": {
+    "path": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mc3-independent/baseline-repro-xbyfppqo/.scratch/mc3-preview/repro.py",
+    "exit_code": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mc3-independent/baseline-repro-xbyfppqo/.scratch/mc3-preview/repro.py\", line 9, in <module>\n    assert model.get('previewStatus')!='unavailable', f\"{code}: 3D preview is unavailable\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: MC3_VP_350Z_04: 3D preview is unavailable\n",
+    "stdout": ""
+  },
+  "preserved_file_count": 8363,
+  "baseline_file_count": 8363,
+  "changed_original_files": [],
+  "claim_limits": [
+    "Initial baseline state only; does not approve current converter/importer or render fidelity.",
+    "Original unavailable descriptors were rederived from captured baseline code and all94 original package files.",
+    "Current dealership rows have changed to textured-glb and require their own conversion/assembly review."
+  ]
+}

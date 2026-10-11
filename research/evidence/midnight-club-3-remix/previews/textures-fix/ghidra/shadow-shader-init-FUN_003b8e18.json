@@ -1,0 +1,41 @@
+{
+ "endpoint": "/get_functions",
+ "args": {
+  "function": "0x003b8e18",
+  "fields": "entry_point,decompiled_code,callees",
+  "program": "SLUS_213.55"
+ },
+ "result": {
+  "program": "SLUS_213.55",
+  "name": "FUN_003b8e18",
+  "size": 456,
+  "address": "003b8e18",
+  "entry_point": "003b8e18",
+  "decompiled_code": "\nvoid FUN_003b8e18(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,\n                 undefined8 param_5)\n\n{\n  int *piVar1;\n  undefined1 uVar2;\n  int iVar3;\n  undefined4 uVar4;\n  \n  piVar1 = DAT_006d557c;\n  iVar3 = (int)param_1;\n  uVar4 = 0x3f800000;\n  *(uint *)(iVar3 + 4) = *(uint *)(iVar3 + 4) & 0xffffff80 | 0xf;\n  (**(code **)(*piVar1 + 0x10))(piVar1,0x65e15a);\n  FUN_002b0388(param_1,param_2,param_3,param_4,param_5);\n  (**(code **)(*DAT_006d557c + 0x14))();\n  FUN_002b32e0(uVar4,param_5,0x65e1bb,0xffffffffffffffff);\n  FUN_002b32e0(0,param_5,0x65e1c3,0xffffffffffffffff);\n  FUN_002b32e0(0,param_5,0x65e1cb,0xffffffffffffffff);\n  FUN_002b32e0(uVar4,param_5,0x65e1d3,0xffffffffffffffff);\n  FUN_002b32e0(0,param_5,0x65e1db,0xffffffffffffffff);\n  uVar2 = FUN_002b3238(param_5,0x65e1bb,0xffffffffffffffff);\n  *(undefined1 *)(iVar3 + 0x30) = uVar2;\n  uVar2 = FUN_002b3238(param_5,0x65e1c3,0xffffffffffffffff);\n  *(undefined1 *)(iVar3 + 0x31) = uVar2;\n  uVar2 = FUN_002b3238(param_5,0x65e1cb,0xffffffffffffffff);\n  *(undefined1 *)(iVar3 + 0x32) = uVar2;\n  uVar2 = FUN_002b3238(param_5,0x65e1d3,0xffffffffffffffff);\n  *(undefined1 *)(iVar3 + 0x33) = uVar2;\n  uVar2 = FUN_002b3238(param_5,0x65e1db,0xffffffffffffffff);\n  *(undefined1 *)(iVar3 + 0x34) = uVar2;\n  return;\n}\n\n",
+  "callee_count": 3,
+  "callees": [
+   {
+    "name": "FUN_002b0388",
+    "address": "002b0388"
+   },
+   {
+    "name": "FUN_002b3238",
+    "address": "002b3238"
+   },
+   {
+    "name": "FUN_002b32e0",
+    "address": "002b32e0"
+   }
+  ],
+  "revision": {
+   "token": "1791659127401:44cbab3e:3",
+   "epoch": "44cbab3e",
+   "modification_number": 3,
+   "saved_time": 1791659127401,
+   "unsaved_changes": false,
+   "decompiled": true
+  }
+ },
+ "elapsed_seconds": 0.275,
+ "server": "GhidraMCP 7.0.0 headless, Ghidra 12.1.4, program SLUS_213.55 (project mc3-ghidra-20261010)"
+}

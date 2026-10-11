@@ -1,0 +1,47 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 6 {
+			ambient_wheel.shadert 1 va_whl_sedan_02.tex 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_body.shadert 1 va_odessey_share.tex 
+			emissive_headlight.shadert 2 va_odessey_share.tex __envmap__ 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			ambient_emissive_brakelight.shadert 2 va_odessey_share.tex __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 6 whl0_H.mesh 3 whl1_H.mesh 4 whl2_H.mesh 5 whl3_H.mesh 6 shadow_L.mesh 7 body_h.mesh 0 9999.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.007058 -0.000049 0.037137
+		radius 3.636754
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_odessey_sh.skel
+}
+bonetag {
+	whl_l0	3
+	whl_r0	4
+	whl_l1	5
+	whl_r1	6
+	drop_shadow	7
+	glow_side0	9
+	glow_side1	10
+	glow_headlight0	11
+	glow_headlight1	12
+	glow_side2	13
+	glow_side3	14
+	glow_brakelight0	15
+	glow_brakelight1	16
+	glow_taillight0	17
+	glow_taillight1	18
+}

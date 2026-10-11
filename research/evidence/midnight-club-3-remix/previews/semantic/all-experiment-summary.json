@@ -1,0 +1,345 @@
+{
+  "schema": 1,
+  "experiments": [
+    {
+      "name": "initial-wording-experiment",
+      "metrics": {
+        "grounded": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 18,
+          "top_accuracy": 0.9473684210526315,
+          "correct_action": 14,
+          "action_accuracy": 0.7368421052631579,
+          "applied": 3,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 35709,
+            "output_tokens": 3496
+          },
+          "provider_cost": 0.001499778,
+          "known_partial_cost": 0.001499778,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 4.242467166957795,
+            "mean": 0.2232877456293576,
+            "min": 0.15368308399047237,
+            "max": 0.7536300409992691
+          }
+        },
+        "stateful": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 19,
+          "top_accuracy": 1.0,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 2,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 43290,
+            "output_tokens": 3503
+          },
+          "provider_cost": 0.00181818,
+          "known_partial_cost": 0.00181818,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.6671631680510473,
+            "mean": 0.19300858779216037,
+            "min": 0.15407504100585356,
+            "max": 0.2823820000048727
+          }
+        }
+      },
+      "elapsed_seconds": 7.928494375009905
+    },
+    {
+      "name": "refined-wording-experiment",
+      "metrics": {
+        "grounded": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 17,
+          "top_accuracy": 0.8947368421052632,
+          "correct_action": 12,
+          "action_accuracy": 0.631578947368421,
+          "applied": 1,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 36070,
+            "output_tokens": 3517
+          },
+          "provider_cost": 0.00151494,
+          "known_partial_cost": 0.00151494,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.9886387920123525,
+            "mean": 0.20992835747433433,
+            "min": 0.1621745419979561,
+            "max": 0.3420638749958016
+          }
+        },
+        "stateful": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 17,
+          "top_accuracy": 0.8947368421052632,
+          "correct_action": 15,
+          "action_accuracy": 0.7894736842105263,
+          "applied": 4,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 51717,
+            "output_tokens": 3517
+          },
+          "provider_cost": 0.002172114,
+          "known_partial_cost": 0.002172114,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.7768951250182,
+            "mean": 0.19878395394832632,
+            "min": 0.1626777920027962,
+            "max": 0.23832499999844003
+          }
+        }
+      },
+      "elapsed_seconds": 7.806393708000542
+    },
+    {
+      "name": "explicit-property-experiment",
+      "metrics": {
+        "grounded": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 18,
+          "top_accuracy": 0.9473684210526315,
+          "correct_action": 14,
+          "action_accuracy": 0.7368421052631579,
+          "applied": 3,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 36507,
+            "output_tokens": 3510
+          },
+          "provider_cost": 0.001533294,
+          "known_partial_cost": 0.001533294,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.9174350830435287,
+            "mean": 0.20618079384439625,
+            "min": 0.15898262501286808,
+            "max": 0.4341862500004936
+          }
+        },
+        "stateful": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 17,
+          "top_accuracy": 0.8947368421052632,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 2,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 55113,
+            "output_tokens": 3517
+          },
+          "provider_cost": 0.002314746,
+          "known_partial_cost": 0.002314746,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 4.271897043989156,
+            "mean": 0.22483668652574507,
+            "min": 0.15777429200534243,
+            "max": 0.37037970799428876
+          }
+        }
+      },
+      "elapsed_seconds": 8.22747874999186
+    },
+    {
+      "name": "decomposed-experiment",
+      "metrics": {
+        "grounded": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 16,
+          "top_accuracy": 0.8421052631578947,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 2,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 35728,
+            "output_tokens": 3510
+          },
+          "provider_cost": 0.001500576,
+          "known_partial_cost": 0.001500576,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.283829792999313,
+            "mean": 0.17283314699996385,
+            "min": 0.14568274999328423,
+            "max": 0.22372391699173022
+          }
+        },
+        "stateful": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 9,
+          "top_accuracy": 0.47368421052631576,
+          "correct_action": 12,
+          "action_accuracy": 0.631578947368421,
+          "applied": 1,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 50173,
+            "output_tokens": 4526
+          },
+          "provider_cost": 0.002107266,
+          "known_partial_cost": 0.002107266,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.4523038339830237,
+            "mean": 0.18170020178858018,
+            "min": 0.15549812499375548,
+            "max": 0.22686254100699443
+          }
+        }
+      },
+      "elapsed_seconds": 6.775521999996272
+    },
+    {
+      "name": "final-composition-experiment",
+      "metrics": {
+        "grounded": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 16,
+          "top_accuracy": 0.8421052631578947,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 2,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 35728,
+            "output_tokens": 3510
+          },
+          "provider_cost": 0.001500576,
+          "known_partial_cost": 0.001500576,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.842015956994146,
+            "mean": 0.20221136615758664,
+            "min": 0.16801824999856763,
+            "max": 0.27004699999815784
+          }
+        },
+        "stateful": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 10,
+          "top_accuracy": 0.5263157894736842,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 2,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 50173,
+            "output_tokens": 4520
+          },
+          "provider_cost": 0.002107266,
+          "known_partial_cost": 0.002107266,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.9259259610116715,
+            "mean": 0.20662768215850902,
+            "min": 0.16741829199600033,
+            "max": 0.29305541700159665
+          }
+        }
+      },
+      "elapsed_seconds": 7.810298874988803
+    },
+    {
+      "name": "schema2-experiment",
+      "metrics": {
+        "grounded": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 18,
+          "top_accuracy": 0.9473684210526315,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 3,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 35875,
+            "output_tokens": 3517
+          },
+          "provider_cost": 0.00150675,
+          "known_partial_cost": 0.00150675,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.6049855839810334,
+            "mean": 0.18973608336742281,
+            "min": 0.15865783399203792,
+            "max": 0.3281105829955777
+          }
+        },
+        "stateful": {
+          "attempted": 19,
+          "valid": 19,
+          "errors": 0,
+          "top_correct": 10,
+          "top_accuracy": 0.5263157894736842,
+          "correct_action": 13,
+          "action_accuracy": 0.6842105263157895,
+          "applied": 3,
+          "wrongly_applied": 0,
+          "usage": {
+            "input_tokens": 50273,
+            "output_tokens": 4526
+          },
+          "provider_cost": 0.002111466,
+          "known_partial_cost": 0.002111466,
+          "cost_receipts": 19,
+          "latency_seconds": {
+            "total": 3.664619372037123,
+            "mean": 0.19287470379142752,
+            "min": 0.15599195798859,
+            "max": 0.279574500003946
+          }
+        }
+      },
+      "elapsed_seconds": 7.321734334007488
+    }
+  ],
+  "totals": {
+    "requests": 228,
+    "input_tokens": 516356,
+    "output_tokens": 45169,
+    "provider_cost": 0.021686952,
+    "wrongly_applied": 0,
+    "elapsed_seconds": 45.86992204199487
+  },
+  "latest_experiment": "schema2-experiment.json",
+  "latest_literal_evidence": "schema2-direct-evidence.json",
+  "claim_limits": [
+    "228 requests repeat a constructed19-query sample across changed designs; not228 independent cases.",
+    "Earlier runs had the independently discovered schema2 readiness defect; their outcomes are development history, not approval of that version.",
+    "Current source and dealership readiness differ; schema2 actual descriptor counts are recorded in latest evidence.",
+    "Final stateful action accuracy13/19 includes conservative valid-query false negatives; no general semantic or rendered-model accuracy is established."
+  ]
+}

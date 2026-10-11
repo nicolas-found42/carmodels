@@ -1,0 +1,142 @@
+{
+  "args": {
+    "request": "Independently review the newly authored MC3 exporter boundary test file. Assess whether the six source-exact fixture tests actually cover member traversal/absolute paths/symlinks/hardlinks, duplicate vehicle identities, manifest traversal, successful repeat exports and preservation of edited output. This is a scoped test review, not approval of the whole exporter or dealership feature.",
+    "diff": "--- /dev/null\n+++ b/tools/test_export_mc3_models.py\n@@ -0,0 +1,125 @@\n+\"\"\"Exporter boundary controls on temporary copies of exact native 350Z members.\"\"\"\n+import copy\n+import json\n+import os\n+from pathlib import Path\n+import shutil\n+import tempfile\n+import unittest\n+\n+from bake_models import ROOT, read_glb\n+from export_mc3_models import export\n+\n+\n+class ExportBoundaryTests(unittest.TestCase):\n+    def fixture(self, base):\n+        native = ROOT / 'midnight-club-3-remix/cars'\n+        index = json.loads((native / 'index.json').read_text())\n+        vehicle = next(v for v in index['vehicles'] if v['id'] == 'vp_350z_04')\n+        manifest = json.loads((native / vehicle['manifest']).read_text())\n+        source = base / 'source'\n+        (source / 'members').mkdir(parents=True)\n+        members = []\n+        for row in manifest['members']:\n+            if row['file'].endswith('.pck'):\n+                target = source / 'members' / Path(row['file']).name\n+                shutil.copyfile(native / row['file'], target)\n+                members.append({**row, 'file': target.relative_to(source).as_posix()})\n+        manifest = {**manifest, 'members': members}\n+        wheel_sources = {vehicle['id'] + '.carcfg', 'decal.pck', 'rim.ppf', 'tire.ppf', 'vehicle.lst'}\n+        shared = [row for row in index['files'] if row['file'].startswith('shared/')\n+                  and Path(row['file']).name in wheel_sources]\n+        self.assertEqual({Path(row['file']).name for row in shared}, wheel_sources)\n+        for row in shared:\n+            target = source / row['file']\n+            target.parent.mkdir(parents=True, exist_ok=True)\n+            shutil.copyfile(native / row['file'], target)\n+        index = {**index, 'vehicles': [{**vehicle, 'manifest': vehicle['id'] + '/manifest.json'}], 'files': shared}\n+        self.write_fixture(source, index, manifest)\n+        return source, index, manifest\n+\n+    def write_fixture(self, source, index, manifest):\n+        manifest_path = source / 'vp_350z_04/manifest.json'\n+        manifest_path.parent.mkdir(parents=True, exist_ok=True)\n+        manifest_path.write_text(json.dumps(manifest))\n+        (source / 'index.json').write_text(json.dumps(index))\n+\n+    def reject(self, source, output, reason):\n+        with self.assertRaisesRegex(ValueError, reason):\n+            export(source, output)\n+        self.assertFalse(output.exists(), 'rejected export must not publish output')\n+\n+    def test_parent_and_absolute_member_paths_reject_before_output(self):\n+        for absolute in (False, True):\n+            with self.subTest(absolute=absolute), tempfile.TemporaryDirectory() as temp:\n+                base = Path(temp).resolve()\n+                source, index, manifest = self.fixture(base)\n+                payload = base / 'payload'\n+                shutil.copytree(source / 'members', payload)\n+                for row in manifest['members']:\n+                    name = Path(row['file']).name\n+                    row['file'] = str(payload / name) if absolute else '../payload/' + name\n+                self.write_fixture(source, index, manifest)\n+                self.reject(source, base / 'output', 'path|relative|outside|boundary')\n+\n+    def test_symlink_member_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, _, manifest = self.fixture(base)\n+            member = source / manifest['members'][0]['file']\n+            outside = base / member.name\n+            member.rename(outside)\n+            member.symlink_to(outside)\n+            self.reject(source, base / 'output', 'symlink|path|outside|boundary')\n+\n+    def test_hardlinked_member_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, _, manifest = self.fixture(base)\n+            member = source / manifest['members'][0]['file']\n+            os.link(member, base / 'linked-member.pck')\n+            self.reject(source, base / 'output', 'independent file')\n+\n+    def test_duplicate_vehicle_identity_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, index, manifest = self.fixture(base)\n+            index['vehicles'].append(copy.deepcopy(index['vehicles'][0]))\n+            self.write_fixture(source, index, manifest)\n+            self.reject(source, base / 'output', 'duplicat|identity|ambiguous')\n+\n+    def test_manifest_parent_path_rejects_before_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, index, manifest = self.fixture(base)\n+            (base / 'manifest.json').write_text(json.dumps(manifest))\n+            index['vehicles'][0]['manifest'] = '../manifest.json'\n+            self.write_fixture(source, index, manifest)\n+            self.reject(source, base / 'output', 'identity')\n+\n+    def test_valid_export_repeats_and_preserves_changed_output(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            base = Path(temp).resolve()\n+            source, _, _ = self.fixture(base)\n+            output = base / 'output'\n+            self.assertEqual(export(source, output), 1)\n+            row = json.loads((output / 'index.json').read_text())['cars'][0]\n+            self.assertFalse(row['wheels']['bike'])\n+            self.assertEqual(len(row['wheels']['slots']), 4)\n+            document, _ = read_glb((output / row['file']).read_bytes())\n+            for slot in row['wheels']['slots']:\n+                nodes = [node for node in document['nodes']\n+                         if node['extras'].get('nativeBone') == slot['bone']\n+                         and 'nativeWheelComponent' in node['extras']]\n+                self.assertEqual({node['extras']['nativeWheelComponent'] for node in nodes}, {'rim', 'tire'})\n+            self.assertEqual(export(source, output), 0)\n+            model = output / 'vp_350z_04.glb'\n+            model.write_bytes(model.read_bytes() + b'user edit')\n+            before = {p.name: p.read_bytes() for p in output.iterdir()}\n+            with self.assertRaisesRegex(ValueError, 'differs; nothing overwritten'):\n+                export(source, output)\n+            self.assertEqual({p.name: p.read_bytes() for p in output.iterdir()}, before)\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n",
+    "claims": [
+      "All six exporter boundary tests pass against the current exporter and wheel-enabled model converter.",
+      "The tests use temporary copies of exact source bytes, preserve native extraction, require rejection before publishing output for invalid source/identity inputs, and verify that changed output is preserved."
+    ],
+    "evidence": [
+      {
+        "id": "test-source",
+        "text": "\"\"\"Exporter boundary controls on temporary copies of exact native 350Z members.\"\"\"\nimport copy\nimport json\nimport os\nfrom pathlib import Path\nimport shutil\nimport tempfile\nimport unittest\n\nfrom bake_models import ROOT, read_glb\nfrom export_mc3_models import export\n\n\nclass ExportBoundaryTests(unittest.TestCase):\n    def fixture(self, base):\n        native = ROOT / 'midnight-club-3-remix/cars'\n        index = json.loads((native / 'index.json').read_text())\n        vehicle = next(v for v in index['vehicles'] if v['id'] == 'vp_350z_04')\n        manifest = json.loads((native / vehicle['manifest']).read_text())\n        source = base / 'source'\n        (source / 'members').mkdir(parents=True)\n        members = []\n        for row in manifest['members']:\n            if row['file'].endswith('.pck'):\n                target = source / 'members' / Path(row['file']).name\n                shutil.copyfile(native / row['file'], target)\n                members.append({**row, 'file': target.relative_to(source).as_posix()})\n        manifest = {**manifest, 'members': members}\n        wheel_sources = {vehicle['id'] + '.carcfg', 'decal.pck', 'rim.ppf', 'tire.ppf', 'vehicle.lst'}\n        shared = [row for row in index['files'] if row['file'].startswith('shared/')\n                  and Path(row['file']).name in wheel_sources]\n        self.assertEqual({Path(row['file']).name for row in shared}, wheel_sources)\n        for row in shared:\n            target = source / row['file']\n            target.parent.mkdir(parents=True, exist_ok=True)\n            shutil.copyfile(native / row['file'], target)\n        index = {**index, 'vehicles': [{**vehicle, 'manifest': vehicle['id'] + '/manifest.json'}], 'files': shared}\n        self.write_fixture(source, index, manifest)\n        return source, index, manifest\n\n    def write_fixture(self, source, index, manifest):\n        manifest_path = source / 'vp_350z_04/manifest.json'\n        manifest_path.parent.mkdir(parents=True, exist_ok=True)\n        manifest_path.write_text(json.dumps(manifest))\n        (source / 'index.json').write_text(json.dumps(index))\n\n    def reject(self, source, output, reason):\n        with self.assertRaisesRegex(ValueError, reason):\n            export(source, output)\n        self.assertFalse(output.exists(), 'rejected export must not publish output')\n\n    def test_parent_and_absolute_member_paths_reject_before_output(self):\n        for absolute in (False, True):\n            with self.subTest(absolute=absolute), tempfile.TemporaryDirectory() as temp:\n                base = Path(temp).resolve()\n                source, index, manifest = self.fixture(base)\n                payload = base / 'payload'\n                shutil.copytree(source / 'members', payload)\n                for row in manifest['members']:\n                    name = Path(row['file']).name\n                    row['file'] = str(payload / name) if absolute else '../payload/' + name\n                self.write_fixture(source, index, manifest)\n                self.reject(source, base / 'output', 'path|relative|outside|boundary')\n\n    def test_symlink_member_rejects_before_output(self):\n        with tempfile.TemporaryDirectory() as temp:\n            base = Path(temp).resolve()\n            source, _, manifest = self.fixture(base)\n            member = source / manifest['members'][0]['file']\n            outside = base / member.name\n            member.rename(outside)\n            member.symlink_to(outside)\n            self.reject(source, base / 'output', 'symlink|path|outside|boundary')\n\n    def test_hardlinked_member_rejects_before_output(self):\n        with tempfile.TemporaryDirectory() as temp:\n            base = Path(temp).resolve()\n            source, _, manifest = self.fixture(base)\n            member = source / manifest['members'][0]['file']\n            os.link(member, base / 'linked-member.pck')\n            self.reject(source, base / 'output', 'independent file')\n\n    def test_duplicate_vehicle_identity_rejects_before_output(self):\n        with tempfile.TemporaryDirectory() as temp:\n            base = Path(temp).resolve()\n            source, index, manifest = self.fixture(base)\n            index['vehicles'].append(copy.deepcopy(index['vehicles'][0]))\n            self.write_fixture(source, index, manifest)\n            self.reject(source, base / 'output', 'duplicat|identity|ambiguous')\n\n    def test_manifest_parent_path_rejects_before_output(self):\n        with tempfile.TemporaryDirectory() as temp:\n            base = Path(temp).resolve()\n            source, index, manifest = self.fixture(base)\n            (base / 'manifest.json').write_text(json.dumps(manifest))\n            index['vehicles'][0]['manifest'] = '../manifest.json'\n            self.write_fixture(source, index, manifest)\n            self.reject(source, base / 'output', 'identity')\n\n    def test_valid_export_repeats_and_preserves_changed_output(self):\n        with tempfile.TemporaryDirectory() as temp:\n            base = Path(temp).resolve()\n            source, _, _ = self.fixture(base)\n            output = base / 'output'\n            self.assertEqual(export(source, output), 1)\n            row = json.loads((output / 'index.json').read_text())['cars'][0]\n            self.assertFalse(row['wheels']['bike'])\n            self.assertEqual(len(row['wheels']['slots']), 4)\n            document, _ = read_glb((output / row['file']).read_bytes())\n            for slot in row['wheels']['slots']:\n                nodes = [node for node in document['nodes']\n                         if node['extras'].get('nativeBone') == slot['bone']\n                         and 'nativeWheelComponent' in node['extras']]\n                self.assertEqual({node['extras']['nativeWheelComponent'] for node in nodes}, {'rim', 'tire'})\n            self.assertEqual(export(source, output), 0)\n            model = output / 'vp_350z_04.glb'\n            model.write_bytes(model.read_bytes() + b'user edit')\n            before = {p.name: p.read_bytes() for p in output.iterdir()}\n            with self.assertRaisesRegex(ValueError, 'differs; nothing overwritten'):\n                export(source, output)\n            self.assertEqual({p.name: p.read_bytes() for p in output.iterdir()}, before)\n\n\nif __name__ == '__main__':\n    unittest.main()\n"
+      },
+      {
+        "id": "real-tests",
+        "text": "test_duplicate_vehicle_identity_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_duplicate_vehicle_identity_rejects_before_output) ... ok\ntest_hardlinked_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_hardlinked_member_rejects_before_output) ... ok\ntest_manifest_parent_path_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_manifest_parent_path_rejects_before_output) ... ok\ntest_parent_and_absolute_member_paths_reject_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_parent_and_absolute_member_paths_reject_before_output) ... ok\ntest_symlink_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_symlink_member_rejects_before_output) ... ok\ntest_valid_export_repeats_and_preserves_changed_output (tools.test_export_mc3_models.ExportBoundaryTests.test_valid_export_repeats_and_preserves_changed_output) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 1.548s\n\nOK\n"
+      },
+      {
+        "id": "exporter-source",
+        "text": "#!/usr/bin/env python3\n\"\"\"Export separate MC3 preview conversions without modifying native extraction.\"\"\"\nimport argparse\nimport json\nfrom pathlib import Path\nimport re\nimport tempfile\n\nfrom bake_models import ROOT, bake_car\nfrom mc3_model import PROFILE, preview_vehicle, sha, source_path, native_executable\nfrom import_mc3_catalogs import regular\n\nDEFAULT = ROOT / 'midnight-club-3-remix/recovered-models'\n\n\ndef export(extraction=ROOT / 'midnight-club-3-remix/cars', output=DEFAULT):\n    extraction, output = Path(extraction), Path(output)\n    regular(output)\n    if extraction.resolve().is_relative_to(output.resolve()) or output.resolve().is_relative_to(extraction.resolve()):\n        raise ValueError('preview export must be separate from native extraction')\n    index = json.loads(source_path(extraction, 'index.json').read_text())\n    identities, manifests = set(), set()\n    for car in index['vehicles']:\n        code, manifest = car['id'], car['manifest']\n        if (not isinstance(code, str) or not re.fullmatch(r'vp_[a-z0-9_]+', code)\n                or manifest != code+'/manifest.json' or code in identities or manifest in manifests):\n            raise ValueError('duplicate or invalid native vehicle/output identity')\n        source_path(extraction, manifest)\n        identities.add(code);manifests.add(manifest)\n    if not identities:\n        raise ValueError('native preview corpus is empty')\n    rows, files = [], {}\n    executable = native_executable()\n    for car in index['vehicles']:\n        manifest = json.loads(source_path(extraction, car['manifest']).read_text())\n        if manifest['id'] != car['id']:\n            raise ValueError('preview manifest identity differs')\n        data, evidence = preview_vehicle(extraction, manifest, index, executable)\n        code = car['id']\n        baked = bake_car('MC3_'+code.upper(), data, source_mode=False)\n        # Export provenance paths remain relative to the repository, never machine-specific.\n        rows.append({'code': code, 'file': code+'.glb', 'source_profile': PROFILE,\n                     'bytes': len(data), 'sha256': sha(data), 'triangle_count': baked['triangleCount'], **evidence})\n        files[code+'.glb'] = data\n    files['index.json'] = (json.dumps({'schema': 1, 'cars': rows, 'source': index['source']}, indent=1)+'\\n').encode()\n    if output.exists():\n        expected = set(files)\n        actual = {p.relative_to(output).as_posix() for p in output.rglob('*') if p.is_file()}\n        if actual != expected:\n            raise ValueError('existing preview export coverage differs')\n        for name, data in files.items():\n            regular(output/name)\n            if (output/name).read_bytes() != data:\n                raise ValueError('existing preview export differs; nothing overwritten')\n        return 0\n    output.parent.mkdir(parents=True, exist_ok=True)\n    with tempfile.TemporaryDirectory(prefix='.mc3-preview-', dir=output.parent) as temp:\n        stage = Path(temp)/'models';stage.mkdir()\n        for name, data in files.items():\n            (stage/name).write_bytes(data)\n        stage.rename(output)\n    return len(rows)\n\n\nif __name__ == '__main__':\n    p = argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--extraction', type=Path, default=ROOT/'midnight-club-3-remix/cars')\n    p.add_argument('--output', type=Path, default=DEFAULT)\n    a = p.parse_args()\n    print(f'Exported {export(a.extraction, a.output)} source-bound static MC3 previews')\n"
+      },
+      {
+        "id": "source-boundary-reader",
+        "text": "\"\"\"Convert source-bound MC3 static packet geometry to an editable GLB preview.\"\"\"\nimport hashlib\nimport copy\nimport json\nimport math\nfrom pathlib import Path\nimport re\nimport struct\n\nfrom mc3_pck import Pck, read_vehicle, read_mesh, read_resource_group, strip_indices\nfrom mc3_materials import read_material_table, CLAIM_LIMITS\nfrom mc3_wheels import read_default_wheels, read_vehicle_class, read_wheel_sizing\nfrom mc3_archive import CookedDisc\nfrom import_mc3_catalogs import ROOT, regular\n\nPROFILE = 'mc3-ps2-static-preview-v1'\nLIMITS = [\n    'Static inspection preview of native PS2 geometry; animation and damage are not emulated.',\n    'Triangle strips use the native normal-X ADC restart bit; runtime clipping and winding are not emulated.',\n    'Default stock-named parts use native skeleton rest positions; runtime customization is not emulated.',\n    'Single-axis source Euler poses are applied; parts needing an unverified multi-axis order are omitted.',\n    'Native rims and tires use default source handles and static rest sizing; wheel rotation, camber and deformation are not emulated.',\n    'Normals are derived from preview faces; native normal and UV scales are not a rendering fidelity claim.',\n    *CLAIM_LIMITS,\n]\n\n\ndef sha(data):\n    return hashlib.sha256(data).hexdigest()\n\n\ndef source_path(folder, name):\n    \"\"\"Require canonical relative source identities within the extraction root.\"\"\"\n    folder = Path(folder)\n    if (not isinstance(name, str) or not name or '\\\\' in name or '\\0' in name\n            or Path(name).is_absolute() or '..' in name.split('/')\n            or Path(name).as_posix() != name):\n        raise ValueError('native source path must be canonical and relative')\n    path = folder/name\n    regular(path)\n    if not path.resolve().is_relative_to(folder.resolve()) or not path.is_file():\n        raise ValueError('native source path outside extraction or missing')\n    if path.stat().st_size > 64 * 1024 * 1024:\n        raise ValueError('native preview source outside size bound')\n    return path\n\n\ndef wheel_slots(bones):\n    \"\"\"Bind the source corpus's explicit wheel-joint aliases and zero rest frames.\"\"\"\n    slots = []\n    for bone in bones:\n        name = bone['name'].lower()\n        numeric = re.fullmatch(r'(?:whl_?0?[0-3]|wheel[0-3]|whl[fr][01])', name)\n        bike = name in {'whl_front', 'whl_rear', 'wheel_front', 'wheel_rear', 'wheelf', 'wheelr'}\n        plain = name == 'wheel' and bone['parent'] is not None and bones[bone['parent']]['name'].lower() in {'ax', 'ax1', 'ax2', 'ax3'}\n        if not (numeric or bike or plain):\n            continue\n        ancestor = bone\n        while ancestor is not None:\n            if any(ancestor['rotation_raw']):\n                raise ValueError('wheel rest frame has unsupported ancestor rotation')\n            ancestor = bones[ancestor['parent']] if ancestor['parent'] is not None else None\n        x, y, z = bone['global_position']\n        if not y > 0 or z == 0:\n            raise ValueError('wheel anchor outside verified source frame')\n        slots.append({'bone': bone['index'], 'native_name': bone['name'],\n                      'translation': bone['global_position'], 'axle': 0 if z < 0 else 1,\n                      'side': 'left' if x < 0 else 'right'})\n    if len(slots) not in {2, 4} or [sum(s['axle'] == a for s in slots) for a in (0, 1)] != [len(slots)//2]*2:\n        raise ValueError('native wheel joint set missing or ambiguous')\n    names = {s['native_name'].lower() for s in slots}\n    if len(slots) == 2:\n        pairs = [{'whl_front', 'whl_rear'}, {'wheel_front', 'wheel_rear'},\n                 {'whl0', 'whl1'}, {'wheelf', 'wheelr'}]\n        if names not in pairs:\n            raise ValueError('native two-wheel aliases missing or ambiguous')\n    else:\n        indices = []\n        for slot in slots:\n            name = slot['native_name'].lower()\n            if name == 'wheel':\n                parent = bones[bones[slot['bone']]['parent']]['name'].lower()\n                index = 0 if parent == 'ax' else int(parent[-1])\n            elif re.fullmatch(r'whl[fr][01]', name):\n                index = int(name[-1]) + (2 if name[-2] == 'r' else 0)\n            else:\n                index = int(name[-1])\n            if slot['axle'] != index//2:\n                raise ValueError('native wheel alias differs from axle source frame')\n            indices.append(index)\n        if sorted(indices) != [0, 1, 2, 3]:\n            raise ValueError('native four-wheel aliases missing or ambig"
+      }
+    ],
+    "tests": "test_duplicate_vehicle_identity_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_duplicate_vehicle_identity_rejects_before_output) ... ok\ntest_hardlinked_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_hardlinked_member_rejects_before_output) ... ok\ntest_manifest_parent_path_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_manifest_parent_path_rejects_before_output) ... ok\ntest_parent_and_absolute_member_paths_reject_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_parent_and_absolute_member_paths_reject_before_output) ... ok\ntest_symlink_member_rejects_before_output (tools.test_export_mc3_models.ExportBoundaryTests.test_symlink_member_rejects_before_output) ... ok\ntest_valid_export_repeats_and_preserves_changed_output (tools.test_export_mc3_models.ExportBoundaryTests.test_valid_export_repeats_and_preserves_changed_output) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 1.548s\n\nOK\n"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "safe_to_apply": 0.59,
+      "scores": {
+        "correctness": {
+          "score": 1.73,
+          "confidence": 0.59,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.19,
+            "2": 0.77
+          }
+        },
+        "spec_match": {
+          "score": 1.78,
+          "confidence": 0.69,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.19,
+            "2": 0.8
+          }
+        },
+        "test_gap": {
+          "score": 0.62,
+          "confidence": 0.07,
+          "probabilities": {
+            "0": 0.48,
+            "1": 0.42,
+            "2": 0.1
+          }
+        },
+        "blast_radius": {
+          "score": 0.09,
+          "confidence": 0.88,
+          "probabilities": {
+            "0": 0.93,
+            "1": 0.06,
+            "2": 0.01
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.85975,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "All six exporter boundary tests pass against the current exporter and wheel-enabled model converter.",
+          "verdict": "verified",
+          "confidence": 0.91,
+          "probabilities": {
+            "verified": 0.9400000000000001,
+            "contradicted": 0,
+            "unsupported": 0.06
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The tests use temporary copies of exact source bytes, preserve native extraction, require rejection before publishing output for invalid source/identity inputs, and verify that changed output is preserved.",
+          "verdict": "verified",
+          "confidence": 0.88,
+          "probabilities": {
+            "verified": 0.92,
+            "contradicted": 0.02,
+            "unsupported": 0.06
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 6930,
+      "output_tokens": 158
+    }
+  }
+}

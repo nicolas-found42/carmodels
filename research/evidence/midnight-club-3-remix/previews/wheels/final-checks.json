@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "file": "tools/mc3_wheels.py",
+      "sha256": "96542e5bc04e34e46deb9c4887ea129f4ffd8c8d7db82eb66b73c9a53f135ff3"
+    },
+    {
+      "file": "tools/test_mc3_wheels.py",
+      "sha256": "86419b5dafb3ddd1f0f37a5ecef380403768093cfb53daf8e46c3dbdcd0b1e07"
+    }
+  ],
+  "test_command": "PYTHONPATH=tools python3 -m unittest tools/test_mc3_wheels.py -v",
+  "tests": "test_conflicting_default_configs_are_not_selected (tools.test_mc3_wheels.WheelTests.test_conflicting_default_configs_are_not_selected) ... ok\ntest_elf_virtual_mapping_and_ambiguous_segments (tools.test_mc3_wheels.WheelTests.test_elf_virtual_mapping_and_ambiguous_segments) ... ok\ntest_library_handle_preserves_actual_page_and_rejects_wrong_archive (tools.test_mc3_wheels.WheelTests.test_library_handle_preserves_actual_page_and_rejects_wrong_archive) ... ok\ntest_native_ppf_offset_mask_and_length (tools.test_mc3_wheels.WheelTests.test_native_ppf_offset_mask_and_length) ... ok\ntest_native_sizing_car_bike_and_failure_controls (tools.test_mc3_wheels.WheelTests.test_native_sizing_car_bike_and_failure_controls) ... ok\ntest_nested_class_source_and_ambiguous_records (tools.test_mc3_wheels.WheelTests.test_nested_class_source_and_ambiguous_records) ... ok\ntest_recovered_350z_join_and_native_geometry (tools.test_mc3_wheels.WheelTests.test_recovered_350z_join_and_native_geometry) ... ok\ntest_source_model_corruption_controls (tools.test_mc3_wheels.WheelTests.test_source_model_corruption_controls) ... ok\ntest_source_rejects_linked_files_and_directory_ancestry (tools.test_mc3_wheels.WheelTests.test_source_rejects_linked_files_and_directory_ancestry) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 1.929s\n\nOK\n",
+  "ruff_command": "ruff check tools/mc3_wheels.py tools/test_mc3_wheels.py",
+  "ruff": "All checks passed!\n"
+}

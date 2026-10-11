@@ -1,0 +1,50 @@
+Version: 103
+shadinggroup {
+	shadinggroup {
+		Count 1
+		Shaders 7 {
+			ambient_wheel.shadert 1 va_whl_truck_chrm.tex 
+			ambient_shadow.shadert 1 vp_shadow_ambient.tex 
+			ambient_body.shadert 1 va_cementtruck_share.tex 
+			default.shadert 0 
+			emissive_headlight.shadert 2 va_cementtruck_share.tex __envmap__ 
+			lit_textured_damage_noHDR.shadert 1 va_undercar_1.tex 
+			ambient_chrome.shadert 1 __envmap__ 
+		}
+	}
+}
+lodgroup {
+	mesh {
+		high 8 whl_l0_H.mesh 2 whl_r0_H.mesh 3 whl_l3_H.mesh 4 whl_r3_H.mesh 5 whl_l4_H.mesh 6 whl_r4_H.mesh 7 shadow_L.mesh 8 vroot_cement_sh_LOD_hlod.mesh 0 10.000000
+		med none 9999.000000 
+		low none 9999.000000 
+		vlow none 9999.000000 
+		center 0.008001 0.928007 0.408397
+		radius 5.338045
+	}
+}
+bound {
+	bound bound.bnd
+}
+skel {
+	skel va_cementtruck_sh.skel
+}
+bonetag {
+	whl_l0	2
+	whl_r0	3
+	whl_l1	4
+	whl_r1	5
+	whl_l2	6
+	whl_r2	7
+	drop_shadow	8
+	glow_headlight0	10
+	glow_headlight1	11
+	glow_brakelight0	12
+	glow_brakelight1	13
+	glow_side0	14
+	glow_side1	15
+	glow_side2	16
+	glow_side3	17
+	glow_taillight0	18
+	glow_taillight1	19
+}

@@ -1,0 +1,167 @@
+--- a/dealership/dealership.html
++++ b/dealership/dealership.html
+@@ -170,12 +170,12 @@
+   <nav id="sidebar">
+     <header>
+       <h1>CAR LIBRARY — <span>DEALERSHIP</span></h1>
+-      <div class="sub">Independent editable models · multiple games</div>
++      <div class="sub">Cars and recovered assets · multiple games</div>
+       <a class="jump" href="recovered.html">Source models →</a>
+     </header>
+     <input aria-label="Search cars by name or year" id="search" placeholder="Search name or year…" autocomplete="off">
+     <label style="padding:0 16px 8px;font-size:12px">Game <select id="game-filter" aria-label="Filter by game"><option value="all">All games</option></select></label>
+-    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="day">Day</option><option value="night">Night</option><option value="arcade">Arcade</option><option value="base">Base game</option><option value="addon">Add-on</option></select></label>
++    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="day">Day</option><option value="night">Night</option><option value="arcade">Arcade</option><option value="base">Base game</option><option value="addon">Add-on</option><option value="native">Native packages</option></select></label>
+     <div style="padding:0 16px 10px"><input id="semantic-query" aria-label="Describe game and variant filters" placeholder="e.g. Gran Turismo night models" maxlength="500" style="width:100%"><button type="button" id="semantic-filter">Find game and variant</button><div id="semantic-status" role="status" style="font-size:12px;color:var(--muted)"></div></div>
+     <div id="filters"></div>
+     <div id="results" role="status" aria-live="polite"></div>
+@@ -187,7 +187,7 @@
+     <div id="hud">
+         <div class="name" id="hud-name">—</div>
+         <div class="tag" id="hud-tag"></div>
+-        <div class="recon" title="These dealership models are independent editable copies. Changes here do not modify the recovered source models. Surface tones are illustrative.">Dealership edition · editable model copies</div>
++        <div class="recon" title="Dealership assets are independent copies. Model editing requires a converted GLB; native packages can be downloaded.">Dealership edition · independent asset copies</div>
+       </div>
+       <div id="stage">
+         <div id="loading" role="status" aria-live="polite">Loading corpus…</div>
+@@ -303,7 +303,7 @@
+ <script type="module">
+ import * as THREE from 'three';
+ import { OrbitControls } from './vendor/OrbitControls.js';
+-import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant } from './dealership.mjs';
++import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, isNativePackage, dealershipDownload } from './dealership.mjs';
+ 
+ const $ = id => document.getElementById(id);
+ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
+@@ -398,7 +398,7 @@
+     row.hidden = !matches;
+     if (matches) visible++;
+   });
+-  $('results').textContent = `${visible} of ${CARS.length} entries` + (current ? ` · Preview: ${current.name}` : '');
++  $('results').textContent = `${visible} of ${CARS.length} entries` + (current ? ` · ${isNativePackage(current)?'Selected':'Preview'}: ${current.name}` : '');
+   $('empty').hidden = visible > 0;
+   if(visible && current && [...document.querySelectorAll('.car-row')].find(r=>r._code===current.code)?.hidden) {
+     const first=[...document.querySelectorAll('.car-row')].find(r=>!r.hidden);
+@@ -531,8 +531,11 @@
+ 
+   $('hud-name').textContent = c.name;
+   $('model-limits').textContent = (c.claimLimits || c.model.claimLimits || []).join(' ');
+-  $('download-model').href = `./dealership/models/${c.code}.glb`;
+-  $('download-model').download = `${c.code}-dealership.glb`;
++  const download=dealershipDownload(c);
++  $('download-model').href=download.href;$('download-model').download=download.filename;
++  $('download-model').textContent=download.label;
++  for(const button of document.querySelectorAll('[data-view]'))button.disabled=isNativePackage(c);
++  $('auto-rotate').disabled=isNativePackage(c);
+   $('hud-tag').textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.group || ''} · ${c.bodyStyle==='unknown'?gameLabel(c)+' · '+c.sourceVariant:c.bodyStyle}`;
+   $('v-ag').textContent = c.agility==null?'Not decoded':c.agility.toFixed(1);
+   $('v-ac').textContent = c.accel==null?'Not decoded':c.accel.toFixed(1);
+@@ -549,12 +552,12 @@
+   $('k-bhp').textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '—';
+   $('k-kg').textContent = c.kg ? fmt(c.kg) + ' kg' : '—';
+   $('k-ts').textContent = c.topSpeed ? Math.round(c.topSpeed) + ' mph' : '—';
+-  $('k-liv').textContent = c.model.schema===2?'Not decoded':c.liveries ? c.liveries.length : '—';
++  $('k-liv').textContent = c.model.schema!==1?'Not decoded':c.liveries ? c.liveries.length : '—';
+   $('k-snd').textContent = (c.sound || '').split(';')[0].replace(' (in _shared/sounds/)', '');
+   const sample = c.paint ? c.paint.rgb : [90, 90, 90];
+   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
+   $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
+-  $('paint-caveat').textContent = c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
++  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
+   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
+     const el = document.createElement('span');
+     el.className = 'livery-code';
+@@ -564,6 +567,11 @@
+ 
+   if (carMesh) { scene.remove(carMesh); disposeCar(carMesh); }
+   carMesh=null;
++  if(isNativePackage(c)) {
++    $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';
++    $('loading').textContent='3D preview unavailable. The native vehicle package is available to download.';
++    applyFilters();return;
++  }
+   $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';$('loading').textContent='Loading '+c.name+'…';
+   try {
+     const model=await loadCar(c,{signal:selectionController.signal});
+--- a/dealership/dealership.mjs
++++ b/dealership/dealership.mjs
+@@ -3,10 +3,16 @@
+ 
+ export const gameId = c => c.game || 'ford-racing-2';
+ export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
++export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';
++export function dealershipDownload(c) {
++  return isNativePackage(c) ? {href:'./'+c.model.source.package, filename:c.code+'-dealership.dat', label:'Download native package (.dat)'} :
++    {href:`./dealership/models/${c.code}.glb`, filename:c.code+'-dealership.glb', label:'Download dealership model (.glb)'};
++}
+ export function matchesVariant(c, variant) {
+   return !variant || (variant==='arcade' ? c.sourceCollection==='arcade' : c.sourceVariant===variant);
+ }
+ export async function loadCar(c, options={}) {
++  if(isNativePackage(c))throw Error('3D preview unavailable for this native package.');
+   return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);
+ }
+ 
+@@ -108,7 +114,7 @@
+   for (const c of cars) {
+     if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
+     codes.add(c.code);
+-    const unknownSpecs = ['gran-turismo','redline'].includes(c.game);
++    const unknownSpecs = ['gran-turismo','redline','midnight-club-3-remix'].includes(c.game);
+     if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);
+     if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);
+     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);
+@@ -124,7 +130,16 @@
+     if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);
+     if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);
+     if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);
+-    if(c.model?.schema===2) {
++    if(isNativePackage(c)!==(c.model?.schema===3))throw Error(`${c.code}: inconsistent native package model.`);
++    if(c.model?.schema===3) {
++      const s=c.model.source;
++      if(c.game!=='midnight-club-3-remix' || c.displayMode!=='native-package' || c.model.previewStatus!=='unavailable' ||
++         !s || s.package!==`dealership/assets/${c.code}.dat` || s.preset!=='dealership' ||
++         s.profile!=='mc3-ps2-native-package-v1' || !/^[a-f0-9]{64}$/.test(s.sha256) ||
++         !Number.isInteger(s.bytes) || s.bytes<=0 || s.bytes>256*1024*1024 ||
++         !Number.isInteger(s.nativeMembers) || s.nativeMembers<=0 || s.nativeMembers>100000 ||
++         !/^vp_[a-z0-9_]+$/.test(c.sourceCode) || c.code!=='MC3_'+c.sourceCode.toUpperCase())throw Error(`${c.code}: invalid native dealership package.`);
++    } else if(c.model?.schema===2) {
+       if(c.displayMode!=='textured-glb' || !c.model.source || c.model.source.glb!==`dealership/models/${c.code}.glb` ||
+          c.model.source.preset!=='dealership' || !/^[a-f0-9]{64}$/.test(c.model.source.sha256) ||
+          !Number.isInteger(c.model.triangleCount) || c.model.triangleCount<=0)throw Error(`${c.code}: invalid textured dealership model.`);
+--- a/tools/test_dealership.mjs
++++ b/tools/test_dealership.mjs
+@@ -2,14 +2,14 @@
+ import fs from 'node:fs';
+ import http from 'node:http';
+ import * as THREE from '../dealership/vendor/three.module.js';
+-import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant} from '../dealership/dealership.mjs';
++import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload} from '../dealership/dealership.mjs';
+ 
+ const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
+ const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
+ const sourcePage = fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
+ assert.match(dealershipPage,/fetchCars\('\.\/public\/dealership\/cars.json'\)/);
+ assert(!dealershipPage.includes('silhouette')&&!dealershipPage.includes('Silhouette'),'old visible terminology removed');
+-assert.match(dealershipPage,/dealership\/models\/\$\{c.code\}\.glb/,'dealership downloads its own copies');
++assert.equal(dealershipDownload(cars[0]).href,`./dealership/models/${cars[0].code}.glb`,'dealership downloads its own copies');
+ assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
+ assert.match(sourcePage,/<h1>Source model library<\/h1>/);
+ assert.equal(validateCars(cars).length, cars.length);
+--- a/tools/test_build_dealership.py
++++ b/tools/test_build_dealership.py
+@@ -77,8 +77,12 @@
+         self.assertEqual(len([c for c in catalog if c.get('game', 'ford-racing-2') == 'ford-racing-2']), 35)
+         for entry in catalog:
+             code = entry['code']
+-            copy = DEALERSHIP / 'models' / f'{code}.glb'
+-            source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
++            if entry.get('displayMode') == 'native-package':
++                copy = DEALERSHIP / entry['nativePackage']['file']
++                source = ROOT / f"dealership/public/{entry['game']}/native/{entry['sourceCode']}.dat"
++            else:
++                copy = DEALERSHIP / 'models' / f'{code}.glb'
++                source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
+             self.assertFalse(copy.is_symlink())
+             self.assertEqual(copy.stat().st_nlink, 1)
+             self.assertFalse(os.path.samefile(copy, source))
