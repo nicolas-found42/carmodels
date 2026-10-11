@@ -1,0 +1,171 @@
+[
+ {
+  "tool": "jev_verify",
+  "args": {
+   "claims": [
+    "With a positive-determinant node transform, glTF treats counter-clockwise triangles as front-facing.",
+    "For a doubleSided glTF material, the normals of back-facing triangles are negated."
+   ],
+   "evidence": [
+    {
+     "id": "e0",
+     "text": "After applying the node's global transform, mesh vertex position values are meters.\n\nWhen a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, _triangle strips_, or _triangle fans_), the determinant of the node's global transform defines the winding order of the instantiated mesh primitives:\n- if the determinant is a positive value, the front-facing triangles use the counterclockwise order, and the back-facing triangles use the clockwise order;\n- if the determinant is a negative value, the front-facing triangles use the clockwise order, and the back-facing triangles use the counterclockwise order.\n\n...\n----\n\nIn addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to _base color_.\n\n...\nThe `doubleSided` property specifies whether the material is double sided.\n\nWhen this value is false, back-face culling is enabled, i.e., only front-facing triangles are rendered.\n\nWhen this value is true, back-face culling is disabled, triangles are rendered from both sides, and the normal vectors of the back-facing triangles are negated.\n"
+    }
+   ]
+  },
+  "out": "experiments/jev/verify_gltf.r2.json"
+ },
+ {
+  "tool": "jev_verify",
+  "args": {
+   "claims": [
+    "KHR_materials_unlit shades a material with its base colour term (factor, texture and vertex colour) and ignores lighting.",
+    "glTF COLOR_0 acts as a linear multiplier on base colour."
+   ],
+   "evidence": [
+    {
+     "id": "e0",
+     "text": "<!--\nCopyright 2017-2018 The Khronos Group Inc.\nSPDX-License-Identifier: LicenseRef-KhronosSpecCopyright\n-->\n\n# KHR\\_materials\\_unlit\n\n## Contributors\n\n- Don McCurdy, Google, [@donrmccurdy](https://twitter.com/donrmccurdy)\n- Norbert Nopper, UX3D, <mailto:nopper@ux3d.io>\n- Gary Hsu, Microsoft, [@bghgary](https://twitter.com/bghgary)\n- Scott Nagy, Microsoft, [@visageofscott](https://twitter.com/visageofscott)\n- P\u00e4r Winzell, Facebook, [@zellski](https://twitter.com/zellski)\n- Michael Feldstein, Facebook, [@msfeldstein](https://twitter.com/msfeldstein)\n- Robert Long, Mozilla, [@arobertlong](https://twitter.com/arobertlong)\n\nCopyright 2017-2018 The Khronos Group Inc. All Rights Reserved. glTF is a trademark of The Khronos Group Inc.\nSee [Appendix](#appendix-full-khronos-copyright-statement) for full Khronos Copyright Statement.\n\n## Status\n\nComplete, Ratified by the Khronos Group\n\n## Dependencies\n\nWritten against the glTF 2.0 spec.\n\n## Overview\n\nThis extension defines an unlit shading model for use in glTF 2.0\nmaterials, as an alternative to the Physically Based Rendering (PBR) shading\nmodels provided by the core specification. Three motivating uses cases for\nunlit materials include:\n\n- Mobile devices with limited resources, where unlit materials offer a\nperformant alternative to higher-quality shading models.\n- Photogrammetry, in which lighting information is already present and\nadditional lighting should not be applied.\n- Stylized materials (such as \"anime\" or \"hand-drawn\" looks) in which lighting is\nundesirable for aesthetic reasons.\n\nThese use cases are not mutually exclusive: artists may pick an unlit material\nfor performance reasons, and make aesthetic decisions to complement that\nchoice. As a result, client implementations capable of rendering PBR should not\nautomatically \"upgrade\" to fully-shaded PBR. Any core PBR properties specified\non an unlit material (except `baseColor`) are meant only as fallbacks for\nclients that do not support the `KHR_materials_unlit` extension. The extension,\nwhether required or optional within the asset, indicates preference for an\nunlit visual style.\n\n## Extending Materials\n\nThe common Unlit material is defined by adding the\n`KHR_materials_unlit` extension to any glTF material. When present, the\nextension indicates that a material should be unlit and use available\n`baseColor` values, alpha values, and vertex colors while ignoring all\nproperties of the default PBR model related to lighting or color. Alpha\ncoverage and doubleSided still apply to unlit materials.\n\n```json\n{\n    \"materials\": [\n        {\n            \"name\": \"MyUnlitMaterial\",\n            \"pbrMetallicRoughness\": {\n                \"baseColorFactor\": [ 0.5, 0.8, 0.0, 1.0 ]\n            },\n            \"extensions\": {\n                \"KHR_materials_unlit\": {}\n            }\n        }\n    ]\n}\n```\n\n### Definition\n\nThe Unlit material model describes a constantly shaded surface that is\nindependent of lighting. The material is defined only by properties already\npresent in the [glTF 2.0 material specification](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#materials).\nNo new properties are added by this extension \u2014 it is effectively a Boolean\nflag indicating use of an unlit shading model. Additional properties on the\nextension object are allowed, but may lead to undefined behavior in conforming\nviewers.\n\nColor is calculated as:\n\n```\ncolor = <baseColorTerm>\n```\n\n`<baseColorTerm>` is the product of `baseColorFactor`, `baseColorTexture`, and vertex color (if any), as defined by the [core glTF material specification](https://www.khronos.org/registry/glTF/specs/2.0/glTF-2.0.html#metallic-roughness-material).\n\n### Example\n\nThe following example defines an unlit material with a constant red color.\n\n```json\n\"materials\": [\n    {\n        \"name\": \"red_unlit_material\",\n        \"pbrMetallicRoughness\": {\n            \"baseColorFactor\": [ 1.0, 0.0, 0.0, 1.0 ]\n        },\n        \"extensions\": {\n            \"KHR_materials_unlit\": {}\n        }\n    }\n]\n```\n\n### Extension compatibility and fallback materials\n\nWhen possible, authoring tools should provide a fallback material definition\nand mark the `KHR_materials_unlit` extension as optional. Models\nincluding the extension optionally will still render in all clients that\nsupport the core glTF 2.0 specification, falling back to a PBR metal/rough\nmaterial. In clients that do not support the extension, direct lighting will\nbe applied and performance may be degraded.\n\nDefining a fallback to the default PBR shading model is achieved by setting\nappropriate parameters on the default material.\n\n```json\n\"materials\": [\n    {\n        \"name\": \"unlit_with_fallback\",\n        \"pbrMetallicRoughness\": {\n            \"baseColorFactor\": [ 1.0, 1.0, 1.0, 1.0 ],\n            \"baseColorTexture\": { \"index\": 0 },\n            \"roughnessFactor\": 0.9,\n            \"metallicFactor\": 0.0\n        },\n        \"extensions\": {\n            \"KHR_materials_unlit\": {}\n        }\n    }\n]\n```\n\n> **Implementation Note:** For best fallback behavior in clients that do not\n> implement the `KHR_materials_unlit` extension, authoring tools may use:\n>\n> * `metallicFactor` is `0` and `emissiveFactor` is `[0, 0, 0]`.\n> * `roughnessFactor` is greater than `0.5`.\n> * Omit `metallicRoughnessTexture`, `occlusionTexture`, `emissiveTexture`,\n> and `normalTexture`.\n\n> **Implementation Note:** When `KHR_materials_unlit` is included with another\n> extension specifying a shading model on the same material, the result is\n> undefined.\n\n## Schema\n\n- [material.KHR_materials_unlit.schema.json](schema/material.KHR_materials_unlit.schema.json)\n\n## Appendix: Full Khronos Copyright Statement\n\nCopyright 2017-2018 The Khronos Group Inc.\n\nSome parts of this Specification are purely informative and do not define requirements\nnecessary for compliance and so are outside the Scope of this Specification. These\nparts of the Specification are marked as being non-normative, or identified as\n**Implementation Notes**.\n\nWhere this Specification inclu"
+    },
+    {
+     "id": "e1",
+     "text": "After applying the node's global transform, mesh vertex position values are meters.\n\nWhen a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, _triangle strips_, or _triangle fans_), the determinant of the node's global transform defines the winding order of the instantiated mesh primitives:\n- if the determinant is a positive value, the front-facing triangles use the counterclockwise order, and the back-facing triangles use the clockwise order;\n- if the determinant is a negative value, the front-facing triangles use the clockwise order, and the back-facing triangles use the counterclockwise order.\n\n...\n----\n\nIn addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to _base color_.\n\n...\nThe `doubleSided` property specifies whether the material is double sided.\n\nWhen this value is false, back-face culling is enabled, i.e., only front-facing triangles are rendered.\n\nWhen this value is true, back-face culling is disabled, triangles are rendered from both sides, and the normal vectors of the back-facing triangles are negated.\n"
+    }
+   ]
+  },
+  "out": "experiments/jev/verify_unlit.r2.json"
+ },
+ {
+  "tool": "jev_verify",
+  "args": {
+   "claims": [
+    "On the PS1 GPU, bit 24 of a polygon command selects raw texture colour (1) or modulated/shaded (0), and in modulated mode 80h is the brightest neutral value, with 81h..FFh brightening up to about twice.",
+    "The sign of GTE NCLIP tells whether a polygon's screen coordinates are clockwise or anticlockwise, i.e. whether the front side or back side is visible."
+   ],
+   "evidence": [
+    {
+     "id": "e0",
+     "text": "24    TGE    Texture Color Mode  (0=Shaded/Modulated, 1=Raw)\nCaution: For untextured graphics, 8bit RGB values of FFh are brightest. However, for modulation, 8bit values of 80h are brightest (values 81h..FFh are \"brighter than bright\" allowing to make textures about twice as bright as than they were originially stored in memory; of course the results can't exceed the maximum brightness, ie. the 5bit values written to the framebuffer are saturated to max 1Fh)."
+    },
+    {
+     "id": "e1",
+     "text": "COP2 1400006h - 8 Cycles - NCLIP - Normal clipping\nMAC0 = SX0*SY1 + SX1*SY2 + SX2*SY0 - SX0*SY2 - SX1*SY0 - SX2*SY1\nThe sign of the result indicates whether the polygon coordinates are arranged clockwise or anticlockwise (ie. whether the front side or backside is visible). If the result is zero, then it's neither one (ie. the vertices are all arranged in a straight line)."
+    }
+   ]
+  },
+  "out": "experiments/jev/verify_psx.r2.json"
+ },
+ {
+  "tool": "jev_verify",
+  "args": {
+   "claims": [
+    "In the current exports, 727 of 728 Gran Turismo cars (day, night and arcade) have less than half of their body area wound counter-clockwise in agreement with the stored vertex normals.",
+    "Dropping the index swap gives a median agreement of 0.842, while per-triangle orientation from the stored normals gives a median of 1.0 with 642 of 728 cars at or above 0.99."
+   ],
+   "evidence": [
+    {
+     "id": "e0",
+     "text": "{\n \"current\": {\n  \"body_ccw_agrees_with_stored_normal\": {\n   \"n\": 728,\n   \"min\": 0.0,\n   \"p10\": 0.055,\n   \"median\": 0.144,\n   \"max\": 0.517,\n   \"below_half\": 727,\n   \"at_least_099\": 0\n  },\n  \"body_ccw_points_away_from_car_centroid\": {\n   \"n\": 728,\n   \"min\": 0.0,\n   \"p10\": 0.097,\n   \"median\": 0.11,\n   \"max\": 0.256,\n   \"below_half\": 728,\n   \"at_least_099\": 0\n  },\n  \"wheel_ccw_points_away_from_wheel_centroid\": {\n   \"n\": 724,\n   \"min\": 0.0,\n   \"p10\": 0.0,\n   \"median\": 0.0,\n   \"max\": 0.0,\n   \"below_half\": 724,\n   \"at_least_099\": 0\n  }\n },\n \"no_swap\": {\n  \"body_ccw_agrees_with_stored_normal\": {\n   \"n\": 728,\n   \"min\": 0.356,\n   \"p10\": 0.632,\n   \"median\": 0.842,\n   \"max\": 1.0,\n   \"below_half\": 1,\n   \"at_least_099\": 16\n  },\n  \"body_ccw_points_away_from_car_centroid\": {\n   \"n\": 728,\n   \"min\": 0.744,\n   \"p10\": 0.87,\n   \"median\": 0.89,\n   \"max\": 1.0,\n   \"below_half\": 0,\n   \"at_least_099\": 6\n  },\n  \"wheel_ccw_points_away_from_wheel_centroid\": {\n   \"n\": 724,\n   \"min\": 0.0,\n   \"p10\": 0.0,\n   \"median\": 0.0,\n   \"max\": 0.0,\n   \"below_half\": 724,\n   \"at_least_099\": 0\n  }\n },\n \"per_triangle\": {\n  \"body_ccw_agrees_with_stored_normal\": {\n   \"n\": 728,\n   \"min\": 0.81,\n   \"p10\": 0.975,\n   \"median\": 1.0,\n   \"max\": 1.0,\n   \"below_half\": 0,\n   \"at_least_099\": 642\n  },\n  \"body_ccw_points_away_from_car_centroid\": {\n   \"n\": 728,\n   \"min\": 0.619,\n   \"p10\": 0.683,\n   \"median\": 0.824,\n   \"max\": 1.0,\n   \"below_half\": 0,\n   \"at_least_099\": 6\n  },\n  \"wheel_ccw_points_away_from_wheel_centroid\": {\n   \"n\": 724,\n   \"min\": 0.0,\n   \"p10\": 0.0,\n   \"median\": 0.0,\n   \"max\": 0.0,\n   \"below_half\": 724,\n   \"at_least_099\": 0\n  }\n },\n \"median_body_agreement_by_variant\": {\n  \"current/simulation/day\": 0.144,\n  \"no_swap/simulation/day\": 0.843,\n  \"per_triangle/simulation/day\": 1.0,\n  \"current/simulation/night\": 0.144,\n  \"no_swap/simulation/night\": 0.843,\n  \"per_triangle/simulation/night\": 1.0,\n  \"current/arcade/unknown\": 0.148,\n  \"no_swap/arcade/unknown\": 0.828,\n  \"per_triangle/arcade/unknown\": 1.0\n }\n}\n"
+    }
+   ]
+  },
+  "out": "experiments/jev/verify_winding.r2.json"
+ },
+ {
+  "tool": "jev_verify",
+  "args": {
+   "claims": [
+    "Before normal repair, a median of 16.8% of each day car's body area has stored normals nearly perpendicular to the face, and about three quarters of that area is flat black faces.",
+    "After normal repair, no day car has more than 1.3% of body area with near-perpendicular normals."
+   ],
+   "evidence": [
+    {
+     "id": "e0",
+     "text": "{\n \"cars\": 344,\n \"perpendicular_area_share_per_car\": {\n  \"min\": 0.0,\n  \"median\": 0.168,\n  \"p90\": 0.395,\n  \"max\": 0.443\n },\n \"cars_over_5pct\": 289,\n \"perpendicular_share_within_kind\": {\n  \"textured\": 0.061,\n  \"flat-black\": 0.43,\n  \"flat-other\": 0.657,\n  \"gouraud\": 0.011\n },\n \"kind_share_of_perpendicular_area\": {\n  \"flat-black\": 0.746,\n  \"textured\": 0.195,\n  \"flat-other\": 0.058,\n  \"gouraud\": 0.001\n }\n}\n"
+    },
+    {
+     "id": "e1",
+     "text": "{\n \"cars\": 344,\n \"perpendicular_area_share_per_car\": {\n  \"min\": 0.0,\n  \"median\": 0.0,\n  \"p90\": 0.002,\n  \"max\": 0.013\n },\n \"cars_over_5pct\": 0,\n \"perpendicular_share_within_kind\": {\n  \"textured\": 0.001,\n  \"flat-black\": 0.0,\n  \"flat-other\": 0.0,\n  \"gouraud\": 0.0\n },\n \"kind_share_of_perpendicular_area\": {\n  \"textured\": 0.993,\n  \"flat-other\": 0.003,\n  \"gouraud\": 0.004\n }\n}\n"
+    }
+   ]
+  },
+  "out": "experiments/jev/verify_normals.r2.json"
+ },
+ {
+  "tool": "jev_verify",
+  "args": {
+   "claims": [
+    "In the default viewer camera, removing every flat 000000 face changed at most 0.23% of car pixels on the four test cars.",
+    "The winding fix raised mean car luma from about 38.9 to 89.5 on HNSXN and from 24.7 to 47.6 on CCRVN under the unchanged viewer lighting."
+   ],
+   "evidence": [
+    {
+     "id": "e0",
+     "text": "Changed pixels (|diff|>24) between per_triangle/base and per_triangle_noblack/base captures (all flat 000000 primitives removed), default viewer camera:\nHNSXN changed px 115 of car px 50754 = 0.23%\nNR33N changed px 120 of car px 52181 = 0.23%\nCCRVN changed px 1 of car px 48073 = 0.00%\nLD7VR changed px 57 of car px 47477 = 0.12%"
+    },
+    {
+     "id": "e1",
+     "text": "GT_SIMULATION__HNSXN_DAY current base {\"carPixels\":50754,\"meanLuma\":38.875222540094356,\"p10\":0,\"median\":31.237799999999996,\"p90\":75.969,\"darkShare\":0.5728021436734051}\nGT_SIMULATION__HNSXN_DAY no_swap base {\"carPixels\":50754,\"meanLuma\":89.47704735784718,\"p10\":23,\"median\":74.8676,\"p90\":184.73119999999997,\"darkShare\":0.34340150530007485}\nGT_SIMULATION__HNSXN_DAY per_triangle base {\"carPixels\":50754,\"meanLuma\":89.49354429996009,\"p10\":23.072200000000002,\"median\":74.86359999999999,\"p90\":184.73119999999997,\"darkShare\":0.34316507073334124}\nGT_SIMULATION__HNSXN_DAY per_triangle env {\"carPixels\":50754,\"meanLuma\":109.98238448992514,\"p10\":11.859599999999999,\"median\":90.93979999999999,\"p90\":237.008,\"darkShare\":0.32044764944634907}\nGT_SIMULATION__HNSXN_DAY per_triangle unlit {\"carPixels\":50754,\"meanLuma\":101.80477690822427,\"p10\":11.4016,\"median\":103.99999999999999,\"p90\":200,\"darkShare\":0.38592032155101075}\nGT_SIMULATION__HNSXN_DAY per_triangle_noblack base {\"carPixels\":50608,\"meanLuma\":89.80886357888407,\"p10\":23.582800000000002,\"median\":75.0762,\"p90\":184.7994,\"darkShare\":0.34087496048055643}\nGT_SIMULATION__NR33N_DAY current base {\"carPixels\":52181,\"meanLuma\":50.47414375730451,\"p10\":4.931799999999999,\"median\":54.812599999999996,\"p90\":93.25899999999999,\"darkShare\":0.4378605239454974}\nGT_SIMULATION__NR33N_DAY no_swap base {\"carPixels\":52181,\"meanLuma\":105.39060279796293,\"p10\":25.999999999999996,\"median\":108.5748,\"p90\":184.3622,\"darkShare\":0.25444127172725706}\nGT_SIMULATION__NR33N_DAY per_triangle base {\"carPixels\":52181,\"meanLuma\":105.6124136486552,\"p10\":26.0722,\"median\":108.64699999999999,\"p90\":184.3622,\"darkShare\":0.25106839654280294}\nGT_SIMULATION__NR33N_DAY per_triangle env {\"carPixels\":52181,\"meanLuma\":135.51966209156217,\"p10\":17.144399999999997,\"median\":141.93699999999998,\"p90\":239.0734,\"darkShare\":0.24129472413330522}\nGT_SIMULATION__NR33N_DAY per_triangle unlit {\"carPixels\":52181,\"meanLuma\":127.13194038818796,\"p10\":15.4224,\"median\":151.4224,\"p90\":215.42239999999998,\"darkShare\":0.24869205266284664}\nGT_SIMULATION__NR33N_DAY per_triangle_noblack base {\"carPixels\":52151,\"meanLuma\":105.78028980461488,\"p10\":26.3742,\"median\":109.294,\"p90\":184.3622,\"darkShare\":0.24983221798239727}\nGT_SIMULATION__CCRVN_DAY current base {\"carPixels\":48073,\"meanLuma\":24.704603760946227,\"p10\":0.2888,\"median\":28.601599999999998,\"p90\":38.1338,\"darkShare\":0.909783038295925}\nGT_SIMULATION__CCRVN_DAY no_swap base {\"carPixels\":48073,\"meanLuma\":48.49006470160135,\"p10\":20.0722,\"median\":35.5106,\"p90\":82.33539999999999,\"darkShare\":0.5530755309633266}\nGT_SIMULATION__CCRVN_DAY per_triangle base {\"carPixels\":48073,\"meanLuma\":47.62491441349842,\"p10\":20.360999999999997,\"median\":34.7232,\"p90\":81.2632,\"darkShare\":0.5674079004846796}\nGT_SIMULATION__CCRVN_DAY per_triangle env {\"carPixels\":48073,\"meanLuma\":51.981159453332985,\"p10\":8.7192,\"median\":32.8202,\"p90\":102.24819999999998,\"darkShare\":0.5789944459467893}\nGT_SIMULATION__CCRVN_DAY per_triangle unlit {\"carPixels\":48073,\"meanLuma\":47.34085995464651,\"p10\":14.299199999999999,\"median\":30.8992,\"p90\":103.0048,\"darkShare\":0.7065088511222516}\nGT_SIMULATION__CCRVN_DAY per_triangle_noblack base {\"carPixels\":47959,\"meanLuma\":47.670830517736064,\"p10\":20.0722,\"median\":34.9658,\"p90\":81.2632,\"darkShare\":0.5662128067724514}\nGT_SIMULATION__LD7VR_DAY current base {\"carPixels\":47477,\"meanLuma\":40.41311052509868,\"p10\":4.1444,\"median\":38.309999999999995,\"p90\":76.969,\"darkShare\":0.5308465151547065}\nGT_SIMULATION__LD7VR_DAY no_swap base {\"carPixels\":47477,\"meanLuma\":78.09295488342134,\"p10\":29.1496,\"median\":69.0762,\"p90\":128.9358,\"darkShare\":0.21837942582724265}\nGT_SIMULATION__LD7VR_DAY per_triangle base {\"carPixels\":47477,\"meanLuma\":78.70422570508381,\"p10\":27.221799999999995,\"median\":69.96499999999999,\"p90\":128.9358,\"darkShare\":0.21821092318385746}\nGT_SIMULATION__LD7VR_DAY per_triangle env {\"carPixels\":47477,\"meanLuma\":102.50591299366658,\"p10\":20.4528,\"median\":97.314,\"p90\":185.9358,\"darkShare\":0.23449249110095416}\nGT_SIMULATION__LD7VR_DAY per_triangle unlit {\"carPixels\":47477,\"meanLuma\":97.57881786549258,\"p10\":22.299200000000003,\"median\":103.99999999999999,\"p90\":152,\"darkShare\":0.1902605472123344}\nGT_SIMULATION__LD7VR_DAY per_triangle_noblack base {\"carPixels\":47400,\"meanLuma\":78.8746495569677,\"p10\":28.1272,\"median\":70.07619999999999,\"p90\":128.9398,\"darkShare\":0.21639240506329113}\nGT_SIMULATION__HNSXN_DAY repaired base {\"carPixels\":50754,\"meanLuma\":89.48771554163561,\"p10\":23,\"median\":75.004,\"p90\":184.73119999999997,\"darkShare\":0.3433620995389526}\nGT_SIMULATION__HNSXN_DAY repaired env {\"carPixels\":50754,\"meanLuma\":109.96782835247782,\"p10\":11.859599999999999,\"median\":90.9358,\"p90\":237.008,\"darkShare\":0.3210190329826221}\nGT_SIMULATION__NR33N_DAY repaired base {\"carPixels\":52181,\"meanLuma\":105.61113990533869,\"p10\":26.0722,\"median\":108.5748,\"p90\":184.3622,\"darkShare\":0.25106839654280294}\nGT_SIMULATION__NR33N_DAY repaired env {\"carPixels\":52181,\"meanLuma\":135.50670660584893,\"p10\":17.144399999999997,\"median\":141.4304,\"p90\":239.0734,\"darkShare\":0.24129472413330522}\nGT_SIMULATION__CCRVN_DAY repaired base {\"carPixels\":0,\"meanLuma\":0,\"p10\":null,\"median\":null,\"p90\":null,\"darkShare\":0}\nGT_SIMULATION__CCRVN_DAY repaired env {\"carPixels\":0,\"meanLuma\":0,\"p10\":null,\"median\":null,\"p90\":null,\"darkShare\":0}\nGT_SIMULATION__LD7VR_DAY repaired base {\"carPixels\":47477,\"meanLuma\":81.87135347642794,\"p10\":27.0722,\"median\":73.82459999999999,\"p90\":131.86759999999998,\"darkShare\":0.2019082924363376}\nGT_SIMULATION__LD7VR_DAY repaired env {\"carPixels\":47477,\"meanLuma\":106.15237250038074,\"p10\":19.8636,\"median\":103.511,\"p90\":187.72719999999998,\"darkShare\":0.23070118162478673}\nGT_SIMULATION__HNSXN_DAY repaired base {\"carPixels\":50754,\"meanLuma\":89.48771554163561,\"p10\":23,\"median\":75.004,\"p90\":184.73119999999997,\"darkShare\":0.3433620995389526}\nGT_SIMULATION__HNSXN_DAY repaired env {\"carPixels\":50754,\"meanLuma\":109.96782835247782,\"p10\":11.859599999999999,\"median\":90.9358,\"p90\":237.008,\"darkShare\":0.3210190329826221}\nGT_SIMULATION__NR33N_DAY repaired base {\"carPixels\":52181,\"meanLuma\":105.61113990533869,\"p10\":26.0722,\"median\":108.5748,\"p90\":184.3622,\"darkShare\":0.25106839654280294}\nGT_SIMULATION__NR33N_DAY repaired env {\"carPixels\":52181,\"meanLuma\":135.50670660584893,\"p10\":17.144399999999997,\"median\":141.4304,\"p90\":239.0734,\"darkShare\":0.24129472413330522}\nGT_SIMULATION__CCRVN_DAY repaired base {\"carPixels\":48073,\"meanLuma\":48.22285277390764,\"p10\":20.360999999999997,\"median\":35.2506,\"p90\":81.3354,\"darkShare\":0.5611257878642897}\nGT_SIMULATION__CCRVN_DAY repaired env {\"carPixels\":48073,\"meanLuma\":52.42030616770551,\"p10\":8.7192,\"median\":32.8608,\"p90\":102.24819999999998,\"darkShare\":0.5730243587876771}\nGT_SIMULATION__LD7VR_DAY repaired base {\"carPixels\":47477,\"meanLuma\":81.87135347642794,\"p10\":27.0722,\"median\":73.82459999999999,\"p90\":131.86759999999998,\"darkShare\":0.2019082924363376}\nGT_SIMULATION__LD7VR_DAY repaired env {\"carPixels\":47477,\"meanLuma\":106.15237250038074,\"p10\":19.8636,\"median\":103.511,\"p90\":187.72719999999998,\"darkShare\":0.23070118162478673}\n"
+    }
+   ]
+  },
+  "out": "experiments/jev/verify_render.r2.json"
+ },
+ {
+  "tool": "jev_decide",
+  "args": {
+   "decision": "Which change should be recommended first to fix the dark, shadowed look of the Gran Turismo cars in the dealership viewer?",
+   "evidence": "Measurements on Gran Turismo PS1 car GLBs in a three.js r182 viewer (double-sided MeshStandardMaterial, hemisphere ground 0x1a1c20, key+rim lights, no environment, no tone mapping).\nWinding: current exporter agreement median 0.144 (727/728 cars below half, day/night/arcade alike). Drop-swap median 0.842. Per-triangle-from-normals median 1.0.\nStored normals: median 16.8% of day-car body area has normals nearly perpendicular to the face (75% of it flat black faces). Repair (geometric normal for those faces) leaves max 1.3%.\nRenders, mean car luma current->per_triangle->repaired(base lights)->repaired+env: HNSXN 38.9->89.5->89.5->110.0; NR33N 50.5->105.6->105.6->135.5; CCRVN 24.7->47.6->48.2->52.4; LD7VR 40.4->78.7->81.9->106.2. LD7VR door panel stays blue/dark with per_triangle; uniform with repaired. Unlit rendering gives HNSXN 101.8, NR33N 127.1, CCRVN 47.3, LD7VR 97.6.\nRemoving flat black faces changes <=0.23% of visible car pixels. Textured faces are raw-texture (unlit) on PS1 hardware. Exporter change requires regenerating GT source GLBs and dealership copies (catalog hashes change).",
+   "priorities": "Fix the shadowed look on every GT car; keep native data provenance; deterministic and verifiable by script; do not tune lighting to hide geometry defects; smallest change that fully fixes the defect.",
+   "candidates": [
+    {
+     "id": "repaired_export",
+     "description": "Exporter: per-face orientation from stored normals, and replace near-perpendicular stored normals with geometric face normals; regenerate GT GLBs and dealership copies."
+    },
+    {
+     "id": "drop_swap",
+     "description": "Exporter: remove the index swap only; regenerate."
+    },
+    {
+     "id": "unlit_mode",
+     "description": "Viewer: unlit native display mode for GT cars only; no exporter change."
+    },
+    {
+     "id": "showroom_lighting",
+     "description": "Viewer: environment map, brighter ground bounce and neutral tone mapping; no exporter change."
+    },
+    {
+     "id": "gather_reference",
+     "description": "Capture an emulator reference of GT1 car rendering before changing anything."
+    }
+   ],
+   "requirements": [
+    "Corrects the inverted lighting on all 728 cars",
+    "Leaves no faces shaded by arbitrary in-plane normals",
+    "Keeps lit (PBR) rendering usable in the viewer"
+   ]
+  },
+  "out": "experiments/jev/decide_fix.r2.json"
+ },
+ {
+  "tool": "jev_noul",
+  "args": {
+   "propositions": [
+    "Flat untextured RGB 000000 faces contribute meaningfully to the dark look of GT cars in the default showroom view.",
+    "After the winding repair, the remaining darkness of the CCRVN car is mainly due to its texture colours rather than the viewer lighting.",
+    "Adding showroom environment lighting is necessary to remove the shadowed look once the winding is repaired."
+   ],
+   "context": [
+    {
+     "id": "c0",
+     "text": "Measurements on Gran Turismo PS1 car GLBs in a three.js r182 viewer (double-sided MeshStandardMaterial, hemisphere ground 0x1a1c20, key+rim lights, no environment, no tone mapping).\nWinding: current exporter agreement median 0.144 (727/728 cars below half, day/night/arcade alike). Drop-swap median 0.842. Per-triangle-from-normals median 1.0.\nStored normals: median 16.8% of day-car body area has normals nearly perpendicular to the face (75% of it flat black faces). Repair (geometric normal for those faces) leaves max 1.3%.\nRenders, mean car luma current->per_triangle->repaired(base lights)->repaired+env: HNSXN 38.9->89.5->89.5->110.0; NR33N 50.5->105.6->105.6->135.5; CCRVN 24.7->47.6->48.2->52.4; LD7VR 40.4->78.7->81.9->106.2. LD7VR door panel stays blue/dark with per_triangle; uniform with repaired. Unlit rendering gives HNSXN 101.8, NR33N 127.1, CCRVN 47.3, LD7VR 97.6.\nRemoving flat black faces changes <=0.23% of visible car pixels. Textured faces are raw-texture (unlit) on PS1 hardware. Exporter change requires regenerating GT source GLBs and dealership copies (catalog hashes change)."
+    },
+    {
+     "id": "c1",
+     "text": "Changed pixels (|diff|>24) between per_triangle/base and per_triangle_noblack/base captures (all flat 000000 primitives removed), default viewer camera:\nHNSXN changed px 115 of car px 50754 = 0.23%\nNR33N changed px 120 of car px 52181 = 0.23%\nCCRVN changed px 1 of car px 48073 = 0.00%\nLD7VR changed px 57 of car px 47477 = 0.12%"
+    }
+   ]
+  },
+  "out": "experiments/jev/noul_evidence.r2.json"
+ }
+]

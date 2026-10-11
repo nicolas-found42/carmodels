@@ -1,0 +1,65 @@
+{
+  "args": {
+    "claims": [
+      "On the PS1 GPU, bit 24 of a polygon command selects raw texture colour (1) or modulated/shaded (0), and in modulated mode 80h is the brightest neutral value, with 81h..FFh brightening up to about twice.",
+      "The sign of GTE NCLIP tells whether a polygon's screen coordinates are clockwise or anticlockwise, i.e. whether the front side or back side is visible."
+    ],
+    "evidence": [
+      {
+        "id": "e0",
+        "text": "24    TGE    Texture Color Mode  (0=Shaded/Modulated, 1=Raw)\nCaution: For untextured graphics, 8bit RGB values of FFh are brightest. However, for modulation, 8bit values of 80h are brightest (values 81h..FFh are \"brighter than bright\" allowing to make textures about twice as bright as than they were originially stored in memory; of course the results can't exceed the maximum brightness, ie. the 5bit values written to the framebuffer are saturated to max 1Fh)."
+      },
+      {
+        "id": "e1",
+        "text": "COP2 1400006h - 8 Cycles - NCLIP - Normal clipping\nMAC0 = SX0*SY1 + SX1*SY2 + SX2*SY0 - SX0*SY2 - SX1*SY0 - SX2*SY1\nThe sign of the result indicates whether the polygon coordinates are arranged clockwise or anticlockwise (ie. whether the front side or backside is visible). If the result is zero, then it's neither one (ie. the vertices are all arranged in a straight line)."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "On the PS1 GPU, bit 24 of a polygon command selects raw texture colour (1) or modulated/shaded (0), and in modulated mode 80h is the brightest neutral value, with 81h..FFh brightening up to about twice.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "e0",
+        "same_subject": 0.51
+      },
+      {
+        "id": "claim1",
+        "claim": "The sign of GTE NCLIP tells whether a polygon's screen coordinates are clockwise or anticlockwise, i.e. whether the front side or back side is visible.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "e1",
+        "same_subject": 0.44
+      }
+    ],
+    "usage": {
+      "input_tokens": 1369,
+      "output_tokens": 205
+    }
+  }
+}

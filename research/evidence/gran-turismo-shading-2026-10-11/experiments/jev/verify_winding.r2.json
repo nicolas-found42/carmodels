@@ -1,0 +1,61 @@
+{
+  "args": {
+    "claims": [
+      "In the current exports, 727 of 728 Gran Turismo cars (day, night and arcade) have less than half of their body area wound counter-clockwise in agreement with the stored vertex normals.",
+      "Dropping the index swap gives a median agreement of 0.842, while per-triangle orientation from the stored normals gives a median of 1.0 with 642 of 728 cars at or above 0.99."
+    ],
+    "evidence": [
+      {
+        "id": "e0",
+        "text": "{\n \"current\": {\n  \"body_ccw_agrees_with_stored_normal\": {\n   \"n\": 728,\n   \"min\": 0.0,\n   \"p10\": 0.055,\n   \"median\": 0.144,\n   \"max\": 0.517,\n   \"below_half\": 727,\n   \"at_least_099\": 0\n  },\n  \"body_ccw_points_away_from_car_centroid\": {\n   \"n\": 728,\n   \"min\": 0.0,\n   \"p10\": 0.097,\n   \"median\": 0.11,\n   \"max\": 0.256,\n   \"below_half\": 728,\n   \"at_least_099\": 0\n  },\n  \"wheel_ccw_points_away_from_wheel_centroid\": {\n   \"n\": 724,\n   \"min\": 0.0,\n   \"p10\": 0.0,\n   \"median\": 0.0,\n   \"max\": 0.0,\n   \"below_half\": 724,\n   \"at_least_099\": 0\n  }\n },\n \"no_swap\": {\n  \"body_ccw_agrees_with_stored_normal\": {\n   \"n\": 728,\n   \"min\": 0.356,\n   \"p10\": 0.632,\n   \"median\": 0.842,\n   \"max\": 1.0,\n   \"below_half\": 1,\n   \"at_least_099\": 16\n  },\n  \"body_ccw_points_away_from_car_centroid\": {\n   \"n\": 728,\n   \"min\": 0.744,\n   \"p10\": 0.87,\n   \"median\": 0.89,\n   \"max\": 1.0,\n   \"below_half\": 0,\n   \"at_least_099\": 6\n  },\n  \"wheel_ccw_points_away_from_wheel_centroid\": {\n   \"n\": 724,\n   \"min\": 0.0,\n   \"p10\": 0.0,\n   \"median\": 0.0,\n   \"max\": 0.0,\n   \"below_half\": 724,\n   \"at_least_099\": 0\n  }\n },\n \"per_triangle\": {\n  \"body_ccw_agrees_with_stored_normal\": {\n   \"n\": 728,\n   \"min\": 0.81,\n   \"p10\": 0.975,\n   \"median\": 1.0,\n   \"max\": 1.0,\n   \"below_half\": 0,\n   \"at_least_099\": 642\n  },\n  \"body_ccw_points_away_from_car_centroid\": {\n   \"n\": 728,\n   \"min\": 0.619,\n   \"p10\": 0.683,\n   \"median\": 0.824,\n   \"max\": 1.0,\n   \"below_half\": 0,\n   \"at_least_099\": 6\n  },\n  \"wheel_ccw_points_away_from_wheel_centroid\": {\n   \"n\": 724,\n   \"min\": 0.0,\n   \"p10\": 0.0,\n   \"median\": 0.0,\n   \"max\": 0.0,\n   \"below_half\": 724,\n   \"at_least_099\": 0\n  }\n },\n \"median_body_agreement_by_variant\": {\n  \"current/simulation/day\": 0.144,\n  \"no_swap/simulation/day\": 0.843,\n  \"per_triangle/simulation/day\": 1.0,\n  \"current/simulation/night\": 0.144,\n  \"no_swap/simulation/night\": 0.843,\n  \"per_triangle/simulation/night\": 1.0,\n  \"current/arcade/unknown\": 0.148,\n  \"no_swap/arcade/unknown\": 0.828,\n  \"per_triangle/arcade/unknown\": 1.0\n }\n}\n"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "In the current exports, 727 of 728 Gran Turismo cars (day, night and arcade) have less than half of their body area wound counter-clockwise in agreement with the stored vertex normals.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim1",
+        "claim": "Dropping the index swap gives a median agreement of 0.842, while per-triangle orientation from the stored normals gives a median of 1.0 with 642 of 728 cars at or above 0.99.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      }
+    ],
+    "usage": {
+      "input_tokens": 1912,
+      "output_tokens": 126
+    }
+  }
+}

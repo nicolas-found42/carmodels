@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "24    TGE    Texture Color Mode  (0=Shaded/Modulated, 1=Raw)\nCaution: For untextured graphics, 8bit RGB values of FFh are brightest. However, for modulation, 8bit values of 80h are brightest (values 81h..FFh are \"brighter than bright\" allowing to make textures about twice as bright as than they were originially stored in memory; of course the results can't exceed the maximum brightness, ie. the 5bit values written to the framebuffer are saturated to max 1Fh).",
+    "purpose": "Research how to fix Gran Turismo PS1 car models that render dark/shadowed in a three.js glTF viewer; need spec facts on winding, double-sided normals, PS1 texture colour mode and unlit materials."
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.01,
+      "substance": 0.98,
+      "relevance": 0.94
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 701,
+      "output_tokens": 57
+    }
+  }
+}
