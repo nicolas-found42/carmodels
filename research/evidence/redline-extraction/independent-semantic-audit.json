@@ -1,0 +1,97 @@
+{
+  "reviewer": "/root/redline_addons",
+  "checks": [
+    {
+      "receipt": "semantic-brief.json",
+      "labels_correct": 26,
+      "accepted": 12,
+      "accepted_correct": 12,
+      "review": 16,
+      "errors": [
+        {
+          "path": "mixed/bundle.zip",
+          "expected": "unknown",
+          "actual": "other",
+          "decision": "review"
+        },
+        {
+          "path": "unidentified/records.bin",
+          "expected": "car_metadata",
+          "actual": "unknown",
+          "decision": "review"
+        }
+      ],
+      "raw_recomposition_exact": true
+    },
+    {
+      "receipt": "semantic-grounded.json",
+      "labels_correct": 27,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "review": 28,
+      "errors": [
+        {
+          "path": "unidentified/records.bin",
+          "expected": "car_metadata",
+          "actual": "unknown",
+          "decision": "review"
+        }
+      ],
+      "raw_recomposition_exact": true
+    },
+    {
+      "receipt": "semantic-active.json",
+      "labels_correct": 27,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "review": 28,
+      "errors": [
+        {
+          "path": "unidentified/records.bin",
+          "expected": "car_metadata",
+          "actual": "unknown",
+          "decision": "review"
+        }
+      ],
+      "raw_recomposition_exact": true
+    },
+    {
+      "final_named_checks": 42,
+      "all_pass_exit_0": true,
+      "all_logs_exist": true,
+      "tamper_control_logs_read": true,
+      "Blender_roundtrip_log_read": true
+    },
+    {
+      "protected_files_independently_rehashed": 4554,
+      "changed": []
+    }
+  ],
+  "source_pins": {
+    ".scratch/redline/semantic-dataset.json": "268bcc56b8d0d007217d868aa0625c60b2c7a3bb047f1771ed6b8df47687c89c",
+    ".scratch/redline/semantic-active-dataset.json": "4309dd7b36f404d541e34c2f9fe5c446111015a2e95e77bf39c6e0cffa6cd4f9",
+    ".scratch/redline/semantic-brief.json": "578c8d5a007822590a188d15938f5aab261a62b3ae6bb620f8cdfc5510e077e7",
+    ".scratch/redline/semantic-grounded.json": "f4cdc8bad899515a1c019598f4d1c0322e7493498929380d297038f12d9c17b8",
+    ".scratch/redline/semantic-active.json": "dc24cb42548a593165fb1fa76cef9e1482fa6537a783b6b629b7af6600c49f23",
+    ".scratch/redline/advisory-production.json": "f972979119e14c45c7628387c3f387bf65c64ab544aea96b812f4165803f7eb3",
+    ".scratch/redline/checks-final/results.json": "d60cc43110e277ba35c2991bdb4a04adb22674d4a452b22be5d589e134da124b",
+    ".scratch/redline/protected-before.json": "4d54c0ebf95a9c65bbfafcfec6a526b669393a9800bdeda13d811e719bd71624"
+  },
+  "sdk_usage": {
+    "calls": 4,
+    "input_tokens": 51300,
+    "output_tokens": 8169,
+    "cost_usd": "0.002154600",
+    "latencies": [
+      0.6440013749997888,
+      0.35101987500092946,
+      0.35071200000311364,
+      0.3275828339974396
+    ]
+  },
+  "limits": [
+    "Raw SDK-response recomposition validates retained small labeled dataset only; no general accuracy claim.",
+    "Only SDK measured latencies/cost; screening/MCP/CLI overhead and costs remain unknown.",
+    "Original contradicted compound claim remains retired, never approved by this audit."
+  ]
+}

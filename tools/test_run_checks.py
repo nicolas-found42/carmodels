@@ -38,7 +38,7 @@ class CheckRunnerTests(unittest.TestCase):
 
     def test_actual_javascript_registry_requires_node(self):
         checks = [c for c in registry() if c['command'][0] == 'node']
-        self.assertEqual(len(checks), 5)
+        self.assertEqual(len(checks), 6)
         self.assertTrue(all(c['requires'] == 'node' for c in checks))
         with tempfile.TemporaryDirectory() as temp, patch('run_checks.shutil.which', return_value=None):
             self.assertEqual(run_checks(checks, temp, Path(temp) / 'ci', ci=True), 1)

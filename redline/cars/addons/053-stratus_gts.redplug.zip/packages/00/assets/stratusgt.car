@@ -1,0 +1,45 @@
+;The fictitious 1971 Dodge Stratus GT-S by Dr. T.H. Huxley
+
+builtIn 1
+
+carName "'71 Dodge Stratus GT-S";engineName "Cadmium, 68 Degree, Water Cooled V8"year 1971displacement 9
+
+;credits: modified from original .car file which was the Porsche Carrera GT by DannyL;---aerodynamicsfrontAirResistance 0.85sideAirResistance 4.0topAirResistance 3.0frontLift -1.35rearLift -0.5;---chassismass 1485.0inertia {2200,1800,650};massCenter {0.0,0.10,0.283}massCenter {0.0,0.32,0.13}numCollBoxes 2# 0coll.tfr {0.955,0.853,2.24}coll.tfl {-0.955,0.853,2.24}coll.trr {0.955,0.853,-2.24}coll.trl {-0.955,0.853,-2.24}coll.bfr {0.955,0.275,2.24}coll.bfl {-0.955,0.275,2.24}coll.brr {0.955,0.275,-2.24}coll.brl {-0.955,0.275,-2.24}# 1coll.tfr {0.85,1.31,0.385}coll.tfl {-0.85,1.31,0.385}coll.trr {0.85,1.31,-0.675}coll.trl {-0.85,1.31,-0.675}coll.bfr {0.955,0.853,0.828}coll.bfl {-0.955,0.853,0.828}coll.brr {0.955,0.853,-2.27}coll.brl {-0.955,0.853,-2.27};---graphicsmodel "stratusgts.mdl"interiorModel "null.mdl"driverPos {0.41,0.4,-0.05}
+noDriverModel 1
+;steering wheel included in modelsteeringWheelPos {0.41,0.74,0.42}steeringWheelAngle 15steeringWheelTurns 3.5steeringWheelTexture "wheelholder.png.txr"steeringWheelRadius 0.15numColors 2# 0colors {1,0.1,0.1}
+# 1colors {0.591, 0.7, 0.847}
+
+exhaust1Pos {0.4,0.42,-2.2}exhaust2Pos {0.3,0.43,-2.2}
+exhaustFire 61000frontLicensePlatePos {0,0.25,2.19}rearLicensePlatePos {0,0.40,-2.12}hornSample "horn2.wav"hornPitch -0.05;--engine
+;power = hp * 745.69987power 431148.42
+;torque = torque * 1.35628105torque 689.98228powerRPM 8200torqueRPM 5750maxRPM 9400.0idleRPM 900.0jerkRPM 500.0engineInertia 0.22engineFriction 80;engine sound sampleengineSample "idler3.wav"hallSample "hissbang.wav"
+turboSample "openvalves.wav"
+turboGain 2.5
+zeroRPMSoundGain 3.5fullRPMSoundGain 1.23zeroThrottleSoundGain 3.9fullThrottleSoundGain 1.7zeroRPMSoundPitch 1.0fullRPMSoundPitch 2.7zeroThrottleSoundPitch 1.0fullThrottleSoundPitch 1.4;---suspensionsupsensionFriction 970damperStrength 28000;frontSwayBar 28000
+frontSwayBar 18000;rearSwayBar 27000
+rearSwayBar 13000;---drivetrainfinalDriveRatio 4.44maxClutchTorqueTransfer 950differentialLockCoefficient 70shiftUpRPM 7500.0shiftDownRPM 4200.0gearSwitchTime 0.22
+
+;gearRatios - 3.20:1, 1.87:1, 1.36:1, 1.07:1, 0.90:1, 0.75:1numGears 7# 0gearRatios -3.06# 1gearRatios 0# 2gearRatios 3.24# 3gearRatios 1.84# 4gearRatios 1.32# 5gearRatios 1.04# 6gearRatios 0.88;---wheelsnumWheels 4# 0
+;front leftwheels.pos {-0.83,0.19,1.30}wheels.inertia 2.2wheels.friction 10wheels.powered 0.0wheels.maxAngle 0.48135934017wheels.maxSuspension 0.13wheels.radius 0.32wheels.braked 6400.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.26wheels.texture 6
+wheels.stickyness 0.11# 1
+;front rightwheels.pos {0.83,0.19,1.30}wheels.inertia 2.2wheels.friction 10wheels.powered 0.0wheels.maxAngle 0.48135934017wheels.maxSuspension 0.13wheels.radius 0.32wheels.braked 6400.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.26wheels.texture 6
+wheels.stickyness 0.11# 2
+;rear leftwheels.pos {-0.84,0.16,-1.278}wheels.inertia 2.2wheels.friction 10wheels.powered 0.5wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.328wheels.braked 2300.0wheels.handbraked 1wheels.model "wheel-classic-disc.mdl"wheels.width 0.327wheels.texture 6
+wheels.stickyness 0.21# 3
+;rear rightwheels.pos {0.84,0.16,-1.278}wheels.inertia 2.2wheels.friction 10wheels.powered 0.5wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.33wheels.braked 2300.0wheels.handbraked 1wheels.model "wheel-classic-disc.mdl"wheels.width 0.327wheels.texture 6
+wheels.stickyness 0.21;numLights 10
+numLights 10
+
+
+# 0lights.pos {-0.61,0.514,-1.8}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.3lights.onFlags 0x01lights.offFlags 0x00# 1lights.pos {0.61,0.514,-1.8}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.3lights.onFlags 0x01lights.offFlags 0x00# 2lights.pos {-0.7,0.43,1.89}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.6lights.onFlags 0x01lights.offFlags 0x00# 3lights.pos {0.7,0.43,1.89}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.6lights.onFlags 0x01lights.offFlags 0x00
+
+;brake lights
+# 4lights.pos {-0.61,0.514,-1.8}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.5lights.onFlags 0x10lights.offFlags 0x00# 5lights.pos {0.61,0.514,-1.8}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.5lights.onFlags 0x10lights.offFlags 0x00
+
+;reverse lights
+# 6lights.pos {-0.55,0.46,-1.8}lights.dir {0,0,-1}lights.rgb {0.8,0.7,0.7}lights.type 2lights.size 0.3lights.onFlags 0x08lights.offFlags 0x00# 7lights.pos {0.55,0.46,-1.8}lights.dir {0,0,-1}lights.rgb {0.8,0.7,0.7}lights.type 2lights.size 0.3lights.onFlags 0x08lights.offFlags 0x00
+
+;light cones
+# 8lights.pos {-0.7,0.43,1.89}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 1lights.size 2.6lights.onFlags 0x01lights.offFlags 0x00# 9lights.pos {0.7,0.43,1.89}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 1lights.size 2.6lights.onFlags 0x01lights.offFlags 0x00
+
+

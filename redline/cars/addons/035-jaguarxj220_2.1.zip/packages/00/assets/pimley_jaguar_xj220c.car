@@ -1,0 +1,84 @@
+;pimley_jaguar_xj220c.car
+;Copyright © 2006-2007 Daniel Pimley.
+;a string with the name of the carcarName "­pimley_jaguar_xj220_21.txr­ Jaguar XJ220C Le Mans"year 1993;displacement in litresdisplacement 3.498
+
+builtIn 1
+;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.;A modern sports car might have values as low as 0.6 for thisfrontAirResistance 0.66;air resistance of the side and top areas of the car.;these values are not that important to be very exact.sideAirResistance 2.0topAirResistance 3.3;used to simulate spoilers;negative values are downforce, positive values are upforcefrontLift -0.66rearLift -1.0;---chassis;Car's mass in kgmass 1125;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get rotationally accelerated around it's axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2. lower values result in better cornering abilitiesinertia {2200,2200,900}
+
+;The car's center of gravity.;This vector (as all the others that may follow) uses the following;coordinate system: X points to the right, Y points up and Z points to the front.;Coordinates are in meters.;The lower the CG, the better the cars handling.;Also, the further the CG is to the rear of the car, the more the car will tend;to oversteer in corners, making it much harder to handle. If your car uncontrollably;spins out in the rear a lot, try moving the CG further to the front.massCenter {0,0.25,-0.20};An approximation of the car's borders, used for collision detection.;More than two boxes can be used, but if too many are used, performance ;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).;number of collision boxesnumCollBoxes 1;a list of the collision boxes used, in this case only one# 0coll.tfr {0.9,1.0,2.4}coll.tfl {-0.9,1.0,2.4}coll.trr {0.9,1.0,-2.4}coll.trl {-0.9,1.0,-2.4}coll.bfr {0.9,0.2,2.4}coll.bfl {-0.9,0.2,2.4}coll.brr {0.9,0.2,-2.4}coll.brl {-0.9,0.2,-2.4}
+
+;---graphics
+
+numColors 6# 0colors {1,1,1}
+# 1colors {9,0,0}
+# 2colors {1,1,0.4}
+# 3colors {0.3,0.8,1}
+# 4colors {0.3,1,0.2}
+# 5colors {1,0.4,0.8}
+
+;Model used to represent the car.model "pimley_jaguar_xj220c.mdl";Model used to represent the car's interior.interiorModel "pimley_xj220_interior.mdl";Position of driver modeldriverPos {-0.34,0.36,0.15};Position of the steering wheelsteeringWheelPos {-0.35,0.66,0.51};Angle of the steering wheelsteeringWheelAngle 15;Number of turns, lock-to-lock.steeringWheelTurns 2
+
+;Model used to represent the steering wheelsteeringWheelTexture "pimley_xj220_steer.txr"
+steeringWheelRadius 0.18
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {-0.25,0.4,-2.6}
+exhaust2Pos {0.25,0.4,-2.6}
+;The lower this value, the more the car's exhaust will spit out banging noises and flames.;exhaustFire 0;Position of license plates;for network player namesfrontLicensePlatePos {0,0.25,2.4}rearLicensePlatePos {0,0.4,-2.4};--engine;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+;542bhp
+power 404169
+
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.
+torque 644;RPM values for the power and torque ratings.powerRPM 7000.0torqueRPM 4500.0;Engines idle RPMidleRPM 1000.0jerkRPM 500.0
+
+;RPM delimtermaxRPM 7200.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 0.25;currently unusedengineFriction 100;engine sound sampleengineSample "pimley_jaguar_xj220.wav"
+turboSample "turbo.wav"hallSample "pimley_xj220_hall.wav"zeroRPMSoundGain 1.0fullRPMSoundGain 1.75zeroThrottleSoundGain 1.25fullThrottleSoundGain 2.0zeroRPMSoundPitch 1.0fullRPMSoundPitch 1.5zeroThrottleSoundPitch 1.0fullThrottleSoundPitch 1.25
+turboGain 1.0
+
+;hornSample "hornnormal.wav"
+;---suspension;These determines the strength of the car's shock absorbers.supsensionFriction 1000damperStrength 45000;sway Bars will cause the car to tilt less in corners. The higher these values,;the less the car will tilt to the side when corneringfrontSwayBar 11000rearSwayBar 22000;---drivetrain;The ratio of the final drive gear in the car's differential.finalDriveRatio 2.88;The maximum amount of torque the car's clutch can transfer (in Nm).maxClutchTorqueTransfer 700;this factor is used to simulate limited slip differentials.;0 means free differential. the higher the value, the more differential locking.;values around 100 seem to get realistic limited slip differentials.differentialLockCoefficient 100;For automatic transmission: When to shift up and downshiftDownRPM 3000shiftUpRPM 7000;Time it takes to shift gears in secondsgearSwitchTime 0.1;Number of gears, including reverse and neutral.numGears 7;The gear ratios# 0gearRatios -5# 1gearRatios 0# 2gearRatios 4.33
+# 3gearRatios 2.75# 4gearRatios 1.9# 5gearRatios 1.33
+# 6
+gearRatios 0.99;---wheels;number of wheels.numWheels 4;front left wheel# 0;Wheel's positionwheels.pos {-0.80,0.33,1.25};Wheel's inertia in kg*m^2.wheels.inertia 2.2;Wheel's stickyness - higher values for more grip
+wheels.stickyness 0.3
+;Fraction of engine power lead to this wheel.wheels.powered 0;Friction caused by rotating the wheel in Nm.wheels.friction 10;Maximal steering angle of this wheel in radians.wheels.maxAngle 0.48;Suspension travel of this wheel in meters.wheels.maxSuspension 0.1;Wheel's radius in meters.wheels.radius 0.32;Torque of the brakes on this wheel (in Nm).wheels.braked 10000.0;How much of the braking torque is generated by pulling the handbrake (between 0 and 1).wheels.handbraked 0.0;model used to represent the wheelwheels.model "pimley_xj220_wheel.mdl";width of the wheelwheels.width 0.3wheels.texture 1;front right wheel# 1wheels.pos {0.80,0.33,1.25}wheels.inertia 2.2wheels.stickyness 0.3
+wheels.powered 0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.1wheels.radius 0.32wheels.braked 10000.0wheels.handbraked 0.0wheels.model "pimley_xj220_wheel.mdl"wheels.width 0.3wheels.texture 1;rear left wheel# 2wheels.pos {-0.75,0.36,-1.4}wheels.inertia 2.2wheels.stickyness 0.3
+wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.33wheels.braked 5500.0wheels.handbraked 1.0wheels.model "pimley_xj220_wheel.mdl"wheels.width 0.4wheels.texture 1;rear right wheel# 3wheels.pos {0.75,0.36,-1.4}wheels.inertia 2.2wheels.stickyness 0.3
+wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.33wheels.braked 5500.0wheels.handbraked 1.0wheels.model "pimley_xj220_wheel.mdl"wheels.width 0.4wheels.texture 1;---lights;number of lights on the carnumLights 16
+
+# 0lights.pos {-0.7,0.5,2}lights.dir {-0.05,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+
+# 1lights.pos {0.7,0.5,2}lights.dir {0.05,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+
+# 2lights.pos {-0.63,0.27,2.3}lights.dir {0,0,1}lights.rgb {0.75,0.75,0.75}lights.type 2lights.size 0.2lights.onFlags 0xc0lights.offFlags 0x00
+
+# 3lights.pos {0.63,0.27,2.3}lights.dir {0,0,1}lights.rgb {0.75,0.75,0.75}lights.type 2lights.size 0.2lights.onFlags 0xc0lights.offFlags 0x00
+
+# 4lights.pos {-0.7,0.44,2}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.75lights.onFlags 0x01lights.offFlags 0x00
+
+# 5lights.pos {0.7,0.44,2}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.75lights.onFlags 0x01lights.offFlags 0x00
+
+# 6lights.pos {-0.65,0.43,-2.3}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.25lights.onFlags 0x01lights.offFlags 0x00
+
+# 7lights.pos {0.65,0.43,-2.3}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.25lights.onFlags 0x01lights.offFlags 0x00
+
+# 8lights.pos {-0.53,0.56,-2.3}lights.dir {0,0,-1}lights.rgb {1,1,1}lights.type 2lights.size 0.15lights.onFlags 0x08lights.offFlags 0x00
+
+# 9lights.pos {0.53,0.56,-2.3}lights.dir {0,0,-1}lights.rgb {1,1,1}lights.type 2lights.size 0.15lights.onFlags 0x08lights.offFlags 0x00
+
+# 10lights.pos {-0.52,0.43,-2.3}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.2lights.onFlags 0x10lights.offFlags 0x00
+
+# 11lights.pos {0.52,0.43,-2.3}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.2lights.onFlags 0x10lights.offFlags 0x00
+
+# 12lights.pos {-1,0.54,0.72}lights.dir {-1,0,0}lights.rgb {1,0.5,0}lights.type 2lights.size 0.05lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 13lights.pos {1,0.54,0.72}lights.dir {1,0,0}lights.rgb {1,0.5,0}lights.type 2lights.size 0.05lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 14lights.pos {-0.68,0.56,-2.3}lights.dir {0,0,-1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 15lights.pos {0.68,0.56,-2.3}lights.dir {0,0,-1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+
+-- Add-On optionsnumAddOns 1initialAddOns 0x01# 0addOns.hasGraphic 1addOns.model "jaguar_xj220c_addons.mdl"

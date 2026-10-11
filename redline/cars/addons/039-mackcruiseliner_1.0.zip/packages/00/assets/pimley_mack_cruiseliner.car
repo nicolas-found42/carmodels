@@ -1,0 +1,126 @@
+;pimley_mack_cruiseliner.car
+;Copyright © 2007 Daniel Pimley.
+;a string with the name of the carcarName "­pimley_cruiseliner_10.txr­ Mack Cruiseliner"year 1975;displacement in litresdisplacement 12.1
+
+builtIn 1
+;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.;A modern sports car might have values as low as 0.6 for thisfrontAirResistance 2.0;air resistance of the side and top areas of the car.;these values are not that important to be very exact.sideAirResistance 4.0topAirResistance 6.0;used to simulate spoilers;negative values are downforce, positive values are upforcefrontLift -0.0rearLift -0.0;---chassis;Car's mass in kgmass 4000;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get rotationally accelerated around it's axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2. lower values result in better cornering abilitiesinertia {10000,8000,4000}
+
+;The car's center of gravity.;This vector (as all the others that may follow) uses the following;coordinate system: X points to the right, Y points up and Z points to the front.;Coordinates are in meters.;The lower the CG, the better the cars handling.;Also, the further the CG is to the rear of the car, the more the car will tend;to oversteer in corners, making it much harder to handle. If your car uncontrollably;spins out in the rear a lot, try moving the CG further to the front.massCenter {0,0.6,0.6};An approximation of the car's borders, used for collision detection.;More than two boxes can be used, but if too many are used, performance ;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).;number of collision boxesnumCollBoxes 2;a list of the collision boxes used, in this case two# 0coll.tfr {1.08,1,2.35}coll.tfl {-1.08,1,2.35}coll.trr {1.08,1,-2.35}coll.trl {-1.08,1,-2.35}coll.bfr {1.08,0.4,2.35}coll.bfl {-1.08,0.4,2.35}coll.brr {1.08,0.4,-2.35}coll.brl {-1.08,0.4,-2.35}
+
+# 1coll.tfr {1.08,2.75,2.35}coll.tfl {-1.08,2.75,2.35}coll.trr {1.08,2.75,0.38}coll.trl {-1.08,2.75,0.38}
+coll.bfr {1.08,1,2.35}coll.bfl {-1.08,1,2.35}coll.brr {1.08,1,0.38}coll.brl {-1.08,1,0.38}
+
+;---graphics
+
+numColors 6# 0colors {0.2,0.3,0.6}
+# 1colors {0.8,0.8,0.8}
+# 2colors {0.8,0.1,0}
+# 3colors {0.9,0.8,0.4}
+# 4colors {0.6,0,0.1}
+# 5colors {0.3,0.6,1}
+
+;Model used to represent the car.model "pimley_mack_cruiseliner.mdl";Model used to represent the car's interior.interiorModel "pimley_mack_interior.mdl";Position of driver modeldriverPos {0.6,1.75,1.65};Position of the steering wheelsteeringWheelPos {0.6,1.95,2.0};Angle of the steering wheelsteeringWheelAngle 70;Number of turns, lock-to-lock.steeringWheelTurns 4
+
+;Model used to represent the steering wheelsteeringWheelTexture "pimley_mack_steer.txr"
+steeringWheelRadius 0.22
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {-0.79,3.25,0.25}
+exhaust2Pos {-0.79,3.25,0.25}
+;The lower this value, the more the car's exhaust will spit out banging noises and flames.;exhaustFire 0;Position of license plates;for network player namesfrontLicensePlatePos {0,0.62,2.37}rearLicensePlatePos {0,0.62,-2.37};--engine;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+;Detroit Diesel 8V-92
+;400bhp
+power 298279
+
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.
+;Estimated torque 1020 lb-ft
+torque 1383;RPM values for the power and torque ratings.powerRPM 2300.0torqueRPM 1300.0;Engines idle RPMidleRPM 250.0jerkRPM 250.0
+
+;RPM delimtermaxRPM 2500.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 1.0;engineBaseFriction,engineRPMFriction: Change engine friction.
+;engineBaseFriction is a constant
+;(such as resistance caused by friction of moving parts in their bearings)
+;engineRPMFriction is dependant on engine speed
+;(such as resistance caused by compression inside the cylinders)
+;Default values are 25 and 0.02. Add either field to have both customized
+;(if you just add one of the two fields, the other is set to zero).
+engineBaseFriction 100
+engineRPMFriction 0.08
+;engine sound sampleengineSample "pimley_cruiseliner.wav"
+hallSample "pimley_cruiseliner_hall.wav"zeroRPMSoundGain 1.0fullRPMSoundGain 1.4zeroThrottleSoundGain 1.0fullThrottleSoundGain 1.8zeroRPMSoundPitch 0.9fullRPMSoundPitch 1.4zeroThrottleSoundPitch 1.0fullThrottleSoundPitch 1.2
+
+hornSample "pimley_cruiseliner_horn.wav"
+;---suspension;These determines the strength of the car's shock absorbers.supsensionFriction 6000damperStrength 80000;sway Bars will cause the car to tilt less in corners. The higher these values,;the less the car will tilt to the side when corneringfrontSwayBar 14000rearSwayBar 16000;---drivetrain;The ratio of the final drive gear in the car's differential.finalDriveRatio 2.0;The maximum amount of torque the car's clutch can transfer (in Nm).maxClutchTorqueTransfer 1383;this factor is used to simulate limited slip differentials.;0 means free differential. the higher the value, the more differential locking.;values around 100 seem to get realistic limited slip differentials.differentialLockCoefficient 100;For automatic transmission: When to shift up and downshiftDownRPM 1300shiftUpRPM 2300;Time it takes to shift gears in secondsgearSwitchTime 0.7;Number of gears, including reverse and neutral.numGears 12;The gear ratios
+# 0gearRatios -7.1775# 1gearRatios 0# 2gearRatios 7.1775
+# 3gearRatios 5.052# 4gearRatios 3.635
+# 5
+gearRatios 2.69
+# 6
+gearRatios 2.06
+# 7gearRatios 1.64
+# 8gearRatios 1.38# 9gearRatios 1.2
+# 10
+gearRatios 1.04
+# 11
+gearRatios 0.9
+
+;---wheels;number of wheels.numWheels 6;front left wheel# 0;Wheel's positionwheels.pos {-0.92,0.54,1.82};Wheel's inertia in kg*m^2.wheels.inertia 4.0
+
+;Tire load sensitivity modifier
+wheels.loadSensitivity 0
+;Fraction of engine power lead to this wheel.wheels.powered 0;Friction caused by rotating the wheel in Nm.wheels.friction 20;Maximal steering angle of this wheel in radians.wheels.maxAngle 0.48;Suspension travel of this wheel in meters.wheels.maxSuspension 0.2;Wheel's radius in meters.wheels.radius 0.45;Torque of the brakes on this wheel (in Nm).wheels.braked 36000.0;How much of the braking torque is generated by pulling the handbrake (between 0 and 1).wheels.handbraked 0.0;model used to represent the wheelwheels.model "pimley_mack_wheels1.mdl";width of the wheelwheels.width 0.25wheels.texture 0;front right wheel# 1wheels.pos {0.92,0.54,1.82}wheels.inertia 4.0
+wheels.loadSensitivity 0
+wheels.powered 0wheels.friction 20wheels.maxAngle 0.48wheels.maxSuspension 0.2wheels.radius 0.45wheels.braked 36000.0wheels.handbraked 0.0wheels.model "pimley_mack_wheels1.mdl"wheels.width 0.25wheels.texture 0;middle left wheel# 2wheels.pos {-0.86,0.58,-0.7}wheels.inertia 7.2
+wheels.loadSensitivity -0.1
+wheels.powered 0.25wheels.friction 20wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.45wheels.braked 27000.0wheels.handbraked 1.0wheels.model "pimley_mack_wheels2.mdl"wheels.customBrakeModel "null.mdl"
+wheels.width 0.5wheels.texture 0;middle right wheel# 3wheels.pos {0.86,0.58,-0.7}wheels.inertia 7.2
+wheels.loadSensitivity -0.1
+wheels.powered 0.25wheels.friction 20wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.45wheels.braked 27000.0wheels.handbraked 1.0wheels.model "pimley_mack_wheels2.mdl"wheels.customBrakeModel "null.mdl"
+wheels.width 0.5wheels.texture 0
+
+;rear left wheel# 4wheels.pos {-0.86,0.58,-1.7}wheels.inertia 7.2
+wheels.loadSensitivity -0.1
+wheels.powered 0.25wheels.friction 20wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.45wheels.braked 9000.0wheels.handbraked 1.0wheels.model "pimley_mack_wheels2.mdl"wheels.customBrakeModel "null.mdl"
+wheels.width 0.5wheels.texture 0;rear right wheel# 5wheels.pos {0.86,0.6,-1.7}wheels.inertia 7.2
+wheels.loadSensitivity -0.1
+wheels.powered 0.25wheels.friction 20wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.45wheels.braked 9000.0wheels.handbraked 1.0wheels.model "pimley_mack_wheels2.mdl"wheels.customBrakeModel "null.mdl"
+wheels.width 0.5wheels.texture 0;---lights;number of lights on the carnumLights 17
+
+# 0lights.pos {-0.81,1.07,2.35}lights.dir {-0.1,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+
+# 1lights.pos {0.81,1.07,2.35}lights.dir {0.1,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+
+# 2lights.pos {-0.81,1.07,2.35}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.50lights.onFlags 0x01lights.offFlags 0x00
+
+# 3lights.pos {0.81,1.07,2.35}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.50lights.onFlags 0x01lights.offFlags 0x00
+
+# 4lights.pos {-0.9,2.77,2.08}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 5lights.pos {0.9,2.77,2.08}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 6lights.pos {-0.20,2.78,2.08}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 7lights.pos {0.20,2.78,2.08}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 8lights.pos {0,2.78,2.08}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 9lights.pos {-0.94,0.725,-2.33}lights.dir {0,0,-1}lights.rgb {6,0,0}lights.type 2lights.size 0.20lights.onFlags 0x01lights.offFlags 0x00
+
+# 10lights.pos {0.95,0.725,-2.33}lights.dir {0,0,-1}lights.rgb {6,0,0}lights.type 2lights.size 0.20lights.onFlags 0x01lights.offFlags 0x00
+
+# 11lights.pos {-0.76,0.725,-2.33}lights.dir {0,0,-1}lights.rgb {1,0.2,0}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 12lights.pos {0.77,0.725,-2.33}lights.dir {0,0,-1}lights.rgb {1,0.2,0}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 13lights.pos {-0.58,0.725,-2.33}lights.dir {0,0,-1}lights.rgb {0.6,0.6,0.6}lights.type 2lights.size 0.24lights.onFlags 0x08lights.offFlags 0x00
+
+# 14lights.pos {0.59,0.725,-2.33}lights.dir {0,0,-1}lights.rgb {0.6,0.6,0.6}lights.type 2lights.size 0.24lights.onFlags 0x08lights.offFlags 0x00
+
+# 15lights.pos {-1.06,1.15,1.96}lights.dir {-1,0,0}lights.rgb {0.8,0.4,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 16lights.pos {1.06,1.15,1.96}lights.dir {1,0,0}lights.rgb {0.8,0.4,0}lights.type 2lights.size 0.2lights.onFlags 0xc0
+lights.offFlags 0x00
+

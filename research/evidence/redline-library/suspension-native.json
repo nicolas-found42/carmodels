@@ -1,0 +1,87 @@
+{
+  "executable": ".scratch/redline/native/Redline-i386",
+  "executable_sha256": "b2ac41a4335a1a75f71f9e88a4867c08cc514a74426576733e58aa6a05547e22",
+  "otool_full_sha256": "e87557bf5df42a257a8304eb834509be9af6d5bacd2c8a7fcbe1aced7bc2f8a9",
+  "mapping": "__TEXT VA 0x1000 maps to file 0; VA to file subtract 4096",
+  "spans": {
+    "preview-initialize": {
+      "path": ".scratch/redline-conversion/mesh/suspension-preview-initialize.s",
+      "start": "0xc501",
+      "end": "0xc5d2",
+      "sha256": "25e037818ccf894c816f1f6d87821f9c011066b3b866ed63e4b62977c91da0e4"
+    },
+    "default-and-parser": {
+      "path": ".scratch/redline-conversion/mesh/suspension-default-and-parser.s",
+      "start": "0x4c73f",
+      "end": "0x4c7ce",
+      "sha256": "0cdc9e5e2ff74623df0fdd2476dc00734673868344e6d2c0029a518045394b91"
+    },
+    "max-suspension-parser": {
+      "path": ".scratch/redline-conversion/mesh/suspension-max-suspension-parser.s",
+      "start": "0x4d59f",
+      "end": "0x4d60b",
+      "sha256": "bd0293500602253ebc90ac91554a7cfc4a194b08ca6ad1c4e97d01382426b084"
+    },
+    "simple-wheel-center": {
+      "path": ".scratch/redline-conversion/mesh/suspension-simple-wheel-center.s",
+      "start": "0x519de",
+      "end": "0x51ab7",
+      "sha256": "3845c2890992a9efd23a9f9fc514c11aadcefbb16f52774520680b77aeddd949"
+    },
+    "detailed-wheel-center": {
+      "path": ".scratch/redline-conversion/mesh/suspension-detailed-wheel-center.s",
+      "start": "0x54d26",
+      "end": "0x54e77",
+      "sha256": "da4f9ad4cf3de15b247059ba41d7174a712b223f1650c4469df52ddf84ba1735"
+    },
+    "addon-active-mask": {
+      "path": ".scratch/redline-conversion/mesh/suspension-addon-active-mask.s",
+      "start": "0x43ab",
+      "end": "0x43eb",
+      "sha256": "1d65ff8c6e3b82fb7a7d7a83b7f86485c34dc600a3661ddb241a53df01582066"
+    },
+    "addon-track-width": {
+      "path": ".scratch/redline-conversion/mesh/suspension-addon-track-width.s",
+      "start": "0x4546",
+      "end": "0x459c",
+      "sha256": "79a6c69fd3f340ae30967198b81a8a2adf6d585fe8b8367656049b4414a40510"
+    }
+  },
+  "constants": {
+    "0x83ed4": {
+      "file_offset": "0x82ed4",
+      "hex": "0000003f0000fa440000c84300009643",
+      "value": 0.5
+    },
+    "0x81aac": {
+      "file_offset": "0x80aac",
+      "hex": "6e756d576865656c730000006e756d41",
+      "value": "numWheels"
+    },
+    "0x81b3c": {
+      "file_offset": "0x80b3c",
+      "hex": "776865656c732e6d617853757370656e",
+      "value": "wheels.maxSuspension"
+    },
+    "0x80664": {
+      "file_offset": "0x7f664",
+      "hex": "2566000030782578000000007b25662c",
+      "value": "%f"
+    }
+  },
+  "mustang_config": {
+    "path": "redline/cars/shared/base/assets/500gt.car",
+    "sha256": "fdc2d9b7e3cd3fa8a66681e07640b531f90738bb29f186763c54c90e8a534c75",
+    "wheel_lines": "model \"500gt.mdl\"\nnumWheels 4\nwheels.pos {-0.76,0.35,1.47}\nwheels.inertia 2.2\nwheels.powered 0.0\nwheels.friction 10\nwheels.maxAngle 0.48135934017\nwheels.maxSuspension 0.2\nwheels.radius 0.34\nwheels.grip 1.0\nwheels.braked 4000.0\nwheels.handbraked 0.0\nwheels.model \"wheel-classic-disc.mdl\"\nwheels.width 0.19\nwheels.texture 4\nwheels.pos {0.76,0.35,1.47}\nwheels.inertia 2.2\nwheels.powered 0.0\nwheels.friction 10\nwheels.maxAngle 0.48135934017\nwheels.maxSuspension 0.2\nwheels.radius 0.34\nwheels.grip 1.0\nwheels.braked 4000.0\nwheels.handbraked 0.0\nwheels.model \"wheel-classic-disc.mdl\"\nwheels.width 0.19\nwheels.texture 4\nwheels.pos {-0.76,0.35,-1.29}\nwheels.inertia 2.2\nwheels.powered 0.5\nwheels.friction 10\nwheels.maxAngle 0.0\nwheels.maxSuspension 0.2\nwheels.radius 0.34\nwheels.grip 1.0\nwheels.braked 1100.0\nwheels.handbraked 1.0\nwheels.model \"wheel-classic-disc.mdl\"\nwheels.width 0.19\nwheels.texture 4\nwheels.pos {0.76,0.35,-1.29}\nwheels.inertia 2.2\nwheels.powered 0.5\nwheels.friction 10\nwheels.maxAngle 0.0\nwheels.maxSuspension 0.2\nwheels.radius 0.34\nwheels.grip 1.0\nwheels.braked 1100.0\nwheels.handbraked 1.0\nwheels.model \"wheel-classic-disc.mdl\"\nwheels.width 0.19\nwheels.texture 4"
+  },
+  "interpretation": {
+    "preview_center": [
+      "pos.x",
+      "pos.y - 0.5 * maxSuspension",
+      "pos.z"
+    ],
+    "missing_maxSuspension_default": 0.0,
+    "limits": "Preview/static showroom pose only, not claimed physics equilibrium. Loader sscanf lacks range checks; converter finite/nonnegative validation is a separate project safeguard. Base Mustang has no numAddOns and no selected tuning is applied."
+  },
+  "retired_claim": "Earlier neutral static translation T(pos) omitted preview suspension initialization. Scale, rotation, and texture-selector evidence remains unchanged."
+}

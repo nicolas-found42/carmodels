@@ -1,0 +1,368 @@
+{
+  "args": {
+    "request": "Complete native Redline static car conversion and import into source and independent editable dealership libraries, preserve prior native/model files and edits, correct preview wheel suspension height using native evidence, retain explicit source omissions, keep TypeSafe judgments conservative and credentials server-side. This packet reviews the named component; other packets cover the remaining task-owned files. Do not claim game shader/animation fidelity or physics equilibrium. No Hopper.",
+    "files": [
+      {
+        "path": "redline/README.md",
+        "diff": "--- a/redline/README.md\n+++ b/redline/README.md\n@@ -62,6 +62,8 @@\n in the local process environment. Offline extraction and verification require no API\n key or network access.\n \n-Native mesh/texture conversion, browser rendering, library registration and\n-dealership import remain separate work. Extraction has not established game\n-execution or visual fidelity.\n+Native mesh/texture conversion and library import now publish 128 drawable cars\n+from 129 configurations into both source and dealership catalogs. See\n+[conversion and library evidence](../research/redline-library.md) for rebuilding,\n+verified checks and per-car omissions. Extraction and static conversion have not\n+established game execution or game-render fidelity.\n"
+      },
+      {
+        "path": "research/README.md",
+        "diff": "--- a/research/README.md\n+++ b/research/README.md\n@@ -25,7 +25,7 @@\n \n ## Open items\n \n-- Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Native mesh/texture decoding, runtime plug-in precedence and browser/library/dealership conversion remain open.\n+- Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Static mesh/texture conversion and both library imports are documented in [redline-library.md](redline-library.md); runtime plug-in precedence and game-render fidelity remain open.\n \n - Gran Turismo dynamic wheel behavior, additional colour sets, PS1 rendering fidelity, runtime LOD selection, per-car metadata joins and retail identities remain open. Native extraction is established in `gran-turismo-extraction.md`; static body/first-colour conversion and dealership import are established in `gran-turismo-library.md`; native wheel templates and neutral assembly are established in `gran-turismo-wheels.md`.\n \n@@ -52,3 +52,5 @@\n \n - [Gran Turismo library](gran-turismo-library.md): body/texture conversions, independent editable imports, semantic-filter experiments and rendering limits.\n - [Gran Turismo wheels](gran-turismo-wheels.md): native template recovery, corrected dimension interpretation, wheel textures, neutral assembly and safe editable upgrades.\n+\n+- [Redline library](redline-library.md): native static mesh/texture conversion, 128 independent editable imports, verification, semantic-filter experiments and source limits.\n"
+      },
+      {
+        "path": "research/redline-library.md",
+        "diff": "--- /dev/null\n+++ b/research/redline-library.md\n@@ -0,0 +1,114 @@\n+# Redline conversion and library import\n+\n+The 2026-10-09 import processed all 129 extracted car configurations. It published\n+128 static GLBs (19 base-game configurations and 109 add-ons), plus 128 separate,\n+editable dealership copies. Both catalogs now contain 891 entries. The native\n+extraction in `redline/cars` remains unchanged.\n+\n+## Conversion\n+\n+`tools/redline_mesh.py` reads the native big-endian MDL arrays and indexed triangle\n+corners, with bounds and finite-value checks. `tools/redline_texture.py` converts\n+native TXR/DXT3 and conventional image resources into embedded PNGs.\n+`tools/redline_model.py` assembles body, optional interior, wheels, custom brakes\n+and graphical add-ons from each car configuration. Wheel placement uses the\n+native position, tilt, side rotation, width and radius. The neutral preview lowers\n+each wheel/brake center by half its configured suspension travel; omitted travel\n+defaults to zero as in the native cleared wheel allocation. Source UV values remain\n+unchanged; texture-row mapping follows the native upload and GLB loader evidence.\n+Zero normals use geometric face normals; unusable zero-area triangles are omitted.\n+\n+The resulting static export contains 598,013 triangles and 169,074,436 GLB bytes.\n+862 corner normals were derived, and 8,513 unusable triangles were omitted.\n+Native arrays and source files are retained separately. Every consumed resource\n+is pinned by size and SHA-256. Package-local resources precede base resources;\n+ambiguous resources are not borrowed from unrelated plug-ins.\n+\n+## Rebuilding\n+\n+Run from the repository root. The system Python has the local Pillow installation\n+required by the supplied TIFF/PSD images; PICT conversion uses macOS `sips`.\n+\n+```sh\n+/usr/bin/python3 tools/export_redline_models.py\n+/usr/bin/python3 tools/export_redline_models.py --check\n+python3 tools/build_model_catalog.py\n+/usr/bin/python3 tools/import_redline_dealership.py --upgrade-unedited\n+python3 tools/build_dealership.py\n+python3 tools/build_dealership.py --check\n+tools/check.sh --evidence-dir .scratch/redline-conversion/final-checks\n+```\n+\n+Publication stages and validates the full model directory before replacement.\n+The importer appends independent editable copies, validates source metadata, and\n+preserves existing catalog entries. Repeating the import added zero models.\n+The upgrade flag refreshes only copies whose bytes still match their recorded\n+source hash; edited models remain untouched. The source viewer and dealership\n+provide Redline base/add-on filters and visible\n+per-car conversion limits. Dealership Front/Side controls respect the native\n+Redline forward-Z axis.\n+\n+## Exceptions and limits\n+\n+- Invisivette uses empty native meshes. Its configuration is recorded in the export\n+  index as non-drawable; no invented model is published.\n+- Pimped Diablo references `countach_wheel.mdl`, absent from all supplied packages.\n+  Its available body/interior are retained with missing-wheel warnings.\n+- An optional APC interior contains non-finite native UV values and is skipped.\n+- Six texture references are unavailable in the owning/base resources. One has\n+  conflicting variants in other plug-ins. Neutral materials and warnings preserve\n+  that uncertainty instead of guessing a texture.\n+- Wipeout 2 declares zero wheel scales; collapsed wheels are omitted with warnings.\n+- Runtime steering, spin, animation, paint/reflection/secondary shader composition,\n+  graphical add-on visibility masks and global plug-in load precedence are not\n+  reproduced or established. Raw two-slice 3D textures use the native first-slice\n+  2D fallback. Game-render fidelity remains unverified.\n+\n+## Verification and judgments\n+\n+The 48-check suite passed; eight checks covering the affected assembly, exporter,\n+importer, baker, viewer, freshness and Blender paths passed again after the stance\n+correction. The published 487 wheel centers and 40 custom-brake centers match\n+the native preview formula. The exporter regenerated the entire published inventory byte-for-byte with\n+`--check`. Preservation checks found 8,256 pre-existing native/model files\n+unchanged, all 763 previous catalog/origin entries unchanged, and 128 new regular\n+editable copies with bytes equal to their source models and separate inodes.\n+The stance regression failed with raw configured centers, then passed after the\n+native half-travel subtraction (Mustang Y 0.35 to 0.25). Both native wheel render\n+paths use this subtraction. Horizontal position and wheel dimensions retain their\n+native values; no universal track-width adjustment is invented. Blender 4.5.14 imported and exported four-, three- and six-wheel assemblies,\n+preserved their triangle counts, propagated a 10% geometry stretch, and rebuilt\n+schema-2 dealership data without modifying the 256 production Redline GLBs.\n+\n+All 2,297 source image files (2,159 unique byte payloads) decoded in the full corpus\n+experiment. Independent comparisons covered native DXT3 and conventional image\n+pixels. The final PICT optimization was separately checked against all 140 unique\n+PICT inputs; the original full-corpus receipt identifies its earlier producer.\n+\n+Jev screened documentation and qualified native-format evidence, reviewed changes,\n+verified corpus claims and informed the bounded decision to retain cars with\n+missing original resources and disclose their omissions. Low-confidence reviews\n+received independent evidence review; original model scores were preserved.\n+An earlier extension-only PNG warning was withdrawn after content decoding showed\n+that the affected `.png` file is a valid JPEG.\n+\n+The server-side semantic filter composes TypeSafe Choice, Noul and Score judgments\n+for available game/variant filters. It sends bounded queries and filter options,\n+keeps credentials server-side, and leaves filters unchanged on review/failure.\n+Sixty labeled experiments compared wording and candidate state. The final\n+20-case run selected the expected choice in 16 cases; its five accepted answers\n+were all correct (25% acceptance coverage, a small observed sample). The 40-case\n+wording comparison used 44,338 input/6,054 output tokens, cost $0.001862196 and\n+3.523 seconds of wall time with concurrency four. The final 20-case run used\n+24,799 input/3,026 output tokens, cost $0.001041558 and 2.175 seconds. These costs\n+exclude MCP documentation/review calls, whose billed cost was not returned.\n+Four real HTTP requests accepted Redline/base and Gran Turismo/night and returned\n+review for the add-on request and unsupported all-wheels query; measured latency\n+was 0.279\u20130.901 seconds. No acceptance thresholds were relaxed.\n+\n+Evidence: `.scratch/redline-conversion/export-summary-final.json`, `export-suspension-check.log`,\n+`preservation-final.json`, `roundtrip-corrected.log`, `final-checks/results.json`,\n+`stance-final-checks/results.json`,\n+`live-api-experiments.json`, and the component receipts under `mesh`, `texture`\n+and `integration`. Browser evidence is in `research/evidence/redline-library`.\n+Scratch inputs, credentials and native installers are not published by this note.\n"
+      },
+      {
+        "path": "dealership/dealership/README.md",
+        "diff": "--- a/dealership/dealership/README.md\n+++ b/dealership/dealership/README.md\n@@ -61,3 +61,17 @@\n files. It also runs in the normal check suite, so an unrecompiled model or catalog edit fails.\n `tools/check.sh --only test_build_dealership,dealership_freshness,dealership_roundtrip` runs\n the focused editing checks with complete retained logs.\n+\n+Redline static exports are added with `python3 tools/import_redline_dealership.py`, then\n+`python3 tools/build_dealership.py`. The importer verifies every indexed GLB hash, size,\n+source identity and static profile before changing working files. Repeat imports preserve\n+existing models and catalog edits; `--upgrade-unedited` refreshes only exact copies of\n+recorded sources while retaining original import provenance. Editable identifiers begin\n+with `REDLINE_` and include a digest of the complete source configuration identity.\n+\n+Redline names are literal native configuration names. Base-game and add-on configurations\n+remain separate variants. Their performance and body categories remain unknown; conversion\n+limits travel with each entry. Both viewers use the static GLB scene and embedded textures.\n+Game, source-variant and literal-name filters work offline. The optional TypeSafe semantic\n+filter can interpret Redline base-game or add-on requests, with unsupported restrictions and\n+uncertain/provider-failure answers leaving the current filter unchanged.\n"
+      }
+    ],
+    "claims": [
+      "The final export contains19 base and109 add-on drawable models, and one non-drawable Invisivette configuration is recorded separately."
+    ],
+    "evidence": "{\n  \"asset_verifier_command\": \"python3 .scratch/redline-conversion/verify_final_assets.py\",\n  \"asset_verifier\": {\n    \"protected_models_and_native_files_unchanged\": 8256,\n    \"changed_unexpectedly\": [],\n    \"previous_catalog_entries_preserved\": 763,\n    \"previous_origin_entries_preserved\": 763,\n    \"new_independent_models\": 128,\n    \"source_library_count\": 891,\n    \"dealership_count\": 891,\n    \"export_index_sha256\": \"996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4\",\n    \"wheel_centers_checked\": 487,\n    \"brake_centers_checked\": 40,\n    \"mustang_centers\": [\n      [\n        -0.76,\n        0.24999999999999997,\n        1.47\n      ],\n      [\n        0.76,\n        0.24999999999999997,\n        1.47\n      ],\n      [\n        -0.76,\n        0.24999999999999997,\n        -1.29\n      ],\n      [\n        0.76,\n        0.24999999999999997,\n        -1.29\n      ]\n    ],\n    \"claim_limits\": [\n      \"Static model conversion and catalog preservation; game shaders/animation unverified.\"\n    ]\n  },\n  \"export_summary\": {\n    \"configuration_count\": 129,\n    \"models\": 128,\n    \"game_variants\": {\n      \"base\": 19,\n      \"addon\": 109\n    },\n    \"non_drawable\": [\n      {\n        \"code\": \"addon/034-invisivette_zip/Invisivette_96415078ea09\",\n        \"native_car_id\": \"addons/034-invisivette.zip/packages/00/Invisivette.car\",\n        \"display_name\": \"Invisivette\",\n        \"source_variant\": \"addon\",\n        \"native_config_sha256\": \"e240cd38ed81b32bda3b72705348bbf42fbcc583015367d68b6da1e9dbe8ab14\",\n        \"reason\": \"Native configuration has no drawable geometry\",\n        \"native_resources\": [\n          {\n            \"file\": \"shared/base/assets/null.mdl\",\n            \"bytes\": 108,\n            \"sha256\": \"6232746c9c8c696fd49c0bbbbcb701417ddd70de16a591c9036bc9f64ddcfc45\"\n          }\n        ],\n        \"warnings\": [\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          }\n        ]\n      }\n    ],\n    \"source_index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n    \"export_index_sha256\": \"996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4\",\n    \"triangles\": 598013,\n    \"native_triangles\": 606526,\n    \"derived_corner_normals\": 862,\n    \"omitted_triangles\": 8513,\n    \"model_bytes\": 169074436,\n    \"warnings\": {\n      \"empty-mesh\": 84,\n      \"texture\": 22,\n      \"normal-derivation\": 44,\n      \"optional-mesh\": 5,\n      \"collapsed-wheel\": 4\n    }\n  },\n  \"full_check_results\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.05\n      },\n      {\n        \"name\": \"test_viewer_scenes\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_scenes.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_scenes.log\",\n        \"elapsed_seconds\": 0.132\n      },\n      {\n        \"name\": \"test_viewer_materials\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_materials.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_materials.log\",\n        \"elapsed_seconds\": 0.047\n      },\n      {\n        \"name\": \"test_model_load\",\n        \"command\": [\n          \"node\",\n          \"tools/test_model_load.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_load.log\",\n        \"elapsed_seconds\": 0.042\n      },\n      {\n        \"name\": \"test_viewer_loading\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_loading.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_loading.log\",\n        \"elapsed_seconds\": 0.102\n      },\n      {\n        \"name\": \"test_dealership\",\n        \"command\": [\n          \"node\",\n          \"tools/test_dealership.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_dealership.log\",\n        \"elapsed_seconds\": 1.694\n      },\n      {\n        \"name\": \"test_editable_glb\",\n        \"command\": [\n          \"node\",\n          \"tools/test_editable_glb.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_editable_glb.log\",\n        \"elapsed_seconds\": 1.704\n      },\n      {\n        \"name\": \"verify_recovered_asset_index\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_recovered_asset_index.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_recovered_asset_index.log\",\n        \"elapsed_seconds\": 1.292\n      },\n      {\n        \"name\": \"test_export_materials\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_materials.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_materials.log\",\n        \"elapsed_seconds\": 0.241\n      },\n      {\n        \"name\": \"test_build_showcase\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_build_showcase.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_build_showcase.log\",\n        \"elapsed_seconds\": 0.579\n      },\n      {\n        \"name\": \"test_bake_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_bake_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_bake_models.log\",\n        \"elapsed_seconds\": 2.659\n      },\n      {\n        \"name\": \"test_build_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_build_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_build_dealership.log\",\n        \"elapsed_seconds\": 0.498\n      },\n      {\n        \"name\": \"test_model_catalog\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_catalog.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_catalog.log\",\n        \"elapsed_seconds\": 0.051\n      },\n      {\n        \"name\": \"test_model_png\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_png.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_png.log\",\n        \"elapsed_seconds\": 0.038\n      },\n      {\n        \"name\": \"test_run_checks\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_run_checks.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_run_checks.log\",\n        \"elapsed_seconds\": 0.102\n      },\n      {\n        \"name\": \"test_review_payload\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_review_payload.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_review_payload.log\",\n        \"elapsed_seconds\": 0.048\n      },\n      {\n        \"name\": \"test_static_inputs\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_static_inputs.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_static_inputs.log\",\n        \"elapsed_seconds\": 0.166\n      },\n      {\n        \"name\": \"test_recovery_inputs\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_recovery_inputs.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_recovery_inputs.log\",\n        \"elapsed_seconds\": 3.353\n      },\n      {\n        \"name\": \"test_gt_archive\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_archive.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_archive.log\",\n        \"elapsed_seconds\": 0.15\n      },\n      {\n        \"name\": \"test_gt_asset_judgments\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_asset_judgments.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_asset_judgments.log\",\n        \"elapsed_seconds\": 0.11\n      },\n      {\n        \"name\": \"test_gt_wheels\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_wheels.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_wheels.log\",\n        \"elapsed_seconds\": 0.072\n      },\n      {\n        \"name\": \"test_gt_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_model.log\",\n        \"elapsed_seconds\": 4.287\n      },\n      {\n        \"name\": \"test_import_gt_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_gt_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_gt_dealership.log\",\n        \"elapsed_seconds\": 0.546\n      },\n      {\n        \"name\": \"test_library_filter\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_library_filter.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_library_filter.log\",\n        \"elapsed_seconds\": 0.137\n      },\n      {\n        \"name\": \"test_serve_library\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_serve_library.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_serve_library.log\",\n        \"elapsed_seconds\": 0.696\n      },\n      {\n        \"name\": \"test_redline_archive\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_archive.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_archive.log\",\n        \"elapsed_seconds\": 0.104\n      },\n      {\n        \"name\": \"test_extract_redline_cars\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_extract_redline_cars.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_extract_redline_cars.log\",\n        \"elapsed_seconds\": 0.14\n      },\n      {\n        \"name\": \"test_redline_mesh\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_mesh.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_mesh.log\",\n        \"elapsed_seconds\": 0.06\n      },\n      {\n        \"name\": \"test_redline_texture\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_texture.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_texture.log\",\n        \"elapsed_seconds\": 0.084\n      },\n      {\n        \"name\": \"test_redline_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_model.log\",\n        \"elapsed_seconds\": 0.105\n      },\n      {\n        \"name\": \"test_export_redline_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_redline_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_redline_models.log\",\n        \"elapsed_seconds\": 0.128\n      },\n      {\n        \"name\": \"test_import_redline_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_redline_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_redline_dealership.log\",\n        \"elapsed_seconds\": 1.4\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 32.945\n      },\n      {\n        \"name\": \"verify_config_data_sound\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_config_data_sound.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_config_data_sound.log\",\n        \"elapsed_seconds\": 9.879\n      },\n      {\n        \"name\": \"verify_sound_bank_index\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_sound_bank_index.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_sound_bank_index.log\",\n        \"elapsed_seconds\": 1.538\n      },\n      {\n        \"name\": \"verify_vu_dispatch_map\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_dispatch_map.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_dispatch_map.log\",\n        \"elapsed_seconds\": 14.931\n      },\n      {\n        \"name\": \"test_vu_dispatch_map\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_dispatch_map.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_dispatch_map.log\",\n        \"elapsed_seconds\": 50.863\n      },\n      {\n        \"name\": \"test_vu1_decode\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu1_decode.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu1_decode.log\",\n        \"elapsed_seconds\": 1.575\n      },\n      {\n        \"name\": \"verify_vu_pass_handlers\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_pass_handlers.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_pass_handlers.log\",\n        \"elapsed_seconds\": 11.598\n      },\n      {\n        \"name\": \"test_vu_pass_handlers\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_pass_handlers.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_pass_handlers.log\",\n        \"elapsed_seconds\": 9.263\n      },\n      {\n        \"name\": \"verify_vu_handler_dump\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_handler_dump.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_handler_dump.log\",\n        \"elapsed_seconds\": 14.176\n      },\n      {\n        \"name\": \"test_vu_handler_dump\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_handler_dump.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_handler_dump.log\",\n        \"elapsed_seconds\": 7.732\n      },\n      {\n        \"name\": \"recover_dump_reference_frame\",\n        \"command\": [\n          \"python3\",\n          \"tools/recover_dump_reference_frame.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"recover_dump_reference_frame.log\",\n        \"elapsed_seconds\": 4.731\n      },\n      {\n        \"name\": \"test_recover_dump_reference_frame\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_recover_dump_reference_frame.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_recover_dump_reference_frame.log\",\n        \"elapsed_seconds\": 13.468\n      },\n      {\n        \"name\": \"verify_pass_source_join\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_pass_source_join.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_pass_source_join.log\",\n        \"elapsed_seconds\": 26.335\n      },\n      {\n        \"name\": \"test_pass_source_join\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_pass_source_join.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_pass_source_join.log\",\n        \"elapsed_seconds\": 24.54\n      },\n      {\n        \"name\": \"dealership_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_dealership_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_roundtrip.log\",\n        \"elapsed_seconds\": 25.452\n      },\n      {\n        \"name\": \"redline_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_redline_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"redline_roundtrip.log\",\n        \"elapsed_seconds\": 18.782\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  },\n  \"affected_check_results\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.127\n      },\n      {\n        \"name\": \"test_dealership\",\n        \"command\": [\n          \"node\",\n          \"tools/test_dealership.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_dealership.log\",\n        \"elapsed_seconds\": 6.915\n      },\n      {\n        \"name\": \"test_bake_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_bake_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_bake_models.log\",\n        \"elapsed_seconds\": 12.066\n      },\n      {\n        \"name\": \"test_redline_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_model.log\",\n        \"elapsed_seconds\": 0.242\n      },\n      {\n        \"name\": \"test_export_redline_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_redline_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_redline_models.log\",\n        \"elapsed_seconds\": 0.761\n      },\n      {\n        \"name\": \"test_import_redline_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_redline_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_redline_dealership.log\",\n        \"elapsed_seconds\": 2.93\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 63.782\n      },\n      {\n        \"name\": \"redline_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_redline_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"redline_roundtrip.log\",\n        \"elapsed_seconds\": 42.792\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  }\n}",
+    "tests": ""
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "safe_to_apply_below_auto_accept",
+      "confidence_below_auto_accept",
+      "confidence_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "mode": "per-file",
+      "action": "escalate",
+      "composite": 0.8585,
+      "safe_to_apply": 0.58,
+      "reason_codes": [
+        "safe_to_apply_below_auto_accept",
+        "confidence_below_auto_accept",
+        "confidence_below_review"
+      ],
+      "limiting": [
+        {
+          "file": "redline/README.md",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "research/README.md",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "research/redline-library.md",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "dealership/dealership/README.md",
+          "rubrics": [
+            "blast_radius"
+          ]
+        }
+      ],
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "files": [
+        {
+          "path": "redline/README.md",
+          "safe_to_apply": 0.59,
+          "scores": {
+            "correctness": {
+              "score": 1.82,
+              "confidence": 0.74,
+              "probabilities": {
+                "0": 0.03,
+                "1": 0.11,
+                "2": 0.86
+              }
+            },
+            "spec_match": {
+              "score": 1.75,
+              "confidence": 0.64,
+              "probabilities": {
+                "0": 0.02,
+                "1": 0.2,
+                "2": 0.78
+              }
+            },
+            "test_gap": {
+              "score": 0.19,
+              "confidence": 0.7,
+              "probabilities": {
+                "0": 0.86,
+                "1": 0.08,
+                "2": 0.06
+              }
+            },
+            "blast_radius": {
+              "score": 0.33,
+              "confidence": 0.52,
+              "probabilities": {
+                "0": 0.8,
+                "1": 0.08,
+                "2": 0.12
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "review",
+          "composite": 0.8875000000000001,
+          "reason_codes": [
+            "safe_to_apply_below_auto_accept",
+            "confidence_below_auto_accept"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "research/README.md",
+          "safe_to_apply": 0.68,
+          "scores": {
+            "correctness": {
+              "score": 1.86,
+              "confidence": 0.79,
+              "probabilities": {
+                "0": 0.02,
+                "1": 0.1,
+                "2": 0.88
+              }
+            },
+            "spec_match": {
+              "score": 1.78,
+              "confidence": 0.68,
+              "probabilities": {
+                "0": 0.02,
+                "1": 0.17,
+                "2": 0.81
+              }
+            },
+            "test_gap": {
+              "score": 0.19,
+              "confidence": 0.71,
+              "probabilities": {
+                "0": 0.86,
+                "1": 0.09,
+                "2": 0.05
+              }
+            },
+            "blast_radius": {
+              "score": 0.31,
+              "confidence": 0.52,
+              "probabilities": {
+                "0": 0.75,
+                "1": 0.18,
+                "2": 0.07
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "review",
+          "composite": 0.9015000000000001,
+          "reason_codes": [
+            "safe_to_apply_below_auto_accept",
+            "confidence_below_auto_accept"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "research/redline-library.md",
+          "safe_to_apply": 0.58,
+          "scores": {
+            "correctness": {
+              "score": 1.82,
+              "confidence": 0.73,
+              "probabilities": {
+                "0": 0.03,
+                "1": 0.12,
+                "2": 0.85
+              }
+            },
+            "spec_match": {
+              "score": 1.89,
+              "confidence": 0.83,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.09,
+                "2": 0.9
+              }
+            },
+            "test_gap": {
+              "score": 0.38,
+              "confidence": 0.43,
+              "probabilities": {
+                "0": 0.7,
+                "1": 0.22,
+                "2": 0.08
+              }
+            },
+            "blast_radius": {
+              "score": 1.57,
+              "confidence": 0.35,
+              "probabilities": {
+                "0": 0.12,
+                "1": 0.19,
+                "2": 0.69
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.8012499999999999,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "dealership/dealership/README.md",
+          "safe_to_apply": 0.71,
+          "scores": {
+            "correctness": {
+              "score": 1.89,
+              "confidence": 0.83,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.09,
+                "2": 0.9
+              }
+            },
+            "spec_match": {
+              "score": 1.77,
+              "confidence": 0.67,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.2,
+                "2": 0.79
+              }
+            },
+            "test_gap": {
+              "score": 0.5,
+              "confidence": 0.25,
+              "probabilities": {
+                "0": 0.61,
+                "1": 0.28,
+                "2": 0.11
+              }
+            },
+            "blast_radius": {
+              "score": 0.83,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.47,
+                "1": 0.22,
+                "2": 0.31
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.84375,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        }
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 1,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The final export contains19 base and109 add-on drawable models, and one non-drawable Invisivette configuration is recorded separately.",
+          "verdict": "verified",
+          "confidence": 0.97,
+          "probabilities": {
+            "verified": 0.98,
+            "contradicted": 0.02,
+            "unsupported": 0
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 11260,
+      "output_tokens": 407
+    }
+  }
+}

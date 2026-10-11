@@ -1,0 +1,31 @@
+;VW hippie van with Subaru engine, also with Ÿber-cool paintjob.;carName "Flower-Power"carName "AlluBus"year 1983displacement 2.3;---aerodynamicsfrontAirResistance 1.9sideAirResistance 2.0topAirResistance 3.0frontLift 0.1rearLift 0.1;---chassis;Car's mass in kgmass 1500inertia {4000,3600,600}massCenter {0.0,0.65,-0.1}numCollBoxes 1# 0coll.tfr {0.955,1.9,2.25}coll.tfl {-0.955,1.9,2.25}coll.trr {0.955,1.9,-2.25}coll.trl {-0.955,1.9,-2.25}coll.bfr {0.955,0.3,2.25}coll.bfl {-0.955,0.3,2.25}coll.brr {0.955,0.3,-2.25}coll.brl {-0.955,0.3,-2.25};---graphics;Model used to represent the car.model "allubus.mdl";Model used to represent the car's interior.;The AlluBus has no interior graphics, so we just pass "null.mdl"interiorModel "null.mdl"noDriverModel 1steeringWheelPos {0.5,0.74,0.414}steeringWheelAngle 15steeringWheelTurns 3.5steeringWheelModel "null.mdl"
+
+numColors 3# 0
+colors {0.04,1.0,0.2}
+# 1
+colors {1,1,1}
+# 2
+colors {0,0,0}
+
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {-0.45,0.4,-2.3}exhaust2Pos {-0.45,0.4,-2.3}
+
+exhaustFire 120000
+frontLicensePlatePos {0,0.42,2.3}rearLicensePlatePos {0,0.65,-2.3}
+
+;---engine---
+power 122127.1torque 230powerRPM 5700torqueRPM 2600maxRPM 6000.0idleRPM 800.jerkRPM 450.0engineInertia 0.15engineFriction 70engineSample "barge.wav"hallSample "barge.wav"zeroRPMSoundGain 0.7fullRPMSoundGain 1.1zeroThrottleSoundGain 0.4fullThrottleSoundGain 1.1zeroRPMSoundPitch 0.5fullRPMSoundPitch 0.9zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.0
+
+hornSample "More than a feeling.wav"
+hornSoundGain 3.0;---suspension;These determines the strength of the car's shock absorbers.
+supsensionFriction 300damperStrength 22000
+frontSwayBar 12000rearSwayBar 0
+
+;---drivetrainfinalDriveRatio 4.65maxClutchTorqueTransfer 900
+differentialLockCoefficient 30shiftUpRPM 6600.0shiftDownRPM 3000.0gearSwitchTime 0.4numGears 6# 0gearRatios -2.66# 1gearRatios 0# 2gearRatios 2.86# 3gearRatios 1.98# 4gearRatios 1.42# 5gearRatios 1.1
+
+;---wheelsnumWheels 4# 0wheels.pos {-0.81,0.375,1.17}wheels.inertia 2.2wheels.powered 0.0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.22wheels.radius 0.34wheels.braked 4000.0wheels.handbraked 0.0
+wheels.model "allubus_wheel.mdl"wheels.width 0.2wheels.texture 5# 1wheels.pos {0.8,0.375,1.17}wheels.inertia 2.2wheels.powered 0.0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.22wheels.radius 0.34wheels.braked 4000.0wheels.handbraked 0.0wheels.model "allubus_wheel.mdl"wheels.width 0.2wheels.texture 5
+
+# 2wheels.pos {-0.79,0.375,-1.36}wheels.inertia 2.2wheels.powered 0.5wheels.friction 10wheels.maxAngle -0.0wheels.maxSuspension 0.22wheels.radius 0.34wheels.braked 1500.0wheels.handbraked 1.0wheels.model "allubus_wheel.mdl"wheels.width 0.2wheels.texture 5
+# 3wheels.pos {0.79,0.375,-1.36}wheels.inertia 2.2wheels.powered 0.5wheels.friction 10wheels.maxAngle -0.0wheels.maxSuspension 0.22wheels.radius 0.34wheels.braked 1500.0wheels.handbraked 1.0wheels.model "allubus_wheel.mdl"wheels.width 0.2wheels.texture 5
+;---lightsnumLights 12# 0lights.pos {-0.82,0.62,2.55}lights.dir {0,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00# 1lights.pos {0.82,0.62,2.25}lights.dir {0,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00# 2lights.pos {-0.7,0.55,-2.25}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00# 3lights.pos {0.7,0.55,-2.25}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00# 4lights.pos {-0.7,0.68,2.3}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.6lights.onFlags 0x01lights.offFlags 0x00# 5lights.pos {0.7,0.68,2.3}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.6lights.onFlags 0x01lights.offFlags 0x00# 6lights.pos {-0.3,0.5,2.3}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.5lights.onFlags 0x01lights.offFlags 0x00# 7lights.pos {0.3,0.5,2.3}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 0lights.size 0.5lights.onFlags 0x01lights.offFlags 0x00# 8lights.pos {-0.6,0.55,-2.25}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.18lights.onFlags 0x10lights.offFlags 0x00# 9lights.pos {0.6,0.55,-2.25}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.18lights.onFlags 0x10lights.offFlags 0x00# 10lights.pos {-0.53,0.55,-2.25}lights.dir {0,0,-1}lights.rgb {0.8,0.8,0.8}lights.type 0lights.size 0.2lights.onFlags 0x08lights.offFlags 0x00# 11lights.pos {0.53,0.55,-2.25}lights.dir {0,0,-1}lights.rgb {0.8,0.8,0.8}lights.type 0lights.size 0.2lights.onFlags 0x08lights.offFlags 0x00

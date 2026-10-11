@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.127
+    },
+    {
+      "name": "test_dealership",
+      "command": [
+        "node",
+        "tools/test_dealership.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_dealership.log",
+      "elapsed_seconds": 6.915
+    },
+    {
+      "name": "test_bake_models",
+      "command": [
+        "python3",
+        "tools/test_bake_models.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_bake_models.log",
+      "elapsed_seconds": 12.066
+    },
+    {
+      "name": "test_redline_model",
+      "command": [
+        "python3",
+        "tools/test_redline_model.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_redline_model.log",
+      "elapsed_seconds": 0.242
+    },
+    {
+      "name": "test_export_redline_models",
+      "command": [
+        "python3",
+        "tools/test_export_redline_models.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_export_redline_models.log",
+      "elapsed_seconds": 0.761
+    },
+    {
+      "name": "test_import_redline_dealership",
+      "command": [
+        "python3",
+        "tools/test_import_redline_dealership.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_import_redline_dealership.log",
+      "elapsed_seconds": 2.93
+    },
+    {
+      "name": "dealership_freshness",
+      "command": [
+        "python3",
+        "tools/build_dealership.py",
+        "--check"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "dealership_freshness.log",
+      "elapsed_seconds": 63.782
+    },
+    {
+      "name": "redline_roundtrip",
+      "command": [
+        "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender",
+        "--background",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "tools/test_redline_roundtrip.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "redline_roundtrip.log",
+      "elapsed_seconds": 42.792
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

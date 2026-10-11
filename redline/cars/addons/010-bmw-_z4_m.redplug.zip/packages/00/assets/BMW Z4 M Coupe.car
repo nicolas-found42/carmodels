@@ -1,0 +1,748 @@
+; 2008
+; Model, textures and .car created by Andreu
+; No alterations or derivatives without the author's permission
+; You can reach me on the Redline forums @ Vicent Estrella
+
+
+;——————General Car Information——————
+carName "≠BMW_Z4_M_version.png≠ BMW Z4 M Coupe"
+year 2006
+displacement 3.246
+builtIn 1
+price 54000
+
+
+;——————Aerodynamics——————
+; Coefficient of Drag: 0.35
+; Frontal area = 1.91 m2
+frontAirResistance 0.668
+sideAirResistance 1.543
+topAirResistance 2.129
+frontLift 0.01
+rearLift 0.02
+
+
+;——————Chassis——————
+; weight distibution = 50/50
+; wheelbase 2.497 m
+; W = 1.78 m
+; H = 1.29 m (coupe)
+; L = 4.11 m (coupe)
+
+mass 1495
+massCenter {0, 0.415, -0.02}
+inertia {2200, 2300, 750}
+
+
+;-—————Collision Boxes——————
+numCollBoxes 1
+# 0
+coll.tfr {0.88, 1.28, 2.05}
+coll.tfl {-0.88, 1.28, 2.05}
+coll.trr {0.88, 1.28, -2.05}
+coll.trl {-0.88, 1.28, -2.05}
+coll.bfr {0.88, 0.15, 2.05}
+coll.bfl {-0.88, 0.15, 2.05}
+coll.brr {0.88, 0.15, -2.05}
+coll.brl {-0.88, 0.15, -2.05}
+
+
+;——————Graphics——————
+model "BMW_Z4_body.mdl"
+interiorModel "BMW_Z4_interior.mdl"
+shadowModel "BMW_Z4_shadow.mdl"
+
+numColors 6
+
+; Orange
+# 0
+colors {1, 0.5, 0}
+
+; Light grey
+# 1
+colors {0.9, 0.9, 0.9}
+
+; Black
+# 2
+colors {0, 0, 0}
+
+; Blue
+# 3
+colors {0, 0.2, 0.5}
+
+; Maroon
+# 4
+colors {0.5, 0, 0.1}
+
+; Yellow
+# 5
+colors {1, 1, 0}
+
+
+;——————Driver model——————
+driverPos {0.34, 0.56, -0.42}
+
+
+;——————Position of steering wheel model——————
+steeringWheelPos {0.34, 0.8, -0.03}
+steeringWheelAngle 15
+steeringWheelTurns 2.8
+steeringWheelRadius 0.18
+steeringWheelTexture "BMW_Z4_M_wheel.png"
+
+
+;——————Position of Exhaust——————
+exhaust1Pos {0.47, 0.26, -1.95}
+exhaust2Pos {-0.47, 0.26, -1.95}
+
+
+;——————Position of License Plates——————
+frontLicensePlatePos {0.0, 0.5, 2.1}
+rearLicensePlatePos {0.0, 0.5, -2.05}
+
+
+;——————Engine——————
+power 252000
+powerRPM 7900
+torque 365
+torqueRPM 4900
+jerkRPM 600
+idleRPM 850
+maxRPM 8200
+engineInertia 0.15
+engineBaseFriction 25
+engineRPMFriction 0.015
+
+
+;——————Engine Sound——————
+engineSample "BMW_Z4_M_engine.wav"
+hallSample "BMW_Z4_M_engine.wav"
+zeroRPMSoundGain 0.8
+fullRPMSoundGain 2.0
+zeroThrottleSoundGain 1.4
+fullThrottleSoundGain 2.1
+
+zeroRPMSoundPitch 0.3
+fullRPMSoundPitch 1.0
+zeroThrottleSoundPitch 0.9
+fullThrottleSoundPitch 1.0
+
+
+;——————Horn Sound——————
+hornSample "BMW_Z4_M_horn.wav"
+hornPitch 0
+hornSoundgain 1
+
+
+;——————Drivetrain——————
+finalDriveRatio 3.62
+maxClutchTorqueTransfer 450
+shiftUpRPM 8000
+shiftUpRPMFix 8000
+shiftDownRPM 4000
+clutchRPM 2000
+gearSwitchTime 0.45
+differentialLockCoefficient 85
+
+
+;——————Number of gears——————
+numGears 8
+# 0
+gearRatios -3.93
+# 1
+gearRatios 0
+# 2
+gearRatios 4.35
+# 3
+gearRatios 2.5
+# 4
+gearRatios 1.66
+# 5
+gearRatios 1.23
+# 6
+gearRatios 1
+# 7
+gearRatios 0.85
+
+
+;——————Suspension——————
+suspensionFriction 1300
+damperStrength 35000
+frontSwayBar 14000
+rearSwayBar 28000
+
+
+;——————Wheels——————
+; wheelbase 2.497 m
+; Front Track = 1.486 m
+; Rear Track = 1.516 m
+; 60-0 mph in 119 ft
+; Balance: Mild understeer
+; Steering ratio 14.7:1
+; Turns: 2.8
+; F: 225/45-18
+; R: 255/40-18
+
+numWheels 4
+
+# 0
+wheels.pos {0.743, 0.365, 1.209}
+wheels.inertia 2
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.598
+wheels.maxSuspension 0.09
+wheels.radius 0.32985
+wheels.braked 6000
+wheels.handbraked 0.0
+wheels.model "BMW_Z4_tire.mdl"
+wheels.width 0.225
+wheels.stickyness 0.07
+wheels.loadSensitivity 0
+
+# 1
+wheels.pos {-0.743, 0.365, 1.209}
+wheels.inertia 2
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.598
+wheels.maxSuspension 0.09
+wheels.radius 0.32985
+wheels.braked 6000
+wheels.handbraked 0.0
+wheels.model "BMW_Z4_tire.mdl"
+wheels.width 0.225
+wheels.stickyness 0.07
+wheels.loadSensitivity 0
+
+# 2
+wheels.pos {0.758, 0.37, -1.288}
+wheels.inertia 2.1
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.10
+wheels.radius 0.3306
+wheels.braked 1500
+wheels.handbraked 0.5
+wheels.model "BMW_Z4_tire.mdl"
+wheels.width 0.255
+wheels.stickyness 0.07
+wheels.loadSensitivity 0
+
+# 3
+wheels.pos {-0.758, 0.37, -1.288}
+wheels.inertia 2.1
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.10
+wheels.radius 0.3306
+wheels.braked 1500
+wheels.handbraked 0.5
+wheels.model "BMW_Z4_tire.mdl"
+wheels.width 0.255
+wheels.stickyness 0.07
+wheels.loadSensitivity 0
+
+
+;------Lights------
+numLights 49
+
+; Front lights
+
+# 0
+; spot
+lights.pos {-0.64,0.61,1.81}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 1
+; spot
+lights.pos {0.64,0.61,1.81}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 2
+; Headlights
+lights.pos {-0.64,0.61,1.81}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 3
+; Headlights
+lights.pos {0.64,0.61,1.81}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 4
+; front orange lights
+lights.pos {0.5,0.57,1.88}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 5
+; front orange lights
+lights.pos {-0.5,0.57,1.88}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 6
+; front orange lights
+lights.pos {0.54,0.57,1.88}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 7
+; front orange lights
+lights.pos {-0.54,0.57,1.88}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 8
+; front orange lights
+lights.pos {0.59,0.57,1.88}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 9
+; front orange lights
+lights.pos {-0.59,0.57,1.88}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 10
+; front orange lights
+lights.pos {0.66,0.58,1.78}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.1
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 11
+; front orange lights
+lights.pos {-0.66,0.58,1.78}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.1
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 12
+; front orange lights
+lights.pos {0.73,0.58,1.72}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.1
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 13
+; front orange lights
+lights.pos {-0.73,0.58,1.72}
+lights.dir {0,0,1}
+lights.rgb {1,0.7,0}
+lights.type 6
+lights.size 0.1
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+
+
+
+
+; Rear lights
+
+# 14
+; brakes
+lights.pos {0.6,0.69,-1.88}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .1
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 15
+; brakes
+lights.pos {-0.6,0.69,-1.88}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .1
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 16
+; brakes
+lights.pos {0.61,0.66,-1.88}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .1
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 17
+; brakes
+lights.pos {-0.61,0.66,-1.88}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .1
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 18
+; brakes
+lights.pos {0.61,0.63,-1.88}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .1
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 19
+; brakes
+lights.pos {-0.61,0.63,-1.88}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .1
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 20
+; red position rear
+lights.pos {0.65,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 21
+; red position rear
+lights.pos {-0.65,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 22
+; red position rear
+lights.pos {0.60,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 23
+; red position rear
+lights.pos {-0.60,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 24
+; red position rear
+lights.pos {0.56,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 25
+; red position rear
+lights.pos {-0.56,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 26
+; red position rear
+lights.pos {0.52,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 27
+; red position rear
+lights.pos {-0.52,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 28
+; red position rear
+lights.pos {0.48,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 29
+; red position rear
+lights.pos {-0.48,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size 0.075
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 30
+; red position rear
+lights.pos {0.46,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size .05
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 31
+; red position rear
+lights.pos {-0.46,0.74,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 6
+lights.size .05
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 32
+; Reverse
+lights.pos {0.57,0.71,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .08
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 33
+; Reverse
+lights.pos {-0.57,0.71,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .08
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 34
+; Reverse
+lights.pos {0.53,0.71,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .08
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 35
+; Reverse
+lights.pos {-0.53,0.71,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .08
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 36
+; Reverse
+lights.pos {0.5,0.705,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .08
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 37
+; Reverse
+lights.pos {-0.5,0.705,-1.86}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .08
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 38
+; central brake
+lights.pos {0,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 39
+; central brake
+lights.pos {0.05,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 40
+; central brake
+lights.pos {-0.05,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 41
+; central brake
+lights.pos {0.1,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 42
+; central brake
+lights.pos {-0.1,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 43
+; central brake
+lights.pos {0.15,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 44
+; central brake
+lights.pos {-0.15,0.85,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 45
+; central brake
+lights.pos {0.2,0.845,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 46
+; central brake
+lights.pos {-0.2,0.845,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 47
+; central brake
+lights.pos {0.25,0.84,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 48
+; central brake
+lights.pos {-0.25,0.84,-1.92}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .05
+lights.onFlags 0x10
+lights.offFlags 0x00

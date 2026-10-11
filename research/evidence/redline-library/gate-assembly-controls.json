@@ -1,0 +1,450 @@
+{
+  "args": {
+    "request": "Complete native Redline static car conversion and import into source and independent editable dealership libraries, preserve prior native/model files and edits, correct preview wheel suspension height using native evidence, retain explicit source omissions, keep TypeSafe judgments conservative and credentials server-side. This packet reviews the named component; other packets cover the remaining task-owned files. Do not claim game shader/animation fidelity or physics equilibrium. No Hopper.",
+    "files": [
+      {
+        "path": "tools/test_redline_model.py",
+        "diff": "--- /dev/null\n+++ b/tools/test_redline_model.py\n@@ -0,0 +1,165 @@\n+\"\"\"Static assembly controls: source identity, wheel pose, UVs and texture provenance.\"\"\"\n+import json\n+from pathlib import Path\n+import tempfile\n+import unittest\n+\n+from bake_models import read_glb, accessor\n+from redline_model import NoDrawableGeometry, Resources, build_glb, export_primitive, fold, parse_config, sha\n+from redline_texture import encode_png\n+from test_redline_mesh import fixture\n+\n+\n+def source_fixture(root):\n+    assets = {'body.mdl': fixture(), 'wheel.mdl': fixture(),\n+              'paint.pct': encode_png(1, 1, b'\\xff\\x00\\x00\\xff'),\n+              'paint#4.pct': encode_png(1, 1, b'\\x00\\xff\\x00\\xff')}\n+    config = b'carName \"Literal test\"\\rmodel \"body.mdl\"\\rnumWheels 2\\r# 0\\rwheels.model \"wheel.mdl\"\\rwheels.pos {-1,1,2}\\rwheels.width 0.2\\rwheels.radius 0.4\\rwheels.texture 4\\r# 1\\rwheels.model \"wheel.mdl\"\\rwheels.pos {1,1,2}\\rwheels.width 0.2\\rwheels.radius 0.4\\r'\n+    rows = []\n+    for name, data in assets.items():\n+        (root / name).write_bytes(data)\n+        rows.append({'name': name, 'file': name, 'bytes': len(data), 'sha256': sha(data)})\n+    (root / 'test.car').write_bytes(config)\n+    car = {'id': 'shared/base/test.car', 'package': 'shared/base', 'file': 'test.car',\n+           'bytes': len(config), 'sha256': sha(config), 'group': 'base'}\n+    return {'game': 'redline', 'cars': [car], 'packages': [{'id': 'shared/base', 'members': rows}]}, car\n+\n+\n+class AssemblyTests(unittest.TestCase):\n+    def test_zero_normals_and_zero_area_controls(self):\n+        group = {'positions': [(0, 0, 0), (1, 0, 0), (0, 1, 0)],\n+                 'normals': [(0, 0, 0), (0, 0, 2), (0, 0, 0)], 'uvs': [(0, 0), (1, 0), (0, 1)]}\n+        result, derived, omitted = export_primitive(group)\n+        self.assertEqual((derived, omitted), (2, 0))\n+        self.assertEqual(result['normals'], [(0, 0, 1)] * 3)\n+        self.assertEqual(result['positions'], group['positions'])\n+        self.assertEqual(result['uvs'], group['uvs'])\n+        group['positions'] = [(0, 0, 0)] * 3\n+        result, derived, omitted = export_primitive(group)\n+        self.assertEqual((derived, omitted), (0, 1))\n+        self.assertFalse(result['indices'])\n+\n+    def test_custom_brake_and_missing_mesh_notes(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, car = source_fixture(root)\n+            config = (root / 'test.car').read_bytes() + b'# 1\\rwheels.customBrakeModel \"body.mdl\"\\r'\n+            (root / 'test.car').write_bytes(config)\n+            car.update(bytes=len(config), sha256=sha(config))\n+            data, records, warnings, _ = build_glb(root, index, car, 'base/test')\n+            doc, _ = read_glb(data)\n+            self.assertFalse(warnings)\n+            self.assertEqual(records[-1]['role'], 'BRAKE_1')\n+            self.assertAlmostEqual(abs(doc['nodes'][-1]['rotation'][2]), 1)\n+            config += b'# 0\\rwheels.model \"absent.mdl\"\\r'\n+            (root / 'test.car').write_bytes(config)\n+            car.update(bytes=len(config), sha256=sha(config))\n+            data, _, warnings, _ = build_glb(root, index, car, 'base/test')\n+            doc, _ = read_glb(data)\n+            self.assertEqual(warnings[0]['resource'], 'absent.mdl')\n+            self.assertTrue(any('absent.mdl' in s for s in doc['extras']['claim_limits']))\n+            config += b'# 1\\rwheels.width 0\\rwheels.radius 0\\r'\n+            (root / 'test.car').write_bytes(config)\n+            car.update(bytes=len(config), sha256=sha(config))\n+            _, records, warnings, _ = build_glb(root, index, car, 'base/test')\n+            self.assertFalse(any(r['role'] == 'WHEEL_1' for r in records))\n+            self.assertTrue(any(w['kind'] == 'collapsed-wheel' for w in warnings))\n+\n+    def test_native_preview_suspension_clears_arch_pose(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, car = source_fixture(root)\n+            config = (root / 'test.car').read_bytes() + b'# 0\\rwheels.maxSuspension 0.2\\r# 1\\rwheels.maxSuspension 0.3\\rwheels.customBrakeModel \"body.mdl\"\\r'\n+            (root / 'test.car').write_bytes(config)\n+            car.update(bytes=len(config), sha256=sha(config))\n+            data, _, _, _ = build_glb(root, index, car, 'base/test')\n+            doc, _ = read_glb(data)\n+            left, right, brake = doc['nodes'][1:]\n+            self.assertEqual(left['translation'], [-1, 0.9, 2])\n+            self.assertEqual(right['translation'], [1, 0.85, 2])\n+            self.assertEqual(brake['translation'], right['translation'])\n+            config += b'# 0\\rwheels.maxSuspension -0.1\\r'\n+            (root / 'test.car').write_bytes(config)\n+            car.update(bytes=len(config), sha256=sha(config))\n+            with self.assertRaisesRegex(ValueError, 'suspension travel'):\n+                build_glb(root, index, car, 'base/test')\n+\n+    def test_native_empty_geometry_is_explicit(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, car = source_fixture(root)\n+            import struct\n+            empty = struct.pack('>6If', 0, 0, 0, 0, 0, 0, 0)\n+            for name in ('body.mdl', 'wheel.mdl'):\n+                (root / name).write_bytes(empty)\n+                row = next(r for r in index['packages'][0]['members'] if r['name'] == name)\n+                row.update(bytes=len(empty), sha256=sha(empty))\n+            with self.assertRaises(NoDrawableGeometry) as captured:\n+                build_glb(root, index, car, 'base/test')\n+            self.assertEqual(captured.exception.name, 'Literal test')\n+            self.assertEqual(len(captured.exception.resources), 2)\n+\n+    def test_carriage_return_arrays_and_literal_name(self):\n+        fields, arrays = parse_config(b'carName \"Name\"\\rnumWheels 3\\r# 2\\rwheels.pos {1,2,3}\\r')\n+        self.assertEqual(fields['numWheels'], 3)\n+        self.assertEqual(arrays['wheels.pos'][2], [1, 2, 3])\n+        self.assertEqual(fold('A\\xc4Z'), 'a\\xc4z')\n+        for value in (b'numWheels 3.5', b'numWheels 1000', b'# 5000', b'wheels.pos {1,2}'):\n+            with self.assertRaises(ValueError):\n+                parse_config(value)\n+\n+    def test_native_pose_selector_and_embedded_pixels(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, car = source_fixture(root)\n+            data, records, warnings, name = build_glb(root, index, car, 'base/test')\n+            doc, blob = read_glb(data)\n+            self.assertEqual(name, 'Literal test')\n+            self.assertFalse(warnings)\n+            self.assertEqual([r['role'] for r in records], ['BODY', 'WHEEL_0', 'WHEEL_1'])\n+            left, right = doc['nodes'][1:]\n+            self.assertEqual(left['scale'], [0.2, 0.4, 0.4])\n+            self.assertEqual(left['translation'], [-1, 1, 2])\n+            self.assertAlmostEqual(right['rotation'][1], 1)\n+            self.assertEqual(left['rotation'], [0, 0, 0, 1])\n+            uv = accessor(doc, blob, doc['meshes'][0]['primitives'][0]['attributes']['TEXCOORD_0'], 2, 5126)\n+            self.assertEqual(uv, [(0, 0), (1, 0), (0, 1)])\n+            self.assertEqual(len(doc['images']), 2)\n+            self.assertTrue(any(r['file'] == 'paint#4.pct' for r in doc['extras']['nativeResources']))\n+\n+    def test_pinned_optional_and_texture_corruption_fail(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, car = source_fixture(root)\n+            (root / 'paint.pct').write_bytes(b'corruption')\n+            with self.assertRaisesRegex(ValueError, 'extraction pin'):\n+                build_glb(root, index, car, 'base/test')\n+            index, car = source_fixture(root)\n+            interior = fixture()\n+            (root / 'interior.mdl').write_bytes(interior)\n+            index['packages'][0]['members'].append({'name': 'interior.mdl', 'file': 'interior.mdl',\n+                                                    'bytes': len(interior), 'sha256': sha(interior)})\n+            config = (root / 'test.car').read_bytes() + b'interiorModel \"interior.mdl\"\\r'\n+            (root / 'test.car').write_bytes(config)\n+            car.update(bytes=len(config), sha256=sha(config))\n+            (root / 'interior.mdl').write_bytes(b'corruption')\n+            with self.assertRaisesRegex(ValueError, 'extraction pin'):\n+                build_glb(root, index, car, 'base/test')\n+\n+    def test_resource_scope_alias_and_path_controls(self):\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, _ = source_fixture(root)\n+            resource = Resources(root, index, 'shared/base')\n+            self.assertEqual(resource.read('PAINT.PCT', True)[1], 'paint.pct')\n+            with self.assertRaisesRegex(ValueError, 'Invalid native resource'):\n+                resource.read('../paint.pct')\n+            row = index['packages'][0]['members'][0]\n+            row['file'] = '../escape'\n+            with self.assertRaisesRegex(ValueError, 'Unsafe'):\n+                resource.read(row['name'])\n+            json.dumps(index)\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n"
+      },
+      {
+        "path": "tools/test_redline_roundtrip.py",
+        "diff": "--- /dev/null\n+++ b/tools/test_redline_roundtrip.py\n@@ -0,0 +1,76 @@\n+\"\"\"Blender import/edit/export checks on native four-, three- and six-wheel cars.\"\"\"\n+import hashlib\n+import json\n+from pathlib import Path\n+import sys\n+import tempfile\n+\n+import bpy\n+\n+ROOT = Path(__file__).resolve().parents[1]\n+sys.path.insert(0, str(ROOT / 'tools'))\n+from bake_models import bake_car\n+from build_dealership import build, check\n+\n+\n+def run():\n+    assert bpy.app.version == (4, 5, 14), 'Use pinned Blender 4.5.14'\n+    index = json.loads((ROOT / 'dealership/public/redline/index.json').read_text())\n+    catalog = json.loads((ROOT / 'dealership/dealership/catalog.json').read_text())\n+    models = list((ROOT / 'dealership/public/redline').rglob('*.glb')) + list((ROOT / 'dealership/dealership/models').glob('REDLINE_*.glb'))\n+    before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in models}\n+    receipts = []\n+    for needle, wheels in [('500gt.car', 4), ('gcw-mog3w', 3), ('Mack', 6)]:\n+        row = next(c for c in index['cars'] if needle.lower() in c['native_car_id'].lower())\n+        entry = next(c for c in catalog if c.get('game') == 'redline' and c['sourceCode'] == row['code'])\n+        source = ROOT / 'dealership/dealership/models' / (entry['code'] + '.glb')\n+        original = bake_car(entry['code'], source.read_bytes(), source_mode=False)\n+        assert sum(r['role'].startswith('WHEEL_') for r in row['records']) == wheels\n+        bpy.ops.wm.read_factory_settings(use_empty=True)\n+        bpy.ops.import_scene.gltf(filepath=str(source))\n+        objects = list(bpy.context.scene.objects)\n+        meshes = [obj for obj in objects if obj.type == 'MESH']\n+        assert meshes and bpy.data.images, 'Missing native mesh or embedded texture'\n+        for image in bpy.data.images:\n+            assert image.size[0] > 0 and image.size[1] > 0 and len(image.pixels) > 0, 'Unreadable embedded texture'\n+        bpy.ops.object.select_all(action='DESELECT')\n+        for obj in objects:\n+            obj.select_set(True)\n+        with tempfile.TemporaryDirectory(prefix='redline-roundtrip-') as temporary:\n+            work = Path(temporary) / 'editable'\n+            (work / 'models').mkdir(parents=True)\n+            (work / 'catalog.json').write_text(json.dumps([entry]))\n+            model = work / 'models' / (entry['code'] + '.glb')\n+            output = Path(temporary) / 'cars.json'\n+            def export():\n+                bpy.ops.export_scene.gltf(filepath=str(model), export_format='GLB', use_selection=True,\n+                                          export_extras=True, export_animations=False, export_normals=True,\n+                                          export_image_format='AUTO', export_keep_originals=False)\n+            export()\n+            baseline = bake_car(entry['code'], model.read_bytes(), source_mode=False)\n+            assert baseline['triangleCount'] == original['triangleCount'], 'Blender lost native triangles'\n+            for obj in meshes:\n+                world, inverse = obj.matrix_world.copy(), obj.matrix_world.inverted()\n+                for vertex in obj.data.vertices:\n+                    point = world @ vertex.co\n+                    point.y *= 1.1\n+                    vertex.co = inverse @ point\n+                obj.data.update()\n+            export()\n+            edited = bake_car(entry['code'], model.read_bytes(), source_mode=False)\n+            length = lambda value: value['bounds'][3] - value['bounds'][0]\n+            assert abs(length(edited) / length(baseline) - 1.1) < 1e-5, 'Geometry edit did not reach exported model'\n+            assert edited['triangleCount'] == baseline['triangleCount']\n+            built = build(work, output)[0]\n+            assert built['model']['schema'] == 2\n+            assert built['model']['triangleCount'] == edited['triangleCount']\n+            check(work, output)\n+            receipts.append({'native_car_id': row['native_car_id'], 'wheels': wheels,\n+                             'triangles': edited['triangleCount'], 'length_multiplier': 1.1})\n+    assert all(hashlib.sha256(p.read_bytes()).hexdigest() == h for p, h in before.items()), 'Production models changed'\n+    print('PASS Redline Blender roundtrip: ' + json.dumps({'blender': bpy.app.version_string, 'cars': receipts,\n+          'model_files_preserved': len(models), 'claim_limits': ['Three static assemblies; original-game shaders and animations unverified.']}, sort_keys=True))\n+\n+\n+if __name__ == '__main__':\n+    run()\n"
+      },
+      {
+        "path": "tools/bake_models.py",
+        "diff": "--- a/tools/bake_models.py\n+++ b/tools/bake_models.py\n@@ -192,7 +192,9 @@\n                         w, h, rgba = pixels\n                         u, v = uv[i]\n                         # glTF UV origin and repeat sampling, same as the recovered viewer.\n-                        px, py = math.floor((u % 1) * w), math.floor((v % 1) * h)\n+                        # Tiny negative native UVs can round modulo to exactly\n+                        # 1.0 in double precision; keep sampling inside the image.\n+                        px, py = min(w - 1, math.floor((u % 1) * w)), min(h - 1, math.floor((v % 1) * h))\n                         offset = (py * w + px) * 4\n                         tone = texture_tone(rgba[offset:offset + 3], wheel)\n                     else:\n"
+      },
+      {
+        "path": "tools/test_bake_models.py",
+        "diff": "--- a/tools/test_bake_models.py\n+++ b/tools/test_bake_models.py\n@@ -6,9 +6,10 @@\n import json\n from pathlib import Path\n import struct\n+import tempfile\n import unittest\n \n-from bake_models import bake_car, texture_tone, load_source_model\n+from bake_models import bake_car, read_glb, texture_tone, load_source_model\n \n ROOT = Path(__file__).resolve().parents[1]\n \n@@ -102,6 +103,26 @@\n \n \n class ModelBakeTests(unittest.TestCase):\n+    def test_tiny_negative_uv_modulo_rounding_stays_in_image(self):\n+        from redline_model import build_glb\n+        from test_redline_model import source_fixture\n+        with tempfile.TemporaryDirectory() as directory:\n+            root = Path(directory)\n+            index, car = source_fixture(root)\n+            data, _, _, _ = build_glb(root, index, car, 'base/test')\n+            doc, binary = read_glb(data)\n+            changed = bytearray(binary)\n+            for mesh in doc['meshes']:\n+                for primitive in mesh['primitives']:\n+                    a = doc['accessors'][primitive['attributes']['TEXCOORD_0']]\n+                    view = doc['bufferViews'][a['bufferView']]\n+                    struct.pack_into('<2f', changed, view['byteOffset'] + a.get('byteOffset', 0), -2.0**-80, -2.0**-80)\n+            self.assertEqual((-2.0**-80) % 1, 1.0)\n+            original = bake_car('TEST', data, source_mode=False)\n+            edited = bake_car('TEST', data[:-len(binary)] + changed, source_mode=False)\n+            self.assertEqual(edited['triangleCount'], original['triangleCount'])\n+            self.assertEqual(edited['parts'], original['parts'])\n+\n     @classmethod\n     def setUpClass(cls):\n         cls.cars = [{'code':p.stem,'model':load_source_model(p.stem)} for p in sorted((ROOT / 'dealership/public/ford-racing-2').glob('*.glb'))]\n"
+      },
+      {
+        "path": "tools/run_checks.py",
+        "diff": "--- a/tools/run_checks.py\n+++ b/tools/run_checks.py\n@@ -18,7 +18,8 @@\n     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',\n              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',\n              'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',\n-             'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars']\n+             'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars',\n+             'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership']\n     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]\n     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})\n     for name in ['verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',\n@@ -39,6 +40,9 @@\n         blender = str(mounted)\n     checks.append({'name': 'dealership_roundtrip', 'command': [blender or 'blender', '--background', '--python-exit-code', '1',\n                                                            '--python', 'tools/test_dealership_roundtrip.py'], 'requires': blender or 'blender'})\n+    checks.append({'name': 'redline_roundtrip', 'command': [blender or 'blender', '--background', '--python-exit-code', '1',\n+                                                        '--python', 'tools/test_redline_roundtrip.py'], 'requires': blender or 'blender',\n+                   'availability': ['python3', '-c', \"from pathlib import Path; import sys; sys.exit(0 if Path('dealership/public/redline/index.json').is_file() else 1)\"]})\n     return checks\n \n \n"
+      }
+    ],
+    "claims": [
+      "The corrected suspension regression passes, after failing before the fix.",
+      "The post-fix Blender test imported, edited and exported static four-, three- and six-wheel cars."
+    ],
+    "evidence": "{\n  \"asset_verifier_command\": \"python3 .scratch/redline-conversion/verify_final_assets.py\",\n  \"asset_verifier\": {\n    \"protected_models_and_native_files_unchanged\": 8256,\n    \"changed_unexpectedly\": [],\n    \"previous_catalog_entries_preserved\": 763,\n    \"previous_origin_entries_preserved\": 763,\n    \"new_independent_models\": 128,\n    \"source_library_count\": 891,\n    \"dealership_count\": 891,\n    \"export_index_sha256\": \"996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4\",\n    \"wheel_centers_checked\": 487,\n    \"brake_centers_checked\": 40,\n    \"mustang_centers\": [\n      [\n        -0.76,\n        0.24999999999999997,\n        1.47\n      ],\n      [\n        0.76,\n        0.24999999999999997,\n        1.47\n      ],\n      [\n        -0.76,\n        0.24999999999999997,\n        -1.29\n      ],\n      [\n        0.76,\n        0.24999999999999997,\n        -1.29\n      ]\n    ],\n    \"claim_limits\": [\n      \"Static model conversion and catalog preservation; game shaders/animation unverified.\"\n    ]\n  },\n  \"export_summary\": {\n    \"configuration_count\": 129,\n    \"models\": 128,\n    \"game_variants\": {\n      \"base\": 19,\n      \"addon\": 109\n    },\n    \"non_drawable\": [\n      {\n        \"code\": \"addon/034-invisivette_zip/Invisivette_96415078ea09\",\n        \"native_car_id\": \"addons/034-invisivette.zip/packages/00/Invisivette.car\",\n        \"display_name\": \"Invisivette\",\n        \"source_variant\": \"addon\",\n        \"native_config_sha256\": \"e240cd38ed81b32bda3b72705348bbf42fbcc583015367d68b6da1e9dbe8ab14\",\n        \"reason\": \"Native configuration has no drawable geometry\",\n        \"native_resources\": [\n          {\n            \"file\": \"shared/base/assets/null.mdl\",\n            \"bytes\": 108,\n            \"sha256\": \"6232746c9c8c696fd49c0bbbbcb701417ddd70de16a591c9036bc9f64ddcfc45\"\n          }\n        ],\n        \"warnings\": [\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          },\n          {\n            \"kind\": \"empty-mesh\",\n            \"resource\": \"null.mdl\",\n            \"reason\": \"Native draw materials contain no triangles\"\n          }\n        ]\n      }\n    ],\n    \"source_index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n    \"export_index_sha256\": \"996b6c5eca397c296088fc15ebe462b0cb43be7b5b5aa81b0dfee1be1d5f47f4\",\n    \"triangles\": 598013,\n    \"native_triangles\": 606526,\n    \"derived_corner_normals\": 862,\n    \"omitted_triangles\": 8513,\n    \"model_bytes\": 169074436,\n    \"warnings\": {\n      \"empty-mesh\": 84,\n      \"texture\": 22,\n      \"normal-derivation\": 44,\n      \"optional-mesh\": 5,\n      \"collapsed-wheel\": 4\n    }\n  },\n  \"full_check_results\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.05\n      },\n      {\n        \"name\": \"test_viewer_scenes\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_scenes.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_scenes.log\",\n        \"elapsed_seconds\": 0.132\n      },\n      {\n        \"name\": \"test_viewer_materials\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_materials.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_materials.log\",\n        \"elapsed_seconds\": 0.047\n      },\n      {\n        \"name\": \"test_model_load\",\n        \"command\": [\n          \"node\",\n          \"tools/test_model_load.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_load.log\",\n        \"elapsed_seconds\": 0.042\n      },\n      {\n        \"name\": \"test_viewer_loading\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_loading.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_loading.log\",\n        \"elapsed_seconds\": 0.102\n      },\n      {\n        \"name\": \"test_dealership\",\n        \"command\": [\n          \"node\",\n          \"tools/test_dealership.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_dealership.log\",\n        \"elapsed_seconds\": 1.694\n      },\n      {\n        \"name\": \"test_editable_glb\",\n        \"command\": [\n          \"node\",\n          \"tools/test_editable_glb.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_editable_glb.log\",\n        \"elapsed_seconds\": 1.704\n      },\n      {\n        \"name\": \"verify_recovered_asset_index\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_recovered_asset_index.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_recovered_asset_index.log\",\n        \"elapsed_seconds\": 1.292\n      },\n      {\n        \"name\": \"test_export_materials\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_materials.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_materials.log\",\n        \"elapsed_seconds\": 0.241\n      },\n      {\n        \"name\": \"test_build_showcase\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_build_showcase.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_build_showcase.log\",\n        \"elapsed_seconds\": 0.579\n      },\n      {\n        \"name\": \"test_bake_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_bake_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_bake_models.log\",\n        \"elapsed_seconds\": 2.659\n      },\n      {\n        \"name\": \"test_build_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_build_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_build_dealership.log\",\n        \"elapsed_seconds\": 0.498\n      },\n      {\n        \"name\": \"test_model_catalog\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_catalog.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_catalog.log\",\n        \"elapsed_seconds\": 0.051\n      },\n      {\n        \"name\": \"test_model_png\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_png.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_png.log\",\n        \"elapsed_seconds\": 0.038\n      },\n      {\n        \"name\": \"test_run_checks\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_run_checks.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_run_checks.log\",\n        \"elapsed_seconds\": 0.102\n      },\n      {\n        \"name\": \"test_review_payload\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_review_payload.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_review_payload.log\",\n        \"elapsed_seconds\": 0.048\n      },\n      {\n        \"name\": \"test_static_inputs\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_static_inputs.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_static_inputs.log\",\n        \"elapsed_seconds\": 0.166\n      },\n      {\n        \"name\": \"test_recovery_inputs\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_recovery_inputs.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_recovery_inputs.log\",\n        \"elapsed_seconds\": 3.353\n      },\n      {\n        \"name\": \"test_gt_archive\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_archive.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_archive.log\",\n        \"elapsed_seconds\": 0.15\n      },\n      {\n        \"name\": \"test_gt_asset_judgments\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_asset_judgments.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_asset_judgments.log\",\n        \"elapsed_seconds\": 0.11\n      },\n      {\n        \"name\": \"test_gt_wheels\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_wheels.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_wheels.log\",\n        \"elapsed_seconds\": 0.072\n      },\n      {\n        \"name\": \"test_gt_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_gt_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_gt_model.log\",\n        \"elapsed_seconds\": 4.287\n      },\n      {\n        \"name\": \"test_import_gt_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_gt_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_gt_dealership.log\",\n        \"elapsed_seconds\": 0.546\n      },\n      {\n        \"name\": \"test_library_filter\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_library_filter.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_library_filter.log\",\n        \"elapsed_seconds\": 0.137\n      },\n      {\n        \"name\": \"test_serve_library\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_serve_library.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_serve_library.log\",\n        \"elapsed_seconds\": 0.696\n      },\n      {\n        \"name\": \"test_redline_archive\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_archive.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_archive.log\",\n        \"elapsed_seconds\": 0.104\n      },\n      {\n        \"name\": \"test_extract_redline_cars\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_extract_redline_cars.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_extract_redline_cars.log\",\n        \"elapsed_seconds\": 0.14\n      },\n      {\n        \"name\": \"test_redline_mesh\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_mesh.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_mesh.log\",\n        \"elapsed_seconds\": 0.06\n      },\n      {\n        \"name\": \"test_redline_texture\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_texture.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_texture.log\",\n        \"elapsed_seconds\": 0.084\n      },\n      {\n        \"name\": \"test_redline_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_model.log\",\n        \"elapsed_seconds\": 0.105\n      },\n      {\n        \"name\": \"test_export_redline_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_redline_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_redline_models.log\",\n        \"elapsed_seconds\": 0.128\n      },\n      {\n        \"name\": \"test_import_redline_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_redline_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_redline_dealership.log\",\n        \"elapsed_seconds\": 1.4\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 32.945\n      },\n      {\n        \"name\": \"verify_config_data_sound\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_config_data_sound.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_config_data_sound.log\",\n        \"elapsed_seconds\": 9.879\n      },\n      {\n        \"name\": \"verify_sound_bank_index\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_sound_bank_index.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_sound_bank_index.log\",\n        \"elapsed_seconds\": 1.538\n      },\n      {\n        \"name\": \"verify_vu_dispatch_map\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_dispatch_map.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_dispatch_map.log\",\n        \"elapsed_seconds\": 14.931\n      },\n      {\n        \"name\": \"test_vu_dispatch_map\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_dispatch_map.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_dispatch_map.log\",\n        \"elapsed_seconds\": 50.863\n      },\n      {\n        \"name\": \"test_vu1_decode\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu1_decode.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu1_decode.log\",\n        \"elapsed_seconds\": 1.575\n      },\n      {\n        \"name\": \"verify_vu_pass_handlers\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_pass_handlers.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_pass_handlers.log\",\n        \"elapsed_seconds\": 11.598\n      },\n      {\n        \"name\": \"test_vu_pass_handlers\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_pass_handlers.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_pass_handlers.log\",\n        \"elapsed_seconds\": 9.263\n      },\n      {\n        \"name\": \"verify_vu_handler_dump\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_vu_handler_dump.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_vu_handler_dump.log\",\n        \"elapsed_seconds\": 14.176\n      },\n      {\n        \"name\": \"test_vu_handler_dump\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_vu_handler_dump.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_vu_handler_dump.log\",\n        \"elapsed_seconds\": 7.732\n      },\n      {\n        \"name\": \"recover_dump_reference_frame\",\n        \"command\": [\n          \"python3\",\n          \"tools/recover_dump_reference_frame.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"recover_dump_reference_frame.log\",\n        \"elapsed_seconds\": 4.731\n      },\n      {\n        \"name\": \"test_recover_dump_reference_frame\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_recover_dump_reference_frame.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_recover_dump_reference_frame.log\",\n        \"elapsed_seconds\": 13.468\n      },\n      {\n        \"name\": \"verify_pass_source_join\",\n        \"command\": [\n          \"python3\",\n          \"tools/verify_pass_source_join.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"verify_pass_source_join.log\",\n        \"elapsed_seconds\": 26.335\n      },\n      {\n        \"name\": \"test_pass_source_join\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_pass_source_join.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_pass_source_join.log\",\n        \"elapsed_seconds\": 24.54\n      },\n      {\n        \"name\": \"dealership_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_dealership_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_roundtrip.log\",\n        \"elapsed_seconds\": 25.452\n      },\n      {\n        \"name\": \"redline_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_redline_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"redline_roundtrip.log\",\n        \"elapsed_seconds\": 18.782\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  },\n  \"affected_check_results\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.127\n      },\n      {\n        \"name\": \"test_dealership\",\n        \"command\": [\n          \"node\",\n          \"tools/test_dealership.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_dealership.log\",\n        \"elapsed_seconds\": 6.915\n      },\n      {\n        \"name\": \"test_bake_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_bake_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_bake_models.log\",\n        \"elapsed_seconds\": 12.066\n      },\n      {\n        \"name\": \"test_redline_model\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_redline_model.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_redline_model.log\",\n        \"elapsed_seconds\": 0.242\n      },\n      {\n        \"name\": \"test_export_redline_models\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_export_redline_models.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_export_redline_models.log\",\n        \"elapsed_seconds\": 0.761\n      },\n      {\n        \"name\": \"test_import_redline_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_redline_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_redline_dealership.log\",\n        \"elapsed_seconds\": 2.93\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 63.782\n      },\n      {\n        \"name\": \"redline_roundtrip\",\n        \"command\": [\n          \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n          \"--background\",\n          \"--python-exit-code\",\n          \"1\",\n          \"--python\",\n          \"tools/test_redline_roundtrip.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"redline_roundtrip.log\",\n        \"elapsed_seconds\": 42.792\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  },\n  \"native_suspension\": {\n    \"executable\": \".scratch/redline/native/Redline-i386\",\n    \"executable_sha256\": \"b2ac41a4335a1a75f71f9e88a4867c08cc514a74426576733e58aa6a05547e22\",\n    \"otool_full_sha256\": \"e87557bf5df42a257a8304eb834509be9af6d5bacd2c8a7fcbe1aced7bc2f8a9\",\n    \"mapping\": \"__TEXT VA 0x1000 maps to file 0; VA to file subtract 4096\",\n    \"spans\": {\n      \"preview-initialize\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-preview-initialize.s\",\n        \"start\": \"0xc501\",\n        \"end\": \"0xc5d2\",\n        \"sha256\": \"25e037818ccf894c816f1f6d87821f9c011066b3b866ed63e4b62977c91da0e4\"\n      },\n      \"default-and-parser\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-default-and-parser.s\",\n        \"start\": \"0x4c73f\",\n        \"end\": \"0x4c7ce\",\n        \"sha256\": \"0cdc9e5e2ff74623df0fdd2476dc00734673868344e6d2c0029a518045394b91\"\n      },\n      \"max-suspension-parser\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-max-suspension-parser.s\",\n        \"start\": \"0x4d59f\",\n        \"end\": \"0x4d60b\",\n        \"sha256\": \"bd0293500602253ebc90ac91554a7cfc4a194b08ca6ad1c4e97d01382426b084\"\n      },\n      \"simple-wheel-center\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-simple-wheel-center.s\",\n        \"start\": \"0x519de\",\n        \"end\": \"0x51ab7\",\n        \"sha256\": \"3845c2890992a9efd23a9f9fc514c11aadcefbb16f52774520680b77aeddd949\"\n      },\n      \"detailed-wheel-center\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-detailed-wheel-center.s\",\n        \"start\": \"0x54d26\",\n        \"end\": \"0x54e77\",\n        \"sha256\": \"da4f9ad4cf3de15b247059ba41d7174a712b223f1650c4469df52ddf84ba1735\"\n      },\n      \"addon-active-mask\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-addon-active-mask.s\",\n        \"start\": \"0x43ab\",\n        \"end\": \"0x43eb\",\n        \"sha256\": \"1d65ff8c6e3b82fb7a7d7a83b7f86485c34dc600a3661ddb241a53df01582066\"\n      },\n      \"addon-track-width\": {\n        \"path\": \".scratch/redline-conversion/mesh/suspension-addon-track-width.s\",\n        \"start\": \"0x4546\",\n        \"end\": \"0x459c\",\n        \"sha256\": \"79a6c69fd3f340ae30967198b81a8a2adf6d585fe8b8367656049b4414a40510\"\n      }\n    },\n    \"constants\": {\n      \"0x83ed4\": {\n        \"file_offset\": \"0x82ed4\",\n        \"hex\": \"0000003f0000fa440000c84300009643\",\n        \"value\": 0.5\n      },\n      \"0x81aac\": {\n        \"file_offset\": \"0x80aac\",\n        \"hex\": \"6e756d576865656c730000006e756d41\",\n        \"value\": \"numWheels\"\n      },\n      \"0x81b3c\": {\n        \"file_offset\": \"0x80b3c\",\n        \"hex\": \"776865656c732e6d617853757370656e\",\n        \"value\": \"wheels.maxSuspension\"\n      },\n      \"0x80664\": {\n        \"file_offset\": \"0x7f664\",\n        \"hex\": \"2566000030782578000000007b25662c\",\n        \"value\": \"%f\"\n      }\n    },\n    \"mustang_config\": {\n      \"path\": \"redline/cars/shared/base/assets/500gt.car\",\n      \"sha256\": \"fdc2d9b7e3cd3fa8a66681e07640b531f90738bb29f186763c54c90e8a534c75\",\n      \"wheel_lines\": \"model \\\"500gt.mdl\\\"\\nnumWheels 4\\nwheels.pos {-0.76,0.35,1.47}\\nwheels.inertia 2.2\\nwheels.powered 0.0\\nwheels.friction 10\\nwheels.maxAngle 0.48135934017\\nwheels.maxSuspension 0.2\\nwheels.radius 0.34\\nwheels.grip 1.0\\nwheels.braked 4000.0\\nwheels.handbraked 0.0\\nwheels.model \\\"wheel-classic-disc.mdl\\\"\\nwheels.width 0.19\\nwheels.texture 4\\nwheels.pos {0.76,0.35,1.47}\\nwheels.inertia 2.2\\nwheels.powered 0.0\\nwheels.friction 10\\nwheels.maxAngle 0.48135934017\\nwheels.maxSuspension 0.2\\nwheels.radius 0.34\\nwheels.grip 1.0\\nwheels.braked 4000.0\\nwheels.handbraked 0.0\\nwheels.model \\\"wheel-classic-disc.mdl\\\"\\nwheels.width 0.19\\nwheels.texture 4\\nwheels.pos {-0.76,0.35,-1.29}\\nwheels.inertia 2.2\\nwheels.powered 0.5\\nwheels.friction 10\\nwheels.maxAngle 0.0\\nwheels.maxSuspension 0.2\\nwheels.radius 0.34\\nwheels.grip 1.0\\nwheels.braked 1100.0\\nwheels.handbraked 1.0\\nwheels.model \\\"wheel-classic-disc.mdl\\\"\\nwheels.width 0.19\\nwheels.texture 4\\nwheels.pos {0.76,0.35,-1.29}\\nwheels.inertia 2.2\\nwheels.powered 0.5\\nwheels.friction 10\\nwheels.maxAngle 0.0\\nwheels.maxSuspension 0.2\\nwheels.radius 0.34\\nwheels.grip 1.0\\nwheels.braked 1100.0\\nwheels.handbraked 1.0\\nwheels.model \\\"wheel-classic-disc.mdl\\\"\\nwheels.width 0.19\\nwheels.texture 4\"\n    },\n    \"interpretation\": {\n      \"preview_center\": [\n        \"pos.x\",\n        \"pos.y - 0.5 * maxSuspension\",\n        \"pos.z\"\n      ],\n      \"missing_maxSuspension_default\": 0.0,\n      \"limits\": \"Preview/static showroom pose only, not claimed physics equilibrium. Loader sscanf lacks range checks; converter finite/nonnegative validation is a separate project safeguard. Base Mustang has no numAddOns and no selected tuning is applied.\"\n    },\n    \"retired_claim\": \"Earlier neutral static translation T(pos) omitted preview suspension initialization. Scale, rotation, and texture-selector evidence remains unchanged.\"\n  },\n  \"red_regression\": \"F\\n======================================================================\\nFAIL: test_native_preview_suspension_clears_arch_pose (__main__.AssemblyTests.test_native_preview_suspension_clears_arch_pose)\\n----------------------------------------------------------------------\\nTraceback (most recent call last):\\n  File \\\"/Users/Nicolas/Documents/github/hermes/projects/carmodels/tools/test_redline_model.py\\\", line 78, in test_native_preview_suspension_clears_arch_pose\\n    self.assertEqual(left['translation'], [-1, 0.9, 2])\\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\nAssertionError: Lists differ: [-1.0, 1.0, 2.0] != [-1, 0.9, 2]\\n\\nFirst differing element 1:\\n1.0\\n0.9\\n\\n- [-1.0, 1.0, 2.0]\\n+ [-1, 0.9, 2]\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.014s\\n\\nFAILED (failures=1)\\n\",\n  \"green_regression\": \"........\\n----------------------------------------------------------------------\\nRan 8 tests in 0.029s\\n\\nOK\\n\"\n}",
+    "tests": "test_redline_model.log\n........\n----------------------------------------------------------------------\nRan 8 tests in 0.054s\n\nOK\n\n\ntest_bake_models.log\n.....\n----------------------------------------------------------------------\nRan 5 tests in 11.486s\n\nOK\n\n\nredline_roundtrip.log\n16:43:20 | INFO: Data are loaded, start creating Blender stuff\n16:43:20 | INFO: Blender create Mesh node 500gt.mdl\n16:43:21 | INFO: Blender create Mesh node 500gt-interior.mdl\n16:43:23 | INFO: Blender create Mesh node wheel-classic-disc.mdl\n16:43:23 | INFO: Blender create Mesh node wheel-classic-disc.mdl\n16:43:23 | INFO: Blender create Mesh node wheel-classic-disc.mdl\n16:43:23 | INFO: Blender create Mesh node wheel-classic-disc.mdl\n16:43:25 | INFO: glTF import finished in 4.95s\nINFO Draco mesh compression is available, use library at /Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/Resources/4.5/scripts/addons_core/io_scene_gltf2/libextern_draco.dylib\n16:43:27 | INFO: Starting glTF 2.0 export\n16:43:27 | INFO: Extracting primitive: 500gt.mdl\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | INFO: Primitives created: 4\n16:43:27 | INFO: Extracting primitive: 500gt-interior.mdl\n16:43:27 | INFO: Primitives created: 1\n16:43:27 | INFO: Extracting primitive: wheel-classic-disc.mdl\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | INFO: Primitives created: 4\n16:43:27 | INFO: Extracting primitive: wheel-classic-disc.mdl.001\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | INFO: Primitives created: 4\n16:43:27 | INFO: Extracting primitive: wheel-classic-disc.mdl.002\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | INFO: Primitives created: 4\n16:43:27 | INFO: Extracting primitive: wheel-classic-disc.mdl.003\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:27 | INFO: Primitives created: 4\n16:43:28 | INFO: Finished glTF 2.0 export in 0.6430201530456543 s\n\n16:43:29 | INFO: Starting glTF 2.0 export\n16:43:29 | INFO: Extracting primitive: 500gt.mdl\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | INFO: Primitives created: 4\n16:43:29 | INFO: Extracting primitive: 500gt-interior.mdl\n16:43:29 | INFO: Primitives created: 1\n16:43:29 | INFO: Extracting primitive: wheel-classic-disc.mdl\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | INFO: Primitives created: 4\n16:43:29 | INFO: Extracting primitive: wheel-classic-disc.mdl.001\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | INFO: Primitives created: 4\n16:43:29 | INFO: Extracting primitive: wheel-classic-disc.mdl.002\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | INFO: Primitives created: 4\n16:43:29 | INFO: Extracting primitive: wheel-classic-disc.mdl.003\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:29 | INFO: Primitives created: 4\n16:43:30 | INFO: Finished glTF 2.0 export in 1.2622969150543213 s\n\n16:43:34 | INFO: Data are loaded, start creating Blender stuff\n16:43:34 | INFO: Blender create Mesh node gcw-mog3w.mdl\n16:43:34 | INFO: Blender create Mesh node wheel-classic-disc.mdl\n16:43:34 | INFO: Blender create Mesh node wheel-classic-disc.mdl\n16:43:34 | INFO: Blender create Mesh node wheel-classic.mdl\n16:43:34 | INFO: glTF import finished in 0.07s\n16:43:34 | INFO: Starting glTF 2.0 export\n16:43:34 | INFO: Extracting primitive: gcw-mog3w.mdl\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 12\n16:43:34 | INFO: Extracting primitive: wheel-classic-disc.mdl\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 4\n16:43:34 | INFO: Extracting primitive: wheel-classic-disc.mdl.001\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 4\n16:43:34 | INFO: Extracting primitive: wheel-classic.mdl\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 3\n16:43:34 | INFO: Finished glTF 2.0 export in 0.05486011505126953 s\n\n16:43:34 | INFO: Starting glTF 2.0 export\n16:43:34 | INFO: Extracting primitive: gcw-mog3w.mdl\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 12\n16:43:34 | INFO: Extracting primitive: wheel-classic-disc.mdl\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 4\n16:43:34 | INFO: Extracting primitive: wheel-classic-disc.mdl.001\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 4\n16:43:34 | INFO: Extracting primitive: wheel-classic.mdl\n16:43:34 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:34 | INFO: Primitives created: 3\n16:43:34 | INFO: Finished glTF 2.0 export in 0.04343080520629883 s\n\n16:43:35 | INFO: Data are loaded, start creating Blender stuff\n16:43:35 | INFO: Blender create Mesh node pimley_mack_cruiseliner.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_interior.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_wheels1.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_wheels1.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl\n16:43:35 | INFO: Blender create Mesh node pimley_mack_wheels2.mdl\n16:43:35 | INFO: glTF import finished in 0.04s\n16:43:36 | INFO: Starting glTF 2.0 export\n16:43:36 | INFO: Extracting primitive: pimley_mack_cruiseliner.mdl\n16:43:36 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:36 | INFO: Primitives created: 5\n16:43:36 | INFO: Extracting primitive: pimley_mack_interior.mdl\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels1.mdl\n16:43:36 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:36 | INFO: Primitives created: 2\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels1.mdl.001\n16:43:36 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:36 | INFO: Primitives created: 2\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.001\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.002\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.003\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Finished glTF 2.0 export in 0.05972599983215332 s\n\n16:43:36 | INFO: Starting glTF 2.0 export\n16:43:36 | INFO: Extracting primitive: pimley_mack_cruiseliner.mdl\n16:43:36 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:36 | INFO: Primitives created: 5\n16:43:36 | INFO: Extracting primitive: pimley_mack_interior.mdl\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels1.mdl\n16:43:36 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:36 | INFO: Primitives created: 2\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels1.mdl.001\n16:43:36 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.\n16:43:36 | INFO: Primitives created: 2\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.001\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.002\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Extracting primitive: pimley_mack_wheels2.mdl.003\n16:43:36 | INFO: Primitives created: 1\n16:43:36 | INFO: Finished glTF 2.0 export in 0.06980776786804199 s\n\nPASS Redline Blender roundtrip: {\"blender\": \"4.5.14 LTS\", \"cars\": [{\"length_multiplier\": 1.1, \"native_car_id\": \"shared/base/500gt.car\", \"triangles\": 1576, \"wheels\": 4}, {\"length_multiplier\": 1.1, \"native_car_id\": \"addons/077-gcw-mog3w.v1.10.zip/packages/00/gcw-mog3w.car\", \"triangles\": 4024, \"wheels\": 3}, {\"length_multiplier\": 1.1, \"native_car_id\": \"addons/039-mackcruiseliner_1.0.zip/packages/00/pimley_mack_cruiseliner.car\", \"triangles\": 8260, \"wheels\": 6}], \"claim_limits\": [\"Three static assemblies; original-game shaders and animations unverified.\"], \"model_files_preserved\": 256}\nBlender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)\n\nBlender quit\n\n\nruff.log\nAll checks passed!\n"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated"
+    ],
+    "review": {
+      "mode": "per-file",
+      "action": "escalate",
+      "composite": 0.7832999999999999,
+      "safe_to_apply": 0.48,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting": [
+        {
+          "file": "tools/test_redline_model.py",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "tools/test_redline_roundtrip.py",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "tools/bake_models.py",
+          "rubrics": [
+            "spec_match",
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "tools/test_bake_models.py",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "tools/run_checks.py",
+          "rubrics": [
+            "blast_radius"
+          ]
+        }
+      ],
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "files": [
+        {
+          "path": "tools/test_redline_model.py",
+          "safe_to_apply": 0.62,
+          "scores": {
+            "correctness": {
+              "score": 1.68,
+              "confidence": 0.53,
+              "probabilities": {
+                "0": 0.05,
+                "1": 0.21,
+                "2": 0.74
+              }
+            },
+            "spec_match": {
+              "score": 1.47,
+              "confidence": 0.2,
+              "probabilities": {
+                "0": 0.08,
+                "1": 0.37,
+                "2": 0.55
+              }
+            },
+            "test_gap": {
+              "score": 0.29,
+              "confidence": 0.56,
+              "probabilities": {
+                "0": 0.8,
+                "1": 0.11,
+                "2": 0.09
+              }
+            },
+            "blast_radius": {
+              "score": 0.6,
+              "confidence": 0.11,
+              "probabilities": {
+                "0": 0.56,
+                "1": 0.29,
+                "2": 0.15
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.78975,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "tools/test_redline_roundtrip.py",
+          "safe_to_apply": 0.48,
+          "scores": {
+            "correctness": {
+              "score": 1.76,
+              "confidence": 0.64,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.16,
+                "2": 0.8
+              }
+            },
+            "spec_match": {
+              "score": 1.7,
+              "confidence": 0.53,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.23,
+                "2": 0.73
+              }
+            },
+            "test_gap": {
+              "score": 0.33,
+              "confidence": 0.49,
+              "probabilities": {
+                "0": 0.75,
+                "1": 0.16,
+                "2": 0.09
+              }
+            },
+            "blast_radius": {
+              "score": 1.08,
+              "confidence": 0.07,
+              "probabilities": {
+                "0": 0.27,
+                "1": 0.38,
+                "2": 0.35
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.8012499999999999,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "tools/bake_models.py",
+          "safe_to_apply": 0.72,
+          "scores": {
+            "correctness": {
+              "score": 1.81,
+              "confidence": 0.73,
+              "probabilities": {
+                "0": 0.02,
+                "1": 0.14,
+                "2": 0.84
+              }
+            },
+            "spec_match": {
+              "score": 1.18,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.3,
+                "1": 0.23,
+                "2": 0.47
+              }
+            },
+            "test_gap": {
+              "score": 0.28,
+              "confidence": 0.59,
+              "probabilities": {
+                "0": 0.78,
+                "1": 0.17,
+                "2": 0.05
+              }
+            },
+            "blast_radius": {
+              "score": 1.03,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.39,
+                "1": 0.2,
+                "2": 0.41
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.74075,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match",
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "tools/test_bake_models.py",
+          "safe_to_apply": 0.73,
+          "scores": {
+            "correctness": {
+              "score": 1.74,
+              "confidence": 0.61,
+              "probabilities": {
+                "0": 0.05,
+                "1": 0.16,
+                "2": 0.79
+              }
+            },
+            "spec_match": {
+              "score": 1.31,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.18,
+                "1": 0.33,
+                "2": 0.49
+              }
+            },
+            "test_gap": {
+              "score": 0.24,
+              "confidence": 0.62,
+              "probabilities": {
+                "0": 0.83,
+                "1": 0.09,
+                "2": 0.08
+              }
+            },
+            "blast_radius": {
+              "score": 0.25,
+              "confidence": 0.61,
+              "probabilities": {
+                "0": 0.78,
+                "1": 0.18,
+                "2": 0.04
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.80775,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "tools/run_checks.py",
+          "safe_to_apply": 0.74,
+          "scores": {
+            "correctness": {
+              "score": 1.77,
+              "confidence": 0.64,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.16,
+                "2": 0.8
+              }
+            },
+            "spec_match": {
+              "score": 1.47,
+              "confidence": 0.2,
+              "probabilities": {
+                "0": 0.11,
+                "1": 0.31,
+                "2": 0.58
+              }
+            },
+            "test_gap": {
+              "score": 0.4,
+              "confidence": 0.41,
+              "probabilities": {
+                "0": 0.73,
+                "1": 0.15,
+                "2": 0.12
+              }
+            },
+            "blast_radius": {
+              "score": 0.9,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.39,
+                "1": 0.33,
+                "2": 0.28
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.777,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        }
+      ]
+    },
+    "verification": {
+      "action": "auto",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The corrected suspension regression passes, after failing before the fix.",
+          "verdict": "verified",
+          "confidence": 0.88,
+          "probabilities": {
+            "verified": 0.92,
+            "contradicted": 0.04,
+            "unsupported": 0.04
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "The post-fix Blender test imported, edited and exported static four-, three- and six-wheel cars.",
+          "verdict": "verified",
+          "confidence": 0.88,
+          "probabilities": {
+            "verified": 0.92,
+            "contradicted": 0.01,
+            "unsupported": 0.07
+          },
+          "action": "auto"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 21448,
+      "output_tokens": 538
+    }
+  }
+}

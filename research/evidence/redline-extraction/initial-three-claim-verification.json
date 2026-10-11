@@ -1,0 +1,76 @@
+{
+  "args": {
+    "claims": [
+      "The brief experiment summary records 28 labeled items, 12 accepted advisory labels, 12 correct accepted labels and 16 review outcomes; its two listed label errors were both review outcomes.",
+      "The grounded experiment records 28 labeled items, zero accepted advisory labels, 28 review outcomes and one listed label error. The active-field experiment also records 28 items, zero accepted labels, 28 review outcomes and one listed error.",
+      "The four supplied SDK usage records have code-computed totals of 51300 input tokens, 8169 output tokens and $0.0021546 cost; these totals exclude MCP and screening calls."
+    ],
+    "evidence": [
+      {
+        "id": "direct-measurements",
+        "text": "{\n  \"four_sdk_usages\": [\n    {\n      \"cost\": 0.0003738,\n      \"input_tokens\": 8900,\n      \"output_tokens\": 1302\n    },\n    {\n      \"input_tokens\": 12373,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000519666\n    },\n    {\n      \"input_tokens\": 15061,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000632562\n    },\n    {\n      \"input_tokens\": 14966,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000628572\n    }\n  ],\n  \"totals_computed_in_code\": {\n    \"schema\": 1,\n    \"production_metadata_labels\": 16,\n    \"production_advisory_accepted\": 0,\n    \"production_review\": 16,\n    \"sdk_calls\": 4,\n    \"input_tokens\": 51300,\n    \"output_tokens\": 8169,\n    \"provider_reported_cost_usd\": 0.0021546,\n    \"sdk_latency_seconds\": [\n      0.6440013749997888,\n      0.35101987500092946,\n      0.35071200000311364,\n      0.3275828339974396\n    ],\n    \"limits\": [\n      \"SDK request validation/provider/composition latency; screening/CLI overhead not included.\",\n      \"MCP monetary costs not returned.\",\n      \"Small28-item labeled experiment; not a general accuracy estimate.\"\n    ]\n  },\n  \"brief\": {\n    \"total\": 28,\n    \"accepted\": 12,\n    \"accepted_correct\": 12,\n    \"review\": 16,\n    \"errors\": [\n      {\n        \"path\": \"mixed/bundle.zip\",\n        \"expected\": \"unknown\",\n        \"actual\": \"other\",\n        \"decision\": \"review\"\n      },\n      {\n        \"path\": \"unidentified/records.bin\",\n        \"expected\": \"car_metadata\",\n        \"actual\": \"unknown\",\n        \"decision\": \"review\"\n      }\n    ],\n    \"label_accuracy\": 0.9285714285714286\n  },\n  \"grounded\": {\n    \"total\": 28,\n    \"accepted\": 0,\n    \"accepted_correct\": 0,\n    \"review\": 28,\n    \"errors\": [\n      {\n        \"path\": \"unidentified/records.bin\",\n        \"expected\": \"car_metadata\",\n        \"actual\": \"unknown\",\n        \"decision\": \"review\"\n      }\n    ],\n    \"label_accuracy\": 0.9642857142857143\n  },\n  \"active\": {\n    \"status\": \"ok\",\n    \"evidence_strategy\": \"active-carName-and-model-excerpts\",\n    \"latency_seconds\": 0.3275828339974396,\n    \"usage\": {\n      \"input_tokens\": 14966,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000628572\n    },\n    \"total\": 28,\n    \"label_correct\": 27,\n    \"accepted\": 0,\n    \"accepted_correct\": 0,\n    \"review\": 28,\n    \"actual_metadata_accepted\": 0,\n    \"errors\": [\n      {\n        \"path\": \"unidentified/records.bin\",\n        \"expected\": \"car_metadata\",\n        \"actual\": \"unknown\",\n        \"decision\": \"review\"\n      }\n    ]\n  },\n  \"limits\": \"SDK-only accounting and small labeled experiment; review outcomes are not automatic acceptance. Rounded latency range is approximate.\"\n}"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 3,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The brief experiment summary records 28 labeled items, 12 accepted advisory labels, 12 correct accepted labels and 16 review outcomes; its two listed label errors were both review outcomes.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim1",
+        "claim": "The grounded experiment records 28 labeled items, zero accepted advisory labels, 28 review outcomes and one listed label error. The active-field experiment also records 28 items, zero accepted labels, 28 review outcomes and one listed error.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.99,
+          "contradicts": 0.01,
+          "says_nothing": 0
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.96
+      },
+      {
+        "id": "claim2",
+        "claim": "The four supplied SDK usage records have code-computed totals of 51300 input tokens, 8169 output tokens and $0.0021546 cost; these totals exclude MCP and screening calls.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.96,
+          "contradicts": 0.03,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.94,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.92
+      }
+    ],
+    "usage": {
+      "input_tokens": 2157,
+      "output_tokens": 187
+    }
+  }
+}

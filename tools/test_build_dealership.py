@@ -74,11 +74,11 @@ class DealershipBuildTests(unittest.TestCase):
 
     def test_all_editable_copies_are_independent_files(self):
         catalog = json.loads((DEALERSHIP / 'catalog.json').read_text())
-        self.assertEqual(len(catalog), 35)
+        self.assertEqual(len([c for c in catalog if c.get('game', 'ford-racing-2') == 'ford-racing-2']), 35)
         for entry in catalog:
             code = entry['code']
             copy = DEALERSHIP / 'models' / f'{code}.glb'
-            source = ROOT / f'dealership/public/ford-racing-2/{code}.glb'
+            source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
             self.assertFalse(copy.is_symlink())
             self.assertEqual(copy.stat().st_nlink, 1)
             self.assertFalse(os.path.samefile(copy, source))
@@ -133,7 +133,7 @@ class DealershipBuildTests(unittest.TestCase):
                 self.assertFalse(seed(work))
             self.assertEqual(sha(model), edited_hash)
             self.assertEqual(json.loads((work / 'catalog.json').read_text())[0]['name'], 'Custom Gran Torino')
-            for forbidden in [work / 'models' / 'GRAN_TORINO.glb', ROOT / 'dealership/public/ford-racing-2/GRAN_TORINO.glb', ROOT / 'ford-racing-2/unwanted.json']:
+            for forbidden in [work / 'models' / 'GRAN_TORINO.glb', ROOT / 'dealership/public/ford-racing-2/GRAN_TORINO.glb', ROOT / 'ford-racing-2/unwanted.json', ROOT / 'gran-turismo/unwanted.json', ROOT / 'redline/unwanted.json', ROOT / 'dealership/public/models.json']:
                 with self.assertRaisesRegex(ValueError, 'must not replace source or editable'):
                     build(work, forbidden)
         self.assertEqual({p: sha(p) for p in source_hashes}, source_hashes)

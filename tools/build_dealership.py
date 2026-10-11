@@ -33,6 +33,13 @@ def load_all(dealership=DEALERSHIP):
         baked['source'].pop('originalModelSha256', None)
         baked['claimLimits'] = ['Editable dealership copy; not a recovery artifact or original-game fidelity claim.',
                                 'Surface tones and icon tint are illustrative; static geometry only.']
+        if entry.get('displayMode') == 'textured-glb':
+            # Validate the edited static GLB with the same strict baker, but load its
+            # actual texture maps in the viewer rather than the compact tone mesh.
+            baked = {key: baked[key] for key in ('source', 'triangleCount')}
+            baked.update(schema=2, claimLimits=[
+                'Editable static model with its embedded textures; not original-game rendering fidelity.',
+                'Default GLB scene only; source identities and names retain their conversion limits.'])
         cars.append({**entry, 'model': baked})
     return cars
 
@@ -51,7 +58,12 @@ def check(dealership=DEALERSHIP, output=OUTPUT):
 
 def build(dealership=DEALERSHIP, output=OUTPUT):
     output = Path(output)
-    for protected in [ROOT / 'ford-racing-2', ROOT / 'ford-racing-2/recovered', ROOT / 'dealership/public/ford-racing-2', Path(dealership)]:
+    public = ROOT / 'dealership/public'
+    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'gran-turismo', ROOT / 'redline',
+                       public / 'models.json', Path(dealership)]
+    protected_paths.extend(path for path in public.iterdir()
+                           if path.is_dir() and path.name != 'dealership')
+    for protected in protected_paths:
         if output.resolve() == protected.resolve() or protected.resolve() in output.resolve().parents:
             raise ValueError('Dealership build output must not replace source or editable model files')
     cars = load_all(dealership)

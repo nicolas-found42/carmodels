@@ -1,0 +1,265 @@
+
+builtIn 1carName "­gcw-1275Sv10.png­Mini Cooper 1275S"year 1964displacement 1.275price 28000demoAvailable 1;---aerodynamics
+; Cd x area
+;
+; 0.45est x 1.2 x 1.0 x 2.2
+;frontAirResistance 0.54sideAirResistance 0.99topAirResistance 1.188frontLift 0.0rearLift 0.0
+
+; add to speed considerations by AI cars (x 1.0 + index)
+aiSpeedIndex 1.15;---chassis
+; wet weight (estimated from 640kg dry weight)mass 700
+;
+; note that if you consider the car as a block of dimensions W H L
+; Ix = mass x ( H^2 + L^2) / 12
+; Iy = mass x ( W^2 + L^2) / 12
+; Iz = mass x ( W^2 + H^2) / 12
+;
+; W = 1.2 H = 1.0 L = 2.2 mass = 700
+;
+; Ix = 340.667 Iy = 366.333+43.75, Iz = 142.333+43.75
+inertia {341, 410, 186}
+
+massCenter {0.000, -0.250, 0.250}numCollBoxes 2# 0coll.tfr {0.68, 0.15, 1.46}coll.tfl {-0.68, 0.15, 1.46}coll.trr {0.68, 0.15, -1.40}coll.trl {-0.68, 0.15, -1.40}coll.bfr {0.68, -0.47, 1.46}coll.bfl {-0.68, -0.47, 1.46}coll.brr {0.68, -0.47, -1.40}coll.brl {-0.68, -0.47, -1.40}# 1coll.tfr {0.54, 0.63, 0.48}coll.tfl {-0.54, 0.63, 0.48}coll.trr {0.54, 0.63, -1.02}coll.trl {-0.54, 0.63, -1.02}coll.bfr {0.61, 0.15, 0.72}coll.bfl {-0.61, 0.15, 0.72}coll.brr {0.61, 0.15, -1.27}coll.brl {-0.61, 0.15, -1.27};---graphicsmodel "gcw-mini.mdl"interiorModel "gcw-mini-int.mdl"
+
+numColors 5# 0colors {0.05, 0.31, 0.0}# 1colors {0.157, 0.275, 0.627}# 2colors {0.1, 0.1, 0.1}# 3colors {0.800, 0.067, 0.0}# 4colors {1.0, 1.0, 0.95}driverPos {-0.24, -0.10, 0.0}
+
+steeringWheelPos {-0.24, 0.10, 0.48}steeringWheelAngle 15steeringWheelTurns 3.5steeringWheelRadius 0.15steeringWheelTexture "gcw-minicoopwheel.png"exhaust1Pos {0.0, -0.41, -1.51}exhaust2Pos {0.0, -0.41, -1.51}frontLicensePlatePos {0.0, -0.32, 1.49}rearLicensePlatePos {0.0, -0.06, -1.43}hornSample "horn3.wav"hornPitch 0.3
+
+
+
+;RPM values for the power and torque ratings.;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+; Mini Mk 1 Cooper S 1275cc
+; 76bhp @ 5800 rpm
+; = 56673power 56673
+powerRPM 5800.0
+
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.
+; Mini Mk 1 1275cc
+; 79 ftlb @ 3000 rpm
+; = 107.15torque 107.15torqueRPM 3000.0
+;RPM for engine stall, currently unusedjerkRPM 250.0;Engines idle RPMidleRPM 450.0;RPM delimtermaxRPM 6900.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 0.16
+
+;engineBaseFriction,engineRPMFriction: Change engine friction.
+;engineBaseFriction is a constant
+;(such as resistance caused by friction of moving parts in their bearings)
+;engineRPMFriction is dependant on engine speed
+;(such as resistance caused by compression inside the cylinders)
+;Default values are 25 and 0.02. Add either field to have both customized
+;(if you just add one of the two fields, the other is set to zero).
+
+engineBaseFriction 15.0
+engineRPMFriction 0.0125
+
+
+
+engineSample "enginemuffled.wav"hallSample "hallmuffled.wav"zeroRPMSoundGain 0.8fullRPMSoundGain 1.0zeroThrottleSoundGain 0.5fullThrottleSoundGain 1.1zeroRPMSoundPitch 0.4fullRPMSoundPitch 1.8zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.0;---suspensionsupsensionFriction 1000damperStrength 40000frontSwayBar 30000rearSwayBar 30000;---drivetrainfinalDriveRatio 3.8maxClutchTorqueTransfer 500shiftUpRPM 6000.0shiftDownRPM 3500.0gearSwitchTime 0.25numGears 6# 0gearRatios -2.57# 1gearRatios 0# 2gearRatios 2.57# 3gearRatios 1.78# 4gearRatios 1.24# 5gearRatios 1.0;---wheels
+
+; disc brakes at front, drum at rear
+numWheels 4# 0wheels.pos {-0.607, -0.350, 1.020}wheels.inertia 0.88wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.48135934017wheels.maxSuspension 0.09wheels.radius 0.24wheels.braked 4000.0wheels.handbraked 0.0wheels.model "gcw-mini-wheeldrum.mdl"wheels.width 0.115wheels.texture 6# 1wheels.pos {0.607, -0.350, 1.020}wheels.inertia 0.88wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.48135934017wheels.maxSuspension 0.09wheels.radius 0.24wheels.braked 4000.0wheels.handbraked 0.0wheels.model "gcw-mini-wheeldrum.mdl"wheels.width 0.115wheels.texture 6# 2wheels.pos {-0.583, -0.350, -0.950}wheels.inertia 0.88wheels.powered 0.0wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.09wheels.radius 0.24wheels.braked 800.0wheels.handbraked 1.0wheels.model "gcw-mini-wheeldrum.mdl"wheels.width 0.115wheels.texture 6# 3wheels.pos {0.583, -0.350, -0.950}wheels.inertia 0.88wheels.powered 0.0wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.09wheels.radius 0.24wheels.braked 800.0wheels.handbraked 1.0wheels.model "gcw-mini-wheeldrum.mdl"wheels.width 0.115wheels.texture 6;number of lights on the car
+numLights 20
+
+;the light's position
+;>> lights.pos {-0.52, 0.25, 0.86}
+;direction the light is pointing to
+;>> lights.dir {0.0, -0.1, 1.0}
+;RGB color of the light
+;>> lights.rgb {1, 1, 1}
+;lights.type
+; 0 = glowing RED dot
+; 1 = light cone
+; 2 = reflected red dot (apparently)
+; 3 = white sphere (visible 360 degrees)
+; 4 = white sphere (visible 360 degrees)
+; 5 = nothing
+; 6 = white sphere (for headlights)
+;lights size, - length of light cone, or diameter of dot
+;what is the light used for:
+;0x01: normal driving light. 
+;0x02: not used
+;0x04: not used 
+;0x08: reverse gear light.
+;0x10: brake light
+;0x20: left indicator
+;0x40: right indicator
+;0x80: horn
+;>> lights.onFlags 0x01
+;tell the light to turn OFF, when one of the above mentioned lights turns on.
+;>> lights.offFlags 0x00
+
+; headlight cones
+# 0
+lights.pos {0.488, -0.036, 1.432}
+lights.dir {0.02, -0.10, 1.0}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 1
+lights.size 21
+lights.onFlags 0x81
+lights.offFlags 0x00
+# 1
+lights.pos {-0.488, -0.036, 1.432}
+lights.dir {-0.02, -0.10, 1.0}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 1
+lights.size 21
+lights.onFlags 0x81
+lights.offFlags 0x00
+
+; headlight flares
+# 2
+lights.pos {0.488, -0.036, 1.432}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.24
+lights.onFlags 0x81
+lights.offFlags 0x00
+# 3
+lights.pos {-0.488, -0.036, 1.432}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.24
+lights.onFlags 0x81
+lights.offFlags 0x00
+
+; front indicator lights / flash with horn
+# 4
+lights.pos {0.494, -0.255, 1.414}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 5
+lights.pos {-0.494, -0.255, 1.414}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0xa0
+lights.offFlags 0x00
+; indicator reflections
+# 6
+lights.pos {0.494, -0.255, 1.414}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 7
+lights.pos {-0.494, -0.255, 1.414}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+; rear lights
+# 8
+lights.pos {0.544, -0.197, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 9
+lights.pos {-0.544, -0.197, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0x01
+lights.offFlags 0x00
+; rain-reflected rear lights...
+# 10
+lights.pos {0.544, -0.197, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 11
+lights.pos {-0.544, -0.197, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; brake lights
+# 12
+lights.pos {0.545, -0.143, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 13
+lights.pos {-0.545, -0.143, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0x10
+lights.offFlags 0x00
+; brake lights reflections
+# 14
+lights.pos {0.545, -0.143, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 15
+lights.pos {-0.545, -0.143, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+; rear indicator lights / flash with horn
+# 16
+lights.pos {0.545, -0.089, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 17
+lights.pos {-0.545, -0.089, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.10
+lights.onFlags 0xa0
+lights.offFlags 0x00
+; indicator reflections
+# 18
+lights.pos {0.545, -0.089, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 19
+lights.pos {-0.545, -0.089, -1.375}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.10
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+ 

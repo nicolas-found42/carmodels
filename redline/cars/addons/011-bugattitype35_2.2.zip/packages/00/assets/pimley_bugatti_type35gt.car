@@ -1,0 +1,68 @@
+;pimley_bugatti_type35.car
+;Copyright © 2006-2007 Daniel Pimley.
+;a string with the name of the carcarName "­pimley_bugatti_type35_22.txr­ Bugatti Type 35C GT"year 1926;displacement in litresdisplacement 1.991
+
+builtIn 1
+;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.;A modern sports car might have values as low as 0.6 for thisfrontAirResistance 1.2;air resistance of the side and top areas of the car.;these values are not that important to be very exact.sideAirResistance 2.2topAirResistance 3.0;used to simulate spoilers;negative values are downforce, positive values are upforcefrontLift -0rearLift -0;---chassis;Car's mass in kg
+; The GT is 50 kg heavier than the track car due to spare tyre and lamps.mass 798;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get rotationally accelerated around it's axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2. lower values result in better cornering abilitiesinertia {1500,1500,500};The car's center of gravity.;This vector (as all the others that may follow) uses the following;coordinate system: X points to the right, Y points up and Z points to the front.;Coordinates are in meters.;The lower the CG, the better the cars handling.;Also, the further the CG is to the rear of the car, the more the car will tend;to oversteer in corners, making it much harder to handle. If your car uncontrollably;spins out in the rear a lot, try moving the CG further to the front.massCenter {0.03,0.2,0.48};An approximation of the car's borders, used for collision detection.;More than two boxes can be used, but if too many are used, performance ;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).;number of collision boxesnumCollBoxes 1;a list of the collision boxes used, in this case only one# 0coll.tfr {0.66,1.0,1.5}coll.tfl {-0.66,1.0,1.5}coll.trr {0.66,1.0,-1.8}coll.trl {-0.66,1.0,-1.8}coll.bfr {0.66,0.2,1.8}coll.bfl {-0.66,0.2,1.8}coll.brr {0.66,0.2,-1.8}coll.brl {-0.66,0.2,-1.8}
+
+;---graphics
+
+numColors 3# 0colors {0,0.4,0.7}# 1colors {0,0.2,0}
+# 2colors {0.3,0.04,0.08}
+
+;Model used to represent the car.model "pimley_bugatti_type35.mdl";Model used to represent the car's interior.interiorModel "pimley_type35_interior.mdl";Position of driver modeldriverPos {-0.09,0.58,-0.52};Position of the steering wheelsteeringWheelPos {-0.09,0.84,-0.16};Angle of the steering wheelsteeringWheelAngle 12;Number of turns, lock-to-lock.steeringWheelTurns 2
+
+;Model used to represent the steering wheelsteeringWheelTexture "pimley_bugatti_35_steer.txr"
+steeringWheelRadius 0.18
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {0.3,0.3,-1.7}exhaust2Pos {0.3,0.3,-1.7};The lower this value, the more the car's exhaust will spit out banging noises and flames.exhaustFire 180000;Position of license plates;for network player namesfrontLicensePlatePos {0,0.4,1.8}rearLicensePlatePos {-0.1,0.35,-1.5};--engine;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+;127bhp
+power 94703
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.
+;Bugatti Type 35C torque at peak power is is 181 Nm @ 5000 RPM. Roots-type supercharger achieves peak torque at ~2000-3000 RPM.
+;Torque rating is estimated to be on the scale: 181 @ 1000 RPM; 240 @ 2000 RPM; 300 @ 3000 RPM; 240 @ 4000 RPM; 181 @ 5000 RPM.
+torque 300;RPM values for the power and torque ratings.powerRPM 5000.0torqueRPM 3000.0;Engines idle RPMidleRPM 1000.0jerkRPM 500.0
+
+;RPM delimtermaxRPM 5200.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 0.25;currently unusedengineFriction 100;engine sound sampleengineSample "pimley_bugatti_type35.wav"
+turboSample "turbo.wav"hallSample "pimley_bugatti_type35_hall.wav"zeroRPMSoundGain 0.8fullRPMSoundGain 1.2zeroThrottleSoundGain 0.8fullThrottleSoundGain 1.6zeroRPMSoundPitch 0.9fullRPMSoundPitch 1.2zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.2
+turboGain 0.33
+
+hornSample "pimley_bugatti_type35_horn.wav"
+;---suspension;These determines the strength of the car's shock absorbers.supsensionFriction 2000damperStrength 40000;sway Bars will cause the car to tilt less in corners. The higher these values,;the less the car will tilt to the side when corneringfrontSwayBar 10000rearSwayBar 20000;---drivetrain;The ratio of the final drive gear in the car's differential.finalDriveRatio 3.6;The maximum amount of torque the car's clutch can transfer (in Nm).maxClutchTorqueTransfer 300;this factor is used to simulate limited slip differentials.;0 means free differential. the higher the value, the more differential locking.;values around 100 seem to get realistic limited slip differentials.differentialLockCoefficient 0;For automatic transmission: When to shift up and downshiftDownRPM 2000shiftUpRPM 5000;Time it takes to shift gears in secondsgearSwitchTime 0.5;Number of gears, including reverse and neutral.numGears 6;The gear ratios
+# 0gearRatios -5# 1gearRatios 0# 2gearRatios 4
+# 3gearRatios 2.2# 4gearRatios 1.6# 5gearRatios 1;---wheels;number of wheels.numWheels 4;front left wheel# 0;Wheel's positionwheels.pos {-0.52,0.42,1.42};Wheel's inertia in kg*m^2.wheels.inertia 2.2
+
+;Wheel's stickyness - higher values for more grip
+wheels.stickyness -0.02
+;Fraction of engine power lead to this wheel.wheels.powered 0;Friction caused by rotating the wheel in Nm.wheels.friction 10;Maximal steering angle of this wheel in radians.wheels.maxAngle 0.48;Suspension travel of this wheel in meters.wheels.maxSuspension 0.1;Wheel's radius in meters.wheels.radius 0.38;Torque of the brakes on this wheel (in Nm).wheels.braked 1200.0;How much of the braking torque is generated by pulling the handbrake (between 0 and 1).wheels.handbraked 0.0;model used to represent the wheelwheels.model "pimley_bugatti_type35_wheel.mdl";width of the wheelwheels.width 0.09wheels.texture 0;front right wheel# 1wheels.pos {0.52,0.42,1.42}wheels.inertia 2.2
+wheels.stickyness -0.02
+wheels.powered 0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.1wheels.radius 0.38wheels.braked 1200.0wheels.handbraked 0.0wheels.model "pimley_bugatti_type35_wheel.mdl"wheels.width 0.09wheels.texture 0;rear left wheel# 2wheels.pos {-0.52,0.42,-0.94}wheels.inertia 2.2
+wheels.stickyness -0.02
+wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.38wheels.braked 400.0wheels.handbraked 1.0wheels.model "pimley_bugatti_type35_wheel.mdl"wheels.width 0.09wheels.texture 0;rear right wheel# 3wheels.pos {0.52,0.42,-0.94}wheels.inertia 2.2
+wheels.stickyness -0.02
+wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.38wheels.braked 400.0wheels.handbraked 1.0wheels.model "pimley_bugatti_type35_wheel.mdl"wheels.width 0.09wheels.texture 0;---lights;number of lights on the carnumLights 10
+
+# 0lights.pos {-0.3,0.75,1.5}lights.dir {-0.1,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 15lights.onFlags 0x01lights.offFlags 0x00
+
+# 1lights.pos {0.3,0.75,1.5}lights.dir {0.1,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 15lights.onFlags 0x01lights.offFlags 0x00
+
+# 2lights.pos {-0.3,0.75,1.5}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.50lights.onFlags 0x01lights.offFlags 0x00
+
+# 3lights.pos {0.3,0.75,1.5}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.50lights.onFlags 0x01lights.offFlags 0x00
+
+# 4lights.pos {-0.3,0.75,1.5}lights.dir {0,0,1}lights.rgb {0.5,0.5,0.5}lights.type 2lights.size 0.33lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 5lights.pos {0.3,0.75,1.5}lights.dir {0,0,1}lights.rgb {0.5,0.5,0.5}lights.type 2lights.size 0.33lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 6lights.pos {-0.35,0.42,-1.4}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00
+
+# 7lights.pos {0.36,0.42,-1.4}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00
+
+# 8lights.pos {-0.35,0.49,-1.4}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.1lights.onFlags 0x10lights.offFlags 0x00
+
+# 9lights.pos {0.36,0.49,-1.4}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.1lights.onFlags 0x10lights.offFlags 0x00
+
+
+-- Add-On optionsnumAddOns 1initialAddOns 0x01# 0addOns.hasGraphic 1addOns.model "pimley_bugatti_type35gt.mdl"

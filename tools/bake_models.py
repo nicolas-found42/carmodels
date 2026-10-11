@@ -192,7 +192,9 @@ def bake_car(code, data, expected_sha256=None, *, source_mode=True):
                         w, h, rgba = pixels
                         u, v = uv[i]
                         # glTF UV origin and repeat sampling, same as the recovered viewer.
-                        px, py = math.floor((u % 1) * w), math.floor((v % 1) * h)
+                        # Tiny negative native UVs can round modulo to exactly
+                        # 1.0 in double precision; keep sampling inside the image.
+                        px, py = min(w - 1, math.floor((u % 1) * w)), min(h - 1, math.floor((v % 1) * h))
                         offset = (py * w + px) * 4
                         tone = texture_tone(rgba[offset:offset + 3], wheel)
                     else:

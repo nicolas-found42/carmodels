@@ -1,0 +1,118 @@
+;1953 Chrysler Powered Allard J2X by Seth "AmishIndy" Jones;a string with the name of the carbuiltIn 1carName "Allard J2X (Test)";used only for career modeyear 1953displacement 5.416price 3720
+;Boss 302: top speed 118 4.9L displacement
+;Boss 302 15.8 sec @ 90.0 mph
+;Boss 429top speed 125mph   379hp for the Boss 429  7.0L displacement
+
+
+;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.;air resistance of the side and top areas of the car.;these values are not that important to be very exact.
+
+frontAirResistance 0.45
+sideAirResistance 4topAirResistance 4frontLift 0.02rearLift 0.04;---chassis;Car's mass in kg
+;curb wt 302 = 1464.2, curb 429 1460.  test wt 429= 1623.6mass 1200;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get accelerated around its axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2.inertia {3046,3046,400}
+;The car's center of gravity.;This vector (as all the others that may follow) uses the following;coordinate system: X points to the right, Y points up and Z points to the front.;Coordinates are in meters.massCenter {0.0,0.475,0.0}
+;An approximation of the car's borders, used for collision detection.;More than two boxes can be used, but if too many are used, performance ;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).numCollBoxes 3# 0coll.tfr {0.25,0.99,2.2}coll.tfl {-0.25,0.99,2.2}coll.trr {0.65,1,-1.25}coll.trl {-0.65,0.20,-1.25}coll.bfr {0.25,0.20,2.3}coll.bfl {-0.25,0.20,2.3}coll.brr {0.65,0.20,-1.8}coll.brl {-0.65,0.20,-1.8}# 1coll.tfr {0.65,1.35,0.57}coll.tfl {-0.65,1.35,0.57}coll.trr {0.65,1.35,-0.56}coll.trl {-0.65,1.35,-0.56}coll.bfr {0.65,1,0.69}coll.bfl {-0.65,1,0.69}coll.brr {0.65,1,-0.68}coll.brl {-0.65,1,-0.68}# 2coll.tfr {0.85,0.55,2.35}coll.tfl {-0.85,0.55,2.35}coll.trr {0.85,0.55,-1.3}coll.trl {-0.85,0.55,-1.3}coll.bfr {0.85,0.20,2.35}coll.bfl {-0.85,0.20,2.35}coll.brr {0.85,0.20,-1.3}coll.brl {-0.85,0.20,-1.3};---graphics;Model used to represent the car.model "AllardJ2Xext.mdl"
+;Model used to represent the car's interior.interiorModel "AllardJ2Xnterior.mdl";Position of driver modeldriverPos {-0.305,0.481,-0.82};Position of the steering wheelsteeringWheelPos {-0.305,0.850,-0.515};Angle of the steering wheelsteeringWheelAngle 16;Number of turns, lock-to-lock.steeringWheelTurns 2.5steeringWheelRadius 0.215;Model used to represent the steering wheelsteeringWheelTexture "AllardJ2XSteeringWheel.png";Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {-0.444842,0.23342,-2.055947}exhaust2Pos {0.444103,0.23342,-2.055947};Position of license plates;for network player namesfrontLicensePlatePos {0,0.38,2.45}rearLicensePlatePos {0,0.552769,-2.076215}numColors 6
+;British Racing Green
+# 0colors {0.14,0.34,0.29} 
+
+;Y
+# 1colors {0.80,0.57,0.15}
+
+;Burgundy
+# 2colors {0.25,0.05,0.03}
+
+;Red
+# 3colors {0.92,0.04,0.03}
+
+;Blue
+# 4colors {.14,0.18,0.46}
+
+;Old English White
+# 5colors {0.84,0.85,0.68}
+;One lb-ft equals 1.35628105 Nm.
+;One hp equals 745.69987 Watts.;--engine
+; +150 hp (pure guess) for supercharger and racing exhaust
+
+power 134225.98torque 423.1597powerRPM 4000.0torqueRPM 2000.0jerkRPM 450.0idleRPM 800.0maxRPM 6150.0
+;rev limiter 6150engineInertia 0.36engineFriction 100
+engineSample "Chrysler331hemi2.wav"hallSample "Chrysler331HemiTunnel2.wav"zeroRPMSoundGain 0.75fullRPMSoundGain 1.25zeroThrottleSoundGain 0.75fullThrottleSoundGain 1.25zeroRPMSoundPitch 0.5fullRPMSoundPitch 3.0zeroThrottleSoundPitch 1.0fullThrottleSoundPitch 1.5;---suspension;These determines the strength of the car's shock absorbers.suspensionType 6supsensionFriction 1000damperStrength 30000frontSwayBar 8000rearSwayBar 8000;---drivetrain;The ratio of the final drive gear in the car's differential.
+
+finalDriveRatio 3.6;The maximum amount of torque the car's clutch can transfer (in Nm).maxClutchTorqueTransfer 1350;this factor is used to simulate limited slip differentials.;0 means free differential. the higher the value, the more differential locking.;values around 100 seem to get realistic limited slip differentials.differentialLockCoefficient 0;For automatic transmission: When to shift up and downshiftUpRPM 6000.0shiftDownRPM 3000.0;Time it takes to shift gears in secondsgearSwitchTime 0.3;Number of gears, including reverse and neutral.numGears 6
+
+;The gear ratios (Tremec T-65 close ratio)
+;source http://www.rsgear.com
+
+# 0gearRatios -2# 1gearRatios 0# 2gearRatios 3.10# 3gearRatios 2.1# 4
+gearRatios 1.31
+# 5gearRatios 1.00
+
+;---wheels;number of wheels (theoretically you could make vehicles with numWheels!=4. This has not been tested and might cause troubles, though).numWheels 4
+
+# 0wheels.pos {0.7447,0.359,1.270}wheels.inertia 2.312576wheels.powered 0wheels.friction 5wheels.maxAngle 0.48wheels.maxSuspension 0.1wheels.radius 0.355
+wheels.grip 1.0wheels.braked 3500.0wheels.handbraked 0wheels.model "AllardJ2xWheel.mdl"wheels.width 0.178wheels.texture 2
+wheels.loadSensitivity -0.2
+;wheel tilt is in radians
+wheels.tilt 0.052359878
+
+;left front wheel# 1wheels.pos {-0.7447,0.359,1.270}wheels.inertia 2.312576wheels.powered 0wheels.friction 5wheels.maxAngle 0.48wheels.maxSuspension 0.1wheels.radius 0.355
+wheels.grip 1.0wheels.braked 3500.0wheels.handbraked 0wheels.model "AllardJ2xWheel.mdl"wheels.width 0.178wheels.texture 2
+wheels.loadSensitivity -0.2
+;wheel tilt is in radians
+wheels.tilt 0.052359878
+
+;left back wheel
+# 2wheels.pos {-0.6604,0.359,-1.270}wheels.inertia 2.312576wheels.powered 0.5wheels.friction 10wheels.maxAngle 0wheels.maxSuspension 0.1wheels.radius 0.355
+wheels.grip 1.0wheels.braked 1000.0wheels.handbraked 1.0wheels.model "AllardJ2xWheel.mdl"wheels.width 0.178wheels.texture 2
+wheels.loadSensitivity -0.2
+
+;right back wheel# 3wheels.pos {0.6604,0.359,-1.270}wheels.inertia 2.312576wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.355
+wheels.grip 1.0wheels.braked 1000.0wheels.handbraked 1.0wheels.model "AllardJ2xWheel.mdl"wheels.width 0.178wheels.texture 2
+wheels.loadSensitivity -0.2
+
+numLights 11
+
+;headlight cone Left
+# 0lights.pos {-0.48489,0.68762,1.399088}lights.dir {0,-0.17,1}lights.rgb {0.99,0.99,0.94}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+
+;headlight cone Right
+# 1lights.pos {0.483391,0.676698,1.399088}lights.dir {0,-0.17,1}lights.rgb {0.99,0.99,0.94}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+
+
+;---------------------------
+;brakelight L1
+# 2lights.pos {-0.390579,0.568478,-1.98585}lights.dir {0,0,-1}lights.rgb {0.75,0,0}lights.type 2lights.size 0.2lights.onFlags 0x10lights.offFlags 0x00
+
+;-------------------
+;---------------------------
+;brakelight R1
+# 3lights.pos {0.390579,0.568478,-1.98585}lights.dir {0,0,-1}lights.rgb {0.75,0,0}lights.type 2lights.size 0.2lights.onFlags 0x10lights.offFlags 0x00
+
+
+;-------------------
+
+
+;backup light L 
+# 4lights.pos {-0.390579,0.568478,-1.98585}lights.dir {0,0,-1}lights.rgb {0.99,0.99,0.94}lights.type 2lights.size 0.2lights.onFlags 0x08lights.offFlags 0x00
+
+;backup light R 
+# 5lights.pos {0.390579,0.568478,-1.98585}lights.dir {0,0,-1}lights.rgb {0.99,0.99,0.94}lights.type 2lights.size 0.2lights.onFlags 0x08lights.offFlags 0x00
+
+;---------------------------
+;Running light Back L1
+# 6lights.pos {-0.390579,0.568478,-1.98585}lights.dir {0,0,-1}lights.rgb {0.75,0,0}lights.type 2lights.size 0.15lights.onFlags 0x01lights.offFlags 0x00
+
+
+;---------------------------
+;Running light Back R1
+# 7lights.pos {0.390579,0.568478,-1.98585}lights.dir {0,0,-1}lights.rgb {0.75,0,0}lights.type 2lights.size 0.15lights.onFlags 0x01lights.offFlags 0x00
+;-------------------
+
+;headlight dot Left
+# 8lights.pos {-0.48489,0.68762,1.399088}lights.dir {0,-0.17,1}lights.rgb {0.99,0.99,0.94}lights.type 2lights.size .5lights.onFlags 0x01lights.offFlags 0x00
+
+;headlight dot Right
+# 9lights.pos {0.483391,0.676698,1.399088}lights.dir {0,-0.17,1}lights.rgb {0.99,0.99,0.94}lights.type 2lights.size .5lights.onFlags 0x01lights.offFlags 0x00
+
+;licence plate light
+# 10
+lights.pos {0,0.575335,-2.058869}lights.dir {0,-.25,-.25}lights.rgb {0.99,0.99,0.94}lights.type 2lights.size 0.15lights.onFlags 0x01lights.offFlags 0x00

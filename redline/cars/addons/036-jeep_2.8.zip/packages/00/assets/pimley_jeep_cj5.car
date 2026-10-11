@@ -1,0 +1,94 @@
+;pimley_jeep_cj5.car
+;Copyright © 2007-2008 Daniel Pimley.
+;a string with the name of the carcarName "­pimley_jeep_28.txr­ Jeep Renegade II"year 1971;displacement in litresdisplacement 3.68
+
+builtIn 1
+;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.;A modern sports car might have values as low as 0.6 for thisfrontAirResistance 1.5;air resistance of the side and top areas of the car.;these values are not that important to be very exact.sideAirResistance 2.0topAirResistance 3.0;used to simulate spoilers;negative values are downforce, positive values are upforcefrontLift -0.0rearLift -0.0;---chassis;Car's mass in kgmass 1111;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get rotationally accelerated around it's axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2. lower values result in better cornering abilitiesinertia {5000,2500,1000}
+
+;The car's center of gravity.;This vector (as all the others that may follow) uses the following;coordinate system: X points to the right, Y points up and Z points to the front.;Coordinates are in meters.;The lower the CG, the better the cars handling.;Also, the further the CG is to the rear of the car, the more the car will tend;to oversteer in corners, making it much harder to handle. If your car uncontrollably;spins out in the rear a lot, try moving the CG further to the front.massCenter {0,0.2,0.25};An approximation of the car's borders, used for collision detection.;More than two boxes can be used, but if too many are used, performance ;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).;number of collision boxesnumCollBoxes 2;a list of the collision boxes used, in this case two# 0coll.tfr {0.8,0.65,1.65}coll.tfl {-0.8,0.65,1.65}coll.trr {0.8,0.65,-1.65}coll.trl {-0.8,0.65,-1.65}coll.bfr {0.8,0.0,1.65}coll.bfl {-0.8,0.0,1.65}coll.brr {0.8,0.0,-1.65}coll.brl {-0.8,0.0,-1.65}
+
+# 1coll.tfr {0.70,0.95,0.35}coll.tfl {-0.70,0.95,0.35}coll.trr {0.70,0.95,0.7}coll.trl {-0.70,0.95,0.7}
+coll.bfr {0.70,0.65,0.35}coll.bfl {-0.70,0.65,0.35}coll.brr {0.70,0.65,0.7}coll.brl {-0.70,0.65,0.7}
+
+;---graphics
+
+numColors 5# 0colors {0.4,0.8,0.2}
+# 1colors {1,0.8,0}
+# 2colors {1,0.1,0.1}
+# 3colors {0.1,0.6,0.8}
+# 4colors {0.2,0.1,0.3}
+
+;Model used to represent the car.model "pimley_jeep_cj5.mdl";Model used to represent the car's interior.interiorModel "pimley_cj5_interior.mdl";Position of driver modeldriverPos {0.33,0.3,-0.3};Position of the steering wheelsteeringWheelPos {0.34,0.58,0.11};Angle of the steering wheelsteeringWheelAngle 30;Number of turns, lock-to-lock.steeringWheelTurns 4
+
+;Model used to represent the steering wheelsteeringWheelTexture "pimley_jeep_steer.txr"
+steeringWheelRadius 0.22
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {-0.8,-0.15,-0.52}
+exhaust2Pos {-0.8,-0.15,-0.52}
+;The lower this value, the more the car's exhaust will spit out banging noises and flames.;exhaustFire 0;Position of license plates;for network player namesfrontLicensePlatePos {0,0.04,1.65}rearLicensePlatePos {0,0.04,-1.53};--engine;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+;Buick 225 V6 Dauntless
+;160bhp
+power 119312
+
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.
+torque 319;RPM values for the power and torque ratings.powerRPM 4200.0torqueRPM 2400.0;Engines idle RPMidleRPM 500.0jerkRPM 250.0
+
+;RPM delimtermaxRPM 6000.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 0.25;currently unusedengineFriction 100;engine sound sampleengineSample "pimley_jeep.wav"
+hallSample "pimley_jeep_hall.wav"zeroRPMSoundGain 1.0fullRPMSoundGain 1.6zeroThrottleSoundGain 1.0fullThrottleSoundGain 1.8zeroRPMSoundPitch 1.2fullRPMSoundPitch 1.8zeroThrottleSoundPitch 1.2fullThrottleSoundPitch 1.6
+
+hornSample "pimley_jeep_horn.wav"
+;---suspension;These determines the strength of the car's shock absorbers.supsensionFriction 4000damperStrength 80000;sway Bars will cause the car to tilt less in corners. The higher these values,;the less the car will tilt to the side when corneringfrontSwayBar 10000rearSwayBar 20000;---drivetrain;The ratio of the final drive gear in the car's differential.finalDriveRatio 4.88;The maximum amount of torque the car's clutch can transfer (in Nm).maxClutchTorqueTransfer 319;this factor is used to simulate limited slip differentials.;0 means free differential. the higher the value, the more differential locking.;values around 100 seem to get realistic limited slip differentials.differentialLockCoefficient 125;For automatic transmission: When to shift up and downshiftDownRPM 2000shiftUpRPM 5200;Time it takes to shift gears in secondsgearSwitchTime 0.7;Number of gears, including reverse and neutral.numGears 6;The gear ratios
+;Borg-Warner T18 transmission unit# 0gearRatios -4.73# 1gearRatios 0
+# 2
+gearRatios 4.02
+# 3gearRatios 2.41# 4gearRatios 1.41
+# 5
+gearRatios 1;---wheels;number of wheels.numWheels 4;front left wheel# 0;Wheel's positionwheels.pos {-0.64,-0.02,1.1};Wheel's inertia in kg*m^2.;32 x width x radiuswheels.inertia 2.8
+
+;Wheel's stickyness - higher values for more grip
+wheels.stickyness 0.01
+
+;Tire load sensitivity modifier
+wheels.loadSensitivity -0.1
+;Fraction of engine power lead to this wheel.wheels.powered 0.22;Friction caused by rotating the wheel in Nm.wheels.friction 14;Maximal steering angle of this wheel in radians.wheels.maxAngle 0.48;Suspension travel of this wheel in meters.wheels.maxSuspension 0.20;Wheel's radius in meters.wheels.radius 0.36;Torque of the brakes on this wheel (in Nm).wheels.braked 6000.0;How much of the braking torque is generated by pulling the handbrake (between 0 and 1).wheels.handbraked 0.0;model used to represent the wheelwheels.model "pimley_cj5_wheel.mdl";width of the wheel; model is +50% to simulate tyre shoulderwheels.width 0.16wheels.texture 0;front right wheel# 1wheels.pos {0.64,-0.02,1.1}wheels.inertia 2.8
+wheels.stickyness 0.01
+wheels.loadSensitivity -0.1
+wheels.powered 0.22wheels.friction 14wheels.maxAngle 0.48wheels.maxSuspension 0.20wheels.radius 0.36wheels.braked 6000.0wheels.handbraked 0.0wheels.model "pimley_cj5_wheel.mdl"wheels.width 0.16wheels.texture 0;rear left wheel# 2wheels.pos {-0.64,-0.02,-0.99}wheels.inertia 2.8
+wheels.stickyness 0.01
+wheels.loadSensitivity -0.1
+wheels.powered 0.28wheels.friction 14wheels.maxAngle 0.0wheels.maxSuspension 0.20wheels.radius 0.36wheels.braked 2000.0wheels.handbraked 1.0wheels.model "pimley_cj5_wheel.mdl"wheels.width 0.16wheels.texture 0;rear right wheel# 3wheels.pos {0.64,-0.02,-0.99}wheels.inertia 2.8
+wheels.stickyness 0.01
+wheels.loadSensitivity -0.1
+wheels.powered 0.28wheels.friction 14wheels.maxAngle 0.0wheels.maxSuspension 0.20wheels.radius 0.36wheels.braked 2000.0wheels.handbraked 1.0wheels.model "pimley_cj5_wheel.mdl"wheels.width 0.16wheels.texture 0;---lights;number of lights on the carnumLights 14
+
+# 0lights.pos {-0.37,0.43,1.46}lights.dir {-0.1,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 15lights.onFlags 0x01lights.offFlags 0x00
+
+# 1lights.pos {0.35,0.43,1.46}lights.dir {0.1,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 15lights.onFlags 0x01lights.offFlags 0x00
+
+# 2lights.pos {-0.37,0.43,1.46}lights.dir {0,0,1}lights.rgb {1,1,0.7}lights.type 2lights.size 0.40lights.onFlags 0x01lights.offFlags 0x00
+
+# 3lights.pos {0.35,0.43,1.46}lights.dir {0,0,1}lights.rgb {1,1,0.7}lights.type 2lights.size 0.40lights.onFlags 0x01lights.offFlags 0x00
+
+# 4lights.pos {-0.34,0.24,1.46}lights.dir {0,0,1}lights.rgb {0.7,0.7,0.5}lights.type 2lights.size 0.25lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 5lights.pos {0.325,0.24,1.46}lights.dir {0,0,1}lights.rgb {0.7,0.7,0.5}lights.type 2lights.size 0.25lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 6lights.pos {-0.55,0.135,-1.53}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.25lights.onFlags 0x01lights.offFlags 0x00
+
+# 7lights.pos {0.535,0.135,-1.53}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.25lights.onFlags 0x01lights.offFlags 0x00
+
+# 8lights.pos {-0.55,0.135,-1.53}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 9lights.pos {0.535,0.135,-1.53}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 10lights.pos {-0.55,0.135,-1.53}lights.dir {0,0,-1}lights.rgb {0.1,0.1,0.1}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 11lights.pos {0.535,0.135,-1.53}lights.dir {0,0,-1}lights.rgb {0.1,0.1,0.1}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 12lights.pos {-0.55,0.44,-1.53}lights.dir {0,0,-1}lights.rgb {0.6,0.6,0.6}lights.type 2lights.size 0.1lights.onFlags 0x08lights.offFlags 0x00
+
+# 13lights.pos {0.535,0.44,-1.53}lights.dir {0,0,-1}lights.rgb {0.6,0.6,0.6}lights.type 2lights.size 0.1lights.onFlags 0x08lights.offFlags 0x00
+
+
+-- Add-On optionsnumAddOns 1initialAddOns 0x01# 0addOns.hasGraphic 1addOns.model "pimley_cj5_addons.mdl"

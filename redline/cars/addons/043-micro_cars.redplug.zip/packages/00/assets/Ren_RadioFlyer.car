@@ -1,0 +1,60 @@
+By: RenesisbuiltIn 1carName "­RenRotor.png.txr­ Radio Flyer"year 1945displacement 0.5price 400
+
+frontAirResistance 0.2sideAirResistance 0.33topAirResistance 0.3frontLift -0.0rearLift -0.0mass 80inertia {65,48,22}massCenter {0.0,0.0,-0.05}
+
+model "Ren_RadioFlyer_Body.mdl"interiorModel "null.mdl"
+driverPos {0.0,0.4,-0.3}steeringWheelPos {0.0,0.66,0.165}steeringWheelAngle 35steeringWheelTurns 0.5steeringWheelRadius 0.13steeringWheelTexture "Ren_RadioFlyer_SW.png.txr"exhaust1Pos {-0.2,0.1,-0.5}exhaust2Pos {-0.2,0.1,-0.5}frontLicensePlatePos {0,0.5,-0.49}rearLicensePlatePos {0,0.5,-0.53}numColors 4# 0colors {0.0,0.0,0.0}
+# 1colors {0.0,0.0,0.6}
+# 2colors {0.0,0.6,0.0}
+# 3colors {0.6,0.0,0.0}power 26000torque 45powerRPM 6500.0torqueRPM 3200.0idleRPM 800.0jerkRPM 450.0maxRPM 7900.0engineInertia 0.03engineFriction 0.000001engineSample "Ren_RadioFlyer_Engine.wav"hallSample "Ren_RadioFlyer_Hall.wav"zeroRPMSoundGain 0.9fullRPMSoundGain 1.2zeroThrottleSoundGain 0.5fullThrottleSoundGain 1.4zeroRPMSoundPitch 0.4fullRPMSoundPitch 1.5zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.0
+
+hornSample "Ren_RadioFlyer_Horn.wav"
+
+suspensionType 6supsensionFriction 300damperStrength 4400frontSwayBar 8000rearSwayBar 8000finalDriveRatio 2maxClutchTorqueTransfer 38differentialLockCoefficient 0shiftUpRPM 7450.0shiftDownRPM 3500.0gearSwitchTime 0.1numGears 6;The gear ratios# 0gearRatios -4# 1gearRatios 0
+# 2gearRatios 4.0# 3gearRatios 2.4
+# 4gearRatios 1.6# 5gearRatios 1.15numWheels 4;wheels.stickyness: Tire friction modifier. 0 for default, -1 for zero friction, 1 for double friction.
+# 0wheels.pos {-0.32,0.03,0.35}
+wheels.stickyness 0wheels.inertia 0.5wheels.powered 0.0wheels.friction 0.000001wheels.maxAngle 0.48wheels.maxSuspension 0.08wheels.radius 0.15wheels.braked 800.0wheels.handbraked 0.0wheels.model "Ren_RadioFlyer_Wheel.mdl"wheels.width 0.05wheels.texture 4# 1wheels.pos {0.32,0.03,0.35}
+wheels.stickyness 0wheels.inertia 0.5wheels.powered 0.0wheels.friction 0.000001wheels.maxAngle 0.48wheels.maxSuspension 0.08wheels.radius 0.15wheels.braked 800.0wheels.handbraked 0.0wheels.model "Ren_RadioFlyer_Wheel.mdl"wheels.width 0.05wheels.texture 4# 2wheels.pos {-0.32,0.03,-0.35}
+wheels.stickyness 0.2wheels.inertia 0.5wheels.powered 0.5wheels.friction 0.000001wheels.maxAngle 0.0wheels.maxSuspension 0.08wheels.radius 0.15wheels.braked 300.0wheels.handbraked 1.0wheels.model "Ren_RadioFlyer_Wheel.mdl"wheels.width 0.08wheels.texture 4# 3wheels.pos {0.32,0.03,-0.35}
+wheels.stickyness 0.2wheels.inertia 0.5wheels.powered 0.5wheels.friction 0.000001wheels.maxAngle 0.0wheels.maxSuspension 0.08wheels.radius 0.15wheels.braked 300.0wheels.handbraked 1.0wheels.model "Ren_RadioFlyer_Wheel.mdl"wheels.width 0.08wheels.texture 4;---lights;number of lights on the carnumLights 7# 0lights.pos {0.15,0.2,0.5}lights.dir {0.05,-0.2,1}lights.rgb {1,1,1}lights.type 1lights.size 20lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 1lights.pos {-0.15,0.2,0.5}lights.dir {-0.05,-0.2,1}lights.rgb {1,1,1}lights.type 1lights.size 20lights.onFlags 0x01lights.offFlags 0x00
+# 2lights.pos {0.15,0.2,0.5}lights.dir {0,-0.1,1}lights.rgb {1,1,1}lights.type 2lights.size 0.3lights.onFlags 0x01lights.offFlags 0x00
+# 3lights.pos {-0.15,0.2,0.5}lights.dir {0,-0.1,1}lights.rgb {1,1,1}lights.type 2lights.size 0.3lights.onFlags 0x01lights.offFlags 0x00
+
+
+numCollBoxes 1
+# 0
+
+;4coll.tfr {0.25,0.5,0.49}
+;5coll.tfl {-0.25,0.5,0.49}
+;6coll.trr {0.15,0.7,-0.53}
+;7coll.trl {-0.15,0.7,-0.53}
+;8coll.bfr {0.25,0.1,0.5}
+;9coll.bfl {-0.25,0.1,0.5}
+;10coll.brr {0.25,0.1,-0.5}
+;11
+coll.brl {-0.25,0.1,-0.5}
+
+
+
+
+;# 4;lights.pos {0.25,0.5,0.49};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 5;lights.pos {-0.25,0.5,0.49};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 6;lights.pos {0.15,0.7,-0.53};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 7;lights.pos {-0.15,0.7,-0.53};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 8;lights.pos {0.25,0.1,0.5};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 9;lights.pos {-0.25,0.1,0.5};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 10;lights.pos {0.25,0.1,-0.5};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+;# 11;lights.pos {-0.25,0.1,-0.5};lights.dir {0,1,0};lights.rgb {0,1,0};lights.type 0;lights.size 0.1;lights.onFlags 0x01;lights.offFlags 0x00
+
+
+
+# 4lights.pos {0.17,0.20,-0.5}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.17lights.onFlags 0x01lights.offFlags 0x00
+# 5lights.pos {0.17,0.20,-0.5}lights.dir {0,0,-1}lights.rgb {0.8,0,0}lights.type 2lights.size 0.2lights.onFlags 0x10lights.offFlags 0x00
+# 6lights.pos {0.07,0.20,-0.5}lights.dir {0,0,-1}lights.rgb {6,6,6}lights.type 2lights.size 0.13lights.onFlags 0x08lights.offFlags 0x00
+
+
+

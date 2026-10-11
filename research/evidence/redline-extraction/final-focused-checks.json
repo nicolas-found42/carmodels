@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.032
+    },
+    {
+      "name": "test_redline_archive",
+      "command": [
+        "python3",
+        "tools/test_redline_archive.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_redline_archive.log",
+      "elapsed_seconds": 0.06
+    },
+    {
+      "name": "test_extract_redline_cars",
+      "command": [
+        "python3",
+        "tools/test_extract_redline_cars.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_extract_redline_cars.log",
+      "elapsed_seconds": 0.086
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

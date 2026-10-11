@@ -1,0 +1,35 @@
+builtIn 1
+carName "­RenRotor.png.txr­ Shriner"year 1993displacement 0.8price 1000frontAirResistance 0.15sideAirResistance 0.3topAirResistance 0.6frontLift -0.0rearLift -0.00mass 120inertia {120,90,30}massCenter {0.0,0.03,0.05}
+model "Ren_Shriner_Body.mdl"interiorModel "Ren_Shriner_Fez.mdl"driverPos {0.1,0.21,-0.2}
+steeringWheelPos {0.1,0.3,0.15}steeringWheelAngle 15steeringWheelTurns 2steeringWheelRadius 0.1steeringWheelTexture "old_steering_wheel01.pct"
+exhaust1Pos {-0.2,0.1,-0.8}exhaust2Pos {0.2,0.1,-0.8}frontLicensePlatePos {0,0.25,0.95}rearLicensePlatePos {0,0.25,-0.9}hornSample "Ren_Shriner_Horn.wav"numColors 6# 0colors {0.9,0.0,0.0}# 1colors {0.9,0.9,0}# 2colors {0.8,0.8,0.7}# 3colors {0.1,0.1,0.1}# 4colors {0.2,0.4,0.2}
+# 5colors {0.3,0.3,0.6}power 20000torque 59powerRPM 5500.0torqueRPM 4000.0jerkRPM 450.0idleRPM 600.0maxRPM 6000.0engineInertia 0.04engineFriction 0.000001
+engineSample "Ren_Shriner_Engine.wav"
+hallSample "Ren_Shriner_Hall.wav"
+zeroRPMSoundGain 0.5fullRPMSoundGain 0.8zeroThrottleSoundGain 0.2fullThrottleSoundGain 0.6zeroRPMSoundPitch 0.1fullRPMSoundPitch 4zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.2suspensionType 6supsensionFriction 300damperStrength 3000frontSwayBar 1000rearSwayBar 0finalDriveRatio 2.4maxClutchTorqueTransfer 600differentialLockCoefficient 0shiftUpRPM 6000.0shiftDownRPM 3500.0gearSwitchTime 0.2numGears 6;The gear ratios# 0gearRatios -2# 1gearRatios 0# 2gearRatios 2.0
+# 3gearRatios 1.2
+# 4gearRatios 0.8
+# 5gearRatios 0.66numWheels 4
+;wheels.stickyness: Tire friction modifier. 0 for default, -1 for zero friction, 1 for double friction.# 0wheels.pos {-0.33,0.04,0.63}
+wheels.stickyness 0wheels.inertia 0.5wheels.powered 0.0wheels.friction 0.000001wheels.maxAngle 0.48wheels.maxSuspension 0.1wheels.radius 0.12wheels.braked 900.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"
+wheels.width 0.13wheels.texture 4# 1wheels.pos {0.33,0.04,0.63}
+wheels.stickyness 0wheels.inertia 0.5wheels.powered 0.0wheels.friction 0.000001wheels.maxAngle 0.48wheels.maxSuspension 0.1wheels.radius 0.12wheels.braked 900.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.13wheels.texture 4# 2wheels.pos {-0.33,0.04,-0.5}
+wheels.stickyness 0.1wheels.inertia 0.5wheels.powered 0.5wheels.friction 0.0001wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.12wheels.braked 300.0wheels.handbraked 1.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.15wheels.texture 4# 3wheels.pos {0.33,0.04,-0.5}
+wheels.stickyness 0.1wheels.inertia 0.5wheels.powered 0.5wheels.friction 0.000001wheels.maxAngle 0.0wheels.maxSuspension 0.1wheels.radius 0.12wheels.braked 300.0wheels.handbraked 1.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.15wheels.texture 4numCollBoxes 1# 0coll.tfr {0.4,0.3,0.85}
+;1
+coll.tfl {-0.4,0.3,0.85}
+;2coll.trr {0.4,0.3,-0.8}
+;3coll.trl {-0.4,0.3,-0.8}
+;4coll.bfr {0.4,0.08,0.85}
+;5coll.bfl {-0.4,0.08,0.85}
+;6coll.brr {0.4,0.08,-0.8}
+;7coll.brl {-0.4,0.08,-0.8}
+
+
+
+numLights 4
+
+# 0lights.pos {0.345,0.22,0.9}lights.dir {0,-0.15,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+# 1lights.pos {0.345,0.22,0.9}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.17lights.onFlags 0x01lights.offFlags 0x00
+
+# 2lights.pos {-0.345,0.22,0.9}lights.dir {0,-0.15,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00# 3lights.pos {-0.345,0.22,0.9}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 2lights.size 0.17lights.onFlags 0x01lights.offFlags 0x00

@@ -1,0 +1,72 @@
+;a string with the name of the carcarName "­gcw-alfav10.png­Alfa Romeo 8C 1935"year 1935;displacement in litresdisplacement 3.882
+
+builtIn 1
+;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.;A modern sports car might have values as low as 0.6 for thisfrontAirResistance 0.35;air resistance of the side and top areas of the car.;these values are not that important to be very exact.sideAirResistance 2.8topAirResistance 2.5;used to simulate spoilers;negative values are downforce, positive values are upforcefrontLift 0.0rearLift 0.0;---chassis;Car's mass in kgmass 955;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get rotationally accelerated around it's axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2. lower values result in better cornering abilities;
+; note that if you consider the car as a block of dimensions W H L
+; Ix = mass x ( H^2 + L^2) / 12
+; Iy = mass x ( W^2 + L^2) / 12
+; Iz = mass x ( W^2 + H^2) / 12
+;
+inertia {1350, 1350, 200};The car's center of gravity.;This vector (as all the others that may follow) uses the following;coordinate system: X points to the right, Y points up and Z points to the front.;Coordinates are in meters.;The lower the CG, the better the cars handling.;Also, the further the CG is to the rear of the car, the more the car will tend;to oversteer in corners, making it much harder to handle. If your car uncontrollably;spins out in the rear a lot, try moving the CG further to the front.massCenter {0.0, -0.10, 0.30};An approximation of the car's borders, used for collision detection.;More than two boxes can be used, but if too many are used, performance ;may degrade. Each box is defined by 8 edges (top/front/right to bottom/rear/left).;number of collision boxesnumCollBoxes 1;a list of the collision boxes used, in this case only one# 0coll.tfr {0.58, 0.60, 2.00}coll.tfl {-0.58, 0.60, 2.00}coll.trr {0.28, 0.60, -2.12}coll.trl {-0.28, 0.60, -2.12}coll.bfr {0.58, -0.46, 2.00}coll.bfl {-0.58, -0.46, 2.00}coll.brr {0.28, -0.46, -2.12}coll.brl {-0.28 , -0.46, -2.12}
+
+;---graphics
+
+numColors 7# 0colors {1.0, 0.0, 0.0}
+# 1
+colors {0.0, 0.0, 0.0}
+# 2
+colors {0.031, 0.243, 0.129}
+# 3
+colors {0.839, 0.537, 0.008}
+# 4
+colors {1.000, 1.000, 1.000}
+# 5
+colors {0.157, 0.275, 0.627}
+# 6
+colors {0.231, 0.063, 0.502}
+
+
+;Model used to represent the car.model "gcw-ar8c35.mdl";Model used to represent the car's interior.interiorModel "gcw-ar8c35-dash.mdl";Position of driver modeldriverPos {0.0, 0.125, -0.50};Position of the steering wheelsteeringWheelPos {0.0, 0.41, -0.15};Angle of the steering wheelsteeringWheelAngle 15;Number of turns, lock-to-lock.steeringWheelTurns 2
+
+;Model used to represent the steering wheelsteeringWheelTexture "gcw-ar8c35-steeringwheel.png"
+steeringWheelRadius 0.19
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {-0.125, 0.075, -1.962}exhaust2Pos {-0.125, 0.075, -1.962};The lower this value, the more the car's exhaust will spit out banging noises and flames.exhaustFire 210000;Position of license plates;for network player namesfrontLicensePlatePos {0.01,0.38,1.92}rearLicensePlatePos {-0.03,0.35,-1.52};--engine;Car's maximal power in Watts.;One hp equals 745.69987 Watts.
+;127bhp
+power 94703
+; 330 bhp @ 5400 rpm
+
+power 246080
+
+; estimated:
+; 325 Nm torque @ 4000 rpm
+
+torque 325
+
+powerRPM 5400.0
+torqueRPM 3500.0
+
+idleRPM 1000.0
+jerkRPM 500.0
+
+maxRPM 6001.0
+
+engineInertia 0.25
+
+engineBaseFriction 28
+engineRPMFriction 0.05
+
+;engine sound sampleengineSample "gcw-ar8c35normal.wav"
+hallSample "gcw-ar8c35hall.wav"turboSample "turbo.wav"zeroRPMSoundGain 0.8fullRPMSoundGain 1.2zeroThrottleSoundGain 0.8fullThrottleSoundGain 1.6zeroRPMSoundPitch 0.5fullRPMSoundPitch 3.5zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.1
+turboGain 1
+
+hornSample "horn2.wav";---suspension;These determines the strength of the car's shock absorbers.supsensionFriction 900damperStrength 18000;sway Bars will cause the car to tilt less in corners. The higher these values,;the less the car will tilt to the side when corneringfrontSwayBar 16500rearSwayBar 19500;---drivetrain;The maximum amount of torque the car's clutch can transfer (in Nm).maxClutchTorqueTransfer 360;this factor is used to simulate limited slip differentials.;0 means free differential. the higher the value, the more differential locking.;values around 100 seem to get realistic limited slip differentials.differentialLockCoefficient 0;For automatic transmission: When to shift up and downshiftDownRPM 2000shiftUpRPM 5700;Time it takes to shift gears in secondsgearSwitchTime 0.5;Number of gears, including reverse and neutral.numGears 6;The ratio of the final drive gear in the car's differential.finalDriveRatio 3.6;The gear ratios
+# 0gearRatios -4.9# 1gearRatios 0# 2gearRatios 3.5
+# 3gearRatios 2.4# 4gearRatios 1.3# 5gearRatios 0.9;---wheels;number of wheels.numWheels 4;front left wheel# 0wheels.pos {-0.772, -0.224, 1.664}wheels.inertia 1.84
+wheels.stickyness -0.025
+wheels.powered 0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.08wheels.braked 1500.0wheels.handbraked 0.0wheels.model "gcw-ar8c35-wheel.mdl"wheels.radius 0.383wheels.width 0.15wheels.texture 2;front right wheel# 1wheels.pos {0.772, -0.224, 1.664}wheels.inertia 1.84
+wheels.stickyness -0.025
+wheels.powered 0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.08wheels.braked 1500.0wheels.handbraked 0.0wheels.model "gcw-ar8c35-wheel.mdl"wheels.radius 0.383wheels.width 0.15wheels.texture 2;rear left wheel# 2wheels.pos {-0.771, -0.184, -1.066}wheels.inertia 2.66
+wheels.stickyness -0.025
+wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.08wheels.braked 500.0wheels.handbraked 1.0wheels.model "gcw-ar8c35-wheel.mdl"wheels.radius 0.4375wheels.width 0.19wheels.texture 2;rear right wheel# 3wheels.pos {0.771, -0.184, -1.066}wheels.inertia 2.66
+wheels.stickyness -0.025
+wheels.powered 0.5wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.08wheels.braked 500.0wheels.handbraked 1.0wheels.model "gcw-ar8c35-wheel.mdl"wheels.radius 0.4375wheels.width 0.19wheels.texture 2;---lights;number of lights on the carnumLights 0

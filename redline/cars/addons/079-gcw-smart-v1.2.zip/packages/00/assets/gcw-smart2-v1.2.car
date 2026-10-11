@@ -1,0 +1,416 @@
+;a string with the name of the carcarName "­gcw-smrtv12.png­ Smart Roadster";used only for career modeyear 2002displacement 0.698price 48000;---aerodynamics;the car's frontal air resitance.;this equals cw*S, where cw is the coefficient of friction ;and S is the frontal area of the car in square meters.
+;
+; assume cw is about 0.245
+; front area of the Smart is 1.656 x 1.200 x 90% ~= 1.8frontAirResistance 0.45;air resistance of the side and top areas of the car.;these values are not that important to be very exact.sideAirResistance 1.5topAirResistance 2.0
+;used to simulate spoilersfrontLift -0.05rearLift -0.10;---chassis;Car's momentum of inertia around the x,y and z axis.;Meassured in kg*m^2;For those not into physics that much, inertia specifies the car's;initial resistance to get accelerated around it's axis. Smaller, lighter;cars have much lower values here. A formula-1 car might have an inertia;around the y-axis af about 750 kg*m^2, whereas a big station wagon may have;4000 kg*m^2.
+;
+; note that if you consider the car as a block of dimensions W H L
+; Ix = mass x ( H^2 + L^2) / 12
+; Iy = mass x ( W^2 + L^2) / 12
+; Iz = mass x ( W^2 + H^2) / 12
+;
+mass 870.0inertia { 750.0, 850.0, 200.0}massCenter {0.0, 0.0, 0.0}numCollBoxes 1# 0coll.tfr {0.77, 0.66, 1.67}coll.tfl {-0.77, 0.66, 1.67}coll.trr {0.77, 0.76, -1.57}coll.trl {-0.77, 0.76, -1.57}coll.bfr {0.77, -0.26, 1.67}coll.bfl {-0.77, -0.26, 1.67}coll.brr {0.77, -0.16, -1.57}coll.brl {-0.77, -0.16, -1.57};---graphics;Model used to represent the car.model "gcw-smrt2.mdl";Model used to represent the car's interior.interiorModel "gcw-smrt2-interior.mdl"
+; driver model set to 0 for standard
+; set to 1 for no model
+; set to 2 for just arms!
+noDriverModel 0;Position of driver modeldriverPos {0.26, 0.09, -0.28}
+;Position of the steering wheelsteeringWheelPos {0.26, 0.36, 0.20}
+;Angle of the steering wheelsteeringWheelAngle 15;Number of turns, lock-to-lock.steeringWheelTurns 3.5steeringWheelRadius 0.15;Model used to represent the steering wheelsteeringWheelTexture "Racing_steering_wheel.pct"
+;Position of left and right exhaust ends. For a car with only;one exhaust pipe, use the same coordinates for both.exhaust1Pos {0.035, -0.139, -1.521}exhaust2Pos {-0.035, -0.139, -1.521};Position of license plates;for network player namesfrontLicensePlatePos {0.0, -0.12, 1.69}rearLicensePlatePos {0.0, 0.25, -1.60}hornSample "horn2.wav"numColors 8# 0colors {1.000, 0.333, 0.000}
+# 1colors {0.667, 0.753, 0.224}
+# 2colors {0.000, 0.478, 0.671}
+# 3colors {1.000, 0.812, 0.251}
+# 4colors {0.753, 0.000, 0.020}
+# 5colors {0.500, 0.500, 0.500}
+# 6colors {0.847, 0.282, 0.000}
+# 7colors {0.827, 0.804, 0.686}
+;--engine;Car's maximal power in Watts.;One hp equals 745.69987 Watts.power 75315
+
+;Car's maximal torque in Nm.;One lb-ft equals 1.35628105 Nm.torque 130;RPM values for the power and torque ratings.powerRPM 5250.0torqueRPM 4500.0
+;RPM for engine stall, currently unusedjerkRPM 250.0;Engines idle RPMidleRPM 450.0;RPM delimtermaxRPM 6600.0;Engines Inertia in kg*m^2.;The higher this value is, the longer the engine takes to spin up.engineInertia 0.16
+
+;engineBaseFriction,engineRPMFriction: Change engine friction.
+;engineBaseFriction is a constant
+;(such as resistance caused by friction of moving parts in their bearings)
+;engineRPMFriction is dependant on engine speed
+;(such as resistance caused by compression inside the cylinders)
+;Default values are 25 and 0.02. Add either field to have both customized
+;(if you just add one of the two fields, the other is set to zero).
+
+engineBaseFriction 20.0
+engineRPMFriction 0.018
+engineSample "enginemuffled.wav"hallSample "hallmuffled.wav"turboSample "turbo.wav"zeroRPMSoundGain 0.5fullRPMSoundGain 1.0zeroThrottleSoundGain 0.3fullThrottleSoundGain 0.8zeroRPMSoundPitch 0.4fullRPMSoundPitch 1.5zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.0turboGain 0.25;---suspensionsupsensionFriction 900damperStrength 17000frontSwayBar 20000rearSwayBar 10000;---drivetrainfinalDriveRatio 3.92maxClutchTorqueTransfer 500differentialLockCoefficient 40shiftUpRPM 5250.0shiftDownRPM 3000.0gearSwitchTime 0.12numGears 8
+# 0
+gearRatios -3.92
+# 1
+gearRatios 0.0
+# 2
+gearRatios 3.38
+# 3
+gearRatios 2.45
+# 4
+gearRatios 1.89
+# 5
+gearRatios 1.48
+# 6
+gearRatios 1.07# 7
+gearRatios 0.82;---wheelsnumWheels 4# 0wheels.pos {-0.65, -0.01, 1.115}wheels.inertia 1.35wheels.powered 0.0wheels.friction 12wheels.maxAngle 0.48wheels.maxSuspension 0.10wheels.radius 0.295wheels.braked 3000.0wheels.handbraked 0.0wheels.model "gcw-smrt1-wheel.mdl"wheels.width 0.205wheels.texture 1
+# 1wheels.pos {0.65, -0.01, 1.115}wheels.inertia 1.35wheels.powered 0.0wheels.friction 12wheels.maxAngle 0.48wheels.maxSuspension 0.10wheels.radius 0.295wheels.braked 3000.0wheels.handbraked 0.0wheels.model "gcw-smrt1-wheel.mdl"wheels.width 0.205wheels.texture 1
+# 2wheels.pos {0.65, -0.01, -1.115}wheels.inertia 1.35wheels.powered 0.5wheels.friction 12wheels.maxAngle 0.0wheels.maxSuspension 0.11wheels.radius 0.295wheels.braked 800.0wheels.handbraked 1.0wheels.model "gcw-smrt1-wheel.mdl"wheels.width 0.225wheels.texture 1
+# 3wheels.pos {-0.65, -0.01, -1.115}wheels.inertia 1.35wheels.powered 0.5wheels.friction 12wheels.maxAngle 0.0wheels.maxSuspension 0.11wheels.radius 0.295wheels.braked 800.0wheels.handbraked 1.0wheels.model "gcw-smrt1-wheel.mdl"wheels.width 0.225wheels.texture 1
+;---lights
+
+;number of lights on the car
+numLights 37
+
+;the light's position
+;>> lights.pos {-0.52, 0.25, 0.86}
+;direction the light is pointing to
+;>> lights.dir {0.0, -0.1, 1.0}
+;RGB color of the light
+;>> lights.rgb {1, 1, 1}
+;lights.type
+; 0 = glowing RED dot
+; 1 = light cone
+; 2 = reflected red dot (apparently)
+; 3 = white sphere (visible 360 degrees)
+; 4 = white sphere (visible 360 degrees)
+; 5 = nothing
+; 6 = white sphere (for headlights)
+;lights size, - length of light cone, or diameter of dot
+;what is the light used for:
+;0x01: normal driving light. 
+;0x02: not used
+;0x04: not used 
+;0x08: reverse gear light.
+;0x10: brake light
+;0x20: left indicator
+;0x40: right indicator
+;0x80: horn
+;>> lights.onFlags 0x01
+;tell the light to turn OFF, when one of the above mentioned lights turns on.
+;>> lights.offFlags 0x00
+
+; headlight cones
+# 0
+lights.pos {0.478, 0.208, 1.464}
+lights.dir {0.02, -0.10, 1.0}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 1
+lights.size 24
+lights.onFlags 0x81
+lights.offFlags 0x00
+# 1
+lights.pos {-0.478, 0.208, 1.464}
+lights.dir {-0.02, -0.10, 1.0}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 1
+lights.size 24
+lights.onFlags 0x81
+lights.offFlags 0x00
+
+; headlight flares
+# 2
+lights.pos {0.509, 0.261, 1.352}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.18
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 3
+lights.pos {0.470, 0.150, 1.477}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.18
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 4
+lights.pos {-0.509, 0.261, 1.352}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.18
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 5
+lights.pos {-0.470, 0.150, 1.477}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.18
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; rear lights
+# 6
+lights.pos {0.500, 0.386, -1.411}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 0
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 7
+lights.pos {-0.500, 0.386, -1.411}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 0
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+; rain-reflected rear lights...
+# 8
+lights.pos {0.500, 0.386, -1.411}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 9
+lights.pos {-0.500, 0.386, -1.411}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.75 ,0.0 ,0.0 }
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; brake lights
+# 10
+lights.pos {0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.15
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 11
+lights.pos {-0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.15
+lights.onFlags 0x10
+lights.offFlags 0x00
+; brake lights reflections
+# 12
+lights.pos {0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 13
+lights.pos {-0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+; reversing lights
+# 14
+lights.pos {0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 1.0, 1.0}
+lights.type 0
+lights.size 0.11
+lights.onFlags 0x08
+lights.offFlags 0x00
+# 15
+lights.pos {-0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 1.0, 1.0}
+lights.type 0
+lights.size 0.11
+lights.onFlags 0x08
+lights.offFlags 0x00
+; reverse reflections
+# 16
+lights.pos {0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 1.0, 1.0}
+lights.type 2
+lights.size 0.11
+lights.onFlags 0x08
+lights.offFlags 0x00
+# 17
+lights.pos {-0.353, 0.378, -1.436}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 1.0, 1.0}
+lights.type 2
+lights.size 0.11
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+; rear indicator lights / flash with horn
+# 18
+lights.pos {0.434, 0.381, -1.429}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.11
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 19
+lights.pos {-0.434, 0.381, -1.429}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.11
+lights.onFlags 0xa0
+lights.offFlags 0x00
+; indicator reflections
+# 20
+lights.pos {0.434, 0.381, -1.429}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.11
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 21
+lights.pos {-0.434, 0.381, -1.429}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.11
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+; headlight horn flares
+# 22
+lights.pos {0.509, 0.261, 1.352}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.21
+lights.onFlags 0x80
+lights.offFlags 0x00
+# 23
+lights.pos {-0.509, 0.261, 1.352}
+lights.dir {0, 0, 1}
+lights.rgb {1.0, 1.0, 0.9}
+lights.type 6
+lights.size 0.21
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+; front indicator lights / flash with horn
+# 24
+lights.pos {0.422, -0.070, 1.609}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.12
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 25
+lights.pos {-0.422, -0.070, 1.609}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.12
+lights.onFlags 0xa0
+lights.offFlags 0x00
+; indicator reflections
+# 26
+lights.pos {0.422, -0.070, 1.609}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.12
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 27
+lights.pos {-0.422, -0.070, 1.609}
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.12
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+; side indicator lights / flash with horn
+# 28
+lights.pos {0.700, 0.163, 0.653}
+lights.dir {1.0, 0.0, 0.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.12
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 29
+lights.pos {-0.700, 0.163, 0.653}
+lights.dir {-1.0, 0.0, 0.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 0
+lights.size 0.12
+lights.onFlags 0xa0
+lights.offFlags 0x00
+; indicator reflections
+# 30
+lights.pos {0.700, 0.163, 0.653}
+lights.dir {1.0, 0.0, 0.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.12
+lights.onFlags 0xc0
+lights.offFlags 0x00
+# 31
+lights.pos {-0.700, 0.163, 0.653}
+lights.dir {-1.0, 0.0, 0.0}
+lights.rgb {1.0, 0.75, 0.0 }
+lights.type 2
+lights.size 0.12
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+; spoiler brake lights
+# 32
+lights.pos {0.080, 0.722, -0.799}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.070
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 33
+lights.pos {0.040, 0.722, -0.799}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.070
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 34
+lights.pos {0.000, 0.722, -0.799}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.070
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 35
+lights.pos {-0.040, 0.722, -0.799}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.070
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 36
+lights.pos {-0.080, 0.722, -0.799}
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {1.0 ,0.05 ,0.0 }
+lights.type 0
+lights.size 0.070
+lights.onFlags 0x10
+lights.offFlags 0x00
+;
+

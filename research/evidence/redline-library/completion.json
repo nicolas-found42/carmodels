@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "source_export_check": {
+    "command": "/usr/bin/python3 tools/export_redline_models.py --check",
+    "exit_code": 0,
+    "output": "VERIFY OK: {\"bytes\": 169074436, \"configurations\": 129, \"models\": 128, \"non_drawable_configurations\": 1, \"source_index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\", \"triangles\": 598013, \"warnings\": 159}\n"
+  },
+  "import": {
+    "command": "/usr/bin/python3 tools/import_redline_dealership.py --upgrade-unedited",
+    "exit_code": 0,
+    "output": "Imported 128 independent editable Redline models; existing dealership entries preserved\n"
+  },
+  "browser_views": {
+    "dealer": "dealer-mustang-corrected.png",
+    "source": "source-mustang-corrected.png"
+  },
+  "evidence_hashes": {
+    "dealer-mustang-corrected.png": "1eb93e361ccc3ad66562a546bc132d7a57955ce86aba0ae9eaeb36f4d20ae2dc",
+    "dealer-mustang-corrected.txt": "f839e9131ee78fd50a20e7cc187001a9d88f05af516e89972eefbfcab85a915e",
+    "dealer-mustang.png": "20d764cac37f49bcf13bc9226ff567dae814e475b477ab56b48a3e42805dc13b",
+    "dealer-mustang.txt": "e53958d35c2aeb41a9fcd492730a85fbd45e135309d3fbadf32f0669ffe79835",
+    "export-summary.json": "4b686d6fa4dadbf3ef7626bbdaadd32e6ed6f4b9f6b87ee5bc76d2ed657f6447",
+    "full-checks.json": "d039ae8ca4a75ce2f5979634444aa69bf9eb120e50aa50d0db08fb0b66179f7a",
+    "live-api-experiments.json": "2ea9f9b2578a9172a6f7cafe2e8828fe977adeac31db219f50e8db28e18cd76b",
+    "preservation.json": "738538a662a9666cdf137a2a68aa48eb6fdbd0840cd1c88d6f16dbdfa021699e",
+    "source-mustang-corrected.png": "f8e7c97e0688edb23aabb60cab3f07e6fd0daa2e298cb8cc371733111e3f26dd",
+    "source-mustang-corrected.txt": "92bfb33a5f1922d198aeaa6e4bf9385bbd6036ed500c7f12708ba8f2420c8506",
+    "source-mustang.png": "3159b6d38f044f67d067bbf55e7bf12e806e29818b4e6ba7ecc4046b5b786a50",
+    "source-mustang.txt": "bf191199c127d5c46304c84a92c084e00749a04aedb00241d894912fca45c315",
+    "stance-checks.json": "d3912f1e43a3bead63f73f73d4ddd2c558c4f9ae0f15356b606339c6d5824498",
+    "stance-independent-review.json": "914aec7b2c281a24edb1fc934a565740f4f833ea63677e234890b95e4341129b",
+    "suspension-native.json": "9e0c5b971555d7901cfa5ee1100080d6a007d137296a616b71a3f2d38ca4218f",
+    "suspension-prior-claim-comparison.json": "c32c88d799d0bd8e7c7825fe6b040d0062171879ba44dcb007a3456337bd24c0",
+    "suspension-verify.json": "1f7b358fd601e2a43b48766ee257865408273bbcf5edfc4d05203aab5c42d59c"
+  },
+  "claim_limits": [
+    "Static source-derived preview pose; original game shaders, animations, physics equilibrium and global plug-in precedence remain unverified."
+  ],
+  "jev_completion_sha256": "494d1e35fa0a1e28c7e0350ff4e0232f8cd0d3eff0ea0afb8d689796b1f818f7",
+  "final_review_status": "complete; final patches and effective completion claims accepted through scoped independent reviews"
+}

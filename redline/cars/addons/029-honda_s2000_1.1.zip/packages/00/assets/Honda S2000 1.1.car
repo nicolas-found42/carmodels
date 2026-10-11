@@ -1,0 +1,191 @@
+;——————General Car Information——————carName "≠honda.png≠ Honda S2000 1.1"year 2000-2003displacement 2builtIn 1;——————Aerodynamics——————
+; W = 1.5m, H = 0.61m (without windshield), 1.04m (with windshield), L = 4.08m
+; Coefficient of Drag: 0.4
+; 0.4 X 1.5 X 1.04 = 0.624
+; 0.4 x 0.61 X 4.08 = 0.995
+; 0.4 x 1.5 x 4.08 = 2.448
+frontAirResistance 0.624
+sideAirResistance 0.995topAirResistance 2.448
+frontLift 0
+rearLift -0.01
+;——————Chassis——————
+; CoG: X = 0m Y = 0.42m Z = 0.0165m (towards the front)
+; W = 1.5m, H = 0.61m (without windshield), L = 4.08m
+
+massCenter {0,0.45,0.0165}
+mass 1350inertia {2187,2125,567};-—————Collision Boxes——————numCollBoxes 2
+# 0coll.tfr {0.83, 0.71, 2.05}coll.tfl {-0.83, 0.71, 2.05}coll.trr {0.85, 1.2, 0.0}coll.trl {-0.85, 1.2, 0.0}coll.bfr {0.83, 0.17, 2.05}coll.bfl {-0.83, 0.17, 2.05}coll.brr {0.85, 0.18, 0.0}coll.brl {-0.85, 0.18, 0.0}
+# 1
+coll.tfr {0.85, 1.2, 0.0}coll.tfl {-0.85, 1.2, 0.0}coll.trr {0.87, 0.92, -2.05}coll.trl {-0.87, 0.92, -2.05}coll.bfr {0.85, 0.18, 0.0}coll.bfl {-0.85, 0.18, 0.0}coll.brr {0.87, 0.19, -2.05}coll.brl {-0.87, 0.19, -2.05}
+
+;——————Graphics——————model "S2000 body.mdl"
+interiorModel "null.mdl"shadowModel "S2000 shadow.mdl"numColors 6; Yellow# 0colors {0.99, 0.875, 0.120}; Red# 1colors {0.7, 0.1, 0.1}; Blue# 2colors {0.1, 0.15, 0.5}; White# 3colors {1, 1, 1}; Black# 4colors {0, 0, 0}; Grey
+# 5
+colors {0.2, 0.2, 0.2}
+
+
+;——————Driver model——————driverPos {0.36, 0.50, -0.5}; noDriverModel 2 (eventually!)
+;——————Position of steering wheel model——————steeringWheelPos {0.35, 0.75, -0.15}steeringWheelAngle 15steeringWheelTurns 2.4steeringWheelRadius 0.18steeringWheelTexture "S2000wheel.png";——————Position of Exhaust——————exhaust1Pos {0.43, 0.28, -1.95}exhaust2Pos {-0.43, 0.28, -1.95};——————Position of License Plates——————frontLicensePlatePos {0.0, 0.55, 2.1}rearLicensePlatePos {0.0, 0.56, -2.045};——————Engine——————power 179000powerRPM 8300torque 208torqueRPM 7500jerkRPM 350.0idleRPM 1000maxRPM 9500engineInertia 0.125
+; engineFriction 50
+engineBaseFriction 0.0006engineRPMFriction 0.0125;——————Engine Sound——————engineSample "S2000 engine.wav"hallSample "S2000 engine.wav"turboSample "S2000 engine.wav"turboGain 1.5zeroRPMSoundGain 1.7fullRPMSoundGain 4zeroThrottleSoundGain 1.8fullThrottleSoundGain 4zeroRPMSoundPitch 0.95fullRPMSoundPitch 1.55zeroThrottleSoundPitch 1.1fullThrottleSoundPitch 1.45
+;——————Horn Sound——————hornSample "S2000 horn.wav"hornPitch 0hornSoundgain 1
+
+;——————Drivetrain——————
+; finalDriveRatio 4.1
+finalDriveRatio 4.756
+maxClutchTorqueTransfer 4000
+shiftUpRPM 8300shiftDownRPM 5500
+gearSwitchTime 0.35differentialLockCoefficient 120
+
+;——————Number of gears——————numGears 8# 0gearRatios -2.8
+# 1
+gearRatios 0
+# 2
+gearRatios 3.133# 3
+gearRatios 2.045# 4
+gearRatios 1.481# 5
+gearRatios 1.1# 6
+gearRatios 0.9250
+# 7
+gearRatios 0.81
+;——————Suspension——————
+;suspensionFriction 2700
+;suspensionFriction 1000damperStrength 15000
+damperStrength 20000
+;frontSwayBar 24200;rearSwayBar 26200
+frontSwayBar 11000rearSwayBar 20000;——————Wheels——————
+numWheels 4# 0
+wheels.pos {0.72, 0.35, 1.195}
+wheels.inertia 2.07
+wheels.powered 0.0
+wheels.friction 1wheels.maxAngle 0.5838
+wheels.maxSuspension 0.10
+wheels.radius 0.3159
+wheels.braked 4000wheels.handbraked 0.0
+wheels.model "S2000 tire_left.mdl"wheels.width 0.205wheels.stickyness 0.0025wheels.loadSensitivity -0.1# 1wheels.pos {-0.72, 0.35, 1.195}
+wheels.inertia 2.07
+wheels.powered 0.0
+wheels.friction 1wheels.maxAngle 0.5838
+wheels.maxSuspension 0.10
+wheels.radius 0.3159
+wheels.braked 4000wheels.handbraked 0.0
+wheels.model "S2000 tire_right.mdl"wheels.width 0.205wheels.stickyness 0.0025wheels.loadSensitivity -0.1# 2wheels.pos {0.75, 0.34, -1.145}
+wheels.inertia 2.07
+wheels.powered 0.5wheels.friction 1wheels.maxAngle 0wheels.maxSuspension 0.12wheels.radius 0.3157wheels.braked 1600wheels.handbraked 1wheels.model "S2000 tire_left.mdl"wheels.width 0.225wheels.stickyness 0.0025wheels.loadSensitivity -0.1# 3wheels.pos {-0.75, 0.34, -1.145}
+wheels.inertia 2.07
+wheels.powered 0.5wheels.friction 1wheels.maxAngle 0.0wheels.maxSuspension 0.12wheels.radius 0.3157wheels.braked 1600wheels.handbraked 1wheels.model "S2000 tire_right.mdl"wheels.width 0.225wheels.stickyness 0.0025wheels.loadSensitivity -0.1
+
+;------Lights------numLights 29
+
+# 0
+; spot
+lights.pos {-0.48,0.58,1.71}lights.dir {0,-0.1,1}lights.rgb {1,1,0.8}lights.type 1lights.size 35lights.onFlags 0x01lights.offFlags 0x00
+
+# 1; spot
+lights.pos {0.48,0.58,1.71}lights.dir {0,-0.1,1}lights.rgb {1,1,0.8}lights.type 1lights.size 35lights.onFlags 0x01lights.offFlags 0x00
+
+# 2; spot bulb
+lights.pos {-0.48,0.6,1.8}lights.dir {0,0,1}lights.rgb {1,1,0.8}lights.type 6lights.size 0.35lights.onFlags 0x01lights.offFlags 0x00
+
+# 3; spot bulb
+lights.pos {0.48,0.6,1.8}lights.dir {0,0,1}lights.rgb {1,1,0.8}lights.type 6lights.size 0.35lights.onFlags 0x01lights.offFlags 0x00
+
+# 4
+; horn front
+lights.pos {-0.57,0.58,1.64}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 3lights.size 0.2lights.onFlags 0x80lights.offFlags 0x00
+
+# 5
+; horn front
+lights.pos {0.57,0.58,1.64}lights.dir {0,0,1}lights.rgb {1,1,1}lights.type 3lights.size 0.2lights.onFlags 0x80lights.offFlags 0x00
+
+# 6
+; right position
+lights.pos {-0.63,0.61,1.6}lights.dir {0,0,1}lights.rgb {1,0.25,0}lights.type 0lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00
+
+# 7
+; left position
+lights.pos {0.63,0.61,1.6}lights.dir {0,0,1}lights.rgb {1,0.25,0}lights.type 0lights.size 0.1lights.onFlags 0x01lights.offFlags 0x00
+
+# 8
+; brakes
+lights.pos {-0.6,0.71,-1.83}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.3lights.onFlags 0x10lights.offFlags 0x00
+
+# 9
+; brakes
+lights.pos {0.6,0.71,-1.83}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.3lights.onFlags 0x10lights.offFlags 0x00
+
+# 10
+; reverse
+lights.pos {-0.5,0.7,-1.9}lights.dir {0,0,-1}lights.rgb {1,1,1}lights.type 6lights.size 0.3lights.onFlags 0x08lights.offFlags 0x00
+
+# 11
+; reverse
+lights.pos {0.5,0.7,-1.9}lights.dir {0,0,-1}lights.rgb {1,1,1}lights.type 6lights.size 0.3lights.onFlags 0x08lights.offFlags 0x00
+
+# 12
+; position rear left
+lights.pos {-0.71,0.73,-1.73}lights.dir {0,0,-1}lights.rgb {1,0.25,0}lights.type 2lights.size 0.1lights.onFlags 0x20lights.offFlags 0x40
+
+# 13
+; position rear right
+lights.pos {0.71,0.73,-1.73}lights.dir {0,0,-1}lights.rgb {1,0.25,0}lights.type 2lights.size 0.1lights.onFlags 0x40lights.offFlags 0x20
+
+# 14
+; center brake
+lights.pos {0,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.075lights.onFlags 0x10lights.offFlags 0x00
+
+# 15
+; center brake
+lights.pos {0.025,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.075lights.onFlags 0x10lights.offFlags 0x00
+
+# 16
+; center brake
+lights.pos {-0.025,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.075lights.onFlags 0x10lights.offFlags 0x00
+
+# 17
+; center brake
+lights.pos {0.05,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.075lights.onFlags 0x10lights.offFlags 0x00
+
+# 18
+; center brake
+lights.pos {-0.05,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.075lights.onFlags 0x10lights.offFlags 0x00
+
+# 19
+; center brake
+lights.pos {0.075,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.04lights.onFlags 0x10lights.offFlags 0x00
+
+# 20
+; center brake
+lights.pos {-0.075,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.04lights.onFlags 0x10lights.offFlags 0x00
+
+# 21
+; brakes
+lights.pos {-0.6,0.71,-1.83}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00
+
+# 22
+; brakes
+lights.pos {0.6,0.71,-1.83}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00
+
+# 23
+; right turn front
+lights.pos {-0.63,0.61,1.6}lights.dir {0,0,1}lights.rgb {1,0.25,0}lights.type 0lights.size 0.1lights.onFlags 0x40lights.offFlags 0x20
+
+# 24
+; left turn front
+lights.pos {0.63,0.61,1.6}lights.dir {0,0,1}lights.rgb {1,0.25,0}lights.type 0lights.size 0.1lights.onFlags 0x20lights.offFlags 0x40
+
+# 25
+; indicator rear left
+lights.pos {-0.73,0.73,-1.7}lights.dir {0,0,-1}lights.rgb {1,0.25,0}lights.type 2lights.size 0.1lights.onFlags 0x20lights.offFlags 0x40
+
+# 26
+; indicator rear right
+lights.pos {0.73,0.73,-1.7}lights.dir {0,0,-1}lights.rgb {1,0.25,0}lights.type 2lights.size 0.1lights.onFlags 0x40lights.offFlags 0x20
+
+# 27
+; center brake
+lights.pos {0.1,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.04lights.onFlags 0x10lights.offFlags 0x00
+
+# 28
+; center brake
+lights.pos {-0.1,0.86,-1.98}lights.dir {0,0,-1}lights.rgb {1,0.0}lights.type 0lights.size 0.04lights.onFlags 0x10lights.offFlags 0x00

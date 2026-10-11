@@ -1,0 +1,769 @@
+;------Credits------
+; 2008
+; Model, textures and .car file created by Andreu
+; .car file created by Tomte
+; Please, no alterations or derivatives of this plugin without permission from the authors
+; Please contact Andreu on the Redline forum under the name "Vicent Estrella" for any questions
+
+
+;——————General Car Information——————
+carName "≠mazda_logo.png≠ Mazda MX-5 Miata v1.0"
+year 2006
+displacement 1.999
+builtIn 1
+price 25000
+aiSpeedIndex 1.2
+
+
+;——————Aerodynamics——————
+frontAirResistance 0.61
+sideAirResistance 1.70
+topAirResistance 2.34
+frontLift 0.1
+rearLift 0.1
+
+
+;——————Chassis——————
+; wheelbase 2.33 m
+; weight distibution = 52/48
+; W = 1.72 m
+; H = 1.245 m
+; L = 3.995 m
+
+mass 1170
+; massCenter {0.0, 0.42, 0.10}
+massCenter {0.0, 0.45, 0.10}
+inertia {1802, 1857, 522}
+
+
+;-—————Collision Boxes——————
+numCollBoxes 2
+# 0
+coll.tfr {0.86, 0.89, 1.87}
+coll.tfl {-0.86, 0.89, 1.87}
+coll.trr {0.86, 0.89, -1.91}
+coll.trl {-0.86, 0.89, -1.91}
+coll.bfr {0.86, 0.14, 1.87}
+coll.bfl {-0.86, 0.14, 1.87}
+coll.brr {0.86, 0.14, -1.91}
+coll.brl {-0.86, 0.14, -1.91}
+
+# 1
+coll.tfr {0.55, 1.23, -0.02}
+coll.tfl {-0.55, 1.23, -0.02}
+coll.trr {0.55, 1.23, -0.79}
+coll.trl {-0.55, 1.23, -0.79}
+coll.bfr {0.86, 0.89, 0.54}
+coll.bfl {-0.86, 0.89, 0.54}
+coll.brr {0.86, 0.89, -1.21}
+coll.brl {-0.86, 0.89, -1.21}
+
+
+;——————Graphics——————
+model "miata_body_2.mdl"
+interiorModel "null.mdl"
+shadowModel "miata_shadow_2.mdl"
+
+numColors 10
+
+; Dark Blue
+# 0
+colors {0.066, 0.085, 0.328}
+
+; Orange
+# 1
+colors {1, 0.351, 0}
+
+; Green
+# 2
+colors {0, 0.292, 0.093}
+
+; Maroon
+# 3
+colors {0.46, 0.035, 0.007}
+
+; Purple
+# 4
+colors {0.238, 0.062, 0.48}
+
+; Gray
+# 5
+colors {0.5, 0.5, 0.5}
+
+; Yellow
+# 6
+colors {1, 0.761, 0}
+
+; White
+# 7
+colors {1, 1, 1}
+
+; Magenta
+# 8
+colors {0.886, 0, 0.48}
+
+; Black
+# 9
+colors {0, 0, 0}
+
+;——————Driver model——————
+driverPos {0.358, 0.45,-0.3}
+noDriverModel 2
+
+
+;——————Position of steering wheel model——————
+steeringWheelPos {0.358, 0.77, 0.10}
+steeringWheelAngle 15
+steeringWheelTurns 3
+steeringWheelRadius 0.18
+steeringWheelTexture "miata_wheel.png"
+
+
+;——————Position of Exhaust——————
+exhaust1Pos {0.43,0.275,-1.83}
+exhaust2Pos {-0.43,0.275,-1.83}
+
+
+;——————Position of License Plates——————
+frontLicensePlatePos {0.0, 0.55, 2.01}
+rearLicensePlatePos {0.0, 0.79, -1.90}
+
+
+;——————Engine——————
+power 126769
+powerRPM 6700
+torque 190
+torqueRPM 5000
+jerkRPM 700
+idleRPM 800
+maxRPM 6750
+engineInertia 0.15
+engineBaseFriction 20
+engineRPMFriction 0.025
+
+
+;——————Engine Sound——————
+engineSample "MX-5 Miata NC engine.wav"
+hallSample "MX-5 Miata NC engine hall.wav"
+
+zeroRPMSoundGain 0.6fullRPMSoundGain 1.0zeroThrottleSoundGain 0.9
+fullThrottleSoundGain 1.05
+
+zeroRPMSoundPitch 0.20fullRPMSoundPitch 1.05zeroThrottleSoundPitch 0.8fullThrottleSoundPitch 1.05
+
+;——————Horn Sound——————
+hornSample "miata_horn.wav"
+hornPitch 0
+hornSoundgain 1
+
+
+;——————Drivetrain——————
+finalDriveRatio 4.100
+maxClutchTorqueTransfer 200
+shiftUpRPM 6700
+shiftDownRPM 3500
+gearSwitchTime 0.4
+differentialLockCoefficient 80
+
+
+;——————Number of gears——————
+numGears 8
+# 0
+gearRatios -3.603
+# 1
+gearRatios 0
+# 2
+gearRatios 3.815
+# 3
+gearRatios 2.260
+# 4
+gearRatios 1.640
+# 5
+gearRatios 1.177
+# 6
+gearRatios 1.000
+# 7
+gearRatios 0.832
+
+
+;——————Suspension——————
+suspensionFriction 1250
+damperStrength 35000
+frontSwayBar 12400
+rearSwayBar 25400
+
+
+;——————Wheels——————
+; Front: 205/45 R17, radius = 30.815 cm
+; Rear: 205/45 R17, radius = 30.815 cm
+; Front Track = 1.490 m
+; Rear Track = 1.495 m
+
+
+numWheels 4
+
+# 0
+wheels.pos {0.745, 0.35815, 1.221}
+wheels.inertia 2.02
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.52
+wheels.maxSuspension 0.10
+wheels.radius 0.30815
+wheels.braked 5000
+wheels.handbraked 0.0
+wheels.model "miata_tire_right_2.mdl"
+wheels.width 0.205
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "miata_brake_caliper_2.mdl"
+
+# 1
+wheels.pos {-0.745, 0.35815, 1.221}
+wheels.inertia 2.02
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.52
+wheels.maxSuspension 0.10
+wheels.radius 0.30815
+wheels.braked 5000
+wheels.handbraked 0.0
+wheels.model "miata_tire_left_2.mdl"
+wheels.width 0.205
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "miata_brake_caliper_2.mdl"
+
+# 2
+wheels.pos {0.745, 0.36815, -1.109}
+wheels.inertia 2.02
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.12
+wheels.radius 0.30815
+wheels.braked 1500
+wheels.handbraked 1.0
+wheels.model "miata_tire_right_2.mdl"
+wheels.width 0.205
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "miata_brake_caliper_2.mdl"
+
+# 3
+wheels.pos {-0.745, 0.36815, -1.109}
+wheels.inertia 2.02
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.12
+wheels.radius 0.30815
+wheels.braked 1500
+wheels.handbraked 1.0
+wheels.model "miata_tire_left_2.mdl"
+wheels.width 0.205
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.0
+wheels.customBrakeModel "miata_brake_caliper_2.mdl"
+
+
+;------Lights------
+numLights 83
+
+; -- Front lights --
+
+; Driving Lights
+
+# 0
+; spot right
+lights.pos {-0.54,0.56,1.29}
+lights.dir {-0.10,-0.10,1}
+lights.rgb {1,1,0.9}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 1
+; spot left
+lights.pos {0.54,0.56,1.29}
+lights.dir {0.10,-0.10,1}
+lights.rgb {1,1,0.9}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 2
+; spot bulb right
+lights.pos {-0.54,0.66,1.69}
+lights.dir {0,0,1}
+lights.rgb {1,1,0.9}
+lights.type 2
+lights.size 0.20
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 3
+; spot bulb left
+lights.pos {0.54,0.66,1.69}
+lights.dir {0,0,1}
+lights.rgb {1,1,0.9}
+lights.type 2
+lights.size 0.20
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+;--
+
+# 4
+; small spot bulb right
+lights.pos {-0.37,0.645,1.77}
+lights.dir {0,0,1}
+lights.rgb {1,1,0.8}
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 5
+; small spot bulb left
+lights.pos {0.37,0.645,1.77}
+lights.dir {0,0,1}
+lights.rgb {1,1,0.8}
+lights.type 2
+lights.size 0.15
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; Horn lights
+
+# 6
+; horn front right
+lights.pos {-0.45,0.65,1.38}
+lights.dir {-0.05,-0.05,1}
+lights.rgb {1,1,1}
+lights.type 1
+lights.size 50
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 7
+; horn front left
+lights.pos {0.45,0.65,1.38}
+lights.dir {0.05,-0.05,1}
+lights.rgb {1,1,1}
+lights.type 1
+lights.size 50
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 8
+; horn front right spot
+lights.pos {-0.45,0.65,1.68}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 9
+; horn front left spot
+lights.pos {0.45,0.65,1.68}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+;--
+
+# 10
+; horn fog front right 
+lights.pos {-0.567,0.40,1.44}
+lights.dir {-0.15,-0.1,1}
+lights.rgb {1,1,1}
+lights.type 1
+lights.size 20
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 11
+; horn fog front left
+lights.pos {0.567,0.40,1.44}
+lights.dir {0.15,-0.1,1}
+lights.rgb {1,1,1}
+lights.type 1
+lights.size 20
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 12
+; horn fog front right spot
+lights.pos {-0.567,0.40,1.74}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+# 13
+; horn fog front left spot
+lights.pos {0.567,0.40,1.74}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x80
+lights.offFlags 0x00
+
+; Indicators front
+
+# 14
+; front right indicator 1
+lights.pos {-0.587,0.672,1.616} 
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.11
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 15
+; front right indicator 2
+lights.pos {-0.623,0.675,1.598} 
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.10
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 16
+; front right indicator 3
+lights.pos {-0.644,0.680,1.585} 
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.09
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 17
+; front left indicator 1
+lights.pos {0.587,0.672,1.616} 
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.11
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 18
+; front left indicator 2
+lights.pos {0.623,0.675,1.598} 
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.10
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 19
+; front left indicator 3
+lights.pos {0.644,0.680,1.585} 
+lights.dir {0.0, 0.0, 1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.09
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 20
+; right side indicator 
+lights.pos {-0.86,0.593,0.722} 
+lights.dir {-1.0, 0.0, 0.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.15
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 21
+; left side indicator 
+lights.pos {0.86,0.593,0.722} 
+lights.dir {1.0, 0.0, 0.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.15
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+; -- Rear lights --
+
+; Rear Indicators
+
+# 22
+; rear right indicator 1
+lights.pos {-0.523,0.732,-1.755} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.18
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 23
+; rear right indicator 2
+lights.pos {-0.55,0.761,-1.74} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 24
+; rear right indicator 3
+lights.pos {-0.500,0.761,-1.770} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 25
+; rear right indicator 4
+lights.pos {-0.550,0.703,-1.740} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 26
+; rear right indicator 5
+lights.pos {-0.500,0.703,-1.770} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xa0
+lights.offFlags 0x00
+
+# 27
+; rear left indicator 1
+lights.pos {0.523,0.732,-1.755} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.18
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 28
+; rear left indicator 2
+lights.pos {0.55,0.761,-1.74} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 29
+; rear left indicator 3
+lights.pos {0.500,0.761,-1.770} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.04
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 30
+; rear left indicator 4
+lights.pos {0.550,0.703,-1.760} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+# 31
+; rear left indicator 5
+lights.pos {0.500,0.703,-1.770} 
+lights.dir {0.0, 0.0, -1.0}
+lights.rgb {0.89, 0.51, 0.15}
+lights.type 0
+lights.size 0.02
+lights.onFlags 0xc0
+lights.offFlags 0x00
+
+; rear Position lights
+
+# 32
+; rear right red 1lights.pos {-0.442,0.784,-1.839}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 33
+; rear right red 2lights.pos {-0.418,0.777,-1.851}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 34
+; rear right red 3lights.pos {-0.401,0.757,-1.860}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 35
+; rear right red 4lights.pos {-0.395,0.729,-1.863}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 36
+; rear right red 5lights.pos {-0.401,0.702,-1.860}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 37
+; rear right red 6lights.pos {-0.418,0.682,-1.851}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 38
+; rear right red 7lights.pos {-0.442,0.675,-1.839}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 39
+; rear right red 8lights.pos {-0.466,0.682,-1.827}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 40
+; rear right red 9lights.pos {-0.484,0.702,-1.818}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 41
+; rear right red 10lights.pos {-0.490,0.729,-1.815}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 42
+; rear right red 11lights.pos {-0.484,0.757,-1.818}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 43
+; rear right red 12lights.pos {-0.466,0.777,-1.827}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 44
+; rear left red 1lights.pos {0.442,0.784,-1.839}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 45
+; rear left red 2lights.pos {0.418,0.777,-1.851}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 46
+; rear left red 3lights.pos {0.401,0.757,-1.860}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 47
+; rear left red 4lights.pos {0.395,0.729,-1.863}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 48
+; rear left red 5lights.pos {0.401,0.702,-1.860}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 49
+; rear left red 6lights.pos {0.418,0.682,-1.851}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 50
+; rear left red 7lights.pos {0.442,0.675,-1.839}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 51
+; rear left red 8lights.pos {0.466,0.682,-1.827}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 52
+; rear left red 9lights.pos {0.484,0.702,-1.818}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 53
+; rear left red 10lights.pos {0.490,0.729,-1.815}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 54
+; rear left red 11lights.pos {0.484,0.757,-1.818}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 55
+; rear left red 12lights.pos {0.466,0.777,-1.827}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.05lights.onFlags 0x01lights.offFlags 0x00
+
+# 56
+; rear right red 13lights.pos {-0.670,0.729,-1.691}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.06lights.onFlags 0x01lights.offFlags 0x00
+
+# 57
+; rear right red 14lights.pos {-0.650,0.729,-1.706}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.06lights.onFlags 0x01lights.offFlags 0x00
+
+# 58
+; rear left red 13lights.pos {0.670,0.729,-1.691}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.06lights.onFlags 0x01lights.offFlags 0x00
+
+# 59
+; rear left red 14lights.pos {0.650,0.729,-1.706}lights.dir {0,0,-1}lights.rgb {0.5,0,0}lights.type 2lights.size 0.06lights.onFlags 0x01lights.offFlags 0x00
+
+
+;--
+
+# 60
+; rear right yellow 1lights.pos {-0.723,0.536,-1.654}lights.dir {-1,0,-0.2}lights.rgb {0.89, 0.51, 0.15}lights.type 2lights.size 0.08lights.onFlags 0x01lights.offFlags 0x00
+
+# 61
+; rear right yellow 2lights.pos {-0.714,0.536,-1.678}lights.dir {-1,0,-0.2}lights.rgb {0.89, 0.51, 0.15}lights.type 2lights.size 0.08lights.onFlags 0x01lights.offFlags 0x00
+
+# 62
+; rear right yellow 3lights.pos {-0.704,0.536,-1.701}lights.dir {-1,0,-0.2}lights.rgb {0.89, 0.51, 0.15}lights.type 2lights.size 0.08lights.onFlags 0x01lights.offFlags 0x00
+
+# 63
+; rear left yellow 1lights.pos {0.723,0.536,-1.654}lights.dir {1,0,-0.2}lights.rgb {0.89, 0.51, 0.15}lights.type 2lights.size 0.08lights.onFlags 0x01lights.offFlags 0x00
+
+# 64
+; rear left yellow 2lights.pos {0.714,0.536,-1.678}lights.dir {1,0,-0.2}lights.rgb {0.89, 0.51, 0.15}lights.type 2lights.size 0.08lights.onFlags 0x01lights.offFlags 0x00
+
+# 65
+; rear left yellow 3lights.pos {0.704,0.536,-1.701}lights.dir {1,0,-0.2}lights.rgb {0.89, 0.51, 0.15}lights.type 2lights.size 0.08lights.onFlags 0x01lights.offFlags 0x00
+
+; brake lights
+
+# 66
+; rear right brake lightlights.pos {-0.603,0.729,-1.750}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 67
+; rear left brake lightlights.pos {0.603,0.729,-1.750}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.20lights.onFlags 0x10lights.offFlags 0x00
+
+# 68
+; center brake light 1lights.pos {0.000,0.942,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 69
+; center brake light 2lights.pos {-0.023,0.942,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 70
+; center brake light 3lights.pos {0.023,0.942,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 71
+; center brake light 4lights.pos {-0.046,0.941,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 72
+; center brake light 5lights.pos {0.046,0.941,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 73
+; center brake light 6lights.pos {-0.069,0.940,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 74
+; center brake light 7lights.pos {0.069,0.940,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 75
+; center brake light 8lights.pos {-0.092,0.939,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 76
+; center brake light 9lights.pos {0.093,0.939,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 77
+; center brake light 10lights.pos {-0.115,0.938,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 78
+; center brake light 11lights.pos {0.115,0.938,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 79
+; center brake light 12lights.pos {-0.138,0.937,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+# 80
+; center brake light 13lights.pos {0.138,0.937,-1.360}lights.dir {0,0,-1}lights.rgb {1,0,0}lights.type 2lights.size 0.06lights.onFlags 0x10lights.offFlags 0x00
+
+; reverse lights
+
+# 81
+; rear right reverse lightlights.pos {-0.442,0.729,-1.849}lights.dir {0,0,-1}lights.rgb {0.9,0.9,0.9}lights.type 0lights.size 0.20lights.onFlags 0x08lights.offFlags 0x00
+# 82
+; rear left reverse lightlights.pos {0.442,0.729,-1.849}lights.dir {0,0,-1}lights.rgb {0.9,0.9,0.9}lights.type 0lights.size 0.20lights.onFlags 0x08lights.offFlags 0x00
+  

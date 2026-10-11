@@ -1,0 +1,39 @@
+carName "Mustang 350E"year 1965displacement 4.74price 4547;---aerodynamicsfrontAirResistance 1.7sideAirResistance 2.0topAirResistance 3.0frontLift -0.02rearLift -0.02;---chassis
+; bru mass from 65 GT350, cg from hot rod
+mass 1270.0inertia {4000,3500,450}massCenter {0.0,0.47,0.25}
+numCollBoxes 2# 0coll.tfr {0.955,0.853,2.27}coll.tfl {-0.955,0.853,2.27}coll.trr {0.955,0.853,-2.4}coll.trl {-0.955,0.853,-2.54}coll.bfr {0.955,0.275,2.27}coll.bfl {-0.955,0.275,2.27}coll.brr {0.955,0.275,-2.4}coll.brl {-0.955,0.275,-2.4}# 1coll.tfr {0.85,1.31,0.385}coll.tfl {-0.85,1.31,0.385}coll.trr {0.85,1.31,-0.675}coll.trl {-0.85,1.31,-0.675}coll.bfr {0.955,0.853,0.828}coll.bfl {-0.955,0.853,0.828}coll.brr {0.955,0.853,-2.27}coll.brl {-0.955,0.853,-2.27};---graphics
+model "br-must.mdl"interiorModel "br-must-interior.mdl"numColors 4# 0colors {0.35,0.0,0.35} # 1colors {0.02,0.6,0.02}# 2colors {0.3,0.4,0.5}# 3colors {0.4,0.4,0.2}driverPos {0.42,0.54,-0.1}steeringWheelPos {0.43,0.74,0.414}steeringWheelAngle 15steeringWheelTurns 4.75steeringWheelRadius 0.19steeringWheelTexture "HotRod_steering_wheel.pct"exhaust1Pos {-0.36,0.2,-2.3}exhaust2Pos {0.36,0.2,-2.3}frontLicensePlatePos {0,0.36,2.27}rearLicensePlatePos {0,0.43,-2.4}hornPitch -0.2
+
+;--engine; bru engine from 65 GT350
+power 228184torque 446powerRPM 6000.0torqueRPM 4200.0jerkRPM 450.0idleRPM 1000.0maxRPM 6700.0engineInertia 0.3engineFriction 100engineSample "enginenormal2.wav"hallSample "hallnormal2.wav"zeroRPMSoundGain 0.8fullRPMSoundGain 1.0zeroThrottleSoundGain 0.5fullThrottleSoundGain 1.1zeroRPMSoundPitch 0.3fullRPMSoundPitch 1.2zeroThrottleSoundPitch 0.9fullThrottleSoundPitch 1.0;---suspension
+; bru suspension from mustang
+supsensionFriction 1000damperStrength 35000
+
+frontSwayBar 15000
+;rearSwayBar 11000
+
+;---drivetrain
+; bru drivetrain from 65 GT350
+finalDriveRatio 3.89maxClutchTorqueTransfer 900differentialLockCoefficient 100shiftUpRPM 6000.0shiftDownRPM 4000.0gearSwitchTime 0.12numGears 6# 0gearRatios -2.4# 1gearRatios 0# 2gearRatios 2.36# 3gearRatios 1.62# 4gearRatios 1.2# 5gearRatios 1.0;---wheels
+; bru rear wheels moved back 1.8 inches to fit model better.
+Tires from GT500 Hot RodnumWheels 4# 0wheels.pos {-0.76,0.35,1.47}wheels.inertia 2.2wheels.powered 0.0
+wheels.grip 1.0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.12wheels.radius 0.34wheels.braked 4000.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.225wheels.texture 5# 1wheels.pos {0.76,0.35,1.47}wheels.inertia 2.2wheels.powered 0.0
+wheels.grip 1.0wheels.friction 10wheels.maxAngle 0.48wheels.maxSuspension 0.12wheels.radius 0.34wheels.braked 4000.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.225wheels.texture 5# 2wheels.pos {-0.76,0.35,-1.32}wheels.inertia 2.2wheels.powered 0.5
+wheels.grip 1.0wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.34wheels.braked 1100.0wheels.handbraked 1.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.285wheels.texture 5# 3wheels.pos {0.76,0.35,-1.32}wheels.inertia 2.2wheels.powered 0.5
+wheels.grip 1.0wheels.friction 10wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.34wheels.braked 1100.0wheels.handbraked 1.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.285wheels.texture 5;---lights
+; bru many changes
+numLights 20
+
+;front marker lights# 0lights.pos {0.7,0.254,2.05}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 0lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00# 1lights.pos {-0.7,0.254,2.05}lights.dir {0,0,1}lights.rgb {1,0.5,0}lights.type 0lights.size 0.2lights.onFlags 0x01lights.offFlags 0x00
+
+;outer headlights# 2lights.pos {-0.7,0.58,2.25}lights.dir {0,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00# 3lights.pos {0.7,0.58,2.25}lights.dir {0,-0.1,1}lights.rgb {1,1,1}lights.type 1lights.size 30lights.onFlags 0x01lights.offFlags 0x00
+# 4lights.pos {-0.7,0.58,2.1}lights.dir {0,0,1}lights.rgb {.9,.9,.8}lights.type 0lights.size 0.5lights.onFlags 0x01lights.offFlags 0x00# 5lights.pos {0.7,0.58,2.1}lights.dir {0,0,1}lights.rgb {.9,.9,.8}lights.type 0lights.size 0.5lights.onFlags 0x01lights.offFlags 0x00
+
+; inner headlights# 6lights.pos {-0.15,0.58,2.17}lights.dir {0,0,1}lights.rgb {.9,.9,.8}lights.type 0lights.size 0.5lights.onFlags 0x01lights.offFlags 0x00# 7lights.pos {0.15,0.58,2.17}lights.dir {0,0,1}lights.rgb {.9,.9,.8}lights.type 0lights.size 0.5lights.onFlags 0x01lights.offFlags 0x00; reverse# 8lights.pos {-0.68,0.29,-2.25}lights.dir {0,0,-1}lights.rgb {0.7,0.7,0.7}lights.type 0lights.size 0.35lights.onFlags 0x08lights.offFlags 0x00# 9lights.pos {0.68,0.29,-2.25}lights.dir {0,0,-1}lights.rgb {0.7,0.7,0.7}lights.type 0lights.size 0.35lights.onFlags 0x08lights.offFlags 0x00
+;back, outer
+# 10lights.pos {-0.61,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.4lights.onFlags 0x01lights.offFlags 0x00# 11lights.pos {0.61,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.4lights.onFlags 0x01lights.offFlags 0x00;back, mid# 12lights.pos {-0.41,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.4lights.onFlags 0x01lights.offFlags 0x00# 13lights.pos {0.41,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.4lights.onFlags 0x01lights.offFlags 0x00
+
+;back, mid - brake# 14lights.pos {-0.41,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.4,0,0}lights.type 2lights.size 0.4lights.onFlags 0x10lights.offFlags 0x00# 15lights.pos {0.41,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.4,0,0}lights.type 2lights.size 0.4lights.onFlags 0x10lights.offFlags 0x00
+
+;back, inner - brake# 16lights.pos {-0.21,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.4,0,0}lights.type 2lights.size 0.4lights.onFlags 0x10lights.offFlags 0x00# 17lights.pos {0.21,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.4,0,0}lights.type 2lights.size 0.4lights.onFlags 0x10lights.offFlags 0x00
+;back, inner# 18lights.pos {-0.21,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.4lights.onFlags 0x01lights.offFlags 0x00# 19lights.pos {0.21,0.59,-2.35}lights.dir {0,0,-1}lights.rgb {0.6,0,0}lights.type 2lights.size 0.4lights.onFlags 0x01lights.offFlags 0x00

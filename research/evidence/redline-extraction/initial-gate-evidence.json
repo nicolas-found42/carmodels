@@ -1,0 +1,930 @@
+{
+  "args": {
+    "request": "Extract car files from supplied redline/game-files/ into redline/cars/ using native artifact evidence and TypeSafe/Jev. Native extraction scope: preserve original car carriers and base shared resources, separate configuration variants, bound malformed inputs and refuse overwrites, retain source pins and deterministic check, screen optional semantic evidence and honor uncertainty. Mesh/texture conversion and library/dealership imports are not requested in this step. Existing Gran Turismo work is preserved. This final bounded gate group contains complete raw diffs for its listed files; the other group is independently gated. Generated asset bytes are verified by actual rederivation and independent audit, not text diffs.",
+    "files": [
+      {
+        "path": "research/evidence/redline-extraction/checks.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/checks.json\n@@ -0,0 +1,477 @@\n+{\n+  \"schema\": 1,\n+  \"exit_code\": 0,\n+  \"checks\": [\n+    {\n+      \"name\": \"ruff\",\n+      \"command\": [\n+        \"ruff\",\n+        \"check\",\n+        \"tools\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"ruff.log\",\n+      \"elapsed_seconds\": 0.033\n+    },\n+    {\n+      \"name\": \"test_viewer_scenes\",\n+      \"command\": [\n+        \"node\",\n+        \"tools/test_viewer_scenes.mjs\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_viewer_scenes.log\",\n+      \"elapsed_seconds\": 0.193\n+    },\n+    {\n+      \"name\": \"test_viewer_materials\",\n+      \"command\": [\n+        \"node\",\n+        \"tools/test_viewer_materials.mjs\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_viewer_materials.log\",\n+      \"elapsed_seconds\": 0.06\n+    },\n+    {\n+      \"name\": \"test_model_load\",\n+      \"command\": [\n+        \"node\",\n+        \"tools/test_model_load.mjs\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_model_load.log\",\n+      \"elapsed_seconds\": 0.049\n+    },\n+    {\n+      \"name\": \"test_viewer_loading\",\n+      \"command\": [\n+        \"node\",\n+        \"tools/test_viewer_loading.mjs\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_viewer_loading.log\",\n+      \"elapsed_seconds\": 0.147\n+    },\n+    {\n+      \"name\": \"test_dealership\",\n+      \"command\": [\n+        \"node\",\n+        \"tools/test_dealership.mjs\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_dealership.log\",\n+      \"elapsed_seconds\": 1.351\n+    },\n+    {\n+      \"name\": \"test_editable_glb\",\n+      \"command\": [\n+        \"node\",\n+        \"tools/test_editable_glb.mjs\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_editable_glb.log\",\n+      \"elapsed_seconds\": 1.034\n+    },\n+    {\n+      \"name\": \"verify_recovered_asset_index\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_recovered_asset_index.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_recovered_asset_index.log\",\n+      \"elapsed_seconds\": 1.235\n+    },\n+    {\n+      \"name\": \"test_export_materials\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_export_materials.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_export_materials.log\",\n+      \"elapsed_seconds\": 0.309\n+    },\n+    {\n+      \"name\": \"test_build_showcase\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_build_showcase.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_build_showcase.log\",\n+      \"elapsed_seconds\": 0.892\n+    },\n+    {\n+      \"name\": \"test_bake_models\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_bake_models.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_bake_models.log\",\n+      \"elapsed_seconds\": 5.782\n+    },\n+    {\n+      \"name\": \"test_build_dealership\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_build_dealership.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_build_dealership.log\",\n+      \"elapsed_seconds\": 1.002\n+    },\n+    {\n+      \"name\": \"test_model_catalog\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_model_catalog.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_model_catalog.log\",\n+      \"elapsed_seconds\": 0.11\n+    },\n+    {\n+      \"name\": \"test_model_png\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_model_png.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_model_png.log\",\n+      \"elapsed_seconds\": 0.074\n+    },\n+    {\n+      \"name\": \"test_run_checks\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_run_checks.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_run_checks.log\",\n+      \"elapsed_seconds\": 0.227\n+    },\n+    {\n+      \"name\": \"test_review_payload\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_review_payload.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_review_payload.log\",\n+      \"elapsed_seconds\": 0.106\n+    },\n+    {\n+      \"name\": \"test_static_inputs\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_static_inputs.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_static_inputs.log\",\n+      \"elapsed_seconds\": 0.33\n+    },\n+    {\n+      \"name\": \"test_recovery_inputs\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_recovery_inputs.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_recovery_inputs.log\",\n+      \"elapsed_seconds\": 3.796\n+    },\n+    {\n+      \"name\": \"test_gt_archive\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_gt_archive.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_gt_archive.log\",\n+      \"elapsed_seconds\": 0.157\n+    },\n+    {\n+      \"name\": \"test_gt_asset_judgments\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_gt_asset_judgments.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_gt_asset_judgments.log\",\n+      \"elapsed_seconds\": 0.125\n+    },\n+    {\n+      \"name\": \"test_gt_wheels\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_gt_wheels.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_gt_wheels.log\",\n+      \"elapsed_seconds\": 0.1\n+    },\n+    {\n+      \"name\": \"test_gt_model\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_gt_model.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_gt_model.log\",\n+      \"elapsed_seconds\": 6.771\n+    },\n+    {\n+      \"name\": \"test_import_gt_dealership\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_import_gt_dealership.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_import_gt_dealership.log\",\n+      \"elapsed_seconds\": 0.87\n+    },\n+    {\n+      \"name\": \"test_library_filter\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_library_filter.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_library_filter.log\",\n+      \"elapsed_seconds\": 0.1\n+    },\n+    {\n+      \"name\": \"test_serve_library\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_serve_library.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_serve_library.log\",\n+      \"elapsed_seconds\": 0.667\n+    },\n+    {\n+      \"name\": \"test_redline_archive\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_redline_archive.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_redline_archive.log\",\n+      \"elapsed_seconds\": 0.111\n+    },\n+    {\n+      \"name\": \"test_extract_redline_cars\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_extract_redline_cars.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_extract_redline_cars.log\",\n+      \"elapsed_seconds\": 0.165\n+    },\n+    {\n+      \"name\": \"dealership_freshness\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/build_dealership.py\",\n+        \"--check\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"dealership_freshness.log\",\n+      \"elapsed_seconds\": 40.288\n+    },\n+    {\n+      \"name\": \"verify_config_data_sound\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_config_data_sound.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_config_data_sound.log\",\n+      \"elapsed_seconds\": 0.687\n+    },\n+    {\n+      \"name\": \"verify_sound_bank_index\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_sound_bank_index.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_sound_bank_index.log\",\n+      \"elapsed_seconds\": 0.246\n+    },\n+    {\n+      \"name\": \"verify_vu_dispatch_map\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_vu_dispatch_map.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_vu_dispatch_map.log\",\n+      \"elapsed_seconds\": 6.782\n+    },\n+    {\n+      \"name\": \"test_vu_dispatch_map\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_vu_dispatch_map.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_vu_dispatch_map.log\",\n+      \"elapsed_seconds\": 3.683\n+    },\n+    {\n+      \"name\": \"test_vu1_decode\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_vu1_decode.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_vu1_decode.log\",\n+      \"elapsed_seconds\": 0.191\n+    },\n+    {\n+      \"name\": \"verify_vu_pass_handlers\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_vu_pass_handlers.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_vu_pass_handlers.log\",\n+      \"elapsed_seconds\": 1.46\n+    },\n+    {\n+      \"name\": \"test_vu_pass_handlers\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_vu_pass_handlers.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_vu_pass_handlers.log\",\n+      \"elapsed_seconds\": 2.611\n+    },\n+    {\n+      \"name\": \"verify_vu_handler_dump\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_vu_handler_dump.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_vu_handler_dump.log\",\n+      \"elapsed_seconds\": 3.959\n+    },\n+    {\n+      \"name\": \"test_vu_handler_dump\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_vu_handler_dump.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_vu_handler_dump.log\",\n+      \"elapsed_seconds\": 4.281\n+    },\n+    {\n+      \"name\": \"recover_dump_reference_frame\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/recover_dump_reference_frame.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"recover_dump_reference_frame.log\",\n+      \"elapsed_seconds\": 1.769\n+    },\n+    {\n+      \"name\": \"test_recover_dump_reference_frame\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_recover_dump_reference_frame.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_recover_dump_reference_frame.log\",\n+      \"elapsed_seconds\": 2.999\n+    },\n+    {\n+      \"name\": \"verify_pass_source_join\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/verify_pass_source_join.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"verify_pass_source_join.log\",\n+      \"elapsed_seconds\": 11.383\n+    },\n+    {\n+      \"name\": \"test_pass_source_join\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_pass_source_join.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_pass_source_join.log\",\n+      \"elapsed_seconds\": 15.266\n+    },\n+    {\n+      \"name\": \"dealership_roundtrip\",\n+      \"command\": [\n+        \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n+        \"--background\",\n+        \"--python-exit-code\",\n+        \"1\",\n+        \"--python\",\n+        \"tools/test_dealership_roundtrip.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"dealership_roundtrip.log\",\n+      \"elapsed_seconds\": 31.344\n+    }\n+  ],\n+  \"claim_limits\": [\n+    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/extraction.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/extraction.json\n@@ -0,0 +1,24 @@\n+{\n+  \"schema\": 1,\n+  \"status\": \"PASS\",\n+  \"index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n+  \"car_configurations\": 129,\n+  \"base_configurations\": 19,\n+  \"addon_configurations\": 110,\n+  \"packages\": 83,\n+  \"original_car_envelopes\": 82,\n+  \"output_files\": 3709,\n+  \"output_bytes\": 2202028393,\n+  \"native_decoded_packed_members\": 3432,\n+  \"loose_native_members\": 65,\n+  \"verification_output\": \"CHECKED 129 native configurations, 3709 files, 2202028393 bytes\\n\",\n+  \"limits\": [\n+    \"Native asset extraction only; no mesh/texture conversion or dealership integration.\",\n+    \"Counts refer to configuration variants, not distinct real-world cars.\",\n+    \"All base resources are retained because car plug-ins share the global resource namespace; this includes non-car resources.\",\n+    \"Resource matches are static local/base candidates; plug-in load precedence and game execution remain unverified.\",\n+    \"Unreadable native table slots remain in original packages; their liveness is unknown.\",\n+    \"Regular data forks are unpacked; original envelopes retain filesystem/resource-fork metadata.\",\n+    \"HFS/StuffIt staging is verified separately; --check rederives from the staged packages and supplied source pins.\"\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/final-focused-checks.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/final-focused-checks.json\n@@ -0,0 +1,43 @@\n+{\n+  \"schema\": 1,\n+  \"exit_code\": 0,\n+  \"checks\": [\n+    {\n+      \"name\": \"ruff\",\n+      \"command\": [\n+        \"ruff\",\n+        \"check\",\n+        \"tools\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"ruff.log\",\n+      \"elapsed_seconds\": 0.032\n+    },\n+    {\n+      \"name\": \"test_redline_archive\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_redline_archive.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_redline_archive.log\",\n+      \"elapsed_seconds\": 0.06\n+    },\n+    {\n+      \"name\": \"test_extract_redline_cars\",\n+      \"command\": [\n+        \"python3\",\n+        \"tools/test_extract_redline_cars.py\"\n+      ],\n+      \"status\": \"pass\",\n+      \"exit_code\": 0,\n+      \"log\": \"test_extract_redline_cars.log\",\n+      \"elapsed_seconds\": 0.086\n+    }\n+  ],\n+  \"claim_limits\": [\n+    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/independent-output-audit.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/independent-output-audit.json\n@@ -0,0 +1,39 @@\n+{\n+  \"index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n+  \"manifest_sha256\": \"06f0623c59b119695e7d5e8c8feab9ddb45cb31b33a5ceacb8c785547b35492b\",\n+  \"output_files\": 3709,\n+  \"output_bytes\": 2202028393,\n+  \"checks\": [\n+    {\n+      \"check\": \"all outputfile SHA/length coverage and links\",\n+      \"files\": 3709,\n+      \"pass\": true\n+    },\n+    {\n+      \"check\": \"both originalsource inputs and82car envelopes match sourcepins\",\n+      \"pass\": true\n+    },\n+    {\n+      \"check\": \"independent native C members/config coverage andsourcefieldlineequality\",\n+      \"packed_native_members\": 3432,\n+      \"loose_members\": 65,\n+      \"configurations\": 129,\n+      \"base\": 19,\n+      \"addon\": 110,\n+      \"pass\": true\n+    },\n+    {\n+      \"check\": \"all declared resourcecandidate lists independently joined using nativeASCII+aliasorder\",\n+      \"references\": 1454,\n+      \"no_match\": 64,\n+      \"multiple_candidates\": 202,\n+      \"pass\": true\n+    }\n+  ],\n+  \"claim_limits\": [\n+    \"Independentbyte/hash/schema/resourcecandidate audit, not game execution or rendering.\",\n+    \"Fullbase resource retention is a conservative completenesspolicy; not everyretained file is claimedcar-specific.\",\n+    \"Sourceimage/HFS conversion and StuffIt staging were checkedseparately; thisaudit uses theirretained pins and originalinputs.\",\n+    \"Static multiplematches do not decide pluginload precedence.\"\n+  ]\n+}"
+      },
+      {
+        "path": "research/evidence/redline-extraction/mount-cleanup.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/mount-cleanup.json\n@@ -0,0 +1,7 @@\n+{\n+  \"owned_mount\": \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/redline/base-volume\",\n+  \"device\": \"/dev/disk5\",\n+  \"exit_code\": 0,\n+  \"output\": \"\\\"disk5\\\" ejected.\\n\",\n+  \"mount_absent_after\": true\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/native-corpus-comparison.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/native-corpus-comparison.json\n@@ -0,0 +1,54 @@\n+{\n+  \"status\": \"PASS\",\n+  \"unique_native_packages\": 81,\n+  \"unique_native_members\": 3485,\n+  \"producer_package_instances\": 82,\n+  \"producer_member_instances\": 3495,\n+  \"compared_decoded_bytes\": 1340186243,\n+  \"duplicate_package_instances\": {\n+    \"f8884922a7f55567257daecae38297a9134982f3c6c1bd086eae52a0cddb6263\": [\n+      {\n+        \"path\": \".scratch/redline/addons/Wipeout ship 1.0.redplug\",\n+        \"members\": 10\n+      },\n+      {\n+        \"path\": \".scratch/redline/addons/car-envelopes/Wipeout_ship_1.0.redplug.zip.extracted/Wipeout ship 1.0.redplug\",\n+        \"members\": 10\n+      }\n+    ]\n+  },\n+  \"native_decode_errors\": 0,\n+  \"excluded_non_native_carriers\": [\n+    {\n+      \"path\": \".scratch/redline/addons/car-envelopes/Honda_S2000_1.1.python-zip/__MACOSX/Honda S2000 1.1/._Honda S2000 1.1.redplug\",\n+      \"reason\": \"not native package\"\n+    }\n+  ],\n+  \"controls\": [\n+    {\n+      \"mutation\": \"hash\",\n+      \"rejected_reason\": \"decoded SHA256 mismatch\"\n+    },\n+    {\n+      \"mutation\": \"length\",\n+      \"rejected_reason\": \"decoded length mismatch\"\n+    },\n+    {\n+      \"mutation\": \"member\",\n+      \"rejected_reason\": \"member coverage mismatch\"\n+    },\n+    {\n+      \"mutation\": \"package\",\n+      \"rejected_reason\": \"package coverage mismatch\"\n+    }\n+  ],\n+  \"input_pins\": {\n+    \"independent\": \"769a349d481214945394ae9ec56ff7adbb0d8044b1e95c3c026a48500131a93a\",\n+    \"producer\": \"29330ccac00f0be2d86d840e7099d4c8794cd8980c4c27a39541143e0af1867e\"\n+  },\n+  \"claim_limits\": [\n+    \"Independent C native-instruction translation compared to Python producer outputs on the supplied static corpus.\",\n+    \"No game execution or rendering claim.\",\n+    \"Unreadable table slots not claimed inactive.\"\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/outer-archive-coverage.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/outer-archive-coverage.json\n@@ -0,0 +1,26 @@\n+{\n+  \"xad_reported_format\": \"StuffIt 5\",\n+  \"xad_reported_corrupted\": false,\n+  \"xad_reported_entries\": 147,\n+  \"xad_directory_entries\": [\n+    \"tracks\",\n+    \"misc\",\n+    \"cars\"\n+  ],\n+  \"regular_entries\": 144,\n+  \"saved_regular_paths_exist_with_declared_lengths\": true,\n+  \"raw_stored_slice_and_crc16_count\": 142,\n+  \"compressed_framework_only_count\": 2,\n+  \"source_bytes\": 480219651,\n+  \"declared_total_bytes\": 480219651,\n+  \"source_sha256\": \"1f729115120016d0053076297a9fbf61a9adab1f627990fc01137e6bf527c6f2\",\n+  \"last_payload_end\": 480219603,\n+  \"remaining_source_bytes\": 48,\n+  \"remaining_source_prefix\": \"a5a5a5a5\",\n+  \"report_sha256\": \"7b81d958b96104d5e1889ac94ca979c22e9f8965d6949092b58c50d94f21d9e3\",\n+  \"claim_limits\": [\n+    \"No independent decoding of the two Arsenic entries.\",\n+    \"The final48bytes are preserved; a5a5a5a5 prefix matches StuffIt record signature, semantic role not independently proved here.\",\n+    \"Not a reconstruction of application behavior.\"\n+  ]\n+}"
+      },
+      {
+        "path": "research/evidence/redline-extraction/semantic-active-experiment.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/semantic-active-experiment.json\n@@ -0,0 +1,24 @@\n+{\n+  \"status\": \"ok\",\n+  \"evidence_strategy\": \"active-carName-and-model-excerpts\",\n+  \"latency_seconds\": 0.3275828339974396,\n+  \"usage\": {\n+    \"input_tokens\": 14966,\n+    \"output_tokens\": 2289,\n+    \"cost\": 0.000628572\n+  },\n+  \"total\": 28,\n+  \"label_correct\": 27,\n+  \"accepted\": 0,\n+  \"accepted_correct\": 0,\n+  \"review\": 28,\n+  \"actual_metadata_accepted\": 0,\n+  \"errors\": [\n+    {\n+      \"path\": \"unidentified/records.bin\",\n+      \"expected\": \"car_metadata\",\n+      \"actual\": \"unknown\",\n+      \"decision\": \"review\"\n+    }\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/semantic-experiments.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/semantic-experiments.json\n@@ -0,0 +1,131 @@\n+{\n+  \"experiments\": [\n+    {\n+      \"wording\": \"brief\",\n+      \"status\": \"ok\",\n+      \"latency_seconds\": 0.35101987500092946,\n+      \"usage\": {\n+        \"input_tokens\": 12373,\n+        \"output_tokens\": 2289,\n+        \"cost\": 0.000519666\n+      },\n+      \"label_accuracy\": 0.9285714285714286,\n+      \"total\": 28,\n+      \"accepted\": 12,\n+      \"accepted_correct\": 12,\n+      \"review\": 16,\n+      \"errors\": [\n+        {\n+          \"path\": \"mixed/bundle.zip\",\n+          \"expected\": \"unknown\",\n+          \"actual\": \"other\",\n+          \"decision\": \"review\"\n+        },\n+        {\n+          \"path\": \"unidentified/records.bin\",\n+          \"expected\": \"car_metadata\",\n+          \"actual\": \"unknown\",\n+          \"decision\": \"review\"\n+        }\n+      ],\n+      \"threshold_experiment_without_extra_requests\": [\n+        {\n+          \"thresholds\": {\n+            \"top\": 0.75,\n+            \"margin\": 0.4,\n+            \"support\": 0.75,\n+            \"quality\": 1.3\n+          },\n+          \"accepted\": 13,\n+          \"wrongly_accepted\": 0,\n+          \"review\": 15\n+        },\n+        {\n+          \"thresholds\": {\n+            \"top\": 0.85,\n+            \"margin\": 0.5,\n+            \"support\": 0.85,\n+            \"quality\": 1.5\n+          },\n+          \"accepted\": 12,\n+          \"wrongly_accepted\": 0,\n+          \"review\": 16\n+        },\n+        {\n+          \"thresholds\": {\n+            \"top\": 0.95,\n+            \"margin\": 0.7,\n+            \"support\": 0.95,\n+            \"quality\": 1.8\n+          },\n+          \"accepted\": 7,\n+          \"wrongly_accepted\": 0,\n+          \"review\": 21\n+        }\n+      ]\n+    },\n+    {\n+      \"wording\": \"grounded\",\n+      \"status\": \"ok\",\n+      \"latency_seconds\": 0.35071200000311364,\n+      \"usage\": {\n+        \"input_tokens\": 15061,\n+        \"output_tokens\": 2289,\n+        \"cost\": 0.000632562\n+      },\n+      \"label_accuracy\": 0.9642857142857143,\n+      \"total\": 28,\n+      \"accepted\": 0,\n+      \"accepted_correct\": 0,\n+      \"review\": 28,\n+      \"errors\": [\n+        {\n+          \"path\": \"unidentified/records.bin\",\n+          \"expected\": \"car_metadata\",\n+          \"actual\": \"unknown\",\n+          \"decision\": \"review\"\n+        }\n+      ],\n+      \"threshold_experiment_without_extra_requests\": [\n+        {\n+          \"thresholds\": {\n+            \"top\": 0.75,\n+            \"margin\": 0.4,\n+            \"support\": 0.75,\n+            \"quality\": 1.3\n+          },\n+          \"accepted\": 6,\n+          \"wrongly_accepted\": 0,\n+          \"review\": 22\n+        },\n+        {\n+          \"thresholds\": {\n+            \"top\": 0.85,\n+            \"margin\": 0.5,\n+            \"support\": 0.85,\n+            \"quality\": 1.5\n+          },\n+          \"accepted\": 0,\n+          \"wrongly_accepted\": 0,\n+          \"review\": 28\n+        },\n+        {\n+          \"thresholds\": {\n+            \"top\": 0.95,\n+            \"margin\": 0.7,\n+            \"support\": 0.95,\n+            \"quality\": 1.8\n+          },\n+          \"accepted\": 0,\n+          \"wrongly_accepted\": 0,\n+          \"review\": 28\n+        }\n+      ]\n+    }\n+  ],\n+  \"limits\": [\n+    \"No generalization beyond this28-item sample.\",\n+    \"Unknown/ambiguous results are retained for review; labels do not change files.\",\n+    \"Cost may be absent from provider usage.\"\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/semantic-metrics.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/semantic-metrics.json\n@@ -0,0 +1,21 @@\n+{\n+  \"schema\": 1,\n+  \"production_metadata_labels\": 16,\n+  \"production_advisory_accepted\": 0,\n+  \"production_review\": 16,\n+  \"sdk_calls\": 4,\n+  \"input_tokens\": 51300,\n+  \"output_tokens\": 8169,\n+  \"provider_reported_cost_usd\": 0.0021546,\n+  \"sdk_latency_seconds\": [\n+    0.6440013749997888,\n+    0.35101987500092946,\n+    0.35071200000311364,\n+    0.3275828339974396\n+  ],\n+  \"limits\": [\n+    \"SDK request validation/provider/composition latency; screening/CLI overhead not included.\",\n+    \"MCP monetary costs not returned.\",\n+    \"Small28-item labeled experiment; not a general accuracy estimate.\"\n+  ]\n+}\n"
+      },
+      {
+        "path": "research/evidence/redline-extraction/source-preservation.json",
+        "diff": "--- /dev/null\n+++ b/research/evidence/redline-extraction/source-preservation.json\n@@ -0,0 +1,6 @@\n+{\n+  \"status\": \"PASS\",\n+  \"files_checked\": 4554,\n+  \"changed\": [],\n+  \"baseline_sha256\": \"4d54c0ebf95a9c65bbfafcfec6a526b669393a9800bdeda13d811e719bd71624\"\n+}\n"
+      }
+    ],
+    "claims": [
+      "The independent output audit matched 3432 retained packed native member hashes and lengths against the independent C decoder, and checked 65 loose members,82 original car envelopes and all 129 configuration source-field line/value mappings. This is static byte extraction, not game rendering.",
+      "In the 28-item labeled experiments, brief wording selected 26 correct labels and accepted 12 allcorrect; grounded wording selected 27 correct and kept 28 forreview. Active-field excerpts also selected 27 correct and kept 28 forreview. Four SDK calls reported 51300 input tokens,8169 output tokens, $0.0021546 total and 0.328\u20130.644 seconds per SDK call; screening and CLI overhead are excluded."
+    ],
+    "evidence": [
+      {
+        "id": "actual-final-checks",
+        "text": "{\n  \"schema\": 1,\n  \"exit_code\": 0,\n  \"checks\": [\n    {\n      \"name\": \"ruff\",\n      \"command\": [\n        \"ruff\",\n        \"check\",\n        \"tools\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"ruff.log\",\n      \"elapsed_seconds\": 0.033\n    },\n    {\n      \"name\": \"test_viewer_scenes\",\n      \"command\": [\n        \"node\",\n        \"tools/test_viewer_scenes.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_viewer_scenes.log\",\n      \"elapsed_seconds\": 0.193\n    },\n    {\n      \"name\": \"test_viewer_materials\",\n      \"command\": [\n        \"node\",\n        \"tools/test_viewer_materials.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_viewer_materials.log\",\n      \"elapsed_seconds\": 0.06\n    },\n    {\n      \"name\": \"test_model_load\",\n      \"command\": [\n        \"node\",\n        \"tools/test_model_load.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_model_load.log\",\n      \"elapsed_seconds\": 0.049\n    },\n    {\n      \"name\": \"test_viewer_loading\",\n      \"command\": [\n        \"node\",\n        \"tools/test_viewer_loading.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_viewer_loading.log\",\n      \"elapsed_seconds\": 0.147\n    },\n    {\n      \"name\": \"test_dealership\",\n      \"command\": [\n        \"node\",\n        \"tools/test_dealership.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_dealership.log\",\n      \"elapsed_seconds\": 1.351\n    },\n    {\n      \"name\": \"test_editable_glb\",\n      \"command\": [\n        \"node\",\n        \"tools/test_editable_glb.mjs\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_editable_glb.log\",\n      \"elapsed_seconds\": 1.034\n    },\n    {\n      \"name\": \"verify_recovered_asset_index\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_recovered_asset_index.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_recovered_asset_index.log\",\n      \"elapsed_seconds\": 1.235\n    },\n    {\n      \"name\": \"test_export_materials\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_export_materials.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_export_materials.log\",\n      \"elapsed_seconds\": 0.309\n    },\n    {\n      \"name\": \"test_build_showcase\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_build_showcase.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_build_showcase.log\",\n      \"elapsed_seconds\": 0.892\n    },\n    {\n      \"name\": \"test_bake_models\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_bake_models.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_bake_models.log\",\n      \"elapsed_seconds\": 5.782\n    },\n    {\n      \"name\": \"test_build_dealership\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_build_dealership.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_build_dealership.log\",\n      \"elapsed_seconds\": 1.002\n    },\n    {\n      \"name\": \"test_model_catalog\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_model_catalog.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_model_catalog.log\",\n      \"elapsed_seconds\": 0.11\n    },\n    {\n      \"name\": \"test_model_png\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_model_png.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_model_png.log\",\n      \"elapsed_seconds\": 0.074\n    },\n    {\n      \"name\": \"test_run_checks\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_run_checks.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_run_checks.log\",\n      \"elapsed_seconds\": 0.227\n    },\n    {\n      \"name\": \"test_review_payload\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_review_payload.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_review_payload.log\",\n      \"elapsed_seconds\": 0.106\n    },\n    {\n      \"name\": \"test_static_inputs\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_static_inputs.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_static_inputs.log\",\n      \"elapsed_seconds\": 0.33\n    },\n    {\n      \"name\": \"test_recovery_inputs\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_recovery_inputs.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_recovery_inputs.log\",\n      \"elapsed_seconds\": 3.796\n    },\n    {\n      \"name\": \"test_gt_archive\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_gt_archive.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_gt_archive.log\",\n      \"elapsed_seconds\": 0.157\n    },\n    {\n      \"name\": \"test_gt_asset_judgments\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_gt_asset_judgments.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_gt_asset_judgments.log\",\n      \"elapsed_seconds\": 0.125\n    },\n    {\n      \"name\": \"test_gt_wheels\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_gt_wheels.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_gt_wheels.log\",\n      \"elapsed_seconds\": 0.1\n    },\n    {\n      \"name\": \"test_gt_model\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_gt_model.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_gt_model.log\",\n      \"elapsed_seconds\": 6.771\n    },\n    {\n      \"name\": \"test_import_gt_dealership\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_import_gt_dealership.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_import_gt_dealership.log\",\n      \"elapsed_seconds\": 0.87\n    },\n    {\n      \"name\": \"test_library_filter\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_library_filter.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_library_filter.log\",\n      \"elapsed_seconds\": 0.1\n    },\n    {\n      \"name\": \"test_serve_library\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_serve_library.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_serve_library.log\",\n      \"elapsed_seconds\": 0.667\n    },\n    {\n      \"name\": \"test_redline_archive\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_redline_archive.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_redline_archive.log\",\n      \"elapsed_seconds\": 0.111\n    },\n    {\n      \"name\": \"test_extract_redline_cars\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_extract_redline_cars.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_extract_redline_cars.log\",\n      \"elapsed_seconds\": 0.165\n    },\n    {\n      \"name\": \"dealership_freshness\",\n      \"command\": [\n        \"python3\",\n        \"tools/build_dealership.py\",\n        \"--check\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"dealership_freshness.log\",\n      \"elapsed_seconds\": 40.288\n    },\n    {\n      \"name\": \"verify_config_data_sound\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_config_data_sound.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_config_data_sound.log\",\n      \"elapsed_seconds\": 0.687\n    },\n    {\n      \"name\": \"verify_sound_bank_index\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_sound_bank_index.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_sound_bank_index.log\",\n      \"elapsed_seconds\": 0.246\n    },\n    {\n      \"name\": \"verify_vu_dispatch_map\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_vu_dispatch_map.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_vu_dispatch_map.log\",\n      \"elapsed_seconds\": 6.782\n    },\n    {\n      \"name\": \"test_vu_dispatch_map\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_vu_dispatch_map.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_vu_dispatch_map.log\",\n      \"elapsed_seconds\": 3.683\n    },\n    {\n      \"name\": \"test_vu1_decode\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_vu1_decode.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_vu1_decode.log\",\n      \"elapsed_seconds\": 0.191\n    },\n    {\n      \"name\": \"verify_vu_pass_handlers\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_vu_pass_handlers.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_vu_pass_handlers.log\",\n      \"elapsed_seconds\": 1.46\n    },\n    {\n      \"name\": \"test_vu_pass_handlers\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_vu_pass_handlers.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_vu_pass_handlers.log\",\n      \"elapsed_seconds\": 2.611\n    },\n    {\n      \"name\": \"verify_vu_handler_dump\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_vu_handler_dump.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_vu_handler_dump.log\",\n      \"elapsed_seconds\": 3.959\n    },\n    {\n      \"name\": \"test_vu_handler_dump\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_vu_handler_dump.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_vu_handler_dump.log\",\n      \"elapsed_seconds\": 4.281\n    },\n    {\n      \"name\": \"recover_dump_reference_frame\",\n      \"command\": [\n        \"python3\",\n        \"tools/recover_dump_reference_frame.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"recover_dump_reference_frame.log\",\n      \"elapsed_seconds\": 1.769\n    },\n    {\n      \"name\": \"test_recover_dump_reference_frame\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_recover_dump_reference_frame.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_recover_dump_reference_frame.log\",\n      \"elapsed_seconds\": 2.999\n    },\n    {\n      \"name\": \"verify_pass_source_join\",\n      \"command\": [\n        \"python3\",\n        \"tools/verify_pass_source_join.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"verify_pass_source_join.log\",\n      \"elapsed_seconds\": 11.383\n    },\n    {\n      \"name\": \"test_pass_source_join\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_pass_source_join.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_pass_source_join.log\",\n      \"elapsed_seconds\": 15.266\n    },\n    {\n      \"name\": \"dealership_roundtrip\",\n      \"command\": [\n        \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\",\n        \"--background\",\n        \"--python-exit-code\",\n        \"1\",\n        \"--python\",\n        \"tools/test_dealership_roundtrip.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"dealership_roundtrip.log\",\n      \"elapsed_seconds\": 31.344\n    }\n  ],\n  \"claim_limits\": [\n    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n  ]\n}\nCOMMAND ['ruff', 'check', 'tools'] STATUS pass EXIT 0\nAll checks passed!\n\nCOMMAND ['node', 'tools/test_viewer_scenes.mjs'] STATUS pass EXIT 0\nPASS test_viewer_scenes: 35 cars, 12080 material bindings, 105 disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard and visible header-colour honesty label\n\nCOMMAND ['node', 'tools/test_viewer_materials.mjs'] STATUS pass EXIT 0\nPASS test_viewer_materials: independent material/texture/image indices, linear factors, alpha, variant changes, toggles, linear/no-mip and Sharp pixels round trip\n\nCOMMAND ['node', 'tools/test_model_load.mjs'] STATUS pass EXIT 0\nPASS test_model_load: corpus GLB, truncations, 404, successful body, stalled body timeout, cancellation\n\nCOMMAND ['node', 'tools/test_viewer_loading.mjs'] STATUS pass EXIT 0\nPASS test_viewer_loading: actual callback, success, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup\n\nCOMMAND ['node', 'tools/test_dealership.mjs'] STATUS pass EXIT 0\nPASS test_dealership: 35 dealership meshes, editable wheel counts, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, editable model data, corpus errors and real HTTP body timeout\n\nCOMMAND ['node', 'tools/test_editable_glb.mjs'] STATUS pass EXIT 0\nPASS test_editable_glb: 728 GT GLBs, embedded textured triangles, MASK alpha, transforms, independent paths, hash mismatch, cancellation and disposal controls\n\nCOMMAND ['python3', 'tools/verify_recovered_asset_index.py'] STATUS pass EXIT 0\n{\"cars\": 35, \"assets\": 2579, \"counts\": {\"original_model\": 35, \"glb\": 35, \"model_texture_display\": 700, \"model_texture_raw\": 700, \"mip_plane\": 94, \"mip_stored_alpha\": 94, \"original_icon\": 35, \"icon_raw_alpha_png\": 35, \"icon_display_png\": 35, \"original_livery\": 136, \"livery_raw_alpha_png\": 136, \"livery_display_png\": 136, \"original_matrix\": 136, \"matrix_csm0-swap-raw\": 136, \"matrix_csm0-swap-display\": 136}, \"producer_receipt_set_equality\": true, \"per_car_producer_record_equality\": true, \"corrupt_manifest_hash_rejected\": true, \"rehashed_cross_car_model_swap_rejected\": true, \"rehashed_schema_fidelity_status_limits_controls_rejected\": true, \"result\": \"VERIFY OK\", \"index_sha256\": \"84d29e67c80803c89e306ccac14fa53d8209647af8881f4511b3c2990cce9c5b\"}\n\nCOMMAND ['python3', 'tools/test_export_materials.py'] STATUS pass EXIT 0\nPASS test_export_materials: 35 cars, source texture and selector bindings, header colour/alpha/blend, linear samplers, three semantic mutations rejected\n\nCOMMAND ['python3', 'tools/test_build_showcase.py'] STATUS pass EXIT 0\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.819s\n\nOK\n\nCOMMAND ['python3', 'tools/test_bake_models.py'] STATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 5.507s\n\nOK\n\nCOMMAND ['python3', 'tools/test_build_dealership.py'] STATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.784s\n\nOK\n\nCOMMAND ['python3', 'tools/test_model_catalog.py'] STATUS pass EXIT 0\n.\n----------------------------------------------------------------------\nRan 1 test in 0.012s\n\nOK\n\nCOMMAND ['python3', 'tools/test_model_png.py'] STATUS pass EXIT 0\n..\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n\nCOMMAND ['python3', 'tools/test_run_checks.py'] STATUS pass EXIT 0\nfail  test_viewer_scenes  (test_viewer_scenes.log)\nRequired runtime unavailable: node\nfail  test_viewer_materials  (test_viewer_materials.log)\nRequired runtime unavailable: node\nfail  test_model_load  (test_model_load.log)\nRequired runtime unavailable: node\nfail  test_viewer_loading  (test_viewer_loading.log)\nRequired runtime unavailable: node\nfail  test_dealership  (test_dealership.log)\nRequired runtime unavailable: node\nfail  test_editable_glb  (test_editable_glb.log)\nRequired runtime unavailable: node\n.fail  broken  (broken.log)\nfirst line\nlast line\npass  green  (green.log)\n.skip  node  (node.log)\nfail  node  (node.log)\nRequired runtime unavailable: carmodels-runtime-does-not-exist\n.\n----------------------------------------------------------------------\nRan 3 tests in 0.098s\n\nOK\n\nCOMMAND ['python3', 'tools/test_review_payload.py'] STATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.015s\n\nOK\n\nCOMMAND ['python3', 'tools/test_static_inputs.py'] STATUS pass EXIT 0\nPASS test_static_inputs\n\nCOMMAND ['python3', 'tools/test_recovery_inputs.py'] STATUS pass EXIT 0\nPASS test_recovery_inputs: 35 models, decoded textures, independent copies, configuration and multi-game dealership controls\n\nCOMMAND ['python3', 'tools/test_gt_archive.py'] STATUS pass EXIT 0\n......\n----------------------------------------------------------------------\nRan 6 tests in 0.027s\n\nOK\n\nCOMMAND ['python3', 'tools/test_gt_asset_judgments.py'] STATUS pass EXIT 0\n........\n----------------------------------------------------------------------\nRan 8 tests in 0.003s\n\nOK\n\nCOMMAND ['python3', 'tools/test_gt_wheels.py'] STATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.011s\n\nOK\n\nCOMMAND ['python3', 'tools/test_gt_model.py'] STATUS pass EXIT 0\n......\n----------------------------------------------------------------------\nRan 6 tests in 6.669s\n\nOK\n\nCOMMAND ['python3', 'tools/test_import_gt_dealership.py'] STATUS pass EXIT 0\n....\n----------------------------------------------------------------------\nRan 4 tests in 0.759s\n\nOK\n\nCOMMAND ['python3', 'tools/test_library_filter.py'] STATUS pass EXIT 0\n.....\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nOK\n\nCOMMAND ['python3', 'tools/test_serve_library.py'] STATUS pass EXIT 0\n.\n----------------------------------------------------------------------\nRan 1 test in 0.537s\n\nOK\n\nCOMMAND ['python3', 'tools/test_redline_archive.py'] STATUS pass EXIT 0\n........\n----------------------------------------------------------------------\nRan 8 tests in 0.006s\n\nOK\n\nCOMMAND ['python3', 'tools/test_extract_redline_cars.py'] STATUS pass EXIT 0\n......\n----------------------------------------------------------------------\nRan 6 tests in 0.067s\n\nOK\n\nCOMMAND ['python3', 'tools/build_dealership.py', '--check'] STATUS pass EXIT 0\nPASS dealership freshness: compiled data matches current models and catalog\n\nCOMMAND ['python3', 'tools/verify_config_data_sound.py'] STATUS pass EXIT 0\n{\n  \"cars\": 35,\n  \"config_files_checked\": 385,\n  \"config_set_equality\": true,\n  \"config_s_derived_content_equality\": true,\n  \"data_files_checked\": 35,\n  \"sound_chains_resolved\": 35,\n  \"shared_config_files_present\": 11,\n  \"manifest_files_checked\": 626,\n  \"manifest_disk_parity\": true,\n  \"result\": \"VERIFY OK\",\n  \"control_mutated_config_hash_rejected\": true,\n  \"control_cross_car_config_swap_rejected\": true,\n  \"control_missing_shared_banks_rejected\": true,\n  \"control_manifest_sha_tamper_rejected\": true,\n  \"controls\": [\n    \"control_mutated_config_hash_rejected\",\n    \"control_cross_car_config_swap_rejected\",\n    \"control_missing_shared_banks_rejected\",\n    \"control_manifest_sha_tamper_rejected\"\n  ],\n  \"controls_all_rejected\": true,\n  \"render_fidelity_complete\": false,\n  \"scope\": \"35 cars x config (11 files) + data DAT + sound chain; geometry/textures/liveries/GLB out (T1), render fidelity out\"\n}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/verify_sound_bank_index.py'] STATUS pass EXIT 0\n{\n  \"elf_path\": \"static-input:executable\",\n  \"elf_sha256\": \"216711210898aee296eed73d0776e7f733bac04c334002683bce769c86beea95\",\n  \"config_table_va\": \"0x24af68\",\n  \"descriptor_table_va\": \"0x24afe8\",\n  \"exe_mapping\": {\n    \"CAR_SND_CAR1\": \"car1_snd\",\n    \"CAR_SND_CAR2\": \"car2_snd\",\n    \"CAR_SND_CAR3\": \"car3_snd\",\n    \"CAR_SND_CAR4\": \"car4_snd\",\n    \"CAR_SND_CAR5\": \"car5_snd\",\n    \"CAR_SND_CAR6\": \"car6_snd\",\n    \"CAR_SND_CAR7\": \"car7_snd\",\n    \"CAR_SND_CAR8\": \"car8_snd\"\n  },\n  \"corpus_mapping\": {\n    \"CAR_SND_CAR1\": \"car1_snd\",\n    \"CAR_SND_CAR2\": \"car2_snd\",\n    \"CAR_SND_CAR3\": \"car3_snd\",\n    \"CAR_SND_CAR4\": \"car4_snd\",\n    \"CAR_SND_CAR5\": \"car5_snd\",\n    \"CAR_SND_CAR6\": \"car6_snd\",\n    \"CAR_SND_CAR7\": \"car7_snd\",\n    \"CAR_SND_CAR8\": \"car8_snd\"\n  },\n  \"mappings_equal\": true,\n  \"cars_checked\": 35,\n  \"verdict\": \"consistent\",\n  \"control_off_by_one_mapping_rejected\": true,\n  \"control_swapped_table_rejected\": true,\n  \"descriptor_bank_ordinals\": [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7\n  ],\n  \"descriptor_ordinals_sequential_car1_to_car8\": true,\n  \"bank_name_source\": \"literal descriptor stem 'sounds\\\\\\\\carN_snd'; the numeric fields (:B:O:C) are not used to build the filename\",\n  \"render_fidelity_complete\": false,\n  \"scope\": \"sound-bank index reconciliation only; no change to the green T2 verifier\",\n  \"result\": \"VERIFY OK\"\n}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/verify_vu_dispatch_map.py'] STATUS pass EXIT 0\n{\"jump_table\": [766, 77, 163, 428, 558, 469, 693], \"mscal\": {\"mscal0\": 0, \"main_car_path\": 26, \"overlay5_path\": 1484}, \"static_pass_words\": [1, 2, 3, 4, 5, 6], \"lowest_common_ancestors\": [\"001cf848\"], \"controls_rejected\": 14, \"controls\": 14}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/test_vu_dispatch_map.py'] STATUS pass EXIT 0\nPASS test_vu_dispatch_map\n\nCOMMAND ['python3', 'tools/test_vu1_decode.py'] STATUS pass EXIT 0\nPASS test_vu1_decode (1558 pairs, 76 distinct mnemonics, 656/688 bit flips visible)\n\nCOMMAND ['python3', 'tools/verify_vu_pass_handlers.py'] STATUS pass EXIT 0\n{\"handlers\": {\"4\": {\"entry\": 558, \"kick\": 37}, \"5\": {\"entry\": 469, \"kick\": 28}}, \"epilogue_first_pair\": 758, \"numeric_cross_check_values\": {\"4\": 1920, \"5\": 1920}, \"controls_rejected\": 9, \"controls\": 9}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/test_vu_pass_handlers.py'] STATUS pass EXIT 0\nPASS test_vu_pass_handlers\n\nCOMMAND ['python3', 'tools/verify_vu_handler_dump.py'] STATUS pass EXIT 0\n{\"by_pass_word\": {\"4\": {\"draws\": 37, \"vertices\": 2189, \"xyzf_equal_draws\": 37, \"qw_equal_draws\": 37, \"rgb_from_raw_float_alpha_draws\": 37, \"finite_unit_alpha_draws\": 37}, \"5\": {\"draws\": 63, \"vertices\": 3666, \"xyzf_equal_draws\": 63, \"qw_equal_draws\": 63, \"uniform_rgba_draws\": 63, \"rgba_from_retained_dm5_draws\": 63, \"t_exact_draws\": 54, \"t_exact_vertices\": 3387, \"t_one_ulp_vertices\": 279, \"t_max_ulp\": 1, \"paused_dm5_mismatching_draws\": 63, \"t_without_colour_factor_failing_vertices\": 512}}, \"controls\": 8}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/test_vu_handler_dump.py'] STATUS pass EXIT 0\nPASS test_vu_handler_dump: 100 draws, eight intended corruption failures, absent-input and non-finite checks\n\nCOMMAND ['python3', 'tools/recover_dump_reference_frame.py'] STATUS pass EXIT 0\n{\"rows\": 2, \"controls\": 5}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/test_recover_dump_reference_frame.py'] STATUS pass EXIT 0\nPASS test_recover_dump_reference_frame: two frames, five intended corruption failures, pin-fired control\n\nCOMMAND ['python3', 'tools/verify_pass_source_join.py'] STATUS pass EXIT 0\n{\"draws\": 100, \"controls\": [{\"mutation\": \"wrong Header\", \"rejected\": true, \"reason\": \"wrong Header: retained pointers/count do not identify the declared source Header\"}, {\"mutation\": \"wrong texture\", \"rejected\": true, \"reason\": \"wrong texture: GS TEX0 differs from global pass4 texture object\"}]}\nVERIFY OK\n\nCOMMAND ['python3', 'tools/test_pass_source_join.py'] STATUS pass EXIT 0\nPASS test_pass_source_join: 100 draws, wrong-Header/wrong-texture reasons, flag, swizzle and GS-pin controls\n\nCOMMAND ['/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender', '--background', '--python-exit-code', '1', '--python', 'tools/test_dealership_roundtrip.py'] STATUS pass EXIT 0\n15:30:55 | INFO: Data are loaded, start creating Blender stuff\n15:30:55 | INFO: Blender create Mesh node record_001\n15:30:56 | INFO: Blender create Mesh node record_002\n15:30:56 | INFO: Blender create Mesh node record_003\n15:30:56 | INFO: Blender create Mesh node record_004\n15:30:56 | INFO: Blender create Mesh node record_005\n15:30:56 | INFO: Blender create Mesh node record_006\n15:30:56 | INFO: Blender create Mesh node record_007\n15:30:56 | INFO: Blender create Mesh node record_008\n15:30:56 | INFO: Blender create Mesh node record_009\n15:30:56 | INFO: Blender create Mesh node record_010\n15:30:56 | INFO: Blender create Mesh node record_011\n15:30:56 | INFO: Blender create Mesh node record_012\n15:30:56 | INFO: Blender create Mesh node record_013\n15:30:56 | INFO: Blender create Mesh node record_014\n15:30:56 | INFO: Blender create Mesh node record_015\n15:30:56 | INFO: Blender create Mesh node record_016\n15:30:56 | INFO: Blender create Mesh node record_017\n15:30:56 | INFO: Blender create Mesh node record_018\n15:30:56 | INFO: Blender create Mesh node record_019\n15:30:56 | INFO: Blender create Mesh node record_020\n15:30:56 | INFO: Blender create Mesh node record_021\n15:30:56 | INFO: Blender create Mesh node record_022\n15:30:56 | INFO: Blender create Mesh node record_023\n15:30:56 | INFO: Blender create Mesh node record_024\n15:30:56 | INFO: Blender create Mesh node record_025\n15:30:56 | INFO: Blender create Mesh node record_026\n15:30:56 | INFO: Blender create Mesh node record_027\n15:30:56 | INFO: Blender create Mesh node record_028\n15:30:56 | INFO: Blender create Mesh node record_029\n15:30:56 | INFO: Blender create Mesh node record_030\n15:30:56 | INFO: Blender create Mesh node record_031\n15:30:56 | INFO: Blender create Mesh node record_032\n15:30:56 | INFO: Blender create Mesh node record_033\n15:30:56 | INFO: Blender create Mesh node record_034\n15:30:56 | INFO: Blender create Mesh node record_035\n15:30:56 | INFO: Blender create Mesh node record_036\n15:30:56 | INFO: Blender create Mesh node record_037\n15:30:56 | INFO: Blender create Mesh node record_038\n15:30:56 | INFO: Blender create Mesh node record_039\n15:30:56 | INFO: Blender create Mesh node record_040\n15:30:56 | INFO: Blender create Mesh node record_041\n15:30:56 | INFO: Blender create Mesh node record_042\n15:30:56 | INFO: glTF import finished in 0.48s\nINFO Draco mesh compression is available, use library at /Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/Resources/4.5/scripts/addons_core/io_scene_gltf2/libextern_draco.dylib\n15:30:56 | INFO: Starting glTF 2.0 export\n15:30:56 | INFO: Extracting primitive: record_001\n15:30:56 | INFO: Primitives created: 2\n15:30:56 | INFO: Extracting primitive: record_003\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Extracting primitive: record_004\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Extracting primitive: record_010\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Extracting primitive: record_008\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Extracting primitive: record_014\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Extracting primitive: record_012\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Extracting primitive: record_005\n15:30:56 | INFO: Primitives created: 1\n15:30:56 | INFO: Finished glTF 2.0 export in 0.39316797256469727 s\n\n15:30:57 | INFO: Starting glTF 2.0 export\n15:30:57 | INFO: Extracting primitive: record_001\n15:30:57 | INFO: Primitives created: 2\n15:30:57 | INFO: Extracting primitive: record_003\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Extracting primitive: record_004\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Extracting primitive: record_010\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Extracting primitive: record_008\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Extracting primitive: record_014\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Extracting primitive: record_012\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Extracting primitive: record_005\n15:30:57 | INFO: Primitives created: 1\n15:30:57 | INFO: Finished glTF 2.0 export in 0.14604401588439941 s\n\nPASS dealership Blender roundtrip: {\"blender\": \"4.5.14 LTS\", \"car\": \"GRAN_TORINO\", \"claim_limits\": [\"One static car import/edit/export/rebuild, not all DCC exporters or animation.\", \"No original-game shading fidelity claim.\"], \"length_multiplier\": 1.2, \"model_files_preserved\": 798, \"triangles\": 4072}\nBlender 4.5.14 LTS (hash 62c1db4208e8 built 2026-09-15 01:30:44)\n\nBlender quit\n"
+      },
+      {
+        "id": "extraction",
+        "text": "{\n  \"schema\": 1,\n  \"status\": \"PASS\",\n  \"index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n  \"car_configurations\": 129,\n  \"base_configurations\": 19,\n  \"addon_configurations\": 110,\n  \"packages\": 83,\n  \"original_car_envelopes\": 82,\n  \"output_files\": 3709,\n  \"output_bytes\": 2202028393,\n  \"native_decoded_packed_members\": 3432,\n  \"loose_native_members\": 65,\n  \"verification_output\": \"CHECKED 129 native configurations, 3709 files, 2202028393 bytes\\n\",\n  \"limits\": [\n    \"Native asset extraction only; no mesh/texture conversion or dealership integration.\",\n    \"Counts refer to configuration variants, not distinct real-world cars.\",\n    \"All base resources are retained because car plug-ins share the global resource namespace; this includes non-car resources.\",\n    \"Resource matches are static local/base candidates; plug-in load precedence and game execution remain unverified.\",\n    \"Unreadable native table slots remain in original packages; their liveness is unknown.\",\n    \"Regular data forks are unpacked; original envelopes retain filesystem/resource-fork metadata.\",\n    \"HFS/StuffIt staging is verified separately; --check rederives from the staged packages and supplied source pins.\"\n  ]\n}\n"
+      },
+      {
+        "id": "independent-output-audit",
+        "text": "{\n  \"index_sha256\": \"b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2\",\n  \"manifest_sha256\": \"06f0623c59b119695e7d5e8c8feab9ddb45cb31b33a5ceacb8c785547b35492b\",\n  \"output_files\": 3709,\n  \"output_bytes\": 2202028393,\n  \"checks\": [\n    {\n      \"check\": \"all outputfile SHA/length coverage and links\",\n      \"files\": 3709,\n      \"pass\": true\n    },\n    {\n      \"check\": \"both originalsource inputs and82car envelopes match sourcepins\",\n      \"pass\": true\n    },\n    {\n      \"check\": \"independent native C members/config coverage andsourcefieldlineequality\",\n      \"packed_native_members\": 3432,\n      \"loose_members\": 65,\n      \"configurations\": 129,\n      \"base\": 19,\n      \"addon\": 110,\n      \"pass\": true\n    },\n    {\n      \"check\": \"all declared resourcecandidate lists independently joined using nativeASCII+aliasorder\",\n      \"references\": 1454,\n      \"no_match\": 64,\n      \"multiple_candidates\": 202,\n      \"pass\": true\n    }\n  ],\n  \"claim_limits\": [\n    \"Independentbyte/hash/schema/resourcecandidate audit, not game execution or rendering.\",\n    \"Fullbase resource retention is a conservative completenesspolicy; not everyretained file is claimedcar-specific.\",\n    \"Sourceimage/HFS conversion and StuffIt staging were checkedseparately; thisaudit uses theirretained pins and originalinputs.\",\n    \"Static multiplematches do not decide pluginload precedence.\"\n  ]\n}"
+      },
+      {
+        "id": "native-corpus-comparison",
+        "text": "{\n  \"status\": \"PASS\",\n  \"unique_native_packages\": 81,\n  \"unique_native_members\": 3485,\n  \"producer_package_instances\": 82,\n  \"producer_member_instances\": 3495,\n  \"compared_decoded_bytes\": 1340186243,\n  \"duplicate_package_instances\": {\n    \"f8884922a7f55567257daecae38297a9134982f3c6c1bd086eae52a0cddb6263\": [\n      {\n        \"path\": \".scratch/redline/addons/Wipeout ship 1.0.redplug\",\n        \"members\": 10\n      },\n      {\n        \"path\": \".scratch/redline/addons/car-envelopes/Wipeout_ship_1.0.redplug.zip.extracted/Wipeout ship 1.0.redplug\",\n        \"members\": 10\n      }\n    ]\n  },\n  \"native_decode_errors\": 0,\n  \"excluded_non_native_carriers\": [\n    {\n      \"path\": \".scratch/redline/addons/car-envelopes/Honda_S2000_1.1.python-zip/__MACOSX/Honda S2000 1.1/._Honda S2000 1.1.redplug\",\n      \"reason\": \"not native package\"\n    }\n  ],\n  \"controls\": [\n    {\n      \"mutation\": \"hash\",\n      \"rejected_reason\": \"decoded SHA256 mismatch\"\n    },\n    {\n      \"mutation\": \"length\",\n      \"rejected_reason\": \"decoded length mismatch\"\n    },\n    {\n      \"mutation\": \"member\",\n      \"rejected_reason\": \"member coverage mismatch\"\n    },\n    {\n      \"mutation\": \"package\",\n      \"rejected_reason\": \"package coverage mismatch\"\n    }\n  ],\n  \"input_pins\": {\n    \"independent\": \"769a349d481214945394ae9ec56ff7adbb0d8044b1e95c3c026a48500131a93a\",\n    \"producer\": \"29330ccac00f0be2d86d840e7099d4c8794cd8980c4c27a39541143e0af1867e\"\n  },\n  \"claim_limits\": [\n    \"Independent C native-instruction translation compared to Python producer outputs on the supplied static corpus.\",\n    \"No game execution or rendering claim.\",\n    \"Unreadable table slots not claimed inactive.\"\n  ]\n}\n"
+      },
+      {
+        "id": "outer-archive-coverage",
+        "text": "{\n  \"xad_reported_format\": \"StuffIt 5\",\n  \"xad_reported_corrupted\": false,\n  \"xad_reported_entries\": 147,\n  \"xad_directory_entries\": [\n    \"tracks\",\n    \"misc\",\n    \"cars\"\n  ],\n  \"regular_entries\": 144,\n  \"saved_regular_paths_exist_with_declared_lengths\": true,\n  \"raw_stored_slice_and_crc16_count\": 142,\n  \"compressed_framework_only_count\": 2,\n  \"source_bytes\": 480219651,\n  \"declared_total_bytes\": 480219651,\n  \"source_sha256\": \"1f729115120016d0053076297a9fbf61a9adab1f627990fc01137e6bf527c6f2\",\n  \"last_payload_end\": 480219603,\n  \"remaining_source_bytes\": 48,\n  \"remaining_source_prefix\": \"a5a5a5a5\",\n  \"report_sha256\": \"7b81d958b96104d5e1889ac94ca979c22e9f8965d6949092b58c50d94f21d9e3\",\n  \"claim_limits\": [\n    \"No independent decoding of the two Arsenic entries.\",\n    \"The final48bytes are preserved; a5a5a5a5 prefix matches StuffIt record signature, semantic role not independently proved here.\",\n    \"Not a reconstruction of application behavior.\"\n  ]\n}"
+      },
+      {
+        "id": "source-preservation",
+        "text": "{\n  \"status\": \"PASS\",\n  \"files_checked\": 4554,\n  \"changed\": [],\n  \"baseline_sha256\": \"4d54c0ebf95a9c65bbfafcfec6a526b669393a9800bdeda13d811e719bd71624\"\n}\n"
+      },
+      {
+        "id": "semantic-experiments",
+        "text": "{\n  \"experiments\": [\n    {\n      \"wording\": \"brief\",\n      \"status\": \"ok\",\n      \"latency_seconds\": 0.35101987500092946,\n      \"usage\": {\n        \"input_tokens\": 12373,\n        \"output_tokens\": 2289,\n        \"cost\": 0.000519666\n      },\n      \"label_accuracy\": 0.9285714285714286,\n      \"total\": 28,\n      \"accepted\": 12,\n      \"accepted_correct\": 12,\n      \"review\": 16,\n      \"errors\": [\n        {\n          \"path\": \"mixed/bundle.zip\",\n          \"expected\": \"unknown\",\n          \"actual\": \"other\",\n          \"decision\": \"review\"\n        },\n        {\n          \"path\": \"unidentified/records.bin\",\n          \"expected\": \"car_metadata\",\n          \"actual\": \"unknown\",\n          \"decision\": \"review\"\n        }\n      ],\n      \"threshold_experiment_without_extra_requests\": [\n        {\n          \"thresholds\": {\n            \"top\": 0.75,\n            \"margin\": 0.4,\n            \"support\": 0.75,\n            \"quality\": 1.3\n          },\n          \"accepted\": 13,\n          \"wrongly_accepted\": 0,\n          \"review\": 15\n        },\n        {\n          \"thresholds\": {\n            \"top\": 0.85,\n            \"margin\": 0.5,\n            \"support\": 0.85,\n            \"quality\": 1.5\n          },\n          \"accepted\": 12,\n          \"wrongly_accepted\": 0,\n          \"review\": 16\n        },\n        {\n          \"thresholds\": {\n            \"top\": 0.95,\n            \"margin\": 0.7,\n            \"support\": 0.95,\n            \"quality\": 1.8\n          },\n          \"accepted\": 7,\n          \"wrongly_accepted\": 0,\n          \"review\": 21\n        }\n      ]\n    },\n    {\n      \"wording\": \"grounded\",\n      \"status\": \"ok\",\n      \"latency_seconds\": 0.35071200000311364,\n      \"usage\": {\n        \"input_tokens\": 15061,\n        \"output_tokens\": 2289,\n        \"cost\": 0.000632562\n      },\n      \"label_accuracy\": 0.9642857142857143,\n      \"total\": 28,\n      \"accepted\": 0,\n      \"accepted_correct\": 0,\n      \"review\": 28,\n      \"errors\": [\n        {\n          \"path\": \"unidentified/records.bin\",\n          \"expected\": \"car_metadata\",\n          \"actual\": \"unknown\",\n          \"decision\": \"review\"\n        }\n      ],\n      \"threshold_experiment_without_extra_requests\": [\n        {\n          \"thresholds\": {\n            \"top\": 0.75,\n            \"margin\": 0.4,\n            \"support\": 0.75,\n            \"quality\": 1.3\n          },\n          \"accepted\": 6,\n          \"wrongly_accepted\": 0,\n          \"review\": 22\n        },\n        {\n          \"thresholds\": {\n            \"top\": 0.85,\n            \"margin\": 0.5,\n            \"support\": 0.85,\n            \"quality\": 1.5\n          },\n          \"accepted\": 0,\n          \"wrongly_accepted\": 0,\n          \"review\": 28\n        },\n        {\n          \"thresholds\": {\n            \"top\": 0.95,\n            \"margin\": 0.7,\n            \"support\": 0.95,\n            \"quality\": 1.8\n          },\n          \"accepted\": 0,\n          \"wrongly_accepted\": 0,\n          \"review\": 28\n        }\n      ]\n    }\n  ],\n  \"limits\": [\n    \"No generalization beyond this28-item sample.\",\n    \"Unknown/ambiguous results are retained for review; labels do not change files.\",\n    \"Cost may be absent from provider usage.\"\n  ]\n}\n"
+      },
+      {
+        "id": "semantic-active-experiment",
+        "text": "{\n  \"status\": \"ok\",\n  \"evidence_strategy\": \"active-carName-and-model-excerpts\",\n  \"latency_seconds\": 0.3275828339974396,\n  \"usage\": {\n    \"input_tokens\": 14966,\n    \"output_tokens\": 2289,\n    \"cost\": 0.000628572\n  },\n  \"total\": 28,\n  \"label_correct\": 27,\n  \"accepted\": 0,\n  \"accepted_correct\": 0,\n  \"review\": 28,\n  \"actual_metadata_accepted\": 0,\n  \"errors\": [\n    {\n      \"path\": \"unidentified/records.bin\",\n      \"expected\": \"car_metadata\",\n      \"actual\": \"unknown\",\n      \"decision\": \"review\"\n    }\n  ]\n}\n"
+      },
+      {
+        "id": "semantic-metrics",
+        "text": "{\n  \"schema\": 1,\n  \"production_metadata_labels\": 16,\n  \"production_advisory_accepted\": 0,\n  \"production_review\": 16,\n  \"sdk_calls\": 4,\n  \"input_tokens\": 51300,\n  \"output_tokens\": 8169,\n  \"provider_reported_cost_usd\": 0.0021546,\n  \"sdk_latency_seconds\": [\n    0.6440013749997888,\n    0.35101987500092946,\n    0.35071200000311364,\n    0.3275828339974396\n  ],\n  \"limits\": [\n    \"SDK request validation/provider/composition latency; screening/CLI overhead not included.\",\n    \"MCP monetary costs not returned.\",\n    \"Small28-item labeled experiment; not a general accuracy estimate.\"\n  ]\n}\n"
+      },
+      {
+        "id": "mount-cleanup",
+        "text": "{\n  \"owned_mount\": \"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/redline/base-volume\",\n  \"device\": \"/dev/disk5\",\n  \"exit_code\": 0,\n  \"output\": \"\\\"disk5\\\" ejected.\\n\",\n  \"mount_absent_after\": true\n}\n"
+      },
+      {
+        "id": "native-python-stock-tests",
+        "text": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.036s\n\nOK\n........\n----------------------------------------------------------------------\nRan 8 tests in 0.004s\n\nOK\n"
+      }
+    ],
+    "tests": "{\"schema\": 1, \"exit_code\": 0, \"checks\": [{\"name\": \"ruff\", \"command\": [\"ruff\", \"check\", \"tools\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"ruff.log\", \"elapsed_seconds\": 0.033}, {\"name\": \"test_viewer_scenes\", \"command\": [\"node\", \"tools/test_viewer_scenes.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_viewer_scenes.log\", \"elapsed_seconds\": 0.193}, {\"name\": \"test_viewer_materials\", \"command\": [\"node\", \"tools/test_viewer_materials.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_viewer_materials.log\", \"elapsed_seconds\": 0.06}, {\"name\": \"test_model_load\", \"command\": [\"node\", \"tools/test_model_load.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_model_load.log\", \"elapsed_seconds\": 0.049}, {\"name\": \"test_viewer_loading\", \"command\": [\"node\", \"tools/test_viewer_loading.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_viewer_loading.log\", \"elapsed_seconds\": 0.147}, {\"name\": \"test_dealership\", \"command\": [\"node\", \"tools/test_dealership.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_dealership.log\", \"elapsed_seconds\": 1.351}, {\"name\": \"test_editable_glb\", \"command\": [\"node\", \"tools/test_editable_glb.mjs\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_editable_glb.log\", \"elapsed_seconds\": 1.034}, {\"name\": \"verify_recovered_asset_index\", \"command\": [\"python3\", \"tools/verify_recovered_asset_index.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_recovered_asset_index.log\", \"elapsed_seconds\": 1.235}, {\"name\": \"test_export_materials\", \"command\": [\"python3\", \"tools/test_export_materials.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_export_materials.log\", \"elapsed_seconds\": 0.309}, {\"name\": \"test_build_showcase\", \"command\": [\"python3\", \"tools/test_build_showcase.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_build_showcase.log\", \"elapsed_seconds\": 0.892}, {\"name\": \"test_bake_models\", \"command\": [\"python3\", \"tools/test_bake_models.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_bake_models.log\", \"elapsed_seconds\": 5.782}, {\"name\": \"test_build_dealership\", \"command\": [\"python3\", \"tools/test_build_dealership.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_build_dealership.log\", \"elapsed_seconds\": 1.002}, {\"name\": \"test_model_catalog\", \"command\": [\"python3\", \"tools/test_model_catalog.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_model_catalog.log\", \"elapsed_seconds\": 0.11}, {\"name\": \"test_model_png\", \"command\": [\"python3\", \"tools/test_model_png.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_model_png.log\", \"elapsed_seconds\": 0.074}, {\"name\": \"test_run_checks\", \"command\": [\"python3\", \"tools/test_run_checks.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_run_checks.log\", \"elapsed_seconds\": 0.227}, {\"name\": \"test_review_payload\", \"command\": [\"python3\", \"tools/test_review_payload.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_review_payload.log\", \"elapsed_seconds\": 0.106}, {\"name\": \"test_static_inputs\", \"command\": [\"python3\", \"tools/test_static_inputs.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_static_inputs.log\", \"elapsed_seconds\": 0.33}, {\"name\": \"test_recovery_inputs\", \"command\": [\"python3\", \"tools/test_recovery_inputs.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_recovery_inputs.log\", \"elapsed_seconds\": 3.796}, {\"name\": \"test_gt_archive\", \"command\": [\"python3\", \"tools/test_gt_archive.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_gt_archive.log\", \"elapsed_seconds\": 0.157}, {\"name\": \"test_gt_asset_judgments\", \"command\": [\"python3\", \"tools/test_gt_asset_judgments.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_gt_asset_judgments.log\", \"elapsed_seconds\": 0.125}, {\"name\": \"test_gt_wheels\", \"command\": [\"python3\", \"tools/test_gt_wheels.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_gt_wheels.log\", \"elapsed_seconds\": 0.1}, {\"name\": \"test_gt_model\", \"command\": [\"python3\", \"tools/test_gt_model.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_gt_model.log\", \"elapsed_seconds\": 6.771}, {\"name\": \"test_import_gt_dealership\", \"command\": [\"python3\", \"tools/test_import_gt_dealership.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_import_gt_dealership.log\", \"elapsed_seconds\": 0.87}, {\"name\": \"test_library_filter\", \"command\": [\"python3\", \"tools/test_library_filter.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_library_filter.log\", \"elapsed_seconds\": 0.1}, {\"name\": \"test_serve_library\", \"command\": [\"python3\", \"tools/test_serve_library.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_serve_library.log\", \"elapsed_seconds\": 0.667}, {\"name\": \"test_redline_archive\", \"command\": [\"python3\", \"tools/test_redline_archive.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_redline_archive.log\", \"elapsed_seconds\": 0.111}, {\"name\": \"test_extract_redline_cars\", \"command\": [\"python3\", \"tools/test_extract_redline_cars.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_extract_redline_cars.log\", \"elapsed_seconds\": 0.165}, {\"name\": \"dealership_freshness\", \"command\": [\"python3\", \"tools/build_dealership.py\", \"--check\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"dealership_freshness.log\", \"elapsed_seconds\": 40.288}, {\"name\": \"verify_config_data_sound\", \"command\": [\"python3\", \"tools/verify_config_data_sound.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_config_data_sound.log\", \"elapsed_seconds\": 0.687}, {\"name\": \"verify_sound_bank_index\", \"command\": [\"python3\", \"tools/verify_sound_bank_index.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_sound_bank_index.log\", \"elapsed_seconds\": 0.246}, {\"name\": \"verify_vu_dispatch_map\", \"command\": [\"python3\", \"tools/verify_vu_dispatch_map.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_vu_dispatch_map.log\", \"elapsed_seconds\": 6.782}, {\"name\": \"test_vu_dispatch_map\", \"command\": [\"python3\", \"tools/test_vu_dispatch_map.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu_dispatch_map.log\", \"elapsed_seconds\": 3.683}, {\"name\": \"test_vu1_decode\", \"command\": [\"python3\", \"tools/test_vu1_decode.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu1_decode.log\", \"elapsed_seconds\": 0.191}, {\"name\": \"verify_vu_pass_handlers\", \"command\": [\"python3\", \"tools/verify_vu_pass_handlers.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_vu_pass_handlers.log\", \"elapsed_seconds\": 1.46}, {\"name\": \"test_vu_pass_handlers\", \"command\": [\"python3\", \"tools/test_vu_pass_handlers.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu_pass_handlers.log\", \"elapsed_seconds\": 2.611}, {\"name\": \"verify_vu_handler_dump\", \"command\": [\"python3\", \"tools/verify_vu_handler_dump.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_vu_handler_dump.log\", \"elapsed_seconds\": 3.959}, {\"name\": \"test_vu_handler_dump\", \"command\": [\"python3\", \"tools/test_vu_handler_dump.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_vu_handler_dump.log\", \"elapsed_seconds\": 4.281}, {\"name\": \"recover_dump_reference_frame\", \"command\": [\"python3\", \"tools/recover_dump_reference_frame.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"recover_dump_reference_frame.log\", \"elapsed_seconds\": 1.769}, {\"name\": \"test_recover_dump_reference_frame\", \"command\": [\"python3\", \"tools/test_recover_dump_reference_frame.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_recover_dump_reference_frame.log\", \"elapsed_seconds\": 2.999}, {\"name\": \"verify_pass_source_join\", \"command\": [\"python3\", \"tools/verify_pass_source_join.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"verify_pass_source_join.log\", \"elapsed_seconds\": 11.383}, {\"name\": \"test_pass_source_join\", \"command\": [\"python3\", \"tools/test_pass_source_join.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"test_pass_source_join.log\", \"elapsed_seconds\": 15.266}, {\"name\": \"dealership_roundtrip\", \"command\": [\"/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender\", \"--background\", \"--python-exit-code\", \"1\", \"--python\", \"tools/test_dealership_roundtrip.py\"], \"status\": \"pass\", \"exit_code\": 0, \"log\": \"dealership_roundtrip.log\", \"elapsed_seconds\": 31.344}], \"claim_limits\": [\"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"]}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claims_contradicted",
+      "claim_confidence_low",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "mode": "per-file",
+      "action": "escalate",
+      "composite": 0.7123409090909093,
+      "safe_to_apply": 0.29,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting": [
+        {
+          "file": "research/evidence/redline-extraction/checks.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/extraction.json",
+          "rubrics": [
+            "test_gap"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/final-focused-checks.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/independent-output-audit.json",
+          "rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/mount-cleanup.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/native-corpus-comparison.json",
+          "rubrics": [
+            "test_gap",
+            "blast_radius"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/outer-archive-coverage.json",
+          "rubrics": [
+            "spec_match",
+            "test_gap"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/semantic-active-experiment.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/semantic-experiments.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/semantic-metrics.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "file": "research/evidence/redline-extraction/source-preservation.json",
+          "rubrics": [
+            "spec_match"
+          ]
+        }
+      ],
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "files": [
+        {
+          "path": "research/evidence/redline-extraction/checks.json",
+          "safe_to_apply": 0.55,
+          "scores": {
+            "correctness": {
+              "score": 1.44,
+              "confidence": 0.16,
+              "probabilities": {
+                "0": 0.09,
+                "1": 0.38,
+                "2": 0.53
+              }
+            },
+            "spec_match": {
+              "score": 1.02,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.35,
+                "1": 0.27,
+                "2": 0.38
+              }
+            },
+            "test_gap": {
+              "score": 0.37,
+              "confidence": 0.43,
+              "probabilities": {
+                "0": 0.76,
+                "1": 0.1,
+                "2": 0.14
+              }
+            },
+            "blast_radius": {
+              "score": 0.32,
+              "confidence": 0.52,
+              "probabilities": {
+                "0": 0.81,
+                "1": 0.06,
+                "2": 0.13
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.6892499999999999,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/extraction.json",
+          "safe_to_apply": 0.29,
+          "scores": {
+            "correctness": {
+              "score": 1.52,
+              "confidence": 0.27,
+              "probabilities": {
+                "0": 0.05,
+                "1": 0.39,
+                "2": 0.5599999999999999
+              }
+            },
+            "spec_match": {
+              "score": 1.53,
+              "confidence": 0.29,
+              "probabilities": {
+                "0": 0.1,
+                "1": 0.27,
+                "2": 0.63
+              }
+            },
+            "test_gap": {
+              "score": 0.77,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.45,
+                "1": 0.33,
+                "2": 0.22
+              }
+            },
+            "blast_radius": {
+              "score": 1.59,
+              "confidence": 0.37,
+              "probabilities": {
+                "0": 0.17,
+                "1": 0.08,
+                "2": 0.75
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.6565,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "test_gap"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/final-focused-checks.json",
+          "safe_to_apply": 0.59,
+          "scores": {
+            "correctness": {
+              "score": 1.59,
+              "confidence": 0.37,
+              "probabilities": {
+                "0": 0.06,
+                "1": 0.3,
+                "2": 0.64
+              }
+            },
+            "spec_match": {
+              "score": 1.24,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.21,
+                "1": 0.35,
+                "2": 0.44
+              }
+            },
+            "test_gap": {
+              "score": 0.62,
+              "confidence": 0.07,
+              "probabilities": {
+                "0": 0.58,
+                "1": 0.22,
+                "2": 0.2
+              }
+            },
+            "blast_radius": {
+              "score": 0.19,
+              "confidence": 0.71,
+              "probabilities": {
+                "0": 0.87,
+                "1": 0.07,
+                "2": 0.06
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.7432500000000001,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/independent-output-audit.json",
+          "safe_to_apply": 0.47,
+          "scores": {
+            "correctness": {
+              "score": 1.67,
+              "confidence": 0.5,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.25,
+                "2": 0.71
+              }
+            },
+            "spec_match": {
+              "score": 1.58,
+              "confidence": 0.35,
+              "probabilities": {
+                "0": 0.11,
+                "1": 0.21,
+                "2": 0.6799999999999999
+              }
+            },
+            "test_gap": {
+              "score": 0.52,
+              "confidence": 0.2,
+              "probabilities": {
+                "0": 0.61,
+                "1": 0.25,
+                "2": 0.14
+              }
+            },
+            "blast_radius": {
+              "score": 0.79,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.55,
+                "1": 0.1,
+                "2": 0.35
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.7727499999999999,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/mount-cleanup.json",
+          "safe_to_apply": 0.64,
+          "scores": {
+            "correctness": {
+              "score": 1.7,
+              "confidence": 0.53,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.23,
+                "2": 0.73
+              }
+            },
+            "spec_match": {
+              "score": 0.87,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.46,
+                "1": 0.21,
+                "2": 0.33
+              }
+            },
+            "test_gap": {
+              "score": 0.24,
+              "confidence": 0.64,
+              "probabilities": {
+                "0": 0.85,
+                "1": 0.06,
+                "2": 0.09
+              }
+            },
+            "blast_radius": {
+              "score": 0.08,
+              "confidence": 0.88,
+              "probabilities": {
+                "0": 0.95,
+                "1": 0.02,
+                "2": 0.03
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.7465,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/native-corpus-comparison.json",
+          "safe_to_apply": 0.46,
+          "scores": {
+            "correctness": {
+              "score": 1.56,
+              "confidence": 0.34,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.36,
+                "2": 0.6
+              }
+            },
+            "spec_match": {
+              "score": 1.36,
+              "confidence": 0.04,
+              "probabilities": {
+                "0": 0.21,
+                "1": 0.22,
+                "2": 0.57
+              }
+            },
+            "test_gap": {
+              "score": 0.68,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.51,
+                "1": 0.3,
+                "2": 0.19
+              }
+            },
+            "blast_radius": {
+              "score": 0.69,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.56,
+                "1": 0.19,
+                "2": 0.25
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.7132499999999999,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "test_gap",
+            "blast_radius"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/outer-archive-coverage.json",
+          "safe_to_apply": 0.55,
+          "scores": {
+            "correctness": {
+              "score": 1.59,
+              "confidence": 0.4,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.32,
+                "2": 0.64
+              }
+            },
+            "spec_match": {
+              "score": 1.31,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.22,
+                "1": 0.24,
+                "2": 0.54
+              }
+            },
+            "test_gap": {
+              "score": 0.77,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.47,
+                "1": 0.29,
+                "2": 0.24
+              }
+            },
+            "blast_radius": {
+              "score": 0.25,
+              "confidence": 0.64,
+              "probabilities": {
+                "0": 0.85,
+                "1": 0.06,
+                "2": 0.09
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.7380000000000001,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match",
+            "test_gap"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/semantic-active-experiment.json",
+          "safe_to_apply": 0.48,
+          "scores": {
+            "correctness": {
+              "score": 1.49,
+              "confidence": 0.25,
+              "probabilities": {
+                "0": 0.08,
+                "1": 0.34,
+                "2": 0.58
+              }
+            },
+            "spec_match": {
+              "score": 1.1,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.36,
+                "1": 0.18,
+                "2": 0.46
+              }
+            },
+            "test_gap": {
+              "score": 0.56,
+              "confidence": 0.14,
+              "probabilities": {
+                "0": 0.62,
+                "1": 0.19,
+                "2": 0.19
+              }
+            },
+            "blast_radius": {
+              "score": 0.23,
+              "confidence": 0.66,
+              "probabilities": {
+                "0": 0.84,
+                "1": 0.09,
+                "2": 0.07
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.70375,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/semantic-experiments.json",
+          "safe_to_apply": 0.53,
+          "scores": {
+            "correctness": {
+              "score": 1.42,
+              "confidence": 0.14,
+              "probabilities": {
+                "0": 0.12,
+                "1": 0.33,
+                "2": 0.55
+              }
+            },
+            "spec_match": {
+              "score": 0.95,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.43,
+                "1": 0.18,
+                "2": 0.39
+              }
+            },
+            "test_gap": {
+              "score": 0.44,
+              "confidence": 0.34,
+              "probabilities": {
+                "0": 0.71,
+                "1": 0.14,
+                "2": 0.15
+              }
+            },
+            "blast_radius": {
+              "score": 0.28,
+              "confidence": 0.58,
+              "probabilities": {
+                "0": 0.81,
+                "1": 0.1,
+                "2": 0.09
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.6725,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/semantic-metrics.json",
+          "safe_to_apply": 0.48,
+          "scores": {
+            "correctness": {
+              "score": 1.36,
+              "confidence": 0.03,
+              "probabilities": {
+                "0": 0.12,
+                "1": 0.41,
+                "2": 0.47
+              }
+            },
+            "spec_match": {
+              "score": 0.91,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.46,
+                "1": 0.18,
+                "2": 0.36
+              }
+            },
+            "test_gap": {
+              "score": 0.41,
+              "confidence": 0.39,
+              "probabilities": {
+                "0": 0.74,
+                "1": 0.11,
+                "2": 0.15
+              }
+            },
+            "blast_radius": {
+              "score": 0.37,
+              "confidence": 0.44,
+              "probabilities": {
+                "0": 0.77,
+                "1": 0.09,
+                "2": 0.14
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.65,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        },
+        {
+          "path": "research/evidence/redline-extraction/source-preservation.json",
+          "safe_to_apply": 0.62,
+          "scores": {
+            "correctness": {
+              "score": 1.56,
+              "confidence": 0.34,
+              "probabilities": {
+                "0": 0.05,
+                "1": 0.34,
+                "2": 0.61
+              }
+            },
+            "spec_match": {
+              "score": 1.2,
+              "confidence": 0,
+              "probabilities": {
+                "0": 0.3,
+                "1": 0.21,
+                "2": 0.49
+              }
+            },
+            "test_gap": {
+              "score": 0.37,
+              "confidence": 0.46,
+              "probabilities": {
+                "0": 0.77,
+                "1": 0.1,
+                "2": 0.13
+              }
+            },
+            "blast_radius": {
+              "score": 0.19,
+              "confidence": 0.71,
+              "probabilities": {
+                "0": 0.89,
+                "1": 0.03,
+                "2": 0.08
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.7500000000000001,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "spec_match"
+          ]
+        }
+      ]
+    },
+    "verification": {
+      "action": "escalate",
+      "summary": {
+        "verified": 1,
+        "contradicted": 1,
+        "unsupported": 0,
+        "needs_review": 2,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "The independent output audit matched 3432 retained packed native member hashes and lengths against the independent C decoder, and checked 65 loose members,82 original car envelopes and all 129 configuration source-field line/value mappings. This is static byte extraction, not game rendering.",
+          "verdict": "verified",
+          "confidence": 0.74,
+          "probabilities": {
+            "verified": 0.83,
+            "contradicted": 0.07,
+            "unsupported": 0.1
+          },
+          "action": "review"
+        },
+        {
+          "claim": "In the 28-item labeled experiments, brief wording selected 26 correct labels and accepted 12 allcorrect; grounded wording selected 27 correct and kept 28 forreview. Active-field excerpts also selected 27 correct and kept 28 forreview. Four SDK calls reported 51300 input tokens,8169 output tokens, $0.0021546 total and 0.328\u20130.644 seconds per SDK call; screening and CLI overhead are excluded.",
+          "verdict": "contradicted",
+          "confidence": 0.35,
+          "probabilities": {
+            "verified": 0.4,
+            "contradicted": 0.57,
+            "unsupported": 0.03
+          },
+          "action": "escalate"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 30874,
+      "output_tokens": 1092
+    }
+  }
+}
