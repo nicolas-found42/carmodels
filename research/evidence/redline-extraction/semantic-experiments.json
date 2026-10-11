@@ -1,0 +1,131 @@
+{
+  "experiments": [
+    {
+      "wording": "brief",
+      "status": "ok",
+      "latency_seconds": 0.35101987500092946,
+      "usage": {
+        "input_tokens": 12373,
+        "output_tokens": 2289,
+        "cost": 0.000519666
+      },
+      "label_accuracy": 0.9285714285714286,
+      "total": 28,
+      "accepted": 12,
+      "accepted_correct": 12,
+      "review": 16,
+      "errors": [
+        {
+          "path": "mixed/bundle.zip",
+          "expected": "unknown",
+          "actual": "other",
+          "decision": "review"
+        },
+        {
+          "path": "unidentified/records.bin",
+          "expected": "car_metadata",
+          "actual": "unknown",
+          "decision": "review"
+        }
+      ],
+      "threshold_experiment_without_extra_requests": [
+        {
+          "thresholds": {
+            "top": 0.75,
+            "margin": 0.4,
+            "support": 0.75,
+            "quality": 1.3
+          },
+          "accepted": 13,
+          "wrongly_accepted": 0,
+          "review": 15
+        },
+        {
+          "thresholds": {
+            "top": 0.85,
+            "margin": 0.5,
+            "support": 0.85,
+            "quality": 1.5
+          },
+          "accepted": 12,
+          "wrongly_accepted": 0,
+          "review": 16
+        },
+        {
+          "thresholds": {
+            "top": 0.95,
+            "margin": 0.7,
+            "support": 0.95,
+            "quality": 1.8
+          },
+          "accepted": 7,
+          "wrongly_accepted": 0,
+          "review": 21
+        }
+      ]
+    },
+    {
+      "wording": "grounded",
+      "status": "ok",
+      "latency_seconds": 0.35071200000311364,
+      "usage": {
+        "input_tokens": 15061,
+        "output_tokens": 2289,
+        "cost": 0.000632562
+      },
+      "label_accuracy": 0.9642857142857143,
+      "total": 28,
+      "accepted": 0,
+      "accepted_correct": 0,
+      "review": 28,
+      "errors": [
+        {
+          "path": "unidentified/records.bin",
+          "expected": "car_metadata",
+          "actual": "unknown",
+          "decision": "review"
+        }
+      ],
+      "threshold_experiment_without_extra_requests": [
+        {
+          "thresholds": {
+            "top": 0.75,
+            "margin": 0.4,
+            "support": 0.75,
+            "quality": 1.3
+          },
+          "accepted": 6,
+          "wrongly_accepted": 0,
+          "review": 22
+        },
+        {
+          "thresholds": {
+            "top": 0.85,
+            "margin": 0.5,
+            "support": 0.85,
+            "quality": 1.5
+          },
+          "accepted": 0,
+          "wrongly_accepted": 0,
+          "review": 28
+        },
+        {
+          "thresholds": {
+            "top": 0.95,
+            "margin": 0.7,
+            "support": 0.95,
+            "quality": 1.8
+          },
+          "accepted": 0,
+          "wrongly_accepted": 0,
+          "review": 28
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No generalization beyond this28-item sample.",
+    "Unknown/ambiguous results are retained for review; labels do not change files.",
+    "Cost may be absent from provider usage."
+  ]
+}

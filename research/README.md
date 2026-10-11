@@ -6,6 +6,7 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `gran-turismo-extraction.md` | Native GT1 simulation/arcade models and texture bundles, shared metadata, source provenance, extraction controls and semantic inventory experiments |
 | `retro-implementation-2026-10-08.md` | Real dealership Blender edit/export regression, display freshness, retained check evidence, bounded review tooling and explicit CI runtimes |
 | `adversarial-teardown-2026-10-08.md` | Executed offline viewer/export teardown, material ownership repairs, failure/keyboard/layout probes, sampling improvement and verification evidence |
 | `dealership-split-2026-10-08.md` | Independent editable dealership models/catalog, separate source showcase, rebuild preservation and source hash evidence |
@@ -23,6 +24,10 @@ single list of what is not yet established; update it when a note closes or open
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
 ## Open items
+
+- Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Static mesh/texture conversion and both library imports are documented in [redline-library.md](redline-library.md); runtime plug-in precedence and game-render fidelity remain open.
+
+- Gran Turismo dynamic wheel behavior, additional colour sets, PS1 rendering fidelity, runtime LOD selection, per-car metadata joins and retail identities remain open. Native extraction is established in `gran-turismo-extraction.md`; static body/first-colour conversion and dealership import are established in `gran-turismo-library.md`; native wheel templates and neutral assembly are established in `gran-turismo-wheels.md`.
 
 - Dealership surface tones use vertex sampling rather than semantic glass/paint segmentation; residual decals and dark details are approximate. Full game-render fidelity remains open.
 
@@ -44,3 +49,8 @@ single list of what is not yet established; update it when a note closes or open
   see the receipt's `claim_limits`), as is the camera/metric work of issue #27.
 
 - [Branch integration and verification, 2026-10-09](main-integration-2026-10-09.md) — independent dealership/source apps, game-folder migration and complete offline/Blender checks.
+
+- [Gran Turismo library](gran-turismo-library.md): body/texture conversions, independent editable imports, semantic-filter experiments and rendering limits.
+- [Gran Turismo wheels](gran-turismo-wheels.md): native template recovery, corrected dimension interpretation, wheel textures, neutral assembly and safe editable upgrades.
+
+- [Redline library](redline-library.md): native static mesh/texture conversion, 128 independent editable imports, verification, semantic-filter experiments and source limits.

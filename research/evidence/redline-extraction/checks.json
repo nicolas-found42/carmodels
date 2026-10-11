@@ -1,0 +1,477 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.033
+    },
+    {
+      "name": "test_viewer_scenes",
+      "command": [
+        "node",
+        "tools/test_viewer_scenes.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_scenes.log",
+      "elapsed_seconds": 0.193
+    },
+    {
+      "name": "test_viewer_materials",
+      "command": [
+        "node",
+        "tools/test_viewer_materials.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_materials.log",
+      "elapsed_seconds": 0.06
+    },
+    {
+      "name": "test_model_load",
+      "command": [
+        "node",
+        "tools/test_model_load.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_load.log",
+      "elapsed_seconds": 0.049
+    },
+    {
+      "name": "test_viewer_loading",
+      "command": [
+        "node",
+        "tools/test_viewer_loading.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_loading.log",
+      "elapsed_seconds": 0.147
+    },
+    {
+      "name": "test_dealership",
+      "command": [
+        "node",
+        "tools/test_dealership.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_dealership.log",
+      "elapsed_seconds": 1.351
+    },
+    {
+      "name": "test_editable_glb",
+      "command": [
+        "node",
+        "tools/test_editable_glb.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_editable_glb.log",
+      "elapsed_seconds": 1.034
+    },
+    {
+      "name": "verify_recovered_asset_index",
+      "command": [
+        "python3",
+        "tools/verify_recovered_asset_index.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_recovered_asset_index.log",
+      "elapsed_seconds": 1.235
+    },
+    {
+      "name": "test_export_materials",
+      "command": [
+        "python3",
+        "tools/test_export_materials.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_export_materials.log",
+      "elapsed_seconds": 0.309
+    },
+    {
+      "name": "test_build_showcase",
+      "command": [
+        "python3",
+        "tools/test_build_showcase.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_build_showcase.log",
+      "elapsed_seconds": 0.892
+    },
+    {
+      "name": "test_bake_models",
+      "command": [
+        "python3",
+        "tools/test_bake_models.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_bake_models.log",
+      "elapsed_seconds": 5.782
+    },
+    {
+      "name": "test_build_dealership",
+      "command": [
+        "python3",
+        "tools/test_build_dealership.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_build_dealership.log",
+      "elapsed_seconds": 1.002
+    },
+    {
+      "name": "test_model_catalog",
+      "command": [
+        "python3",
+        "tools/test_model_catalog.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_catalog.log",
+      "elapsed_seconds": 0.11
+    },
+    {
+      "name": "test_model_png",
+      "command": [
+        "python3",
+        "tools/test_model_png.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_png.log",
+      "elapsed_seconds": 0.074
+    },
+    {
+      "name": "test_run_checks",
+      "command": [
+        "python3",
+        "tools/test_run_checks.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_run_checks.log",
+      "elapsed_seconds": 0.227
+    },
+    {
+      "name": "test_review_payload",
+      "command": [
+        "python3",
+        "tools/test_review_payload.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_review_payload.log",
+      "elapsed_seconds": 0.106
+    },
+    {
+      "name": "test_static_inputs",
+      "command": [
+        "python3",
+        "tools/test_static_inputs.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_static_inputs.log",
+      "elapsed_seconds": 0.33
+    },
+    {
+      "name": "test_recovery_inputs",
+      "command": [
+        "python3",
+        "tools/test_recovery_inputs.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_recovery_inputs.log",
+      "elapsed_seconds": 3.796
+    },
+    {
+      "name": "test_gt_archive",
+      "command": [
+        "python3",
+        "tools/test_gt_archive.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_gt_archive.log",
+      "elapsed_seconds": 0.157
+    },
+    {
+      "name": "test_gt_asset_judgments",
+      "command": [
+        "python3",
+        "tools/test_gt_asset_judgments.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_gt_asset_judgments.log",
+      "elapsed_seconds": 0.125
+    },
+    {
+      "name": "test_gt_wheels",
+      "command": [
+        "python3",
+        "tools/test_gt_wheels.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_gt_wheels.log",
+      "elapsed_seconds": 0.1
+    },
+    {
+      "name": "test_gt_model",
+      "command": [
+        "python3",
+        "tools/test_gt_model.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_gt_model.log",
+      "elapsed_seconds": 6.771
+    },
+    {
+      "name": "test_import_gt_dealership",
+      "command": [
+        "python3",
+        "tools/test_import_gt_dealership.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_import_gt_dealership.log",
+      "elapsed_seconds": 0.87
+    },
+    {
+      "name": "test_library_filter",
+      "command": [
+        "python3",
+        "tools/test_library_filter.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_library_filter.log",
+      "elapsed_seconds": 0.1
+    },
+    {
+      "name": "test_serve_library",
+      "command": [
+        "python3",
+        "tools/test_serve_library.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_serve_library.log",
+      "elapsed_seconds": 0.667
+    },
+    {
+      "name": "test_redline_archive",
+      "command": [
+        "python3",
+        "tools/test_redline_archive.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_redline_archive.log",
+      "elapsed_seconds": 0.111
+    },
+    {
+      "name": "test_extract_redline_cars",
+      "command": [
+        "python3",
+        "tools/test_extract_redline_cars.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_extract_redline_cars.log",
+      "elapsed_seconds": 0.165
+    },
+    {
+      "name": "dealership_freshness",
+      "command": [
+        "python3",
+        "tools/build_dealership.py",
+        "--check"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "dealership_freshness.log",
+      "elapsed_seconds": 40.288
+    },
+    {
+      "name": "verify_config_data_sound",
+      "command": [
+        "python3",
+        "tools/verify_config_data_sound.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_config_data_sound.log",
+      "elapsed_seconds": 0.687
+    },
+    {
+      "name": "verify_sound_bank_index",
+      "command": [
+        "python3",
+        "tools/verify_sound_bank_index.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_sound_bank_index.log",
+      "elapsed_seconds": 0.246
+    },
+    {
+      "name": "verify_vu_dispatch_map",
+      "command": [
+        "python3",
+        "tools/verify_vu_dispatch_map.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_vu_dispatch_map.log",
+      "elapsed_seconds": 6.782
+    },
+    {
+      "name": "test_vu_dispatch_map",
+      "command": [
+        "python3",
+        "tools/test_vu_dispatch_map.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu_dispatch_map.log",
+      "elapsed_seconds": 3.683
+    },
+    {
+      "name": "test_vu1_decode",
+      "command": [
+        "python3",
+        "tools/test_vu1_decode.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu1_decode.log",
+      "elapsed_seconds": 0.191
+    },
+    {
+      "name": "verify_vu_pass_handlers",
+      "command": [
+        "python3",
+        "tools/verify_vu_pass_handlers.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_vu_pass_handlers.log",
+      "elapsed_seconds": 1.46
+    },
+    {
+      "name": "test_vu_pass_handlers",
+      "command": [
+        "python3",
+        "tools/test_vu_pass_handlers.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu_pass_handlers.log",
+      "elapsed_seconds": 2.611
+    },
+    {
+      "name": "verify_vu_handler_dump",
+      "command": [
+        "python3",
+        "tools/verify_vu_handler_dump.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_vu_handler_dump.log",
+      "elapsed_seconds": 3.959
+    },
+    {
+      "name": "test_vu_handler_dump",
+      "command": [
+        "python3",
+        "tools/test_vu_handler_dump.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_vu_handler_dump.log",
+      "elapsed_seconds": 4.281
+    },
+    {
+      "name": "recover_dump_reference_frame",
+      "command": [
+        "python3",
+        "tools/recover_dump_reference_frame.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "recover_dump_reference_frame.log",
+      "elapsed_seconds": 1.769
+    },
+    {
+      "name": "test_recover_dump_reference_frame",
+      "command": [
+        "python3",
+        "tools/test_recover_dump_reference_frame.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_recover_dump_reference_frame.log",
+      "elapsed_seconds": 2.999
+    },
+    {
+      "name": "verify_pass_source_join",
+      "command": [
+        "python3",
+        "tools/verify_pass_source_join.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "verify_pass_source_join.log",
+      "elapsed_seconds": 11.383
+    },
+    {
+      "name": "test_pass_source_join",
+      "command": [
+        "python3",
+        "tools/test_pass_source_join.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_pass_source_join.log",
+      "elapsed_seconds": 15.266
+    },
+    {
+      "name": "dealership_roundtrip",
+      "command": [
+        "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender",
+        "--background",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "tools/test_dealership_roundtrip.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "dealership_roundtrip.log",
+      "elapsed_seconds": 31.344
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

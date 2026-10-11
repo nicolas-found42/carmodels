@@ -1,0 +1,1913 @@
+{
+  "bundle_sha256": "14643ee136c5b97cf155cb128a0b58f7c81796ed4e7667bc7f05c4819dd9ebb0",
+  "bundle_file_sha256": "56abfbc78c029620184c5cb7c3d3a2e866f545484a832d98c8791691425105bc",
+  "reviewer": "/root/redline_addons",
+  "verdict": "approve",
+  "rationale": "Independent stronger review read all complete task-relative patches, matched all20 diffs and exact pins, resolved each patch confidence/test-gap/blast-radius escalation with the native byte/instruction reconstruction, independent C corpus comparison, actual full output hash/name/length/config-field audit, non-clobber and duplicate-coverage controls, six extractor and eight parser test methods on current/stock Python, post-fix42check manifest and retained logs. Actual output is129 native configuration variants (19base110addon),3709files2202028393bytes; --check rederivation succeeded. All4554 protected pre-existing files independently rehashed unchanged. Raw SDK recomposition confirms bounded sample counts and usage arithmetic. Approval covers only valid patch reviews and final verified narrowed claims; original operational failure and retired contradicted compound claim are explicitly excluded. All original distributions are retained below.",
+  "approved_scope": "Native extraction of supplied staged Redline car assets and conservative base/shared resources, deterministic source index and tests/docs/advisory inventory screening. No model conversion, browser/dealership/library import, game execution or rendering claim.",
+  "file_pins": {
+    ".gitignore": "ddb28bdb10229d9dfcc84372d2139977cec2b56668631a418c4adef92f5283fe",
+    "redline/README.md": "eaa6c0ba0cb0cc41a22c14df759e2941bda4f87caeb982b57daf8d92ce42f25b",
+    "research/README.md": "fbdca87d1e31969d2b0887a1e6e84ad2da0e489d015519acf6ae5791611abe72",
+    "research/evidence/redline-extraction/checks.json": "d60cc43110e277ba35c2991bdb4a04adb22674d4a452b22be5d589e134da124b",
+    "research/evidence/redline-extraction/extraction.json": "c2eb033210922f713e0b15c461065f2dc3226464b533541e52002b7d2d876922",
+    "research/evidence/redline-extraction/final-focused-checks.json": "bdd0403d72cea58e67db68f671c836c835bda2612eb10d52a047f78fc7be2c7a",
+    "research/evidence/redline-extraction/independent-output-audit.json": "99b1ada77e96ade9359923559456895e9ee4989f760f6fb0f130f3cf0c65b46a",
+    "research/evidence/redline-extraction/mount-cleanup.json": "277bfe85d147ca80090170cd7b958ffe84a2d0389a0e7712eec555b40c83d88e",
+    "research/evidence/redline-extraction/native-corpus-comparison.json": "1dbc75d4f643195f621402d23903d7334f6a616865d10925da1416579354d9ee",
+    "research/evidence/redline-extraction/outer-archive-coverage.json": "ad41d5f91fa8d200f6c2799ca6cbb8fc427c418d74cdf21b7f415c69ab3b9a0b",
+    "research/evidence/redline-extraction/semantic-active-experiment.json": "00670685dca6701f2f1c8ea35f26594ca3448ab9581ae9cb0428eb52597b3a4c",
+    "research/evidence/redline-extraction/semantic-experiments.json": "1a79c3c962b279ee65c88a5db9878da481c6baa666ad50b3b15365d3c08605a1",
+    "research/evidence/redline-extraction/semantic-metrics.json": "ff72efe5adb959da07c6791bc5254f07211c48ba65a6d6bf0995e8719d482567",
+    "research/evidence/redline-extraction/source-preservation.json": "86649011b00258f04a4cade0e3255f2d472604908edca08883a71e13f497605c",
+    "research/redline-extraction.md": "bce472e13793f98381e8c0267404ed8479200e11eb69cbc89bb5ea3e35853625",
+    "tools/extract_redline_cars.py": "0511180cb11e6cf2011904cba701f9664a89efa1b0e04332708dc96661ffea0e",
+    "tools/redline_archive.py": "3e5d7785e3096e6699481d62bc308da8904652a752a50d3cffee2b760d9663d0",
+    "tools/run_checks.py": "aeba94211cbec960efe40aa7709f582d4d9b0f972f12d4422fe7932694802d41",
+    "tools/test_extract_redline_cars.py": "8b3f0bf0a394fe5feddaf250ca4d64c0251275ead17569cf1a347ce54d22339f",
+    "tools/test_redline_archive.py": "bd9a0378437a8bf97030a4ed1566bbc423a730c43a91abf6d1bdeed7de0706f9"
+  },
+  "index_sha256": "b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2",
+  "raw_diff_complete_coverage_files": 20,
+  "jev_receipts_with_original_distributions": [
+    {
+      "path": ".scratch/redline/final-gate-repaired/gate-001.json",
+      "sha256": "d3bddd156b8dd0cd81ae394852e0e0eb3b9e25133377ef41802d3ca6d6b0bb3d",
+      "result": {
+        "tool": "jev_gate",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "truncated": false,
+        "action": "escalate",
+        "reason_codes": [
+          "confidence_below_review",
+          "confidence_below_auto_accept",
+          "review_escalated"
+        ],
+        "review": {
+          "mode": "per-file",
+          "action": "escalate",
+          "composite": 0.8536875000000002,
+          "safe_to_apply": 0.52,
+          "reason_codes": [
+            "confidence_below_review",
+            "confidence_below_auto_accept"
+          ],
+          "limiting": [
+            {
+              "file": ".gitignore",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "redline/README.md",
+              "rubrics": [
+                "blast_radius"
+              ]
+            },
+            {
+              "file": "research/README.md",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/redline-extraction.md",
+              "rubrics": [
+                "blast_radius"
+              ]
+            }
+          ],
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "files": [
+            {
+              "path": ".gitignore",
+              "safe_to_apply": 0.62,
+              "scores": {
+                "correctness": {
+                  "score": 1.65,
+                  "confidence": 0.47,
+                  "probabilities": {
+                    "0": 0.09,
+                    "1": 0.17,
+                    "2": 0.74
+                  }
+                },
+                "spec_match": {
+                  "score": 1.63,
+                  "confidence": 0.44,
+                  "probabilities": {
+                    "0": 0.06,
+                    "1": 0.25,
+                    "2": 0.69
+                  }
+                },
+                "test_gap": {
+                  "score": 0.21,
+                  "confidence": 0.68,
+                  "probabilities": {
+                    "0": 0.86,
+                    "1": 0.07,
+                    "2": 0.07
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.28,
+                  "confidence": 0.58,
+                  "probabilities": {
+                    "0": 0.81,
+                    "1": 0.1,
+                    "2": 0.09
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.83775,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "redline/README.md",
+              "safe_to_apply": 0.64,
+              "scores": {
+                "correctness": {
+                  "score": 1.75,
+                  "confidence": 0.62,
+                  "probabilities": {
+                    "0": 0.02,
+                    "1": 0.21,
+                    "2": 0.77
+                  }
+                },
+                "spec_match": {
+                  "score": 1.77,
+                  "confidence": 0.66,
+                  "probabilities": {
+                    "0": 0.03,
+                    "1": 0.17,
+                    "2": 0.8
+                  }
+                },
+                "test_gap": {
+                  "score": 0.22,
+                  "confidence": 0.67,
+                  "probabilities": {
+                    "0": 0.84,
+                    "1": 0.1,
+                    "2": 0.06
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.65,
+                  "confidence": 0.02,
+                  "probabilities": {
+                    "0": 0.59,
+                    "1": 0.17,
+                    "2": 0.24
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.8502500000000002,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "blast_radius"
+              ]
+            },
+            {
+              "path": "research/README.md",
+              "safe_to_apply": 0.8,
+              "scores": {
+                "correctness": {
+                  "score": 1.94,
+                  "confidence": 0.9,
+                  "probabilities": {
+                    "0": 0.01,
+                    "1": 0.05,
+                    "2": 0.94
+                  }
+                },
+                "spec_match": {
+                  "score": 1.79,
+                  "confidence": 0.68,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.13,
+                    "2": 0.83
+                  }
+                },
+                "test_gap": {
+                  "score": 0.06,
+                  "confidence": 0.9,
+                  "probabilities": {
+                    "0": 0.95,
+                    "1": 0.03,
+                    "2": 0.02
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.05,
+                  "confidence": 0.93,
+                  "probabilities": {
+                    "0": 0.96,
+                    "1": 0.03,
+                    "2": 0.01
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "review",
+              "composite": 0.94825,
+              "reason_codes": [
+                "confidence_below_auto_accept"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/redline-extraction.md",
+              "safe_to_apply": 0.52,
+              "scores": {
+                "correctness": {
+                  "score": 1.65,
+                  "confidence": 0.47,
+                  "probabilities": {
+                    "0": 0.03,
+                    "1": 0.29,
+                    "2": 0.68
+                  }
+                },
+                "spec_match": {
+                  "score": 1.72,
+                  "confidence": 0.59,
+                  "probabilities": {
+                    "0": 0.05,
+                    "1": 0.17,
+                    "2": 0.78
+                  }
+                },
+                "test_gap": {
+                  "score": 0.55,
+                  "confidence": 0.17,
+                  "probabilities": {
+                    "0": 0.61,
+                    "1": 0.23,
+                    "2": 0.16
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.91,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.45,
+                    "1": 0.19,
+                    "2": 0.36
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7785000000000001,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "blast_radius"
+              ]
+            }
+          ]
+        },
+        "verification": {
+          "action": "auto",
+          "summary": {
+            "verified": 1,
+            "contradicted": 0,
+            "unsupported": 0,
+            "needs_review": 0,
+            "invalid_response": 0
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5
+          },
+          "results": [
+            {
+              "claim": "The final named repository check run contains 42 executed checks, all pass with exit 0, including both new Redline modules and the Blender dealership round trip.",
+              "verdict": "verified",
+              "confidence": 0.88,
+              "probabilities": {
+                "verified": 0.92,
+                "contradicted": 0.07,
+                "unsupported": 0.01
+              },
+              "action": "auto"
+            }
+          ]
+        },
+        "usage": {
+          "input_tokens": 22194,
+          "output_tokens": 407
+        }
+      }
+    },
+    {
+      "path": ".scratch/redline/final-gate-repaired/gate-002.json",
+      "sha256": "d4361cb8c6452c36d31caf94935b4c7c0cd82518b9e57132974b9129eef947d3",
+      "result": {
+        "tool": "jev_gate",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "truncated": false,
+        "action": "escalate",
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review",
+          "review_escalated"
+        ],
+        "review": {
+          "mode": "per-file",
+          "action": "escalate",
+          "composite": 0.7785000000000001,
+          "safe_to_apply": 0.41,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting": [
+            {
+              "file": "tools/extract_redline_cars.py",
+              "rubrics": [
+                "test_gap"
+              ]
+            }
+          ],
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "files": [
+            {
+              "path": "tools/extract_redline_cars.py",
+              "safe_to_apply": 0.41,
+              "scores": {
+                "correctness": {
+                  "score": 1.77,
+                  "confidence": 0.66,
+                  "probabilities": {
+                    "0": 0.03,
+                    "1": 0.17,
+                    "2": 0.8
+                  }
+                },
+                "spec_match": {
+                  "score": 1.87,
+                  "confidence": 0.8,
+                  "probabilities": {
+                    "0": 0.01,
+                    "1": 0.11,
+                    "2": 0.88
+                  }
+                },
+                "test_gap": {
+                  "score": 0.7,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.5,
+                    "1": 0.31,
+                    "2": 0.19
+                  }
+                },
+                "blast_radius": {
+                  "score": 1.38,
+                  "confidence": 0.08,
+                  "probabilities": {
+                    "0": 0.15,
+                    "1": 0.31,
+                    "2": 0.54
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7785000000000001,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "test_gap"
+              ]
+            }
+          ]
+        },
+        "verification": {
+          "action": "auto",
+          "summary": {
+            "verified": 1,
+            "contradicted": 0,
+            "unsupported": 0,
+            "needs_review": 0,
+            "invalid_response": 0
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5
+          },
+          "results": [
+            {
+              "claim": "The extracted tree has 129 native car configuration variants (19 base and 110 add-on),3709 files and 2202028393 bytes; the real --check regenerated and compared all output bytes successfully.",
+              "verdict": "verified",
+              "confidence": 0.95,
+              "probabilities": {
+                "verified": 0.97,
+                "contradicted": 0.01,
+                "unsupported": 0.02
+              },
+              "action": "auto"
+            }
+          ]
+        },
+        "usage": {
+          "input_tokens": 20943,
+          "output_tokens": 134
+        }
+      }
+    },
+    {
+      "path": ".scratch/redline/final-gate-repaired/gate-003.json",
+      "sha256": "99e47af3fd600404f2d123f71a25c3a20eedf119ca96211534ebdc7cebe7348d",
+      "result": {
+        "tool": "jev_gate",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "truncated": false,
+        "action": "escalate",
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review",
+          "review_escalated"
+        ],
+        "review": {
+          "mode": "per-file",
+          "action": "escalate",
+          "composite": 0.7794166666666668,
+          "safe_to_apply": 0.41,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting": [
+            {
+              "file": "tools/redline_archive.py",
+              "rubrics": [
+                "test_gap"
+              ]
+            },
+            {
+              "file": "tools/run_checks.py",
+              "rubrics": [
+                "blast_radius"
+              ]
+            },
+            {
+              "file": "tools/test_extract_redline_cars.py",
+              "rubrics": [
+                "blast_radius"
+              ]
+            }
+          ],
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "files": [
+            {
+              "path": "tools/redline_archive.py",
+              "safe_to_apply": 0.41,
+              "scores": {
+                "correctness": {
+                  "score": 1.56,
+                  "confidence": 0.34,
+                  "probabilities": {
+                    "0": 0.05,
+                    "1": 0.34,
+                    "2": 0.61
+                  }
+                },
+                "spec_match": {
+                  "score": 1.59,
+                  "confidence": 0.38,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.33,
+                    "2": 0.63
+                  }
+                },
+                "test_gap": {
+                  "score": 0.81,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.42,
+                    "1": 0.35,
+                    "2": 0.23
+                  }
+                },
+                "blast_radius": {
+                  "score": 1.36,
+                  "confidence": 0.04,
+                  "probabilities": {
+                    "0": 0.15,
+                    "1": 0.34,
+                    "2": 0.51
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.6877500000000001,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "test_gap"
+              ]
+            },
+            {
+              "path": "tools/run_checks.py",
+              "safe_to_apply": 0.77,
+              "scores": {
+                "correctness": {
+                  "score": 1.83,
+                  "confidence": 0.74,
+                  "probabilities": {
+                    "0": 0.03,
+                    "1": 0.11,
+                    "2": 0.86
+                  }
+                },
+                "spec_match": {
+                  "score": 1.61,
+                  "confidence": 0.41,
+                  "probabilities": {
+                    "0": 0.07,
+                    "1": 0.25,
+                    "2": 0.68
+                  }
+                },
+                "test_gap": {
+                  "score": 0.17,
+                  "confidence": 0.76,
+                  "probabilities": {
+                    "0": 0.88,
+                    "1": 0.08,
+                    "2": 0.04
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.53,
+                  "confidence": 0.19,
+                  "probabilities": {
+                    "0": 0.6,
+                    "1": 0.26,
+                    "2": 0.14
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.855,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "blast_radius"
+              ]
+            },
+            {
+              "path": "tools/test_extract_redline_cars.py",
+              "safe_to_apply": 0.63,
+              "scores": {
+                "correctness": {
+                  "score": 1.66,
+                  "confidence": 0.51,
+                  "probabilities": {
+                    "0": 0.02,
+                    "1": 0.29,
+                    "2": 0.6900000000000001
+                  }
+                },
+                "spec_match": {
+                  "score": 1.68,
+                  "confidence": 0.53,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.23,
+                    "2": 0.73
+                  }
+                },
+                "test_gap": {
+                  "score": 0.52,
+                  "confidence": 0.22,
+                  "probabilities": {
+                    "0": 0.61,
+                    "1": 0.26,
+                    "2": 0.13
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.66,
+                  "confidence": 0.02,
+                  "probabilities": {
+                    "0": 0.48,
+                    "1": 0.39,
+                    "2": 0.13
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7955000000000001,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "blast_radius"
+              ]
+            }
+          ]
+        },
+        "verification": {
+          "action": "auto",
+          "summary": {
+            "verified": 1,
+            "contradicted": 0,
+            "unsupported": 0,
+            "needs_review": 0,
+            "invalid_response": 0
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5
+          },
+          "results": [
+            {
+              "claim": "The final named repository check run contains 42 executed checks, all pass with exit 0, including both new Redline modules and the Blender dealership round trip.",
+              "verdict": "verified",
+              "confidence": 0.88,
+              "probabilities": {
+                "verified": 0.92,
+                "contradicted": 0.07,
+                "unsupported": 0.01
+              },
+              "action": "auto"
+            }
+          ]
+        },
+        "usage": {
+          "input_tokens": 23071,
+          "output_tokens": 316
+        }
+      }
+    },
+    {
+      "path": ".scratch/redline/final-gate-repaired/gate-004.json",
+      "sha256": "32b58b78c92d6c48b017339fdcfb17e4a763cbacca52f5de61b5c77d87ed8290",
+      "result": {
+        "tool": "jev_gate",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "truncated": false,
+        "action": "escalate",
+        "reason_codes": [
+          "confidence_below_review",
+          "review_escalated",
+          "claim_confidence_below_auto_accept"
+        ],
+        "review": {
+          "mode": "per-file",
+          "action": "escalate",
+          "composite": 0.7224999999999999,
+          "safe_to_apply": 0.69,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting": [
+            {
+              "file": "tools/test_redline_archive.py",
+              "rubrics": [
+                "spec_match"
+              ]
+            }
+          ],
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "files": [
+            {
+              "path": "tools/test_redline_archive.py",
+              "safe_to_apply": 0.69,
+              "scores": {
+                "correctness": {
+                  "score": 1.49,
+                  "confidence": 0.23,
+                  "probabilities": {
+                    "0": 0.06,
+                    "1": 0.39,
+                    "2": 0.55
+                  }
+                },
+                "spec_match": {
+                  "score": 1.06,
+                  "confidence": 0.04,
+                  "probabilities": {
+                    "0": 0.29,
+                    "1": 0.36,
+                    "2": 0.35
+                  }
+                },
+                "test_gap": {
+                  "score": 0.29,
+                  "confidence": 0.55,
+                  "probabilities": {
+                    "0": 0.79,
+                    "1": 0.12,
+                    "2": 0.09
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.17,
+                  "confidence": 0.74,
+                  "probabilities": {
+                    "0": 0.87,
+                    "1": 0.09,
+                    "2": 0.04
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7224999999999999,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            }
+          ]
+        },
+        "verification": {
+          "action": "review",
+          "summary": {
+            "verified": 1,
+            "contradicted": 0,
+            "unsupported": 0,
+            "needs_review": 1,
+            "invalid_response": 0
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5
+          },
+          "results": [
+            {
+              "claim": "The extracted tree has 129 native car configuration variants (19 base and 110 add-on),3709 files and 2202028393 bytes; the real --check regenerated and compared all output bytes successfully.",
+              "verdict": "verified",
+              "confidence": 0.72,
+              "probabilities": {
+                "verified": 0.81,
+                "contradicted": 0.1,
+                "unsupported": 0.09
+              },
+              "action": "review"
+            }
+          ]
+        },
+        "usage": {
+          "input_tokens": 21498,
+          "output_tokens": 134
+        }
+      }
+    },
+    {
+      "path": ".scratch/redline/semantic-verification-repair/verify-001.json",
+      "sha256": "775b9cbe4cc4fc930eb78f7f71713a3d3462b80e2d46c407b7e7c2007b30e16e",
+      "result": {
+        "tool": "jev_verify",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "auto_accept": 0.8,
+        "subject_at": 0.5,
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0
+        },
+        "results": [
+          {
+            "id": "claim0",
+            "claim": "The brief experiment summary records 28 labeled items, 12 accepted advisory labels, 12 correct accepted labels and 16 review outcomes; its two listed label errors were both review outcomes.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 0.99,
+              "contradicts": 0.01,
+              "says_nothing": 0
+            },
+            "confidence": 0.98,
+            "action": "auto",
+            "supporting_evidence": "direct-measurements",
+            "same_subject": 0.95
+          },
+          {
+            "id": "claim1",
+            "claim": "The grounded experiment records 28 labeled items, zero accepted advisory labels, 28 review outcomes and one listed label error. The active-field experiment also records 28 items, zero accepted labels, 28 review outcomes and one listed error.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 0.96,
+              "contradicts": 0.04,
+              "says_nothing": 0
+            },
+            "confidence": 0.94,
+            "action": "auto",
+            "supporting_evidence": "direct-measurements",
+            "same_subject": 0.95
+          }
+        ],
+        "usage": {
+          "input_tokens": 10147,
+          "output_tokens": 235
+        }
+      }
+    },
+    {
+      "path": ".scratch/redline/semantic-verification-repair/verify-002.json",
+      "sha256": "039473a9c13d47c94c02a664f3c6d5447b69308d023d1b88f52fdb2049837b76",
+      "result": {
+        "tool": "jev_verify",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "auto_accept": 0.8,
+        "subject_at": 0.5,
+        "summary": {
+          "verified": 1,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0
+        },
+        "results": [
+          {
+            "id": "claim0",
+            "claim": "The four supplied SDK usage records have code-computed totals of 51300 input tokens, 8169 output tokens and $0.0021546 cost; these totals exclude MCP and screening calls.",
+            "verdict": "verified",
+            "probabilities": {
+              "supports": 0.97,
+              "contradicts": 0.03,
+              "says_nothing": 0
+            },
+            "confidence": 0.95,
+            "action": "auto",
+            "supporting_evidence": "direct-measurements",
+            "same_subject": 0.94
+          }
+        ],
+        "usage": {
+          "input_tokens": 9742,
+          "output_tokens": 119
+        }
+      }
+    },
+    {
+      "path": ".scratch/redline/final-gate/gate-002.json",
+      "sha256": "c34ae7b501e55f23cc81aaf995e426c86ceed5f3163d9ccfe0f0d63ab8e10476",
+      "result": {
+        "tool": "jev_gate",
+        "model": "typesafe/jev-1.13-20260917",
+        "provider": "openrouter",
+        "truncated": false,
+        "action": "escalate",
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review",
+          "review_escalated",
+          "claims_contradicted",
+          "claim_confidence_low",
+          "claim_confidence_below_auto_accept"
+        ],
+        "review": {
+          "mode": "per-file",
+          "action": "escalate",
+          "composite": 0.7123409090909093,
+          "safe_to_apply": 0.29,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting": [
+            {
+              "file": "research/evidence/redline-extraction/checks.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/extraction.json",
+              "rubrics": [
+                "test_gap"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/final-focused-checks.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/independent-output-audit.json",
+              "rubrics": [
+                "blast_radius"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/mount-cleanup.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/native-corpus-comparison.json",
+              "rubrics": [
+                "test_gap",
+                "blast_radius"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/outer-archive-coverage.json",
+              "rubrics": [
+                "spec_match",
+                "test_gap"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/semantic-active-experiment.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/semantic-experiments.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/semantic-metrics.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "file": "research/evidence/redline-extraction/source-preservation.json",
+              "rubrics": [
+                "spec_match"
+              ]
+            }
+          ],
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "files": [
+            {
+              "path": "research/evidence/redline-extraction/checks.json",
+              "safe_to_apply": 0.55,
+              "scores": {
+                "correctness": {
+                  "score": 1.44,
+                  "confidence": 0.16,
+                  "probabilities": {
+                    "0": 0.09,
+                    "1": 0.38,
+                    "2": 0.53
+                  }
+                },
+                "spec_match": {
+                  "score": 1.02,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.35,
+                    "1": 0.27,
+                    "2": 0.38
+                  }
+                },
+                "test_gap": {
+                  "score": 0.37,
+                  "confidence": 0.43,
+                  "probabilities": {
+                    "0": 0.76,
+                    "1": 0.1,
+                    "2": 0.14
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.32,
+                  "confidence": 0.52,
+                  "probabilities": {
+                    "0": 0.81,
+                    "1": 0.06,
+                    "2": 0.13
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.6892499999999999,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/extraction.json",
+              "safe_to_apply": 0.29,
+              "scores": {
+                "correctness": {
+                  "score": 1.52,
+                  "confidence": 0.27,
+                  "probabilities": {
+                    "0": 0.05,
+                    "1": 0.39,
+                    "2": 0.5599999999999999
+                  }
+                },
+                "spec_match": {
+                  "score": 1.53,
+                  "confidence": 0.29,
+                  "probabilities": {
+                    "0": 0.1,
+                    "1": 0.27,
+                    "2": 0.63
+                  }
+                },
+                "test_gap": {
+                  "score": 0.77,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.45,
+                    "1": 0.33,
+                    "2": 0.22
+                  }
+                },
+                "blast_radius": {
+                  "score": 1.59,
+                  "confidence": 0.37,
+                  "probabilities": {
+                    "0": 0.17,
+                    "1": 0.08,
+                    "2": 0.75
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.6565,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "test_gap"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/final-focused-checks.json",
+              "safe_to_apply": 0.59,
+              "scores": {
+                "correctness": {
+                  "score": 1.59,
+                  "confidence": 0.37,
+                  "probabilities": {
+                    "0": 0.06,
+                    "1": 0.3,
+                    "2": 0.64
+                  }
+                },
+                "spec_match": {
+                  "score": 1.24,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.21,
+                    "1": 0.35,
+                    "2": 0.44
+                  }
+                },
+                "test_gap": {
+                  "score": 0.62,
+                  "confidence": 0.07,
+                  "probabilities": {
+                    "0": 0.58,
+                    "1": 0.22,
+                    "2": 0.2
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.19,
+                  "confidence": 0.71,
+                  "probabilities": {
+                    "0": 0.87,
+                    "1": 0.07,
+                    "2": 0.06
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7432500000000001,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/independent-output-audit.json",
+              "safe_to_apply": 0.47,
+              "scores": {
+                "correctness": {
+                  "score": 1.67,
+                  "confidence": 0.5,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.25,
+                    "2": 0.71
+                  }
+                },
+                "spec_match": {
+                  "score": 1.58,
+                  "confidence": 0.35,
+                  "probabilities": {
+                    "0": 0.11,
+                    "1": 0.21,
+                    "2": 0.6799999999999999
+                  }
+                },
+                "test_gap": {
+                  "score": 0.52,
+                  "confidence": 0.2,
+                  "probabilities": {
+                    "0": 0.61,
+                    "1": 0.25,
+                    "2": 0.14
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.79,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.55,
+                    "1": 0.1,
+                    "2": 0.35
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7727499999999999,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "blast_radius"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/mount-cleanup.json",
+              "safe_to_apply": 0.64,
+              "scores": {
+                "correctness": {
+                  "score": 1.7,
+                  "confidence": 0.53,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.23,
+                    "2": 0.73
+                  }
+                },
+                "spec_match": {
+                  "score": 0.87,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.46,
+                    "1": 0.21,
+                    "2": 0.33
+                  }
+                },
+                "test_gap": {
+                  "score": 0.24,
+                  "confidence": 0.64,
+                  "probabilities": {
+                    "0": 0.85,
+                    "1": 0.06,
+                    "2": 0.09
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.08,
+                  "confidence": 0.88,
+                  "probabilities": {
+                    "0": 0.95,
+                    "1": 0.02,
+                    "2": 0.03
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7465,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/native-corpus-comparison.json",
+              "safe_to_apply": 0.46,
+              "scores": {
+                "correctness": {
+                  "score": 1.56,
+                  "confidence": 0.34,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.36,
+                    "2": 0.6
+                  }
+                },
+                "spec_match": {
+                  "score": 1.36,
+                  "confidence": 0.04,
+                  "probabilities": {
+                    "0": 0.21,
+                    "1": 0.22,
+                    "2": 0.57
+                  }
+                },
+                "test_gap": {
+                  "score": 0.68,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.51,
+                    "1": 0.3,
+                    "2": 0.19
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.69,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.56,
+                    "1": 0.19,
+                    "2": 0.25
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7132499999999999,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "test_gap",
+                "blast_radius"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/outer-archive-coverage.json",
+              "safe_to_apply": 0.55,
+              "scores": {
+                "correctness": {
+                  "score": 1.59,
+                  "confidence": 0.4,
+                  "probabilities": {
+                    "0": 0.04,
+                    "1": 0.32,
+                    "2": 0.64
+                  }
+                },
+                "spec_match": {
+                  "score": 1.31,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.22,
+                    "1": 0.24,
+                    "2": 0.54
+                  }
+                },
+                "test_gap": {
+                  "score": 0.77,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.47,
+                    "1": 0.29,
+                    "2": 0.24
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.25,
+                  "confidence": 0.64,
+                  "probabilities": {
+                    "0": 0.85,
+                    "1": 0.06,
+                    "2": 0.09
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7380000000000001,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match",
+                "test_gap"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/semantic-active-experiment.json",
+              "safe_to_apply": 0.48,
+              "scores": {
+                "correctness": {
+                  "score": 1.49,
+                  "confidence": 0.25,
+                  "probabilities": {
+                    "0": 0.08,
+                    "1": 0.34,
+                    "2": 0.58
+                  }
+                },
+                "spec_match": {
+                  "score": 1.1,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.36,
+                    "1": 0.18,
+                    "2": 0.46
+                  }
+                },
+                "test_gap": {
+                  "score": 0.56,
+                  "confidence": 0.14,
+                  "probabilities": {
+                    "0": 0.62,
+                    "1": 0.19,
+                    "2": 0.19
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.23,
+                  "confidence": 0.66,
+                  "probabilities": {
+                    "0": 0.84,
+                    "1": 0.09,
+                    "2": 0.07
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.70375,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/semantic-experiments.json",
+              "safe_to_apply": 0.53,
+              "scores": {
+                "correctness": {
+                  "score": 1.42,
+                  "confidence": 0.14,
+                  "probabilities": {
+                    "0": 0.12,
+                    "1": 0.33,
+                    "2": 0.55
+                  }
+                },
+                "spec_match": {
+                  "score": 0.95,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.43,
+                    "1": 0.18,
+                    "2": 0.39
+                  }
+                },
+                "test_gap": {
+                  "score": 0.44,
+                  "confidence": 0.34,
+                  "probabilities": {
+                    "0": 0.71,
+                    "1": 0.14,
+                    "2": 0.15
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.28,
+                  "confidence": 0.58,
+                  "probabilities": {
+                    "0": 0.81,
+                    "1": 0.1,
+                    "2": 0.09
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.6725,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/semantic-metrics.json",
+              "safe_to_apply": 0.48,
+              "scores": {
+                "correctness": {
+                  "score": 1.36,
+                  "confidence": 0.03,
+                  "probabilities": {
+                    "0": 0.12,
+                    "1": 0.41,
+                    "2": 0.47
+                  }
+                },
+                "spec_match": {
+                  "score": 0.91,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.46,
+                    "1": 0.18,
+                    "2": 0.36
+                  }
+                },
+                "test_gap": {
+                  "score": 0.41,
+                  "confidence": 0.39,
+                  "probabilities": {
+                    "0": 0.74,
+                    "1": 0.11,
+                    "2": 0.15
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.37,
+                  "confidence": 0.44,
+                  "probabilities": {
+                    "0": 0.77,
+                    "1": 0.09,
+                    "2": 0.14
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.65,
+              "reason_codes": [
+                "confidence_below_review",
+                "safe_to_apply_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            },
+            {
+              "path": "research/evidence/redline-extraction/source-preservation.json",
+              "safe_to_apply": 0.62,
+              "scores": {
+                "correctness": {
+                  "score": 1.56,
+                  "confidence": 0.34,
+                  "probabilities": {
+                    "0": 0.05,
+                    "1": 0.34,
+                    "2": 0.61
+                  }
+                },
+                "spec_match": {
+                  "score": 1.2,
+                  "confidence": 0,
+                  "probabilities": {
+                    "0": 0.3,
+                    "1": 0.21,
+                    "2": 0.49
+                  }
+                },
+                "test_gap": {
+                  "score": 0.37,
+                  "confidence": 0.46,
+                  "probabilities": {
+                    "0": 0.77,
+                    "1": 0.1,
+                    "2": 0.13
+                  }
+                },
+                "blast_radius": {
+                  "score": 0.19,
+                  "confidence": 0.71,
+                  "probabilities": {
+                    "0": 0.89,
+                    "1": 0.03,
+                    "2": 0.08
+                  }
+                }
+              },
+              "weights": {
+                "correctness": 0.4,
+                "spec_match": 0.3,
+                "test_gap": 0.15,
+                "blast_radius": 0.15
+              },
+              "thresholds": {
+                "auto_accept": 0.8,
+                "review_at": 0.5,
+                "composite_floor": 0.7
+              },
+              "action": "escalate",
+              "composite": 0.7500000000000001,
+              "reason_codes": [
+                "confidence_below_review"
+              ],
+              "limiting_rubrics": [
+                "spec_match"
+              ]
+            }
+          ]
+        },
+        "verification": {
+          "action": "escalate",
+          "summary": {
+            "verified": 1,
+            "contradicted": 1,
+            "unsupported": 0,
+            "needs_review": 2,
+            "invalid_response": 0
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5
+          },
+          "results": [
+            {
+              "claim": "The independent output audit matched 3432 retained packed native member hashes and lengths against the independent C decoder, and checked 65 loose members,82 original car envelopes and all 129 configuration source-field line/value mappings. This is static byte extraction, not game rendering.",
+              "verdict": "verified",
+              "confidence": 0.74,
+              "probabilities": {
+                "verified": 0.83,
+                "contradicted": 0.07,
+                "unsupported": 0.1
+              },
+              "action": "review"
+            },
+            {
+              "claim": "In the 28-item labeled experiments, brief wording selected 26 correct labels and accepted 12 allcorrect; grounded wording selected 27 correct and kept 28 forreview. Active-field excerpts also selected 27 correct and kept 28 forreview. Four SDK calls reported 51300 input tokens,8169 output tokens, $0.0021546 total and 0.328\u20130.644 seconds per SDK call; screening and CLI overhead are excluded.",
+              "verdict": "contradicted",
+              "confidence": 0.35,
+              "probabilities": {
+                "verified": 0.4,
+                "contradicted": 0.57,
+                "unsupported": 0.03
+              },
+              "action": "escalate"
+            }
+          ]
+        },
+        "usage": {
+          "input_tokens": 30874,
+          "output_tokens": 1092
+        }
+      },
+      "approved_scope": "Patch review and first verified independent-output-audit claim only; second compound claim remains retired and is not approved."
+    }
+  ],
+  "retirement": {
+    "original_receipt": ".scratch/redline/final-gate/gate-002.json",
+    "retired_claim": "In the 28-item labeled experiments, brief wording selected 26 correct labels and accepted 12 allcorrect; grounded wording selected 27 correct and kept 28 forreview. Active-field excerpts also selected 27 correct and kept 28 forreview. Four SDK calls reported 51300 input tokens,8169 output tokens, $0.0021546 total and 0.328\u20130.644 seconds per SDK call; screening and CLI overhead are excluded.",
+    "reason": "Compound summary was contradicted at low confidence. It is not an approved completion claim. Separate narrower source-record claims and approximate latency wording replace it; original receipt remains retained.",
+    "replacement_claims": [
+      "The brief experiment summary records 28 labeled items, 12 accepted advisory labels, 12 correct accepted labels and 16 review outcomes; its two listed label errors were both review outcomes.",
+      "The grounded experiment records 28 labeled items, zero accepted advisory labels, 28 review outcomes and one listed label error. The active-field experiment also records 28 items, zero accepted labels, 28 review outcomes and one listed error.",
+      "The four supplied SDK usage records have code-computed totals of 51300 input tokens, 8169 output tokens and $0.0021546 cost; these totals exclude MCP and screening calls."
+    ]
+  },
+  "procedural_repair": "Original three-claim verification obeyed MCP schema but exceeded repository max-two claim batching. Original results retained; two compliant batches explicitly repair the workflow without changing evidence conclusions or seeking preferred scores.",
+  "original_three_claim_judgments_retained": {
+    "tool": "jev_verify",
+    "args": {
+      "claims": [
+        "The brief experiment summary records 28 labeled items, 12 accepted advisory labels, 12 correct accepted labels and 16 review outcomes; its two listed label errors were both review outcomes.",
+        "The grounded experiment records 28 labeled items, zero accepted advisory labels, 28 review outcomes and one listed label error. The active-field experiment also records 28 items, zero accepted labels, 28 review outcomes and one listed error.",
+        "The four supplied SDK usage records have code-computed totals of 51300 input tokens, 8169 output tokens and $0.0021546 cost; these totals exclude MCP and screening calls."
+      ],
+      "evidence": [
+        {
+          "id": "direct-measurements",
+          "text": "{\n  \"four_sdk_usages\": [\n    {\n      \"cost\": 0.0003738,\n      \"input_tokens\": 8900,\n      \"output_tokens\": 1302\n    },\n    {\n      \"input_tokens\": 12373,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000519666\n    },\n    {\n      \"input_tokens\": 15061,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000632562\n    },\n    {\n      \"input_tokens\": 14966,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000628572\n    }\n  ],\n  \"totals_computed_in_code\": {\n    \"schema\": 1,\n    \"production_metadata_labels\": 16,\n    \"production_advisory_accepted\": 0,\n    \"production_review\": 16,\n    \"sdk_calls\": 4,\n    \"input_tokens\": 51300,\n    \"output_tokens\": 8169,\n    \"provider_reported_cost_usd\": 0.0021546,\n    \"sdk_latency_seconds\": [\n      0.6440013749997888,\n      0.35101987500092946,\n      0.35071200000311364,\n      0.3275828339974396\n    ],\n    \"limits\": [\n      \"SDK request validation/provider/composition latency; screening/CLI overhead not included.\",\n      \"MCP monetary costs not returned.\",\n      \"Small28-item labeled experiment; not a general accuracy estimate.\"\n    ]\n  },\n  \"brief\": {\n    \"total\": 28,\n    \"accepted\": 12,\n    \"accepted_correct\": 12,\n    \"review\": 16,\n    \"errors\": [\n      {\n        \"path\": \"mixed/bundle.zip\",\n        \"expected\": \"unknown\",\n        \"actual\": \"other\",\n        \"decision\": \"review\"\n      },\n      {\n        \"path\": \"unidentified/records.bin\",\n        \"expected\": \"car_metadata\",\n        \"actual\": \"unknown\",\n        \"decision\": \"review\"\n      }\n    ],\n    \"label_accuracy\": 0.9285714285714286\n  },\n  \"grounded\": {\n    \"total\": 28,\n    \"accepted\": 0,\n    \"accepted_correct\": 0,\n    \"review\": 28,\n    \"errors\": [\n      {\n        \"path\": \"unidentified/records.bin\",\n        \"expected\": \"car_metadata\",\n        \"actual\": \"unknown\",\n        \"decision\": \"review\"\n      }\n    ],\n    \"label_accuracy\": 0.9642857142857143\n  },\n  \"active\": {\n    \"status\": \"ok\",\n    \"evidence_strategy\": \"active-carName-and-model-excerpts\",\n    \"latency_seconds\": 0.3275828339974396,\n    \"usage\": {\n      \"input_tokens\": 14966,\n      \"output_tokens\": 2289,\n      \"cost\": 0.000628572\n    },\n    \"total\": 28,\n    \"label_correct\": 27,\n    \"accepted\": 0,\n    \"accepted_correct\": 0,\n    \"review\": 28,\n    \"actual_metadata_accepted\": 0,\n    \"errors\": [\n      {\n        \"path\": \"unidentified/records.bin\",\n        \"expected\": \"car_metadata\",\n        \"actual\": \"unknown\",\n        \"decision\": \"review\"\n      }\n    ]\n  },\n  \"limits\": \"SDK-only accounting and small labeled experiment; review outcomes are not automatic acceptance. Rounded latency range is approximate.\"\n}"
+        }
+      ]
+    },
+    "out": ".scratch/redline/final-gate-repaired/semantic-verify.json"
+  },
+  "resolved_uncertainties": [
+    {
+      "scope": "Native correctness and parser test gap",
+      "evidence": [
+        "addons/native-ambiguity-resolution.json",
+        "addons/parser-gate-independent-resolution.json",
+        "addons/independent-corpus-comparison-audit.json"
+      ],
+      "resolution": "Static source instruction mapping and independent C decoder agree with producer on81unique packages3485unique package-members; bounds/path/no-clobber controls pass. Unreadable slots remain in carriers and are never asserted deleted."
+    },
+    {
+      "scope": "Integration completeness and output blast radius",
+      "evidence": [
+        "addons/final-integration-output-audit.json",
+        "addons/final-integration-controls-fixed.json",
+        "extraction-check.log"
+      ],
+      "resolution": "3432packed decoded members match independent C;65loose members,82original envelopes,129config mappings and3709filetree independently checked. Duplicate package/loose declarations reject. Writes publish only absent/empty destinations; current output hash pins exact."
+    },
+    {
+      "scope": "Post-fix checks and semantic measurements",
+      "evidence": [
+        "checks-final/results.json",
+        "addons/final-integration-semantic-check-audit.json"
+      ],
+      "resolution": "42executed checks allpass exit0 with verifier tamper-control evidence and Blender roundtrip. Raw responses reproduce26/28brief12acceptedallcorrect,27/28grounded+active0accepted; 51300input8169outputtokens,$.002154600actualSDKcost. Approximate0.328\u20130.644sSDK-only latencies supported; unmeasuredCLI/MCP overhead excluded."
+    },
+    {
+      "scope": "Documentation/receipts/gitignore spec and blast radius",
+      "resolution": "All11 compact receipts match independently retained run evidence; docs qualify variants/static/no-transitive-closure/data-fork limitations. Gitignore covers local installer images and retained >100MB base envelope only. Existing GT/dealership changes are preserved. Literal source-line issue and24-byte header wording corrected."
+    }
+  ],
+  "remaining_limits": [
+    "64static resource references have no local/base candidate and202 have multiple candidates; transitive closure and plug-in precedence remain unverified.",
+    "Two outer Arsenic entries rely on installedXADMaster; originalSIT retains48trailingbytes whose semantic role is unknown. Resource forks not separately reconstructed; original envelopes preserve their carriers.",
+    "Small28-item semantic test is not general accuracy evidence; no grounded label was automatically accepted. Active fields measured no gain and productionadapter remains unchanged.",
+    "Game execution, model topology/texture conversion and visual fidelity remain outside this extraction completion."
+  ]
+}

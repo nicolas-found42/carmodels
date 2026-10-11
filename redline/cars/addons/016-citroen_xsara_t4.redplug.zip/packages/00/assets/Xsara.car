@@ -1,0 +1,351 @@
+
+
+
+;carName "Citroen Xsara WRC"
+carName "Citroen Xsara T4 WRC"
+
+
+;engineName "aluminum 122ci aspirated straight 4, 310 bhp"
+year 2006
+displacement 1.994
+price 380000
+
+;---aerodynamics
+frontAirResistance 0.41
+sideAirResistance 1.2
+topAirResistance 2.0
+frontLift -1.4
+rearLift -0.78 
+
+;---chassis
+mass 1230
+inertia {2300,2520,585}
+;massCenter 
+massCenter {0.0,0.13,0.2}
+
+numCollBoxes 2
+# 0
+coll.tfr {0.955,0.850,2.24}
+coll.tfl {-0.955,0.850,2.24}
+coll.trr {0.955,0.850,-2.24}
+coll.trl {-0.955,0.850,-2.24}
+coll.bfr {0.955,0.275,2.24}
+coll.bfl {-0.955,0.275,2.24}
+coll.brr {0.955,0.275,-2.24}
+coll.brl {-0.955,0.275,-2.24}
+# 1
+coll.tfr {0.85,1.31,0.385}
+coll.tfl {-0.85,1.31,0.385}
+coll.trr {0.85,1.31,-0.675}
+coll.trl {-0.85,1.31,-0.675}
+coll.bfr {0.955,0.853,0.828}
+coll.bfl {-0.955,0.853,0.828}
+coll.brr {0.955,0.853,-2.27}
+coll.brl {-0.955,0.853,-2.27}
+
+;---graphics
+model "xsara2.mdl"
+interiorModel "null.mdl"
+driverPos {0.41,0.4,-0.05}
+noDriverModel 1
+steeringWheelPos {0.41,0.74,0.42}
+steeringWheelAngle 15
+steeringWheelTurns 3.5
+steeringWheelTexture "null.txr"
+steeringWheelRadius 0.02
+
+;---color
+numColors 1
+# 0
+colors {1,0.1,0.1}
+
+
+
+exhaust1Pos {-0.3,0.1,-2.2}
+exhaust2Pos {-0.3,0.1,-2.2}
+exhaustFire 80000
+
+frontLicensePlatePos {0,0.22,2.06}
+rearLicensePlatePos {0,0.56,-1.98}
+
+hornSample "horn2.wav"
+hornPitch 0.4
+
+
+
+engineSample "fin2.wav"
+hallSample "fin2hall.wav"
+zeroRPMSoundGain 0.22
+fullRPMSoundGain 1.4
+zeroThrottleSoundGain 0.63
+fullThrottleSoundGain 1.4
+zeroRPMSoundPitch 0.70
+fullRPMSoundPitch .9
+zeroThrottleSoundPitch 0.54
+fullThrottleSoundPitch 0.83
+turboSample "turbo.wav"
+turboGain 1.55
+
+
+;--engine
+power 230900
+torque 570
+powerRPM 6000
+torqueRPM 2760
+maxRPM 7600.0
+idleRPM 900.0
+jerkRPM 500.0
+engineInertia 0.05
+engineFriction 104
+
+;---drivetrain
+finalDriveRatio 3.6
+maxClutchTorqueTransfer 800
+differentialLockCoefficient 90
+
+shiftUpRPM 7000.0
+shiftDownRPM 3500.0
+gearSwitchTime 0.04
+
+numGears 8
+# 0
+gearRatios -3.416
+# 1
+gearRatios 0
+# 2
+gearRatios 3.583
+# 3
+gearRatios 2.68
+# 4
+gearRatios 2.121
+# 5
+gearRatios 1.612
+# 6
+gearRatios 1.335
+# 7
+gearRatios 0.97
+
+
+;---suspension
+supsensionFriction 500
+damperStrength 45000
+
+frontSwayBar 20000
+rearSwayBar 30000
+
+
+;---wheelsnumWheels 4# 0
+;front leftwheels.pos {-0.81,0.17,1.257}wheels.inertia 2.2wheels.friction 10wheels.powered 0.05wheels.maxAngle 0.48135934017wheels.maxSuspension 0.13wheels.radius 0.327wheels.braked 6400.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.26wheels.texture 6
+wheels.stickyness 0.07# 1
+;front rightwheels.pos {0.81,0.17,1.257}wheels.inertia 2.2wheels.friction 10wheels.powered 0.05wheels.maxAngle 0.48135934017wheels.maxSuspension 0.13wheels.radius 0.327wheels.braked 6400.0wheels.handbraked 0.0wheels.model "wheel-classic-disc.mdl"wheels.width 0.26wheels.texture 6
+wheels.stickyness 0.07# 2
+;rear leftwheels.pos {-0.80,0.16,-1.278}wheels.inertia 2.2wheels.friction 10wheels.powered 0.45wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.328wheels.braked 2300.0wheels.handbraked 1wheels.model "wheel-classic-disc.mdl"wheels.width 0.327wheels.texture 6
+wheels.stickyness 0.14# 3
+;rear rightwheels.pos {0.80,0.16,-1.278}wheels.inertia 2.2wheels.friction 10wheels.powered 0.45wheels.maxAngle 0.0wheels.maxSuspension 0.2wheels.radius 0.33wheels.braked 2300.0wheels.handbraked 1wheels.model "wheel-classic-disc.mdl"wheels.width 0.327wheels.texture 6
+wheels.stickyness 0.14
+
+
+
+numLights 23
+
+# 0
+lights.pos {0.58,0.53,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.26
+lights.onFlags 0x01
+
+# 1
+lights.pos {-0.58,0.53,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.26
+lights.onFlags 0x01
+# 2
+
+lights.pos {0.58,0.53,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 2
+lights.size 0.3
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 3
+
+lights.pos {-0.58,0.53,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 2
+lights.size 0.3
+lights.onFlags 0x10
+lights.offFlags 0x00
+# 4
+
+lights.pos {-0.58,0.5,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 2
+lights.size 0.2
+lights.onFlags 0x08
+lights.offFlags 0x00
+# 5
+
+lights.pos {0.58,0.5,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 2
+lights.size 0.2
+lights.onFlags 0x08
+lights.offFlags 0x00
+# 6
+;main head
+lights.pos {0.536,0.40,1.94}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size 0.55
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 7
+;main head
+lights.pos {-0.536,0.40,1.94}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size 0.55
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+
+# 8
+;cone perhaps
+lights.pos {0.9,0.5,1.96}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,1}
+lights.type 1
+lights.size 30
+lights.onFlags 0x01
+# 9
+;cone perhaps
+lights.pos {-0.9,0.5,1.96}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,1}
+lights.type 1
+lights.size 30
+lights.onFlags 0x01
+# 10
+lights.pos {0.9,0.5,1.96}
+lights.dir {0,0,1}
+lights.rgb {0.5,0.5,0.9}
+lights.type 5
+lights.size 1.8
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 11
+lights.pos {-0.9,0.5,1.96}
+lights.dir {0,0,1}
+lights.rgb {0.5,0.5,0.9}
+lights.type 5
+lights.size 1.8
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+
+# 12
+lights.pos {0.5,0.48,1.96}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size 0.13
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 13
+lights.pos {-0.5,0.48,1.96}
+lights.dir {0,0,1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size 0.13
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+
+# 14
+lights.pos {0.65,0.53,-1.93}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.20
+lights.onFlags 0x01
+# 15
+lights.pos {-0.65,0.53,-1.93}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.20
+lights.onFlags 0x01
+
+
+# 16
+lights.pos {0.565,0.18,1.98}
+lights.dir {0,0,1}
+lights.rgb {1,.5,0}
+lights.type 2
+lights.size 0.35
+lights.onFlags 0x01
+lights.offFlags 0x00
+# 17
+lights.pos {-0.565,0.18,1.98}
+lights.dir {0,0,1}
+lights.rgb {1,.5,0}
+lights.type 2
+lights.size 0.35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 18
+lights.pos {0.0,0.74,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.08
+lights.onFlags 0x01
+
+# 19
+lights.pos {0.06,0.74,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.08
+lights.onFlags 0x01
+
+# 20
+lights.pos {-0.06,0.74,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.08
+lights.onFlags 0x01
+
+# 21
+lights.pos {-0.12,0.74,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.08
+lights.onFlags 0x01
+
+# 22
+lights.pos {0.12,0.74,-1.94}
+lights.dir {0,0,-1}
+lights.rgb {0.8,0,0}
+lights.type 2
+lights.size 0.08
+lights.onFlags 0x01
+
+
+
+
+
+

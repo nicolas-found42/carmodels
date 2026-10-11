@@ -1,4 +1,14 @@
 import * as THREE from './vendor/three.module.js';
+import {loadEditableGLB} from './editable-glb.mjs';
+
+export const gameId = c => c.game || 'ford-racing-2';
+export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
+export function matchesVariant(c, variant) {
+  return !variant || (variant==='arcade' ? c.sourceCollection==='arcade' : c.sourceVariant===variant);
+}
+export async function loadCar(c, options={}) {
+  return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);
+}
 
 // Compact offline mesh: little-endian XYZ + normal XYZ float32, then a tone byte.
 function bytes(encoded) {
@@ -81,28 +91,32 @@ export function makeCar(c) {
 // Shared geometries/materials belong to the selected car and are disposed once.
 export function disposeCar(car) {
   if (!car) return;
-  const geometries = new Set(), materials = new Set();
+  const geometries = new Set(), materials = new Set(), textures = new Set(car.userData.textures||[]);
   car.traverse(node => {
     if (node.geometry) geometries.add(node.geometry);
-    if (node.material) for (const mat of [node.material].flat()) materials.add(mat);
+    if (node.material) for (const mat of [node.material].flat()) { materials.add(mat); if(mat.map)textures.add(mat.map); }
   });
   geometries.forEach(geo => geo.dispose());
   materials.forEach(mat => mat.dispose());
+  textures.forEach(texture => texture.dispose());
 }
 
 export function validateCars(cars) {
   if (!Array.isArray(cars) || !cars.length) throw Error('The vehicle list is empty or is not an array.');
   const codes = new Set();
-  const styles = new Set(['coupe', 'sedan', 'hatchback', 'pickup', 'suv', 'racecar', 'concept']);
+  const styles = new Set(['coupe', 'sedan', 'hatchback', 'pickup', 'suv', 'racecar', 'concept', 'unknown']);
   for (const c of cars) {
     if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
     codes.add(c.code);
+    const unknownSpecs = ['gran-turismo','redline'].includes(c.game);
+    if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);
+    if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);
     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);
     for (const key of ['agility', 'accel', 'speed', 'weight']) {
-      if (!Number.isFinite(c[key]) || c[key] < 0 || c[key] > 1) throw Error(`${c.code}: ${key} must be a rating from 0 to 1.`);
+      if (!(unknownSpecs && c[key]===null) && (!Number.isFinite(c[key]) || c[key] < 0 || c[key] > 1)) throw Error(`${c.code}: ${key} must be a rating from 0 to 1.`);
     }
     for (const key of ['bhp', 'kg']) {
-      if (!Number.isFinite(c[key]) || c[key] < 0) throw Error(`${c.code}: invalid ${key}.`);
+      if (!(unknownSpecs && c[key]===null) && (!Number.isFinite(c[key]) || c[key] < 0)) throw Error(`${c.code}: invalid ${key}.`);
     }
     if (c.topSpeed != null && (!Number.isFinite(Number(c.topSpeed)) || Number(c.topSpeed) < 0)) throw Error(`${c.code}: invalid top speed.`);
     if (c.year != null && !['string','number'].includes(typeof c.year)) throw Error(`${c.code}: invalid year.`);
@@ -110,7 +124,11 @@ export function validateCars(cars) {
     if (c.sound != null && typeof c.sound !== 'string') throw Error(`${c.code}: invalid sound bank.`);
     if (!Array.isArray(c.liveries) || c.liveries.some(l => !l || typeof l.label !== 'string' || typeof l.code !== 'string')) throw Error(`${c.code}: invalid liveries.`);
     if (c.paint != null && (!Array.isArray(c.paint.rgb) || c.paint.rgb.length !== 3 || c.paint.rgb.some(v => !Number.isInteger(v) || v < 0 || v > 255))) throw Error(`${c.code}: invalid paint sample.`);
-    decodeModel(c);
+    if(c.model?.schema===2) {
+      if(c.displayMode!=='textured-glb' || !c.model.source || c.model.source.glb!==`dealership/models/${c.code}.glb` ||
+         c.model.source.preset!=='dealership' || !/^[a-f0-9]{64}$/.test(c.model.source.sha256) ||
+         !Number.isInteger(c.model.triangleCount) || c.model.triangleCount<=0)throw Error(`${c.code}: invalid textured dealership model.`);
+    } else decodeModel(c);
   }
   return cars;
 }

@@ -27,6 +27,16 @@ def model_catalog(public=PUBLIC):
             if hashlib.sha256(data).hexdigest() != entry["sha256"] or len(data) != entry["bytes"]:
                 raise ValueError("Model hash/size differs: " + identifier)
             metadata = {key: entry[key] for key in ["code", "sha256", "bytes", "records"]}
+            # Exporters can describe source identities without inventing display names.
+            for key in ["display_name", "source_profile", "source_variant", "claim_limits"]:
+                if key in entry:
+                    value = entry[key]
+                    if key == "claim_limits":
+                        if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+                            raise ValueError("Invalid model claim limits: " + identifier)
+                    elif not isinstance(value, str):
+                        raise ValueError("Invalid model metadata: " + identifier)
+                    metadata[key] = entry[key]
             cars.append({**metadata, "id": identifier, "game": game,
                          "file": model.relative_to(public).as_posix()})
     return {"cars": cars}

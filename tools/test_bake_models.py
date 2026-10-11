@@ -6,9 +6,10 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+import tempfile
 import unittest
 
-from bake_models import bake_car, texture_tone, load_source_model
+from bake_models import bake_car, read_glb, texture_tone, load_source_model
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -102,6 +103,26 @@ def check_bake(code, model):
 
 
 class ModelBakeTests(unittest.TestCase):
+    def test_tiny_negative_uv_modulo_rounding_stays_in_image(self):
+        from redline_model import build_glb
+        from test_redline_model import source_fixture
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            index, car = source_fixture(root)
+            data, _, _, _ = build_glb(root, index, car, 'base/test')
+            doc, binary = read_glb(data)
+            changed = bytearray(binary)
+            for mesh in doc['meshes']:
+                for primitive in mesh['primitives']:
+                    a = doc['accessors'][primitive['attributes']['TEXCOORD_0']]
+                    view = doc['bufferViews'][a['bufferView']]
+                    struct.pack_into('<2f', changed, view['byteOffset'] + a.get('byteOffset', 0), -2.0**-80, -2.0**-80)
+            self.assertEqual((-2.0**-80) % 1, 1.0)
+            original = bake_car('TEST', data, source_mode=False)
+            edited = bake_car('TEST', data[:-len(binary)] + changed, source_mode=False)
+            self.assertEqual(edited['triangleCount'], original['triangleCount'])
+            self.assertEqual(edited['parts'], original['parts'])
+
     @classmethod
     def setUpClass(cls):
         cls.cars = [{'code':p.stem,'model':load_source_model(p.stem)} for p in sorted((ROOT / 'dealership/public/ford-racing-2').glob('*.glb'))]

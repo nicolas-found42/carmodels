@@ -1,0 +1,48 @@
+{
+  "args": {
+    "passage_a": "Earlier conversion neutral static pose statement: wheel translation T(wheels.pos), with zero suspension travel; wheel center y equals configured wheels.pos.y for static showroom/library output.",
+    "passage_b": "Corrected native preview statement: preview initializes runtime wheel travel to half configured wheels.maxSuspension, and draw subtracts runtime travel from configured wheels.pos.y. Static showroom/library output matching native preview uses pos.y - maxSuspension/2 (Mustang .35-.2/2=.25). With maxSuspension=0, centers coincide. Rotation and scale are unchanged.",
+    "aspects": [
+      "Static showroom wheel center Y for a nonzero maxSuspension"
+    ],
+    "purpose": "Assess whether the previous neutral-pose placement claim must be retired after finding omitted native preview suspension state."
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "contradicts",
+      "probabilities": {
+        "same_fact": 0,
+        "contradicts": 0.99,
+        "different_facts": 0.01
+      },
+      "confidence": 0.98,
+      "margin": 0.98,
+      "decision": "auto"
+    },
+    "aspects": [
+      {
+        "aspect": "Static showroom wheel center Y for a nonzero maxSuspension",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0,
+          "contradicts": 0.98,
+          "different_facts": 0.02
+        },
+        "confidence": 0.97,
+        "margin": 0.96,
+        "decision": "auto"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 682,
+      "output_tokens": 89
+    }
+  }
+}

@@ -1,0 +1,379 @@
+;------Credits------
+; 2008
+; Plugin created by Andreu
+
+
+; Top speed 155 mph
+; 0-60 kph 2.7 sec
+; 0-80 kph 4.2 sec
+; 0-100 kph 5.7 sec
+; 0-120 kph 8.0 sec
+; 400 m = 13.80 @ 162 kph (100.7 mph)
+
+;——————General Car Information——————
+carName "Toyota Supra Turbo v0.1"
+year 1998
+displacement 3.0
+builtIn 0
+price 25000
+
+
+;——————Aerodynamics——————
+; Coefficient of Drag: 0.31
+frontAirResistance 0.607
+sideAirResistance 1.515
+topAirResistance 2.153
+frontLift 0.0
+rearLift -0.15
+
+
+;——————Chassis——————
+; wheelbase 2.55 m
+; weight distibution = 53/47
+; W = 1.811 m
+; H = 1.275 m
+; L = 4.513 m
+
+mass 1565
+massCenter {0.0, 0.465, 0.0765}
+inertia {2680,2628,778}
+
+
+;-—————Collision Boxes——————
+numCollBoxes 2
+# 0
+coll.tfr {0.914, 0.692, 2.123}
+coll.tfl {-0.914, 0.692, 2.123}
+coll.trr {0.896, 0.957, -2.220}
+coll.trl {-0.896, 0.957, -2.220}
+coll.bfr {0.862, 0.133, 2.241}
+coll.bfl {-0.862, 0.133, 2.241}
+coll.brr {0.862, 0.209, -2.220}
+coll.brl {-0.862, 0.209, -2.220}
+
+
+# 1
+coll.tfr {0.908, 1.232, 0.334}
+coll.tfl {-0.908, 1.232, 0.334}
+coll.trr {0.899, 1.239, -0.954}
+coll.trl {-0.899, 1.239, -0.954}
+coll.bfr {0.908, 0.779, 0.694}
+coll.bfl {-0.908, 0.779, 0.694}
+coll.brr {0.899, 0.911, -1.468}
+coll.brl {-0.899, 0.911, -1.468}
+
+;——————Graphics——————
+model "toyota_supra_0.1.mdl"
+interiorModel "null.mdl"
+shadowModel "null.mdl"
+
+numColors 7
+
+; Yellow
+# 0
+colors {0.984, 0.875, 0}
+
+; Blue
+# 1
+colors {0.238, 0.0625, 0.48}
+
+; Black
+# 2
+colors {0,0,0}
+
+; Red
+# 3
+colors {0.679, 0.097, 0.097}
+
+; White
+# 4
+colors {1,1,1}
+
+; Orange
+# 5
+colors {0.906, 0.39, 0.105}
+
+; Cyan
+# 6
+colors {0.242, 0.718, 0.703}
+
+
+;——————Driver model——————
+driverPos {0.31, 0.50,-0.215}
+
+
+;——————Position of steering wheel model——————
+steeringWheelPos {0.31, 0.75, 0.156}
+steeringWheelAngle 15
+steeringWheelTurns 3
+steeringWheelRadius 0.2
+steeringWheelTexture "supra_wheel.png"
+
+
+;——————Position of Exhaust——————
+exhaust1Pos {0.551,0.315,-2.193}
+exhaust2Pos {0.551,0.315,-2.193}
+
+
+;——————Position of License Plates——————
+frontLicensePlatePos {0.0, 0.375, 2.25}
+rearLicensePlatePos {0.0, 0.65, -2.28}
+
+
+;——————Engine——————
+power 239000
+powerRPM 5600
+torque 427
+torqueRPM 4000
+jerkRPM 800
+idleRPM 800
+maxRPM 6800
+engineInertia 0.2
+engineBaseFriction 17.5
+engineRPMFriction 0.135
+
+
+;——————Engine Sound——————
+
+engineSample "supra_engine.wav"
+hallSample "supra_engine.wav"
+zeroRPMSoundGain 0.8
+fullRPMSoundGain 2.0
+zeroThrottleSoundGain 1.4
+fullThrottleSoundGain 2.1
+
+; zeroRPMSoundGain 0.0
+; fullRPMSoundGain 0.0
+; zeroThrottleSoundGain 0.0
+; fullThrottleSoundGain 0.0
+
+
+zeroRPMSoundPitch 0.4
+fullRPMSoundPitch 1.0
+zeroThrottleSoundPitch 0.6
+fullThrottleSoundPitch 1.0
+
+
+;——————Horn Sound——————
+hornSample "supra_horn.wav"
+hornPitch 0
+hornSoundgain 1
+
+
+;——————Drivetrain——————
+finalDriveRatio 3.27
+maxClutchTorqueTransfer 332
+shiftUpRPM 5500
+shiftDownRPM 2500
+gearSwitchTime 0.35
+differentialLockCoefficient 97.5
+
+
+;——————Number of gears——————
+numGears 8
+# 0
+gearRatios -3.28
+# 1
+gearRatios 0
+# 2
+gearRatios 3.83
+# 3
+gearRatios 2.36
+# 4
+gearRatios 1.69
+# 5
+gearRatios 1.31
+# 6
+gearRatios 1
+# 7
+gearRatios 0.79
+
+
+;——————Suspension——————
+suspensionFriction 900
+damperStrength 40000
+frontSwayBar 18000
+rearSwayBar 17500
+
+
+;——————Wheels——————
+; Front Track = 1.520 m
+; Rear Track = 1.525 m
+; braking performance
+; 100 kph - 0 in 120 ft
+; 130 kph -0 in 225 ft
+
+; Steering ratio 17.5:1
+; Turns: 3
+; 1.07711748 rad/2 = 0.53855874
+
+numWheels 4
+
+# 0
+wheels.pos {0.76, 0.3345, 1.285}
+wheels.inertia 2
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.5385
+wheels.maxSuspension 0.095
+wheels.radius 0.32165
+wheels.braked 3500
+wheels.handbraked 0.0
+wheels.model "supra_tire_right.mdl"
+wheels.width 0.235
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.12
+
+# 1
+wheels.pos {-0.76, 0.3345, 1.285}
+wheels.inertia 2
+wheels.powered 0.0
+wheels.friction 10
+wheels.maxAngle 0.5385
+wheels.maxSuspension 0.095
+wheels.radius 0.32165
+wheels.braked 3500
+wheels.handbraked 0.0
+wheels.model "supra_tire_left.mdl"
+wheels.width 0.235
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.12
+
+# 2
+wheels.pos {0.7625, 0.342, -1.265}
+wheels.inertia 2.1
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.11
+wheels.radius 0.3179
+wheels.braked 800
+wheels.handbraked 0.10
+wheels.model "supra_tire_right.mdl"
+wheels.width 0.255
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.125
+
+# 3
+wheels.pos {-0.7625, 0.342, -1.265}
+wheels.inertia 2.1
+wheels.powered 0.5
+wheels.friction 10
+wheels.maxAngle 0.0
+wheels.maxSuspension 0.11
+wheels.radius 0.3179
+wheels.braked 800
+wheels.handbraked 0.8
+wheels.model "supra_tire_left.mdl"
+wheels.width 0.255
+wheels.stickyness 0.075
+wheels.loadSensitivity 0.125
+
+
+;------Lights------
+numLights 10
+
+; Front lights
+
+# 0
+; spot
+lights.pos {-0.42,0.6,1.915}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 1
+; spot
+lights.pos {0.42,0.6,1.915}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 1
+lights.size 35
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 2
+; Headlights
+lights.pos {-0.42,0.6,1.915}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 3
+; Headlights
+lights.pos {0.42,0.6,1.915}
+lights.dir {0,-0.1,1}
+lights.rgb {1,1,0.8}
+lights.type 6
+lights.size 0.25
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+; Rear lights
+
+
+# 4
+; brakes
+lights.pos {0.375,0.82,-2.129}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .25
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 5
+; brakes
+lights.pos {-0.375,0.82,-2.129}
+lights.dir {0,0,-1}
+lights.rgb {1,0,0}
+lights.type 0
+lights.size .25
+lights.onFlags 0x10
+lights.offFlags 0x00
+
+# 6
+; Orange rear
+lights.pos {-0.6,0.82,-2.076}
+lights.dir {0,0,-1}
+lights.rgb {0.9,0.39,0.1}
+lights.type 6
+lights.size .25
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 7
+; Orange rear
+lights.pos {0.6,0.82,-2.076}
+lights.dir {0,0,-1}
+lights.rgb {0.9,0.39,0.1}
+lights.type 6
+lights.size .25
+lights.onFlags 0x01
+lights.offFlags 0x00
+
+# 8
+; Reverse
+lights.pos {-0.265,0.82,-2.141}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .35
+lights.onFlags 0x08
+lights.offFlags 0x00
+
+# 9
+; Reverse
+lights.pos {0.265,0.82,-2.141}
+lights.dir {0,0,-1}
+lights.rgb {1,1,1}
+lights.type 0
+lights.size .35
+lights.onFlags 0x08
+lights.offFlags 0x00

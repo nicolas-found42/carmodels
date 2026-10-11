@@ -18,6 +18,7 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
  material.color.fromArray(factor); // glTF factors already use linear RGB.
  material.opacity=factor[3];
  material.transparent=source.alphaMode==='BLEND';
+ material.alphaTest=source.alphaMode==='MASK'?(source.alphaCutoff??.5):0;
  material.depthWrite=!material.transparent;
  material.roughness=pbr.roughnessFactor??1;
  material.metalness=pbr.metallicFactor??1;

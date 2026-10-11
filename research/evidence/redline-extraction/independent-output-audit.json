@@ -1,0 +1,39 @@
+{
+  "index_sha256": "b603e4e490e09bc0e9f770c7a0b8f0238cc0373c56c37e2cacd7c0ee176121f2",
+  "manifest_sha256": "06f0623c59b119695e7d5e8c8feab9ddb45cb31b33a5ceacb8c785547b35492b",
+  "output_files": 3709,
+  "output_bytes": 2202028393,
+  "checks": [
+    {
+      "check": "all outputfile SHA/length coverage and links",
+      "files": 3709,
+      "pass": true
+    },
+    {
+      "check": "both originalsource inputs and82car envelopes match sourcepins",
+      "pass": true
+    },
+    {
+      "check": "independent native C members/config coverage andsourcefieldlineequality",
+      "packed_native_members": 3432,
+      "loose_members": 65,
+      "configurations": 129,
+      "base": 19,
+      "addon": 110,
+      "pass": true
+    },
+    {
+      "check": "all declared resourcecandidate lists independently joined using nativeASCII+aliasorder",
+      "references": 1454,
+      "no_match": 64,
+      "multiple_candidates": 202,
+      "pass": true
+    }
+  ],
+  "claim_limits": [
+    "Independentbyte/hash/schema/resourcecandidate audit, not game execution or rendering.",
+    "Fullbase resource retention is a conservative completenesspolicy; not everyretained file is claimedcar-specific.",
+    "Sourceimage/HFS conversion and StuffIt staging were checkedseparately; thisaudit uses theirretained pins and originalinputs.",
+    "Static multiplematches do not decide pluginload precedence."
+  ]
+}

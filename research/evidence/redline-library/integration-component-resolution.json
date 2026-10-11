@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "bundle_sha256": "0b34b6c37b459d92a31bc63ab99b97e789811fe66a9603df4652ba7f4a2bc15a",
+  "reviewer": "/root, independent reviewer of child-owned integration code",
+  "verdict": "approve",
+  "scope": [
+    "editable-import.json patch only; generated completion claim requires separate independent asset reviewer",
+    "ui-filter.json original integration patch only; root camera delta requires child independent review",
+    "documentation.json dealership/dealership/README.md only; other root docs require child independent review"
+  ],
+  "source_pins": {
+    "tools/import_redline_dealership.py": "1a6004877839a533f0eb8317f1896644c3d8f9689638f70a03c9f624c8e2d521",
+    "tools/test_import_redline_dealership.py": "033d492842c22f173270070fdb08cfbabb4c736af27dfdb8fb096d5478b35d64",
+    "tools/build_dealership.py": "a0c92579a7b184d3f56c0340acc575e34132d517c0c62d80b0547a789da27e76",
+    "tools/test_build_dealership.py": "b25b061b7d5da2f49f893908b13a60c97e80ca3bee558ffe30f2ac9f12ececd7",
+    "tools/library_filter.py": "991df42614e0e4e56ba7b0a4fc050a38532bd308fa026cc7d2dc220769d419ba",
+    "tools/test_library_filter.py": "70349d81a4609bef61ebca343828c3b9a9a47e619acd93592cbaab5f098c7226",
+    "dealership/recovered.html": "bdeae8250e89ff9cc8a2859765f85482b19e8684b9730ef9c0397bc3af7d8c7a",
+    "dealership/dealership.mjs": "b36ea039738a5d067c6a581c118bfeeded8457f5cfbce59b069f3a6e7554d912",
+    "dealership/dealership.html": "fffdff9b76913fd922d9aa4189e59585160843d5a2b68917eabe21209d7a9c88",
+    "dealership/dealership/README.md": "61589b401f78c5816e41f51451942c42dc31870649d5790bd740a8215352dbf3",
+    "tools/test_dealership.mjs": "98bde1ccd958384749f1da6985393b333b869eff078e30ea94b38045a49ff7f7"
+  },
+  "original_review": {
+    "path": ".scratch/redline-conversion/integration/root-independent-resolution.json",
+    "sha256": "e6d51bbfd81cba4c65d4bd0f209110536c97b0ffc29db06c3c081cf6cd74241e"
+  },
+  "final_gate_packet_pins": {
+    "editable-import.json": "6dcdc777c7c2ff841e1228f98ac812e90c46f3d550f90670b77bbf939a3fe49c",
+    "ui-filter.json": "8db00285358e61eb7f66fbec6010796ddeb63452c37dae53848316d020e84ed8",
+    "documentation.json": "03acb6112e14e6414f94aa6167edbb0a268aa4311e945b8128a640fe59e66904"
+  },
+  "rationale": "The complete original raw integration hunks were independently reviewed before publication. All child-owned files match those reviewed pins; removing only the three-line root camera delta restores the exact old HTML pin. Import controls reject conflicts/tamper/symlinks, preserve edited files, validate GLB source identity and roll back partial publication. Final execution includes test_import_redline_dealership, test_build_dealership, test_dealership, test_library_filter and actual live HTTP cases. Read source publication and upgrade/hash ownership again against the current complete importer; metadata validation and conservative unknown specifications remain bounded. Application judgments require conservative acceptance and server-side credentials. Native conversion fidelity is not inferred from this review. Original probability distributions and limiting rubrics are retained unchanged; root-created camera, docs and asset claims are explicitly not self-approved here."
+}
