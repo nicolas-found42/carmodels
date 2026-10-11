@@ -148,6 +148,15 @@ filterContext.clearTimeout=id=>{assert.equal(id,7);cleared=true;};
 filterContext.fetch=async(url,options)=>new Promise((resolve,reject)=>{options.signal.addEventListener('abort',()=>reject(new Error('Request timed out')),{once:true});});
 const stalled=interpret.events.click();timeoutCallback();await stalled;
 assert.equal(interpret.disabled,false);assert(cleared);assert.match(filterStatus.textContent,/timed out/);
+// A browser abort is explained; failure statuses show the server's message or name the library server.
+filterContext.fetch=async(url,options)=>new Promise((resolve,reject)=>{options.signal.addEventListener('abort',()=>reject(Object.assign(new Error('signal is aborted without reason'),{name:'AbortError'})),{once:true});});
+const aborted=interpret.events.click();timeoutCallback();await aborted;
+assert.equal(filterStatus.textContent,'Interpreting took longer than 20 seconds; game, variant and literal search are still available.');
+filterContext.fetch=async()=>({ok:false,json:async()=>({status:'error',message:'A filter request is already running.'})});
+await interpret.events.click();assert.equal(filterStatus.textContent,'A filter request is already running; game, variant and literal search are still available.');
+filterContext.fetch=async()=>({ok:false,json:async()=>{throw new SyntaxError('HTML error page');}});
+await interpret.events.click();assert.match(filterStatus.textContent,/needs the library server \(python3 tools\/serve_library\.py\); game, variant/);
+assert.equal(gameSelect.value,'ford-racing-2');
 // Run the actual startup sequence with an empty native select and a non-first ID.
 const startup=html.slice(html.indexOf('const parameters='),html.indexOf('new ResizeObserver('));
 carSelect.replaceChildren();filterContext.location.search='?game=gran-turismo&variant=day&car=gran-turismo%2Fsimulation%2Fother%2Fday';

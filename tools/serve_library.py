@@ -8,9 +8,12 @@ from pathlib import Path
 import threading
 from urllib.parse import urlparse
 
-from library_filter import live_interpret
+from library_filter import live_interpret, model_status
 
 ROOT = Path(__file__).resolve().parents[1] / 'dealership'
+STARTUP = {'available': 'uses the TypeSafe model.',
+           'sdk_unavailable': 'needs the TypeSafe SDK (typesafe-sdk), which this Python cannot import.',
+           'credentials_missing': 'needs OPENROUTER_API_KEY in the server environment.'}
 
 
 class LibraryHandler(SimpleHTTPRequestHandler):
@@ -68,7 +71,11 @@ class LibraryHandler(SimpleHTTPRequestHandler):
             cars = data['cars'] if catalog == 'source' else data
             receipt = self.judgment(query, cars, catalog=catalog)
             # Do not expose raw provider envelopes in the UI; local experiments retain those separately.
-            self.reply(200, {key: receipt.get(key) for key in ('status', 'filters', 'message', 'signals', 'usage', 'latency_seconds')})
+            self.reply(200, {key: receipt.get(key) for key in ('status', 'filters', 'message', 'decided_by', 'reason',
+                                                               'signals', 'usage', 'latency_seconds')})
+            # The outcome, never the query text, goes to the server log.
+            self.log_message('library filter: %s by %s%s', receipt.get('status'), receipt.get('decided_by') or 'nothing',
+                             f" ({receipt['reason']})" if receipt.get('reason') else '')
         except Exception:
             self.reply(503, {'status': 'error', 'message': 'The model catalog is unavailable.'})
         finally:
@@ -89,4 +96,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     with ThreadingHTTPServer(('127.0.0.1', args.port), functools.partial(LibraryHandler, directory=str(ROOT))) as server:
         print(f'Car library: http://localhost:{args.port}/dealership.html', flush=True)
+        print('Natural-language filter: exact game/variant phrases work offline; other wording ' +
+              STARTUP[model_status()], flush=True)
         server.serve_forever()

@@ -1,0 +1,754 @@
+{
+ "module": ".scratch/teardown-2026-10-11/baseline_library_filter.py",
+ "cases_file": ".scratch/teardown-2026-10-11/holdout2-cases.json",
+ "offline": true,
+ "metrics": {
+  "cases": 45,
+  "supported": 25,
+  "applied": 0,
+  "applied_correct": 0,
+  "wrongly_applied": 0,
+  "supported_applied": 0,
+  "correct_action": 20,
+  "errors": 45,
+  "by_source": {
+   "none": 45
+  },
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost": 0.0,
+  "provider_calls": 0,
+  "elapsed_seconds": 0.081,
+  "latency_max": 0.0423,
+  "latency_mean": 0.0049
+ },
+ "rows": [
+  {
+   "id": "g01",
+   "query": "GT cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0022
+  },
+  {
+   "id": "g02",
+   "query": "gran turismo arcade",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:arcade"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g03",
+   "query": "Gran Turismo (night)",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g04",
+   "query": "GRAN TURISMO DAY",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:day"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g05",
+   "query": "night-time Gran Turismo cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0019
+  },
+  {
+   "id": "g06",
+   "query": "Gran Turismo nite",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g07",
+   "query": "redline addon cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g08",
+   "query": "redline custom cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon",
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g09",
+   "query": "Redline stock cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:base",
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g10",
+   "query": "cars from Redline",
+   "catalog": "dealership",
+   "expected": [
+    "redline"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g11",
+   "query": "show Redline",
+   "catalog": "dealership",
+   "expected": [
+    "redline"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g12",
+   "query": "Ford Racing 2 cars please",
+   "catalog": "dealership",
+   "expected": [
+    "ford-racing-2"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.002
+  },
+  {
+   "id": "g13",
+   "query": "FR2",
+   "catalog": "dealership",
+   "expected": [
+    "ford-racing-2"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g14",
+   "query": "midnight club",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g15",
+   "query": "MC3 remix cars",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g16",
+   "query": "Midnight Club 3 native",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0019
+  },
+  {
+   "id": "g17",
+   "query": "all cars from all games",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g18",
+   "query": "show everything",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0373
+  },
+  {
+   "id": "g19",
+   "query": "list all vehicles",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g20",
+   "query": "every car",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g21",
+   "query": "I want to see Gran Turismo night models",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0131
+  },
+  {
+   "id": "g22",
+   "query": "Gran Turismo night cars",
+   "catalog": "source",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0013
+  },
+  {
+   "id": "g23",
+   "query": "Redline add-on cars",
+   "catalog": "source",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0012
+  },
+  {
+   "id": "g24",
+   "query": "MC3 Remix",
+   "catalog": "source",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0423
+  },
+  {
+   "id": "g25",
+   "query": "Gran Turismo arcade cars with 3D previews",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:arcade"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0019
+  },
+  {
+   "id": "g26",
+   "query": "all Gran Turismo cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g27",
+   "query": "show only redline mods",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0135
+  },
+  {
+   "id": "g28",
+   "query": "Gran Turismo Skylines",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g29",
+   "query": "Redline cars sorted by name",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g30",
+   "query": "Ford Racing 2 trucks",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0019
+  },
+  {
+   "id": "g31",
+   "query": "night cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night",
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g32",
+   "query": "Gran Turismo except arcade",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g33",
+   "query": "Ford Racing 2 and Redline",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g34",
+   "query": "delete all Redline cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0143
+  },
+  {
+   "id": "g35",
+   "query": "Gran Turismo cars with textures",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g36",
+   "query": "only the 10 newest MC3 cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g37",
+   "query": "Redline add-ons by author X",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0191
+  },
+  {
+   "id": "g38",
+   "query": "Gran Turismo night cars that are not Japanese",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g39",
+   "query": "show me the GT-R",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g40",
+   "query": "MC3 night",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0131
+  },
+  {
+   "id": "g41",
+   "query": "Redline arcade",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g42",
+   "query": "every GT car except the arcade ones",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g43",
+   "query": "Gran Turismo night models in the source catalog",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g44",
+   "query": "Redline day",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g45",
+   "query": "all Ford cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "none",
+   "signals": null,
+   "usage": null,
+   "message": "Semantic filters are unavailable. Use the game and variant controls.",
+   "seconds": 0.0017
+  }
+ ]
+}

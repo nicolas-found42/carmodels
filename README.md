@@ -17,6 +17,17 @@ python3 -m http.server 8080 --directory dealership
 
 All model data and three.js r182 are committed, so a fresh clone runs offline without npm installation. A local HTTP server is required for ES modules.
 
+The natural-language game/variant box needs the library server instead of `http.server`:
+
+```sh
+python3 tools/serve_library.py --port 8081
+```
+
+Exact game and variant phrases (“Redline mods”, “GT night”, “everything”) are matched on the server with no
+network access. Other wording is sent, with the catalog's game/variant counts, to the TypeSafe model through
+OpenRouter, which needs `typesafe-sdk` importable by that Python and `OPENROUTER_API_KEY` in its environment;
+without them the server says so at startup and in the page. Uncertain answers never change the filters.
+
 ## Repository layout
 
 - `dealership/` — both app entry points, shared vendor libraries and compiled browser data. See [the app guide](dealership/README.md).

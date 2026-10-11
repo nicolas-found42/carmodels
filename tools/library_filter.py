@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""Optional server-side natural-language routing over existing library filters."""
+"""Optional server-side natural-language routing over existing library filters.
+
+Exact game/variant phrases are decided in code, offline. Only other wording reaches the
+optional TypeSafe model, whose answers are composed conservatively.
+"""
 import hashlib
+import importlib.util
 import json
 import math
+import os
+import re
 import time
 
 from gt_asset_judgments import MODEL, InventoryJudgmentError, _distribution, _number, make_client
@@ -18,6 +25,130 @@ MESSAGE = 'This request needs review. Use the game and variant controls, or ask 
 # Calibrated only for the separate ordinary-preview branch; readiness is checked in code.
 PREVIEW_THRESHOLDS = {'support': .8, 'coverage': 1.6, 'coverage_confidence': .4,
                       'restriction_confidence': .8}
+# An ordinary model answer also needs a confident 'none' restriction; a near-uniform restriction
+# answer let an instruction-like request through (research/semantic-filter-teardown-2026-10-11.md).
+RESTRICTION_CONFIDENCE = .5
+VARIANT_NAMES = {'day': 'day', 'night': 'night', 'arcade': 'arcade', 'base': 'base game',
+                 'addon': 'add-on', 'native': 'native packages'}
+# Phrase routing: a query is decided in code only when every word is one of these.
+PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing', 'ii'): ('game', 'ford-racing-2'),
+           ('fr2',): ('game', 'ford-racing-2'),
+           ('gran', 'turismo', '1'): ('game', 'gran-turismo'), ('gran', 'turismo'): ('game', 'gran-turismo'),
+           ('gt1',): ('game', 'gran-turismo'), ('gt',): ('game', 'gran-turismo'),
+           ('midnight', 'club', '3', 'dub', 'edition', 'remix'): ('game', 'midnight-club-3-remix'),
+           ('midnight', 'club', '3', 'remix'): ('game', 'midnight-club-3-remix'),
+           ('midnight', 'club', '3'): ('game', 'midnight-club-3-remix'), ('midnight', 'club'): ('game', 'midnight-club-3-remix'),
+           ('mc3', 'remix'): ('game', 'midnight-club-3-remix'), ('mc3',): ('game', 'midnight-club-3-remix'),
+           ('redline',): ('game', 'redline'),
+           **{words: ('variant', 'day') for words in (('day',), ('daytime',), ('daylight',), ('day', 'time'))},
+           **{words: ('variant', 'night') for words in (('night',), ('nighttime',), ('night', 'time'))},
+           ('arcade',): ('variant', 'arcade'),
+           **{words: ('variant', 'base') for words in (('base', 'game'), ('base',), ('original',), ('bundled',))},
+           **{words: ('variant', 'addon') for words in (('add', 'on'), ('add', 'ons'), ('addon',), ('addons',), ('mod',),
+                                                        ('mods',), ('plug', 'in'), ('plug', 'ins'), ('plugin',), ('plugins',))},
+           ('native',): ('variant', 'native'),
+           **{words: ('all', None) for words in (('all',), ('every',), ('everything',))},
+           **{words: ('preview', None) for words in (('with', '3d', 'previews'), ('with', '3d', 'preview'), ('with', 'previews'),
+                                                     ('that', 'have', '3d', 'previews'), ('3d', 'previews'), ('previews',))},
+           **{(word,): ('word', None) for word in (
+               'car', 'cars', 'model', 'models', 'vehicle', 'vehicles', 'entry', 'entries', 'version', 'versions',
+               'variant', 'variants', 'game', 'games', 'package', 'packages',
+               'show', 'me', 'list', 'display', 'find', 'the', 'from', 'only', 'just', 'of', 'a', 'an', 'please')}}
+LONGEST_PHRASE = max(len(words) for words in PHRASES)
+INVALID = 'Enter a query of 1 to 500 printable characters.'
+UNAVAILABLE = {
+    'sdk_unavailable': 'Only exact game and variant phrases work here: the TypeSafe SDK is not installed for the '
+                       "server's Python. Use the game and variant controls.",
+    'credentials_missing': 'Only exact game and variant phrases work here: the server has no OPENROUTER_API_KEY. '
+                           'Use the game and variant controls.',
+    'provider_error': 'The TypeSafe model did not answer. Exact game and variant phrases still work; '
+                      'otherwise use the game and variant controls.',
+    'invalid_response': 'The TypeSafe model returned an unusable answer, so no filter was applied. '
+                        'Use the game and variant controls.',
+    'catalog_unavailable': 'Semantic filters are unavailable for this catalog. Use the game and variant controls.'}
+
+
+def describe(options, label):
+    selection = options[label]
+    if selection['game'] == 'all':
+        return 'all games'
+    name = GAMES[selection['game']][0].split(' / ')[0]
+    return name + (f", {VARIANT_NAMES[selection['variant']]} variant" if selection['variant'] else '')
+
+
+def model_status():
+    """Why the optional model path cannot run, without importing the SDK or reading the key's value."""
+    if importlib.util.find_spec('typesafe_sdk') is None:
+        return 'sdk_unavailable'
+    if not os.environ.get('OPENROUTER_API_KEY', '').strip():
+        return 'credentials_missing'
+    return 'available'
+
+
+def words_of(query):
+    # Split only on spaces and ASCII punctuation: a word with any other character stays unknown.
+    return [word for word in re.split(r"[\s.,;:!?()\[\]\"'/_-]+", query.lower()) if word]
+
+
+def other_catalog(query, catalog):
+    """A query naming the other library is withheld in code; the model missed this (teardown holdout g43)."""
+    names = {'source': {'dealership'}, 'dealership': {'source', 'recovered', 'inspector'}}[catalog]
+    if names & set(words_of(query)):
+        page = 'the source model inspector (recovered.html)' if catalog == 'dealership' else 'the dealership (dealership.html)'
+        return {'status': 'review', 'filters': None, 'decided_by': 'phrase',
+                'message': f'These filters apply to the {catalog} catalog only. Open {page} for that library.',
+                'signals': {'phrase': {'other_catalog': True}}}
+    return None
+
+
+def phrase_filter(query, options, state):
+    """Decide a query in code when every word is a known game/variant/filler phrase; otherwise None."""
+    if (conflict := other_catalog(query, state['catalog'])):
+        return conflict
+    words = words_of(query)
+    found, index = [], 0
+    while index < len(words):
+        for size in range(min(LONGEST_PHRASE, len(words) - index), 0, -1):
+            meaning = PHRASES.get(tuple(words[index:index + size]))
+            if meaning:
+                found.append(meaning)
+                index += size
+                break
+        else:
+            return None
+    games = {value for kind, value in found if kind == 'game'}
+    variants = {value for kind, value in found if kind == 'variant'}
+    preview = any(kind == 'preview' for kind, _ in found)
+    if not games and not variants and not any(kind == 'all' for kind, _ in found):
+        return None
+
+    def review(message):
+        return {'status': 'review', 'filters': None, 'decided_by': 'phrase', 'message': message,
+                'signals': {'phrase': {'games': sorted(games), 'variants': sorted(variants), 'preview': preview}}}
+    if len(games) > 1:
+        return review('The filters select one game at a time. Ask for one game, or choose all games.')
+    if len(variants) > 1:
+        return review('The filters select one variant at a time. Ask for one variant, or the whole game.')
+    if variants and not games:
+        variant = next(iter(variants))
+        owners = [GAMES[game][0].split(' / ')[0] for game in GAMES if (game, variant) in
+                  {(o['game'], o['variant']) for o in options.values()}]
+        return review(f"Name the game for the {VARIANT_NAMES[variant]} variant" +
+                      (f" ({' or '.join(owners)})." if owners else '; no game in this catalog has it.'))
+    game = next(iter(games)) if games else 'all'
+    if game != 'all' and game not in options:
+        return review(f"{GAMES[game][0].split(' / ')[0]} is not in this catalog.")
+    label = game if not variants else f'{game}:{next(iter(variants))}'
+    if label not in options:
+        available = [VARIANT_NAMES[o['variant']] for o in options.values() if o['game'] == game and o['variant']]
+        return review(f"{GAMES[game][0].split(' / ')[0]} has no {VARIANT_NAMES[next(iter(variants))]} variant" +
+                      (f"; available: {', '.join(available)}." if available else '.'))
+    if preview and not state['filter_facts'][label]['all_have_preview']:
+        return review(f"Not every {describe(options, label)} entry has a 3D preview in the {state['catalog']} catalog, "
+                      'and the filters cannot select only previewed entries.')
+    return {'status': 'ok', 'filters': options[label], 'decided_by': 'phrase',
+            'message': f'Applied {describe(options, label)} (exact game and variant words).',
+            'signals': {'phrase': {'games': sorted(games), 'variants': sorted(variants), 'preview': preview}}}
 
 
 def options_for(cars):
@@ -197,24 +328,48 @@ def compose(raw, options, questions, threshold=.85, state=None):
         else:
             # Ordinary requests keep the original three-signal acceptance policy.
             # Any classified extra restriction still withholds the filter.
-            accepted = accepted and restriction == 'none'
+            accepted = accepted and restriction == 'none' and restriction_confidence >= RESTRICTION_CONFIDENCE
         restriction_signals = {'choice': restriction, 'probabilities': values, 'confidence': restriction_confidence}
     return {'status': 'ok' if accepted else 'review',
             'filters': options[label] if accepted else None,
-            'message': 'Applied the requested game and variant filters.' if accepted else MESSAGE,
+            'message': f'Applied {describe(options, label)} (interpreted by the TypeSafe model).' if accepted else MESSAGE,
             'signals': {'choice': label, 'probabilities': probabilities, 'confidence': confidence,
                         'support': support, 'coverage': quality, 'coverage_confidence': quality_confidence,
                         **({'restriction': restriction_signals} if restriction_signals else {})}}
 
 
-def interpret(query, cars, client, wording='stateful', catalog='source'):
+def interpret(query, cars, client, wording='stateful', catalog='source', unavailable=None, phrases=True):
+    """Phrase routing first; then the model, or `unavailable` ('sdk_unavailable', ...) when client is None.
+
+    Model experiments pass phrases=False so every query measures the model.
+    """
     started = time.monotonic()
-    receipt = {'status': 'error', 'filters': None, 'message': 'Semantic filters are unavailable. Use the game and variant controls.'}
+    if not isinstance(query, str) or not 1 <= len(query.strip()) <= 500 or any(ord(c) < 32 for c in query):
+        receipt = _failure('invalid_query', INVALID)
+    else:
+        receipt = _decide(query, cars, client, wording, catalog, unavailable, phrases)
+    receipt['latency_seconds'] = time.monotonic() - started
+    return receipt
+
+
+def _failure(reason, message=None):
+    return {'status': 'error', 'filters': None, 'decided_by': None, 'reason': reason,
+            'message': message or UNAVAILABLE[reason]}
+
+
+def _decide(query, cars, client, wording, catalog, unavailable, phrases):
     try:
-        if not isinstance(query, str) or not 1 <= len(query.strip()) <= 500 or any(ord(c) < 32 for c in query):
-            raise ValueError('Query must contain 1..500 printable characters')
         options = options_for(cars)
         state = state_for(query, cars, options, catalog)
+        phrase = phrase_filter(query, options, state) if phrases else None
+    except Exception:
+        return _failure('catalog_unavailable')
+    if phrase:
+        return {**phrase, 'reason': None, 'catalog': catalog}
+    if client is None:
+        return _failure(unavailable or 'provider_error')
+    # SDK exceptions may contain authorization headers: only a fixed reason category leaves here.
+    try:
         questions = questions_for(options, wording, state)
         response = client.system_one(state=state, questions=questions, model=MODEL)
         if isinstance(response, dict):
@@ -223,21 +378,28 @@ def interpret(query, cars, client, wording='stateful', catalog='source'):
             if response.raw_http_response.status_code != 200:
                 raise ValueError('Provider HTTP failure')
             raw = response.raw_http_response.json()
-        json.dumps(raw, allow_nan=False)
-        receipt.update(compose(raw, options, questions, state=state))
-        receipt.update({'raw_response': raw, 'usage': raw['usage'], 'model': raw['model'],
-                        'request_sha256': hashlib.sha256(json.dumps({'state': state, 'questions': questions}, sort_keys=True).encode()).hexdigest(),
-                        'wording': wording, 'catalog': catalog})
     except Exception:
-        # SDK exceptions may contain authorization headers: no exception text leaves here.
-        pass
-    receipt['latency_seconds'] = time.monotonic() - started
-    return receipt
+        return _failure('provider_error')
+    try:
+        json.dumps(raw, allow_nan=False)
+        composed = compose(raw, options, questions, state=state)
+        usage, model = raw['usage'], raw['model']
+    except Exception:
+        return _failure('invalid_response')
+    return {**composed, 'decided_by': 'model', 'reason': None, 'raw_response': raw, 'usage': usage, 'model': model,
+            'request_sha256': hashlib.sha256(json.dumps({'state': state, 'questions': questions}, sort_keys=True).encode()).hexdigest(),
+            'wording': wording, 'catalog': catalog}
+
+
+class _LazyClient:
+    """Opens the SDK client only when a query needs the model."""
+
+    def system_one(self, **kwargs):
+        with make_client() as client:
+            return client.system_one(**kwargs)
 
 
 def live_interpret(query, cars, catalog='source'):
-    try:
-        with make_client() as client:
-            return interpret(query, cars, client, catalog=catalog)
-    except Exception:
-        return {'status': 'error', 'filters': None, 'message': 'Semantic filters are unavailable. Use the game and variant controls.'}
+    status = model_status()
+    return interpret(query, cars, _LazyClient() if status == 'available' else None, catalog=catalog,
+                     unavailable=None if status == 'available' else status)

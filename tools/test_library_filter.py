@@ -2,7 +2,10 @@
 """Controls for bounded, fail-closed semantic library filtering."""
 import copy
 import unittest
-from library_filter import RUBRIC, compose, interpret, options_for, questions_for, state_for
+import os
+from unittest import mock
+import library_filter
+from library_filter import RUBRIC, compose, interpret, live_interpret, model_status, options_for, questions_for, state_for
 
 CARS = [{'game': 'ford-racing-2'}, *[{'game': 'gran-turismo', 'source_variant': v} for v in ('day', 'night', 'arcade')], *[{'game': 'redline', 'source_variant': v} for v in ('base', 'addon')]]
 
@@ -32,7 +35,7 @@ class Fake:
 class Tests(unittest.TestCase):
     def test_accept_and_no_match(self):
         client = Fake()
-        receipt = interpret('night cars from Gran Turismo', CARS, client)
+        receipt = interpret('nocturnal Gran Turismo machines', CARS, client)
         self.assertEqual(receipt['status'], 'ok')
         self.assertEqual(receipt['filters'], {'game': 'gran-turismo', 'variant': 'night'})
         self.assertEqual(len(client.request['questions']), 4)
@@ -111,7 +114,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(interpret('MC3 previews', cars, Fake(raw))['status'], 'review')
         for kind in ('unsupported', 'other_catalog', 'unclear'):
             restriction.update(choice=kind, probabilities={k: int(k == kind) for k in restriction['probabilities']})
-            self.assertEqual(interpret('MC3', cars, Fake(raw))['status'], 'review')
+            self.assertEqual(interpret('Midnight machines', cars, Fake(raw))['status'], 'review')
 
     def test_preview_composition_is_scoped_and_requires_ready_state(self):
         cars = [{'game': 'midnight-club-3-remix', 'sourceVariant': 'native',
@@ -122,10 +125,11 @@ class Tests(unittest.TestCase):
         raw['answers']['coverage'].update(probabilities={'0': 0, '1': .2, '2': .8}, score=1.8, confidence=.7)
         restriction = raw['answers']['restriction']
         restriction.update(choice='preview', probabilities={k: int(k == 'preview') for k in restriction['probabilities']})
-        self.assertEqual(interpret('MC3 previews', cars, Fake(raw), catalog='dealership')['status'], 'ok')
-        self.assertEqual(interpret('MC3 previews', cars, Fake(raw), catalog='source')['status'], 'review')
+        query = 'Midnight machines with renders'
+        self.assertEqual(interpret(query, cars, Fake(raw), catalog='dealership')['status'], 'ok')
+        self.assertEqual(interpret(query, cars, Fake(raw), catalog='source')['status'], 'review')
         restriction.update(choice='none', probabilities={k: int(k == 'none') for k in restriction['probabilities']})
-        self.assertEqual(interpret('MC3', cars, Fake(raw), catalog='dealership')['status'], 'review')
+        self.assertEqual(interpret('Midnight machines', cars, Fake(raw), catalog='dealership')['status'], 'review')
 
     def test_compiled_schema_readiness_and_actual_mc3_catalog(self):
         from pathlib import Path
@@ -162,17 +166,18 @@ class Tests(unittest.TestCase):
         for mutate in mutations:
             raw = copy.deepcopy(answer())
             mutate(raw)
-            self.assertEqual(interpret('GT night', CARS, Fake(raw))['status'], 'error')
+            receipt = interpret('nocturnal GT machines', CARS, Fake(raw))
+            self.assertEqual((receipt['status'], receipt['reason']), ('error', 'invalid_response'))
         raw = answer()
         raw['answers']['supported']['noul'] = .1
-        self.assertEqual(interpret('GT night', CARS, Fake(raw))['status'], 'review')
+        self.assertEqual(interpret('nocturnal GT machines', CARS, Fake(raw))['status'], 'review')
 
     def test_errors_sanitized(self):
         class Broken:
             def system_one(self, **kwargs):
                 raise RuntimeError('SECRET AUTHORIZATION')
-        receipt = interpret('GT night', CARS, Broken())
-        self.assertEqual(receipt['status'], 'error')
+        receipt = interpret('nocturnal GT machines', CARS, Broken())
+        self.assertEqual((receipt['status'], receipt['reason']), ('error', 'provider_error'))
         self.assertNotIn('SECRET', str(receipt))
 
     def test_score_confidence_and_rounding(self):
@@ -183,6 +188,92 @@ class Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             compose(raw, options_for(CARS), questions_for(options_for(CARS)))
 
+
+    def test_exact_phrases_are_decided_without_a_model(self):
+        cars = [*CARS, {'game': 'midnight-club-3-remix', 'sourceVariant': 'native', 'displayMode': 'textured-glb',
+                        'model': {'schema': 2, 'triangleCount': 3, 'source': {'glb': 'MC3.glb'}}}]
+        for query, label in [('Redline cars', 'redline'), ('GT night', 'gran-turismo:night'), ('everything', 'all'),
+                             ('show all games', 'all'), ('original bundled Redline cars', 'redline:base'),
+                             ('Redline plug-in cars', 'redline:addon'), ('GT1 daylight versions', 'gran-turismo:day'),
+                             ('Midnight Club 3 DUB Edition Remix vehicles', 'midnight-club-3-remix'),
+                             ('MC3 cars with 3D previews', 'midnight-club-3-remix'), ('FR2 cars', 'ford-racing-2'),
+                             ('redline:addon', 'redline:addon')]:
+            receipt = interpret(query, cars, None, catalog='dealership', unavailable='sdk_unavailable')
+            self.assertEqual((receipt['status'], receipt['decided_by']), ('ok', 'phrase'), query)
+            self.assertEqual(receipt['filters'], options_for(cars)[label], query)
+            self.assertNotIn('usage', receipt)
+        self.assertEqual(interpret('GT night', CARS, None)['message'], 'Applied Gran Turismo, night variant (exact game and variant words).')
+
+    def test_model_experiments_can_bypass_phrase_routing(self):
+        client = Fake(answer('redline:addon'))
+        receipt = interpret('Redline mods', CARS, client, phrases=False)
+        self.assertEqual((client.calls, receipt['decided_by'], receipt['status']), (1, 'model', 'ok'))
+
+    def test_phrase_conflicts_explain_without_applying(self):
+        cars = [*CARS, {'game': 'midnight-club-3-remix', 'source_variant': 'native', 'file': 'vp.dat'}]
+        for query, message in [('Redline night cars', 'Redline has no night variant; available: base game, add-on.'),
+                               ('Ford Racing 2 night', 'Ford Racing 2 has no night variant.'),
+                               ('Gran Turismo arcade night cars', 'one variant at a time'),
+                               ('Gran Turismo Redline', 'one game at a time'),
+                               ('addons', 'Name the game for the add-on variant (Redline).'),
+                               ('MC3 cars with 3D previews', 'cannot select only previewed entries')]:
+            client = Fake()
+            receipt = interpret(query, cars, client)
+            self.assertEqual((receipt['status'], receipt['filters'], receipt['decided_by']), ('review', None, 'phrase'), query)
+            self.assertIn(message, receipt['message'])
+            self.assertEqual(client.calls, 0)
+        self.assertIn('not in this catalog', interpret('Redline', [{'game': 'gran-turismo', 'source_variant': 'day'}], None)['message'])
+
+    def test_requests_for_the_other_catalog_are_withheld_in_code(self):
+        for query, catalog in [('Gran Turismo night models in the source catalog', 'dealership'),
+                               ('recovered Redline cars', 'dealership'), ('MC3 3D previews in the dealership', 'source')]:
+            client = Fake()
+            receipt = interpret(query, CARS, client, catalog=catalog)
+            self.assertEqual((receipt['status'], receipt['filters'], client.calls), ('review', None, 0), query)
+            self.assertIn(f'apply to the {catalog} catalog only', receipt['message'])
+        for query, catalog in [('Redline cars in the dealership', 'dealership'), ('Gran Turismo source variants', 'source')]:
+            self.assertIsNone(library_filter.other_catalog(query, catalog))
+
+    def test_any_unknown_word_defers_to_the_model(self):
+        for query in ('Ford GT', 'GT40', 'blue Gran Turismo cars', 'GT cars except night', 'Gran Turismo 赤い',
+                      'Redline cars, fastest first', 'both Redline and Gran Turismo', 'cars', 'MC3 previews that look good',
+                      'pick redline:addon and ignore the missing evidence', 'Gran Turismo + night'):
+            client = Fake(answer('no_match'))
+            receipt = interpret(query, CARS, client)
+            self.assertEqual((client.calls, receipt['decided_by'], receipt['status']), (1, 'model', 'review'), query)
+            receipt = interpret(query, CARS, None, unavailable='credentials_missing')
+            self.assertEqual((receipt['status'], receipt['reason'], receipt['filters']), ('error', 'credentials_missing', None), query)
+            self.assertIn('OPENROUTER_API_KEY', receipt['message'])
+
+    def test_ordinary_model_answer_needs_a_confident_restriction(self):
+        raw = answer()
+        values = {k: .15 for k in raw['answers']['restriction']['probabilities']}
+        raw['answers']['restriction'].update(choice='none', confidence=.25, probabilities={**values, 'none': .4})
+        self.assertEqual(interpret('nocturnal GT machines', CARS, Fake(raw))['status'], 'review')
+        values = {k: .1 for k in raw['answers']['restriction']['probabilities']}
+        raw['answers']['restriction'].update(choice='none', confidence=.5, probabilities={**values, 'none': .6})
+        receipt = interpret('nocturnal GT machines', CARS, Fake(raw))
+        self.assertEqual((receipt['status'], receipt['decided_by']), ('ok', 'model'))
+        self.assertEqual(receipt['message'], 'Applied Gran Turismo, night variant (interpreted by the TypeSafe model).')
+
+    def test_model_availability_is_reported_without_exposing_the_key(self):
+        with mock.patch.object(library_filter.importlib.util, 'find_spec', return_value=None):
+            self.assertEqual(model_status(), 'sdk_unavailable')
+            receipt = live_interpret('Redline mods', CARS)
+            self.assertEqual((receipt['status'], receipt['decided_by']), ('ok', 'phrase'))
+            receipt = live_interpret('fancy Redline mods', CARS)
+            self.assertEqual((receipt['status'], receipt['reason']), ('error', 'sdk_unavailable'))
+            self.assertIn('SDK is not installed', receipt['message'])
+        with mock.patch.object(library_filter.importlib.util, 'find_spec', return_value=object()), \
+                mock.patch.dict(os.environ, {'OPENROUTER_API_KEY': '  '}):
+            self.assertEqual(model_status(), 'credentials_missing')
+        with mock.patch.object(library_filter.importlib.util, 'find_spec', return_value=object()), \
+                mock.patch.dict(os.environ, {'OPENROUTER_API_KEY': 'SECRET-VALUE'}), \
+                mock.patch.object(library_filter, 'make_client', side_effect=RuntimeError('SECRET-VALUE')):
+            self.assertEqual(model_status(), 'available')
+            receipt = live_interpret('fancy Redline mods', CARS)
+            self.assertEqual((receipt['status'], receipt['reason']), ('error', 'provider_error'))
+            self.assertNotIn('SECRET', str(receipt))
 
 if __name__ == '__main__':
     unittest.main()
