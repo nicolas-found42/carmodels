@@ -2,8 +2,8 @@
 
 A decompressed resource is its virtual segment followed by its physical segment. Pointers inside it
 are 32-bit words: 0x5XXXXXXX addresses the virtual segment, 0x6XXXXXXX the physical segment, 0 is null
-(reading taken from CodeX.Games.MCLA `RSC5/Rsc5Data.cs` at dedc3156; no code copied). Every read is
-bounds-checked against the segment it addresses.
+(reading taken from CodeX.Games.MCLA `RSC5/Rsc5Data.cs` at dedc3156; no code copied). Pointer ranges are checked
+against the addressed segment; subsequent reads are checked against the combined resource.
 """
 import re
 import struct
