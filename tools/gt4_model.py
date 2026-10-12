@@ -56,10 +56,11 @@ def car4_slots(data):
 
 
 def car_info(data, offset):
-    """Fields used for placement: TirePosRelated holds front/rear tire diameters (metres)."""
+    """TirePosRelated (+0x58, two floats). Meaning unknown: the first is near the front tire diameter,
+    the second matches neither tire (Taurus SHO: 0.658/0.777 for 225/55R16 at both ends); not used
+    for placement."""
     r = Reader(data)
-    front, rear = r.unpack('<2f', offset + 0x58)
-    return {'tire_diameter_front': front, 'tire_diameter_rear': rear}
+    return {'tire_pos_related': r.unpack('<2f', offset + 0x58)}
 
 
 def collision_bounds(data, offset):

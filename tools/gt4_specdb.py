@@ -134,7 +134,7 @@ def car_specs(folder, locale='british'):
     variations = Table(folder, 'CAR_VARIATION_' + locale).by_label()
     variation_rows = Table(folder, 'VARIATION' + locale).by_id()
     parts = Table(folder, 'DEFAULT_PARTS').by_id()
-    tables = {name: Table(folder, name) for name in ('CHASSIS', 'FRONTTIRE', 'REARTIRE', 'TIRESIZE')}
+    tables = {name: Table(folder, name) for name in ('CHASSIS', 'FRONTTIRE', 'REARTIRE', 'TIRESIZE', 'SUSPENSION')}
     rows = {name: table.by_id() for name, table in tables.items()}
     out = {}
     for label, row in sorted(cars.items()):
@@ -148,18 +148,24 @@ def car_specs(folder, locale='british'):
             key, table_id = struct.unpack_from('<ii', part_row, 8 * i)
             keys[table_id] = key
         chassis = struct.unpack_from('<13h', rows['CHASSIS'][keys[tables['CHASSIS'].table_id]])
+        # SUSPENSION shorts: ride height min/max/default front, then rear (mm).
+        suspension = struct.unpack_from('<6h', rows['SUSPENSION'][keys[tables['SUSPENSION'].table_id]])
 
         def tire(table):
             size = rows['TIRESIZE'][struct.unpack_from('<i', rows[table][keys[tables[table].table_id]])[0]]
             # TIRESIZE bytes: aspect/5, category, rim inches x10, width/5 mm (e.g. 215/50R17 = 10, 0, 170, 43).
-            return {'aspect': size[0] * 5, 'rim_inches': size[2] / 10, 'width_mm': size[3] * 5}
+            # Reading: rim bytes under 90 are whole inches. Only the two 1886 cars use them (26/41, 34/45);
+            # every other rim is 9.0" or more, and x10 would give their wooden wheels 0.1 m diameters.
+            rim = size[2] / 10 if size[2] >= 90 else size[2]
+            return {'aspect': size[0] * 5, 'rim_inches': rim, 'width_mm': size[3] * 5}
         name = text[struct.unpack_from('<i', names[label], 0)[0]] if label in names else None
         if model in out:
             raise ValueError('model code used by two spec cars: ' + model)
         out[model] = {'label': label, 'name': name, 'year': struct.unpack_from('<h', row, 12)[0],
                       'wheelbase_mm': chassis[2], 'length_mm': chassis[0], 'height_mm': chassis[1],
                       'mass_kg': chassis[3], 'tread_mm': [chassis[9], chassis[10]],
-                      'tire_diameter_mm': [chassis[11], chassis[12]],
+                      'tire_pos_related_mm': [chassis[11], chassis[12]],  # Equal CarInfo TirePosRelated; not tire diameters.
                       'model_bounds_mm': [round(v, 1) for v in struct.unpack_from('<4f', variation, 16)],
+                      'ride_height_mm': [suspension[2], suspension[5]],
                       'front_tire': tire('FRONTTIRE'), 'rear_tire': tire('REARTIRE')}
     return out

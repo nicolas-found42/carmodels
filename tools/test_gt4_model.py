@@ -29,8 +29,8 @@ class RealModelTests(unittest.TestCase):
                          {'car_info': 0x40, 'collision': 0xA24, 'body': 0xD00, 'wheel': 0x76680,
                           'tire_front': 0x82640, 'tire_rear': 0x8A280})
         info = car_info(self.data, self.slots['car_info'])
-        self.assertAlmostEqual(info['tire_diameter_front'], 0.64602, places=4)
-        self.assertAlmostEqual(info['tire_diameter_rear'], 0.6991, places=4)
+        self.assertAlmostEqual(info['tire_pos_related'][0], 0.64602, places=4)
+        self.assertAlmostEqual(info['tire_pos_related'][1], 0.6991, places=4)
         low, high = collision_bounds(self.data, self.slots['collision'])
         self.assertAlmostEqual(low[1], 0.0)
         self.assertAlmostEqual(high[2], 2.4915, places=3)

@@ -28,10 +28,14 @@ class SpecTests(unittest.TestCase):
     def test_pinned_cars(self):
         acura = self.specs['acra0001']
         self.assertEqual((acura['label'], acura['name'], acura['year']), ('acura_cl_types_01', 'Acura CL 3.2 Type-S `01', 2001))
-        self.assertEqual((acura['wheelbase_mm'], acura['tread_mm'], acura['tire_diameter_mm']), (2715, [1769, 1764], [646, 699]))
+        self.assertEqual((acura['wheelbase_mm'], acura['tread_mm'], acura['tire_pos_related_mm']), (2715, [1769, 1764], [646, 699]))
         self.assertEqual(acura['front_tire'], {'aspect': 50, 'rim_inches': 17.0, 'width_mm': 215})
+        self.assertEqual((acura['ride_height_mm'], self.specs['ford0005']['ride_height_mm']), ([140, 140], [155, 155]))
         self.assertEqual(self.specs['toyt0071']['name'], 'Toyota MR2 V Edition (J) `02')
         self.assertEqual(self.specs['chev0001']['name'], 'Chevrolet Camaro Z28 302 `69')
+        # Rim bytes under 90 are whole inches (1886 cars only): 26" front, 41" rear.
+        benz = self.specs['benz0001']
+        self.assertEqual((benz['front_tire']['rim_inches'], benz['rear_tire']['rim_inches']), (26, 41))
 
     def test_huffman_rows_against_uncompressed_reading(self):
         table = Table(SPECDB, 'CAR_NAME_british')

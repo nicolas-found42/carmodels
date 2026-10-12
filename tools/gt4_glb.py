@@ -23,7 +23,7 @@ LIMITS = [
     'Static showroom (menu) model: render-command LOD 0 and callback branch 0; runtime VM transforms, lamps, damage and animation are not executed.',
     'Wheel placement is a reading of spec-database wheelbase, tread and tire sizes (axles at +/- half wheelbase from the model origin); the game supplies wheel matrices at runtime, including those of body callbacks 11-14 (brake parts).',
     'Textures use colour set 0 and the base CLUT; Pat0 colour patches, reflections and PS2 blending are not reproduced.',
-    'Overlay shapes (kind 2 reflection-like duplicates, kind 5 shadows) and flat ground planes are omitted; X is mirrored to convert the native left-handed frame to glTF.',
+    'Overlay shapes (kind 2 reflection-like duplicates, kind 5 shadows) and flat ground planes are omitted; native coordinates are used unchanged (the car faces -Z, its right side is +X).',
 ]
 
 
@@ -139,7 +139,7 @@ def weld(group, textured, coloured):
     group['indices'] = [remap[i] for i in group['indices']]
 
 
-def model_mesh(builder, ms, label, models, vertex_fn=None, mirror=True, callbacks=None):
+def model_mesh(builder, ms, label, models, vertex_fn=None, mirror=False, callbacks=None):
     """Merge draws of the given models into one glTF mesh grouped by material/texture."""
     groups, stats = {}, {'shapes': 0, 'triangles': 0, 'omitted_flat_shapes': 0, 'omitted_overlay_shapes': 0}
     images = {}
@@ -208,20 +208,30 @@ def model_mesh(builder, ms, label, models, vertex_fn=None, mirror=True, callback
     return len(builder.doc['meshes']) - 1, stats
 
 
-def wheel_layout(spec, info):
-    """Readings: axles at +/- half wheelbase; wheel centre track = tread - tire width;
-    centre height = tire radius over the y=0 ground of the collision model."""
+def tire_diameter(tire):
+    """Metres, from the spec database's tire size (rim inches plus two sidewalls)."""
+    diameter = (tire['rim_inches'] * 25.4 + 2 * tire['aspect'] / 100 * tire['width_mm']) / 1000
+    if not 0.3 < diameter < 1.5:
+        raise ValueError('implausible spec-database tire size')
+    return diameter
+
+
+def wheel_layout(spec):
+    """Readings in the native frame, used unchanged in glTF: the car faces -z and its right side is +x; axles at -/+ half wheelbase; wheel centre track = tread - tire width; the ground lies the
+    default SUSPENSION ride height below the model origin, so centre height = tire radius - ride height."""
     half_base = spec['wheelbase_mm'] / 2000
     out = []
-    for axle, z, tire, diameter in (('front', half_base, spec['front_tire'], info['tire_diameter_front']),
-                                    ('rear', -half_base, spec['rear_tire'], info['tire_diameter_rear'])):
+    for index, (axle, z, tire) in enumerate((('front', -half_base, spec['front_tire']), ('rear', half_base, spec['rear_tire']))):
         tread = spec['tread_mm'][0 if axle == 'front' else 1] / 1000
         width = tire['width_mm'] / 1000
-        outer = diameter / 2
+        outer = tire_diameter(tire) / 2
+        ground = spec['ride_height_mm'][index] / 1000
+        if not 0 <= ground < outer:
+            raise ValueError('implausible spec-database ride height')
         rim = min(tire['rim_inches'] * 0.0127, outer * 0.95)
         for side, sign in (('left', -1), ('right', 1)):
             out.append({'name': f'{axle}_{side}', 'axle': axle, 'side': side,
-                        'centre': [sign * (tread - width) / 2, outer, z], 'width': width,
+                        'centre': [sign * (tread - width) / 2, outer - ground, z], 'width': width,
                         'outer_radius': outer, 'rim_radius': rim})
     return out
 
@@ -231,15 +241,15 @@ def build_car(data, code, spec, source):
     slots = car4_slots(data)
     info = car_info(data, slots['car_info'])
     bounds = collision_bounds(data, slots['collision'])
-    if not 0.2 < info['tire_diameter_front'] < 1.5 or not 0.2 < info['tire_diameter_rear'] < 1.5:
-        raise ValueError('implausible CAR4 tire diameters')
     builder = Builder()
-    wheels = wheel_layout(spec, info)
+    wheels = wheel_layout(spec)
     body = ModelSet(data, slots['body'])
-    # Reading: body callbacks 11-14 load the matrices of the right-front, left-front, right-rear and
-    # left-rear wheels (native frame) for brake parts modelled in wheel-local coordinates.
+    # Reading: body callbacks 11-14 load the matrices of the left-front, right-front, left-rear and
+    # right-rear wheels for brake parts modelled in wheel-local coordinates. Over 725 cars, the parts
+    # of 11/13 sit at local +x and of 12/14 at local -x (inboard only if 11/13 are at -x, the left
+    # side), and 11/12 carry the larger discs in 411 cars against 63 (front).
     callbacks = {}
-    for parameter, name in zip((11, 12, 13, 14), ('front_right', 'front_left', 'rear_right', 'rear_left')):
+    for parameter, name in zip((11, 12, 13, 14), ('front_left', 'front_right', 'rear_left', 'rear_right')):
         cx, cy, cz = next(w['centre'] for w in wheels if w['name'] == name)
         callbacks[parameter] = (1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., cx, cy, cz, 1.)
     body_mesh, body_stats = model_mesh(builder, body, 'body', range(min(body.model_count, 2)), callbacks=callbacks)
@@ -254,7 +264,7 @@ def build_car(data, code, spec, source):
         w, outer, rim = pair[0]['width'], pair[0]['outer_radius'], pair[0]['rim_radius']
 
         def place(p, radial, w=w):
-            # Meshes are built for the native right-hand wheel, whose local +x points inward (-x).
+            # Local x=0 is the outer face; place() puts it at +x, and nodes on the glTF -x side mirror it.
             x, y, z = p
             return (-(x - 0.5) * w, y * radial, z * radial)
 
@@ -278,17 +288,16 @@ def build_car(data, code, spec, source):
             parts[f'{kind}_{axle}'] = stats
             for wheel in pair:
                 cx, cy, cz = wheel['centre']
-                # Native right wheels use the mesh as built; left wheels mirror it. The whole car is
-                # then mirrored in X for glTF, matching the body's per-vertex mirror.
-                nodes.append({'name': f'{kind}_{wheel["name"]}', 'mesh': mesh, 'translation': [-cx, cy, cz],
-                              'scale': [-1 if wheel['side'] == 'right' else 1, 1, 1]})
+                # Left (-x) wheels mirror the mesh so its outer face points outward.
+                nodes.append({'name': f'{kind}_{wheel["name"]}', 'mesh': mesh, 'translation': [cx, cy, cz],
+                              'scale': [-1 if wheel['side'] == 'left' else 1, 1, 1]})
     doc = builder.doc
     doc['nodes'] = nodes
     doc['scenes'] = [{'name': 'Showroom model — static wheels', 'nodes': list(range(len(nodes)))}]
     record = {'role': 'showroom', 'source': source, 'parts': parts,
               'triangles': parts['body']['triangles'] + 2 * sum(v['triangles'] for k, v in parts.items() if k != 'body'),
               'textures': len(builder.textures), 'wheels': wheels,
-              'collision_bounds': bounds, 'tire_diameters': [info['tire_diameter_front'], info['tire_diameter_rear']]}
+              'collision_bounds': bounds, 'tire_pos_related': list(info['tire_pos_related'])}
     doc['extras'] = {'source_profile': PROFILE, 'car': code, 'name': spec['name'], 'record': record,
                      'claim_limits': LIMITS}
     return builder.finish(), record

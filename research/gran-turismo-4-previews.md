@@ -22,9 +22,11 @@ checked against the disc data (counts, totals, rendered output), not taken on tr
 ## What is decoded
 
 **CAR4** (`tools/gt4_model.py`): header slots for car info, collision box, body, wheel and the two
-tire model sets. CarInfo `TirePosRelated` holds the front/rear tire diameters in metres; they equal
-the last two `CHASSIS` columns (e.g. 0.646/0.699 for the Acura CL). The collision box's minimum Y is 0
-(ground).
+tire model sets. The collision box's minimum Y is 0; that is not the ground (see the ride-height reading). CarInfo `TirePosRelated` (two floats,
+equal to the last two `CHASSIS` columns) was first read as front/rear tire diameters; that reading
+was wrong. The second value matches neither tire (Taurus SHO '98: 0.658/0.777 m with 225/55R16,
+about 0.654 m, at both ends), and over 730 cars it is within 10 mm of the rear tire in only 170.
+Its meaning is open; tire sizes now come from TIRESIZE.
 
 **MDLS/ModelSet2 shapes**: each shape is a list of VIF packets. Attributes use VU addresses
 0x00 (position), 0x40 (UV or normal), 0x80 (normal or colour), 0xC0 (GIF tag). Integer unpacks are
@@ -35,9 +37,10 @@ are floats. Strip lengths are `(b + 6) / 3` from the trailing S_8 unpack. Over t
 
 **Render commands**: a static walk takes LOD 0, branch 0 of model callbacks and the first target of
 VM branches. Depth-mask and alpha-test commands are tracked per draw. Body callbacks 11–14 load the
-right-front, left-front, right-rear and left-rear wheel matrices at runtime (a reading: their brake
-shapes sit at ±x around the origin in matching pairs); the preview supplies translations to the
-same wheel centres.
+left-front, right-front, left-rear and right-rear wheel matrices at runtime; the preview supplies
+translations to the same wheel centres. Over 725 cars with all four, the parts of 11/13 sit at local
++x and 12/14 at local −x, inboard only if 11/13 are on −x (the left side). 11/12 carry the
+larger discs in 411 cars against 63 the other way (front).
 
 **Tex1**: transfers are always PSMCT32-swizzled uploads; cars use PSMT4 and PSMT8 textures with
 PSMCT32 CLUTs (CSA offsets in units of eight words; PSMT8 CLUTs in 8×2 tiles). GS alpha 0–0x80 is
@@ -55,9 +58,12 @@ These are labelled readings, verified visually but not by game execution:
 
 | Reading | Evidence |
 | --- | --- |
-| Native frame is left-handed; X is mirrored for glTF | Trunk lettering reads "ACURA" left-to-right from behind; the Japanese-market MR2's steering wheel is on the right |
+| Native coordinates are used unchanged in glTF (no X mirror) | Compared with in-game GT4 photo-mode shots ("Cars of Gran Turismo" blog): with the X mirror the earlier previews were mirror images. The NISMO 270R's exhaust and "270R" badge sat on the wrong side, and its "nismo" plate, side decal and the Hyundai Coupe FX's "Coupe" plate read backwards. Unmirrored, all of these match the game, and the Acura CL's "ACURA" trunk lettering reads correctly. The earlier mirror reading (trunk lettering, MR2 steering wheel) was wrong |
 | Cars face −Z | `VARIATION.ModelFront` equals the model's |min Z| (Acura: 2381.8 mm, collision z −2.3817); the dealership front camera shows grilles from −Z |
-| Axles at ±wheelbase/2 from the model origin | Wheels sit centred in the arches in side views (Camaro, Acura, AC Cobra, MR2) |
+| The car's right side is +X; front axle at −wheelbase/2, rear at +wheelbase/2; body callbacks 11–14 are the left-front, right-front, left-rear and right-rear wheels | Follows from the two rows above and the brake-callback statistics. The first previews put the front axle at +Z; with equal axles this looked right, but on the Taurus SHO the wrong tire size clipped the body (review of PR #36) |
+| Axles are centred on the model origin | Body arch openings, with brake parts moved away, centre at about ±1.36 m for the Taurus SHO (wheelbase 2756 mm) and the Acura CL (2715 mm) |
+| Tire diameter = rim + 2 × aspect × width (TIRESIZE) | 215/50R17 → 0.647 m; front and rear use their own rows |
+| The ground lies the default SUSPENSION ride height below the model origin (wheel centre y = tire radius − ride height) | With the ground at y=0 (the collision floor), the Taurus SHO's tires rose 5–10 cm through the arch lips. The Taurus's lowest body point is 0.029 m and its ride height is 155 mm. Over 44 sampled cars, the 17 with measurable clipping under y=0 have none under this rule; the cars that appeared to get worse are triangle-sampling artefacts, and the Camaro and RX-7 (FC) checked by eye sit in their arches. An in-game Taurus screenshot shows the same small gap above the tires |
 | Wheel centre track = tread − tire width | Acura: 1769 − 215 = 1554 mm against a published 1555 mm track |
 | Wheel/tire meshes are normalised (tire width 0..1, bead radius 1, tread ~1.317) | Measured bounds of every sampled wheel/tire model set |
 | TIRESIZE bytes: aspect/5, category, rim inches × 10, width/5 mm | 215/50R17 decodes to (10, 0, 170, 43) |
@@ -93,6 +99,7 @@ are absent; the catalog build then validates each committed preview against its 
 - Visual artefacts seen in spot checks: light streaks on the NISMO Skyline GT-R R-tune (R34) hood and rear deck; cause not investigated.
 - Paint colours other than colour set 0 / the base CLUT; Pat0 colour patches are not applied.
 - Runtime wheel matrices, steering, suspension travel, wings and VM-driven animation.
+- The meaning of CarInfo `TirePosRelated` and the last two `CHASSIS` columns.
 - Wheel placement beyond the readings above; cars with unusual layouts (three-wheelers,
   karts, concept cars) were not inspected individually.
 - Race (LOD) models, interiors beyond what the showroom model contains, and the 880 shared wheels.
