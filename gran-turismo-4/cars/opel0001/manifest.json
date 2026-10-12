@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 488776,
+   "file": "opel0001/car/lod/opel0001",
+   "sha256": "16d486785314af49b894120d6f7e69a20469a1e183b37de5b288adc6cc4c1b5f",
+   "source": {
+    "iso_offset": 801093632,
+    "kind": "compressed",
+    "modified": "2005-01-19T10:27:09Z",
+    "role": "race-model",
+    "stored_bytes": 206763,
+    "stored_sha256": "785721544567fc0ada50322121e16df5c7f556fa100a890736ab981ca303a119",
+    "volume_offset": 584253440,
+    "volume_path": "car/lod/opel0001"
+   }
+  },
+  {
+   "bytes": 27744,
+   "file": "opel0001/car/lod/opel0001.pat",
+   "sha256": "2894827936a279adc8e4031e93d6c3c2c1acdbe4ebf9ddad156a1b1e1d82e597",
+   "source": {
+    "iso_offset": 801300480,
+    "kind": "compressed",
+    "modified": "2005-01-19T10:25:16Z",
+    "role": "colour-patch",
+    "stored_bytes": 8067,
+    "stored_sha256": "b9dc2e109364c551e77f9bee508c4db9668bcda2c3ae6903d36bc8bd62626078",
+    "volume_offset": 584460288,
+    "volume_path": "car/lod/opel0001.pat"
+   }
+  },
+  {
+   "bytes": 581960,
+   "file": "opel0001/car/menu/opel0001",
+   "sha256": "b98dc35a91fbcb787daafebe121c82331020d7cda6fa12790145764d1f985a7d",
+   "source": {
+    "iso_offset": 664551424,
+    "kind": "compressed",
+    "modified": "2005-01-19T10:29:11Z",
+    "role": "menu-model",
+    "stored_bytes": 207684,
+    "stored_sha256": "261060373f8497118ff8d86c3c33c1a26f7f776440b28a3a11f8220bec764d98",
+    "volume_offset": 447711232,
+    "volume_path": "car/menu/opel0001"
+   }
+  },
+  {
+   "bytes": 19056,
+   "file": "opel0001/wheel/lod/opel0001",
+   "sha256": "38516e4e653e8a4059881a49715d9b200b7026c3f477c6f237edfd970abf37ad",
+   "source": {
+    "iso_offset": 1609799680,
+    "kind": "compressed",
+    "modified": "2004-12-16T11:19:19Z",
+    "role": "race-wheel",
+    "stored_bytes": 10295,
+    "stored_sha256": "15a18ff9b2c894814c01a8547c3c7581b7db5f1943f70d9fef353131dea45235",
+    "volume_offset": 1392959488,
+    "volume_path": "wheel/lod/opel0001"
+   }
+  },
+  {
+   "bytes": 69232,
+   "file": "opel0001/wheel/menu/opel0001",
+   "sha256": "63e04ec5ca03de96a25d4929b566b0fd4dd07b10a8ce6225cb966d0eddb6dfc0",
+   "source": {
+    "iso_offset": 1633611776,
+    "kind": "compressed",
+    "modified": "2004-11-11T12:07:13Z",
+    "role": "menu-wheel",
+    "stored_bytes": 22873,
+    "stored_sha256": "409b5f6abe582f9015723eeef5908254fa70a1d24c23cce4eff3faeae1f7b975",
+    "volume_offset": 1416771584,
+    "volume_path": "wheel/menu/opel0001"
+   }
+  }
+ ],
+ "id": "opel0001",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}

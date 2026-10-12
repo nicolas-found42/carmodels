@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 482760,
+   "file": "fiat0005/car/lod/fiat0005",
+   "sha256": "846531bdad1c221d8b91739076d4d6fd876dbaa4efcea617dc3e1ef006934c99",
+   "source": {
+    "iso_offset": 730050560,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:18:59Z",
+    "role": "race-model",
+    "stored_bytes": 165279,
+    "stored_sha256": "2b068ee8e0a585bbd1a829e02512684c62f8603ff78317f430dfad130e775f27",
+    "volume_offset": 513210368,
+    "volume_path": "car/lod/fiat0005"
+   }
+  },
+  {
+   "bytes": 9744,
+   "file": "fiat0005/car/lod/fiat0005.pat",
+   "sha256": "8d355d1789eb8271615be657a74a8b1588964058b439e6e9ec70ef9123c649af",
+   "source": {
+    "iso_offset": 730216448,
+    "kind": "compressed",
+    "modified": "2004-12-16T11:03:23Z",
+    "role": "colour-patch",
+    "stored_bytes": 2781,
+    "stored_sha256": "9969844b7118114a94757aa601003290212ceedfb61f19771028248400c55a9f",
+    "volume_offset": 513376256,
+    "volume_path": "car/lod/fiat0005.pat"
+   }
+  },
+  {
+   "bytes": 658504,
+   "file": "fiat0005/car/menu/fiat0005",
+   "sha256": "0d2f5c0ea0d283086a4128e2dc34c6e66111b0c41a68eaf13402bacf352d04c3",
+   "source": {
+    "iso_offset": 587954176,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:12:21Z",
+    "role": "menu-model",
+    "stored_bytes": 228669,
+    "stored_sha256": "1ca041b24a71a7279d2c3a20271d4fed1058387dd9931ae612e432d5654be59f",
+    "volume_offset": 371113984,
+    "volume_path": "car/menu/fiat0005"
+   }
+  },
+  {
+   "bytes": 19056,
+   "file": "fiat0005/wheel/lod/fiat0005",
+   "sha256": "c8f591c2d8e9272768ce7b7f660dab28a7cd43ea0a480228686c63ecfa8bfffb",
+   "source": {
+    "iso_offset": 1604335616,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:09:53Z",
+    "role": "race-wheel",
+    "stored_bytes": 8067,
+    "stored_sha256": "d7502701745de9234a4b468579ffba1dad84227e3fa62bc63d8918594b8f41bf",
+    "volume_offset": 1387495424,
+    "volume_path": "wheel/lod/fiat0005"
+   }
+  },
+  {
+   "bytes": 92336,
+   "file": "fiat0005/wheel/menu/fiat0005",
+   "sha256": "9a776e33e02f7592ffdcb6bca5f0c34c186d0afc46eea62167ff85a6f2b299f4",
+   "source": {
+    "iso_offset": 1620592640,
+    "kind": "compressed",
+    "modified": "2004-11-11T12:53:32Z",
+    "role": "menu-wheel",
+    "stored_bytes": 45181,
+    "stored_sha256": "44039fd0dc24c1dfeb6a7f63517e94cf7042066758d92971738cdaedc9db8d31",
+    "volume_offset": 1403752448,
+    "volume_path": "wheel/menu/fiat0005"
+   }
+  }
+ ],
+ "id": "fiat0005",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 466376,
+   "file": "glet0001/car/lod/glet0001",
+   "sha256": "737e0f2581b514247d7b428892984d85c3c28b662f9bf4522d7de62dcd5941ab",
+   "source": {
+    "iso_offset": 732979200,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:08:24Z",
+    "role": "race-model",
+    "stored_bytes": 190080,
+    "stored_sha256": "33294d33ebed805fd6b3a7c56084dc109ba9e7fb218d197ca048aae7db3a7a18",
+    "volume_offset": 516139008,
+    "volume_path": "car/lod/glet0001"
+   }
+  },
+  {
+   "bytes": 32,
+   "file": "glet0001/car/lod/glet0001.pat",
+   "sha256": "779ad5b56da489a91069040ce9b49516bb90350c0fe1e23aeb12e4051e28b3d7",
+   "source": {
+    "iso_offset": 733169664,
+    "kind": "compressed",
+    "modified": "2004-03-31T08:21:53Z",
+    "role": "colour-patch",
+    "stored_bytes": 20,
+    "stored_sha256": "edc66a69ec0b75539ffa27cf93f331480efb39a55250eb04167472e4fa361927",
+    "volume_offset": 516329472,
+    "volume_path": "car/lod/glet0001.pat"
+   }
+  },
+  {
+   "bytes": 550664,
+   "file": "glet0001/car/menu/glet0001",
+   "sha256": "646c88769cc00dc5e9ace192cdb9b2a6f31ba511e9760019f016b264f6720dce",
+   "source": {
+    "iso_offset": 591155200,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:42:05Z",
+    "role": "menu-model",
+    "stored_bytes": 184657,
+    "stored_sha256": "b9c2e8be722c09b217a406e152246854d43aad7bf1f479d26cafc007ac977525",
+    "volume_offset": 374315008,
+    "volume_path": "car/menu/glet0001"
+   }
+  },
+  {
+   "bytes": 21360,
+   "file": "glet0001/wheel/lod/glet0001",
+   "sha256": "22edc69a8e447126096556167fcb699443cbb1d06e1905aa86c6ae56de1d8b39",
+   "source": {
+    "iso_offset": 1604542464,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:17:16Z",
+    "role": "race-wheel",
+    "stored_bytes": 8278,
+    "stored_sha256": "4f1d7092b41cddc392256b45958dc32b47c1d7e44cc14e04c93cbdebfdd1e26f",
+    "volume_offset": 1387702272,
+    "volume_path": "wheel/lod/glet0001"
+   }
+  },
+  {
+   "bytes": 57840,
+   "file": "glet0001/wheel/menu/glet0001",
+   "sha256": "2ed302bcfce54f685d0b220d031f33a008f39e74045609e3e6ed92a8f89e0bda",
+   "source": {
+    "iso_offset": 1621084160,
+    "kind": "compressed",
+    "modified": "2004-11-15T10:11:23Z",
+    "role": "menu-wheel",
+    "stored_bytes": 19122,
+    "stored_sha256": "c7be6d6511a99c3caef3234e7031ddff6e926cb194c1e90cb46590e6ba7f259e",
+    "volume_offset": 1404243968,
+    "volume_path": "wheel/menu/glet0001"
+   }
+  }
+ ],
+ "id": "glet0001",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}

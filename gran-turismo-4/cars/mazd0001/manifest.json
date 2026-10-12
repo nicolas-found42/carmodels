@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 450056,
+   "file": "mazd0001/car/lod/mazd0001",
+   "sha256": "bbe3cca0fdca992eb59128289370e58585d7c416c9f7e253558be73457697ee0",
+   "source": {
+    "iso_offset": 756865024,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:04:46Z",
+    "role": "race-model",
+    "stored_bytes": 153101,
+    "stored_sha256": "20c199c6c143b72a13f64b99ef79db390a8e872da4d8944145bf148031815c65",
+    "volume_offset": 540024832,
+    "volume_path": "car/lod/mazd0001"
+   }
+  },
+  {
+   "bytes": 16608,
+   "file": "mazd0001/car/lod/mazd0001.pat",
+   "sha256": "59051e00d4d93641bc942d81888e16a3c7b920e41b20280808e96ad1c63811b3",
+   "source": {
+    "iso_offset": 757018624,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:02:36Z",
+    "role": "colour-patch",
+    "stored_bytes": 4635,
+    "stored_sha256": "b39f4b800eaec376ac61ebdc84d093bd790c67675b122aca5734ab38a709ed21",
+    "volume_offset": 540178432,
+    "volume_path": "car/lod/mazd0001.pat"
+   }
+  },
+  {
+   "bytes": 572808,
+   "file": "mazd0001/car/menu/mazd0001",
+   "sha256": "5fd10d19808faf91355681d682c131a27822690a4f5f88bd5980c65b56750a18",
+   "source": {
+    "iso_offset": 617097216,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:04:24Z",
+    "role": "menu-model",
+    "stored_bytes": 185337,
+    "stored_sha256": "f6edf463dc27e8bbe33ccb82bcb7904081cac5f1bbfbb423f0bc033747e76edf",
+    "volume_offset": 400257024,
+    "volume_path": "car/menu/mazd0001"
+   }
+  },
+  {
+   "bytes": 24050,
+   "file": "mazd0001/wheel/lod/mazd0001",
+   "sha256": "906d3b99d82c313b4164d90bd01822f6e2abb5ab20ec8759f9a1957606f0a4bc",
+   "source": {
+    "iso_offset": 1606248448,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:17:15Z",
+    "role": "race-wheel",
+    "stored_bytes": 8474,
+    "stored_sha256": "ee5775ff8ef321b252758f8859177ca7b1e33f7cba767badd1dfee9334bdec5a",
+    "volume_offset": 1389408256,
+    "volume_path": "wheel/lod/mazd0001"
+   }
+  },
+  {
+   "bytes": 60272,
+   "file": "mazd0001/wheel/menu/mazd0001",
+   "sha256": "78ea12e4e7d296fd133044c067d4ec2b76abaf97fedac17eeea5db82d3f30563",
+   "source": {
+    "iso_offset": 1625460736,
+    "kind": "compressed",
+    "modified": "2004-11-11T13:05:18Z",
+    "role": "menu-wheel",
+    "stored_bytes": 21023,
+    "stored_sha256": "199688019d0d5b71799ebe21c5e50cd1d2ef55bf0f5b7c718b6a84c2c1c3718e",
+    "volume_offset": 1408620544,
+    "volume_path": "wheel/menu/mazd0001"
+   }
+  }
+ ],
+ "id": "mazd0001",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 488584,
+   "file": "audi0001/car/lod/audi0001",
+   "sha256": "8b55fa9ae24696dcb28bb347938e330e53bc79a3d6769e9d76ca59422e214c06",
+   "source": {
+    "iso_offset": 710596608,
+    "kind": "compressed",
+    "modified": "2005-01-13T11:57:01Z",
+    "role": "race-model",
+    "stored_bytes": 184817,
+    "stored_sha256": "4c7573566e9acc7a507090ed912807e40cd79b2e6b82b951160165844433781b",
+    "volume_offset": 493756416,
+    "volume_path": "car/lod/audi0001"
+   }
+  },
+  {
+   "bytes": 32428,
+   "file": "audi0001/car/lod/audi0001.pat",
+   "sha256": "c2184f98f67750146296e571c2b30f243c2e7b9a2b7ed245f99e9a39616ac428",
+   "source": {
+    "iso_offset": 710782976,
+    "kind": "compressed",
+    "modified": "2004-12-16T11:12:12Z",
+    "role": "colour-patch",
+    "stored_bytes": 7898,
+    "stored_sha256": "23186b4e8a2c02be10c278d1d58d48b581a0d27499c49d4fed6ed111fba0465e",
+    "volume_offset": 493942784,
+    "volume_path": "car/lod/audi0001.pat"
+   }
+  },
+  {
+   "bytes": 588488,
+   "file": "audi0001/car/menu/audi0001",
+   "sha256": "e5a3d963e37ce433441284ac3bed8f73c2955b113b02b2f3517aeb87421bd0e9",
+   "source": {
+    "iso_offset": 567062528,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:37:35Z",
+    "role": "menu-model",
+    "stored_bytes": 199566,
+    "stored_sha256": "7bb4f2214b51ad4a930833bea7304901ed74026500ebd315332113e4fd96b51c",
+    "volume_offset": 350222336,
+    "volume_path": "car/menu/audi0001"
+   }
+  },
+  {
+   "bytes": 18928,
+   "file": "audi0001/wheel/lod/audi0001",
+   "sha256": "71f306b471eb658b43d9d7549bcc264070d4631a99d1e50dbd00043dd205e255",
+   "source": {
+    "iso_offset": 1602330624,
+    "kind": "compressed",
+    "modified": "2005-01-13T11:57:08Z",
+    "role": "race-wheel",
+    "stored_bytes": 9228,
+    "stored_sha256": "073f470fe0d5cd543b749603b311de893070c6a8080aa6ebf41660bd26f4c31e",
+    "volume_offset": 1385490432,
+    "volume_path": "wheel/lod/audi0001"
+   }
+  },
+  {
+   "bytes": 47856,
+   "file": "audi0001/wheel/menu/audi0001",
+   "sha256": "6c509accb8d8a72d23f8fc6bdfe16c00aee72ffa97ddddf54f1fdd2b95c5a877",
+   "source": {
+    "iso_offset": 1615630336,
+    "kind": "compressed",
+    "modified": "2004-11-11T13:27:39Z",
+    "role": "menu-wheel",
+    "stored_bytes": 15527,
+    "stored_sha256": "03ab24b1bb813ab35ccc3150427ddf8c2c8032980bf5aecc9c81a4dc1f546c72",
+    "volume_offset": 1398790144,
+    "volume_path": "wheel/menu/audi0001"
+   }
+  }
+ ],
+ "id": "audi0001",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}

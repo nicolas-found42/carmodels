@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 450056,
+   "file": "pont0001/car/lod/pont0001",
+   "sha256": "4e21445635e944833da4e3fb13d0e2d06958698a6d73d3f7685c72ead0cdbd43",
+   "source": {
+    "iso_offset": 806842368,
+    "kind": "compressed",
+    "modified": "2005-01-13T11:58:00Z",
+    "role": "race-model",
+    "stored_bytes": 171445,
+    "stored_sha256": "5e6ee383b36aa951f169db8101f5fb99be353d71733f46dd0e15f7faa33fb44d",
+    "volume_offset": 590002176,
+    "volume_path": "car/lod/pont0001"
+   }
+  },
+  {
+   "bytes": 44011,
+   "file": "pont0001/car/lod/pont0001.pat",
+   "sha256": "f5cbee9a597dfd6ee742da3973214c99f5c37eeed9732d7386095fdea927fd71",
+   "source": {
+    "iso_offset": 807014400,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:50:45Z",
+    "role": "colour-patch",
+    "stored_bytes": 14498,
+    "stored_sha256": "16b44d2e3a09032ee9b7e1d660e8f5147170f234fec0df5bac5d2492d87cd424",
+    "volume_offset": 590174208,
+    "volume_path": "car/lod/pont0001.pat"
+   }
+  },
+  {
+   "bytes": 547720,
+   "file": "pont0001/car/menu/pont0001",
+   "sha256": "d65508349a3c016054cff574a0fcebad498fb41334f60268780221e48e760350",
+   "source": {
+    "iso_offset": 670646272,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:37:08Z",
+    "role": "menu-model",
+    "stored_bytes": 177398,
+    "stored_sha256": "edb2cab27398f5a98700758fe937da2b76e8393ab0f02f3a9505f4a66e2f028f",
+    "volume_offset": 453806080,
+    "volume_path": "car/menu/pont0001"
+   }
+  },
+  {
+   "bytes": 24436,
+   "file": "pont0001/wheel/lod/pont0001",
+   "sha256": "c05949faeb4d3a2d926e5a2f1da53a4d82d66dd33a486afe67811e2f56d99243",
+   "source": {
+    "iso_offset": 1611085824,
+    "kind": "compressed",
+    "modified": "2005-01-13T12:17:12Z",
+    "role": "race-wheel",
+    "stored_bytes": 11180,
+    "stored_sha256": "fa8f880a642e0eb03ceba52d5b1d9cec9901e7ff7acc28d92d821fe70a5d1dda",
+    "volume_offset": 1394245632,
+    "volume_path": "wheel/lod/pont0001"
+   }
+  },
+  {
+   "bytes": 59376,
+   "file": "pont0001/wheel/menu/pont0001",
+   "sha256": "d491533b9eab35b7f035e2cd24d64e1300e6f8a1730567cde8b2c3f887824b1c",
+   "source": {
+    "iso_offset": 1636802560,
+    "kind": "compressed",
+    "modified": "2004-11-11T13:12:56Z",
+    "role": "menu-wheel",
+    "stored_bytes": 20175,
+    "stored_sha256": "c2e031eca06e216a71b001bfafc8d0ac45371b2787374e0dc4dc28d3f85775d3",
+    "volume_offset": 1419962368,
+    "volume_path": "wheel/menu/pont0001"
+   }
+  }
+ ],
+ "id": "pont0001",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "claim_limits": [
+  "Native volume extraction only; CAR4/MDLS model and Pat0 colour-patch decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are eight-character model codes from car/lod file names, not decoded retail names or a verified playable roster.",
+  "Wheels are assigned to a car only by an exact code match; other wheels, tires and wings are shared with ownership unknown.",
+  "The spec database is retained as native tables; rows, names and car-to-model mappings are not decoded here.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": [
+  {
+   "bytes": 501128,
+   "file": "lxus0001/car/lod/lxus0001",
+   "sha256": "d28f44d89614e194049cd90eca9e72cee9409322a7fec34407762e17d59e1d97",
+   "source": {
+    "iso_offset": 755359744,
+    "kind": "compressed",
+    "modified": "2004-12-31T15:13:28Z",
+    "role": "race-model",
+    "stored_bytes": 176978,
+    "stored_sha256": "fae21be76e8379481d92e6af801de08e9d0404ef9c83442fa927566a1d6a0940",
+    "volume_offset": 538519552,
+    "volume_path": "car/lod/lxus0001"
+   }
+  },
+  {
+   "bytes": 21792,
+   "file": "lxus0001/car/lod/lxus0001.pat",
+   "sha256": "efc03dc1913443c437398c3c2dc60bd96b10034a97f94a6b1fec5172eb3ad2ea",
+   "source": {
+    "iso_offset": 755537920,
+    "kind": "compressed",
+    "modified": "2004-12-31T15:15:23Z",
+    "role": "colour-patch",
+    "stored_bytes": 6710,
+    "stored_sha256": "e05304845e02aa7b8a941f71764a6dc4b2b592f4a28c2383b20e589097eb27cd",
+    "volume_offset": 538697728,
+    "volume_path": "car/lod/lxus0001.pat"
+   }
+  },
+  {
+   "bytes": 579144,
+   "file": "lxus0001/car/menu/lxus0001",
+   "sha256": "3678f07df68e305b6224687c55204c257ba58ec604c3a6dcffa3a5130a2aafc0",
+   "source": {
+    "iso_offset": 615505920,
+    "kind": "compressed",
+    "modified": "2005-01-12T10:05:22Z",
+    "role": "menu-model",
+    "stored_bytes": 188257,
+    "stored_sha256": "aaf46a9e1699de6139b6d0a0069a8487519cc09f7b8161edf08e23f51226f706",
+    "volume_offset": 398665728,
+    "volume_path": "car/menu/lxus0001"
+   }
+  },
+  {
+   "bytes": 19184,
+   "file": "lxus0001/wheel/lod/lxus0001",
+   "sha256": "d50c7a085a13a1bd26bd824bbdd95df53b19bdfc367cd574aa7c7e2e5ea321d7",
+   "source": {
+    "iso_offset": 1606141952,
+    "kind": "compressed",
+    "modified": "2004-12-16T10:35:01Z",
+    "role": "race-wheel",
+    "stored_bytes": 9556,
+    "stored_sha256": "a9015177d0f9092ff907504b636348ad105ec93c9e5ef372836f4a1208ad2c1c",
+    "volume_offset": 1389301760,
+    "volume_path": "wheel/lod/lxus0001"
+   }
+  },
+  {
+   "bytes": 59376,
+   "file": "lxus0001/wheel/menu/lxus0001",
+   "sha256": "e28171e48619e309332782e3f2a3bf1a44d9efd689c331d7d2db1d3c9774dd3c",
+   "source": {
+    "iso_offset": 1625180160,
+    "kind": "compressed",
+    "modified": "2004-11-11T13:27:35Z",
+    "role": "menu-wheel",
+    "stored_bytes": 21412,
+    "stored_sha256": "1c88e6c7f73da1c880eb16e9224241adca836eb46a5d12d9888f2d6e0f8a2ca9",
+    "volume_offset": 1408339968,
+    "volume_path": "wheel/menu/lxus0001"
+   }
+  }
+ ],
+ "id": "lxus0001",
+ "roles": [
+  "colour-patch",
+  "menu-model",
+  "menu-wheel",
+  "race-model",
+  "race-wheel"
+ ]
+}
