@@ -11,6 +11,7 @@ single list of what is not yet established; update it when a note closes or open
 | `ai-agent-reverse-engineering-workflow-2026-10-11.md` | Primary-source tool comparisons, a bounded agent workflow, reusable prompts, September 27–October 11 releases and videos, and source-quality checks |
 | `semantic-filter-teardown-2026-10-11.md` | Natural-language filter teardown: offline phrase routing, fail-closed model composition fixes, availability reporting, frozen labeled before/after measurements and Jev receipts |
 | `gran-turismo-shading-2026-10-11.md` | Why GT cars render shadowed: inverted winding and in-plane stored normals under double-sided lighting, all-728-car rebuild of candidate fixes, headless viewer render matrix, rejected modulation/black-face hypotheses, Jev receipts, ranked fixes |
+| `jev-review-escalations-2026-10-12.md` | Why `jev_review` escalated the MCLA change: server scoring read from jev-mcp 0.13.0, controlled experiments, per-file review and evidence fixes, line coverage, results by round and the judge's ceiling |
 | `midnight-club-los-angeles-extraction.md` | Native MCLA Xbox 360 car files: XDVDFS, basic-packed XEX2, archive key located in the executable, encrypted RPF3 table, disc-string name recovery with collision rules, per-car selection, controls and limits |
 | `gran-turismo-4-previews.md` | GT4 CAR4/MDLS/VIF geometry, Tex1/GS texture and SpecDB decoding sources, preview readings (handedness, -Z front, wheel placement, overlay shapes), 730 previews in both catalogs, limits |
 | `gran-turismo-4-extraction.md` | Native GT4 car files from the encrypted GT4.VOL RoFS table: format sources, decoded volume facts, per-car selection, 730 source-catalog packages, controls and limits |
@@ -34,6 +35,8 @@ single list of what is not yet established; update it when a note closes or open
 ## Open items
 
 - AI-agent reversing workflow: recommendations and dated resources are documented in [the workflow research](ai-agent-reverse-engineering-workflow-2026-10-11.md); local harness comparisons, PS2-specific provider coverage and restart/resume behavior remain to be measured.
+
+- Jev patch review: per-file bundles verify every claim at ≥ 0.98 but no review reaches `auto`; a trivial change scores 0.96–0.97, so the MCLA change's remaining escalations await independent review ([jev-review-escalations-2026-10-12.md](jev-review-escalations-2026-10-12.md)).
 
 - Midnight Club: Los Angeles: native extraction of 106 cars is established ([midnight-club-los-angeles-extraction.md](midnight-club-los-angeles-extraction.md)). RSC5/LZX decoding, part names (most car files keep hash names), GLB conversion and catalog import, shared wheel ownership and game-render fidelity remain open.
 

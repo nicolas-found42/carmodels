@@ -96,9 +96,11 @@ are written inflated, with the stored SHA-256 kept in each manifest.
 | --- | --- |
 | `python3 tools/extract_mcla_cars.py` | `EXTRACTED 106 cars, 10702 files, 415232242 bytes` (35 s) |
 | `python3 tools/extract_mcla_cars.py --check` | `CHECKED 106 cars, 10702 files, 415232242 bytes`, also under stock Python 3.9.6 |
-| `test_aes_decrypt`, `test_xdvdfs`, `test_xex2`, `test_mcla_rpf`, `test_extract_mcla_cars` | synthetic encrypted disc, XEX and archive with tamper controls: wrong key, unreachable or doubly-parented entries, bad DEFLATE sizes, missing RSC5 header, overlapping extents, unexpected vehicle directory, rewritten index masking a payload change, extra and linked output |
+| `test_aes_decrypt`, `test_xdvdfs`, `test_xex2`, `test_mcla_rpf`, `test_extract_mcla_cars` | synthetic encrypted disc, XEX and archive with tamper controls: wrong key, unreachable or doubly-parented entries, bad DEFLATE sizes, missing RSC5 header, overlapping extents, XGD2 offset, multi-sector directories, colliding and ambiguous names, missing disc members, unexpected vehicle directory, a disc changed mid-run, rewritten index masking a payload change, extra and linked output |
 
-`mcla_extraction` in `tools/check.sh` runs the full re-derivation only where the ISO is present.
+| `line_coverage` | 100% of executable lines in the four readers and the extractor under their tests |
+
+`mcla_extraction` in `tools/check.sh` runs the full re-derivation only where the ISO is present. The Jev review of this change and the fixes it prompted are in [jev-review-escalations-2026-10-12.md](jev-review-escalations-2026-10-12.md).
 
 ## Not established
 

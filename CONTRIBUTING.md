@@ -91,6 +91,7 @@ on temporary model copies; production dealership/source GLBs are verified unchan
 | `python3 tools/import_gt4_catalog.py --check` (`gt4_catalog`) | Re-derives all 730 GT4 previews and native ZIPs from the local extraction; skipped when only the committed fixture is present, failed when the extraction is partial | Local GT4 extraction and native ZIPs |
 | `python3 tools/extract_gt4_cars.py --check` (`gt4_extraction`) | Re-derives all 6,591 GT4 extraction files from the disc; skipped when the ISO is absent | Local GT4 ISO |
 | `tools/test_aes_decrypt.py`, `test_xdvdfs.py`, `test_xex2.py`, `test_mcla_rpf.py`, `test_extract_mcla_cars.py` | AES vectors; XDVDFS, XEX2, encrypted RPF3 and MCLA extraction tamper controls on synthetic discs | Python |
+| `python3 tools/line_coverage.py --minimum 95 …` (`line_coverage`), `python3 tools/test_line_coverage.py` | Stdlib-`trace` line coverage of the MCLA readers and the review bundle builder under their tests; fails below 95% | Python |
 | `python3 tools/extract_mcla_cars.py --check` (`mcla_extraction`) | Re-derives all 10,702 MCLA extraction files from the disc; skipped when the ISO is absent | Local MCLA ISO |
 | `python3 tools/verify_config_data_sound.py` | 35 cars × config (11 files) + data DAT + sound chain | Private archive/executable bundle |
 | `python3 tools/verify_sound_bank_index.py` | Sound bank reconciliation | Private archive/executable bundle |

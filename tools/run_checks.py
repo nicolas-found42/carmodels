@@ -23,7 +23,8 @@ def registry():
              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
              'test_gt4_volume', 'test_extract_gt4_cars', 'test_gt4_model', 'test_gt4_specdb', 'test_gt4_glb',
              'test_import_gt4_catalog', 'test_import_gt4_dealership',
-             'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars']
+             'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars',
+             'test_line_coverage']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
@@ -33,6 +34,11 @@ def registry():
     checks.append({'name': 'gt4_extraction', 'command': ['python3', 'tools/extract_gt4_cars.py', '--check'],
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
                                     "'gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso').is_file() else 1)"]})
+    # Line coverage of the MCLA readers and the review bundle builder under their own tests (stdlib trace).
+    covered = ['aes_decrypt', 'xdvdfs', 'xex2', 'mcla_rpf', 'extract_mcla_cars', 'review_payload']
+    checks.append({'name': 'line_coverage', 'command': ['python3', 'tools/line_coverage.py', '--minimum', '95', '--modules',
+                                                        *[f'tools/{n}.py' for n in covered], '--tests',
+                                                        *[f'tools/test_{n}.py' for n in covered]]})
     # The MCLA disc is never committed either; the same skip applies when it is absent.
     checks.append({'name': 'mcla_extraction', 'command': ['python3', 'tools/extract_mcla_cars.py', '--check'],
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("

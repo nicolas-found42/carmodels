@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import patch
 
 import extract_mcla_cars
-from extract_mcla_cars import Named, check_extraction, dictionary, owner, write_extraction
+from extract_mcla_cars import Named, Output, check_extraction, dictionary, owner, write_extraction
 from mcla_rpf import RSC5, Rpf3Archive, jenkins
 from test_mcla_rpf import rpf_fixture
 from test_xdvdfs import disc_fixture
@@ -15,7 +15,7 @@ from test_xex2 import pe_image, xex_fixture
 
 KEY = bytes(range(100, 132))
 PIN = hashlib.sha256(KEY).hexdigest()
-NAMES = (b'resources vehicle vp_test_car_01 vp_test_car_01_dub body_lod_0 configs ambients resources/ui/textures/garage '
+NAMES = (b'shared_utility blur.mesh resources vehicle vp_test_car_01 vp_test_car_01_dub body_lod_0 configs ambients resources/ui/textures/garage '
          b'sh_vp_test_car_01_dub other rims whl_stk_x city tune handling.xml names.xml common.xcc '
          b'gh_01_vp_test_car_01_dub mr_vp_hidden_02 ped_fa_001_set amb')
 
@@ -43,13 +43,16 @@ def tree(extra_vehicle=None):
                                        'other.xtd': resource(9, b'not a car')}}},
         'rims': {'whl_stk_x': {'whl_stk_x.xtp': resource(83, b'rim')}},
         'city': {'sc.xct': resource(50, b'city')}},
+        'vehicle': {'shared_utility': {'blur.mesh': ('deflate', b'blur mesh')}},
+        'preload': {'nested.rpf': ('deflate', rpf_fixture({'secretdir.xml': ('loose', b'secretdir unnamedpart')}))},
         'tune': {'vehicle': {'handling.xml': ('loose', b'<handling/>')}, 'names.xml': ('deflate', NAMES)}}
 
 
-def fixture(path, extra_vehicle=None):
-    image = pe_image(KEY)
-    path.write_bytes(disc_fixture([('default.xex', xex_fixture(image)),
-                                   ('xarchive_cache.rpf', rpf_fixture(tree(extra_vehicle), KEY))]))
+def fixture(path, extra_vehicle=None, archive_tree=None, with_xex=True):
+    files = [('xarchive_cache.rpf', rpf_fixture(archive_tree or tree(extra_vehicle), KEY))]
+    if with_xex:
+        files.insert(0, ('default.xex', xex_fixture(pe_image(KEY))))
+    path.write_bytes(disc_fixture(files))
     return path
 
 
@@ -72,6 +75,18 @@ class NameTests(unittest.TestCase):
         rows = {row['path']: row for row in named.inventory()}
         self.assertEqual(rows['vehicle/']['rejected_candidates'], ['noise.xtd'])
         self.assertEqual(rows['vehicle/0x%08x.xrsc' % jenkins('twin.xrsc')]['name_candidates'], ['twin.xrsc', 'twin_b.xrsc'])
+
+    def test_colliding_paths_are_rejected(self):
+        image = rpf_fixture({'a.xml': ('loose', b'a'), 'b.xml': ('loose', b'b')})
+        archive = Rpf3Archive(lambda o, s: image[o:o + s], len(image))
+        with self.assertRaisesRegex(ValueError, '(?i)duplicate archive path: same.xml'):
+            Named(archive, {jenkins('a.xml'): ['same.xml'], jenkins('b.xml'): ['SAME.xml']})
+        out = Output(lambda path, data: None)
+        out.put('car/a.bin', b'1')
+        with self.assertRaisesRegex(ValueError, 'duplicate output path'):
+            out.put('CAR/A.bin', b'2')
+        with self.assertRaisesRegex(ValueError, 'unsafe'):
+            out.put('../escape.bin', b'3')
 
     def test_embedded_codes_and_longest_owner(self):
         names = dictionary({'mr_vp_nsn_gtr_08'}, {jenkins('vp_nsn_gtr_08'), jenkins('vp_nsn_gtr_08.xct')})
@@ -110,10 +125,14 @@ class ExtractionTests(unittest.TestCase):
                          'vp_hidden_02/resources/vehicle/vp_hidden_02/body_lod_0.xrsc',
                          hidden + '/resources/vehicle/0x%08x/body_lod_0.xrsc' % jenkins('secretdir'),
                          'shared/resources/vehicle/configs/common.xcc', 'shared/resources/rims/whl_stk_x/whl_stk_x.xtp',
-                         'shared/tune/vehicle/handling.xml', 'provenance/disc.inventory.json',
+                         'shared/tune/vehicle/handling.xml', 'shared/vehicle/shared_utility/blur.mesh',
+                         'provenance/disc.inventory.json',
                          'provenance/xarchive_cache.rpf.inventory.json', 'provenance/archive-key.json',
                          'index.json'} <= names)
-        self.assertFalse(any(n.endswith(('other.xtd', 'sc.xct', 'names.xml')) or 'ped_fa' in n for n in names))
+        self.assertFalse(any(n.endswith(('other.xtd', 'sc.xct', 'names.xml')) or 'ped_fa' in n or 'preload' in n
+                             for n in names))
+        # Strings inside a nested archive are not harvested, so 'secretdir' stays a hash name.
+        self.assertIn(hidden, [v['id'] for v in index['vehicles']])
         self.assertEqual((self.root / 'cars' / car / 'vehicle/configs/vp_test_car_01.xcc').read_bytes(), b'config one' * 30)
         manifest = json.loads((self.root / 'cars/vp_test_car_01/manifest.json').read_text())
         sources = {row['source']['archive_path']: row['source'] for row in manifest['files']}
@@ -153,6 +172,46 @@ class ExtractionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'linked'):
             check_extraction(iso, output)
 
+    def test_car_without_package_and_changed_disc_are_rejected(self):
+        empty = fixture(self.root / 'empty.iso', {'vp_empty_car_01': {'parts': {}}})
+        with self.assertRaisesRegex(ValueError, 'car without a vehicle package: unresolved_%08x' % jenkins('vp_empty_car_01')):
+            write_extraction(empty, self.root / 'empty')
+        iso = fixture(self.root / 'source.iso')
+        digests = iter([('a' * 64, 'b' * 40), ('c' * 64, 'b' * 40)])
+        with patch.object(extract_mcla_cars, 'source_digests', lambda path: next(digests)), \
+                self.assertRaisesRegex(ValueError, 'disc changed during extraction'):
+            write_extraction(iso, self.root / 'changed')
+        self.assertFalse((self.root / 'changed').exists())
+
+    def test_missing_disc_members_and_vehicle_tree(self):
+        cases = [(fixture(self.root / 'noxex.iso', with_xex=False), 'default.xex or xarchive_cache.rpf missing'),
+                 (fixture(self.root / 'novehicle.iso', archive_tree={'tune': {'names.xml': ('deflate', NAMES)}}),
+                  'resources/vehicle missing'),
+                 (fixture(self.root / 'nocars.iso', archive_tree={
+                     'resources': {'vehicle': {'configs': {'common.xcc': ('loose', b'c')}}},
+                     'tune': {'names.xml': ('deflate', NAMES)}}), 'no vehicle directories found')]
+        for iso, message in cases:
+            with self.subTest(message), self.assertRaisesRegex(ValueError, message):
+                write_extraction(iso, self.root / ('out-' + iso.stem))
+
+    def test_destination_rules(self):
+        iso = fixture(self.root / 'source.iso')
+        with self.assertRaisesRegex(ValueError, 'missing or linked extraction destination'):
+            check_extraction(iso, self.root / 'absent')
+        (self.root / 'real').mkdir()
+        (self.root / 'alias').symlink_to(self.root / 'real')
+        with self.assertRaisesRegex(ValueError, 'linked extraction destination'):
+            write_extraction(iso, self.root / 'alias' / 'cars')
+        with self.assertRaisesRegex(ValueError, 'absent or empty'):
+            write_extraction(iso, self.root)  # holds the input
+        empty = self.root / 'empty'
+        empty.mkdir()
+        index, _ = write_extraction(iso, empty)  # an existing empty directory is replaced by the staged output
+        self.assertTrue((empty / 'index.json').is_file())
+        (empty / 'vp_test_car_01/manifest.json').unlink()
+        with self.assertRaisesRegex(ValueError, 'coverage mismatch: missing vp_test_car_01/manifest.json'):
+            check_extraction(iso, empty)
+
     def test_key_pin_and_vehicle_names_are_enforced(self):
         iso = fixture(self.root / 'source.iso')
         with patch.object(extract_mcla_cars, 'KEY_SHA256', '0' * 64), \
@@ -165,4 +224,4 @@ class ExtractionTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

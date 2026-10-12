@@ -1,0 +1,180 @@
+{
+ "args_sha256": "64ac475ae5f5b8a3d822eded9008af8bb6de367333bfcf3eb7ea4b0f77eb7248",
+ "args_chars": {
+  "request": 890,
+  "files": 7494,
+  "tests": 410
+ },
+ "files": [
+  "tools/xex2.py",
+  "tools/test_xex2.py"
+ ],
+ "result": {
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "truncated": false,
+  "mode": "per-file",
+  "action": "escalate",
+  "composite": 0.600875,
+  "safe_to_apply": 0.44,
+  "reason_codes": [
+   "confidence_below_review",
+   "safe_to_apply_below_review"
+  ],
+  "limiting": [
+   {
+    "file": "tools/xex2.py",
+    "rubrics": [
+     "test_gap"
+    ]
+   },
+   {
+    "file": "tools/test_xex2.py",
+    "rubrics": [
+     "spec_match"
+    ]
+   }
+  ],
+  "weights": {
+   "correctness": 0.4,
+   "spec_match": 0.3,
+   "test_gap": 0.15,
+   "blast_radius": 0.15
+  },
+  "thresholds": {
+   "auto_accept": 0.8,
+   "review_at": 0.5,
+   "composite_floor": 0.7
+  },
+  "files": [
+   {
+    "path": "tools/xex2.py",
+    "safe_to_apply": 0.44,
+    "scores": {
+     "correctness": {
+      "score": 1.1,
+      "confidence": 0.17,
+      "probabilities": {
+       "0": 0.22,
+       "1": 0.45,
+       "2": 0.33
+      }
+     },
+     "spec_match": {
+      "score": 0.62,
+      "confidence": 0.08,
+      "probabilities": {
+       "0": 0.49,
+       "1": 0.41,
+       "2": 0.1
+      }
+     },
+     "test_gap": {
+      "score": 0.78,
+      "confidence": 0,
+      "probabilities": {
+       "0": 0.48,
+       "1": 0.27,
+       "2": 0.25
+      }
+     },
+     "blast_radius": {
+      "score": 0.74,
+      "confidence": 0.19,
+      "probabilities": {
+       "0": 0.4,
+       "1": 0.46,
+       "2": 0.14
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.4990000000000001,
+    "reason_codes": [
+     "confidence_below_review",
+     "safe_to_apply_below_review"
+    ],
+    "limiting_rubrics": [
+     "test_gap"
+    ]
+   },
+   {
+    "path": "tools/test_xex2.py",
+    "safe_to_apply": 0.77,
+    "scores": {
+     "correctness": {
+      "score": 1.47,
+      "confidence": 0.2,
+      "probabilities": {
+       "0": 0.1,
+       "1": 0.33,
+       "2": 0.57
+      }
+     },
+     "spec_match": {
+      "score": 1.04,
+      "confidence": 0.13,
+      "probabilities": {
+       "0": 0.27,
+       "1": 0.42,
+       "2": 0.31
+      }
+     },
+     "test_gap": {
+      "score": 0.41,
+      "confidence": 0.38,
+      "probabilities": {
+       "0": 0.67,
+       "1": 0.25,
+       "2": 0.08
+      }
+     },
+     "blast_radius": {
+      "score": 0.22,
+      "confidence": 0.68,
+      "probabilities": {
+       "0": 0.8,
+       "1": 0.17,
+       "2": 0.02
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.70275,
+    "reason_codes": [
+     "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+     "spec_match"
+    ]
+   }
+  ],
+  "usage": {
+   "input_tokens": 4053,
+   "output_tokens": 186
+  }
+ }
+}

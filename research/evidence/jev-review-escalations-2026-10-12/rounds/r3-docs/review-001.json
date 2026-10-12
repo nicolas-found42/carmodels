@@ -1,0 +1,454 @@
+{
+ "args_sha256": "dd56e2a4458acbf50b0012d0772af45dba0ad39c8ac13559fe9cc218ff771a70",
+ "args_chars": {
+  "request": 2410,
+  "files": 21003,
+  "tests": 2428
+ },
+ "files": [
+  ".gitignore",
+  "CONTRIBUTING.md",
+  "midnight-club-los-angeles/README.md",
+  "research/README.md",
+  "research/midnight-club-los-angeles-extraction.md",
+  "tools/run_checks.py"
+ ],
+ "result": {
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "truncated": false,
+  "mode": "per-file",
+  "action": "escalate",
+  "composite": 0.9010833333333333,
+  "safe_to_apply": 0.72,
+  "reason_codes": [
+   "confidence_below_review",
+   "safe_to_apply_below_auto_accept",
+   "confidence_below_auto_accept"
+  ],
+  "limiting": [
+   {
+    "file": ".gitignore",
+    "rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "file": "CONTRIBUTING.md",
+    "rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "file": "midnight-club-los-angeles/README.md",
+    "rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "file": "research/README.md",
+    "rubrics": [
+     "spec_match"
+    ]
+   },
+   {
+    "file": "research/midnight-club-los-angeles-extraction.md",
+    "rubrics": [
+     "test_gap"
+    ]
+   },
+   {
+    "file": "tools/run_checks.py",
+    "rubrics": [
+     "blast_radius"
+    ]
+   }
+  ],
+  "weights": {
+   "correctness": 0.4,
+   "spec_match": 0.3,
+   "test_gap": 0.15,
+   "blast_radius": 0.15
+  },
+  "thresholds": {
+   "auto_accept": 0.8,
+   "review_at": 0.5,
+   "composite_floor": 0.7
+  },
+  "files": [
+   {
+    "path": ".gitignore",
+    "safe_to_apply": 0.84,
+    "scores": {
+     "correctness": {
+      "score": 1.88,
+      "confidence": 0.82,
+      "probabilities": {
+       "0": 0.04,
+       "1": 0.04,
+       "2": 0.92
+      }
+     },
+     "spec_match": {
+      "score": 1.86,
+      "confidence": 0.79,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.12,
+       "2": 0.87
+      }
+     },
+     "test_gap": {
+      "score": 0.35,
+      "confidence": 0.47,
+      "probabilities": {
+       "0": 0.76,
+       "1": 0.13,
+       "2": 0.11
+      }
+     },
+     "blast_radius": {
+      "score": 0.6,
+      "confidence": 0.1,
+      "probabilities": {
+       "0": 0.59,
+       "1": 0.22,
+       "2": 0.19
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.88375,
+    "reason_codes": [
+     "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "path": "CONTRIBUTING.md",
+    "safe_to_apply": 0.89,
+    "scores": {
+     "correctness": {
+      "score": 1.93,
+      "confidence": 0.9,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.05,
+       "2": 0.94
+      }
+     },
+     "spec_match": {
+      "score": 1.81,
+      "confidence": 0.71,
+      "probabilities": {
+       "0": 0.02,
+       "1": 0.15,
+       "2": 0.83
+      }
+     },
+     "test_gap": {
+      "score": 0.1,
+      "confidence": 0.85,
+      "probabilities": {
+       "0": 0.92,
+       "1": 0.06,
+       "2": 0.02
+      }
+     },
+     "blast_radius": {
+      "score": 0.55,
+      "confidence": 0.17,
+      "probabilities": {
+       "0": 0.6,
+       "1": 0.25,
+       "2": 0.15
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.90875,
+    "reason_codes": [
+     "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "path": "midnight-club-los-angeles/README.md",
+    "safe_to_apply": 0.78,
+    "scores": {
+     "correctness": {
+      "score": 1.9,
+      "confidence": 0.85,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.08,
+       "2": 0.91
+      }
+     },
+     "spec_match": {
+      "score": 1.86,
+      "confidence": 0.79,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.12,
+       "2": 0.87
+      }
+     },
+     "test_gap": {
+      "score": 0.15,
+      "confidence": 0.77,
+      "probabilities": {
+       "0": 0.89,
+       "1": 0.07,
+       "2": 0.04
+      }
+     },
+     "blast_radius": {
+      "score": 0.17,
+      "confidence": 0.76,
+      "probabilities": {
+       "0": 0.88,
+       "1": 0.08,
+       "2": 0.04
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "review",
+    "composite": 0.935,
+    "reason_codes": [
+     "safe_to_apply_below_auto_accept",
+     "confidence_below_auto_accept"
+    ],
+    "limiting_rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "path": "research/README.md",
+    "safe_to_apply": 0.87,
+    "scores": {
+     "correctness": {
+      "score": 1.95,
+      "confidence": 0.93,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.03,
+       "2": 0.96
+      }
+     },
+     "spec_match": {
+      "score": 1.77,
+      "confidence": 0.67,
+      "probabilities": {
+       "0": 0.02,
+       "1": 0.18,
+       "2": 0.8
+      }
+     },
+     "test_gap": {
+      "score": 0.1,
+      "confidence": 0.85,
+      "probabilities": {
+       "0": 0.93,
+       "1": 0.04,
+       "2": 0.03
+      }
+     },
+     "blast_radius": {
+      "score": 0.18,
+      "confidence": 0.73,
+      "probabilities": {
+       "0": 0.86,
+       "1": 0.1,
+       "2": 0.04
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "review",
+    "composite": 0.9344999999999999,
+    "reason_codes": [
+     "confidence_below_auto_accept"
+    ],
+    "limiting_rubrics": [
+     "spec_match"
+    ]
+   },
+   {
+    "path": "research/midnight-club-los-angeles-extraction.md",
+    "safe_to_apply": 0.72,
+    "scores": {
+     "correctness": {
+      "score": 1.9,
+      "confidence": 0.85,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.08,
+       "2": 0.91
+      }
+     },
+     "spec_match": {
+      "score": 1.84,
+      "confidence": 0.78,
+      "probabilities": {
+       "0": 0.02,
+       "1": 0.11,
+       "2": 0.87
+      }
+     },
+     "test_gap": {
+      "score": 0.31,
+      "confidence": 0.53,
+      "probabilities": {
+       "0": 0.77,
+       "1": 0.15,
+       "2": 0.08
+      }
+     },
+     "blast_radius": {
+      "score": 0.28,
+      "confidence": 0.58,
+      "probabilities": {
+       "0": 0.79,
+       "1": 0.14,
+       "2": 0.07
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "review",
+    "composite": 0.9117500000000001,
+    "reason_codes": [
+     "safe_to_apply_below_auto_accept",
+     "confidence_below_auto_accept"
+    ],
+    "limiting_rubrics": [
+     "test_gap"
+    ]
+   },
+   {
+    "path": "tools/run_checks.py",
+    "safe_to_apply": 0.84,
+    "scores": {
+     "correctness": {
+      "score": 1.94,
+      "confidence": 0.91,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.04,
+       "2": 0.95
+      }
+     },
+     "spec_match": {
+      "score": 1.84,
+      "confidence": 0.76,
+      "probabilities": {
+       "0": 0.03,
+       "1": 0.1,
+       "2": 0.87
+      }
+     },
+     "test_gap": {
+      "score": 0.16,
+      "confidence": 0.76,
+      "probabilities": {
+       "0": 0.88,
+       "1": 0.08,
+       "2": 0.04
+      }
+     },
+     "blast_radius": {
+      "score": 1.59,
+      "confidence": 0.37,
+      "probabilities": {
+       "0": 0.09,
+       "1": 0.24,
+       "2": 0.67
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.83275,
+    "reason_codes": [
+     "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+     "blast_radius"
+    ]
+   }
+  ],
+  "usage": {
+   "input_tokens": 10680,
+   "output_tokens": 550
+  }
+ }
+}

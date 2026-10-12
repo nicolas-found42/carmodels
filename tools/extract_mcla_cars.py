@@ -161,10 +161,8 @@ class Named:
     def _path(self, entry):
         if entry['parent'] is None:
             return ''
-        parent = self.paths.get(entry['parent'])
-        if parent is None:
-            parent = self._path(self.archive.entries[entry['parent']])
-        path = parent + self.name(entry)[0] + ('/' if entry['kind'] == 'directory' else '')
+        # Rpf3Archive guarantees a parent precedes its children, so its path is already known.
+        path = self.paths[entry['parent']] + self.name(entry)[0] + ('/' if entry['kind'] == 'directory' else '')
         safe_name(path, directory=entry['kind'] == 'directory')
         return path
 
@@ -218,108 +216,133 @@ def select(named, codes_by_directory):
     return selected
 
 
+class Output:
+    """Emits each output once (case-insensitively unique, safe path) and records its row."""
+
+    def __init__(self, emit):
+        self.emit, self.files, self.keys = emit, [], set()
+
+    def put(self, path, data, provenance=None):
+        safe_name(path)
+        if path.casefold() in self.keys:
+            raise ValueError('duplicate output path')
+        self.keys.add(path.casefold())
+        self.emit(path, data)
+        row = {'file': path, 'bytes': len(data), 'sha256': sha(data)}
+        if provenance:
+            row['source'] = provenance
+        self.files.append(row)
+        return row
+
+
+def open_archives(disc):
+    """Decrypt default.xex, locate the archive key in its image and open every RPF3 archive."""
+    by_path = {e['path']: e for e in disc.entries}
+    if 'default.xex' not in by_path or CACHE not in by_path:
+        raise ValueError('default.xex or ' + CACHE + ' missing')
+    xex_entry = by_path['default.xex']
+    xex = disc.region(xex_entry)(0, xex_entry['size'])
+    image, xex_facts = load_image(xex)
+    key, key_offset = locate_key(image)
+    archives = {e['path']: Rpf3Archive(disc.region(e), e['size'], key)
+                for e in disc.entries if e['kind'] == 'file' and e['path'].endswith('.rpf')}
+    key_record = {
+        'algorithm': 'AES-256-ECB, sixteen passes over the 16-byte-aligned table prefix',
+        'key_sha256': KEY_SHA256, 'located_in': 'default.xex image', 'image_offset': key_offset,
+        'xex_sha256': sha(xex), 'image_sha256': sha(image), 'xex': xex_facts,
+        'claim_limits': ['The key itself is not stored; it is re-located in the pinned disc executable.']}
+    return image, archives, key_record
+
+
+def name_sources(image, cache):
+    """The executable image, then each loose cache member that is not itself an archive (streamed)."""
+    yield image
+    for entry in cache.entries:
+        if entry['kind'] == 'file' and not entry['resource']:
+            data = cache.payload(entry)
+            if data[:4] != b'RPF3':
+                yield data
+
+
+def vehicle_codes(cache, named):
+    """Vehicle directory name -> car ID; an unresolved directory gets unresolved_<hash>."""
+    directory = next((e for e in cache.entries if named.paths[e['index']] == VEHICLES), None)
+    if directory is None:
+        raise ValueError('resources/vehicle missing from ' + CACHE)
+    codes = {}
+    for index in range(directory['first'], directory['first'] + directory['children']):
+        entry = cache.entries[index]
+        name, source = named.name(entry)
+        if entry['kind'] != 'directory' or name == 'configs':
+            continue
+        if source == 'resolved' and not CODE.fullmatch(name):
+            raise ValueError('unexpected vehicle directory: ' + name)
+        codes[name] = name if source == 'resolved' else 'unresolved_%08x' % entry['hash']
+    if not codes:
+        raise ValueError('no vehicle directories found')
+    return codes
+
+
+def emit_cars(out, cache, named, codes, base):
+    """Write every selected cache member under its car or shared/, then one manifest per car."""
+    selected = select(named, codes)
+    cars = {code: [] for code in sorted(codes.values())}
+    for index in sorted(selected, key=lambda i: named.paths[i]):
+        entry, (prefix, role) = cache.entries[index], selected[index]
+        path = named.paths[index]
+        stored = cache.stored(entry)
+        provenance = {'archive': CACHE, 'archive_path': path, 'hash': '%08x' % entry['hash'],
+                      'name_source': named.name(entry)[1], 'entry': index,
+                      'archive_offset': entry['offset'], 'iso_offset': base + entry['offset'],
+                      'stored_bytes': len(stored), 'stored_sha256': sha(stored), 'role': role}
+        if entry['resource']:
+            provenance.update(resource_type=entry['resource_type'], flag='%08x' % entry['flag'],
+                              virtual_bytes=entry['virtual'], physical_bytes=entry['physical'])
+        else:
+            provenance['compressed'] = entry['compressed']
+        row = out.put(prefix + '/' + path, cache.payload(entry), provenance)
+        if prefix != 'shared':
+            cars[prefix].append(row)
+    vehicles = []
+    for code, rows in cars.items():
+        roles = sorted({row['source']['role'] for row in rows})
+        if 'vehicle-package' not in roles:
+            raise ValueError('car without a vehicle package: ' + code)
+        out.put(code + '/manifest.json', json_bytes({'id': code, 'files': rows, 'roles': roles, 'claim_limits': LIMITS}))
+        vehicles.append({'id': code, 'manifest': code + '/manifest.json', 'files': len(rows),
+                         'bytes': sum(row['bytes'] for row in rows), 'roles': roles,
+                         'name_source': 'unresolved' if code.startswith('unresolved_') else 'resolved'})
+    return vehicles
+
+
 def derive(iso, emit):
     """Emit one payload at a time; the 7.8 GB disc is never held in memory."""
     iso = Path(iso)
     source_pin, source_sha1 = source_digests(iso)
-    files, keys = [], set()
-
-    def put(path, data, provenance=None):
-        safe_name(path)
-        if path.casefold() in keys:
-            raise ValueError('duplicate output path')
-        keys.add(path.casefold())
-        emit(path, data)
-        row = {'file': path, 'bytes': len(data), 'sha256': sha(data)}
-        if provenance:
-            row['source'] = provenance
-        files.append(row)
-        return row
-
+    out = Output(emit)
     disc = XdvdfsDisc(iso)
     try:
-        by_path = {e['path']: e for e in disc.entries}
-        xex_entry, cache_entry = by_path.get('default.xex'), by_path.get(CACHE)
-        if xex_entry is None or cache_entry is None:
-            raise ValueError('default.xex or ' + CACHE + ' missing')
-        xex = disc.region(xex_entry)(0, xex_entry['size'])
-        image, xex_facts = load_image(xex)
-        key, key_offset = locate_key(image)
-        archives = {e['path']: Rpf3Archive(disc.region(e), e['size'], key)
-                    for e in disc.entries if e['kind'] == 'file' and e['path'].endswith('.rpf')}
+        image, archives, key_record = open_archives(disc)
         cache = archives[CACHE]
-        blobs = [image]
-        for entry in cache.entries:
-            if entry['kind'] == 'file' and not entry['resource']:
-                data = cache.payload(entry)
-                if data[:4] != b'RPF3':
-                    blobs.append(data)
-        harvested = harvest(blobs)
-        del blobs
+        harvested = harvest(name_sources(image, cache))
         wanted = {entry['hash'] for archive in archives.values() for entry in archive.entries}
         names = dictionary(harvested, wanted)
         named = {path: Named(archive, names) for path, archive in archives.items()}
-        cache_named = named[CACHE]
-        vehicle_dir = next((e for e in cache.entries if cache_named.paths[e['index']] == VEHICLES), None)
-        if vehicle_dir is None:
-            raise ValueError('resources/vehicle missing from ' + CACHE)
-        codes_by_directory = {}
-        for index in range(vehicle_dir['first'], vehicle_dir['first'] + vehicle_dir['children']):
-            entry = cache.entries[index]
-            name, source = cache_named.name(entry)
-            if entry['kind'] != 'directory' or name == 'configs':
-                continue
-            if source == 'resolved' and not CODE.fullmatch(name):
-                raise ValueError('unexpected vehicle directory: ' + name)
-            codes_by_directory[name] = name if source == 'resolved' else 'unresolved_%08x' % entry['hash']
-        if not codes_by_directory:
-            raise ValueError('no vehicle directories found')
-        selected = select(cache_named, codes_by_directory)
-        cars = {code: [] for code in sorted(codes_by_directory.values())}
-        base = disc.offset(cache_entry['sector'])
-        for index in sorted(selected, key=lambda i: cache_named.paths[i]):
-            entry, (prefix, role) = cache.entries[index], selected[index]
-            path = cache_named.paths[index]
-            stored = cache.stored(entry)
-            data = cache.payload(entry)
-            provenance = {'archive': CACHE, 'archive_path': path, 'hash': '%08x' % entry['hash'],
-                          'name_source': cache_named.name(entry)[1], 'entry': index,
-                          'archive_offset': entry['offset'], 'iso_offset': base + entry['offset'],
-                          'stored_bytes': len(stored), 'stored_sha256': sha(stored), 'role': role}
-            if entry['resource']:
-                provenance.update(resource_type=entry['resource_type'], flag='%08x' % entry['flag'],
-                                  virtual_bytes=entry['virtual'], physical_bytes=entry['physical'])
-            else:
-                provenance['compressed'] = entry['compressed']
-            row = put(prefix + '/' + path, data, provenance)
-            if prefix != 'shared':
-                cars[prefix].append(row)
-        vehicles = []
-        for code, rows in cars.items():
-            roles = sorted({row['source']['role'] for row in rows})
-            if 'vehicle-package' not in roles:
-                raise ValueError('car without a vehicle package: ' + code)
-            manifest = {'id': code, 'files': rows, 'roles': roles, 'claim_limits': LIMITS}
-            put(code + '/manifest.json', json_bytes(manifest))
-            vehicles.append({'id': code, 'manifest': code + '/manifest.json', 'files': len(rows),
-                             'bytes': sum(row['bytes'] for row in rows), 'roles': roles,
-                             'name_source': 'unresolved' if code.startswith('unresolved_') else 'resolved'})
-        put('provenance/disc.inventory.json', json_bytes({
+        by_path = {e['path']: e for e in disc.entries}
+        vehicles = emit_cars(out, cache, named[CACHE], vehicle_codes(cache, named[CACHE]),
+                             disc.offset(by_path[CACHE]['sector']))
+        out.put('provenance/disc.inventory.json', json_bytes({
             'generation': disc.generation, 'partition_offset': disc.partition, 'root': disc.root,
             'entries': disc.entries, 'claim_limits': ['Complete XDVDFS listing; only selected archive members are extracted.']}))
+        resolved = {}
         for path, archive in archives.items():
-            put('provenance/' + path + '.inventory.json', json_bytes({
+            records = named[path].inventory()
+            resolved[path] = sum(1 for row in records if row['name_source'] == 'resolved')
+            out.put('provenance/' + path + '.inventory.json', json_bytes({
                 'archive': path, 'entries': archive.count, 'table_bytes': archive.toc_size,
-                'encrypted': archive.encrypted, 'unknown_header_word': archive.unknown,
-                'records': named[path].inventory(),
+                'encrypted': archive.encrypted, 'unknown_header_word': archive.unknown, 'records': records,
                 'claim_limits': ['Complete decrypted RPF3 table; names are disc-string readings of hashes.']}))
-        resolved = {path: sum(1 for row in n.inventory() if row['name_source'] == 'resolved')
-                    for path, n in named.items()}
-        put('provenance/archive-key.json', json_bytes({
-            'algorithm': 'AES-256-ECB, sixteen passes over the 16-byte-aligned table prefix',
-            'key_sha256': KEY_SHA256, 'located_in': 'default.xex image', 'image_offset': key_offset,
-            'xex_sha256': sha(xex), 'image_sha256': sha(image), 'xex': xex_facts,
-            'claim_limits': ['The key itself is not stored; it is re-located in the pinned disc executable.']}))
+        out.put('provenance/archive-key.json', json_bytes(key_record))
         if source_digests(iso)[0] != source_pin:
             raise ValueError('disc changed during extraction')
         index = {'schema': 1, 'game': GAME,
@@ -335,9 +358,9 @@ def derive(iso, emit):
                                            CONFIGS + ' (full code in name)', UI + ' (full code in name)'],
                                'shared': list(SHARED) + [CONFIGS + ' (no code in name)'],
                                'provenance': ['XDVDFS listing', 'every RPF3 table', 'archive key location']},
-                 'vehicles': vehicles, 'files': files.copy(), 'claim_limits': LIMITS}
-        put('index.json', json_bytes(index))
-        return index, files
+                 'vehicles': vehicles, 'files': out.files.copy(), 'claim_limits': LIMITS}
+        out.put('index.json', json_bytes(index))
+        return index, out.files
     finally:
         disc.close()
 
@@ -386,10 +409,9 @@ def write_extraction(iso, destination):
     for parent in (destination, *destination.parents):
         if parent.is_symlink():
             raise ValueError('linked extraction destination')
+    # A destination holding the input is never empty, so this also keeps the input out of it.
     if destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
         raise ValueError('destination must be absent or empty')
-    if Path(iso).resolve().is_relative_to(destination.resolve()):
-        raise ValueError('input is inside destination')
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='mcla-stage-', dir=destination.parent) as temp:
         stage = Path(temp) / 'cars'

@@ -4,7 +4,10 @@ import struct
 import tempfile
 import unittest
 
-from xdvdfs import MAGIC, SECTOR, XdvdfsDisc
+from unittest.mock import patch
+
+import xdvdfs
+from xdvdfs import MAGIC, PARTITIONS, SECTOR, XdvdfsDisc
 
 
 def directory_table(records):
@@ -98,6 +101,74 @@ class XdvdfsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unsafe XDVDFS name'):
             self.open(bytes(unsafe))
 
+    def test_xgd2_partition_offset_in_sparse_image(self):
+        base = dict(PARTITIONS)['XGD2']
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        path = Path(temp.name) / 'xgd2.iso'
+        partition = disc_fixture([('default.xex', b'XEX2 at XGD2')])
+        with path.open('wb') as stream:  # sparse: only the partition bytes are written
+            stream.seek(base)
+            stream.write(partition)
+        disc = XdvdfsDisc(path)
+        self.addCleanup(disc.close)
+        self.assertEqual((disc.generation, disc.partition), ('XGD2', base))
+        [entry] = disc.entries
+        self.assertEqual(disc.offset(entry['sector']), base + entry['sector'] * SECTOR)
+        self.assertEqual(disc.region(entry)(0, entry['size']), b'XEX2 at XGD2')
+
+    def test_directory_spanning_several_sectors(self):
+        files = [('car_%03d_with_a_long_file_name.bin' % i, bytes([i])) for i in range(150)]
+        disc = self.open(disc_fixture(files))
+        root = struct.unpack_from('<I', disc.read_at(32 * SECTOR, SECTOR), 24)[0]
+        self.assertGreater(root, 2 * SECTOR)
+        self.assertEqual(sorted(e['path'] for e in disc.entries), sorted(name for name, _ in files))
+        by_path = {e['path']: e for e in disc.entries}
+        self.assertEqual(disc.region(by_path['car_149_with_a_long_file_name.bin'])(0, 1), bytes([149]))
+
+    def test_rejects_unsafe_inputs_and_tables(self):
+        good = disc_fixture([('a.bin', b'abc'), ('b.bin', b'def')], {'dir': [('c.bin', b'ghi')]})
+        root = struct.unpack_from('<I', good, 32 * SECTOR + 20)[0] * SECTOR
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        target = Path(temp.name) / 'disc.iso'
+        target.write_bytes(good)
+        (Path(temp.name) / 'link.iso').symlink_to(target)
+        with self.assertRaisesRegex(ValueError, 'linked disc input'):
+            XdvdfsDisc(Path(temp.name) / 'link.iso')
+        disc = self.open(good)
+        with self.assertRaisesRegex(ValueError, 'read outside disc'):
+            disc.read_at(len(good) - 1, 2)
+        with patch.object(disc, 'stream') as stream, self.assertRaisesRegex(ValueError, 'truncated disc read'):
+            stream.read.return_value = b'ab'  # the file shrank under the reader
+            disc.read_at(0, 3)
+        with self.assertRaisesRegex(ValueError, 'not an XDVDFS file'):
+            disc.region(next(e for e in disc.entries if e['kind'] == 'directory'))
+
+        def mutated(*edits):
+            image = bytearray(good)
+            for fmt, at, value in edits:
+                struct.pack_into(fmt, image, at, value)
+            return bytes(image)
+        root_sector = root // SECTOR
+        # The sub-directory record (first in the root table) points back at the root directory.
+        with self.assertRaisesRegex(ValueError, 'directory cycle'):
+            self.open(mutated(('<I', root + 4, root_sector)))
+        with self.assertRaisesRegex(ValueError, 'directory outside disc'):
+            self.open(mutated(('<I', 32 * SECTOR + 24, len(good))))
+        with self.assertRaisesRegex(ValueError, 'record outside directory'):
+            self.open(mutated(('<H', root + 2, (SECTOR - 8) // 4)))
+        with self.assertRaisesRegex(ValueError, 'name outside directory'):
+            self.open(mutated(('B', root + 13, 250)))
+        second = struct.unpack_from('<H', good, root + 2)[0] * 4
+        duplicate = bytearray(good)
+        duplicate[root + second + 14:root + second + 17] = b'dir'
+        struct.pack_into('B', duplicate, root + second + 13, 3)
+        with self.assertRaisesRegex(ValueError, 'duplicate XDVDFS name'):
+            self.open(bytes(duplicate))
+        with patch.object(xdvdfs, 'MAX_ENTRIES', 2), self.assertRaisesRegex(ValueError, 'entry limit'):
+            self.open(good)
+
     def test_rejects_overlapping_extents(self):
         image = bytearray(disc_fixture([('a.bin', b'a' * 3000), ('b.bin', b'b' * 10)]))
         root = struct.unpack_from('<I', image, 32 * SECTOR + 20)[0] * SECTOR
@@ -109,4 +180,4 @@ class XdvdfsTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

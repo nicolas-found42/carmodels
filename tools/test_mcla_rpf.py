@@ -3,7 +3,7 @@ import struct
 import unittest
 import zlib
 
-from mcla_rpf import RSC5, Rpf3Archive, jenkins
+from mcla_rpf import RSC5, Rpf3Archive, jenkins, physical_size, virtual_size
 from test_aes_decrypt import AesEncryptor
 
 KEY = bytes(range(32))
@@ -44,7 +44,7 @@ def rpf_fixture(tree, key=None):
     placed = {}
     for index in blobs:
         _, _, spec = entries[index]
-        stored = deflate(spec[1]) if spec[0] == 'deflate' else spec[-1]
+        stored = deflate(spec[1]) if spec[0] == 'deflate' else spec[2] if spec[0] == 'resource' else spec[1]
         placed[index] = position
         data += stored + bytes((-len(stored)) % 0x800)
         position += len(stored) + (-len(stored)) % 0x800
@@ -54,7 +54,8 @@ def rpf_fixture(tree, key=None):
             continue
         spec, at = entry[2], placed[index]
         if spec[0] == 'resource':
-            struct.pack_into('<IIII', toc, 16 * index, entry[1], len(spec[2]), at | spec[1], 0xC0000000)
+            flag = 0xC0000000 | (spec[3] if len(spec) > 3 else 0)
+            struct.pack_into('<IIII', toc, 16 * index, entry[1], len(spec[2]), at | spec[1], flag)
         elif spec[0] == 'deflate':
             struct.pack_into('<IIII', toc, 16 * index, entry[1], len(spec[1]), at, 0x40000000 | len(deflate(spec[1])))
         else:
@@ -97,6 +98,21 @@ class Rpf3Tests(unittest.TestCase):
             self.assertEqual(body['parent'], car['index'])
             self.assertEqual(archive.payload(by_hash[jenkins('readme.txt')]), b'plain')
 
+    def test_resource_size_words(self):
+        # 3 << (2 + 8) virtual and 5 << (1 + 8) physical bytes.
+        sizes = 3 | (2 << 11) | (5 << 15) | (1 << 26)
+        self.assertEqual((virtual_size(sizes), physical_size(sizes)), (3072, 2560))
+        self.assertEqual((virtual_size(0x7FF | (15 << 11)), physical_size(0x7FF << 15)), (0x7FF << 23, 0x7FF << 8))
+        image = rpf_fixture({'a': {'b': {'deep.xrsc': ('resource', 63, RSC5 + b'x', sizes)}}})
+        archive = opened(image)
+        deep = archive.entries[-1]
+        self.assertEqual((deep['virtual'], deep['physical'], deep['resource_type']), (3072, 2560, 63))
+        chain = []
+        while deep['parent'] is not None:
+            chain.append(deep['hash'])
+            deep = archive.entries[deep['parent']]
+        self.assertEqual(chain, [jenkins('deep.xrsc'), jenkins('b'), jenkins('a')])
+
     def test_rejects_wrong_key_and_missing_key(self):
         image = rpf_fixture(TREE, KEY)
         with self.assertRaisesRegex(ValueError, 'needs the AES key'):
@@ -108,14 +124,31 @@ class Rpf3Tests(unittest.TestCase):
         image = bytearray(rpf_fixture(TREE))
         with self.assertRaisesRegex(ValueError, 'not an RPF3'):
             opened(b'RPF2' + bytes(image[4:]))
+        with self.assertRaisesRegex(ValueError, 'smaller than its header page'):
+            opened(bytes(image[:0x7FF]))
+        rootless = bytearray(image)
+        struct.pack_into('<I', rootless, 0x800 + 8, 0)  # entry 0 decodes as a file
+        with self.assertRaisesRegex(ValueError, 'root is not a directory'):
+            opened(bytes(rootless))
+        short = bytearray(image)
+        struct.pack_into('<I', short, 4, 16)  # table smaller than its entry count
+        with self.assertRaisesRegex(ValueError, 'table outside archive'):
+            opened(bytes(short))
         orphan = bytearray(image)
         struct.pack_into('<I', orphan, 0x800 + 12, 1)  # root claims only its first child
         with self.assertRaisesRegex(ValueError, 'unreachable'):
             opened(bytes(orphan))
+        archive = opened(bytes(image))
+        vehicle = next(e for e in archive.entries if e['hash'] == jenkins('vehicle'))
         twice = bytearray(image)
-        struct.pack_into('<I', twice, 0x800 + 16 + 8, 0x80000000 | 1)  # a child directory re-lists entry 1
-        with self.assertRaisesRegex(ValueError, 'children outside table|two parents'):
+        # 'vehicle' claims one entry more, which is the first child of its own sub-directory.
+        struct.pack_into('<I', twice, 0x800 + 16 * vehicle['index'] + 12, vehicle['children'] + 1)
+        with self.assertRaisesRegex(ValueError, 'two parents'):
             opened(bytes(twice))
+        overrun = bytearray(image)
+        struct.pack_into('<I', overrun, 0x800 + 16 * vehicle['index'] + 12, 1000)  # more children than entries
+        with self.assertRaisesRegex(ValueError, 'children outside table'):
+            opened(bytes(overrun))
         archive = opened(bytes(image))
         notes = next(e for e in archive.entries if e['hash'] == jenkins('notes.xml'))
         outside = bytearray(image)
@@ -135,4 +168,4 @@ class Rpf3Tests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -72,6 +72,18 @@ class Xex2Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'shorter than its blocks'):
             load_image(xex_fixture(odd)[:-8])
         self.assertEqual(load_image(xex_fixture(odd))[0], odd)
+        outside = bytearray(xex_fixture(image))
+        struct.pack_into('>I', outside, 8, len(outside) + 1)  # PE data offset past the file
+        with self.assertRaisesRegex(ValueError, 'header outside file'):
+            load_image(bytes(outside))
+        no_format = bytearray(xex_fixture(image))
+        struct.pack_into('>I', no_format, 24, 0x2FF)  # the only optional header is not file format info
+        with self.assertRaisesRegex(ValueError, 'file format info missing'):
+            load_image(bytes(no_format))
+        unknown = bytearray(xex_fixture(image))
+        struct.pack_into('>H', unknown, 0x200 + 4, 2)  # encryption type 2
+        with self.assertRaisesRegex(ValueError, 'unsupported XEX2 file format info'):
+            load_image(bytes(unknown))
         no_pe = bytearray(image)
         no_pe[0x80:0x84] = b'NE\0\0'
         with self.assertRaisesRegex(ValueError, 'lacks a PE header'):
@@ -79,4 +91,4 @@ class Xex2Tests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

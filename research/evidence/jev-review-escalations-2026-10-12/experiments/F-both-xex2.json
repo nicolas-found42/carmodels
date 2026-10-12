@@ -1,0 +1,77 @@
+{
+ "args_sha256": "74a838d1441c8efb1c5a17e905d49aa7dfa8b9ce8151b3eb0c80f666376346cd",
+ "args_chars": {
+  "request": 1503,
+  "diff": 3441,
+  "tests": 839
+ },
+ "files": null,
+ "result": {
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "truncated": false,
+  "safe_to_apply": 0.54,
+  "scores": {
+   "correctness": {
+    "score": 1.8,
+    "confidence": 0.7,
+    "probabilities": {
+     "0": 0.03,
+     "1": 0.14,
+     "2": 0.83
+    }
+   },
+   "spec_match": {
+    "score": 1.02,
+    "confidence": 0.82,
+    "probabilities": {
+     "0": 0.05,
+     "1": 0.88,
+     "2": 0.07
+    }
+   },
+   "test_gap": {
+    "score": 0.38,
+    "confidence": 0.43,
+    "probabilities": {
+     "0": 0.68,
+     "1": 0.26,
+     "2": 0.06
+    }
+   },
+   "blast_radius": {
+    "score": 0.8,
+    "confidence": 0.49,
+    "probabilities": {
+     "0": 0.27,
+     "1": 0.66,
+     "2": 0.07
+    }
+   }
+  },
+  "weights": {
+   "correctness": 0.4,
+   "spec_match": 0.3,
+   "test_gap": 0.15,
+   "blast_radius": 0.15
+  },
+  "thresholds": {
+   "auto_accept": 0.8,
+   "review_at": 0.5,
+   "composite_floor": 0.7
+  },
+  "action": "escalate",
+  "composite": 0.7245,
+  "reason_codes": [
+   "confidence_below_review"
+  ],
+  "limiting_rubrics": [
+   "test_gap"
+  ],
+  "usage": {
+   "input_tokens": 2479,
+   "output_tokens": 79
+  }
+ }
+}
