@@ -1,0 +1,61 @@
+{
+  "args": {
+    "passage_a": "Simply dropping the swap would also work, at a median of 86% agreement. Per-triangle orientation also covers the faces whose native winding is locally inconsistent.",
+    "passage_b": "Measured over all 728 GT cars, dropping the swap gives median agreement 0.842 (0.843 for day cars), with one car below one half and 16 at or above 0.99. Per-triangle orientation from stored normals gives median 1.0. About 16.8% of a typical day car's body area has stored normals nearly perpendicular to the face, so neither winding policy orients those faces reliably; on LD7VR a door panel stays dark after either policy until those normals are replaced by geometric face normals.",
+    "aspects": [
+      "median agreement when the swap is dropped",
+      "whether dropping the swap is sufficient"
+    ],
+    "purpose": "Decide whether the earlier research note must be corrected by the new measurements."
+  },
+  "result": {
+    "tool": "jev_compare",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "overall": {
+      "relation": "same_fact",
+      "probabilities": {
+        "same_fact": 0.49,
+        "contradicts": 0.46,
+        "different_facts": 0.05
+      },
+      "confidence": 0.23,
+      "margin": 0.02999999999999997,
+      "decision": "review"
+    },
+    "aspects": [
+      {
+        "aspect": "median agreement when the swap is dropped",
+        "relation": "same_fact",
+        "probabilities": {
+          "same_fact": 0.53,
+          "contradicts": 0.45,
+          "different_facts": 0.02
+        },
+        "confidence": 0.3,
+        "margin": 0.08000000000000002,
+        "decision": "review"
+      },
+      {
+        "aspect": "whether dropping the swap is sufficient",
+        "relation": "contradicts",
+        "probabilities": {
+          "same_fact": 0.32,
+          "contradicts": 0.56,
+          "different_facts": 0.12
+        },
+        "confidence": 0.34,
+        "margin": 0.24000000000000005,
+        "decision": "review"
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85,
+      "minimum_margin": 0.5
+    },
+    "usage": {
+      "input_tokens": 841,
+      "output_tokens": 131
+    }
+  }
+}

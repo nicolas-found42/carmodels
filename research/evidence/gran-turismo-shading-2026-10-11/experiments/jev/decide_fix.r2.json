@@ -1,0 +1,138 @@
+{
+  "args": {
+    "decision": "Which change should be recommended first to fix the dark, shadowed look of the Gran Turismo cars in the dealership viewer?",
+    "evidence": "Measurements on Gran Turismo PS1 car GLBs in a three.js r182 viewer (double-sided MeshStandardMaterial, hemisphere ground 0x1a1c20, key+rim lights, no environment, no tone mapping).\nWinding: current exporter agreement median 0.144 (727/728 cars below half, day/night/arcade alike). Drop-swap median 0.842. Per-triangle-from-normals median 1.0.\nStored normals: median 16.8% of day-car body area has normals nearly perpendicular to the face (75% of it flat black faces). Repair (geometric normal for those faces) leaves max 1.3%.\nRenders, mean car luma current->per_triangle->repaired(base lights)->repaired+env: HNSXN 38.9->89.5->89.5->110.0; NR33N 50.5->105.6->105.6->135.5; CCRVN 24.7->47.6->48.2->52.4; LD7VR 40.4->78.7->81.9->106.2. LD7VR door panel stays blue/dark with per_triangle; uniform with repaired. Unlit rendering gives HNSXN 101.8, NR33N 127.1, CCRVN 47.3, LD7VR 97.6.\nRemoving flat black faces changes <=0.23% of visible car pixels. Textured faces are raw-texture (unlit) on PS1 hardware. Exporter change requires regenerating GT source GLBs and dealership copies (catalog hashes change).",
+    "priorities": "Fix the shadowed look on every GT car; keep native data provenance; deterministic and verifiable by script; do not tune lighting to hide geometry defects; smallest change that fully fixes the defect.",
+    "candidates": [
+      {
+        "id": "repaired_export",
+        "description": "Exporter: per-face orientation from stored normals, and replace near-perpendicular stored normals with geometric face normals; regenerate GT GLBs and dealership copies."
+      },
+      {
+        "id": "drop_swap",
+        "description": "Exporter: remove the index swap only; regenerate."
+      },
+      {
+        "id": "unlit_mode",
+        "description": "Viewer: unlit native display mode for GT cars only; no exporter change."
+      },
+      {
+        "id": "showroom_lighting",
+        "description": "Viewer: environment map, brighter ground bounce and neutral tone mapping; no exporter change."
+      },
+      {
+        "id": "gather_reference",
+        "description": "Capture an emulator reference of GT1 car rendering before changing anything."
+      }
+    ],
+    "requirements": [
+      "Corrects the inverted lighting on all 728 cars",
+      "Leaves no faces shaded by arbitrary in-plane normals",
+      "Keeps lit (PBR) rendering usable in the viewer"
+    ]
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "repaired_export",
+      "escaped": false,
+      "confidence": 0.9,
+      "probabilities": {
+        "repaired_export": 0.91,
+        "drop_swap": 0.08,
+        "unlit_mode": 0.01,
+        "showroom_lighting": 0,
+        "gather_reference": 0,
+        "ask_user": 0,
+        "investigate": 0,
+        "none": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "repaired_export",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "repaired_export",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "repaired_export",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "drop_swap",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "drop_swap",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "drop_swap",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "unlit_mode",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "unlit_mode",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "unlit_mode",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "showroom_lighting",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "showroom_lighting",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "showroom_lighting",
+        "requirement": 2,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "gather_reference",
+        "requirement": 0,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "gather_reference",
+        "requirement": 1,
+        "answer": "unknown"
+      },
+      {
+        "candidate": "gather_reference",
+        "requirement": 2,
+        "answer": "unknown"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 3180,
+      "output_tokens": 743
+    }
+  }
+}

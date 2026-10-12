@@ -1,0 +1,55 @@
+{
+  "args": {
+    "propositions": [
+      "Flat untextured RGB 000000 faces contribute meaningfully to the dark look of GT cars in the default showroom view.",
+      "After the winding repair, the remaining darkness of the CCRVN car is mainly due to its texture colours rather than the viewer lighting.",
+      "Adding showroom environment lighting is necessary to remove the shadowed look once the winding is repaired."
+    ],
+    "context": [
+      {
+        "id": "c0",
+        "text": "Measurements on Gran Turismo PS1 car GLBs in a three.js r182 viewer (double-sided MeshStandardMaterial, hemisphere ground 0x1a1c20, key+rim lights, no environment, no tone mapping).\nWinding: current exporter agreement median 0.144 (727/728 cars below half, day/night/arcade alike). Drop-swap median 0.842. Per-triangle-from-normals median 1.0.\nStored normals: median 16.8% of day-car body area has normals nearly perpendicular to the face (75% of it flat black faces). Repair (geometric normal for those faces) leaves max 1.3%.\nRenders, mean car luma current->per_triangle->repaired(base lights)->repaired+env: HNSXN 38.9->89.5->89.5->110.0; NR33N 50.5->105.6->105.6->135.5; CCRVN 24.7->47.6->48.2->52.4; LD7VR 40.4->78.7->81.9->106.2. LD7VR door panel stays blue/dark with per_triangle; uniform with repaired. Unlit rendering gives HNSXN 101.8, NR33N 127.1, CCRVN 47.3, LD7VR 97.6.\nRemoving flat black faces changes <=0.23% of visible car pixels. Textured faces are raw-texture (unlit) on PS1 hardware. Exporter change requires regenerating GT source GLBs and dealership copies (catalog hashes change)."
+      },
+      {
+        "id": "c1",
+        "text": "Changed pixels (|diff|>24) between per_triangle/base and per_triangle_noblack/base captures (all flat 000000 primitives removed), default viewer camera:\nHNSXN changed px 115 of car px 50754 = 0.23%\nNR33N changed px 120 of car px 52181 = 0.23%\nCCRVN changed px 1 of car px 48073 = 0.00%\nLD7VR changed px 57 of car px 47477 = 0.12%"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_noul",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "status": "ok",
+    "results": [
+      {
+        "id": "proposition0",
+        "proposition": "Flat untextured RGB 000000 faces contribute meaningfully to the dark look of GT cars in the default showroom view.",
+        "probability": 0.1,
+        "label": "unlikely",
+        "auto": true
+      },
+      {
+        "id": "proposition1",
+        "proposition": "After the winding repair, the remaining darkness of the CCRVN car is mainly due to its texture colours rather than the viewer lighting.",
+        "probability": 0.85,
+        "label": "likely",
+        "auto": true
+      },
+      {
+        "id": "proposition2",
+        "proposition": "Adding showroom environment lighting is necessary to remove the shadowed look once the winding is repaired.",
+        "probability": 0.11,
+        "label": "unlikely",
+        "auto": true
+      }
+    ],
+    "thresholds": {
+      "auto_accept": 0.85
+    },
+    "usage": {
+      "input_tokens": 1230,
+      "output_tokens": 67
+    }
+  }
+}

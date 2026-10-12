@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "After applying the node's global transform, mesh vertex position values are meters.\n\nWhen a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, _triangle strips_, or _triangle fans_), the determinant of the node's global transform defines the winding order of the instantiated mesh primitives:\n- if the determinant is a positive value, the front-facing triangles use the counterclockwise order, and the back-facing triangles use the clockwise order;\n- if the determinant is a negative value, the front-facing triangles use the clockwise order, and the back-facing triangles use the counterclockwise order.\n\n...\n----\n\nIn addition to the material properties, if a primitive specifies a vertex color using the attribute semantic property `COLOR_0`, then this value acts as an additional linear multiplier to _base color_.\n\n...\nThe `doubleSided` property specifies whether the material is double sided.\n\nWhen this value is false, back-face culling is enabled, i.e., only front-facing triangles are rendered.\n\nWhen this value is true, back-face culling is disabled, triangles are rendered from both sides, and the normal vectors of the back-facing triangles are negated.\n",
+    "purpose": "Research how to fix Gran Turismo PS1 car models that render dark/shadowed in a three.js glTF viewer; need spec facts on winding, double-sided normals, PS1 texture colour mode and unlit materials."
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.02,
+      "substance": 0.98,
+      "relevance": 0.85
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 816,
+      "output_tokens": 57
+    }
+  }
+}

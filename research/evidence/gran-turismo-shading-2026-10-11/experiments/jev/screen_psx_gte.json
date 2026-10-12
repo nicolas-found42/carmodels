@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "COP2 1400006h - 8 Cycles - NCLIP - Normal clipping\nMAC0 = SX0*SY1 + SX1*SY2 + SX2*SY0 - SX0*SY2 - SX1*SY0 - SX2*SY1\nThe sign of the result indicates whether the polygon coordinates are arranged clockwise or anticlockwise (ie. whether the front side or backside is visible). If the result is zero, then it's neither one (ie. the vertices are all arranged in a straight line).",
+    "purpose": "Research how to fix Gran Turismo PS1 car models that render dark/shadowed in a three.js glTF viewer; need spec facts on winding, double-sided normals, PS1 texture colour mode and unlit materials."
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.02,
+      "substance": 0.98,
+      "relevance": 0.79
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 690,
+      "output_tokens": 57
+    }
+  }
+}
