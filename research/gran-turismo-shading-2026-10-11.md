@@ -15,9 +15,11 @@ candidate fixes and rendered them in the real viewer; its inputs, outputs and Je
    The median is 14%. The materials are double-sided, so three.js negates the normal of every back-facing
    fragment. The outside of the car is therefore lit as though it faced inward. A roof gets the hemisphere's
    near-black ground colour, and the key light brightens the inside.
-2. **Second cause: some stored normals lie in the face plane.** A median of 17% of each day car's body area has
-   stored normals within about 9° of the face plane. Those normals give no facing direction and no usable
-   Lambert term, so the faces stay patchy after the winding is fixed. The _ld7vr door panel is the visible example.
+2. **Second cause: some faces' stored corner normals sum to a direction in the face plane.** A median of 17% of
+   each day car's body area has a corner-normal sum within about 9° of the face plane. Individual corner normals
+   can cancel in that sum, so this measures faces whose stored normals give no consistent facing direction, not
+   necessarily corners that each lie in the plane. Those faces get no reliable winding or Lambert term from their
+   normals, so they stay patchy after the winding is fixed. The _ld7vr door panel is the visible example.
 3. **The fix is in the exporter, and it is measured.** Orient each face from its stored normals. Where those
    normals lie in the face plane, replace them with the geometric face normal. In the unchanged viewer this
    roughly doubles the mean on-screen luma of the four test cars (39→89, 50→106, 25→48, 40→82) and removes the
@@ -81,10 +83,11 @@ correctly.
 GTE `NCLIP`, which "indicates whether the polygon coordinates are arranged clockwise or anticlockwise (ie.
 whether the front side or backside is visible)" (https://psx-spx.consoledev.net/geometrytransformationenginegte/).
 Textured car faces are drawn raw (section 3), so the stored normals never darken them in the game. The community
-GTExplorer renderer also culls by screen-space sign and shades with `abs(dot(n, light))`, a two-sided term that
-hides inverted normals (`.scratch/gran-turismo/external-research/gtcar_render.py`, GTExplorer `069ab96f`).
+GTExplorer renderer does not cull either: when a triangle's screen-space area is negative it swaps two vertices
+and draws it anyway ([`gtcar_render.py` L84-L88](https://github.com/JeevesGB/GTExplorer/blob/069ab96f8353637a9ffc5c9b23695650e288e8ea/src/gtarcexplorer/utils/gtcar_render.py#L84-L88)). It shades with `abs(dot(n, light))`, a two-sided
+term that hides inverted normals ([L294-L299](https://github.com/JeevesGB/GTExplorer/blob/069ab96f8353637a9ffc5c9b23695650e288e8ea/src/gtarcexplorer/utils/gtcar_render.py#L294-L299)).
 
-## 2. Stored normals that lie in the face plane (second cause)
+## 2. Corner-normal sums that lie in the face plane (second cause)
 
 On _ld7vr, 25% of body area has a corner-normal sum whose cosine with the face normal is about 0. Across the 344
 day cars (`experiments/normal_quality.json`, threshold |cos| < 0.15):
@@ -92,6 +95,10 @@ day cars (`experiments/normal_quality.json`, threshold |cos| < 0.15):
 - Per-car share of body area: median 16.8%, p90 39.5%, max 44.3%. 289 of 344 cars exceed 5%.
 - By material: 43% of black flat area, 66% of other flat colours, 6.1% of textured area and 1.1% of Gouraud
   area. Black flat faces make up 75% of all in-plane area.
+
+"In-plane area" in this note means this summed-corner-normal measure (`experiments/normal_quality.py`). The
+viewer shades interpolated corner normals, so it is a proxy for faces without a consistent stored direction; the
+rendered effect is measured separately in section 5.
 
 These normals do not affect the game, because the textured faces are drawn raw. In a lit viewer, though, they
 give an arbitrary Lambert term, and the winding chosen from them is arbitrary. With `per_triangle`, the _ld7vr door
@@ -132,7 +139,7 @@ this changed 0.23%, 0.23%, 0.00% and 0.12% of car pixels on the four test cars. 
 hidden behind textured surfaces or underneath the car. The dark NSX roof is texture, not black faces: it stays
 dark when they are removed. That matches the real car, which has a black roof.
 
-GTExplorer's renderer skips any untextured face whose colour is 0 (`if fc == 0: return`, `gtcar_render.py`). It
+GTExplorer's renderer skips any untextured face whose colour is 0 (`if fc == 0: return`, [`gtcar_render.py` L316-L318](https://github.com/JeevesGB/GTExplorer/blob/069ab96f8353637a9ffc5c9b23695650e288e8ea/src/gtarcexplorer/utils/gtcar_render.py#L316-L318)). It
 is a community choice, not evidence of game behaviour. Jev's `jev_noul` without context put "GT1 draws flat
 000000 polygons as visible black geometry" at 0.28 (uncertain). **Open:** in-game appearance. It does not affect
 the shadowed look.
@@ -159,7 +166,9 @@ PS1 polygons look.
 | _ccrvn | 24.7 (91%) | 48.5 (55%) | 47.6 (57%) | **48.2 (56%)** | 52.4 (57%) | 47.3 (71%) |
 | _ld7vr | 40.4 (53%) | 78.1 (22%) | 78.7 (22%) | **81.9 (20%)** | 106.2 (23%) | 97.6 (19%) |
 
-Source: `experiments/matrix.log` and `experiments/captures/*.json`. The images are in
+Source: `experiments/matrix.log` and `experiments/captures/*.json`. Log rows 29-30 (_ccrvn repaired, 0 car
+pixels) are the failed first load described in section 2 and are superseded by rows 37-38; the capture script now
+rejects a failed load, a zero-pixel capture or an unsaved result. The images are in
 `experiments/contact_sheet.png` and `experiments/contact_sheet_repaired.png`.
 
 What the renders show:

@@ -99,7 +99,7 @@ def patch_html(text, light):
     new = ("{const q=new URLSearchParams(location.search).get('car');"
            "await select(CARS.find(c => c.code === q) || CARS[0]);"
            "setRotation(false);" + ("__unlit(carMesh);" if light == 'unlit' else '') +
-           "setView('reset');window.__ready=true;}")
+           "setView('reset');window.__loadFailed=!carMesh;window.__ready=true;}")
     text = text.replace(old, new)
     anchor = "scene.add(rim);"
     assert anchor in text

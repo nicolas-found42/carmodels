@@ -29,7 +29,8 @@ for path in cars:
         elif 'corner_colours' in f: gcol += [lum(cc) for cc in f['corner_colours']]
         else: fcol.append(lum(f['colour']))
     outw.append(pos/tot); geo.append(agree/tot); upn.append(top_up/max(top,1))
-    # texel luminance actually referenced: whole sheet, palette 0, non-transparent
+    # Whole-sheet texel luminance estimate: every non-transparent sheet pixel, weighted by how often faces use
+    # each CLUT. Face UVs are not applied, so pixels no face samples are included.
     pal=tex['palettes'][0]
     vals=[]
     for clut in range(16):
@@ -37,7 +38,6 @@ for path in cars:
         rgb=[((c&31)<<3,((c>>5)&31)<<3,((c>>10)&31)<<3) for c in P]
         vals.append([lum(x) for x in rgb])
     hist=collections.Counter(tex['pixels'])
-    # luminance over all pixels with clut usage unknown; use average across CLUTs referenced by faces
     used=collections.Counter(f['clut'] for f in lod['faces'] if f['clut'] is not None)
     s=w=0
     for clut,cnt in used.items():

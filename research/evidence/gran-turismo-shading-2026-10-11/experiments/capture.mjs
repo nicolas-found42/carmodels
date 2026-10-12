@@ -11,8 +11,10 @@ for (const car of cars.split(',')) for (const combo of combos.split(',')) {
   const [model, light] = combo.split(':');
   await page.goto(`http://127.0.0.1:${port}/${model}/${light}/dealership.html?car=${car}`);
   await page.waitForFunction(() => window.__ready === true, null, { timeout: 60000 });
+  if (await page.evaluate(() => window.__loadFailed)) throw new Error(`${car} ${model} ${light}: model failed to load`);
   await page.waitForTimeout(1500);
-  const r = await page.evaluate(async (name) => { const r = window.__capture(); await fetch('/save/' + name, { method: 'POST', body: JSON.stringify(r) }); return r.stats; }, `${car}__${model}__${light}.png`);
+  const { stats: r, saved } = await page.evaluate(async (name) => { const r = window.__capture(); const response = await fetch('/save/' + name, { method: 'POST', body: JSON.stringify(r) }); return { stats: r.stats, saved: response.ok }; }, `${car}__${model}__${light}.png`);
+  if (!saved || !r.carPixels) throw new Error(`${car} ${model} ${light}: capture not saved or no car pixels`);
   out[`${car} ${model} ${light}`] = r; console.log(car, model, light, JSON.stringify(r));
 }
 await browser.close();
