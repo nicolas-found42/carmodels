@@ -290,6 +290,39 @@ def export_catalog(extraction, output, identities, workers=1):
     return len(rows)
 
 
+def source_available(extraction, iso):
+    """0: usable local inputs; 1: absent optional inputs; 2: partial or malformed inputs."""
+    try:
+        regular(extraction)
+        index_path = extraction / 'index.json'
+        regular(index_path)
+        if not index_path.exists():
+            return 1 if not extraction.exists() or not any(extraction.iterdir()) else 2
+        vehicles = json.loads(index_path.read_text())['vehicles']
+        if not isinstance(vehicles, list) or not vehicles:
+            return 2
+        codes = set()
+        for vehicle in vehicles:
+            if (not isinstance(vehicle, dict) or not isinstance(vehicle.get('id'), str)
+                    or not CODE.fullmatch(vehicle['id']) or vehicle['id'] in codes
+                    or vehicle.get('manifest') != vehicle['id'] + '/manifest.json'):
+                return 2
+            codes.add(vehicle['id'])
+        manifests = [extraction / v['manifest'] for v in vehicles]
+        for manifest in manifests:
+            regular(manifest)
+            if manifest.exists() and not manifest.is_file():
+                return 2
+        present = sum(manifest.is_file() for manifest in manifests)
+        if present and present != len(vehicles):
+            return 2
+        if not present and any((extraction / v['id']).exists() for v in vehicles):
+            return 2
+        return 0 if iso.is_file() and present else 1
+    except (ValueError, OSError, KeyError, TypeError):
+        return 2
+
+
 def main():
     from mcla_names import load_from_disc, identities_for
     parser = argparse.ArgumentParser(description=__doc__)
@@ -301,11 +334,7 @@ def main():
     parser.add_argument('--available', action='store_true')
     args = parser.parse_args()
     if args.available:
-        index = json.loads((args.extraction / 'index.json').read_text())
-        present = sum((args.extraction / v['manifest']).is_file() for v in index['vehicles'])
-        if present and present != len(index['vehicles']):
-            return 2
-        return 0 if args.iso.is_file() and present else 1
+        return source_available(args.extraction, args.iso)
     if not 1 <= args.workers <= 16:
         parser.error('workers must be 1 to 16')
     index = json.loads((args.extraction / 'index.json').read_text())

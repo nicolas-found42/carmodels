@@ -2,6 +2,8 @@
 import io
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -49,6 +51,26 @@ def export(extraction, output, identities):
 
 
 class Tests(unittest.TestCase):
+    def test_availability_cli_never_skips_malformed_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            extraction, _, _ = fixture(root)
+            def available():
+                result = subprocess.run([sys.executable, str(Path(catalog.__file__)), '--available',
+                                         '--iso', str(root / 'missing.iso'), '--extraction', str(extraction)],
+                                        capture_output=True, text=True, check=False)
+                return result.returncode
+            self.assertEqual(available(), 1)
+            for payload in ['broken JSON', '{}', '{"vehicles": []}', '{"vehicles": {}}',
+                            json.dumps({'vehicles': [{'id': CODE, 'manifest': '../manifest.json'}]}),
+                            json.dumps({'vehicles': [None]})]:
+                (extraction / 'index.json').write_text(payload)
+                self.assertEqual(available(), 2, payload)
+            (extraction / 'index.json').unlink()
+            self.assertEqual(available(), 2, 'existing local files without their index must fail')
+            missing = root / 'absent'
+            self.assertEqual(catalog.source_available(missing, root / 'missing.iso'), 1)
+
     def test_availability_distinguishes_missing_disc_and_partial_extraction(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp).resolve()
@@ -68,7 +90,10 @@ class Tests(unittest.TestCase):
             iso.unlink()
             self.assertEqual(available(), 2, 'missing disc must not hide partial extraction')
             (extraction / CODE / 'manifest.json').unlink()
-            self.assertEqual(available(), 1, 'committed index without local files must skip')
+            self.assertEqual(available(), 2, 'native files without any manifests are partial')
+            index_only = root / 'index-only'; index_only.mkdir()
+            (index_only / 'index.json').write_text(json.dumps(index))
+            self.assertEqual(catalog.source_available(index_only, iso), 1, 'committed index without local files must skip')
 
     def test_export_repeat_and_rederive(self):
         with tempfile.TemporaryDirectory() as temp:
