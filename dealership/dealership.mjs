@@ -110,11 +110,11 @@ export function disposeCar(car) {
 export function validateCars(cars) {
   if (!Array.isArray(cars) || !cars.length) throw Error('The vehicle list is empty or is not an array.');
   const codes = new Set();
-  const styles = new Set(['coupe', 'sedan', 'hatchback', 'pickup', 'suv', 'racecar', 'concept', 'unknown']);
+  const styles = new Set(['coupe', 'sedan', 'hatchback', 'convertible', 'wagon', 'pickup', 'suv', 'racecar', 'concept', 'unknown']);
   for (const c of cars) {
     if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
     codes.add(c.code);
-    const unknownSpecs = ['gran-turismo','redline','midnight-club-3-remix'].includes(c.game);
+    const unknownSpecs = ['gran-turismo','redline','midnight-club-3-remix','generated'].includes(c.game);
     if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);
     if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);
     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);

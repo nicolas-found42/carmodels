@@ -1,5 +1,10 @@
 # carmodels
 
+The dealership includes a learned car generator with shape-space and network
+methods, live stage decisions, preview, and add-only saving of **Generated models**.
+See [generator preparation and commands](dealership/dealership/README.md#car-generator)
+and [quality experiments](research/car-generator.md).
+
 Recovered Ford Racing 2 assets and two independent static three.js apps. The dealership is the default app, with 35 editable display models. The source inspector displays the recovered original geometry and embedded textures. The earlier procedural silhouette gallery has been removed.
 
 ## Open the apps

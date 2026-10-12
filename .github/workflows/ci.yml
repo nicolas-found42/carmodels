@@ -18,6 +18,11 @@ jobs:
         with:
           node-version: "22"
       - run: pip install ruff
+      - name: Provision pinned CPU generator environment (inference only)
+        run: |
+          python -m venv .venv-generator
+          .venv-generator/bin/pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cpu
+          .venv-generator/bin/pip install -r tools/generator-requirements.txt
       - name: Provision pinned Blender for the dealership roundtrip
         run: |
           curl --fail --location --retry 3 https://download.blender.org/release/Blender4.5/blender-4.5.14-linux-x64.tar.xz -o "$RUNNER_TEMP/blender.tar.xz"

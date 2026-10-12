@@ -13,6 +13,16 @@ check the result. Two corpora:
 
 ## Prerequisites
 
+Generator work uses a separate `.venv-generator` with Python 3.12, PyTorch 2.10.0,
+and the versions in `tools/generator-requirements.txt`; see the editable dealership
+README for provisioning, preparation and retraining. Stock-Python checks import no
+numerical packages. `test_car_generator`, `test_generator_runtime` and
+`generator_fixed_seed` are named skips when that environment is absent.
+`generator_freshness`, HTTP, blind-review summary and viewer controls still run on
+stock Python/Node. CI uses pinned CPU weights for fixed-seed inference; full-corpus
+network training is a local experiment, never a CI job. The two fixture-training
+checks are also named skips in CI; committed-weight inference runs there.
+
 - **Repo-owned parsers.** The recovery parsers are in `tools/`. Their corpus regression runs on the
   committed reference models. Full archive and VU checks need private static inputs; provision them
   with `tools/provision_static_inputs.py` (see [the input guide](docs/static-inputs.md)).
@@ -72,7 +82,7 @@ Pass `--evidence-dir <empty-directory>` to choose the location. Existing logs ar
 A later successful command cannot mask an earlier failure. CI uploads this evidence even
 when checks fail. Optional private-input skips remain visible and do not count as passes.
 
-The `dealership_roundtrip` check uses `CARMODELS_BLENDER`, `blender` on PATH, or the locally
+The `dealership_roundtrip` and `generator_roundtrip` checks use `CARMODELS_BLENDER`, `blender` on PATH, or the locally
 mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender`.
 CI downloads and hash-checks the pinned Linux Blender release. The check operates entirely
 on temporary model copies; production dealership/source GLBs are verified unchanged.
@@ -83,6 +93,7 @@ on temporary model copies; production dealership/source GLBs are verified unchan
 | `python3 tools/test_model_catalog.py` | Multi-game IDs, encoded paths, duplicate IDs, traversal and corrupt export controls | Python + committed indexes |
 | `python3 tools/test_export_materials.py` | Source texture/selector ownership across 35 GLBs, with an in-range wrong-material mutation | Committed corpus |
 | `python3 tools/build_dealership.py --check` | Read-only equality of compiled dealership data against current editable GLBs/catalog; stale geometry, metadata and missing output fail | Committed dealership inputs |
+| `tools/check.sh --only generator_roundtrip` | Both learned methods, real Blender import/UV/geometry edit/export/rebuild on temporary generated cars | Pinned generator environment + Blender 4.5.14 |
 | `tools/check.sh --only dealership_roundtrip` | Real Gran Torino import, 20% geometry edit, export, rebuild and source preservation | Pinned Blender 4.5.14 |
 | `python3 tools/test_model_png.py`, `python3 tools/test_run_checks.py`, `python3 tools/test_review_payload.py` | PNG filters/RGB conversion and corrupt textures; failure aggregation/logs/runtime controls; raw review scope, budgets and escalation controls | Python |
 | `node tools/test_dealership.mjs`, `python3 tools/test_build_dealership.py`, `python3 tools/test_build_showcase.py`, `python3 tools/test_bake_models.py` | Independent editable dealership GLBs/catalog and rebuild preservation; 35 source-bake triangle/normal/transform/hub checks; bounded GPU resources, malformed meshes and load timeouts; source icon/GLB pins with corruption controls | Node.js + Python + committed reference corpus; no npm install |

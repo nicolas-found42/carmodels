@@ -1,5 +1,87 @@
 # Editable dealership
 
+## Car generator — WIP
+
+Paused at the owner’s request. Generated cars currently use solid body paint and dark
+wheels with no texture maps. The owner found the geometry too bubbly; body quality,
+complete blind-review marks and novelty calibration remain unfinished. See the
+[WIP investigation and resume notes](../../research/car-generator.md).
+
+
+The generator learns aligned 64³ body distance grids and separate regressions of wheel layout from body embeddings
+from distinct dealership shapes. It provides a linear shape space and a conditional
+3D VAE, with their basis, weights, labels and hash manifest in `dealership/generator/`.
+Identical canonical body grids are counted once, with duplicate references in the manifest.
+The four upward tyre-top coverage rays and a separate exclusion judgment screen open-wheel racers.
+Uncertain non-car judgments remain in `review.json` and stay out of training. Labels
+do not change the dealership catalog. `GEN_` entries never enter training.
+
+The numerical runtime is separate from stock Python. Provision it from the repository root:
+
+```sh
+uv venv --python 3.12 .venv-generator
+uv pip install --python .venv-generator/bin/python torch==2.10.0
+uv pip install --python .venv-generator/bin/python -r tools/generator-requirements.txt
+```
+
+On Linux CPU machines, install torch from `https://download.pytorch.org/whl/cpu`;
+CI provisions that pinned runtime. Tests never call a provider. Live preparation
+and free text need `OPENROUTER_API_KEY` on the server; credentials never enter the page.
+
+```sh
+.venv-generator/bin/python tools/car_generator.py prepare --live
+.venv-generator/bin/python tools/car_generator.py train --device mps --epochs 100
+.venv-generator/bin/python tools/car_generator.py generate --method 'shape space' --seed 35 --output .scratch/new-car.glb
+.venv-generator/bin/python tools/car_generator.py save --input .scratch/new-car.glb --name 'My generated coupe'
+python3 tools/serve_library.py
+```
+
+Choose `--method network` for the VAE, `--novelty 0..1` to control novelty, or
+`--request 'a low, long 70s coupe' --live` for interpretation. A `--constraints`
+JSON file can supply recorded readings without another provider call. Generated
+GLBs carry their recipe, and their sidecar JSON retains the request for reference.
+Replay uses the recorded interpreted constraints and pins the basis/network, wheel model,
+labels, calibration, effective training settings, donor GLBs and decoded icon-colour palette.
+A changed pinned input is reported rather than silently producing a different model.
+A saved catalog entry keeps the executable options at `entry['generator']['recipe']`;
+`Generator.generate(**entry['generator']['recipe'])` replays them without interpreting
+`entry['generator']['request']`, which is reference text only.
+Generation runs every stage and never changes its method based on elapsed time.
+Unsupported request parts pause for explicit confirmation. Roll and dropdowns
+work without the TypeSafe SDK or credentials.
+
+The page's **Generate a new car** panel runs the same pipeline and previews in the
+existing viewer. Saving creates a new `GEN_<hash>` model and appends a catalog row,
+then rebuilds display data. It rejects an existing code and never overwrites a model.
+Body style and era are marked requested; power, weight, top speed and ratings remain
+unknown. The **Generated model** honesty label appears on the saved edition.
+
+The grid cache is ignored and rebuilt with `prepare` using recorded, hash-matched
+labels (omit `--live`). A generation after checkout also rebuilds missing grids.
+After editing source dealership models, retrain with `prepare --live` and `train`.
+Offline checks warn about stale weights, naming the retrain command; stale source
+models alone do not fail the generator checks. Corrupt learned artifacts do fail.
+
+```sh
+.venv-generator/bin/python tools/generator_review.py create
+python3 tools/serve_library.py
+# Open /generator-review.html, mark all 70 shuffled models, then Save all 70 marks.
+tools/check.sh --only generator_freshness,generator_fixed_seed,test_car_generator,test_generator_runtime,test_generator_http,test_generator_ui
+```
+
+The review has 30 outputs per method and 10 real held-out controls. `quality.json`
+records held-out reconstruction error, nearest-real distance, symmetry, contact and
+end-to-end timings. Complete reviewer marks produce `review-results.json` and set the
+novelty default. Recognition rates and automatic-check agreement are measured from
+marks, never invented. See [the experiment note](../../research/car-generator.md).
+
+`generator_roundtrip` generates one car by each method, imports and edits it in pinned
+Blender, exports it and proves the edit reaches a deterministic dealership rebuild.
+Generated GLBs use the same static profile and Blender edit/export route described
+below. They carry no original-game rendering or performance claim.
+
+## Working models
+
 This directory owns the dealership's working models and catalog. These regular GLB files
 were copied once from recovery; they are not symlinks or hardlinks. Change a file under
 `models/` to change that dealership car. Edit `catalog.json` for dealership names, metadata

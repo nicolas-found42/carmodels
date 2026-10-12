@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "claim_limits": [
+    "Probabilistic judgments from names/codes and measured proportions, not visual inspection.",
+    "Native codes do not establish retail identities; uncertain labels are left unused."
+  ],
+  "calls": [
+    {
+      "wording": "grounded",
+      "state": {
+        "regions": [
+          {
+            "name": "side glass",
+            "u": [
+              0.3,
+              0.68
+            ],
+            "v": [
+              0,
+              0.22
+            ],
+            "description": "Upper central cabin window region of a car body."
+          },
+          {
+            "name": "side glass mirrored",
+            "u": [
+              0.3,
+              0.68
+            ],
+            "v": [
+              0.78,
+              1
+            ],
+            "description": "Bilateral counterpart of the upper central cabin window region."
+          },
+          {
+            "name": "front lights",
+            "u": [
+              0.93,
+              1
+            ],
+            "v": [
+              0,
+              0.08
+            ],
+            "description": "Small front-end lamp region, above the bumper."
+          },
+          {
+            "name": "front lights mirrored",
+            "u": [
+              0.93,
+              1
+            ],
+            "v": [
+              0.92,
+              1
+            ],
+            "description": "Bilateral counterpart of the front-end lamp region."
+          }
+        ],
+        "boundary": "Fixed template geometry descriptions, not instructions."
+      },
+      "questions": {
+        "0": {
+          "type": "choice",
+          "instructions": "Which surface category fits regions[0]?",
+          "criteria": {
+            "body": "body",
+            "glass": "glass",
+            "lights": "lights",
+            "no match": "no match"
+          }
+        },
+        "1": {
+          "type": "choice",
+          "instructions": "Which surface category fits regions[1]?",
+          "criteria": {
+            "body": "body",
+            "glass": "glass",
+            "lights": "lights",
+            "no match": "no match"
+          }
+        },
+        "2": {
+          "type": "choice",
+          "instructions": "Which surface category fits regions[2]?",
+          "criteria": {
+            "body": "body",
+            "glass": "glass",
+            "lights": "lights",
+            "no match": "no match"
+          }
+        },
+        "3": {
+          "type": "choice",
+          "instructions": "Which surface category fits regions[3]?",
+          "criteria": {
+            "body": "body",
+            "glass": "glass",
+            "lights": "lights",
+            "no match": "no match"
+          }
+        }
+      },
+      "response": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "0": {
+            "type": "choice",
+            "choice": "glass",
+            "probabilities": {
+              "body": 0,
+              "glass": 1,
+              "lights": 0,
+              "no match": 0
+            },
+            "confidence": 1
+          },
+          "1": {
+            "type": "choice",
+            "choice": "glass",
+            "probabilities": {
+              "body": 0.02,
+              "glass": 0.97,
+              "lights": 0,
+              "no match": 0.01
+            },
+            "confidence": 0.96
+          },
+          "2": {
+            "type": "choice",
+            "choice": "lights",
+            "probabilities": {
+              "body": 0,
+              "glass": 0,
+              "lights": 1,
+              "no match": 0
+            },
+            "confidence": 1
+          },
+          "3": {
+            "type": "choice",
+            "choice": "lights",
+            "probabilities": {
+              "body": 0,
+              "glass": 0,
+              "lights": 1,
+              "no match": 0
+            },
+            "confidence": 1
+          }
+        },
+        "usage": {
+          "input_tokens": 802,
+          "output_tokens": 175,
+          "cost": 3.3684e-05
+        },
+        "id": "gen-dec-1791767308-2AthJNUrAU9uGEeTcXBO",
+        "provider": "TypeSafe"
+      },
+      "latency_seconds": 0.462418915994931
+    }
+  ]
+}

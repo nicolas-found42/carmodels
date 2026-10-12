@@ -1,5 +1,10 @@
 # Ford Racing 2 — Car Model Explorer
 
+The editable dealership also has a learned car generator. Its page panel provides
+rolls, dropdown constraints, optional free text, live progress, preview and saving.
+Read [the working-model guide](dealership/README.md#car-generator) for prepare,
+train, generate, save, retrain and the separate numerical environment.
+
 Static three.js viewers for the 35-car reference corpus. Two independent showcases: `recovered.html` displays the recovered source models; `dealership.html` displays an editable dealership edition. `index.html` redirects to the dealership.
 
 ## Run

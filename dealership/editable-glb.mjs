@@ -34,7 +34,9 @@ export function parseEditableGLB(buffer) {
     const v=view(image.bufferView);return new Uint8Array(bin,v.byteOffset??0,v.byteLength);
   });
   const meshes=(doc.meshes??[]).map(mesh=>mesh.primitives.map(p=>{
-    if((p.mode??4)!==4 || p.extensions)throw Error('Editable mesh must use static triangles.');
+    // Optional material-variant mappings do not change the primitive's default
+    // material or triangle data. The library displays that static default edition.
+    if((p.mode??4)!==4 || Object.keys(p.extensions??{}).some(name=>name!=='KHR_materials_variants'))throw Error('Editable mesh must use static triangles.');
     const positions=values(p.attributes?.POSITION,3), normals=values(p.attributes?.NORMAL,3), indices=values(p.indices,1,true);
     const uv=p.attributes.TEXCOORD_0===undefined?null:values(p.attributes.TEXCOORD_0,2);
     const colorWidth=doc.accessors?.[p.attributes.COLOR_0]?.type==='VEC4'?4:3;

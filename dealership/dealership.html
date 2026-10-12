@@ -83,6 +83,13 @@
     position: absolute; bottom: 12px; left: 16px; font-size: 12px; color: var(--faint);
     pointer-events: none;
   }
+  #generator-panel label { display: block; margin: 8px 0; font-size: 12px; }
+  #generator-panel input, #generator-panel select { width: 100%; margin-top: 4px; }
+  #generator-panel button { margin: 3px 0; padding: 7px; }
+  #generator-panel summary { cursor: pointer; font-weight: 700; }
+  #generator-panel ol { padding-left: 18px; font-size: 12px; }
+  #generator-panel li { margin: 8px 0; }
+  .generator-decisions { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--muted); margin-top: 4px; }
   #panel {
     position: absolute; top: 14px; right: 14px; width: 250px;
     background: rgba(29,32,38,.92); border: 1px solid var(--line); border-radius: 4px;
@@ -187,7 +194,7 @@
     <div id="hud">
         <div class="name" id="hud-name">—</div>
         <div class="tag" id="hud-tag"></div>
-        <div class="recon" title="Dealership assets are independent copies. Model editing requires a converted GLB; native packages can be downloaded.">Dealership edition · independent asset copies</div>
+        <div class="recon" id="hud-recon" title="Dealership assets are independent copies. Model editing requires a converted GLB; native packages can be downloaded.">Dealership edition · independent asset copies</div>
       </div>
       <div id="stage">
         <div id="loading" role="status" aria-live="polite">Loading corpus…</div>
@@ -201,6 +208,7 @@
         <a id="download-model" download>Download dealership model (.glb)</a>
       </div>
       <div id="panel">
+        <section id="generator-panel" aria-label="Car generator"></section>
         <h3>Performance (in-game)</h3>
         <div class="stat"><div class="lbl"><b>Agility</b><span id="v-ag"></span></div><div class="bar"><i id="b-ag"></i></div></div>
         <div class="stat"><div class="lbl"><b>Acceleration</b><span id="v-ac"></span></div><div class="bar"><i id="b-ac"></i></div></div>
@@ -304,6 +312,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, isNativePackage, dealershipDownload } from './dealership.mjs';
+import {mountGenerator} from './generator.mjs';
 
 const $ = id => document.getElementById(id);
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
@@ -535,6 +544,7 @@ async function select(c) {
   if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 
   $('hud-name').textContent = c.name;
+  $('hud-recon').textContent=c.honestyLabel || 'Dealership edition · independent asset copies';
   $('model-limits').textContent = (c.claimLimits || c.model.claimLimits || []).join(' ');
   const download=dealershipDownload(c);
   $('download-model').href=download.href;$('download-model').download=download.filename;
@@ -618,7 +628,7 @@ function setView(view) {
   const vertical = THREE.MathUtils.degToRad(camera.fov / 2);
   const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
   const distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
-  const nativeZForward = ['redline', 'midnight-club-3-remix'].includes(current?.game);
+  const nativeZForward = ['redline', 'midnight-club-3-remix', 'generated'].includes(current?.game);
   const direction = view === 'side' ? new THREE.Vector3(nativeZForward ? 1 : 0, 0.08, nativeZForward ? 0 : 1) :
     view === 'front' ? new THREE.Vector3(nativeZForward ? 0 : 1, 0.08, nativeZForward ? (current?.game === 'midnight-club-3-remix' ? -1 : 1) : 0) :
     view === 'top' ? new THREE.Vector3(0.01, 1, 0) : new THREE.Vector3(1, 0.45, 1);
@@ -644,6 +654,16 @@ function tick() {
 }
 tick();
 loadCorpus();
+mountGenerator($('generator-panel'), {
+  preview: async path => {
+    const response=await fetch(path);if(!response.ok)throw Error('Generated preview unavailable.');
+    const bytes=await response.arrayBuffer();
+    const sha=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');
+    const car={code:'GEN_'+sha.slice(0,16).toUpperCase(),name:'Generated car · preview',honestyLabel:'Generated model',game:'generated',gameLabel:'Generated models',sourceVariant:'generated',bodyStyle:'unknown',group:'GENERATED',displayMode:'textured-glb',liveries:[],model:{schema:2,source:{glb:path.slice(1),sha256:sha,preset:'dealership'},claimLimits:['Generated geometry; performance values are unknown.']}};
+    await select(car);$('download-model').href=path;
+  },
+  saved: async entry => {await loadCorpus();await select(CARS.find(c=>c.code===entry.code));}
+});
 </script>
 </body>
 </html>

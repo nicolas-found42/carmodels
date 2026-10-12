@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blind car review</title>
+<style>body{margin:0;background:#181b21;color:#edf0f4;font:16px system-ui}main{max-width:1100px;margin:auto;padding:24px}#viewer{height:65vh;background:#222834;border-radius:12px}button{padding:12px 24px;margin:8px;font:inherit}#status{min-height:2em}header{display:flex;justify-content:space-between;align-items:center}</style></head>
+<body><main><header><h1>Blind car review</h1><span id="count">Loading…</span></header><p>Inspect each model, then mark “car” or “not a car”. You can rotate and zoom. Sources are hidden until all 70 marks are saved.</p><div id="viewer"></div><div id="status" role="status"></div><button id="previous">Previous</button><button id="car">Car</button><button id="notcar">Not a car</button><button id="submit" hidden>Save all 70 marks</button></main>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+import {OrbitControls} from './vendor/OrbitControls.js';
+import {loadEditableGLB} from './editable-glb.mjs';
+import {disposeCar} from './dealership.mjs';
+const $=id=>document.getElementById(id),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(40,1,.01,1000),renderer=new THREE.WebGLRenderer({antialias:true});
+$('viewer').append(renderer.domElement);renderer.setPixelRatio(Math.min(devicePixelRatio,2));scene.add(new THREE.HemisphereLight(0xffffff,0x444454,2.5));const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(4,8,6);scene.add(light);
+const controls=new OrbitControls(camera,renderer.domElement);let model=null,index=0,session=null,version=0;const marks={};
+new ResizeObserver(()=>{const box=$('viewer').getBoundingClientRect();renderer.setSize(box.width,box.height);camera.aspect=box.width/box.height;camera.updateProjectionMatrix();}).observe($('viewer'));
+function tick(){requestAnimationFrame(tick);controls.update();renderer.render(scene,camera);}tick();
+async function show(){
+ const id=++version,item=session.items[index];$('count').textContent=`Item ${index+1} / 70 · ${Object.keys(marks).length} marked`;$('status').textContent='Loading model…';$('car').disabled=$('notcar').disabled=true;
+ if(model){scene.remove(model);disposeCar(model);model=null;}
+ try{const loaded=await loadEditableGLB({model:{source:{glb:item.model.replace(/^\.\//,''),sha256:item.sha256}}});if(id!==version){disposeCar(loaded);return;}model=loaded;scene.add(model);const bounds=new THREE.Box3().setFromObject(model),sphere=bounds.getBoundingSphere(new THREE.Sphere());controls.target.copy(sphere.center);camera.position.copy(sphere.center).add(new THREE.Vector3(1,.4,1).normalize().multiplyScalar(sphere.radius*3.5));controls.update();$('status').textContent=marks[item.id]?`Current mark: ${marks[item.id]}`:'Ready to inspect';$('car').disabled=$('notcar').disabled=false;
+ }catch(error){$('status').textContent='Model could not load: '+error.message;}
+ $('submit').hidden=Object.keys(marks).length!==70;$('previous').disabled=index===0;
+}
+function mark(value){marks[session.items[index].id]=value;localStorage.setItem('car-review-'+session.session,JSON.stringify(marks));if(index<69)index++;show();}
+$('car').onclick=()=>mark('car');$('notcar').onclick=()=>mark('not a car');$('previous').onclick=()=>{index=Math.max(0,index-1);show();};
+$('submit').onclick=async()=>{const response=await fetch('/api/generator-review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:session.session,marks})});const result=await response.json();$('status').textContent=response.ok?'Review saved. Method rates: '+JSON.stringify(result.methods):result.message;};
+try{const response=await fetch('/api/generator-review');if(!response.ok)throw Error('Review session is not prepared.');session=await response.json();Object.assign(marks,JSON.parse(localStorage.getItem('car-review-'+session.session)||'{}'));const nextUnmarked=session.items.findIndex(item=>marks[item.id]===undefined);index=nextUnmarked>=0?nextUnmarked:69;await show();}catch(error){$('status').textContent=error.message;}
+</script></body></html>

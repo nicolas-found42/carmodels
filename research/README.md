@@ -6,6 +6,7 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `car-generator.md` | Distinct-shape preparation, alignment and wheel separation, learned baseline/VAE, bounded TypeSafe judgments, held-out quality measurements and blind-review calibration |
 | `semantic-filter-teardown-2026-10-11.md` | Natural-language filter teardown: offline phrase routing, fail-closed model composition fixes, availability reporting, frozen labeled before/after measurements and Jev receipts |
 | `gran-turismo-shading-2026-10-11.md` | Why GT cars render shadowed: inverted winding and in-plane stored normals under double-sided lighting, all-728-car rebuild of candidate fixes, headless viewer render matrix, rejected modulation/black-face hypotheses, Jev receipts, ranked fixes |
 | `gran-turismo-extraction.md` | Native GT1 simulation/arcade models and texture bundles, shared metadata, source provenance, extraction controls and semantic inventory experiments |
@@ -26,6 +27,8 @@ single list of what is not yet established; update it when a note closes or open
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
 ## Open items
+
+- Car generation (paused WIP): owner reported weird textures and bubbly geometry. Texture maps are disabled on new generated outputs; geometry quality and a fresh complete blind review remain open. Uncertain training entries remain outside learning until reviewed. Human recognition and texture-projection quality are measured by the generator review; neither automatic symmetry nor wheel contact establishes visual quality. See [the generator note](car-generator.md).
 
 - Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Static mesh/texture conversion and both library imports are documented in [redline-library.md](redline-library.md); runtime plug-in precedence and game-render fidelity remain open.
 

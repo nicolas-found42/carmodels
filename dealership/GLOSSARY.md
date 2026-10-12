@@ -16,6 +16,10 @@ _Avoid_: Silhouette gallery, source-model showcase
 An independently editable vehicle edition, initially copied from a recovered source model.
 _Avoid_: Source model, recovery artifact
 
+**Generated model**:
+A dealership model created by the generator.
+_Avoid_: Recovered car, source model
+
 **Source model**:
 A recovered vehicle asset belonging to the source corpus and its verification evidence.
 _Avoid_: Dealership model, editable edition
@@ -41,7 +45,7 @@ A stored wheel and light state, such as low-speed or moving-wheel, derived from 
 _Avoid_: Animation, pose
 
 **Honesty label**:
-The on-screen note that marks an item as a candidate or a procedural reconstruction.
+The on-screen note that identifies an item's origin or uncertainty, such as a Generated model or a recovery candidate.
 _Avoid_: Disclaimer, warning
 
 **Showcase data**:

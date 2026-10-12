@@ -1,0 +1,54 @@
+{
+ "schema": 1,
+ "artifact_hashes": {
+  "manifest.json": "91ba009cf89f751dbedc8181e5ad8d417bc3f2f75c41c1491d838f36cb8bdd78",
+  "labels.json": "f0c26c30e8b435e5423b9a05a9ffaf6efc6f493b6e832c1a71452e7bb51ba209",
+  "basis.npz": "042db477ada3f1e80198a44586b4aa8e1f199a0b5e3bd3c730f95bdc10bc4f58",
+  "network.pt": "428bf58e113ef16372e4274c3120bdff269e32f0f17d0a5935c35d2e8b0d74bf",
+  "wheels.npz": "3bd5ccd967dc7b773c8be76b390737f9168e1835c8e5e30c66150b748a0d962b",
+  "calibration.json": "fae792aa4e4d506ba44026a87e88ace8794aaea774b1bdd6a0d01e5613f72387",
+  "template-labels.json": "c54adff1dbd6b62b277457a8a855123402ad26bc09e7562f615b6dc6ea3e716a"
+ },
+ "training_shapes": 316,
+ "controls": [
+  {
+   "mutation": "manifest.json",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: manifest.json"
+  },
+  {
+   "mutation": "labels.json",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: labels.json"
+  },
+  {
+   "mutation": "basis.npz",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: basis.npz"
+  },
+  {
+   "mutation": "network.pt",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: network.pt"
+  },
+  {
+   "mutation": "wheels.npz",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: wheels.npz"
+  },
+  {
+   "mutation": "calibration.json",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: calibration.json"
+  },
+  {
+   "mutation": "template-labels.json",
+   "rejected": true,
+   "reason": "Committed generator artifact differs from its training pin: template-labels.json"
+  }
+ ],
+ "claim_limits": [
+  "Artifact/hash provenance and corruption controls only, not visual quality.",
+  "Changed dealership inputs warn about retraining; source staleness alone is not failure."
+ ]
+}

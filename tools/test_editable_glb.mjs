@@ -25,6 +25,14 @@ function fixture(mutate=()=>{}) {
 }
 const data=fixture();
 assert.equal(parseEditableGLB(data).meshes[0][0].indices.length,3);
+const variants=fixture(d=>{
+  d.extensionsUsed=['KHR_materials_variants'];
+  d.meshes[0].primitives[0].extensions={KHR_materials_variants:{mappings:[{material:0,variants:[0]}]}};
+});
+assert.equal(parseEditableGLB(variants).meshes[0][0].material,0);
+assert.throws(()=>parseEditableGLB(fixture(d=>{
+  d.meshes[0].primitives[0].extensions={KHR_draco_mesh_compression:{bufferView:0}};
+})),/static triangles/);
 const colored=fixture(d=>{d.accessors.push({...d.accessors[1]});d.meshes[0].primitives[0].attributes.COLOR_0=4;});
 assert.deepEqual([...parseEditableGLB(colored).meshes[0][0].colors],[0,0,1,0,0,1,0,0,1]);
 for(const mutate of [d=>d.nodes[0].children=[0],d=>d.accessors[0].count=100,d=>d.images[0].uri='https://example.com/secret',d=>d.nodes[0].rotation=[0,0,0,0],d=>d.meshes[0].primitives[0].mode=1,(_d,b)=>b.writeUInt16LE(7,96),(_d,b)=>b.writeFloatLE(NaN,0),d=>d.bufferViews[0].byteOffset=-1,d=>d.nodes[0].scale=[0,1,1]])assert.throws(()=>parseEditableGLB(fixture(mutate)));
