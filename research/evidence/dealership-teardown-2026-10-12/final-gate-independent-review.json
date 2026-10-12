@@ -1,0 +1,965 @@
+{
+  "schema": 1,
+  "reviewer": "independent_verification (/root/independent_verification)",
+  "verdict": "blocked",
+  "revised_raw_bundle_status": "accepted_with_independent_resolution",
+  "revised_raw_bundle_sha256": "c4c3a91ceabc425f11c5f2b211ce235ee209c827dc42e65cbe1012bd25fad056",
+  "revised_raw_bundle_resolution": "revised-bundle-resolution.json",
+  "files_sha256": {
+    "dealership/README.md": "f7e695e2e6ee7088796346bbbc222f174ae51ed1e34c2cf437697a4b67fc9959",
+    "dealership/dealership.html": "0c880a1f9a81ea06f0519b8822696cb2445a429a2f57aba98c734f5e396ea084",
+    "dealership/dealership.mjs": "1d1c2e635f5ef74b7754e88fd485f90d45e35c7d26368dc093d306c08854f04e",
+    "dealership/dealership/README.md": "33bc7de21edc5bc640d0caf734bb0053cfe29eab7e2c53ac3f055ac0a002b651",
+    "research/README.md": "e6065773f224df9492b1367f812e984216ccd17a77e4000dcf1e9a73a1790906",
+    "research/dealership-teardown-2026-10-12.md": "b7ba6d071946e4630da1e80be79901e1c915e1ada2b629b40ab3e0565c1974e0",
+    "research/dealership-usability-alternatives-2026-10-12.md": "73b1a283ec9417b87e311b5861bf73a54a08374319af1331759346e759459679",
+    "tools/test_dealership.mjs": "ca7f3c42836efc05000800e91a1f6374546562257d9c27cc13c13ff370ef0874"
+  },
+  "evidence_sha256": {
+    "final-checks/results.json": "fc4d0cf2214a39f8c2b83da1237fa6a70db93b7849eeed2f2794f002db98d5d2",
+    "final-checks/test_redline_texture.log": "a80ef8740af92ca2cae03bfd89746282559bdee6aa5da648fd399e3a070a7034",
+    "final-repair-checks/results.json": "6cba87346681cdf939ed5e23d62e755fa78102e2e9b7e8d979a8e2a1e4e03d8f",
+    "final-repair-checks/test_dealership.log": "aa2df70984234a0797c8b2945d894a209800a0620e31e60a625723b2c23aaa2f",
+    "final-repair-checks/test_viewer_loading.log": "2c73202956d77c4794caa8878459bc1132f15e3da1ec7d0c5d0f0655c50fe2a1"
+  },
+  "gate_receipts_sha256": {
+    "J11-final-gate-1.json": "6c436979d86cc16c5feca70c45558b7d4483d242c7f68f12714cb952b31f9d92",
+    "J11-final-gate-2.json": "6da55ad23bf7a365aba951d0157646f2083e358bfeb1cbb46945cca587a4d010",
+    "J11-final-gate-3.json": "c5773c6fd31b21aa824553105fb22ae8800e1f8c2926bb249f5731df8b3b895d",
+    "J11-final-gate-4.json": "e69345e10fd090d8a1e2b91e7af496326e784c0f87a8334de6fc853f08912044"
+  },
+  "original_gate_judgments": {
+    "J11-final-gate-1.json": {
+      "tool": "jev_gate",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "action": "escalate",
+      "reason_codes": [
+        "confidence_below_review",
+        "review_escalated",
+        "claim_confidence_low"
+      ],
+      "review": {
+        "mode": "per-file",
+        "action": "escalate",
+        "composite": 0.8225833333333333,
+        "safe_to_apply": 0.58,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting": [
+          {
+            "file": "dealership/README.md",
+            "rubrics": [
+              "blast_radius"
+            ]
+          },
+          {
+            "file": "dealership/dealership.html",
+            "rubrics": [
+              "test_gap"
+            ]
+          },
+          {
+            "file": "dealership/dealership.mjs",
+            "rubrics": [
+              "blast_radius"
+            ]
+          }
+        ],
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "files": [
+          {
+            "path": "dealership/README.md",
+            "safe_to_apply": 0.69,
+            "scores": {
+              "correctness": {
+                "score": 1.82,
+                "confidence": 0.73,
+                "probabilities": {
+                  "0": 0.02,
+                  "1": 0.14,
+                  "2": 0.84
+                }
+              },
+              "spec_match": {
+                "score": 1.66,
+                "confidence": 0.51,
+                "probabilities": {
+                  "0": 0.02,
+                  "1": 0.29,
+                  "2": 0.69
+                }
+              },
+              "test_gap": {
+                "score": 0.35,
+                "confidence": 0.46,
+                "probabilities": {
+                  "0": 0.74,
+                  "1": 0.16,
+                  "2": 0.1
+                }
+              },
+              "blast_radius": {
+                "score": 0.72,
+                "confidence": 0,
+                "probabilities": {
+                  "0": 0.58,
+                  "1": 0.11,
+                  "2": 0.31
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.83275,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "blast_radius"
+            ]
+          },
+          {
+            "path": "dealership/dealership.html",
+            "safe_to_apply": 0.58,
+            "scores": {
+              "correctness": {
+                "score": 1.82,
+                "confidence": 0.73,
+                "probabilities": {
+                  "0": 0.03,
+                  "1": 0.12,
+                  "2": 0.85
+                }
+              },
+              "spec_match": {
+                "score": 1.81,
+                "confidence": 0.71,
+                "probabilities": {
+                  "0": 0.01,
+                  "1": 0.17,
+                  "2": 0.82
+                }
+              },
+              "test_gap": {
+                "score": 0.64,
+                "confidence": 0.04,
+                "probabilities": {
+                  "0": 0.47,
+                  "1": 0.42,
+                  "2": 0.11
+                }
+              },
+              "blast_radius": {
+                "score": 1.48,
+                "confidence": 0.23,
+                "probabilities": {
+                  "0": 0.1,
+                  "1": 0.31,
+                  "2": 0.59
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.7765000000000001,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "test_gap"
+            ]
+          },
+          {
+            "path": "dealership/dealership.mjs",
+            "safe_to_apply": 0.64,
+            "scores": {
+              "correctness": {
+                "score": 1.84,
+                "confidence": 0.76,
+                "probabilities": {
+                  "0": 0.02,
+                  "1": 0.12,
+                  "2": 0.86
+                }
+              },
+              "spec_match": {
+                "score": 1.86,
+                "confidence": 0.79,
+                "probabilities": {
+                  "0": 0.01,
+                  "1": 0.12,
+                  "2": 0.87
+                }
+              },
+              "test_gap": {
+                "score": 0.38,
+                "confidence": 0.43,
+                "probabilities": {
+                  "0": 0.69,
+                  "1": 0.24,
+                  "2": 0.07
+                }
+              },
+              "blast_radius": {
+                "score": 0.8,
+                "confidence": 0,
+                "probabilities": {
+                  "0": 0.42,
+                  "1": 0.36,
+                  "2": 0.22
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.8584999999999999,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "blast_radius"
+            ]
+          }
+        ]
+      },
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full-suite logs record 72 passing top-level check commands and one nested optional Pillow test skipped; the two affected checks were rerun after the final diagnostic-path correction and passed.",
+            "verdict": "verified",
+            "confidence": 0.13,
+            "probabilities": {
+              "verified": 0.42,
+              "contradicted": 0.36,
+              "unsupported": 0.22
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "The final dealership regression passed its search precision, filter recovery and semantic request-lifecycle controls.",
+            "verdict": "verified",
+            "confidence": 0.98,
+            "probabilities": {
+              "verified": 0.99,
+              "contradicted": 0,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 15552,
+        "output_tokens": 356
+      }
+    },
+    "J11-final-gate-2.json": {
+      "tool": "jev_gate",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "action": "escalate",
+      "reason_codes": [
+        "confidence_below_review",
+        "review_escalated",
+        "claim_confidence_low"
+      ],
+      "review": {
+        "mode": "per-file",
+        "action": "escalate",
+        "composite": 0.8536250000000001,
+        "safe_to_apply": 0.62,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting": [
+          {
+            "file": "dealership/dealership/README.md",
+            "rubrics": [
+              "correctness"
+            ]
+          },
+          {
+            "file": "research/README.md",
+            "rubrics": [
+              "correctness"
+            ]
+          }
+        ],
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "files": [
+          {
+            "path": "dealership/dealership/README.md",
+            "safe_to_apply": 0.69,
+            "scores": {
+              "correctness": {
+                "score": 1.64,
+                "confidence": 0.44,
+                "probabilities": {
+                  "0": 0.02,
+                  "1": 0.33,
+                  "2": 0.65
+                }
+              },
+              "spec_match": {
+                "score": 1.72,
+                "confidence": 0.59,
+                "probabilities": {
+                  "0": 0.03,
+                  "1": 0.21,
+                  "2": 0.76
+                }
+              },
+              "test_gap": {
+                "score": 0.32,
+                "confidence": 0.52,
+                "probabilities": {
+                  "0": 0.77,
+                  "1": 0.14,
+                  "2": 0.09
+                }
+              },
+              "blast_radius": {
+                "score": 0.17,
+                "confidence": 0.74,
+                "probabilities": {
+                  "0": 0.9,
+                  "1": 0.03,
+                  "2": 0.07
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.8492500000000001,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "correctness"
+            ]
+          },
+          {
+            "path": "research/README.md",
+            "safe_to_apply": 0.62,
+            "scores": {
+              "correctness": {
+                "score": 1.65,
+                "confidence": 0.47,
+                "probabilities": {
+                  "0": 0.03,
+                  "1": 0.29,
+                  "2": 0.68
+                }
+              },
+              "spec_match": {
+                "score": 1.74,
+                "confidence": 0.61,
+                "probabilities": {
+                  "0": 0.03,
+                  "1": 0.2,
+                  "2": 0.77
+                }
+              },
+              "test_gap": {
+                "score": 0.27,
+                "confidence": 0.61,
+                "probabilities": {
+                  "0": 0.81,
+                  "1": 0.1,
+                  "2": 0.08
+                }
+              },
+              "blast_radius": {
+                "score": 0.17,
+                "confidence": 0.74,
+                "probabilities": {
+                  "0": 0.89,
+                  "1": 0.05,
+                  "2": 0.06
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.858,
+            "reason_codes": [
+              "confidence_below_review"
+            ],
+            "limiting_rubrics": [
+              "correctness"
+            ]
+          }
+        ]
+      },
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full-suite logs record 72 passing top-level check commands and one nested optional Pillow test skipped; the two affected checks were rerun after the final diagnostic-path correction and passed.",
+            "verdict": "verified",
+            "confidence": 0.14,
+            "probabilities": {
+              "verified": 0.43,
+              "contradicted": 0.27,
+              "unsupported": 0.3
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "The final dealership regression passed its search precision, filter recovery and semantic request-lifecycle controls.",
+            "verdict": "verified",
+            "confidence": 0.97,
+            "probabilities": {
+              "verified": 0.98,
+              "contradicted": 0,
+              "unsupported": 0.02
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 9316,
+        "output_tokens": 265
+      }
+    },
+    "J11-final-gate-3.json": {
+      "tool": "jev_gate",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "action": "escalate",
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review",
+        "review_escalated",
+        "claim_confidence_low"
+      ],
+      "review": {
+        "mode": "per-file",
+        "action": "escalate",
+        "composite": 0.77125,
+        "safe_to_apply": 0.39,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting": [
+          {
+            "file": "research/dealership-teardown-2026-10-12.md",
+            "rubrics": [
+              "test_gap"
+            ]
+          }
+        ],
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "files": [
+          {
+            "path": "research/dealership-teardown-2026-10-12.md",
+            "safe_to_apply": 0.39,
+            "scores": {
+              "correctness": {
+                "score": 1.58,
+                "confidence": 0.39,
+                "probabilities": {
+                  "0": 0.06,
+                  "1": 0.29,
+                  "2": 0.65
+                }
+              },
+              "spec_match": {
+                "score": 1.57,
+                "confidence": 0.35,
+                "probabilities": {
+                  "0": 0.08,
+                  "1": 0.27,
+                  "2": 0.65
+                }
+              },
+              "test_gap": {
+                "score": 0.69,
+                "confidence": 0.23,
+                "probabilities": {
+                  "0": 0.41,
+                  "1": 0.49,
+                  "2": 0.1
+                }
+              },
+              "blast_radius": {
+                "score": 0.38,
+                "confidence": 0.43,
+                "probabilities": {
+                  "0": 0.77,
+                  "1": 0.08,
+                  "2": 0.15
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.77125,
+            "reason_codes": [
+              "confidence_below_review",
+              "safe_to_apply_below_review"
+            ],
+            "limiting_rubrics": [
+              "test_gap"
+            ]
+          }
+        ]
+      },
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full-suite logs record 72 passing top-level check commands and one nested optional Pillow test skipped; the two affected checks were rerun after the final diagnostic-path correction and passed.",
+            "verdict": "verified",
+            "confidence": 0.09,
+            "probabilities": {
+              "verified": 0.39,
+              "contradicted": 0.36,
+              "unsupported": 0.25
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "The final dealership regression passed its search precision, filter recovery and semantic request-lifecycle controls.",
+            "verdict": "verified",
+            "confidence": 0.91,
+            "probabilities": {
+              "verified": 0.94,
+              "contradicted": 0.02,
+              "unsupported": 0.04
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 13373,
+        "output_tokens": 174
+      }
+    },
+    "J11-final-gate-4.json": {
+      "tool": "jev_gate",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "action": "escalate",
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review",
+        "review_escalated",
+        "claims_contradicted",
+        "claim_confidence_low"
+      ],
+      "review": {
+        "mode": "per-file",
+        "action": "escalate",
+        "composite": 0.7766249999999999,
+        "safe_to_apply": 0.38,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting": [
+          {
+            "file": "research/dealership-usability-alternatives-2026-10-12.md",
+            "rubrics": [
+              "test_gap"
+            ]
+          },
+          {
+            "file": "tools/test_dealership.mjs",
+            "rubrics": [
+              "blast_radius"
+            ]
+          }
+        ],
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "files": [
+          {
+            "path": "research/dealership-usability-alternatives-2026-10-12.md",
+            "safe_to_apply": 0.39,
+            "scores": {
+              "correctness": {
+                "score": 1.55,
+                "confidence": 0.33,
+                "probabilities": {
+                  "0": 0.02,
+                  "1": 0.41,
+                  "2": 0.57
+                }
+              },
+              "spec_match": {
+                "score": 1.65,
+                "confidence": 0.49,
+                "probabilities": {
+                  "0": 0.03,
+                  "1": 0.28,
+                  "2": 0.68
+                }
+              },
+              "test_gap": {
+                "score": 0.72,
+                "confidence": 0,
+                "probabilities": {
+                  "0": 0.52,
+                  "1": 0.24,
+                  "2": 0.24
+                }
+              },
+              "blast_radius": {
+                "score": 0.22,
+                "confidence": 0.66,
+                "probabilities": {
+                  "0": 0.85,
+                  "1": 0.07,
+                  "2": 0.08
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.7869999999999999,
+            "reason_codes": [
+              "confidence_below_review",
+              "safe_to_apply_below_review"
+            ],
+            "limiting_rubrics": [
+              "test_gap"
+            ]
+          },
+          {
+            "path": "tools/test_dealership.mjs",
+            "safe_to_apply": 0.38,
+            "scores": {
+              "correctness": {
+                "score": 1.72,
+                "confidence": 0.58,
+                "probabilities": {
+                  "0": 0.02,
+                  "1": 0.24,
+                  "2": 0.74
+                }
+              },
+              "spec_match": {
+                "score": 1.7,
+                "confidence": 0.56,
+                "probabilities": {
+                  "0": 0.01,
+                  "1": 0.27,
+                  "2": 0.72
+                }
+              },
+              "test_gap": {
+                "score": 0.63,
+                "confidence": 0.05,
+                "probabilities": {
+                  "0": 0.46,
+                  "1": 0.45,
+                  "2": 0.09
+                }
+              },
+              "blast_radius": {
+                "score": 1.14,
+                "confidence": 0,
+                "probabilities": {
+                  "0": 0.24,
+                  "1": 0.37,
+                  "2": 0.39
+                }
+              }
+            },
+            "weights": {
+              "correctness": 0.4,
+              "spec_match": 0.3,
+              "test_gap": 0.15,
+              "blast_radius": 0.15
+            },
+            "thresholds": {
+              "auto_accept": 0.8,
+              "review_at": 0.5,
+              "composite_floor": 0.7
+            },
+            "action": "escalate",
+            "composite": 0.76625,
+            "reason_codes": [
+              "confidence_below_review",
+              "safe_to_apply_below_review"
+            ],
+            "limiting_rubrics": [
+              "blast_radius"
+            ]
+          }
+        ]
+      },
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 1,
+          "contradicted": 1,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The full-suite logs record 72 passing top-level check commands and one nested optional Pillow test skipped; the two affected checks were rerun after the final diagnostic-path correction and passed.",
+            "verdict": "contradicted",
+            "confidence": 0.09,
+            "probabilities": {
+              "verified": 0.33,
+              "contradicted": 0.39,
+              "unsupported": 0.28
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "The final dealership regression passed its search precision, filter recovery and semantic request-lifecycle controls.",
+            "verdict": "verified",
+            "confidence": 0.94,
+            "probabilities": {
+              "verified": 0.96,
+              "contradicted": 0,
+              "unsupported": 0.04
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 14727,
+        "output_tokens": 268
+      }
+    }
+  },
+  "audit": {
+    "raw_current_patch_equals_revised_bundle": true,
+    "all_eight_file_scopes_present_exactly_once": true,
+    "complete_file_diffs_match_current_bundle": true,
+    "all_gate_claims_and_evidence_identical_across_scopes": true,
+    "gate_evidence_equals_saved_files": true,
+    "full_suite_top_level_count": 72,
+    "top_level_passes": 72,
+    "full_suite_exit_code": 0,
+    "nested_optional_skip_count": 1,
+    "nested_optional_skip_identity": "TextureTests.test_optional_pillow_images",
+    "skip_reason": "Pillow is not installed in this interpreter",
+    "repair_checks": [
+      {
+        "name": "test_viewer_loading",
+        "status": "pass",
+        "exit_code": 0
+      },
+      {
+        "name": "test_dealership",
+        "status": "pass",
+        "exit_code": 0
+      }
+    ]
+  },
+  "scope_assessments": [
+    {
+      "scope": "J11-final-gate-1.json",
+      "patch_review": "independently_resolved",
+      "claim0": "independently_supported",
+      "rationale": "Complete current production diff and README inspected; one diagnostic-path correction closes earlier concrete finding. Current callback/corpus tests and saved live layout, filter, Enter/cancellation evidence support bounded behavior. No asset/vendor/provider mutation or added dependency. Claim0 verified by same-subject final and repair manifests/logs, with nested Pillow skip independently reproduced earlier."
+    },
+    {
+      "scope": "J11-final-gate-2.json",
+      "patch_review": "independently_resolved",
+      "claim0": "independently_supported",
+      "rationale": "Documentation reflects actual optional form, offline search, dependent filter recovery and explicit source-viewer/provider open items. No executable change in this scope. Same source artifacts support the qualified execution claim."
+    },
+    {
+      "scope": "J11-final-gate-3.json",
+      "patch_review": "independently_resolved",
+      "claim0": "independently_supported",
+      "rationale": "Report correction now preserves original adverse receipts and accurately distinguishes nested skip and repair timing. Before/after and fixture limitations remain explicit. The reviewed documentation claims match supplied evidence within stated scope."
+    },
+    {
+      "scope": "J11-final-gate-4.json",
+      "patch_review": "independently_resolved",
+      "claim0": "contradicted_receipt_preserved_completion_blocked",
+      "rationale": "Alternatives note remains bounded research with Fuse unexecuted/unapproved. Test diff runs actual handlers and corpus controls; it independently passed earlier and after repair. Actual same-subject artifacts support the corrected qualified count/skip/rerun claim, but its valid contradicted verdict cannot be approved by independent resolution. No further true source/report correction was identified."
+    }
+  ],
+  "blocking_receipt": "J11-final-gate-4.json",
+  "blocking_claim": {
+    "claim": "The full-suite logs record 72 passing top-level check commands and one nested optional Pillow test skipped; the two affected checks were rerun after the final diagnostic-path correction and passed.",
+    "verdict": "contradicted",
+    "confidence": 0.09,
+    "probabilities": {
+      "verified": 0.33,
+      "contradicted": 0.39,
+      "unsupported": 0.28
+    },
+    "action": "escalate"
+  },
+  "why_still_blocked": "docs/agents/review-workflow.md prohibits approving a contradicted claim; the Jev skill likewise treats contradiction as a stop. Low confidence 0.09 does not change that rule. Other scopes cannot outvote this verdict. No protocol approval for the aggregate final gate is issued.",
+  "operational_failure": {
+    "receipt": "J10-final-gate.json",
+    "status": "preserved_failed_attempt",
+    "resolution": "Four bounded complete-file scopes repair the max_tokens_exceeded input-budget failure. The error itself is never counted as a pass."
+  },
+  "further_correction_assessment": "No further factual correction warranted. The original discovered diagnostic and nested-skip issues are corrected; changing a true qualified claim merely to get a different model outcome would be an unchanged-judgment retry in substance. Preserve current sources and all receipts, report verified runtime results plus the formal final-gate blocker, and obtain explicit human direction before any exception to that policy.",
+  "claim_limits": [
+    "Independent source support is not recorded as an automatic model pass.",
+    "No majority vote, threshold weakening, hidden receipt replacement or unchanged call retry was performed.",
+    "The earlier original bundle remains blocked; revised raw-bundle acceptance does not erase it.",
+    "The combined final gate remains blocked despite current patch approval and supported runtime evidence."
+  ]
+}

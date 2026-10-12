@@ -1,0 +1,707 @@
+{
+  "schema": 1,
+  "bundle_sha256": "0d1058f5cb282409e6256027780a3acad3cb9c5fae95dfe0f33c0d709c102071",
+  "reviewer": "independent_verification (/root/independent_verification), separately assigned Codex reviewer",
+  "verdict": "blocked",
+  "protocol_resolution_written": false,
+  "rationale": "The valid contradicted verify-001 claim cannot be approved by an independent resolution under docs/agents/review-workflow.md and tools/review_payload.py:153\u2013165. Audit found a genuine nested optional unittest skip obscured by unqualified no-skips wording, and one remaining diagnostic path inconsistent with the teardown report. Original receipts must remain intact. No unchanged Jev call was rerun.",
+  "original_judgments": {
+    "review-001.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.56,
+      "scores": {
+        "correctness": {
+          "score": 1.74,
+          "confidence": 0.61,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.22,
+            "2": 0.76
+          }
+        },
+        "spec_match": {
+          "score": 1.75,
+          "confidence": 0.64,
+          "probabilities": {
+            "0": 0,
+            "1": 0.24,
+            "2": 0.76
+          }
+        },
+        "test_gap": {
+          "score": 1,
+          "confidence": 0.38,
+          "probabilities": {
+            "0": 0.21,
+            "1": 0.59,
+            "2": 0.2
+          }
+        },
+        "blast_radius": {
+          "score": 1.42,
+          "confidence": 0.28,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.52,
+            "2": 0.45
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.729,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "blast_radius"
+      ],
+      "usage": {
+        "input_tokens": 12063,
+        "output_tokens": 79
+      }
+    },
+    "review-002.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.7,
+      "scores": {
+        "correctness": {
+          "score": 1.14,
+          "confidence": 0.4,
+          "probabilities": {
+            "0": 0.13,
+            "1": 0.6,
+            "2": 0.27
+          }
+        },
+        "spec_match": {
+          "score": 1,
+          "confidence": 0.52,
+          "probabilities": {
+            "0": 0.16,
+            "1": 0.68,
+            "2": 0.16
+          }
+        },
+        "test_gap": {
+          "score": 0.58,
+          "confidence": 0.14,
+          "probabilities": {
+            "0": 0.62,
+            "1": 0.19,
+            "2": 0.19
+          }
+        },
+        "blast_radius": {
+          "score": 0.19,
+          "confidence": 0.71,
+          "probabilities": {
+            "0": 0.88,
+            "1": 0.05,
+            "2": 0.07
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.62025,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ],
+      "usage": {
+        "input_tokens": 6440,
+        "output_tokens": 79
+      }
+    },
+    "review-003.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.57,
+      "scores": {
+        "correctness": {
+          "score": 1.63,
+          "confidence": 0.44,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.29,
+            "2": 0.67
+          }
+        },
+        "spec_match": {
+          "score": 1.58,
+          "confidence": 0.37,
+          "probabilities": {
+            "0": 0.07,
+            "1": 0.28,
+            "2": 0.65
+          }
+        },
+        "test_gap": {
+          "score": 0.7,
+          "confidence": 0.31,
+          "probabilities": {
+            "0": 0.38,
+            "1": 0.54,
+            "2": 0.08
+          }
+        },
+        "blast_radius": {
+          "score": 1.01,
+          "confidence": 0.35,
+          "probabilities": {
+            "0": 0.21,
+            "1": 0.57,
+            "2": 0.22
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.73475,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ],
+      "usage": {
+        "input_tokens": 10705,
+        "output_tokens": 79
+      }
+    },
+    "review-004.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.44,
+      "scores": {
+        "correctness": {
+          "score": 1.05,
+          "confidence": 0.52,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.68,
+            "2": 0.18
+          }
+        },
+        "spec_match": {
+          "score": 1.02,
+          "confidence": 0.64,
+          "probabilities": {
+            "0": 0.11,
+            "1": 0.76,
+            "2": 0.13
+          }
+        },
+        "test_gap": {
+          "score": 0.69,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.6,
+            "1": 0.1,
+            "2": 0.3
+          }
+        },
+        "blast_radius": {
+          "score": 0.13,
+          "confidence": 0.79,
+          "probabilities": {
+            "0": 0.91,
+            "1": 0.04,
+            "2": 0.05
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.6015,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ],
+      "usage": {
+        "input_tokens": 7987,
+        "output_tokens": 79
+      }
+    },
+    "review-005.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.56,
+      "scores": {
+        "correctness": {
+          "score": 1.78,
+          "confidence": 0.69,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.19,
+            "2": 0.8
+          }
+        },
+        "spec_match": {
+          "score": 1.47,
+          "confidence": 0.22,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.48,
+            "2": 0.5
+          }
+        },
+        "test_gap": {
+          "score": 0.4,
+          "confidence": 0.4,
+          "probabilities": {
+            "0": 0.64,
+            "1": 0.32,
+            "2": 0.04
+          }
+        },
+        "blast_radius": {
+          "score": 1.49,
+          "confidence": 0.22,
+          "probabilities": {
+            "0": 0.1,
+            "1": 0.32,
+            "2": 0.58
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.73475,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "spec_match",
+        "blast_radius"
+      ],
+      "usage": {
+        "input_tokens": 9349,
+        "output_tokens": 79
+      }
+    },
+    "verify-001.json": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 1,
+        "contradicted": 1,
+        "unsupported": 0,
+        "needs_review": 1
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "The final check manifest lists 72 passed checks, no skipped or failed checks, and exit code 0.",
+          "verdict": "contradicted",
+          "probabilities": {
+            "supports": 0.47,
+            "contradicts": 0.52,
+            "says_nothing": 0.01
+          },
+          "confidence": 0.28,
+          "action": "review",
+          "supporting_evidence": "check-manifest",
+          "same_subject": 0.92
+        },
+        {
+          "id": "claim1",
+          "claim": "The final dealership regression passed with name/year precision controls, dependent filter recovery, semantic cancellation, stale-response protection, a 35-second timeout callback and invalid suggested-pair rejection.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 1,
+            "contradicts": 0,
+            "says_nothing": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "full-check-logs",
+          "same_subject": 0.95
+        }
+      ],
+      "usage": {
+        "input_tokens": 32007,
+        "output_tokens": 219
+      }
+    }
+  },
+  "integrity": {
+    "bundle_digest_matches": true,
+    "manifest_sha256": "fc4d0cf2214a39f8c2b83da1237fa6a70db93b7849eeed2f2794f002db98d5d2",
+    "submitted_manifest_equals_saved_manifest": true,
+    "saved_manifest_equals_scratch_manifest": true,
+    "submitted_logs_equal_saved_logs": true,
+    "top_level_check_count": 72,
+    "unique_check_names": 72,
+    "top_level_pass_count": 72,
+    "top_level_skip_count": 0,
+    "top_level_failure_count": 0,
+    "all_check_exit_codes_zero": true,
+    "manifest_exit_code": 0
+  },
+  "findings": [
+    {
+      "id": "IV01",
+      "severity": "completion-blocking evidence qualification",
+      "file": "research/dealership-teardown-2026-10-12.md",
+      "line": 75,
+      "finding": "Unqualified no-skips wording omits a real nested unittest skip. All 72 top-level commands passed, but test_redline_texture ran nine tests with one optional Pillow test skipped.",
+      "evidence": [
+        "final-checks/test_redline_texture.log:1\u20136",
+        "tools/test_redline_texture.py:139\u2013143"
+      ],
+      "independent_reproduction": {
+        "command": "python3 tools/test_redline_texture.py -v",
+        "exit_code": 0,
+        "observation": "test_optional_pillow_images ... skipped 'Pillow is not installed in this interpreter'; Ran 9 tests; OK (skipped=1)"
+      },
+      "required_action": "Qualify report/completion claims as 72 passed top-level checks, no top-level skips, one nested optional Pillow test skipped. Preserve original contradictory receipt and blocked bundle; a corrected claim must materially acknowledge the skipped test."
+    },
+    {
+      "id": "IV02",
+      "severity": "minor diagnostic defect and inaccurate fixed claim",
+      "file": "dealership/dealership.html",
+      "line": 316,
+      "finding": "The taking-longer startup guard retains viewer/vendor/ although other guard paths were changed to dealership/vendor/. F07 claims all dealership guard/error paths were corrected.",
+      "required_action": "Correct this remaining diagnostic string with scoped verification, or narrow the report and retain it as an open item. Record updated patch evidence if product changes."
+    }
+  ],
+  "claim0_assessment": {
+    "literal_manifest_claim": "Deterministically true: the manifest itself has 72 pass rows and exit code zero. No malformed manifest, lost rows, wrong evidence copy or log-substitution error was found.",
+    "contrary_evidence": "The accompanying complete logs contain an actual skipped optional Pillow test. This may explain the model signal, although Jev provides no detailed rationale and its private reasoning cannot be known.",
+    "test_runner_controls": "test_run_checks.log intentionally prints synthetic fail and skip rows while testing harness behavior; its three unittest cases finish OK. Those synthetic rows are not failed/skipped project commands.",
+    "withdrawal_assessment": "Do not silently withdraw the existing claim as arithmetic or rewrite the existing bundle to pass. The old bundle remains blocked. New evidence warrants a substantive correction distinguishing top-level checks from nested tests, followed by a separately identified revised bundle; this is not a retry of the unchanged claim.",
+    "protocol_rule": "An independent approval cannot override any contradicted result; review_status was executed and returns blocked with verify-001.json."
+  },
+  "scoped_patch_assessments": [
+    {
+      "receipt": "review-001.json",
+      "decision": "needs_small_correction",
+      "rationale": "Earlier independent complete product review and unchanged hashes resolve test-gap/blast-radius uncertainties for search/filter/form/cancellation/layout behavior. README changes describe these bounded features. IV02 leaves one promised diagnostic-path correction incomplete."
+    },
+    {
+      "receipt": "review-002.json",
+      "decision": "approve_scoped_patch",
+      "rationale": "Documentation-only addition accurately records optional form location, local lookup/filter recovery and indexed dealership changes while retaining source-viewer/provider open items. Adds only the two teardown/research index rows relative to the dirty baseline. No executable blast radius; existing source and artifacts support the behavior described."
+    },
+    {
+      "receipt": "review-003.json",
+      "decision": "needs_evidence_correction",
+      "rationale": "The complete teardown preserves before/after reproductions, genuine-empty counterexamples, fixture/browser/provider limits and original judgments. IV01 needs nested-skip disclosure, and IV02 contradicts F07 all-paths-fixed wording. Existing independent resolutions support the bounded Enter/cancellation/layout/source facts, not the currently unqualified completion wording."
+    },
+    {
+      "receipt": "review-004.json",
+      "decision": "approve_scoped_patch",
+      "rationale": "Read complete alternatives note and retained experiment/source judgments. It distinguishes a token prototype from final prefix matching, records positive/negative measurements, defers unexecuted Fuse integration and explicitly limits license/accountless/runtime conclusions. Documentation recommends bounded native repairs without adding dependencies. Independent conditional-HTML review resolves the retained source uncertainty."
+    },
+    {
+      "receipt": "review-005.json",
+      "decision": "approve_scoped_patch",
+      "rationale": "Complete changed test diff previously reviewed; tests run actual extracted handlers, real catalog ID/search controls, late-response transports, invalid suggestions and controlled timeout callback. Independent dealership execution passed, and final log retains the expected PASS. Test addition does not edit production corpus; no new material gap beyond explicit browser/provider limitations."
+    }
+  ],
+  "runtime_evidence_scope": "All 72 top-level commands completed with exit zero. Each log tail was inspected, relevant full test logs and actual controls/source were inspected, and submitted log concatenation was checked against saved files. One genuine nested optional skip is recorded; shader/game fidelity and untested runtimes are not inferred from these checks.",
+  "protocol_status": {
+    "status": "blocked",
+    "blocked": [
+      "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/dealership-teardown-2026-10-12/review-bundle/verify-001.json"
+    ],
+    "unresolved": [
+      {
+        "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/dealership-teardown-2026-10-12/review-bundle/review-001.json",
+        "action": "escalate",
+        "scores": {
+          "correctness": {
+            "score": 1.74,
+            "confidence": 0.61,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.22,
+              "2": 0.76
+            }
+          },
+          "spec_match": {
+            "score": 1.75,
+            "confidence": 0.64,
+            "probabilities": {
+              "0": 0,
+              "1": 0.24,
+              "2": 0.76
+            }
+          },
+          "test_gap": {
+            "score": 1,
+            "confidence": 0.38,
+            "probabilities": {
+              "0": 0.21,
+              "1": 0.59,
+              "2": 0.2
+            }
+          },
+          "blast_radius": {
+            "score": 1.42,
+            "confidence": 0.28,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.52,
+              "2": 0.45
+            }
+          }
+        },
+        "safe_to_apply": 0.56
+      },
+      {
+        "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/dealership-teardown-2026-10-12/review-bundle/review-002.json",
+        "action": "escalate",
+        "scores": {
+          "correctness": {
+            "score": 1.14,
+            "confidence": 0.4,
+            "probabilities": {
+              "0": 0.13,
+              "1": 0.6,
+              "2": 0.27
+            }
+          },
+          "spec_match": {
+            "score": 1,
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.16,
+              "1": 0.68,
+              "2": 0.16
+            }
+          },
+          "test_gap": {
+            "score": 0.58,
+            "confidence": 0.14,
+            "probabilities": {
+              "0": 0.62,
+              "1": 0.19,
+              "2": 0.19
+            }
+          },
+          "blast_radius": {
+            "score": 0.19,
+            "confidence": 0.71,
+            "probabilities": {
+              "0": 0.88,
+              "1": 0.05,
+              "2": 0.07
+            }
+          }
+        },
+        "safe_to_apply": 0.7
+      },
+      {
+        "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/dealership-teardown-2026-10-12/review-bundle/review-003.json",
+        "action": "escalate",
+        "scores": {
+          "correctness": {
+            "score": 1.63,
+            "confidence": 0.44,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.29,
+              "2": 0.67
+            }
+          },
+          "spec_match": {
+            "score": 1.58,
+            "confidence": 0.37,
+            "probabilities": {
+              "0": 0.07,
+              "1": 0.28,
+              "2": 0.65
+            }
+          },
+          "test_gap": {
+            "score": 0.7,
+            "confidence": 0.31,
+            "probabilities": {
+              "0": 0.38,
+              "1": 0.54,
+              "2": 0.08
+            }
+          },
+          "blast_radius": {
+            "score": 1.01,
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.21,
+              "1": 0.57,
+              "2": 0.22
+            }
+          }
+        },
+        "safe_to_apply": 0.57
+      },
+      {
+        "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/dealership-teardown-2026-10-12/review-bundle/review-004.json",
+        "action": "escalate",
+        "scores": {
+          "correctness": {
+            "score": 1.05,
+            "confidence": 0.52,
+            "probabilities": {
+              "0": 0.14,
+              "1": 0.68,
+              "2": 0.18
+            }
+          },
+          "spec_match": {
+            "score": 1.02,
+            "confidence": 0.64,
+            "probabilities": {
+              "0": 0.11,
+              "1": 0.76,
+              "2": 0.13
+            }
+          },
+          "test_gap": {
+            "score": 0.69,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.6,
+              "1": 0.1,
+              "2": 0.3
+            }
+          },
+          "blast_radius": {
+            "score": 0.13,
+            "confidence": 0.79,
+            "probabilities": {
+              "0": 0.91,
+              "1": 0.04,
+              "2": 0.05
+            }
+          }
+        },
+        "safe_to_apply": 0.44
+      },
+      {
+        "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/dealership-teardown-2026-10-12/review-bundle/review-005.json",
+        "action": "escalate",
+        "scores": {
+          "correctness": {
+            "score": 1.78,
+            "confidence": 0.69,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.19,
+              "2": 0.8
+            }
+          },
+          "spec_match": {
+            "score": 1.47,
+            "confidence": 0.22,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.48,
+              "2": 0.5
+            }
+          },
+          "test_gap": {
+            "score": 0.4,
+            "confidence": 0.4,
+            "probabilities": {
+              "0": 0.64,
+              "1": 0.32,
+              "2": 0.04
+            }
+          },
+          "blast_radius": {
+            "score": 1.49,
+            "confidence": 0.22,
+            "probabilities": {
+              "0": 0.1,
+              "1": 0.32,
+              "2": 0.58
+            }
+          }
+        },
+        "safe_to_apply": 0.56
+      }
+    ],
+    "claim_limits": [
+      "Resolution records a reviewer decision; it is not identity authentication."
+    ]
+  },
+  "claim_limits": [
+    "This record deliberately does not supply an approve resolution for the blocked bundle.",
+    "No original Jev receipt, score, threshold, bundle or product file was altered by this reviewer.",
+    "Scope-specific approvals are advisory independent assessments and do not convert the overall blocked bundle to accepted.",
+    "Later changes require their own recorded patch/claim review."
+  ]
+}

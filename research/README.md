@@ -6,6 +6,9 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `dealership-teardown-2026-10-12.md` | Novice-user dealership teardown, search/filter/layout/request recovery improvements, coverage ledger, original reproductions and final verification |
+| `dealership-usability-alternatives-2026-10-12.md` | Primary-source comparison of native search/filter/form/disclosure improvements and deferred fuzzy search, with eligibility limits |
+| `ai-agent-reverse-engineering-workflow-2026-10-11.md` | Primary-source tool comparisons, a bounded agent workflow, reusable prompts, September 27–October 11 releases and videos, and source-quality checks |
 | `semantic-filter-teardown-2026-10-11.md` | Natural-language filter teardown: offline phrase routing, fail-closed model composition fixes, availability reporting, frozen labeled before/after measurements and Jev receipts |
 | `gran-turismo-shading-2026-10-11.md` | Why GT cars render shadowed: inverted winding and in-plane stored normals under double-sided lighting, all-728-car rebuild of candidate fixes, headless viewer render matrix, rejected modulation/black-face hypotheses, Jev receipts, ranked fixes |
 | `gran-turismo-4-previews.md` | GT4 CAR4/MDLS/VIF geometry, Tex1/GS texture and SpecDB decoding sources, preview readings (handedness, -Z front, wheel placement, overlay shapes), 730 previews in both catalogs, limits |
@@ -29,13 +32,15 @@ single list of what is not yet established; update it when a note closes or open
 
 ## Open items
 
+- AI-agent reversing workflow: recommendations and dated resources are documented in [the workflow research](ai-agent-reverse-engineering-workflow-2026-10-11.md); local harness comparisons, PS2-specific provider coverage and restart/resume behavior remain to be measured.
+
 - Gran Turismo 4: native extraction ([gran-turismo-4-extraction.md](gran-turismo-4-extraction.md)) and static previews in both catalogs ([gran-turismo-4-previews.md](gran-turismo-4-previews.md)) are established. Paint colour sets (Pat0), reflections and game shading, runtime wheel matrices, race LOD conversion, shared wheel ownership and game-render fidelity remain open.
 
 - Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Static mesh/texture conversion and both library imports are documented in [redline-library.md](redline-library.md); runtime plug-in precedence and game-render fidelity remain open.
 
 - Gran Turismo dynamic wheel behavior, additional colour sets, PS1 rendering fidelity, runtime LOD selection, per-car metadata joins and retail identities remain open. Native extraction is established in `gran-turismo-extraction.md`; static body/first-colour conversion and dealership import are established in `gran-turismo-library.md`; native wheel templates and neutral assembly are established in `gran-turismo-wheels.md`. The shadowed dealership look is traced to inverted body winding and in-plane stored normals in `gran-turismo-shading-2026-10-11.md`, with a measured exporter repair; implementing it, connectivity-based orientation, runtime colour/raw-bit rewrites and the in-game look of black flat faces remain open.
 
-- Natural-language filter: exact phrases are decided offline and measured in [the teardown](semantic-filter-teardown-2026-10-11.md); model-path option-order stability, the `original` alias outside Redline, an in-page disclosure before sending and the server/UI timeout mismatch (30 s vs 20 s) remain open.
+- Natural-language filter: exact phrases are decided offline and measured in [the filter teardown](semantic-filter-teardown-2026-10-11.md). The dealership now has visible provider disclosure, Enter submission, request recovery and a 35 s UI budget for the existing 30 s provider request, verified in [the dealership teardown](dealership-teardown-2026-10-12.md). Model-path option-order stability, the `original` alias outside Redline, and the source viewer's disclosure/20 s timeout remain open.
 
 - Dealership surface tones use vertex sampling rather than semantic glass/paint segmentation; residual decals and dark details are approximate. Full game-render fidelity remains open.
 

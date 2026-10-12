@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "reviewer": "independent_verification (/root/independent_verification), separately assigned Codex reviewer",
+  "receipt": "J09-product-review.json",
+  "verdict": "approve",
+  "original_judgment": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "safe_to_apply": 0.5,
+    "scores": {
+      "correctness": {
+        "score": 1.68,
+        "confidence": 0.53,
+        "probabilities": {
+          "0": 0.04,
+          "1": 0.23,
+          "2": 0.73
+        }
+      },
+      "spec_match": {
+        "score": 1.88,
+        "confidence": 0.82,
+        "probabilities": {
+          "0": 0,
+          "1": 0.12,
+          "2": 0.88
+        }
+      },
+      "test_gap": {
+        "score": 0.74,
+        "confidence": 0.52,
+        "probabilities": {
+          "0": 0.29,
+          "1": 0.68,
+          "2": 0.03
+        }
+      },
+      "blast_radius": {
+        "score": 1.61,
+        "confidence": 0.4,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.38,
+          "2": 0.61
+        }
+      }
+    },
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.74175,
+    "reason_codes": [
+      "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+      "blast_radius"
+    ],
+    "usage": {
+      "input_tokens": 10543,
+      "output_tokens": 79
+    }
+  },
+  "reviewed_sha256": {
+    "dealership/dealership.html": "f54c8d4f5600c086573a82bb40ca5a6e0343a0476b3c8c53b5814eb2a995a2b1",
+    "dealership/dealership.mjs": "1d1c2e635f5ef74b7754e88fd485f90d45e35c7d26368dc093d306c08854f04e",
+    "tools/test_dealership.mjs": "ca7f3c42836efc05000800e91a1f6374546562257d9c27cc13c13ff370ef0874",
+    "tools/library_filter.py": "cbe449057214e611ac3dd3c006c38cc663e78ccceba08f28c3c48848ff4bcfb8",
+    "tools/gt_asset_judgments.py": "c6fc918ae9fc32b479139409f0d511f5c0f496981017135ec24c301f2cb713ae",
+    "tools/serve_library.py": "c3f81f6ac537703314c550780a22a5309322bfc6c10244a5cd12af58338b65b9",
+    ".scratch/dealership-teardown-2026-10-12/product.diff": "183bb7d1d56b5972b4ea477e3bcad4d200b1e55b6b6f1e34c5e1f43b10a08c7f"
+  },
+  "rationale": "The explicit low-confidence blast-radius escalation is resolved by inspecting the entire unchanged three-file product.diff, current dependent-filter and semantic handlers, current tests, saved live layout/filter/cancellation artifacts, and tracked file changes relative to task baseline 6c9cc06a068f2d276bd41820f15eb9922af76e7a. No material defect or unexplained affected subsystem was found. This is an independent decision; the original escalation, probabilities and thresholds remain intact.",
+  "concern_resolutions": [
+    {
+      "concern": "blast_radius (score 1.61, confidence 0.40; limiting rubric)",
+      "resolution": "resolved",
+      "evidence_and_reasoning": "Product patch changes dealership.html sidebar layout/filter/semantic handlers, adds an exported pure matcher in dealership.mjs, and extends test_dealership.mjs. The complete diff has no catalog, model, texture, vendor, renderer, download implementation, server or provider changes. git diff --name-only against the supplied baseline under dealership and the three backend Python paths listed only the two dealership source files and two dealership README files. git status showed no tracked model, vendor or catalog changes. Existing focused viewer-loading/native-catalog/MC3-preview tests passed, including disposal, downloads and corrupt-asset rejection. Current product and backend hashes exactly match the earlier independent review."
+    },
+    {
+      "concern": "correctness (score 1.68, confidence 0.53)",
+      "resolution": "resolved",
+      "evidence_and_reasoning": "Search preserves literal matching and complete identifiers while adding normalized token-prefix conjunction; tests check all 1715 IDs, order/case/punctuation/full-width forms and precision negatives. E11 records GT4 selection clearing Night, a visible explanation, 730/1715 entries and only all/showroom enabled. Actual reconciliation tests cover game-specific retention, variant reset and unavailable chip removal. E14 records browser abortion and UI recovery; current semantic handlers invalidate old IDs, abort the stored signal and guard old success/error/finally mutations. Successful and invalid catalog-pair tests plus delayed-response and timeout controls pass."
+    },
+    {
+      "concern": "test_gap (score 0.74, confidence 0.52)",
+      "resolution": "accepted_with_limits",
+      "evidence_and_reasoning": "Independent node tools/test_dealership.mjs execution exited 0 on these exact hashes. The focused manifest records six passes, zero failed/skipped checks; I inspected its actual viewer-loading, native-catalog, MC3-preview, library-filter and server logs as well. E13 records a 163px list at 900x500, and the saved screenshot visibly retains multiple rows and primary controls. E15 records expanded details with 120px list minimum, 1047px sidebar content within a 500px scrollable sidebar, and nonzero help width. CSS supplies overflow-y:auto and prevents non-list controls shrinking. E15 is geometry/overflow evidence, not a recorded full keyboard navigation trace."
+    },
+    {
+      "concern": "spec_match (score 1.88, confidence 0.82)",
+      "resolution": "accepted",
+      "evidence_and_reasoning": "The patch addresses demonstrated compound name/year search failures, stale unavailable source variants, cramped sidebar access and stale semantic pending state. Browser artifacts and corpus/handler tests demonstrate those bounded outcomes; extra filters are disclosed through native details, labeled groups and visible provider help."
+    }
+  ],
+  "material_patch_concerns": [],
+  "evidence": [
+    ".scratch/dealership-teardown-2026-10-12/product.diff",
+    ".scratch/dealership-teardown-2026-10-12/focused-checks/results.json",
+    ".scratch/dealership-teardown-2026-10-12/focused-checks/test_viewer_loading.log",
+    ".scratch/dealership-teardown-2026-10-12/focused-checks/test_native_catalog_ui.log",
+    ".scratch/dealership-teardown-2026-10-12/focused-checks/test_mc3_preview_ui.log",
+    ".scratch/dealership-teardown-2026-10-12/focused-checks/test_library_filter.log",
+    ".scratch/dealership-teardown-2026-10-12/focused-checks/test_serve_library.log",
+    "E11-recovered-variants.json",
+    "E13-final-short-layout.json",
+    "E14-final-cancellation.json",
+    "E15-expanded-keyboard-layout.json",
+    "final-900x500.png",
+    "independent-claim-review.json"
+  ],
+  "claim_limits": [
+    "Approval applies only to the supplied product diff at the recorded hashes, not whole-task completion or publication.",
+    "Final full-suite execution was still in progress and is not approved by this record.",
+    "The browser cancellation fixture does not prove server/provider work stops; the synchronous server call can continue.",
+    "Saved layout observations cover tested viewports only, not every screen, browser or assistive technology.",
+    "No new browser interaction was performed by this reviewer; saved browser artifacts were inspected directly.",
+    "Unchanged assets/vendor means no tracked changes relative to the supplied task baseline; it is not a new byte-by-byte verification of every ignored local file.",
+    "The valid Jev judgment was not rerun and thresholds were not weakened."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "test_viewer_loading",
+      "command": [
+        "node",
+        "tools/test_viewer_loading.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_loading.log",
+      "elapsed_seconds": 0.121
+    },
+    {
+      "name": "test_dealership",
+      "command": [
+        "node",
+        "tools/test_dealership.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_dealership.log",
+      "elapsed_seconds": 3.048
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

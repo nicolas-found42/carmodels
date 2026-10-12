@@ -1,0 +1,28 @@
+{
+  "args": {
+    "text": "Source: https://github.com/microsoft/TRELLIS.2 (fetched 2026-10-11)\nTRELLIS.2 is a state-of-the-art large 3D generative model (4B parameters) designed for high-fidelity image-to-3D generation. It leverages a novel \"field-free\" sparse voxel structure termed O-Voxel to reconstruct and generate arbitrary 3D assets with complex topologies, sharp features, and full PBR materials.\nHardware: An NVIDIA GPU with at least 24GB of memory is necessary. The code has been verified on NVIDIA A100 and H100 GPUs.\n(Single CPU): Textured Mesh \u2192 O-Voxel < 10s\nTRELLIS.2-4B | 4 Billion | 512\u00b3 - 1536\u00b3\nPlease refer to the example_texturing.py for an example of how to generate PBR textures for a given 3D shape.\nWe provide the full training codebase, enabling users to train TRELLIS.2 from scratch or fine-tune it on custom datasets.\nSource: https://github.com/microsoft/TRELLIS.2/blob/main/LICENSE: MIT License Copyright (c) Microsoft Corporation.\nSource: https://huggingface.co/microsoft/TRELLIS.2-4B: This model is released under the MIT License.\nSource: https://github.com/microsoft/TRELLIS.2/blob/main/example_texturing.py: pipeline = Trellis2TexturingPipeline.from_pretrained(\"microsoft/TRELLIS.2-4B\", config_file=\"texturing_pipeline.json\"); pipeline.cuda(); mesh = trimesh.load(...); image = Image.open(...); output = pipeline.run(mesh, image)\n",
+    "purpose": "Choose tools and approaches for generating best-looking 3D car models trained on a local catalog of ~600 car GLBs on an Apple M5 Mac."
+  },
+  "result": {
+    "tool": "jev_screen",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "probabilities": {
+      "injection": 0.02,
+      "substance": 0.97,
+      "relevance": 0.38
+    },
+    "thresholds": {
+      "block_at": 0.75,
+      "review_at": 0.25
+    },
+    "recommendation": {
+      "action": "pass",
+      "reason": "no signals above thresholds"
+    },
+    "usage": {
+      "input_tokens": 936,
+      "output_tokens": 57
+    }
+  }
+}

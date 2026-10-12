@@ -1,0 +1,415 @@
+{
+  "bundle_sha256": "c4c3a91ceabc425f11c5f2b211ce235ee209c827dc42e65cbe1012bd25fad056",
+  "reviewer": "independent_verification (/root/independent_verification)",
+  "verdict": "approve",
+  "rationale": "Read complete eight-file scope in original bundle and exact old-to-revised diff; recomputed raw task-baseline diff and verified byte-for-byte equality with current submitted review diffs. The sole remaining viewer/vendor diagnostic string is corrected. Report now explicitly discloses one nested optional Pillow test skip, distinguishes it from 72 top-level passes, preserves the original blocked bundle, and identifies the post-full-suite one-line correction and separate passing repair checks. Independently reviewed current test source/controls, saved browser fixtures and final repair manifest/logs. The three unchanged documentation/test review scopes retain earlier independent approval; production lifecycle/filter/search changes and bounded layout evidence resolve remaining correctness/spec/test-gap/blast-radius uncertainty. Both current bundle verification claims are valid auto-verified and match actual repair logs. No material outstanding patch concern remains. This approval applies only to revised raw-review bundle c4c3a91ceabc425f11c5f2b211ce235ee209c827dc42e65cbe1012bd25fad056; it neither accepts original blocked bundle nor overrides final J11 gate scope4 contradiction.",
+  "reviewed_files_sha256": {
+    "dealership/README.md": "f7e695e2e6ee7088796346bbbc222f174ae51ed1e34c2cf437697a4b67fc9959",
+    "dealership/dealership.html": "0c880a1f9a81ea06f0519b8822696cb2445a429a2f57aba98c734f5e396ea084",
+    "dealership/dealership.mjs": "1d1c2e635f5ef74b7754e88fd485f90d45e35c7d26368dc093d306c08854f04e",
+    "dealership/dealership/README.md": "33bc7de21edc5bc640d0caf734bb0053cfe29eab7e2c53ac3f055ac0a002b651",
+    "research/README.md": "e6065773f224df9492b1367f812e984216ccd17a77e4000dcf1e9a73a1790906",
+    "research/dealership-teardown-2026-10-12.md": "b7ba6d071946e4630da1e80be79901e1c915e1ada2b629b40ab3e0565c1974e0",
+    "research/dealership-usability-alternatives-2026-10-12.md": "73b1a283ec9417b87e311b5861bf73a54a08374319af1331759346e759459679",
+    "tools/test_dealership.mjs": "ca7f3c42836efc05000800e91a1f6374546562257d9c27cc13c13ff370ef0874"
+  },
+  "original_judgments": {
+    "review-001.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.36,
+      "scores": {
+        "correctness": {
+          "score": 1.4,
+          "confidence": 0.3,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.53,
+            "2": 0.44
+          }
+        },
+        "spec_match": {
+          "score": 1.48,
+          "confidence": 0.25,
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.5,
+            "2": 0.49
+          }
+        },
+        "test_gap": {
+          "score": 1.68,
+          "confidence": 0.52,
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.26,
+            "2": 0.71
+          }
+        },
+        "blast_radius": {
+          "score": 1.51,
+          "confidence": 0.27,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.45,
+            "2": 0.53
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.56275,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "spec_match"
+      ],
+      "usage": {
+        "input_tokens": 7706,
+        "output_tokens": 79
+      }
+    },
+    "review-002.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.61,
+      "scores": {
+        "correctness": {
+          "score": 1,
+          "confidence": 0.58,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.72,
+            "2": 0.14
+          }
+        },
+        "spec_match": {
+          "score": 0.98,
+          "confidence": 0.62,
+          "probabilities": {
+            "0": 0.14,
+            "1": 0.75,
+            "2": 0.11
+          }
+        },
+        "test_gap": {
+          "score": 1.29,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.28,
+            "1": 0.15,
+            "2": 0.57
+          }
+        },
+        "blast_radius": {
+          "score": 0.23,
+          "confidence": 0.67,
+          "probabilities": {
+            "0": 0.85,
+            "1": 0.08,
+            "2": 0.07
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.533,
+      "reason_codes": [
+        "confidence_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ],
+      "usage": {
+        "input_tokens": 2054,
+        "output_tokens": 79
+      }
+    },
+    "review-003.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.39,
+      "scores": {
+        "correctness": {
+          "score": 1.38,
+          "confidence": 0.31,
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.54,
+            "2": 0.42
+          }
+        },
+        "spec_match": {
+          "score": 1.46,
+          "confidence": 0.17,
+          "probabilities": {
+            "0": 0.08,
+            "1": 0.39,
+            "2": 0.53
+          }
+        },
+        "test_gap": {
+          "score": 1.16,
+          "confidence": 0.28,
+          "probabilities": {
+            "0": 0.16,
+            "1": 0.52,
+            "2": 0.32
+          }
+        },
+        "blast_radius": {
+          "score": 1.08,
+          "confidence": 0.31,
+          "probabilities": {
+            "0": 0.19,
+            "1": 0.54,
+            "2": 0.27
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.627,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "spec_match"
+      ],
+      "usage": {
+        "input_tokens": 6684,
+        "output_tokens": 79
+      }
+    },
+    "review-004.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.26,
+      "scores": {
+        "correctness": {
+          "score": 0.99,
+          "confidence": 0.67,
+          "probabilities": {
+            "0": 0.12,
+            "1": 0.78,
+            "2": 0.1
+          }
+        },
+        "spec_match": {
+          "score": 0.96,
+          "confidence": 0.7,
+          "probabilities": {
+            "0": 0.12,
+            "1": 0.8,
+            "2": 0.08
+          }
+        },
+        "test_gap": {
+          "score": 1.22,
+          "confidence": 0,
+          "probabilities": {
+            "0": 0.35,
+            "1": 0.07,
+            "2": 0.58
+          }
+        },
+        "blast_radius": {
+          "score": 0.18,
+          "confidence": 0.73,
+          "probabilities": {
+            "0": 0.88,
+            "1": 0.06,
+            "2": 0.06
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.5369999999999999,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ],
+      "usage": {
+        "input_tokens": 3601,
+        "output_tokens": 79
+      }
+    },
+    "review-005.json": {
+      "tool": "jev_review",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "truncated": false,
+      "safe_to_apply": 0.45,
+      "scores": {
+        "correctness": {
+          "score": 1.68,
+          "confidence": 0.51,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.29,
+            "2": 0.69
+          }
+        },
+        "spec_match": {
+          "score": 1.49,
+          "confidence": 0.25,
+          "probabilities": {
+            "0": 0.02,
+            "1": 0.46,
+            "2": 0.52
+          }
+        },
+        "test_gap": {
+          "score": 0.6,
+          "confidence": 0.1,
+          "probabilities": {
+            "0": 0.47,
+            "1": 0.46,
+            "2": 0.07
+          }
+        },
+        "blast_radius": {
+          "score": 1.48,
+          "confidence": 0.23,
+          "probabilities": {
+            "0": 0.1,
+            "1": 0.31,
+            "2": 0.59
+          }
+        }
+      },
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "action": "escalate",
+      "composite": 0.7035,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting_rubrics": [
+        "test_gap"
+      ],
+      "usage": {
+        "input_tokens": 4963,
+        "output_tokens": 79
+      }
+    },
+    "verify-001.json": {
+      "tool": "jev_verify",
+      "model": "typesafe/jev-1.13-20260917",
+      "provider": "openrouter",
+      "auto_accept": 0.8,
+      "subject_at": 0.5,
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0
+      },
+      "results": [
+        {
+          "id": "claim0",
+          "claim": "The two final repair checks, test_viewer_loading and test_dealership, passed with exit code 0.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 1,
+            "contradicts": 0,
+            "says_nothing": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "check-manifest",
+          "same_subject": 0.98
+        },
+        {
+          "id": "claim1",
+          "claim": "The dealership regression passed search precision controls, dependent filter recovery, semantic cancellation, stale-response protection, a 35-second timeout callback and invalid suggested-pair rejection.",
+          "verdict": "verified",
+          "probabilities": {
+            "supports": 1,
+            "contradicts": 0,
+            "says_nothing": 0
+          },
+          "confidence": 1,
+          "action": "auto",
+          "supporting_evidence": "full-check-logs",
+          "same_subject": 0.97
+        }
+      ],
+      "usage": {
+        "input_tokens": 1446,
+        "output_tokens": 217
+      }
+    }
+  },
+  "claim_limits": [
+    "Final gate remains separately blocked by its valid contradicted claim.",
+    "One nested optional Pillow test was skipped; it is not counted as tested image support.",
+    "Browser fixtures do not prove provider/server termination or universal browser/accessibility behavior.",
+    "Full suite precedes the final diagnostic text correction; the two relevant checks passed after it."
+  ]
+}
