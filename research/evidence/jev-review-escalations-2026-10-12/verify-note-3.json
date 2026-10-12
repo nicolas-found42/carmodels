@@ -1,0 +1,61 @@
+{
+  "args": {
+    "claims": [
+      "In round 3 every verification claim was verified with action auto at confidence 0.98 or higher.",
+      "In round 3 no review file reached auto, and per-file safe_to_apply ranged from 0.59 to 0.89."
+    ],
+    "evidence": [
+      {
+        "id": "round-3-receipts",
+        "text": "ROUND 3 RECEIPTS ONLY (bundles r3-readers, r3-extractor, r3-docs, r3-tool)\nr3-docs review file .gitignore: action=escalate safe_to_apply=0.84\nr3-docs review file CONTRIBUTING.md: action=escalate safe_to_apply=0.89\nr3-docs review file midnight-club-los-angeles/README.md: action=review safe_to_apply=0.78\nr3-docs review file research/README.md: action=review safe_to_apply=0.87\nr3-docs review file research/midnight-club-los-angeles-extraction.md: action=review safe_to_apply=0.72\nr3-docs review file tools/run_checks.py: action=escalate safe_to_apply=0.84\nr3-docs verification claim: verdict=verified action=auto confidence=0.98\nr3-extractor review file tools/extract_mcla_cars.py: action=escalate safe_to_apply=0.67\nr3-extractor review file tools/test_extract_mcla_cars.py: action=escalate safe_to_apply=0.85\nr3-extractor verification claim: verdict=verified action=auto confidence=1\nr3-extractor verification claim: verdict=verified action=auto confidence=0.98\nr3-readers review file tools/aes_decrypt.py: action=escalate safe_to_apply=0.74\nr3-readers review file tools/mcla_rpf.py: action=escalate safe_to_apply=0.77\nr3-readers review file tools/test_aes_decrypt.py: action=escalate safe_to_apply=0.81\nr3-readers review file tools/test_mcla_rpf.py: action=escalate safe_to_apply=0.83\nr3-readers review file tools/test_xdvdfs.py: action=escalate safe_to_apply=0.82\nr3-readers review file tools/test_xex2.py: action=escalate safe_to_apply=0.79\nr3-readers review file tools/xdvdfs.py: action=escalate safe_to_apply=0.81\nr3-readers review file tools/xex2.py: action=escalate safe_to_apply=0.8\nr3-readers verification claim: verdict=verified action=auto confidence=1\nr3-tool review file docs/agents/review-workflow.md: action=escalate safe_to_apply=0.87\nr3-tool review file tools/line_coverage.py: action=escalate safe_to_apply=0.68\nr3-tool review file tools/review_payload.py: action=escalate safe_to_apply=0.59\nr3-tool review file tools/test_line_coverage.py: action=escalate safe_to_apply=0.83\nr3-tool review file tools/test_review_payload.py: action=escalate safe_to_apply=0.77\nr3-tool verification claim: verdict=verified action=auto confidence=1"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 1,
+      "contradicted": 1,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "In round 3 every verification claim was verified with action auto at confidence 0.98 or higher.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.97,
+          "contradicts": 0.03,
+          "says_nothing": 0
+        },
+        "confidence": 0.95,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.94
+      },
+      {
+        "id": "claim1",
+        "claim": "In round 3 no review file reached auto, and per-file safe_to_apply ranged from 0.59 to 0.89.",
+        "verdict": "contradicted",
+        "probabilities": {
+          "supports": 0.13,
+          "contradicts": 0.87,
+          "says_nothing": 0
+        },
+        "confidence": 0.8,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.9
+      }
+    ],
+    "usage": {
+      "input_tokens": 1600,
+      "output_tokens": 128
+    }
+  }
+}

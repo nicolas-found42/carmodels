@@ -1,0 +1,101 @@
+{
+ "args_sha256": "99c6fd03ba839d5983d399f70fa064791a0629fda9e4a4c6eb69f9b38e351bb2",
+ "args_chars": {
+  "request": 65,
+  "files": 413,
+  "tests": 44
+ },
+ "files": [
+  "midnight-club-los-angeles/README.md"
+ ],
+ "result": {
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "truncated": false,
+  "mode": "per-file",
+  "action": "auto",
+  "composite": 1,
+  "safe_to_apply": 0.97,
+  "reason_codes": [
+   "accepted"
+  ],
+  "limiting": [],
+  "weights": {
+   "correctness": 0.4,
+   "spec_match": 0.3,
+   "test_gap": 0.15,
+   "blast_radius": 0.15
+  },
+  "thresholds": {
+   "auto_accept": 0.8,
+   "review_at": 0.5,
+   "composite_floor": 0.7
+  },
+  "files": [
+   {
+    "path": "midnight-club-los-angeles/README.md",
+    "safe_to_apply": 0.97,
+    "scores": {
+     "correctness": {
+      "score": 2,
+      "confidence": 1,
+      "probabilities": {
+       "0": 0,
+       "1": 0,
+       "2": 1
+      }
+     },
+     "spec_match": {
+      "score": 2,
+      "confidence": 1,
+      "probabilities": {
+       "0": 0,
+       "1": 0,
+       "2": 1
+      }
+     },
+     "test_gap": {
+      "score": 0,
+      "confidence": 1,
+      "probabilities": {
+       "0": 1,
+       "1": 0,
+       "2": 0
+      }
+     },
+     "blast_radius": {
+      "score": 0,
+      "confidence": 1,
+      "probabilities": {
+       "0": 1,
+       "1": 0,
+       "2": 0
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "auto",
+    "composite": 1,
+    "reason_codes": [
+     "accepted"
+    ],
+    "limiting_rubrics": []
+   }
+  ],
+  "usage": {
+   "input_tokens": 939,
+   "output_tokens": 95
+  }
+ }
+}

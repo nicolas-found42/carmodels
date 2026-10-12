@@ -1,0 +1,55 @@
+{
+ "args_sha256": "7c848657a85fa95484081f7303b21c183bdc6a5a7d80f28b3a06ece45357ecd3",
+ "args_chars": {
+  "claims": 233,
+  "evidence": 26683
+ },
+ "files": null,
+ "result": {
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+   "verified": 2,
+   "contradicted": 0,
+   "unsupported": 0,
+   "needs_review": 0
+  },
+  "results": [
+   {
+    "id": "claim0",
+    "claim": "test_extract_mcla_cars passed and line_coverage reported 100.0% of executable lines for extract_mcla_cars.py.",
+    "verdict": "verified",
+    "probabilities": {
+     "supports": 1,
+     "contradicts": 0,
+     "says_nothing": 0
+    },
+    "confidence": 1,
+    "action": "auto",
+    "supporting_evidence": "full-check-logs",
+    "same_subject": 0.98
+   },
+   {
+    "id": "claim1",
+    "claim": "mcla_extraction re-derived the extraction from the disc and reported CHECKED 106 cars, 10702 files, 415232242 bytes.",
+    "verdict": "verified",
+    "probabilities": {
+     "supports": 0.99,
+     "contradicts": 0.01,
+     "says_nothing": 0
+    },
+    "confidence": 0.98,
+    "action": "auto",
+    "supporting_evidence": "full-check-logs",
+    "same_subject": 0.98
+   }
+  ],
+  "usage": {
+   "input_tokens": 8230,
+   "output_tokens": 217
+  }
+ }
+}

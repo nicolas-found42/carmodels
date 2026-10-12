@@ -1,0 +1,178 @@
+{
+ "args_sha256": "cccb39bb501f95a55bf55fa20719dfb532f8054e3e53a9a5858de9e803812364",
+ "args_chars": {
+  "request": 2410,
+  "files": 36641,
+  "tests": 4593
+ },
+ "files": [
+  "tools/extract_mcla_cars.py",
+  "tools/test_extract_mcla_cars.py"
+ ],
+ "result": {
+  "tool": "jev_review",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "truncated": false,
+  "mode": "per-file",
+  "action": "escalate",
+  "composite": 0.8632500000000001,
+  "safe_to_apply": 0.67,
+  "reason_codes": [
+   "confidence_below_review"
+  ],
+  "limiting": [
+   {
+    "file": "tools/extract_mcla_cars.py",
+    "rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "file": "tools/test_extract_mcla_cars.py",
+    "rubrics": [
+     "blast_radius"
+    ]
+   }
+  ],
+  "weights": {
+   "correctness": 0.4,
+   "spec_match": 0.3,
+   "test_gap": 0.15,
+   "blast_radius": 0.15
+  },
+  "thresholds": {
+   "auto_accept": 0.8,
+   "review_at": 0.5,
+   "composite_floor": 0.7
+  },
+  "files": [
+   {
+    "path": "tools/extract_mcla_cars.py",
+    "safe_to_apply": 0.67,
+    "scores": {
+     "correctness": {
+      "score": 1.91,
+      "confidence": 0.88,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.06,
+       "2": 0.93
+      }
+     },
+     "spec_match": {
+      "score": 1.76,
+      "confidence": 0.62,
+      "probabilities": {
+       "0": 0.03,
+       "1": 0.19,
+       "2": 0.78
+      }
+     },
+     "test_gap": {
+      "score": 0.28,
+      "confidence": 0.59,
+      "probabilities": {
+       "0": 0.79,
+       "1": 0.15,
+       "2": 0.06
+      }
+     },
+     "blast_radius": {
+      "score": 1.38,
+      "confidence": 0.07,
+      "probabilities": {
+       "0": 0.14,
+       "1": 0.34,
+       "2": 0.52
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.8215,
+    "reason_codes": [
+     "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+     "blast_radius"
+    ]
+   },
+   {
+    "path": "tools/test_extract_mcla_cars.py",
+    "safe_to_apply": 0.85,
+    "scores": {
+     "correctness": {
+      "score": 1.93,
+      "confidence": 0.9,
+      "probabilities": {
+       "0": 0.01,
+       "1": 0.05,
+       "2": 0.94
+      }
+     },
+     "spec_match": {
+      "score": 1.82,
+      "confidence": 0.73,
+      "probabilities": {
+       "0": 0.03,
+       "1": 0.12,
+       "2": 0.85
+      }
+     },
+     "test_gap": {
+      "score": 0.27,
+      "confidence": 0.58,
+      "probabilities": {
+       "0": 0.76,
+       "1": 0.2,
+       "2": 0.04
+      }
+     },
+     "blast_radius": {
+      "score": 0.45,
+      "confidence": 0.32,
+      "probabilities": {
+       "0": 0.62,
+       "1": 0.31,
+       "2": 0.07
+      }
+     }
+    },
+    "weights": {
+     "correctness": 0.4,
+     "spec_match": 0.3,
+     "test_gap": 0.15,
+     "blast_radius": 0.15
+    },
+    "thresholds": {
+     "auto_accept": 0.8,
+     "review_at": 0.5,
+     "composite_floor": 0.7
+    },
+    "action": "escalate",
+    "composite": 0.905,
+    "reason_codes": [
+     "confidence_below_review"
+    ],
+    "limiting_rubrics": [
+     "blast_radius"
+    ]
+   }
+  ],
+  "usage": {
+   "input_tokens": 13229,
+   "output_tokens": 186
+  }
+ }
+}

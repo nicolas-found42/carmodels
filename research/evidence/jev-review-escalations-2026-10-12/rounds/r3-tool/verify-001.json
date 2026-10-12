@@ -1,0 +1,41 @@
+{
+ "args_sha256": "b3366aad5cdbb4b20d2a8e30309f9888bbae3372cdabd3d94d6cd919d842aeb2",
+ "args_chars": {
+  "claims": 131,
+  "evidence": 25893
+ },
+ "files": null,
+ "result": {
+  "tool": "jev_verify",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "auto_accept": 0.8,
+  "subject_at": 0.5,
+  "summary": {
+   "verified": 1,
+   "contradicted": 0,
+   "unsupported": 0,
+   "needs_review": 0
+  },
+  "results": [
+   {
+    "id": "claim0",
+    "claim": "test_review_payload and test_line_coverage passed, and line_coverage reported 100.0% of executable lines for review_payload.py.",
+    "verdict": "verified",
+    "probabilities": {
+     "supports": 1,
+     "contradicts": 0,
+     "says_nothing": 0
+    },
+    "confidence": 1,
+    "action": "auto",
+    "supporting_evidence": "full-check-logs",
+    "same_subject": 0.98
+   }
+  ],
+  "usage": {
+   "input_tokens": 7612,
+   "output_tokens": 110
+  }
+ }
+}

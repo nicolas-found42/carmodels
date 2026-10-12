@@ -1,0 +1,160 @@
+{
+ "archive_key": {
+  "algorithm": "AES-256-ECB, sixteen passes over the 16-byte-aligned table prefix",
+  "image_offset": 8227524,
+  "image_offset_hex": "0x7d8ac4",
+  "image_sha256": "5a9de5cd05f32ae66d2a7fd3b09a569e18239ffa258bb1a0efb9126de1cff319",
+  "key_sha256": "71f5abd83015a713952b7c2f2c25289f92f3cf9a9dd740c40a511a62ea5b505c",
+  "xex": {
+   "block_table": [
+    {
+     "stored_bytes": 8617984,
+     "zero_fill_bytes": 1114112
+    },
+    {
+     "stored_bytes": 622592,
+     "zero_fill_bytes": 0
+    }
+   ],
+   "blocks": [
+    [
+     8617984,
+     1114112
+    ],
+    [
+     622592,
+     0
+    ]
+   ],
+   "compression": 1,
+   "encryption": 1,
+   "image_bytes": 10354688
+  },
+  "xex_sha256": "c386f4001fa569e6ad4b982f441f67412f00b3f47c166134555cd4b59854a432"
+ },
+ "archives": {
+  "xarchive_audio.rpf": {
+   "bytes": 1615757312,
+   "entries": 1822,
+   "iso_offset": 3919380480,
+   "resolved_names": 1558
+  },
+  "xarchive_audlo.rpf": {
+   "bytes": 1463189504,
+   "entries": 1086,
+   "iso_offset": 325419008,
+   "resolved_names": 823
+  },
+  "xarchive_cache.rpf": {
+   "bytes": 2130739200,
+   "entries": 23931,
+   "iso_offset": 1788608512,
+   "resolved_names": 7426
+  },
+  "xarchive_music.rpf": {
+   "bytes": 780304384,
+   "entries": 113,
+   "iso_offset": 5535137792,
+   "resolved_names": 111
+  }
+ },
+ "claim_limits": [
+  "Native archive extraction only; RSC5 resources keep their stored LZX compression. Model, texture and tuning decoding, GLB conversion and rendering remain unverified.",
+  "Car IDs are vehicle directory names under resources/vehicle/ (vp_ player, vpd_ downloadable-content player, va_ ambient), not decoded retail names or a verified playable roster.",
+  "Archive names are 32-bit hashes. A name is resolved only when exactly one plausible string harvested from this disc hashes to it; other entries keep 0x<hash> names. A resolved name can still be a hash collision.",
+  "Configs and garage UI textures join a car only when its full code occurs in the file name; rims, tires, brakes, shared vehicle effects and vehicle tuning are shared with ownership unknown.",
+  "Selection is a declared namespace boundary; runtime dependency closure and load precedence are unknown.",
+  "Checks establish byte extraction and source preservation, not game execution or visual fidelity."
+ ],
+ "files": {
+  "by_role": {
+   "ambient-definition": 41,
+   "config": 393,
+   "garage-ui-texture": 312,
+   "shared-config": 8,
+   "shared-resources-brakes": 34,
+   "shared-resources-rims": 352,
+   "shared-resources-tires": 36,
+   "shared-tune-vehicle": 111,
+   "shared-vehicle": 29,
+   "vehicle-package": 9273
+  },
+  "bytes": 407692668,
+  "name_source_by_role": {
+   "ambient-definition/unresolved": 41,
+   "config/resolved": 393,
+   "garage-ui-texture/resolved": 312,
+   "shared-config/resolved": 6,
+   "shared-config/unresolved": 2,
+   "shared-resources-brakes/resolved": 34,
+   "shared-resources-rims/resolved": 351,
+   "shared-resources-rims/unresolved": 1,
+   "shared-resources-tires/resolved": 36,
+   "shared-tune-vehicle/resolved": 2,
+   "shared-tune-vehicle/unresolved": 109,
+   "shared-vehicle/resolved": 29,
+   "vehicle-package/resolved": 530,
+   "vehicle-package/unresolved": 8743
+  },
+  "total": 10701,
+  "vehicle_package_names": {
+   "files": 9273,
+   "resolved": 530,
+   "unresolved": 8743,
+   "unresolved_percent": 94.3
+  },
+  "vehicle_package_resource_types": {
+   "19": 106,
+   "50": 106,
+   "63": 8849,
+   "83": 212
+  }
+ },
+ "gtr_directory": {
+  "disc_strings": [
+   "garage\\dyntextures\\managerides\\mr_vp_nsn_gtr_08 (cache entries 181, 19295)",
+   "garage\\dyntextures\\mini_showroom\\msh_vpd_nsn_gtr_08 (cache entries 200, 19326)",
+   "VPD_NSN_GTR_08_PROFILE (cache entry 21895)"
+  ],
+  "jenkins_vp_nsn_gtr_08": "b71061ae",
+  "record": {
+   "children": 163,
+   "first": 12014,
+   "flags": 0,
+   "hash": 3071304110,
+   "index": 2473,
+   "kind": "directory",
+   "name_source": "resolved",
+   "path": "resources/vehicle/vp_nsn_gtr_08/"
+  }
+ },
+ "names": {
+  "ambiguous_hashes": 8,
+  "harvested_strings": 448917,
+  "hashes_with_candidates": 7424,
+  "sources": [
+   "default.xex image",
+   "xarchive_cache.rpf loose (non-resource, non-archive) members"
+  ]
+ },
+ "redump_sheet": {
+  "file": "game-files/Vimm's Lair.txt",
+  "matches_iso_sha1": true,
+  "sha1": "4ca07fcf49427834692042faaf07fcfdefa4b263"
+ },
+ "source": {
+  "bytes": 7838695424,
+  "file": "Midnight Club - Los Angeles - Complete Edition (USA, Europe).iso",
+  "format": "XDVDFS XGD2",
+  "sha1": "4ca07fcf49427834692042faaf07fcfdefa4b263",
+  "sha256": "877a9415f695d27f8170d04d3f18aab13e2b4de3cbabda824e04c9338b2914e9"
+ },
+ "vehicles": {
+  "by_prefix": {
+   "va": 41,
+   "vp": 49,
+   "vpd": 16
+  },
+  "total": 106
+ }
+}

@@ -13,10 +13,25 @@ python3 tools/jev_mcp_call.py --batch .scratch/review-bundle/calls.json
 python3 tools/review_payload.py status --bundle .scratch/review-bundle/bundle.json --implementer implementation-agent
 ```
 
-Write the concrete task in the request file. Review inputs use raw unified diffs relative to
-the task baseline, including new files and detected renames. Each patch-review call has at
-most 24,000 diff characters by default; whole file diffs stay intact. Oversized files require
-a deliberately narrower implementation or separately scoped review, never silent truncation.
+Write the concrete task in the request file, including the plan the change implements when it
+is not obvious from the request (a judge cannot see the investigation). Review inputs use raw
+unified diffs relative to the task baseline, including new files and detected renames. When the
+scope has at most 16 files and 200,000 diff characters (50,000 per file), the bundle makes one
+per-file `jev_review` call, so each file is judged with the whole change in view; otherwise, or
+with `--grouped`, it makes whole-diff calls of at most 24,000 characters. Whole file diffs stay
+intact. Oversized files require a deliberately narrower implementation or separately scoped
+review, never silent truncation. A scope larger than 16 files is split into separate bundles by
+concern rather than grouped, because a slice judged against the whole request reads as a partial
+match.
+
+The review's `tests` input carries computed scope facts (added/modified/deleted files and which
+modules in the same directory import each changed Python file), a computed check summary, and
+the full logs of the checks whose command names an in-scope file (at most 50,000 characters,
+never truncated). A verification call carries the computed check summary, the manifest and the
+full logs of the checks its claims name (every log when a claim names none). Any call above
+90,000 characters is refused before it is sent: larger calls failed upstream with
+`max_tokens_exceeded`. Give those checks verbose output: `unittest.main(verbosity=2)` names every
+test, and `tools/line_coverage.py` reports executed lines.
 Evidence verification uses separate calls with at most two claims each, the executed check
 manifest and complete logs. Preparing a bundle does not call Jev. A verifier's approval does
 not approve the patch. The request and claims are assertions to check, not evidence.

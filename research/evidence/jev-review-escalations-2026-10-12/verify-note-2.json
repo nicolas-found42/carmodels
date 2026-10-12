@@ -1,0 +1,76 @@
+{
+  "args": {
+    "claims": [
+      "Jev rated tools/review_payload.py blast radius 1.92 at confidence 0.88 in round 3.",
+      "line_coverage reported 100.0% of executable lines for aes_decrypt.py, xdvdfs.py, xex2.py, mcla_rpf.py, extract_mcla_cars.py and review_payload.py.",
+      "Round 2's MCLA review and both verification calls failed with max_tokens_exceeded."
+    ],
+    "evidence": [
+      {
+        "id": "receipt-digest",
+        "text": "A-baseline-xex2.json: action=escalate safe_to_apply=0.29 correctness=0.68/0.31 spec_match=0.68/0.49 test_gap=0.79/0 blast_radius=0.79/0.19\nB-paired-xex2.json: action=escalate safe_to_apply=0.41 correctness=0.68/0.23 spec_match=0.63/0.43 test_gap=0.94/0 blast_radius=0.83/0.53\nC-perfile-xex2.json: action=escalate safe_to_apply=0.44 correctness=1.1/0.17 spec_match=0.62/0.08 test_gap=0.78/0 blast_radius=0.74/0.19\nD-design-xex2.json: action=escalate safe_to_apply=0.51 correctness=1.55/0.31 spec_match=0.97/0.83 test_gap=0.82/0 blast_radius=0.73/0.4\nE-evidence-xex2.json: action=escalate safe_to_apply=0.37 correctness=1.33/0.23 spec_match=0.92/0.79 test_gap=0.76/0.13 blast_radius=0.86/0.49\nF-both-xex2.json: action=escalate safe_to_apply=0.54 correctness=1.8/0.7 spec_match=1.02/0.82 test_gap=0.38/0.43 blast_radius=0.8/0.49\nG-perfile-all.json: action=escalate safe_to_apply=0.56 correctness=1.86/0.79 spec_match=1.45/0.19 test_gap=0.42/0.38 blast_radius=1.16/0\n  tools/aes_decrypt.py safe_to_apply=0.66 spec_match=1.45\n  tools/test_aes_decrypt.py safe_to_apply=0.81 spec_match=1.57\n  tools/xdvdfs.py safe_to_apply=0.74 spec_match=1.66\n  tools/test_xdvdfs.py safe_to_apply=0.79 spec_match=1.53\n  tools/xex2.py safe_to_apply=0.68 spec_match=1.74\n  tools/test_xex2.py safe_to_apply=0.77 spec_match=1.62\n  tools/mcla_rpf.py safe_to_apply=0.62 spec_match=1.7\n  tools/test_mcla_rpf.py safe_to_apply=0.7 spec_match=1.62\n  tools/extract_mcla_cars.py safe_to_apply=0.56 spec_match=1.77\n  tools/test_extract_mcla_cars.py safe_to_apply=0.69 spec_match=1.6\n  tools/run_checks.py safe_to_apply=0.75 spec_match=1.64\n  .gitignore safe_to_apply=0.7 spec_match=1.69\n  CONTRIBUTING.md safe_to_apply=0.69 spec_match=1.69\n  research/README.md safe_to_apply=0.59 spec_match=1.75\n  midnight-club-los-angeles/README.md safe_to_apply=0.65 spec_match=1.72\n  research/midnight-club-los-angeles-extraction.md safe_to_apply=0.66 spec_match=1.73\nH-ceiling-typo.json: action=auto safe_to_apply=0.96 correctness=2/1 spec_match=2/1 test_gap=0/1 blast_radius=0/1\nI-ceiling-typo-perfile.json: action=auto safe_to_apply=0.97 correctness=2/1 spec_match=2/1 test_gap=0/1 blast_radius=0/1\nr1-mcla .gitignore: action=escalate safe_to_apply=0.81 correctness=1.84/0.77 spec_match=1.82/0.73 test_gap=0.19/0.71 blast_radius=0.49/0.27\nr1-mcla CONTRIBUTING.md: action=escalate safe_to_apply=0.88 correctness=1.93/0.91 spec_match=1.77/0.66 test_gap=0.09/0.88 blast_radius=0.47/0.31\nr1-mcla midnight-club-los-angeles/README.md: action=review safe_to_apply=0.7 correctness=1.9/0.85 spec_match=1.87/0.8 test_gap=0.3/0.55 blast_radius=0.33/0.52\nr1-mcla research/README.md: action=review safe_to_apply=0.87 correctness=1.95/0.93 spec_match=1.82/0.73 test_gap=0.09/0.85 blast_radius=0.22/0.66\nr1-mcla research/midnight-club-los-angeles-extraction.md: action=escalate safe_to_apply=0.66 correctness=1.88/0.83 spec_match=1.87/0.79 test_gap=0.5/0.23 blast_radius=0.46/0.31\nr1-mcla tools/aes_decrypt.py: action=escalate safe_to_apply=0.67 correctness=1.79/0.69 spec_match=1.63/0.44 test_gap=0.42/0.37 blast_radius=1.08/0\nr1-mcla tools/extract_mcla_cars.py: action=escalate safe_to_apply=0.64 correctness=1.84/0.76 spec_match=1.78/0.68 test_gap=0.36/0.44 blast_radius=1.27/0\nr1-mcla tools/mcla_rpf.py: action=escalate safe_to_apply=0.68 correctness=1.78/0.67 spec_match=1.7/0.53 test_gap=0.4/0.41 blast_radius=1.15/0\nr1-mcla tools/run_checks.py: action=escalate safe_to_apply=0.77 correctness=1.84/0.76 spec_match=1.71/0.58 test_gap=0.26/0.62 blast_radius=0.94/0\nr1-mcla tools/test_aes_decrypt.py: action=escalate safe_to_apply=0.76 correctness=1.81/0.7 spec_match=1.69/0.52 test_gap=0.28/0.59 blast_radius=0.83/0\nr1-mcla tools/test_extract_mcla_cars.py: action=escalate safe_to_apply=0.74 correctness=1.8/0.69 spec_match=1.72/0.58 test_gap=0.33/0.49 blast_radius=0.89/0\nr1-mcla tools/test_mcla_rpf.py: action=escalate safe_to_apply=0.72 correctness=1.81/0.73 spec_match=1.67/0.51 test_gap=0.36/0.44 blast_radius=1/0\nr1-mcla tools/test_xdvdfs.py: action=escalate safe_to_apply=0.74 correctness=1.8/0.7 spec_match=1.69/0.55 test_gap=0.35/0.49 blast_radius=0.95/0\nr1-mcla tools/test_xex2.py: action=escalate safe_to_apply=0.74 correctness=1.83/0.73 spec_match=1.68/0.51 test_gap=0.4/0.41 blast_radius=0.88/0\nr1-mcla tools/xdvdfs.py: action=escalate safe_to_apply=0.75 correctness=1.81/0.73 spec_match=1.69/0.53 test_gap=0.35/0.46 blast_radius=0.91/0\nr1-mcla tools/xex2.py: action=escalate safe_to_apply=0.74 correctness=1.81/0.73 spec_match=1.67/0.49 test_gap=0.35/0.47 blast_radius=0.94/0\nr1-mcla verify: verified review confidence=0.58 supports=0.72; verified auto confidence=1 supports=1\nr1-tool tools/review_payload.py: action=escalate safe_to_apply=0.52 correctness=1.68/0.52 spec_match=1.9/0.85 test_gap=0.75/0.15 blast_radius=1.7/0.56\nr1-tool tools/test_review_payload.py: action=escalate safe_to_apply=0.82 correctness=1.92/0.9 spec_match=1.83/0.73 test_gap=0.46/0.31 blast_radius=0.19/0.71\nr1-tool verify: verified review confidence=0.28 supports=0.52\nr2-mcla/review-001.json: operational error OpenRouter decisions API 400 (max_tokens_exceeded)\nr2-mcla/verify-001.json: operational error OpenRouter decisions API 400 (max_tokens_exceeded)\nr2-tool docs/agents/review-workflow.md: action=review safe_to_apply=0.85 correctness=1.92/0.88 spec_match=1.75/0.62 test_gap=0.2/0.7 blast_radius=0.33/0.5\nr2-tool tools/line_coverage.py: action=escalate safe_to_apply=0.71 correctness=1.79/0.67 spec_match=1.65/0.47 test_gap=0.49/0.27 blast_radius=0.67/0\nr2-tool tools/review_payload.py: action=escalate safe_to_apply=0.6 correctness=1.78/0.67 spec_match=1.92/0.88 test_gap=0.45/0.34 blast_radius=1.92/0.88\nr2-tool tools/test_line_coverage.py: action=escalate safe_to_apply=0.82 correctness=1.85/0.78 spec_match=1.71/0.58 test_gap=0.44/0.34 blast_radius=0.17/0.73\nr2-tool tools/test_review_payload.py: action=escalate safe_to_apply=0.78 correctness=1.85/0.79 spec_match=1.81/0.71 test_gap=0.27/0.59 blast_radius=0.64/0.04\nr2-tool/verify-001.json: operational error OpenRouter decisions API 400 (max_tokens_exceeded)\nr3-docs .gitignore: action=escalate safe_to_apply=0.84 correctness=1.88/0.82 spec_match=1.86/0.79 test_gap=0.35/0.47 blast_radius=0.6/0.1\nr3-docs CONTRIBUTING.md: action=escalate safe_to_apply=0.89 correctness=1.93/0.9 spec_match=1.81/0.71 test_gap=0.1/0.85 blast_radius=0.55/0.17\nr3-docs midnight-club-los-angeles/README.md: action=review safe_to_apply=0.78 correctness=1.9/0.85 spec_match=1.86/0.79 test_gap=0.15/0.77 blast_radius=0.17/0.76\nr3-docs research/README.md: action=review safe_to_apply=0.87 correctness=1.95/0.93 spec_match=1.77/0.67 test_gap=0.1/0.85 blast_radius=0.18/0.73\nr3-docs research/midnight-club-los-angeles-extraction.md: action=review safe_to_apply=0.72 correctness=1.9/0.85 spec_match=1.84/0.78 test_gap=0.31/0.53 blast_radius=0.28/0.58\nr3-docs tools/run_checks.py: action=escalate safe_to_apply=0.84 correctness=1.94/0.91 spec_match=1.84/0.76 test_gap=0.16/0.76 blast_radius=1.59/0.37\nr3-docs verify: verified auto confidence=0.98 supports=0.99\nr3-extractor tools/extract_mcla_cars.py: action=escalate safe_to_apply=0.67 correctness=1.91/0.88 spec_match=1.76/0.62 test_gap=0.28/0.59 blast_radius=1.38/0.07\nr3-extractor tools/test_extract_mcla_cars.py: action=escalate safe_to_apply=0.85 correctness=1.93/0.9 spec_match=1.82/0.73 test_gap=0.27/0.58 blast_radius=0.45/0.32\nr3-extractor verify: verified auto confidence=1 supports=1; verified auto confidence=0.98 supports=0.99\nr3-readers tools/aes_decrypt.py: action=escalate safe_to_apply=0.74 correctness=1.89/0.82 spec_match=1.56/0.34 test_gap=0.37/0.44 blast_radius=1.16/0.33\nr3-readers tools/mcla_rpf.py: action=escalate safe_to_apply=0.77 correctness=1.89/0.82 spec_match=1.54/0.32 test_gap=0.19/0.71 blast_radius=0.96/0.43\nr3-readers tools/test_aes_decrypt.py: action=escalate safe_to_apply=0.81 correctness=1.8/0.69 spec_match=1.57/0.35 test_gap=0.39/0.43 blast_radius=0.53/0.19\nr3-readers tools/test_mcla_rpf.py: action=escalate safe_to_apply=0.83 correctness=1.86/0.78 spec_match=1.51/0.25 test_gap=0.19/0.71 blast_radius=0.52/0.23\nr3-readers tools/test_xdvdfs.py: action=escalate safe_to_apply=0.82 correctness=1.81/0.71 spec_match=1.41/0.13 test_gap=0.19/0.73 blast_radius=0.7/0\nr3-readers tools/test_xex2.py: action=escalate safe_to_apply=0.79 correctness=1.81/0.7 spec_match=1.41/0.1 test_gap=0.23/0.66 blast_radius=0.76/0\nr3-readers tools/xdvdfs.py: action=escalate safe_to_apply=0.81 correctness=1.9/0.86 spec_match=1.57/0.35 test_gap=0.16/0.76 blast_radius=1.14/0.23\nr3-readers tools/xex2.py: action=escalate safe_to_apply=0.8 correctness=1.88/0.82 spec_match=1.51/0.27 test_gap=0.33/0.52 blast_radius=0.94/0.34\nr3-readers verify: verified auto confidence=1 supports=1\nr3-tool docs/agents/review-workflow.md: action=escalate safe_to_apply=0.87 correctness=1.92/0.9 spec_match=1.8/0.7 test_gap=0.22/0.67 blast_radius=0.43/0.35\nr3-tool tools/line_coverage.py: action=escalate safe_to_apply=0.68 correctness=1.82/0.73 spec_match=1.7/0.55 test_gap=0.49/0.25 blast_radius=0.72/0\nr3-tool tools/review_payload.py: action=escalate safe_to_apply=0.59 correctness=1.77/0.64 spec_match=1.93/0.9 test_gap=0.53/0.2 blast_radius=1.92/0.88\nr3-tool tools/test_line_coverage.py: action=escalate safe_to_apply=0.83 correctness=1.88/0.83 spec_match=1.76/0.62 test_gap=0.35/0.47 blast_radius=0.19/0.71\nr3-tool tools/test_review_payload.py: action=escalate safe_to_apply=0.77 correctness=1.87/0.82 spec_match=1.83/0.76 test_gap=0.37/0.46 blast_radius=0.63/0.04\nr3-tool verify: verified auto confidence=1 supports=1\naes_decrypt.py: 97/97 executable lines (100.0%), missed []\nxdvdfs.py: 103/103 executable lines (100.0%), missed []\nxex2.py: 44/44 executable lines (100.0%), missed []\nmcla_rpf.py: 100/100 executable lines (100.0%), missed []\nextract_mcla_cars.py: 335/335 executable lines (100.0%), missed []\nreview_payload.py: 217/217 executable lines (100.0%), missed []\nALL MODULES AT OR ABOVE 95.0%\n"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 3,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "Jev rated tools/review_payload.py blast radius 1.92 at confidence 0.88 in round 3.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.48,
+          "contradicts": 0.22,
+          "says_nothing": 0.3
+        },
+        "confidence": 0.22,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.78
+      },
+      {
+        "id": "claim1",
+        "claim": "line_coverage reported 100.0% of executable lines for aes_decrypt.py, xdvdfs.py, xex2.py, mcla_rpf.py, extract_mcla_cars.py and review_payload.py.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.97
+      },
+      {
+        "id": "claim2",
+        "claim": "Round 2's MCLA review and both verification calls failed with max_tokens_exceeded.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.97,
+          "contradicts": 0.03,
+          "says_nothing": 0
+        },
+        "confidence": 0.95,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.96
+      }
+    ],
+    "usage": {
+      "input_tokens": 5602,
+      "output_tokens": 187
+    }
+  }
+}
