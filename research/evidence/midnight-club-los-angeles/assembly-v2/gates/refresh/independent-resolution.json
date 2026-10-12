@@ -1,0 +1,52 @@
+{
+  "bundle_sha256": "b7af3dc005a1a4859c41eeaece2d7dbdb62c24f8c5afeec0d10c10f5c5c040ec",
+  "reviewer": "parts_probe-independent-final-review",
+  "verdict": "approve",
+  "rationale": "I read the COMPLETE bundle: both raw file diffs, request, tests/scope facts, manifest, all supplied logs and preservation evidence, plus the untruncated original gate. The specific valid escalation is importer test-gap uncertainty (safety0.46/composite0.7385), test-file blast-radius uncertainty, and a verified preservation claim requiring review. The refresh change is bounded to a managed source directory. It derives output before writes, requires a complete matching extraction/source identity and ordered car coverage, accepts only known profile/limits and checked existing GLB/ZIP pins, compares native archive member bytes against extraction, rejects extra files and symlinks, stages all files, verifies before and after directory swap, and restores the previous directory on installation/verification exceptions. I independently re-ran all16 catalog tests successfully, including exact nonstandard ZIP encoding preservation, corruption/native-member/metadata/symlink rejection, missing-ZIP pin checks, edited dealership bytes/metadata preservation, and both rollback failures. Tests use temporary directories and scoped mocks, so their blast radius does not include product assets. Current final15 checks also exercise the importer consumers, dealer upgrade, real106-model renderer and catalog rederivation. I independently checked current native ZIP metadata/size/SHA against baseline1ffb261cf0d5a5c97a0dcb7a2567b143bd8f87a6 for106 models; source/dealer bytes match for106; editable catalog bytes and other-game rows are exact;3336 other-game GLBs individually match baseline Git blob bytes. This resolves the verified preservation claim without approving an operational or contradicted receipt. The bounded guard uses the existing managed index as its pin authority; approval does not assert cryptographic authentication of a jointly rewritten artifact and index, crash/power-loss recovery, or concurrency safety. Both current file pins, complete call digest and exact gate args were revalidated. Original distributions/statuses remain unchanged; no Jev rerun or product edit occurred.",
+  "bundle_file_sha256": "fa736894255d88d15c1141c6a246e7bf135018ddd599ceec49c52cfb47355159",
+  "gate_sha256": "456566b0549d71dd20c5e71bf3108f0a9e2349426b697a2ebcb1aa2fc92f0900",
+  "current_file_pins": {
+    "tools/import_mcla_catalog.py": "0025a7aa416d4ceb421cf1daeedd62deb0820344b906a6bc792de628d360ce89",
+    "tools/test_import_mcla_catalog.py": "6e7b544c4a6b268c5d4c3dc8ea56367b53209d28fc414be0a36a55470ed6e644"
+  },
+  "complete_bundle_read": true,
+  "evidence_commands": [
+    {
+      "command": "python3 tools/test_import_mcla_catalog.py",
+      "exit_code": 0,
+      "log": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/refresh-independent-tests.log",
+      "outcome": "Ran16 tests;OK. Fixtures explicitly reject corrupt pins, wrong identity/profile/limits, extra files, rehashed wrong native members and symlinks; preserve exact ZIP encoding and edited dealership data; roll back install/final-verification failures."
+    },
+    {
+      "command": "python3 tools/test_run_checks.py",
+      "exit_code": 0,
+      "log": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/documentation-independent-runner-tests.log",
+      "outcome": "Ran3 tests;OK. fail/skip/missing-runtime output is expected negative-control execution inside a passing unittest runner."
+    },
+    {
+      "command": "python3 .scratch/mcla-assembly-fix/assert-capture-independent.py --phase final-cleanup-v2 --output .scratch/mcla-assembly-fix/parts-probe/documentation-independent-capture-current.json",
+      "exit_code": 0,
+      "log": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/documentation-independent-capture-current.log",
+      "outcome": "106source+106dealer exact IDs;424 distinct PNG paths/headers/dimensions/hashes; exact local/catalog/network GLB hashes; current viewer/catalog pins; no errors; Metal24depthbits."
+    },
+    {
+      "command": "Independent Python bundle/digest/pin/log/registry assertion",
+      "exit_code": 0,
+      "outcome": "Both complete call digests and args match raw gates; eight current product file pins exact;15 distinct outer manifest pass/exit0/no skips; complete bundled logs equal retained disk logs; helper test and minimum95%coverage registration present exactly once."
+    },
+    {
+      "command": "Independent Python baseline/native/current-corpus preservation assertion",
+      "exit_code": 0,
+      "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/refresh-independent-current-preservation.json",
+      "outcome": "106 native ZIP metadata/size/SHA equal original baseline pins;106 source/dealer byte pairs equal; editable catalog bytes and other-game rows exact;3336 tracked other-game GLB bytes individually equal baseline Git blob objects."
+    }
+  ],
+  "original_gate_action": "escalate",
+  "original_safe_to_apply": 0.46,
+  "original_composite": 0.7385,
+  "limits": [
+    "Valid review/escalation only; no operational or contradicted claim approved.",
+    "Original probabilities and failure evidence preserved.",
+    "No product files changed by this reviewer."
+  ]
+}

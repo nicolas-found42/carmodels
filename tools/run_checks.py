@@ -26,6 +26,7 @@ def registry():
              'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars',
              'test_mcla_lzx', 'test_mcla_resource', 'test_mcla_model', 'test_mcla_texture', 'test_mcla_tuning',
              'test_verify_mcla_resources', 'test_verify_mcla_decoding', 'test_mcla_names', 'test_mcla_preview',
+             'test_mcla_preview_geometry',
              'test_import_mcla_catalog', 'test_import_mcla_dealership', 'test_mcla_preview_experiments', 'test_line_coverage']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
@@ -39,7 +40,7 @@ def registry():
     # Line coverage of the MCLA readers and the review bundle builder under their own tests (stdlib trace).
     covered = ['aes_decrypt', 'xdvdfs', 'xex2', 'mcla_rpf', 'extract_mcla_cars', 'review_payload', 'mcla_lzx',
                'mcla_resource', 'mcla_model', 'mcla_texture', 'mcla_tuning', 'verify_mcla_resources',
-               'verify_mcla_decoding']
+               'verify_mcla_decoding', 'mcla_preview_geometry']
     checks.append({'name': 'line_coverage', 'command': ['python3', 'tools/line_coverage.py', '--minimum', '95', '--modules',
                                                         *[f'tools/{n}.py' for n in covered], '--tests',
                                                         *[f'tools/test_{n}.py' for n in covered]]})

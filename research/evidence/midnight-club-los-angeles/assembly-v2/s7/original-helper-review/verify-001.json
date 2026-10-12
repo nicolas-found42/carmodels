@@ -1,0 +1,50 @@
+{
+  "args": {
+    "claims": [
+      "The test_mcla_preview_geometry check passed ten tests including the available pinned native S7 cleanup control."
+    ],
+    "evidence": [
+      {
+        "id": "check-manifest",
+        "text": "CHECK SUMMARY 1 checks: 1 pass\n{\n  \"schema\": 1,\n  \"exit_code\": 0,\n  \"checks\": [\n    {\n      \"name\": \"test_mcla_preview_geometry\",\n      \"command\": [\n        \"python3\",\n        \"tools/test_mcla_preview_geometry.py\"\n      ],\n      \"status\": \"pass\",\n      \"exit_code\": 0,\n      \"log\": \"test_mcla_preview_geometry.log\",\n      \"elapsed_seconds\": 0.112\n    }\n  ],\n  \"claim_limits\": [\n    \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n  ]\n}"
+      },
+      {
+        "id": "full-check-logs",
+        "text": "COMMAND ['python3', 'tools/test_mcla_preview_geometry.py']\nSTATUS pass EXIT 0\ntest_pinned_native_cleanup_scope_and_determinism (__main__.NativePreviewGeometryTests.test_pinned_native_cleanup_scope_and_determinism) ... ok\ntest_centerline_height_winding_and_normal_plane_are_preserved (__main__.PreviewGeometryTests.test_centerline_height_winding_and_normal_plane_are_preserved) ... ok\ntest_coordinate_seam_copies_move_together (__main__.PreviewGeometryTests.test_coordinate_seam_copies_move_together) ... ok\ntest_double_application_and_unbounded_reconstruction_fail_closed (__main__.PreviewGeometryTests.test_double_application_and_unbounded_reconstruction_fail_closed) ... ok\ntest_every_decoded_field_is_bound_to_geometry_pin (__main__.PreviewGeometryTests.test_every_decoded_field_is_bound_to_geometry_pin) ... ok\ntest_invalid_centerline_scale_normals_and_fingerprint_are_rejected (__main__.PreviewGeometryTests.test_invalid_centerline_scale_normals_and_fingerprint_are_rejected) ... ok\ntest_inverse_transpose_keeps_a_nontrivial_transformed_face_normal_perpendicular (__main__.PreviewGeometryTests.test_inverse_transpose_keeps_a_nontrivial_transformed_face_normal_perpendicular) ... ok\ntest_native_input_and_all_unaffected_attributes_stay_exact (__main__.PreviewGeometryTests.test_native_input_and_all_unaffected_attributes_stay_exact) ... ok\ntest_target_requires_exact_source_pin (__main__.PreviewGeometryTests.test_target_requires_exact_source_pin) ... ok\ntest_unrelated_source_model_and_primitive_keep_identity (__main__.PreviewGeometryTests.test_unrelated_source_model_and_primitive_keep_identity) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.056s\n\nOK\n"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 1,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The test_mcla_preview_geometry check passed ten tests including the available pinned native S7 cleanup control.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.84,
+          "contradicts": 0.15,
+          "says_nothing": 0.01
+        },
+        "confidence": 0.76,
+        "action": "review",
+        "supporting_evidence": "full-check-logs",
+        "same_subject": 0.95
+      }
+    ],
+    "usage": {
+      "input_tokens": 1273,
+      "output_tokens": 110
+    }
+  }
+}

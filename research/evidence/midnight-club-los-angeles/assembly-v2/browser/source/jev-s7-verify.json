@@ -1,0 +1,27 @@
+{
+  "args": {
+    "claims": [
+      "The fresh final public S7 source images are described as showing reduced broad fin protrusions, with small endpoints and native cavity walls remaining qualified.",
+      "The final source host review retains 97 no-clear placement observations, five intentional partial trailers, three native-pose or appearance uncertainties, and one qualified S7 preview cleanup."
+    ],
+    "evidence": [
+      {
+        "id": "fresh-S7-transcript",
+        "text": "Fresh final public S7 source rear-quarter and rotated front-quarter images show the body shell, doors, roof, wheels and skirts seated. Compared with the prior original S7, broad white fin slabs and staircase-like protrusions are reduced to thin intake divider edges. Fine short gray fin endpoints remain visible near the lower rocker opening; native main-shell and blackmatte cavity surfaces remain gray behind the upper intake. Independent no-fin ownership and native identity-frame probes locate those cavity walls in the same skirts0 resource, rather than a separately misplaced attachment. The cleanup deliberately thins all ten fin groups; exact indices/topology/Y spans/welded copies are retained. Native surface contacts and game shader fidelity are unestablished, and no zero-contact/all-angle guarantee is claimed."
+      },
+      {
+        "id": "source-host-review-register",
+        "text": "All106 fresh source records were visually re-inspected across18 contact sheets, with two full S7 PNGs additionally inspected. Counts computed from observations.json: no_clear_issue97, intentional_partial5, uncertain3, preview_cleanup_qualified1. The sole changed asset code compared with the prior public pass is vp_sln_s7_06. Original105 Jev judgments are retained without retries. Native cone/garbage/roof-light and hidden-face limits remain."
+      }
+    ]
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_verify\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"auto_accept\": 0.8,\n  \"subject_at\": 0.5,\n  \"summary\": {\n    \"verified\": 2,\n    \"contradicted\": 0,\n    \"unsupported\": 0,\n    \"needs_review\": 0\n  },\n  \"results\": [\n    {\n      \"id\": \"claim0\",\n      \"claim\": \"The fresh final public S7 source images are described as showing reduced broad fin protrusions, with small endpoints and native cavity walls remaining qualified.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.99,\n        \"contradicts\": 0.01,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.98,\n      \"action\": \"auto\",\n      \"supporting_evidence\": \"fresh-S7-transcript\",\n      \"same_subject\": 0.93\n    },\n    {\n      \"id\": \"claim1\",\n      \"claim\": \"The final source host review retains 97 no-clear placement observations, five intentional partial trailers, three native-pose or appearance uncertainties, and one qualified S7 preview cleanup.\",\n      \"verdict\": \"verified\",\n      \"probabilities\": {\n        \"supports\": 0.99,\n        \"contradicts\": 0.01,\n        \"says_nothing\": 0\n      },\n      \"confidence\": 0.98,\n      \"action\": \"auto\",\n      \"supporting_evidence\": \"source-host-review-register\",\n      \"same_subject\": 0.95\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 1372,\n    \"output_tokens\": 226\n  }\n}"
+      }
+    ]
+  },
+  "elapsed_ms": 405
+}

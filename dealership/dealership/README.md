@@ -155,3 +155,7 @@ explicit static assembly convention. Wheel sizing, neutral paint and material si
 are preview approximations; runtime configuration and original rendering remain unverified.
 See [the preview note](../../research/midnight-club-los-angeles-previews.md) and
 [the name note](../../research/midnight-club-los-angeles-names.md).
+
+MCLA profile v2 retains native submodel bone bindings, restores joint orientation and composed descendant placement, and corrects shared-wheel and attachment frames. For a source upgrade, use `python3 tools/import_mcla_catalog.py --refresh`, then the `--upgrade-unedited` dealership import and both catalog builds. Source refresh validates the existing edition before installation and preserves checked native ZIPs. Regular exterior parts exclude alternative wide kits; DUB packages without regular exterior slots use their required wide family. Player citybus uses a guarded wheel-only join from its matching ambient family, with donor source hashes retained. Original gameplay configuration and shader fidelity remain outside the static profile.
+
+The S7 preview also carries a source-pinned divider-profile reconstruction in its GLB `preview_geometry_repairs`. Native model/attachment frames stay unchanged; only ten divider components of one skirt primitive are thinned, with before/after measurements recorded. The original native geometry remains in its ZIP. This documented preview cleanup is separate from recovered game deformation or shader behavior.

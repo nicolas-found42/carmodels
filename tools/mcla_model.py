@@ -4,7 +4,8 @@ Layouts are readings taken from CodeX.Games.MCLA `RSC5/Rsc5ModelResource.cs` and
 (dedc3156; no code copied) and checked on every car model of the disc:
 
 - Model resource: VFT, block map, pointer to a drawable LOD (+0x08), skeleton pointer (+0x24).
-- Drawable LOD: pointer array of models (pointer, count, capacity).
+- Drawable LOD: pointer array of models (pointer, count, capacity) followed by a matching
+  array of 32-bit skeleton bone indices (+0x08, count +0x0C, capacity +0x0E).
 - Model (grmModel): VFT, geometry pointer array (+0x04), bounding spheres (+0x0C: one per geometry
   plus one for the model when it has several), shader index per geometry (+0x10), matrix count,
   flags, type, matrix index, stride, skin flag (+0x14..+0x19), geometry count (+0x1A).
@@ -17,7 +18,11 @@ Layouts are readings taken from CodeX.Games.MCLA `RSC5/Rsc5ModelResource.cs` and
   pointer, parent pointer (+0x10), index (+0x14), id (+0x16), local translation (+0x20), rotation
   quaternion (+0x40) and model-space offset (+0x60).
 
-All values are big-endian. Coordinates are native: Y up, the car faces -Z (a reading recorded where
+The root +0x30 cache stores little-endian 3x4 matrices inline at cache +0x20 (48 bytes per bone).
+It carries bind-relative orientation: draw orientation restores the cumulative ancestor orient
+chain, with each local basis in native Rz @ Ry @ Rx order. Draw translation rebases cached bone translation against cached root translation
+and adds the authored resource-root offset. The verbatim cache is retained separately.
+Other values are big-endian. Coordinates are native: Y up, the car faces -Z (a reading recorded where
 previews are assembled). Every structural rule below raises ModelError when a resource breaks it.
 """
 import math
@@ -35,6 +40,7 @@ CHANNELS = ('position', 'blend_weights', 'blend_indices', 'normal', 'colour0', '
 COMPONENT = {1: ('half2', 4), 6: ('float3', 12), 9: ('ubyte4', 4), 10: ('dec3n', 4)}
 BONE = 224
 SPHERE_TOLERANCE = 1e-3
+MATRIX_TOLERANCE = 1e-4
 F3 = struct.Struct('>3f')
 H2 = struct.Struct('>2e')
 U32 = struct.Struct('>I')
@@ -110,6 +116,8 @@ def skeleton(r, at):
         need(r.unpack('4f', b + 0x40) == (0.0, 0.0, 0.0, 1.0), 'bone %s has a rotation quaternion' % name)
         orient = r.unpack('3f', b + 0x70)
         model_space = r.unpack('3f', b + 0x60)
+        need(all(math.isfinite(v) for field in (local, euler, orient, model_space) for v in field),
+             'bone %s transform is not finite' % name)
         rotated = parent >= 0 and (bones[parent]['rotated'] or any(bones[parent]['euler']) or any(bones[parent]['orient']))
         if not rotated:
             expected = local if parent < 0 else tuple(p + q for p, q in zip(bones[parent]['model'], local))
@@ -118,6 +126,63 @@ def skeleton(r, at):
         bones.append({'name': name, 'id': r.u16(b + 0x16), 'parent': parent, 'local': local, 'euler': euler,
                       'orient': orient, 'model': model_space, 'rotated': rotated})
     return bones
+
+
+def euler_basis(angles):
+    """Native Rz @ Ry @ Rx basis, calibrated against cache/Euler/orient source triples."""
+    x, y, z = angles
+    sx, cx, sy, cy, sz, cz = math.sin(x), math.cos(x), math.sin(y), math.cos(y), math.sin(z), math.cos(z)
+    return ((cz * cy, cz * sy * sx - sz * cx, cz * sy * cx + sz * sx),
+            (sz * cy, sz * sy * sx + cz * cx, sz * sy * cx - cz * sx),
+            (-sy, cy * sx, cy * cx))
+
+
+def bone_matrices(r, bones):
+    """Retain raw cache and reconstruct column-major native mesh draw poses.
+
+    Source calibration establishes cache R = GlobalEuler @ GlobalOrient.T. Restoring
+    GlobalOrient on the right recovers the mesh frame. GlobalOrient composes each parent's
+    basis with the local OrientBasis; it cannot be replaced by a parent cached draw pose.
+    Translation is cached bone T - cached root T + authored resource root T. Unrotated
+    resources without a cache use authored offsets and identity orientation; a missing
+    cache with rotation fails explicitly. The cache's +4 pointer is
+    not an established inverse table and is deliberately not interpreted here.
+    """
+    cache = r.pointer(0x30, 0x20 + 48 * len(bones))
+    if cache is not None:
+        need(len(bones) > 0, 'matrix cache without skeleton')
+        need(r.u16(cache) == r.u16(cache + 2) == len(bones), 'matrix cache counts differ from skeleton')
+    else:
+        need(not any(any(b['euler']) or any(b['orient']) for b in bones), 'rotated skeleton without matrix cache')
+    bind_bases = []
+    for index, bone in enumerate(bones):
+        rows = (struct.unpack_from('<12f', r.data, cache + 0x20 + index * 48) if cache is not None
+                else (1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0.))
+        need(all(math.isfinite(v) for v in rows), 'cached bone matrix is not finite')
+        error = max(abs(sum(rows[k * 4 + i] * rows[k * 4 + j] for k in range(3)) - (i == j))
+                    for i in range(3) for j in range(3))
+        need(error <= MATRIX_TOLERANCE, 'cached bone matrix is not orthogonal')
+        determinant = (rows[0] * (rows[5] * rows[10] - rows[6] * rows[9])
+                       - rows[1] * (rows[4] * rows[10] - rows[6] * rows[8])
+                       + rows[2] * (rows[4] * rows[9] - rows[5] * rows[8]))
+        need(abs(determinant - 1.) <= MATRIX_TOLERANCE, 'cached bone matrix is not a proper rotation')
+        matrix = tuple(rows[row * 4 + col] if row < 3 else float(col == 3)
+                       for col in range(4) for row in range(4))
+        bone['cached_matrix'] = matrix if cache is not None else None
+        if cache is not None:
+            if index == 0:
+                root_translation = tuple(rows[i * 4 + 3] for i in range(3))
+            orient = euler_basis(bone['orient'])
+            parent = bone['parent']
+            bind = (tuple(tuple(sum(bind_bases[parent][i][k] * orient[k][j] for k in range(3))
+                                for j in range(3)) for i in range(3)) if parent >= 0 else orient)
+            bind_bases.append(bind)
+            basis = tuple(tuple(sum(rows[i * 4 + k] * bind[k][j] for k in range(3))
+                                for j in range(3)) for i in range(3))
+            translation = tuple(rows[i * 4 + 3] - root_translation[i] + bones[0]['model'][i] for i in range(3))
+            bone['matrix'] = tuple(basis[i][j] if i < 3 else 0. for j in range(3) for i in range(4)) + translation + (1.,)
+        else:
+            bone['matrix'] = matrix[:12] + tuple(bone['model']) + (1.,)
 
 
 def geometry(r, at, sphere):
@@ -178,13 +243,25 @@ def decode(data, virtual, physical):
     try:
         r = Resource(data, virtual, physical)
         need(r.u32(0) in MODEL_VFTS, 'not a model resource (VFT 0x%08x)' % r.u32(0))
-        lod = r.pointer(8, 8)
+        lod = r.pointer(8, 16)
         need(lod is not None, 'model resource without a drawable LOD')
         models_at, count = r.pointer(lod), r.u16(lod + 4)
         need(count > 0 and models_at is not None, 'drawable LOD without models')
+        need(count <= r.u16(lod + 6), 'drawable LOD model count exceeds capacity')
+        models_at = r.pointer(lod, count * 4)
         skeleton_at = r.pointer(0x24, 0x40)
         bones = skeleton(r, skeleton_at) if skeleton_at is not None else []
+        bone_matrices(r, bones)
+        binding_count = r.u16(lod + 12)
+        need(binding_count <= r.u16(lod + 14), 'drawable LOD binding count exceeds capacity')
+        bindings_at = r.pointer(lod + 8, binding_count * 4)
+        need((bindings_at is None and binding_count == 0) or
+             (bindings_at is not None and binding_count == count), 'drawable LOD binding count differs from models')
+        bindings = [r.u32(bindings_at + 4 * i) for i in range(binding_count)]
+        need(all(index < len(bones) for index in bindings), 'drawable LOD binding outside skeleton')
         models = [model(r, r.offset(r.u32(models_at + 4 * i), 0x1C)) for i in range(count)]
+        for index, decoded in enumerate(models):
+            decoded['bone_index'] = bindings[index] if bindings else None
     except (ResourceError, struct.error) as error:
         raise ModelError(str(error)) from None
     return {'skeleton': bones, 'models': models}

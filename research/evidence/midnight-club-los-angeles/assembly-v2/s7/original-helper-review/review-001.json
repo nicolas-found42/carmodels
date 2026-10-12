@@ -1,0 +1,184 @@
+{
+  "args": {
+    "request": "Implement the user's explicit choice to clean up the derived S7 preview geometry. Native packages must stay unchanged. Repair only exact native source vp_sln_s7_06/resources/vehicle/vp_sln_s7_06/skirts0_lod_0.xrsc (compressed SHA299e37d98e80e2399bb4eb9cef1d2a051f1119526e7e2c1b5022b758c205de5c), model0 geometry1. All unrelated primitives return by identity. Bind the complete decoded target to a second exact geometry fingerprint, reject mutated/unknown input and repeated repair. Keep original vertex/index topology and ten native divider IDs/counts and Y spans, main shell/other attributes unchanged. For each source coordinate component fit native X(Y),Z(Y) least-squares centerlines, contract both transverse residuals by positive0.1 and inset toward car center10mm; all identical-coordinate seam copies move coherently. Apply correct inverse-transpose affine transform to existing native normals only on those divider indices. This is explicit derived thin-blade reconstruction, not native transform/game shader restoration or exact source trimming. Maximum displacement93.436848mm, tested bound93.437mm; per-fin surface area approximately9.98\u20139.99% native, Z residual widths13.67\u201314.11mm. Record per-source provenance, hashes, input/output bounds/counts, ten component ranges, centerlines, areas, displacements, and claim limits. No new vertices or triangle deletions, all exporter indices remain UInt32 through existing Builder.\n\nControlled candidate: .scratch/mcla-assembly-fix/s7-inner-door/vp_sln_s7_06-fin-slim10-inverse-transpose.glb SHA272e57367fd425306685f01624be1c2b9a0fcef90acaad7de060b2ca0a4fadb3. Production helper output positions/normals equal this prototype bit for bit. Parent reviewer independently viewed initial/rotated and accepted the direction: confirmed broad lower white blade protrusions become narrow readable dividers. Fresh parts visual review and final full public/source/dealer captures still pending. Independent new ownership-color/no-fin controls establish broad upper gray background panels belong to separate geometry and remain outside this helper; parts agent investigates separately. Contact contrary evidence retained: proper noncoplanar pair count114\u2192144 (not reduction), summed finite intersection segments2.436969m\u2192.438378m and maximum65.077\u219213.037mm. This supports less crossing extent but cannot prove visible perfection/zero contacts/allS7fixed. Jev bounded candidate selection chose slim10 at.97 confidence (.98 distribution), no contradicted requirements; it does not approve implementation/completion. Prior failed clipping/retraction and source-authoring hypotheses remain preserved.\n\nMeaningful controls: source qualification, per-field geometry corruption, native input/unaffected data preservation, finite normal plane perpendicularity under nontrivial affine transformation, coherent duplicate coordinates, invalid centerline/normal/scale, double application, over-bound failure, exact pinned real native cleanup/determinism. Private native extraction test explicitly skips when absent; synthetic controls run offline. Root owns integration/corpus regeneration/public audit and final task gate; current review scope is helper+tests only, not alltaskcompletion.\n",
+    "files": [
+      {
+        "path": "tools/mcla_preview_geometry.py",
+        "diff": "--- /dev/null\n+++ b/tools/mcla_preview_geometry.py\n@@ -0,0 +1,142 @@\n+\"\"\"Source-pinned S7 divider thinning for the derived static preview only.\"\"\"\n+import hashlib\n+import json\n+import math\n+\n+TARGET_FILE = 'vp_sln_s7_06/resources/vehicle/vp_sln_s7_06/skirts0_lod_0.xrsc'\n+TARGET_SHA256 = '299e37d98e80e2399bb4eb9cef1d2a051f1119526e7e2c1b5022b758c205de5c'\n+GEOMETRY_SHA256 = '0a145fd85523a0634008c4f96a0493dc7f8ee0460787641f142b9c8ebc346886'\n+# These triangle ranges are the ten exact-coordinate components of the pinned native mesh.\n+FIN_RANGES = (\n+    ((1930, 1968),), ((1968, 2006),),\n+    ((2400, 2416), (2773, 2789)), ((2416, 2432), (2789, 2805)),\n+    ((2432, 2448), (2805, 2821)),\n+    ((2612, 2650),), ((2650, 2688),),\n+    ((2688, 2704), (2859, 2875)), ((2704, 2720), (2875, 2891)),\n+    ((2720, 2736), (2891, 2907)),\n+)\n+PROFILE = 's7-source-pinned-divider-thinning-v1'\n+CROSS_SECTION_SCALE = .1\n+MAXIMUM_DISPLACEMENT = .093437\n+LATERAL_INSET = .01\n+\n+\n+def geometry_digest(geometry):\n+    \"\"\"Bind all decoded attributes and metadata, rather than trusting a supplied file pin.\"\"\"\n+    try:\n+        encoded = json.dumps(geometry, sort_keys=True, separators=(',', ':'), allow_nan=False)\n+    except (TypeError, ValueError) as exc:\n+        raise ValueError('Preview geometry cannot be fingerprinted') from exc\n+    return hashlib.sha256(encoded.encode()).hexdigest()\n+\n+\n+def _bounds(points):\n+    return {'min': [min(p[k] for p in points) for k in range(3)],\n+            'max': [max(p[k] for p in points) for k in range(3)]}\n+\n+\n+def _cross(a, b):\n+    return (a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0])\n+\n+\n+def _area(points, indices, triangles):\n+    total = 0.\n+    for t in triangles:\n+        a, b, c = (points[i] for i in indices[t*3:t*3+3])\n+        n = _cross(tuple(b[k]-a[k] for k in range(3)), tuple(c[k]-a[k] for k in range(3)))\n+        total += math.sqrt(sum(v*v for v in n))/2\n+    return total\n+\n+\n+def _thin_component(points, indices, triangles, output_points, output_normals, scale):\n+    \"\"\"Positive X/Z contraction around native X(Y), Z(Y) centerlines; Y stays exact.\"\"\"\n+    vertices = sorted({i for t in triangles for i in indices[t*3:t*3+3]})\n+    unique = sorted({tuple(points[i]) for i in vertices})\n+    mean_y = sum(p[1] for p in unique)/len(unique)\n+    mean_x = sum(p[0] for p in unique)/len(unique)\n+    mean_z = sum(p[2] for p in unique)/len(unique)\n+    variance = sum((p[1]-mean_y)**2 for p in unique)\n+    if variance <= 0 or not 0 < scale <= 1:\n+        raise ValueError('Divider centerline or contraction is invalid')\n+    slope = sum((p[1]-mean_y)*(p[2]-mean_z) for p in unique)/variance\n+    slope_x = sum((p[1]-mean_y)*(p[0]-mean_x) for p in unique)/variance\n+    residuals = [p[2]-mean_z-slope*(p[1]-mean_y) for p in unique]\n+    for i in vertices:\n+        x, y, z = points[i]\n+        center_z = mean_z+slope*(y-mean_y)\n+        center_x = mean_x+slope_x*(y-mean_y)\n+        side = 1 if mean_x > 0 else -1\n+        output_points[i] = (center_x+scale*(x-center_x)-side*LATERAL_INSET, y,\n+                            center_z+scale*(z-center_z))\n+    # Inverse transpose of the positive affine contraction preserves native smoothing seams.\n+    for i in vertices:\n+        nx, ny, nz = output_normals[i]\n+        n = (nx/scale, ny-(1-scale)/scale*(slope_x*nx+slope*nz), nz/scale)\n+        length = math.sqrt(sum(v*v for v in n))\n+        if not length or not math.isfinite(length):\n+            raise ValueError('Thinned divider has an invalid normal')\n+        output_normals[i] = tuple(v/length for v in n)\n+    moved = [i for i in vertices if tuple(points[i]) != output_points[i]]\n+    return {'source_triangle_ranges': _runs(triangles), 'triangles': len(triangles),\n+            'vertices': len(vertices), 'moved_vertices': len(moved),\n+            'input_bounds': _bounds([points[i] for i in vertices]),\n+            'output_bounds': _bounds([output_points[i] for i in vertices]),\n+            'centerline': {'mean_y': mean_y, 'mean_x': mean_x, 'mean_z': mean_z,\n+                           'x_per_y': slope_x, 'z_per_y': slope},\n+            'input_residual_width': max(residuals)-min(residuals),\n+            'output_residual_width': scale*(max(residuals)-min(residuals)),\n+            'maximum_displacement': max(math.dist(points[i], output_points[i]) for i in vertices),\n+            'input_surface_area': _area(points, indices, triangles),\n+            'output_surface_area': _area(output_points, indices, triangles)}\n+\n+\n+def _runs(values):\n+    result = []\n+    for v in sorted(values):\n+        if result and result[-1][1] == v:\n+            result[-1][1] += 1\n+        else:\n+            result.append([v, v+1])\n+    return result\n+\n+\n+def cleanup_preview_geometry(geometry, source_file, source_sha256, geometry_index, model_index=0):\n+    \"\"\"Return unrelated geometry by identity; validate the complete target before deriving a copy.\"\"\"\n+    if source_file != TARGET_FILE or model_index != 0 or geometry_index != 1:\n+        return geometry, None\n+    if source_sha256 != TARGET_SHA256:\n+        raise ValueError('S7 preview geometry source hash differs or is missing')\n+    if geometry_digest(geometry) != GEOMETRY_SHA256:\n+        raise ValueError('S7 decoded preview geometry differs from its pin')\n+    result = dict(geometry)\n+    result['position'] = list(geometry['position'])\n+    result['normal'] = list(geometry['normal'])\n+    components = []\n+    for ranges in FIN_RANGES:\n+        triangles = [t for start, stop in ranges for t in range(start, stop)]\n+        component = _thin_component(geometry['position'], geometry['indices'], triangles,\n+                                         result['position'], result['normal'], CROSS_SECTION_SCALE)\n+        component['source_component'] = ranges[-1][0]\n+        components.append(component)\n+    maximum = max(c['maximum_displacement'] for c in components)\n+    if maximum > MAXIMUM_DISPLACEMENT:\n+        raise ValueError('S7 divider thinning exceeds its verified displacement bound')\n+    receipt = {'profile': PROFILE, 'source_file': source_file, 'source_sha256': source_sha256,\n+               'model_index': model_index, 'geometry_index': geometry_index,\n+               'input_geometry_sha256': GEOMETRY_SHA256, 'output_geometry_sha256': geometry_digest(result),\n+               'input_vertex_count': geometry['vertex_count'], 'output_vertex_count': result['vertex_count'],\n+               'input_index_count': geometry['index_count'], 'output_index_count': result['index_count'],\n+               'new_vertices': 0, 'removed_triangles': 0,\n+               'input_bounds': _bounds(geometry['position']), 'output_bounds': _bounds(result['position']),\n+               'cross_section_scale': CROSS_SECTION_SCALE, 'lateral_inset_m': LATERAL_INSET,\n+               'maximum_displacement': maximum,\n+               'changed_triangles': sum(c['triangles'] for c in components),\n+               'changed_vertices': sum(c['moved_vertices'] for c in components),\n+               'surviving_upper_dividers': 4, 'surviving_lower_dividers': 6,\n+               'components': components,\n+               'reading': 'Contract each native divider in X/Z around its source-fitted X(Y), Z(Y) centerlines; '\n+                          'inset each side 10mm; preserve Y, indices and coordinate seams; inverse-transpose only divider normals.',\n+               'claim_limits': ['Derived preview cleanup, not recovered game deformation or shader behavior.',\n+                                'Finite blade-to-shell attachment contacts remain; this does not prove zero intersections.',\n+                                'All other primitives and native package bytes are outside this repair.']}\n+    return result, receipt\n"
+      },
+      {
+        "path": "tools/test_mcla_preview_geometry.py",
+        "diff": "--- /dev/null\n+++ b/tools/test_mcla_preview_geometry.py\n@@ -0,0 +1,199 @@\n+\"\"\"Bounded preview cleanup invariants, source qualification and tamper controls.\"\"\"\n+import copy\n+import hashlib\n+import math\n+from pathlib import Path\n+import unittest\n+from unittest.mock import patch\n+\n+import mcla_preview_geometry as repair\n+\n+ROOT = Path(__file__).resolve().parents[1]\n+\n+\n+def fixture():\n+    \"\"\"Ten disconnected canted divider quads and a separate shell triangle.\"\"\"\n+    positions, normals, indices = [], [], []\n+    for blade in range(10):\n+        side = 1 if blade < 5 else -1\n+        base = len(positions)\n+        for y, z in [(0, -.05), (1, .45), (1, .55), (0, .05)]:\n+            positions.append((side*(1+blade*.1), y, z))\n+            normals.append((side, 0., 0.))\n+        order = [0, 1, 2, 0, 2, 3] if side > 0 else [0, 2, 1, 0, 3, 2]\n+        indices.extend(base+i for i in order)\n+    base = len(positions)\n+    positions.extend([(0., 0., 0.), (.2, 0., 0.), (0., .2, 0.)])\n+    normals.extend([(0., 0., 1.)]*3)\n+    indices.extend([base, base+1, base+2])\n+    return {'position': positions, 'normal': normals, 'indices': indices,\n+            'vertex_count': len(positions), 'index_count': len(indices),\n+            'texcoord0': [(0., 0.)]*len(positions), 'colour0': [(1, 2, 3, 4)]*len(positions),\n+            'tangent': [(1., 0., 0., 1.)]*len(positions), 'shader': 26}\n+\n+\n+class PreviewGeometryTests(unittest.TestCase):\n+    def setUp(self):\n+        self.geometry = fixture()\n+        self.pin = repair.geometry_digest(self.geometry)\n+        self.pins = patch.multiple(repair, GEOMETRY_SHA256=self.pin,\n+                                   FIN_RANGES=tuple(((i*2, i*2+2),) for i in range(10)))\n+        self.pins.start()\n+        self.addCleanup(self.pins.stop)\n+\n+    def derive(self, geometry=None):\n+        return repair.cleanup_preview_geometry(self.geometry if geometry is None else geometry,\n+                                               repair.TARGET_FILE, repair.TARGET_SHA256, 1)\n+\n+    def test_unrelated_source_model_and_primitive_keep_identity(self):\n+        for file, model, primitive in [('other.xrsc', 0, 1), (repair.TARGET_FILE, 1, 1),\n+                                       (repair.TARGET_FILE, 0, 0)]:\n+            with self.subTest(file=file, model=model, primitive=primitive):\n+                result, receipt = repair.cleanup_preview_geometry(self.geometry, file, None,\n+                                                                   primitive, model_index=model)\n+                self.assertIs(result, self.geometry)\n+                self.assertIsNone(receipt)\n+\n+    def test_target_requires_exact_source_pin(self):\n+        for pin in [None, '', '0'*64, repair.TARGET_SHA256.upper()]:\n+            with self.subTest(pin=pin):\n+                with self.assertRaisesRegex(ValueError, 'source hash'):\n+                    repair.cleanup_preview_geometry(self.geometry, repair.TARGET_FILE, pin, 1)\n+\n+    def test_every_decoded_field_is_bound_to_geometry_pin(self):\n+        for field in self.geometry:\n+            with self.subTest(field=field):\n+                changed = copy.deepcopy(self.geometry)\n+                if isinstance(changed[field], list):\n+                    changed[field] = changed[field][1:]\n+                else:\n+                    changed[field] += 1\n+                with self.assertRaisesRegex(ValueError, 'decoded preview geometry differs'):\n+                    self.derive(changed)\n+        changed = copy.deepcopy(self.geometry)\n+        changed['unexpected'] = 'new'\n+        with self.assertRaisesRegex(ValueError, 'decoded preview geometry differs'):\n+            self.derive(changed)\n+\n+    def test_native_input_and_all_unaffected_attributes_stay_exact(self):\n+        original = copy.deepcopy(self.geometry)\n+        result, receipt = self.derive()\n+        self.assertEqual(self.geometry, original)\n+        self.assertEqual(result['position'][40:], original['position'][40:])\n+        self.assertEqual(result['normal'][40:], original['normal'][40:])\n+        for key in original:\n+            if key not in ('position', 'normal'):\n+                self.assertEqual(result[key], original[key])\n+        self.assertEqual(receipt['changed_vertices'], 40)\n+        self.assertEqual(receipt['changed_triangles'], 20)\n+        self.assertEqual(receipt['input_vertex_count'], receipt['output_vertex_count'])\n+        self.assertEqual(receipt['input_index_count'], receipt['output_index_count'])\n+        self.assertEqual(receipt['new_vertices'], 0)\n+        self.assertEqual(receipt['removed_triangles'], 0)\n+\n+    def test_centerline_height_winding_and_normal_plane_are_preserved(self):\n+        result, receipt = self.derive()\n+        for blade in range(10):\n+            ids = range(blade*4, blade*4+4)\n+            old = [self.geometry['position'][i] for i in ids]\n+            new = [result['position'][i] for i in ids]\n+            self.assertEqual([p[1] for p in old], [p[1] for p in new])\n+            side = 1 if blade < 5 else -1\n+            for a, b in zip(old, new):\n+                self.assertAlmostEqual(b[0], a[0]-side*.01)\n+            self.assertAlmostEqual(new[3][2]-new[0][2], .01)\n+            self.assertAlmostEqual((new[3][2]+new[0][2])/2, 0.)\n+            self.assertAlmostEqual((new[2][2]+new[1][2])/2, .5)\n+            normal = result['normal'][blade*4]\n+            edge = tuple(new[1][k]-new[0][k] for k in range(3))\n+            self.assertAlmostEqual(sum(normal[k]*edge[k] for k in range(3)), 0.)\n+            self.assertAlmostEqual(math.sqrt(sum(x*x for x in normal)), 1.)\n+            self.assertGreater(normal[0]*side, 0.)\n+            self.assertAlmostEqual(receipt['components'][blade]['output_surface_area'] /\n+                                   receipt['components'][blade]['input_surface_area'], .1)\n+\n+    def test_inverse_transpose_keeps_a_nontrivial_transformed_face_normal_perpendicular(self):\n+        points = [(1., 0., 0.), (2., 0., 0.), (1., 1., 0.),\n+                  (1., 2., 2.), (2., 2., 2.), (1., 3., 2.)]\n+        out = list(points)\n+        normals = [(0., 0., 1.)]*6\n+        repair._thin_component(points, [0, 1, 2, 3, 4, 5], [0, 1], out, normals, .1)\n+        self.assertNotEqual(normals[0], (0., 0., 1.))\n+        for j in [1, 2]:\n+            edge = [out[j][k]-out[0][k] for k in range(3)]\n+            self.assertAlmostEqual(sum(normals[0][k]*edge[k] for k in range(3)), 0.)\n+\n+    def test_coordinate_seam_copies_move_together(self):\n+        points = [(1., 0., -.05), (1., 1., .45), (1., 1., .55), (1., 0., -.05)]\n+        indices = [0, 1, 2, 3, 1, 2]\n+        out = list(points)\n+        normals = [(1., 0., 0.)]*4\n+        repair._thin_component(points, indices, [0, 1], out, normals, .1)\n+        self.assertEqual(out[0], out[3])\n+\n+    def test_double_application_and_unbounded_reconstruction_fail_closed(self):\n+        result, _ = self.derive()\n+        with self.assertRaisesRegex(ValueError, 'decoded preview geometry differs'):\n+            self.derive(result)\n+        with patch.object(repair, 'MAXIMUM_DISPLACEMENT', .001):\n+            with self.assertRaisesRegex(ValueError, 'displacement bound'):\n+                self.derive()\n+\n+    def test_invalid_centerline_scale_normals_and_fingerprint_are_rejected(self):\n+        for scale in [0, -1, 2]:\n+            with self.assertRaisesRegex(ValueError, 'centerline or contraction'):\n+                repair._thin_component(self.geometry['position'], self.geometry['indices'], [0, 1],\n+                                       list(self.geometry['position']), list(self.geometry['normal']), scale)\n+        for points, normals, expected in [([(1., 0., 0.)]*3, [(1., 0., 0.)]*3, 'centerline'),\n+                                         ([(1., 0., 0.), (1., 1., 0.), (1., 0., 1.)],\n+                                          [(0., 0., 0.)]*3, 'invalid normal')]:\n+            with self.assertRaisesRegex(ValueError, expected):\n+                repair._thin_component(points, [0, 1, 2], [0], list(points), list(normals), .1)\n+        for invalid in [{'x': float('nan')}, {'x': object()}]:\n+            with self.assertRaisesRegex(ValueError, 'cannot be fingerprinted'):\n+                repair.geometry_digest(invalid)\n+\n+\n+class NativePreviewGeometryTests(unittest.TestCase):\n+    def test_pinned_native_cleanup_scope_and_determinism(self):\n+        path = ROOT/'midnight-club-los-angeles/cars'/repair.TARGET_FILE\n+        if not path.exists():\n+            self.skipTest('Private native S7 extraction absent; synthetic controls still run')\n+        import mcla_lzx\n+        import mcla_model\n+        raw = path.read_bytes()\n+        self.assertEqual(hashlib.sha256(raw).hexdigest(), repair.TARGET_SHA256)\n+        data, header = mcla_lzx.decompress(raw)\n+        native = mcla_model.decode(data, header['virtual'], header['physical'])['models'][0]['geometries'][1]\n+        before = copy.deepcopy(native)\n+        result, receipt = repair.cleanup_preview_geometry(native, repair.TARGET_FILE, repair.TARGET_SHA256, 1)\n+        self.assertEqual(native, before)\n+        self.assertEqual(receipt['changed_vertices'], 292)\n+        self.assertEqual(receipt['changed_triangles'], 344)\n+        self.assertEqual((receipt['surviving_upper_dividers'], receipt['surviving_lower_dividers']), (4, 6))\n+        self.assertAlmostEqual(receipt['maximum_displacement'], .09343684844388069)\n+        fin_vertices = {i for ranges in repair.FIN_RANGES for a, b in ranges\n+                        for t in range(a, b) for i in native['indices'][t*3:t*3+3]}\n+        groups = {}\n+        for i, point in enumerate(native['position']):\n+            if i not in fin_vertices:\n+                self.assertEqual(result['position'][i], point)\n+                self.assertEqual(result['normal'][i], native['normal'][i])\n+            else:\n+                self.assertEqual(result['position'][i][1], point[1])\n+            groups.setdefault(point, []).append(i)\n+        for ids in groups.values():\n+            self.assertEqual(len({result['position'][i] for i in ids}), 1)\n+        for key in native:\n+            if key not in ('position', 'normal'):\n+                self.assertEqual(native[key], result[key])\n+        for c in receipt['components']:\n+            self.assertGreater(c['output_surface_area']/c['input_surface_area'], .099)\n+            self.assertLess(c['output_surface_area']/c['input_surface_area'], .101)\n+        self.assertEqual((result, receipt), repair.cleanup_preview_geometry(native, repair.TARGET_FILE,\n+                                                                          repair.TARGET_SHA256, 1))\n+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), repair.TARGET_SHA256)\n+\n+\n+if __name__ == '__main__':\n+    unittest.main(verbosity=2)\n"
+      }
+    ],
+    "tests": "SCOPE FACTS (computed by tools/review_payload.py from the baseline and working tree)\nADDED tools/mcla_preview_geometry.py <- imported by: tools/mcla_preview.py, tools/test_mcla_preview_geometry.py\nADDED tools/test_mcla_preview_geometry.py <- imported by: nothing in its directory\nCHECK SUMMARY 1 checks: 1 pass\nPASS test_mcla_preview_geometry\n\nLOG test_mcla_preview_geometry (python3 tools/test_mcla_preview_geometry.py) EXIT 0\ntest_pinned_native_cleanup_scope_and_determinism (__main__.NativePreviewGeometryTests.test_pinned_native_cleanup_scope_and_determinism) ... ok\ntest_centerline_height_winding_and_normal_plane_are_preserved (__main__.PreviewGeometryTests.test_centerline_height_winding_and_normal_plane_are_preserved) ... ok\ntest_coordinate_seam_copies_move_together (__main__.PreviewGeometryTests.test_coordinate_seam_copies_move_together) ... ok\ntest_double_application_and_unbounded_reconstruction_fail_closed (__main__.PreviewGeometryTests.test_double_application_and_unbounded_reconstruction_fail_closed) ... ok\ntest_every_decoded_field_is_bound_to_geometry_pin (__main__.PreviewGeometryTests.test_every_decoded_field_is_bound_to_geometry_pin) ... ok\ntest_invalid_centerline_scale_normals_and_fingerprint_are_rejected (__main__.PreviewGeometryTests.test_invalid_centerline_scale_normals_and_fingerprint_are_rejected) ... ok\ntest_inverse_transpose_keeps_a_nontrivial_transformed_face_normal_perpendicular (__main__.PreviewGeometryTests.test_inverse_transpose_keeps_a_nontrivial_transformed_face_normal_perpendicular) ... ok\ntest_native_input_and_all_unaffected_attributes_stay_exact (__main__.PreviewGeometryTests.test_native_input_and_all_unaffected_attributes_stay_exact) ... ok\ntest_target_requires_exact_source_pin (__main__.PreviewGeometryTests.test_target_requires_exact_source_pin) ... ok\ntest_unrelated_source_model_and_primitive_keep_identity (__main__.PreviewGeometryTests.test_unrelated_source_model_and_primitive_keep_identity) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.056s\n\nOK\n"
+  },
+  "result": {
+    "tool": "jev_review",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "mode": "per-file",
+    "action": "escalate",
+    "composite": 0.7648750000000001,
+    "safe_to_apply": 0.22,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting": [
+      {
+        "file": "tools/mcla_preview_geometry.py",
+        "rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "file": "tools/test_mcla_preview_geometry.py",
+        "rubrics": [
+          "blast_radius"
+        ]
+      }
+    ],
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "files": [
+      {
+        "path": "tools/mcla_preview_geometry.py",
+        "safe_to_apply": 0.22,
+        "scores": {
+          "correctness": {
+            "score": 1.37,
+            "confidence": 0.05,
+            "probabilities": {
+              "0": 0.14,
+              "1": 0.35,
+              "2": 0.51
+            }
+          },
+          "spec_match": {
+            "score": 1.57,
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.39,
+              "2": 0.59
+            }
+          },
+          "test_gap": {
+            "score": 0.73,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.47,
+              "1": 0.32,
+              "2": 0.21
+            }
+          },
+          "blast_radius": {
+            "score": 0.88,
+            "confidence": 0.15,
+            "probabilities": {
+              "0": 0.35,
+              "1": 0.43,
+              "2": 0.22
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.6887500000000001,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mcla_preview_geometry.py",
+        "safe_to_apply": 0.62,
+        "scores": {
+          "correctness": {
+            "score": 1.73,
+            "confidence": 0.59,
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.19,
+              "2": 0.77
+            }
+          },
+          "spec_match": {
+            "score": 1.73,
+            "confidence": 0.58,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.24,
+              "2": 0.74
+            }
+          },
+          "test_gap": {
+            "score": 0.43,
+            "confidence": 0.37,
+            "probabilities": {
+              "0": 0.61,
+              "1": 0.36,
+              "2": 0.03
+            }
+          },
+          "blast_radius": {
+            "score": 0.43,
+            "confidence": 0.35,
+            "probabilities": {
+              "0": 0.67,
+              "1": 0.23,
+              "2": 0.1
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.8410000000000001,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      }
+    ],
+    "usage": {
+      "input_tokens": 8095,
+      "output_tokens": 186
+    }
+  }
+}

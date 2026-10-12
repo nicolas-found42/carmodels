@@ -1,0 +1,16 @@
+{
+  "bundle_sha256": "d5d2e2cf831ad4f139cbbefe744275f0d692e7b1d355b65af6b80e7421eceac0",
+  "reviewer": "root (independent of decoder implementation agent)",
+  "verdict": "approve",
+  "approval_scope": [
+    "tools/mcla_model.py",
+    "tools/test_mcla_model.py"
+  ],
+  "rationale": "Reviewed complete raw decoder/test diffs and retained final gate. Its rubric escalation is lack of confidence in correctness/test gap/blast radius, with safe_to_apply .25; both execution claims verified (.97/.88). Independent direct source-byte Euler/local translation reconstruction for every selected part (1491 resources/7453 bones) matches the current decoder below 1.36e-7 without calling product Euler basis. Distinct noncommuting root/child/grandchild/sibling tests disprove local-only and parent-draw shortcuts, retain exact raw cache and distinct model binding, and exercise root translation compensation. Required/null/out-of-range pointer, count/capacity, invalid rotation and absent rotated-cache controls reject. Full native verifier decoded 9044 model resources and rejected all13 controls; published coverage is200/200 executed model lines. Verified raw model attributes/summary unchanged. The change affects source data decoding and preview placement; it does not claim execution of game animation or shader consumer. No concrete defect found after independent algebra and corruption checks. Original scores are retained; this approval does not cover exporter/helper or whole-task completion.",
+  "gate_sha256": "41571479d9a1ac1f2eb56a2c3ef2f190fc799b7f9594cd450d2a8326f03f9b08",
+  "retired_input_error": ".scratch/mcla-assembly-fix/final-gates/decoder/gate.json",
+  "claim_limits": [
+    "Prior malformed input is not an accepted model judgment.",
+    "Source algebra is not gameplay/rendering equivalence."
+  ]
+}

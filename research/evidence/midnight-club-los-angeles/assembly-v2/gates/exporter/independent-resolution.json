@@ -1,0 +1,223 @@
+{
+  "bundle_sha256": "c67907b5eb31827736cacb6211c76cda262bc37b05dd5ecad45d699e68f09689",
+  "reviewer": "decoder_fix-independent-final-exporter",
+  "verdict": "approve",
+  "file_pins": {
+    "tools/mcla_preview.py": "bb6bb49e4bcfd131807e3b63e227beccf1d2459a9ecc7ed5b1b3752aeb686714",
+    "tools/test_mcla_preview.py": "ecde7968849dbb9fdb1aa3d16971217586fe1c1164bc43b0a42f48035c196d8b"
+  },
+  "original_gate_sha256": "58d413bb5418e599ed912d1ed29e5b26b6eb4b1ed91db53bdfbba59bbdef2bc4",
+  "original_gate_scores_preserved": {
+    "mode": "per-file",
+    "action": "escalate",
+    "composite": 0.77525,
+    "safe_to_apply": 0.37,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review"
+    ],
+    "limiting": [
+      {
+        "file": "tools/mcla_preview.py",
+        "rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "file": "tools/test_mcla_preview.py",
+        "rubrics": [
+          "blast_radius"
+        ]
+      }
+    ],
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "files": [
+      {
+        "path": "tools/mcla_preview.py",
+        "safe_to_apply": 0.37,
+        "scores": {
+          "correctness": {
+            "score": 1.75,
+            "confidence": 0.64,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.2,
+              "2": 0.78
+            }
+          },
+          "spec_match": {
+            "score": 1.65,
+            "confidence": 0.47,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.33,
+              "2": 0.66
+            }
+          },
+          "test_gap": {
+            "score": 0.76,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.42,
+              "1": 0.4,
+              "2": 0.18
+            }
+          },
+          "blast_radius": {
+            "score": 1.84,
+            "confidence": 0.78,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.11,
+              "2": 0.87
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.7025,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "test_gap"
+        ]
+      },
+      {
+        "path": "tools/test_mcla_preview.py",
+        "safe_to_apply": 0.61,
+        "scores": {
+          "correctness": {
+            "score": 1.84,
+            "confidence": 0.76,
+            "probabilities": {
+              "0": 0.02,
+              "1": 0.12,
+              "2": 0.86
+            }
+          },
+          "spec_match": {
+            "score": 1.75,
+            "confidence": 0.62,
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.19,
+              "2": 0.78
+            }
+          },
+          "test_gap": {
+            "score": 0.33,
+            "confidence": 0.5,
+            "probabilities": {
+              "0": 0.74,
+              "1": 0.19,
+              "2": 0.07
+            }
+          },
+          "blast_radius": {
+            "score": 0.77,
+            "confidence": 0,
+            "probabilities": {
+              "0": 0.43,
+              "1": 0.38,
+              "2": 0.19
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.8480000000000001,
+        "reason_codes": [
+          "confidence_below_review"
+        ],
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      }
+    ]
+  },
+  "original_claim_verification_preserved": {
+    "action": "review",
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1,
+      "invalid_response": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5
+    },
+    "results": [
+      {
+        "claim": "test_mcla_preview passed26 exporter and cleanup-wiring tests.",
+        "verdict": "verified",
+        "confidence": 0.97,
+        "probabilities": {
+          "verified": 0.98,
+          "contradicted": 0.01,
+          "unsupported": 0.01
+        },
+        "action": "auto"
+      },
+      {
+        "claim": "The independent final browser assertion script passed106 expected IDs in each page,424 distinct PNGs and matching actual source/dealership/catalog/network GLB hashes, with no recorded viewer/page errors.",
+        "verdict": "verified",
+        "confidence": 0.74,
+        "probabilities": {
+          "verified": 0.83,
+          "contradicted": 0.08,
+          "unsupported": 0.09
+        },
+        "action": "review"
+      }
+    ]
+  },
+  "limits": [
+    "Two actual orbital views per model; no hidden-face perfection, zero contacts, native shader/runtime fidelity or absolute clipping absence approved.",
+    "Scope excludes decoder implementation, which this reviewer authored and cannot approve.",
+    "Original valid Jev probabilities/confidences/escalations retained; no unchanged judgment retry performed."
+  ],
+  "rationale": "Reviewed complete raw unified diffs for both exact pinned files, complete26-test log, scope facts and15-check executed manifest, every included evidence item and full browser assertion script. Implementation composes outer attachment and each bound native mesh pose in noncommuting order; root-relative exhaust keeps descendants; normalized shared wheels remove authoring placement and orient native show faces outward; roof/fork/trunk/scissor/DUB/bus cases have concrete independent expected-transform tests and rejection controls. Earlier independent native replay validated1069 poses and3268 untouched attributes across19 critical assemblies; final106 before/after replay preserves4439 native poses/bindings, all105 other GLBs byte-for-byte and12875 primitive scope with one S7 POSITION/NORMAL exception, exact UInt32/index/UV bytes and unchanged material/image arrays. Six scratch-only controls reject named byte/pose/binding/UV/UInt16/source-pin failures. Actual emitted S7 matches helper float32 positions/normalized normals, one exact source/model/geometry receipt and source SHA. Independently executed the entire bundled assertion script against final-cleanup-v2: all106 expected source and dealer IDs,424 distinct PNG files/dimensions/hashes, actual source/dealer/catalog/network bytes agree, current viewer/catalog pins, zero recorded errors, Metal24-depth. Independently inspected all106 fresh dealer pairs; source reviewer separately inspected all106 source pairs. The browser claim is bounded to these recorded assertions, not visual or hidden-face perfection. Independent26 exporter tests previously passed on unchanged exact current pins. These executable, native and actual-photo controls resolve exporter test-gap and test-file blast-radius uncertainty and the .74-confidence browser-assertion claim without another Jev call.",
+  "evidence": [
+    ".scratch/mcla-assembly-fix/exporter-latest-independent/independent-review.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/corpus-comparison.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/comparison-controls-002/comparison-controls.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/emitted-target-proof.json",
+    ".scratch/mcla-assembly-fix/final-cleanup-dealership-review/observations.json",
+    ".scratch/mcla-assembly-fix/final-gates/exporter/independent-capture-assert.json",
+    ".scratch/mcla-assembly-fix/final-gates/exporter/independent-capture-assert.log"
+  ]
+}

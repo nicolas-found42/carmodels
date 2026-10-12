@@ -1,0 +1,209 @@
+{
+  "schema": 1,
+  "exit_code": 0,
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "tools"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "ruff.log",
+      "elapsed_seconds": 0.033
+    },
+    {
+      "name": "test_viewer_scenes",
+      "command": [
+        "node",
+        "tools/test_viewer_scenes.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_scenes.log",
+      "elapsed_seconds": 0.124
+    },
+    {
+      "name": "test_viewer_materials",
+      "command": [
+        "node",
+        "tools/test_viewer_materials.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_materials.log",
+      "elapsed_seconds": 0.049
+    },
+    {
+      "name": "test_model_load",
+      "command": [
+        "node",
+        "tools/test_model_load.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_load.log",
+      "elapsed_seconds": 0.037
+    },
+    {
+      "name": "test_viewer_loading",
+      "command": [
+        "node",
+        "tools/test_viewer_loading.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_viewer_loading.log",
+      "elapsed_seconds": 0.094
+    },
+    {
+      "name": "test_mcla_preview_ui",
+      "command": [
+        "node",
+        "tools/test_mcla_preview_ui.mjs"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_mcla_preview_ui.log",
+      "elapsed_seconds": 2.219
+    },
+    {
+      "name": "test_model_catalog",
+      "command": [
+        "python3",
+        "tools/test_model_catalog.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_model_catalog.log",
+      "elapsed_seconds": 0.081
+    },
+    {
+      "name": "test_run_checks",
+      "command": [
+        "python3",
+        "tools/test_run_checks.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_run_checks.log",
+      "elapsed_seconds": 0.096
+    },
+    {
+      "name": "test_mcla_preview",
+      "command": [
+        "python3",
+        "tools/test_mcla_preview.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_mcla_preview.log",
+      "elapsed_seconds": 1.298
+    },
+    {
+      "name": "test_mcla_preview_geometry",
+      "command": [
+        "python3",
+        "tools/test_mcla_preview_geometry.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_mcla_preview_geometry.log",
+      "elapsed_seconds": 0.19
+    },
+    {
+      "name": "test_import_mcla_catalog",
+      "command": [
+        "python3",
+        "tools/test_import_mcla_catalog.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_import_mcla_catalog.log",
+      "elapsed_seconds": 1.0
+    },
+    {
+      "name": "test_import_mcla_dealership",
+      "command": [
+        "python3",
+        "tools/test_import_mcla_dealership.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "test_import_mcla_dealership.log",
+      "elapsed_seconds": 0.111
+    },
+    {
+      "name": "dealership_freshness",
+      "command": [
+        "python3",
+        "tools/build_dealership.py",
+        "--check"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "dealership_freshness.log",
+      "elapsed_seconds": 74.159
+    },
+    {
+      "name": "line_coverage",
+      "command": [
+        "python3",
+        "tools/line_coverage.py",
+        "--minimum",
+        "95",
+        "--modules",
+        "tools/aes_decrypt.py",
+        "tools/xdvdfs.py",
+        "tools/xex2.py",
+        "tools/mcla_rpf.py",
+        "tools/extract_mcla_cars.py",
+        "tools/review_payload.py",
+        "tools/mcla_lzx.py",
+        "tools/mcla_resource.py",
+        "tools/mcla_model.py",
+        "tools/mcla_texture.py",
+        "tools/mcla_tuning.py",
+        "tools/verify_mcla_resources.py",
+        "tools/verify_mcla_decoding.py",
+        "tools/mcla_preview_geometry.py",
+        "--tests",
+        "tools/test_aes_decrypt.py",
+        "tools/test_xdvdfs.py",
+        "tools/test_xex2.py",
+        "tools/test_mcla_rpf.py",
+        "tools/test_extract_mcla_cars.py",
+        "tools/test_review_payload.py",
+        "tools/test_mcla_lzx.py",
+        "tools/test_mcla_resource.py",
+        "tools/test_mcla_model.py",
+        "tools/test_mcla_texture.py",
+        "tools/test_mcla_tuning.py",
+        "tools/test_verify_mcla_resources.py",
+        "tools/test_verify_mcla_decoding.py",
+        "tools/test_mcla_preview_geometry.py"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "line_coverage.log",
+      "elapsed_seconds": 16.31
+    },
+    {
+      "name": "mcla_catalog",
+      "command": [
+        "python3",
+        "tools/import_mcla_catalog.py",
+        "--check"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "log": "mcla_catalog.log",
+      "elapsed_seconds": 98.685
+    }
+  ],
+  "claim_limits": [
+    "Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity."
+  ]
+}

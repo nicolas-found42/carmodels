@@ -1,0 +1,261 @@
+{
+  "args": {
+    "request": "Implement guarded source --refresh for complete pinned known v1/v2 editions. Validate existing GLB/ZIP pins,identities,coverage,members,limits; stage replacement,validate before/after install,rollback on failure. Preserve original ZIPs and reject unsupported/edited editions. Existing unedited dealership copies refresh through existing importer.",
+    "files": [
+      {
+        "path": "tools/import_mcla_catalog.py",
+        "diff": "--- a/tools/import_mcla_catalog.py\n+++ b/tools/import_mcla_catalog.py\n@@ -20,6 +20,16 @@\n NATIVE_PROFILE = 'mcla-xbox360-native-car-v1'\n VARIANT = 'stock'\n LIMITS = [\n+    'Static LOD 0 stock-index assembly with half-resolution diffuse textures and neutral paint; '\n+    'slot attachment, wheel placement and material interpretation are readings, not runtime observations. Shared wheel radius and width use geometric approximations because runtime tire-size configuration is undecoded.',\n+    'Runtime customization, animation, damage, paint, reflections and original shader passes are not reproduced.',\n+    'Names use exact English UI-string key joins when available; other entries retain source codes. '\n+    'Retail year, manufacturer and performance are not inferred from codes.',\n+    'Native ZIPs hold this car manifest and its extracted files, excluding separately shared rims, tires and brakes.',\n+    'Ambient and player namespace entries remain distinct; this is not a verified playable roster.',\n+]\n+PREVIOUS_PROFILE = 'mcla-xbox360-static-stock-v1'\n+PREVIOUS_LIMITS = [\n     'Static LOD 0 stock-index assembly with half-resolution diffuse textures and neutral paint; '\n     'slot attachment, wheel placement and material interpretation are readings, not runtime observations. Shared wheel radius and width use geometric approximations because runtime tire-size configuration is undecoded.',\n     'Runtime customization, animation, damage, paint, reflections and original shader passes are not reproduced.',\n@@ -141,13 +151,15 @@\n         raise ValueError('MCLA unknown display identity must retain its source code')\n \n \n-def source_package(row, source):\n+def source_package(row, source, *, expected_profile=None, expected_limits=None):\n+    expected_profile = PROFILE if expected_profile is None else expected_profile\n+    expected_limits = LIMITS if expected_limits is None else expected_limits\n     code = row.get('code') if isinstance(row, dict) else None\n     package = row.get('native_package') if isinstance(row, dict) else None\n     if (not isinstance(code, str) or not CODE.fullmatch(code)\n             or row.get('file') != f'previews/{code}.glb' or row.get('source_code') != code\n-            or row.get('asset_kind', 'glb') != 'glb' or row.get('source_profile') != PROFILE\n-            or row.get('source_variant') != VARIANT or row.get('claim_limits') != LIMITS\n+            or row.get('asset_kind', 'glb') != 'glb' or row.get('source_profile') != expected_profile\n+            or row.get('source_variant') != VARIANT or row.get('claim_limits') != expected_limits\n             or not isinstance(row.get('display_name'), str) or not row['display_name'].strip()\n             or not isinstance(row.get('records'), list) or len(row['records']) != 1\n             or not isinstance(package, dict) or package.get('profile') != NATIVE_PROFILE\n@@ -161,7 +173,7 @@\n     data = checked_file(Path(source) / row['file'], row.get('bytes'), row.get('sha256'))\n     doc, _ = read_glb(data)\n     extras = doc.get('extras', {})\n-    if extras.get('car') != code or extras.get('source_profile') != PROFILE:\n+    if extras.get('car') != code or extras.get('source_profile') != expected_profile:\n         raise ValueError('MCLA preview GLB identity differs')\n     record = row['records'][0]\n     if record.get('role') != 'stock' or type(record.get('triangles')) is not int or record['triangles'] <= 0:\n@@ -243,7 +255,78 @@\n     return len(current['cars'])\n \n \n-def export_catalog(extraction, output, identities, workers=1):\n+\n+def refresh_catalog(output, index, outputs, identities):\n+    \"\"\"Migrate only a complete, pinned known-profile source edition, with directory rollback.\"\"\"\n+    regular(output / 'index.json')\n+    current = json.loads((output / 'index.json').read_text())\n+    rows = current.get('cars')\n+    expected_rows = catalog_rows(index, outputs, identities)\n+    if (not isinstance(rows, list) or not rows or current.get('source') != index['source']\n+            or [r.get('code') for r in rows] != [r['code'] for r in expected_rows]):\n+        raise ValueError('MCLA refresh source identity/coverage differs')\n+    profiles = {row.get('source_profile') for row in rows}\n+    if profiles == {PROFILE}:\n+        profile, limits = PROFILE, LIMITS\n+    elif profiles == {PREVIOUS_PROFILE}:\n+        profile, limits = PREVIOUS_PROFILE, PREVIOUS_LIMITS\n+    else:\n+        raise ValueError('Unsupported MCLA refresh profile')\n+    if current.get('claim_limits') != limits:\n+        raise ValueError('MCLA refresh claim limits differ')\n+    expected_files = {'index.json'} | {r['file'] for r in expected_rows}\n+    native_payloads = {}\n+    for row, expected in zip(rows, expected_rows):\n+        source_package(row, output, expected_profile=profile, expected_limits=limits)\n+        if (row['display_name'] != expected['display_name'] or row['name_source'] != expected['name_source']\n+                or row['native_package']['members'] != expected['native_package']['members']):\n+            raise ValueError('MCLA refresh source metadata differs')\n+        native = output / row['native_package']['file']\n+        derived = outputs[row['code']][2]\n+        if native.exists():\n+            data = native.read_bytes()  # Already verified against the old index by source_package.\n+            expected_files.add(row['native_package']['file'])\n+            if package_members(row['code'], data) != package_members(row['code'], derived):\n+                raise ValueError('MCLA refresh native package differs from extraction')\n+        else:\n+            data = derived\n+            if sha(data) != row['native_package']['sha256'] or len(data) != row['native_package']['bytes']:\n+                raise ValueError('Rebuilt MCLA ZIP differs from its pin; nothing overwritten')\n+        native_payloads[row['code']] = data\n+        expected['native_package'].update(bytes=len(data), sha256=sha(data))\n+    paths = list(output.rglob('*'))\n+    for path in paths:\n+        regular(path)\n+    if {p.relative_to(output).as_posix() for p in paths if p.is_file()} != expected_files:\n+        raise ValueError('MCLA refresh file coverage differs')\n+    # Both staged verification and post-swap verification are read-only. A failed swap/check\n+    # restores the entire original directory, including its exact index and ZIP encodings.\n+    with tempfile.TemporaryDirectory(prefix='.mcla-refresh-', dir=output.parent) as temp:\n+        stage, backup = Path(temp) / 'source', Path(temp) / 'previous'\n+        stage.mkdir()\n+        for row in expected_rows:\n+            for name, data in ((row['file'], outputs[row['code']][0]),\n+                               (row['native_package']['file'], native_payloads[row['code']])):\n+                path = stage / name\n+                path.parent.mkdir(parents=True, exist_ok=True)\n+                path.write_bytes(data)\n+        (stage / 'index.json').write_text(text({'cars': expected_rows, 'source': index['source'], 'claim_limits': LIMITS}))\n+        verify_published(None, stage, index, outputs, identities)\n+        output.rename(backup)\n+        installed = False\n+        try:\n+            stage.rename(output)\n+            installed = True\n+            verify_published(None, output, index, outputs, identities)\n+        except BaseException:\n+            if installed:\n+                output.rename(stage)\n+            backup.rename(output)\n+            raise\n+    return len(expected_rows)\n+\n+\n+def export_catalog(extraction, output, identities, workers=1, refresh=False):\n     extraction, output = Path(extraction), Path(output)\n     regular(extraction); regular(output)\n     if output.resolve().is_relative_to(extraction.resolve()) or extraction.resolve().is_relative_to(output.resolve()):\n@@ -256,6 +339,8 @@\n     if set(identities) != {vehicle['id'] for vehicle in index['vehicles']}:\n         raise ValueError('MCLA display identity coverage differs')\n     outputs = derive_outputs(extraction, index, workers)\n+    if output.exists() and refresh:\n+        return refresh_catalog(output, index, outputs, identities)\n     if output.exists():\n         verify_published(extraction, output, index, outputs, identities, allow_missing_native=True)\n         rows = json.loads((output / 'index.json').read_text())['cars']\n@@ -330,7 +415,10 @@\n     parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')\n     parser.add_argument('--output', type=Path, default=ROOT / 'dealership/public' / GAME)\n     parser.add_argument('--workers', type=int, default=8)\n-    parser.add_argument('--check', action='store_true')\n+    mode = parser.add_mutually_exclusive_group()\n+    mode.add_argument('--check', action='store_true')\n+    mode.add_argument('--refresh', action='store_true',\n+                      help='Replace verified prior source previews; preserve checked native packages')\n     parser.add_argument('--available', action='store_true')\n     args = parser.parse_args()\n     if args.available:\n@@ -345,7 +433,7 @@\n                                  derive_outputs(args.extraction, index, args.workers), identities)\n     else:\n         check_extraction(args.iso, args.extraction)\n-        count = export_catalog(args.extraction, args.output, identities, args.workers)\n+        count = export_catalog(args.extraction, args.output, identities, args.workers, refresh=args.refresh)\n     print(f'{\"CHECKED\" if args.check else \"EXPORTED\"} {count} MCLA previews and native packages')\n     return 0\n \n"
+      },
+      {
+        "path": "tools/test_import_mcla_catalog.py",
+        "diff": "--- a/tools/test_import_mcla_catalog.py\n+++ b/tools/test_import_mcla_catalog.py\n@@ -51,6 +51,158 @@\n \n \n class Tests(unittest.TestCase):\n+    def old_edition(self, extraction, output, identities):\n+        with patch.object(catalog, 'PROFILE', catalog.PREVIOUS_PROFILE), patch.object(catalog, 'LIMITS', catalog.PREVIOUS_LIMITS):\n+            export(extraction, output, identities)\n+\n+    def refreshed(self, extraction, output, identities):\n+        with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'), patch.object(catalog, 'build_car', preview):\n+            return catalog.export_catalog(extraction, output, identities, refresh=True)\n+\n+    def snapshot(self, output):\n+        return {p.relative_to(output).as_posix(): p.read_bytes() for p in output.rglob('*') if p.is_file()}\n+\n+    def test_refresh_migrates_old_profile_and_preserves_exact_zip_encoding(self):\n+        with tempfile.TemporaryDirectory() as temp:\n+            extraction, output, identities = fixture(Path(temp).resolve())\n+            self.old_edition(extraction, output, identities)\n+            current = json.loads((output / 'index.json').read_text())\n+            row = current['cars'][0]\n+            native = output / row['native_package']['file']\n+            members = catalog.package_members(CODE, native.read_bytes())\n+            buffer = io.BytesIO()\n+            with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_STORED) as archive:\n+                for name, data in members.items(): archive.writestr(name, data)\n+            native.write_bytes(buffer.getvalue())\n+            row['native_package'].update(bytes=native.stat().st_size, sha256=catalog.sha(native.read_bytes()))\n+            (output / 'index.json').write_text(json.dumps(current))\n+            old = self.snapshot(output)\n+            with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'):\n+                with self.assertRaisesRegex(ValueError, 'index differs'):\n+                    export(extraction, output, identities)\n+            self.assertEqual(self.snapshot(output), old)\n+            self.assertEqual(self.refreshed(extraction, output, identities), 1)\n+            updated = json.loads((output / 'index.json').read_text())['cars'][0]\n+            self.assertEqual(updated['source_profile'], 'mcla-xbox360-static-stock-v2')\n+            self.assertEqual(read_glb((output / updated['file']).read_bytes())[0]['extras']['source_profile'], updated['source_profile'])\n+            self.assertEqual(native.read_bytes(), old[row['native_package']['file']])\n+            self.assertNotEqual((output / row['file']).read_bytes(), old[row['file']])\n+\n+    def test_refresh_corrupt_old_files_and_unsupported_metadata_fail_before_write(self):\n+        for mutation in ('glb', 'native', 'profile', 'source', 'limits', 'extra', 'native-rehashed'):\n+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temp:\n+                extraction, output, identities = fixture(Path(temp).resolve())\n+                self.old_edition(extraction, output, identities)\n+                current = json.loads((output / 'index.json').read_text()); row = current['cars'][0]\n+                if mutation in ('glb', 'native'):\n+                    name = row['file'] if mutation == 'glb' else row['native_package']['file']\n+                    (output / name).write_bytes(b'corrupt old bytes')\n+                elif mutation == 'profile': row['source_profile'] = 'unrecognized'\n+                elif mutation == 'source': current['source'] = {'sha256': 'b' * 64}\n+                elif mutation == 'limits': current['claim_limits'] = ['unsupported promise']\n+                elif mutation == 'extra': (output / 'unexpected.txt').write_text('user file')\n+                else:\n+                    native = output / row['native_package']['file']\n+                    members = catalog.package_members(CODE, native.read_bytes())\n+                    file = 'resources/vehicle/' + CODE + '/body_lod_0.xrsc'\n+                    members[file] = b'other data'\n+                    manifest = json.loads(members['manifest.json'])\n+                    manifest['files'][0].update(bytes=len(members[file]), sha256=catalog.sha(members[file]))\n+                    members['manifest.json'] = json.dumps(manifest).encode()\n+                    buffer = io.BytesIO()\n+                    with zipfile.ZipFile(buffer, 'w') as archive:\n+                        for name, data in members.items(): archive.writestr(name, data)\n+                    native.write_bytes(buffer.getvalue())\n+                    row['native_package'].update(bytes=native.stat().st_size, sha256=catalog.sha(native.read_bytes()))\n+                (output / 'index.json').write_text(json.dumps(current))\n+                old = self.snapshot(output)\n+                reason = {'glb': 'hash/size', 'native': 'hash/size', 'profile': 'Unsupported',\n+                          'source': 'identity/coverage', 'limits': 'claim limits', 'extra': 'file coverage',\n+                          'native-rehashed': 'differs from extraction'}[mutation]\n+                with self.assertRaisesRegex(ValueError, reason): self.refreshed(extraction, output, identities)\n+                self.assertEqual(self.snapshot(output), old)\n+\n+    def test_refresh_missing_native_requires_old_pin_and_restores_matching_zip(self):\n+        for corrupt_pin in (False, True):\n+            with self.subTest(corrupt_pin=corrupt_pin), tempfile.TemporaryDirectory() as temp:\n+                extraction, output, identities = fixture(Path(temp).resolve())\n+                self.old_edition(extraction, output, identities)\n+                current = json.loads((output / 'index.json').read_text()); row = current['cars'][0]\n+                native = output / row['native_package']['file']; original = native.read_bytes(); native.unlink()\n+                if corrupt_pin:\n+                    row['native_package']['sha256'] = 'b' * 64\n+                    (output / 'index.json').write_text(json.dumps(current))\n+                    old = self.snapshot(output)\n+                    with self.assertRaisesRegex(ValueError, 'differs from its pin'):\n+                        self.refreshed(extraction, output, identities)\n+                    self.assertEqual(self.snapshot(output), old)\n+                else:\n+                    self.refreshed(extraction, output, identities)\n+                    self.assertEqual(native.read_bytes(), original)\n+\n+    def test_refresh_symlinks_fail_without_modifying_their_targets(self):\n+        for target in ('directory', 'model', 'native', 'index'):\n+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp:\n+                root = Path(temp).resolve()\n+                extraction, output, identities = fixture(root)\n+                self.old_edition(extraction, output, identities)\n+                before = self.snapshot(output)\n+                if target == 'directory':\n+                    saved = root / 'saved'; output.rename(saved); output.symlink_to(saved, target_is_directory=True)\n+                    link = output\n+                else:\n+                    name = {'model': 'previews/' + CODE + '.glb', 'native': 'native/' + CODE + '.zip', 'index': 'index.json'}[target]\n+                    link = output / name; saved = root / 'saved'; link.rename(saved); link.symlink_to(saved)\n+                saved_bytes = saved.read_bytes() if saved.is_file() else None\n+                with self.assertRaisesRegex(ValueError, 'symlinks'): self.refreshed(extraction, output, identities)\n+                self.assertTrue(link.is_symlink())\n+                if saved_bytes is not None: self.assertEqual(saved.read_bytes(), saved_bytes)\n+                else: self.assertEqual(self.snapshot(saved), before)\n+\n+    def test_source_refresh_keeps_edited_dealership_model_and_metadata(self):\n+        from import_mcla_dealership import import_cars\n+        with tempfile.TemporaryDirectory() as temp:\n+            root = Path(temp).resolve()\n+            extraction, output, identities = fixture(root)\n+            self.old_edition(extraction, output, identities)\n+            dealer = root / 'dealer'; dealer.mkdir(); (dealer / 'models').mkdir()\n+            (dealer / 'catalog.json').write_text(json.dumps([{'code': 'EXISTING'}]))\n+            (dealer / 'origins.json').write_text(json.dumps({'schema': 1, 'cars': []}))\n+            with patch.object(catalog, 'PROFILE', catalog.PREVIOUS_PROFILE), patch.object(catalog, 'LIMITS', catalog.PREVIOUS_LIMITS):\n+                import_cars(output, dealer)\n+            model = dealer / 'models' / ('MCLA_' + CODE.upper() + '.glb')\n+            model.write_bytes(b'edited dealership model')\n+            metadata = json.loads((dealer / 'catalog.json').read_text())\n+            metadata[-1]['name'] = 'User name'\n+            (dealer / 'catalog.json').write_text(json.dumps(metadata))\n+            old = self.snapshot(dealer)\n+            self.refreshed(extraction, output, identities)\n+            with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'):\n+                self.assertEqual(import_cars(output, dealer, upgrade_unedited=True), 0)\n+            self.assertEqual(self.snapshot(dealer), old)\n+\n+    def test_refresh_rolls_back_directory_on_failed_install_or_final_verification(self):\n+        for failure in ('install', 'verify'):\n+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as temp:\n+                extraction, output, identities = fixture(Path(temp).resolve())\n+                self.old_edition(extraction, output, identities)\n+                old = self.snapshot(output)\n+                rename = Path.rename\n+                verify = catalog.verify_published\n+                def failed_rename(path, destination):\n+                    if failure == 'install' and path.name == 'source' and Path(destination) == output:\n+                        raise OSError('injected install failure')\n+                    return rename(path, destination)\n+                def failed_verify(extraction, destination, *args, **kwargs):\n+                    if failure == 'verify' and destination == output:\n+                        raise ValueError('injected final verification failure')\n+                    return verify(extraction, destination, *args, **kwargs)\n+                with patch.object(Path, 'rename', failed_rename), patch.object(catalog, 'verify_published', failed_verify):\n+                    with self.assertRaisesRegex((OSError, ValueError), 'injected'):\n+                        self.refreshed(extraction, output, identities)\n+                self.assertEqual(self.snapshot(output), old)\n+                self.assertFalse(list(output.parent.glob('.mcla-refresh-*')))\n+\n     def test_availability_cli_never_skips_malformed_metadata(self):\n         with tempfile.TemporaryDirectory() as temp:\n             root = Path(temp).resolve()\n"
+      }
+    ],
+    "claims": [
+      "test_import_mcla_catalog passed16 guarded refresh,corruption and rollback tests.",
+      "Final preservation checker verified original native ZIP metadata/bytes for106 models, unchanged editable catalog bytes and unchanged other-game catalog rows/GLBs."
+    ],
+    "evidence": [
+      {
+        "id": "test_complete_log",
+        "text": "test_availability_cli_never_skips_malformed_metadata (__main__.Tests.test_availability_cli_never_skips_malformed_metadata) ... ok\ntest_availability_distinguishes_missing_disc_and_partial_extraction (__main__.Tests.test_availability_distinguishes_missing_disc_and_partial_extraction) ... ok\ntest_changed_native_prevents_publication (__main__.Tests.test_changed_native_prevents_publication) ... ok\ntest_changed_outputs_never_overwritten_and_unsafe_destination (__main__.Tests.test_changed_outputs_never_overwritten_and_unsafe_destination) ... ok\ntest_duplicate_extraction_symlink_index_and_zip_mode (__main__.Tests.test_duplicate_extraction_symlink_index_and_zip_mode) ... ok\ntest_export_repeat_and_rederive (__main__.Tests.test_export_repeat_and_rederive) ... ok\ntest_missing_zip_restored_and_catalog_permits_local_absence (__main__.Tests.test_missing_zip_restored_and_catalog_permits_local_absence) ... ok\ntest_paths_duplicates_corrupt_zip_and_manifest (__main__.Tests.test_paths_duplicates_corrupt_zip_and_manifest) ... ok\ntest_refresh_corrupt_old_files_and_unsupported_metadata_fail_before_write (__main__.Tests.test_refresh_corrupt_old_files_and_unsupported_metadata_fail_before_write) ... ok\ntest_refresh_migrates_old_profile_and_preserves_exact_zip_encoding (__main__.Tests.test_refresh_migrates_old_profile_and_preserves_exact_zip_encoding) ... ok\ntest_refresh_missing_native_requires_old_pin_and_restores_matching_zip (__main__.Tests.test_refresh_missing_native_requires_old_pin_and_restores_matching_zip) ... ok\ntest_refresh_rolls_back_directory_on_failed_install_or_final_verification (__main__.Tests.test_refresh_rolls_back_directory_on_failed_install_or_final_verification) ... ok\ntest_refresh_symlinks_fail_without_modifying_their_targets (__main__.Tests.test_refresh_symlinks_fail_without_modifying_their_targets) ... ok\ntest_rehashed_wrong_identity_and_triangle_declaration (__main__.Tests.test_rehashed_wrong_identity_and_triangle_declaration) ... ok\ntest_restore_and_display_identity_fail_before_write (__main__.Tests.test_restore_and_display_identity_fail_before_write) ... ok\ntest_source_refresh_keeps_edited_dealership_model_and_metadata (__main__.Tests.test_source_refresh_keeps_edited_dealership_model_and_metadata) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.874s\n\nOK\n"
+      },
+      {
+        "id": "preservation_script",
+        "text": "from pathlib import Path\nimport subprocess, json, hashlib\nR=Path.cwd(); G='midnight-club-los-angeles'\ndef old(path):return subprocess.check_output(['git','show','1ffb261cf0d5a5c97a0dcb7a2567b143bd8f87a6:'+path])\ndef doc(path):return json.loads((R/path).read_text())\ndef digest(b):return hashlib.sha256(b).hexdigest()\nsrcpath='dealership/public/'+G+'/index.json'; o=json.loads(old(srcpath)); n=doc(srcpath); om={r['code']:r for r in o['cars']}; nm={r['code']:r for r in n['cars']}\nassert set(om)==set(nm) and len(nm)==106\nassert all(om[c]['native_package']==nm[c]['native_package'] and om[c]['name_source']==nm[c]['name_source'] and om[c]['display_name']==nm[c]['display_name'] for c in nm)\nassert all(nm[c]['source_profile']=='mcla-xbox360-static-stock-v2' for c in nm)\nrows=[]\nfor c,r in nm.items():\n s=(R/'dealership/public'/G/r['file']).read_bytes(); d=(R/'dealership/dealership/models'/('MCLA_'+c.upper()+'.glb')).read_bytes(); z=(R/'dealership/public'/G/r['native_package']['file']).read_bytes()\n assert digest(s)==r['sha256'] and d==s and digest(z)==r['native_package']['sha256']; assert om[c]['sha256']!=r['sha256']\n rows.append({'code':c,'before_sha256':om[c]['sha256'],'after_sha256':digest(s),'native_zip_sha256':digest(z),'source_equals_dealership':True})\ncatalog='dealership/dealership/catalog.json'; assert (R/catalog).read_bytes()==old(catalog)\nfor p, key in [('dealership/public/models.json','cars'),('dealership/public/dealership/cars.json',None),('dealership/dealership/origins.json','cars')]:\n a=json.loads(old(p)); b=doc(p); a=a[key] if key else a; b=b[key] if key else b\n def other(x):return x.get('game')!=G and not x.get('code','').startswith('MCLA_') and not x.get('id','').startswith(G+'/')\n assert [x for x in a if other(x)]==[x for x in b if other(x)],p\nchanged=subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()\nforeign=[p for p in changed if p.endswith('.glb') and G not in p and '/MCLA_' not in p]; assert not foreign,foreign\nresult={'schema':1,'models':106,'new_profile':'mcla-xbox360-static-stock-v2','triangles':sum(r['records'][0]['triangles'] for r in nm.values()),'source_index_sha256':digest((R/srcpath).read_bytes()),'dealership_catalog_sha256':digest((R/'dealership/public/dealership/cars.json').read_bytes()),'native_zip_metadata_and_bytes_preserved':True,'editable_catalog_bytes_preserved':True,'other_game_rows_preserved':True,'other_game_glbs_changed':foreign,'records':rows,'claim_limits':['Hash and metadata preservation is not a visual fidelity check.','Both published sets are exact copies for this upgrade; future dealership edits remain independent.']}\n(R/'.scratch/mcla-assembly-fix/preservation-cleanup-final.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(json.dumps({k:v for k,v in result.items() if k!='records'}))\n"
+      },
+      {
+        "id": "preservation_stdout",
+        "text": "{\"schema\": 1, \"models\": 106, \"new_profile\": \"mcla-xbox360-static-stock-v2\", \"triangles\": 6934246, \"source_index_sha256\": \"194510d18e03785aa760c0f50a19c86831fc963a2c456be4a59645d8dd8eeef2\", \"dealership_catalog_sha256\": \"290afc4a9eb52f151cf3eb390f9c760e0ae83e4ae75e0edf980a2bf245528a27\", \"native_zip_metadata_and_bytes_preserved\": true, \"editable_catalog_bytes_preserved\": true, \"other_game_rows_preserved\": true, \"other_game_glbs_changed\": [], \"claim_limits\": [\"Hash and metadata preservation is not a visual fidelity check.\", \"Both published sets are exact copies for this upgrade; future dealership edits remain independent.\"]}\n"
+      },
+      {
+        "id": "preservation_summary",
+        "text": "{\n  \"schema\": 1,\n  \"models\": 106,\n  \"new_profile\": \"mcla-xbox360-static-stock-v2\",\n  \"triangles\": 6934246,\n  \"source_index_sha256\": \"194510d18e03785aa760c0f50a19c86831fc963a2c456be4a59645d8dd8eeef2\",\n  \"dealership_catalog_sha256\": \"290afc4a9eb52f151cf3eb390f9c760e0ae83e4ae75e0edf980a2bf245528a27\",\n  \"native_zip_metadata_and_bytes_preserved\": true,\n  \"editable_catalog_bytes_preserved\": true,\n  \"other_game_rows_preserved\": true,\n  \"other_game_glbs_changed\": [],\n  \"claim_limits\": [\n    \"Hash and metadata preservation is not a visual fidelity check.\",\n    \"Both published sets are exact copies for this upgrade; future dealership edits remain independent.\"\n  ]\n}"
+      },
+      {
+        "id": "source_refresh_stdout",
+        "text": "EXPORTED 106 MCLA previews and native packages\n"
+      },
+      {
+        "id": "dealer_upgrade_stdout",
+        "text": "Imported 1 independent editable Midnight Club: Los Angeles models; existing dealership entries preserved\n"
+      }
+    ],
+    "tests": "{\n  \"scope_facts\": \"SCOPE FACTS (computed by tools/review_payload.py from the baseline and working tree)\\nMODIFIED tools/import_mcla_catalog.py <- imported by: tools/build_model_catalog.py, tools/import_mcla_dealership.py, tools/test_import_mcla_catalog.py, tools/test_import_mcla_dealership.py\\nMODIFIED tools/test_import_mcla_catalog.py <- imported by: tools/test_import_mcla_dealership.py\",\n  \"executed_manifest\": {\n    \"schema\": 1,\n    \"exit_code\": 0,\n    \"checks\": [\n      {\n        \"name\": \"ruff\",\n        \"command\": [\n          \"ruff\",\n          \"check\",\n          \"tools\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"ruff.log\",\n        \"elapsed_seconds\": 0.033\n      },\n      {\n        \"name\": \"test_viewer_scenes\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_scenes.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_scenes.log\",\n        \"elapsed_seconds\": 0.124\n      },\n      {\n        \"name\": \"test_viewer_materials\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_materials.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_materials.log\",\n        \"elapsed_seconds\": 0.049\n      },\n      {\n        \"name\": \"test_model_load\",\n        \"command\": [\n          \"node\",\n          \"tools/test_model_load.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_load.log\",\n        \"elapsed_seconds\": 0.037\n      },\n      {\n        \"name\": \"test_viewer_loading\",\n        \"command\": [\n          \"node\",\n          \"tools/test_viewer_loading.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_viewer_loading.log\",\n        \"elapsed_seconds\": 0.094\n      },\n      {\n        \"name\": \"test_mcla_preview_ui\",\n        \"command\": [\n          \"node\",\n          \"tools/test_mcla_preview_ui.mjs\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_mcla_preview_ui.log\",\n        \"elapsed_seconds\": 2.219\n      },\n      {\n        \"name\": \"test_model_catalog\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_model_catalog.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_model_catalog.log\",\n        \"elapsed_seconds\": 0.081\n      },\n      {\n        \"name\": \"test_run_checks\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_run_checks.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_run_checks.log\",\n        \"elapsed_seconds\": 0.096\n      },\n      {\n        \"name\": \"test_mcla_preview\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_mcla_preview.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_mcla_preview.log\",\n        \"elapsed_seconds\": 1.298\n      },\n      {\n        \"name\": \"test_mcla_preview_geometry\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_mcla_preview_geometry.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_mcla_preview_geometry.log\",\n        \"elapsed_seconds\": 0.19\n      },\n      {\n        \"name\": \"test_import_mcla_catalog\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_mcla_catalog.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_mcla_catalog.log\",\n        \"elapsed_seconds\": 1.0\n      },\n      {\n        \"name\": \"test_import_mcla_dealership\",\n        \"command\": [\n          \"python3\",\n          \"tools/test_import_mcla_dealership.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"test_import_mcla_dealership.log\",\n        \"elapsed_seconds\": 0.111\n      },\n      {\n        \"name\": \"dealership_freshness\",\n        \"command\": [\n          \"python3\",\n          \"tools/build_dealership.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"dealership_freshness.log\",\n        \"elapsed_seconds\": 74.159\n      },\n      {\n        \"name\": \"line_coverage\",\n        \"command\": [\n          \"python3\",\n          \"tools/line_coverage.py\",\n          \"--minimum\",\n          \"95\",\n          \"--modules\",\n          \"tools/aes_decrypt.py\",\n          \"tools/xdvdfs.py\",\n          \"tools/xex2.py\",\n          \"tools/mcla_rpf.py\",\n          \"tools/extract_mcla_cars.py\",\n          \"tools/review_payload.py\",\n          \"tools/mcla_lzx.py\",\n          \"tools/mcla_resource.py\",\n          \"tools/mcla_model.py\",\n          \"tools/mcla_texture.py\",\n          \"tools/mcla_tuning.py\",\n          \"tools/verify_mcla_resources.py\",\n          \"tools/verify_mcla_decoding.py\",\n          \"tools/mcla_preview_geometry.py\",\n          \"--tests\",\n          \"tools/test_aes_decrypt.py\",\n          \"tools/test_xdvdfs.py\",\n          \"tools/test_xex2.py\",\n          \"tools/test_mcla_rpf.py\",\n          \"tools/test_extract_mcla_cars.py\",\n          \"tools/test_review_payload.py\",\n          \"tools/test_mcla_lzx.py\",\n          \"tools/test_mcla_resource.py\",\n          \"tools/test_mcla_model.py\",\n          \"tools/test_mcla_texture.py\",\n          \"tools/test_mcla_tuning.py\",\n          \"tools/test_verify_mcla_resources.py\",\n          \"tools/test_verify_mcla_decoding.py\",\n          \"tools/test_mcla_preview_geometry.py\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"line_coverage.log\",\n        \"elapsed_seconds\": 16.31\n      },\n      {\n        \"name\": \"mcla_catalog\",\n        \"command\": [\n          \"python3\",\n          \"tools/import_mcla_catalog.py\",\n          \"--check\"\n        ],\n        \"status\": \"pass\",\n        \"exit_code\": 0,\n        \"log\": \"mcla_catalog.log\",\n        \"elapsed_seconds\": 98.685\n      }\n    ],\n    \"claim_limits\": [\n      \"Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.\"\n    ]\n  },\n  \"in_scope_full_test_logs\": {\n    \"test_import_mcla_catalog\": \"test_availability_cli_never_skips_malformed_metadata (__main__.Tests.test_availability_cli_never_skips_malformed_metadata) ... ok\\ntest_availability_distinguishes_missing_disc_and_partial_extraction (__main__.Tests.test_availability_distinguishes_missing_disc_and_partial_extraction) ... ok\\ntest_changed_native_prevents_publication (__main__.Tests.test_changed_native_prevents_publication) ... ok\\ntest_changed_outputs_never_overwritten_and_unsafe_destination (__main__.Tests.test_changed_outputs_never_overwritten_and_unsafe_destination) ... ok\\ntest_duplicate_extraction_symlink_index_and_zip_mode (__main__.Tests.test_duplicate_extraction_symlink_index_and_zip_mode) ... ok\\ntest_export_repeat_and_rederive (__main__.Tests.test_export_repeat_and_rederive) ... ok\\ntest_missing_zip_restored_and_catalog_permits_local_absence (__main__.Tests.test_missing_zip_restored_and_catalog_permits_local_absence) ... ok\\ntest_paths_duplicates_corrupt_zip_and_manifest (__main__.Tests.test_paths_duplicates_corrupt_zip_and_manifest) ... ok\\ntest_refresh_corrupt_old_files_and_unsupported_metadata_fail_before_write (__main__.Tests.test_refresh_corrupt_old_files_and_unsupported_metadata_fail_before_write) ... ok\\ntest_refresh_migrates_old_profile_and_preserves_exact_zip_encoding (__main__.Tests.test_refresh_migrates_old_profile_and_preserves_exact_zip_encoding) ... ok\\ntest_refresh_missing_native_requires_old_pin_and_restores_matching_zip (__main__.Tests.test_refresh_missing_native_requires_old_pin_and_restores_matching_zip) ... ok\\ntest_refresh_rolls_back_directory_on_failed_install_or_final_verification (__main__.Tests.test_refresh_rolls_back_directory_on_failed_install_or_final_verification) ... ok\\ntest_refresh_symlinks_fail_without_modifying_their_targets (__main__.Tests.test_refresh_symlinks_fail_without_modifying_their_targets) ... ok\\ntest_rehashed_wrong_identity_and_triangle_declaration (__main__.Tests.test_rehashed_wrong_identity_and_triangle_declaration) ... ok\\ntest_restore_and_display_identity_fail_before_write (__main__.Tests.test_restore_and_display_identity_fail_before_write) ... ok\\ntest_source_refresh_keeps_edited_dealership_model_and_metadata (__main__.Tests.test_source_refresh_keeps_edited_dealership_model_and_metadata) ... ok\\n\\n----------------------------------------------------------------------\\nRan 16 tests in 0.874s\\n\\nOK\\n\",\n    \"mcla_catalog\": \"CHECKED 106 MCLA previews and native packages\\n\"\n  }\n}"
+  },
+  "result": {
+    "tool": "jev_gate",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "truncated": false,
+    "action": "escalate",
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "review_escalated",
+      "claim_confidence_below_auto_accept"
+    ],
+    "review": {
+      "mode": "per-file",
+      "action": "escalate",
+      "composite": 0.7385,
+      "safe_to_apply": 0.46,
+      "reason_codes": [
+        "confidence_below_review",
+        "safe_to_apply_below_review"
+      ],
+      "limiting": [
+        {
+          "file": "tools/import_mcla_catalog.py",
+          "rubrics": [
+            "test_gap"
+          ]
+        },
+        {
+          "file": "tools/test_import_mcla_catalog.py",
+          "rubrics": [
+            "blast_radius"
+          ]
+        }
+      ],
+      "weights": {
+        "correctness": 0.4,
+        "spec_match": 0.3,
+        "test_gap": 0.15,
+        "blast_radius": 0.15
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5,
+        "composite_floor": 0.7
+      },
+      "files": [
+        {
+          "path": "tools/import_mcla_catalog.py",
+          "safe_to_apply": 0.46,
+          "scores": {
+            "correctness": {
+              "score": 1.59,
+              "confidence": 0.37,
+              "probabilities": {
+                "0": 0.07,
+                "1": 0.28,
+                "2": 0.65
+              }
+            },
+            "spec_match": {
+              "score": 1.68,
+              "confidence": 0.5,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.31,
+                "2": 0.68
+              }
+            },
+            "test_gap": {
+              "score": 0.8,
+              "confidence": 0.14,
+              "probabilities": {
+                "0": 0.39,
+                "1": 0.43,
+                "2": 0.18
+              }
+            },
+            "blast_radius": {
+              "score": 1.84,
+              "confidence": 0.76,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.14,
+                "2": 0.85
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.672,
+          "reason_codes": [
+            "confidence_below_review",
+            "safe_to_apply_below_review"
+          ],
+          "limiting_rubrics": [
+            "test_gap"
+          ]
+        },
+        {
+          "path": "tools/test_import_mcla_catalog.py",
+          "safe_to_apply": 0.62,
+          "scores": {
+            "correctness": {
+              "score": 1.73,
+              "confidence": 0.59,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.19,
+                "2": 0.77
+              }
+            },
+            "spec_match": {
+              "score": 1.63,
+              "confidence": 0.44,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.29,
+                "2": 0.67
+              }
+            },
+            "test_gap": {
+              "score": 0.54,
+              "confidence": 0.19,
+              "probabilities": {
+                "0": 0.54,
+                "1": 0.38,
+                "2": 0.08
+              }
+            },
+            "blast_radius": {
+              "score": 0.6,
+              "confidence": 0.08,
+              "probabilities": {
+                "0": 0.52,
+                "1": 0.35,
+                "2": 0.13
+              }
+            }
+          },
+          "weights": {
+            "correctness": 0.4,
+            "spec_match": 0.3,
+            "test_gap": 0.15,
+            "blast_radius": 0.15
+          },
+          "thresholds": {
+            "auto_accept": 0.8,
+            "review_at": 0.5,
+            "composite_floor": 0.7
+          },
+          "action": "escalate",
+          "composite": 0.805,
+          "reason_codes": [
+            "confidence_below_review"
+          ],
+          "limiting_rubrics": [
+            "blast_radius"
+          ]
+        }
+      ]
+    },
+    "verification": {
+      "action": "review",
+      "summary": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 1,
+        "invalid_response": 0
+      },
+      "thresholds": {
+        "auto_accept": 0.8,
+        "review_at": 0.5
+      },
+      "results": [
+        {
+          "claim": "test_import_mcla_catalog passed16 guarded refresh,corruption and rollback tests.",
+          "verdict": "verified",
+          "confidence": 0.8,
+          "probabilities": {
+            "verified": 0.87,
+            "contradicted": 0.04,
+            "unsupported": 0.09
+          },
+          "action": "auto"
+        },
+        {
+          "claim": "Final preservation checker verified original native ZIP metadata/bytes for106 models, unchanged editable catalog bytes and unchanged other-game catalog rows/GLBs.",
+          "verdict": "verified",
+          "confidence": 0.73,
+          "probabilities": {
+            "verified": 0.82,
+            "contradicted": 0.1,
+            "unsupported": 0.08
+          },
+          "action": "review"
+        }
+      ]
+    },
+    "usage": {
+      "input_tokens": 11092,
+      "output_tokens": 265
+    }
+  }
+}

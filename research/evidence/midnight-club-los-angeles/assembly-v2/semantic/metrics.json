@@ -1,0 +1,74 @@
+{
+  "metrics": {
+    "grounded": {
+      "attempted": 28,
+      "valid": 28,
+      "errors": 0,
+      "top_correct": 22,
+      "top_accuracy": 0.7857142857142857,
+      "correct_action": 22,
+      "action_accuracy": 0.7857142857142857,
+      "applied": 6,
+      "wrongly_applied": 1,
+      "usage": {
+        "input_tokens": 73432,
+        "output_tokens": 6878
+      },
+      "provider_cost": 0.003084144,
+      "known_partial_cost": 0.003084144,
+      "cost_receipts": 28,
+      "latency_seconds": {
+        "total": 6.216195246903226,
+        "mean": 0.22200697310368664,
+        "min": 0.17494658299256116,
+        "max": 0.3435684999858495
+      }
+    },
+    "stateful": {
+      "attempted": 28,
+      "valid": 28,
+      "errors": 0,
+      "top_correct": 14,
+      "top_accuracy": 0.5,
+      "correct_action": 24,
+      "action_accuracy": 0.8571428571428571,
+      "applied": 8,
+      "wrongly_applied": 1,
+      "usage": {
+        "input_tokens": 98978,
+        "output_tokens": 8327
+      },
+      "provider_cost": 0.004157076,
+      "known_partial_cost": 0.004157076,
+      "cost_receipts": 28,
+      "latency_seconds": {
+        "total": 7.62228416398284,
+        "mean": 0.2722244344279586,
+        "min": 0.1767952500085812,
+        "max": 0.45765250001568347
+      }
+    }
+  },
+  "elapsed_seconds": 15.244448667013785,
+  "observed_failure": "Both model-only wordings (phrases=False) incorrectly choose MCLA on dealership for explicit request MCLA in the source library. The production deterministic other_catalog guard was independently exercised and withheld the query with review/filters=None. This is a model limitation retained from the experiment, not a demonstrated production catalog-crossing regression.",
+  "claim_limits": [
+    "Constructed labeled queries measure this sample, not general semantic accuracy.",
+    "Controlled missing-preview states alter metadata copies only, never source assets.",
+    "Provider errors do not count as valid classifications; absent cost is unknown, not zero.",
+    "Filter judgments do not prove decoding, retail identity or original rendering fidelity."
+  ],
+  "production_guard_result": {
+    "status": "review",
+    "filters": null,
+    "decided_by": "phrase",
+    "message": "These filters apply to the dealership catalog only. Open the source model inspector (recovered.html) for that library.",
+    "signals": {
+      "phrase": {
+        "other_catalog": true
+      }
+    },
+    "reason": null,
+    "catalog": "dealership",
+    "latency_seconds": 0.05188362498302013
+  }
+}
