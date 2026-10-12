@@ -9,6 +9,7 @@ from unittest.mock import patch
 import extract_mcla_cars
 from extract_mcla_cars import Named, Output, check_extraction, dictionary, owner, write_extraction
 from mcla_rpf import RSC5, Rpf3Archive, jenkins
+from test_mcla_lzx import Encoder, resource as rsc5_resource
 from test_mcla_rpf import rpf_fixture
 from test_xdvdfs import disc_fixture
 from test_xex2 import pe_image, xex_fixture
@@ -24,10 +25,23 @@ def resource(kind, label):
     return ('resource', kind, RSC5 + b'\0\0\0' + bytes([kind]) + label)
 
 
+def streaming_map():
+    """A type-19 resource whose only string field names hood0_lod_0; decoy_lod_0 is unreferenced text."""
+    virtual = bytearray(256)
+    virtual[8:16] = bytes.fromhex('50000040000b0010')
+    virtual[0x40:0x4C] = b'hood0_lod_0\0'
+    virtual[0x60:0x6C] = b'decoy_lod_0\0'
+    encoder = Encoder()
+    encoder.stored(bytes(virtual))
+    return ('resource', 19, rsc5_resource(encoder.body(), 256, kind=19))
+
+
 def tree(extra_vehicle=None):
     vehicles = {
         'vp_test_car_01': {'body_lod_0.xrsc': resource(63, b'car body'), 'vp_test_car_01.xct': resource(50, b'tune'),
-                           'unnamedpart.xrsc': resource(63, b'hidden part')},
+                           'unnamedpart.xrsc': resource(63, b'hidden part'), 'vp_test_car_01.xspm': streaming_map(),
+                           'hood0_lod_0.xrsc': resource(63, b'hood'), 'hood0_lod_2.xrsc': resource(63, b'far hood'),
+                           'body_lod_1.xrsc': resource(63, b'body lod 1'), 'decoy_lod_0.xrsc': resource(63, b'decoy')},
         'vp_test_car_01_dub': {'body_lod_0.xrsc': resource(63, b'dub body')},
         'vp_hidden_02': {'body_lod_0.xrsc': resource(63, b'hidden car')},
         'secretdir': {'body_lod_0.xrsc': resource(63, b'unknown car')},
@@ -62,7 +76,7 @@ class NameTests(unittest.TestCase):
         image = rpf_fixture({'vehicle': {'part.xrsc': resource(63, b'a'), 'other.xrsc': resource(63, b'b'),
                                          'notes.xml': ('loose', b'n'), 'twin.xrsc': resource(63, b'c')}})
         archive = Rpf3Archive(lambda o, s: image[o:o + s], len(image))
-        names = dictionary({'vehicle', 'part', 'notes.xml'}, {e['hash'] for e in archive.entries})
+        names, _ = dictionary([('disc-string', {'vehicle', 'part', 'notes.xml'})], {e['hash'] for e in archive.entries})
         by_hash = {e['hash']: e for e in archive.entries}
         names[jenkins('vehicle')].append('noise.xtd')        # a dotted collision for a directory
         names[jenkins('notes.xml')].append('noise.xrsc')     # a resource extension for a loose file
@@ -92,13 +106,22 @@ class NameTests(unittest.TestCase):
             out.put('../escape.bin', b'3')
 
     def test_embedded_codes_and_longest_owner(self):
-        names = dictionary({'mr_vp_nsn_gtr_08'}, {jenkins('vp_nsn_gtr_08'), jenkins('vp_nsn_gtr_08.xct')})
+        names, _ = dictionary([('disc-string', {'mr_vp_nsn_gtr_08'})], {jenkins('vp_nsn_gtr_08'), jenkins('vp_nsn_gtr_08.xct')})
         self.assertEqual(names, {jenkins('vp_nsn_gtr_08'): ['vp_nsn_gtr_08'],
                                  jenkins('vp_nsn_gtr_08.xct'): ['vp_nsn_gtr_08.xct']})
         codes = ['vp_lam_murcielago_06', 'vp_lam_murcielago_06_dub']
         self.assertEqual(owner('ui/sh_vp_lam_murcielago_06_dub.xtd', codes), 'vp_lam_murcielago_06_dub')
         self.assertEqual(owner('ui/sh_vp_lam_murcielago_06.xtd', codes), 'vp_lam_murcielago_06')
         self.assertIsNone(owner('ui/gh_vp_lam_murcielago_06a.xcc', codes))
+
+
+    def test_origins_precedence_and_lod_levels(self):
+        wanted = {jenkins(n) for n in ('body_lod_0.xrsc', 'body_lod_1.xrsc', 'hood0_lod_0.xrsc', 'hood0_lod_3.xrsc',
+                                       'hood0_lod_4.xrsc', 'hood0.xrsc')}
+        names, origins = dictionary([('disc-string', {'body_lod_0'}), ('streaming-map', {'hood0_lod_0', 'body_lod_0'})], wanted)
+        found = {n: origins[n] for v in names.values() for n in v}
+        self.assertEqual(found, {'body_lod_0.xrsc': 'disc-string', 'hood0_lod_0.xrsc': 'streaming-map',
+                                 'body_lod_1.xrsc': 'lod-variant', 'hood0_lod_3.xrsc': 'lod-variant'})
 
 
 class ExtractionTests(unittest.TestCase):
@@ -141,6 +164,15 @@ class ExtractionTests(unittest.TestCase):
         manifest = json.loads((self.root / 'cars/vp_test_car_01/manifest.json').read_text())
         sources = {row['source']['archive_path']: row['source'] for row in manifest['files']}
         self.assertEqual(sources['resources/vehicle/vp_test_car_01/' + unresolved]['name_source'], 'unresolved')
+        part = 'resources/vehicle/vp_test_car_01/'
+        self.assertEqual({k: sources[part + k].get('name_origin') for k in
+                          ('hood0_lod_0.xrsc', 'hood0_lod_2.xrsc', 'body_lod_0.xrsc', 'body_lod_1.xrsc', 'vp_test_car_01.xspm')},
+                         {'hood0_lod_0.xrsc': 'streaming-map', 'hood0_lod_2.xrsc': 'lod-variant', 'body_lod_0.xrsc': 'disc-string',
+                          'body_lod_1.xrsc': 'lod-variant', 'vp_test_car_01.xspm': 'disc-string'})
+        # Printable text that no string field references is not a name source.
+        self.assertIn(part + '0x%08x.xrsc' % jenkins('decoy_lod_0.xrsc'), sources)
+        self.assertEqual(index['names']['streaming_maps'], 1)
+        self.assertEqual(index['archives']['xarchive_cache.rpf']['resolved_by_origin']['lod-variant'], 2)
         self.assertTrue(sources['resources/vehicle/configs/vp_test_car_01.xcc']['compressed'])
         self.assertEqual(sources['resources/vehicle/vp_test_car_01/body_lod_0.xrsc']['resource_type'], 63)
         key_record = json.loads((self.root / 'cars/provenance/archive-key.json').read_text())

@@ -1,0 +1,5187 @@
+{
+ "schema": 1,
+ "tool": "tools/verify_mcla_decoding.py",
+ "decoders": [
+  "tools/mcla_lzx.py",
+  "tools/mcla_model.py",
+  "tools/mcla_texture.py",
+  "tools/mcla_tuning.py",
+  "tools/mcla_resource.py"
+ ],
+ "source": {
+  "index": "midnight-club-los-angeles/cars/index.json",
+  "disc_sha256": "877a9415f695d27f8170d04d3f18aab13e2b4de3cbabda824e04c9338b2914e9"
+ },
+ "totals": {
+  "model": {
+   "files": 9044,
+   "geometries": 49328,
+   "vertices": 18822108,
+   "triangles": 20525809,
+   "sha256": "3d8abd1555137277b61837c832e03981dc044e5b6a0c8d8e48a518b9f0f23840"
+  },
+  "streaming-map": {
+   "files": 106,
+   "strings": 8836,
+   "sha256": "04ad34fc848c2ccea4f5f6d2126922288df33b892748a6feb5703481c40aca8a"
+  },
+  "texture-dictionary": {
+   "files": 312,
+   "textures": 312,
+   "texels": 28506112,
+   "sha256": "2070454d12630e2a646602e918d34f9983ad018878ffffaeb2530e4f2d61a051"
+  },
+  "texture-pack": {
+   "files": 407,
+   "textures": 5868,
+   "texels": 229723904,
+   "sha256": "c67d910ce3256ac65e7f57bb601488424d79938b2c1c6d699ad163197e10d41a"
+  },
+  "tuning": {
+   "files": 106,
+   "sha256": "2a19893c4fea3abf4c5cbf5df6b6f50df1f1f465f042529f7b7e94885a53cdf5"
+  }
+ },
+ "tuning_layout": [
+  {
+   "slot": 0,
+   "class": "vehStuck",
+   "variant": null,
+   "bytes": 56,
+   "field_types": {
+    "float": 7,
+    "zero": 1
+   }
+  },
+  {
+   "slot": 1,
+   "class": "vehInput",
+   "variant": "base",
+   "bytes": 132,
+   "field_types": {
+    "float": 24,
+    "zero": 3
+   }
+  },
+  {
+   "slot": 2,
+   "class": "vehInput",
+   "variant": "mods",
+   "bytes": 132,
+   "field_types": {
+    "float": 24,
+    "zero": 3
+   }
+  },
+  {
+   "slot": 3,
+   "class": "vehDamage",
+   "variant": null,
+   "bytes": 68,
+   "field_types": {
+    "float": 11
+   }
+  },
+  {
+   "slot": 4,
+   "class": "vehModel",
+   "variant": null,
+   "bytes": 208,
+   "field_types": {
+    "float": 39,
+    "float/int": 1,
+    "int": 4,
+    "nan": 2
+   }
+  },
+  {
+   "slot": 5,
+   "class": "vehCamShake",
+   "variant": null,
+   "bytes": 52,
+   "field_types": {
+    "float": 7
+   }
+  },
+  {
+   "slot": 6,
+   "class": "vehSim",
+   "variant": "base",
+   "bytes": 352,
+   "field_types": {
+    "float": 47,
+    "int": 1,
+    "nan": 5,
+    "pointer": 15,
+    "zero": 14
+   }
+  },
+  {
+   "slot": 7,
+   "class": "vehSim",
+   "variant": "mods",
+   "bytes": 352,
+   "field_types": {
+    "float": 47,
+    "int": 1,
+    "nan": 5,
+    "pointer": 15,
+    "zero": 14
+   }
+  },
+  {
+   "slot": 8,
+   "class": "vehGyro",
+   "variant": "base",
+   "bytes": 244,
+   "field_types": {
+    "float": 53,
+    "zero": 2
+   }
+  },
+  {
+   "slot": 9,
+   "class": "vehGyro",
+   "variant": "mods",
+   "bytes": 244,
+   "field_types": {
+    "float": 53,
+    "zero": 2
+   }
+  },
+  {
+   "slot": 10,
+   "class": "vehAbility",
+   "variant": "base",
+   "bytes": 28,
+   "field_types": {
+    "int": 1
+   }
+  },
+  {
+   "slot": 11,
+   "class": "vehAbility",
+   "variant": "mods",
+   "bytes": 28,
+   "field_types": {
+    "int": 1
+   }
+  },
+  {
+   "slot": 12,
+   "class": null,
+   "variant": null,
+   "bytes": 8780,
+   "field_types": {
+    "float": 2195
+   }
+  },
+  {
+   "slot": 13,
+   "class": null,
+   "variant": null,
+   "bytes": 8780,
+   "field_types": {
+    "float": 2195
+   }
+  },
+  {
+   "slot": 14,
+   "class": "vehZone",
+   "variant": null,
+   "bytes": 112,
+   "field_types": {
+    "float": 16,
+    "nan": 1,
+    "zero": 5
+   }
+  },
+  {
+   "slot": 15,
+   "class": "vehGrip",
+   "variant": null,
+   "bytes": 112,
+   "field_types": {
+    "float": 7,
+    "nan": 1,
+    "zero": 14
+   }
+  },
+  {
+   "slot": 16,
+   "class": null,
+   "variant": null,
+   "bytes": 68,
+   "field_types": {
+    "float": 1,
+    "int": 7,
+    "pointer": 8,
+    "zero": 1
+   }
+  }
+ ],
+ "cars": [
+  {
+   "id": "va_350z_04",
+   "geometries": 62,
+   "vertices": 13166,
+   "triangles": 11584,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -0.9697,
+      -0.3271,
+      -2.1265
+     ],
+     [
+      0.9697,
+      1.3179,
+      2.1709
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 246656,
+   "shader_count": 16
+  },
+  {
+   "id": "va_cad_ctsv_04",
+   "geometries": 68,
+   "vertices": 11833,
+   "triangles": 10302,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -1.668,
+      -0.354,
+      -2.3569
+     ],
+     [
+      1.667,
+      1.4565,
+      2.4995
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 246656,
+   "shader_count": 17
+  },
+  {
+   "id": "va_cad_escalade_03",
+   "geometries": 62,
+   "vertices": 10825,
+   "triangles": 9503,
+   "models": 3,
+   "max_shader": 14,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.1333,
+      -0.4014,
+      -2.4292
+     ],
+     [
+      1.1372,
+      1.8945,
+      2.6265
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 15
+  },
+  {
+   "id": "va_cad_ext_03",
+   "geometries": 60,
+   "vertices": 12024,
+   "triangles": 10408,
+   "models": 3,
+   "max_shader": 14,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.1353,
+      -0.4014,
+      -2.5913
+     ],
+     [
+      1.1353,
+      1.9243,
+      3.0469
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 15
+  },
+  {
+   "id": "va_cad_limo_07",
+   "geometries": 71,
+   "vertices": 12277,
+   "triangles": 10702,
+   "models": 3,
+   "max_shader": 17,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -1.668,
+      -0.354,
+      -3.6069
+     ],
+     [
+      1.667,
+      1.4565,
+      3.7495
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 246656,
+   "shader_count": 18
+  },
+  {
+   "id": "va_cad_xlr_04",
+   "geometries": 67,
+   "vertices": 12647,
+   "triangles": 11056,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -0.9995,
+      -0.354,
+      -2.1963
+     ],
+     [
+      0.9995,
+      1.3022,
+      2.2939
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 17
+  },
+  {
+   "id": "va_chr_300c_05",
+   "geometries": 58,
+   "vertices": 13538,
+   "triangles": 11308,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.0312,
+      -0.3628,
+      -2.436
+     ],
+     [
+      1.0312,
+      1.481,
+      2.5942
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_chv_chevelle_70",
+   "geometries": 51,
+   "vertices": 10024,
+   "triangles": 10386,
+   "models": 3,
+   "max_shader": 14,
+   "body": {
+    "bones": 30,
+    "bounds": [
+     [
+      -0.9102,
+      -0.3218,
+      -2.3423
+     ],
+     [
+      0.9102,
+      1.353,
+      2.6406
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 15
+  },
+  {
+   "id": "va_chv_cobalt_05",
+   "geometries": 60,
+   "vertices": 12082,
+   "triangles": 10230,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -0.9653,
+      -0.3228,
+      -2.2627
+     ],
+     [
+      0.9653,
+      1.3965,
+      2.3193
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_chv_silverado_04",
+   "geometries": 53,
+   "vertices": 9977,
+   "triangles": 9595,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.0391,
+      -0.3804,
+      -2.6421
+     ],
+     [
+      1.0391,
+      1.7168,
+      2.8872
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_chv_z28_69",
+   "geometries": 56,
+   "vertices": 10015,
+   "triangles": 9841,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 32,
+    "bounds": [
+     [
+      -0.9448,
+      -0.3242,
+      -2.3638
+     ],
+     [
+      0.9448,
+      1.332,
+      2.5127
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_citybus_07",
+   "geometries": 63,
+   "vertices": 16642,
+   "triangles": 13146,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.5801,
+      -0.5547,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 17
+  },
+  {
+   "id": "va_citybus_711_1_07",
+   "geometries": 63,
+   "vertices": 16764,
+   "triangles": 13206,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.5801,
+      -0.5547,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 17
+  },
+  {
+   "id": "va_citybus_711_2_07",
+   "geometries": 63,
+   "vertices": 16764,
+   "triangles": 13206,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.5801,
+      -0.5547,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 17
+  },
+  {
+   "id": "va_citybus_jrdnw1_07",
+   "geometries": 63,
+   "vertices": 16317,
+   "triangles": 13160,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.5801,
+      -0.5547,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 17
+  },
+  {
+   "id": "va_citybus_tmob1_07",
+   "geometries": 63,
+   "vertices": 16764,
+   "triangles": 13206,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.5801,
+      -0.5547,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 17
+  },
+  {
+   "id": "va_citybus_tmob2_07",
+   "geometries": 63,
+   "vertices": 16764,
+   "triangles": 13206,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.5801,
+      -0.5547,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 17
+  },
+  {
+   "id": "va_dge_caravan_07",
+   "geometries": 60,
+   "vertices": 11902,
+   "triangles": 10765,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.0728,
+      -0.3252,
+      -2.3018
+     ],
+     [
+      1.0728,
+      1.6826,
+      2.3599
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_gmc_yukon_05",
+   "geometries": 69,
+   "vertices": 13865,
+   "triangles": 10525,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -1.1826,
+      -0.3867,
+      -2.4326
+     ],
+     [
+      1.1846,
+      1.9448,
+      2.6958
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 17
+  },
+  {
+   "id": "va_golfr32_04",
+   "geometries": 62,
+   "vertices": 12837,
+   "triangles": 11520,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -0.9521,
+      -0.3174,
+      -2.1328
+     ],
+     [
+      0.9521,
+      1.4072,
+      2.0688
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_mb_eclipse_04",
+   "geometries": 57,
+   "vertices": 10616,
+   "triangles": 9889,
+   "models": 3,
+   "max_shader": 14,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -0.8618,
+      -0.3252,
+      -2.2617
+     ],
+     [
+      0.8618,
+      1.2524,
+      2.1899
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 15
+  },
+  {
+   "id": "va_mbz_cl500_04",
+   "geometries": 60,
+   "vertices": 14698,
+   "triangles": 12996,
+   "models": 3,
+   "max_shader": 14,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -0.9487,
+      -0.3408,
+      -2.3853
+     ],
+     [
+      0.9487,
+      1.3896,
+      2.686
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 15
+  },
+  {
+   "id": "va_rstr_food_07",
+   "geometries": 51,
+   "vertices": 12449,
+   "triangles": 9941,
+   "models": 3,
+   "max_shader": 17,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.4917,
+      -0.4722,
+      -3.0103
+     ],
+     [
+      1.4917,
+      3.3823,
+      4.1929
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 26,
+   "texels": 232576,
+   "shader_count": 18
+  },
+  {
+   "id": "va_rstr_garbagetruck_07",
+   "geometries": 62,
+   "vertices": 15487,
+   "triangles": 11202,
+   "models": 3,
+   "max_shader": 17,
+   "body": {
+    "bones": 30,
+    "bounds": [
+     [
+      -1.4204,
+      -0.499,
+      -4.0044
+     ],
+     [
+      1.4185,
+      3.6147,
+      4.2808
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 18
+  },
+  {
+   "id": "va_rstr_servicevana_07",
+   "geometries": 68,
+   "vertices": 9747,
+   "triangles": 8993,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.2412,
+      -0.354,
+      -2.8203
+     ],
+     [
+      1.2412,
+      2.0371,
+      3.186
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 17
+  },
+  {
+   "id": "va_rstr_servicevanb_07",
+   "geometries": 64,
+   "vertices": 10586,
+   "triangles": 9168,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.2412,
+      -0.354,
+      -2.5952
+     ],
+     [
+      1.2412,
+      2.3564,
+      2.9404
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 17
+  },
+  {
+   "id": "va_rstr_shipping711_1_07",
+   "geometries": 51,
+   "vertices": 12480,
+   "triangles": 10028,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.4917,
+      -0.4722,
+      -3.0103
+     ],
+     [
+      1.4917,
+      2.939,
+      4.0596
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 147584,
+   "shader_count": 16
+  },
+  {
+   "id": "va_rstr_shippinga_07",
+   "geometries": 43,
+   "vertices": 12679,
+   "triangles": 10421,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 29,
+    "bounds": [
+     [
+      -1.4917,
+      -0.4727,
+      -3.0103
+     ],
+     [
+      1.4917,
+      2.9849,
+      4.0596
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "va_rstr_shippingb_07",
+   "geometries": 48,
+   "vertices": 12242,
+   "triangles": 9870,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.4917,
+      -0.4722,
+      -3.0103
+     ],
+     [
+      1.4917,
+      2.939,
+      4.0596
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 227456,
+   "shader_count": 17
+  },
+  {
+   "id": "va_rstr_soda_07",
+   "geometries": 48,
+   "vertices": 14790,
+   "triangles": 12236,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.4033,
+      -0.5459,
+      -3.9609
+     ],
+     [
+      1.4033,
+      2.9849,
+      4.5195
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 227456,
+   "shader_count": 17
+  },
+  {
+   "id": "va_rstr_sodapitbull1_07",
+   "geometries": 52,
+   "vertices": 14795,
+   "triangles": 12138,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.4033,
+      -0.5459,
+      -3.9609
+     ],
+     [
+      1.4033,
+      2.9849,
+      4.5195
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 227456,
+   "shader_count": 17
+  },
+  {
+   "id": "va_semitruck_00_cab",
+   "geometries": 61,
+   "vertices": 14599,
+   "triangles": 11017,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -1.2505,
+      -0.5835,
+      -3.5601
+     ],
+     [
+      1.251,
+      3.1714,
+      3.2822
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 164736,
+   "shader_count": 16
+  },
+  {
+   "id": "va_semitruck_00_flatbed",
+   "geometries": 38,
+   "vertices": 6526,
+   "triangles": 4646,
+   "models": 3,
+   "max_shader": 10,
+   "body": {
+    "bones": 19,
+    "bounds": [
+     [
+      -1.3208,
+      -0.584,
+      -6.2969
+     ],
+     [
+      1.3042,
+      1.9277,
+      6.415
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 185216,
+   "shader_count": 11
+  },
+  {
+   "id": "va_semitruck_00_flatloaded",
+   "geometries": 40,
+   "vertices": 7205,
+   "triangles": 5166,
+   "models": 3,
+   "max_shader": 10,
+   "body": {
+    "bones": 19,
+    "bounds": [
+     [
+      -1.3042,
+      -0.584,
+      -6.2969
+     ],
+     [
+      1.3042,
+      3.458,
+      6.4165
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 185216,
+   "shader_count": 11
+  },
+  {
+   "id": "va_semitruck_00_tanker",
+   "geometries": 41,
+   "vertices": 8350,
+   "triangles": 6068,
+   "models": 3,
+   "max_shader": 12,
+   "body": {
+    "bones": 19,
+    "bounds": [
+     [
+      -1.4507,
+      -0.584,
+      -6.062
+     ],
+     [
+      1.4507,
+      3.7349,
+      7.4004
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 185216,
+   "shader_count": 13
+  },
+  {
+   "id": "va_semitruck_00_trailer",
+   "geometries": 38,
+   "vertices": 7162,
+   "triangles": 5085,
+   "models": 3,
+   "max_shader": 11,
+   "body": {
+    "bones": 19,
+    "bounds": [
+     [
+      -1.3237,
+      -0.584,
+      -6.2363
+     ],
+     [
+      1.3237,
+      3.4927,
+      7.3354
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 185216,
+   "shader_count": 12
+  },
+  {
+   "id": "va_semitruck_dub1_00_trailer",
+   "geometries": 38,
+   "vertices": 7068,
+   "triangles": 5071,
+   "models": 3,
+   "max_shader": 11,
+   "body": {
+    "bones": 19,
+    "bounds": [
+     [
+      -1.3237,
+      -0.584,
+      -6.2363
+     ],
+     [
+      1.3237,
+      3.4927,
+      7.3354
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 471936,
+   "shader_count": 12
+  },
+  {
+   "id": "va_taxi_96",
+   "geometries": 59,
+   "vertices": 9157,
+   "triangles": 8760,
+   "models": 3,
+   "max_shader": 17,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.0303,
+      -0.3369,
+      -2.54
+     ],
+     [
+      1.0303,
+      1.4614,
+      2.8716
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 24,
+   "texels": 227456,
+   "shader_count": 18
+  },
+  {
+   "id": "va_taxi_rust1_96",
+   "geometries": 57,
+   "vertices": 9321,
+   "triangles": 9096,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.0303,
+      -0.3369,
+      -2.54
+     ],
+     [
+      1.0303,
+      1.7656,
+      2.8716
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 17
+  },
+  {
+   "id": "va_taxi_zaxbys1_96",
+   "geometries": 57,
+   "vertices": 9321,
+   "triangles": 9096,
+   "models": 3,
+   "max_shader": 16,
+   "body": {
+    "bones": 27,
+    "bounds": [
+     [
+      -1.0303,
+      -0.3369,
+      -2.54
+     ],
+     [
+      1.0303,
+      1.7656,
+      2.8716
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 17
+  },
+  {
+   "id": "va_vw_jetta_03",
+   "geometries": 56,
+   "vertices": 13145,
+   "triangles": 11876,
+   "models": 3,
+   "max_shader": 15,
+   "body": {
+    "bones": 31,
+    "bounds": [
+     [
+      -0.9521,
+      -0.3159,
+      -2.1299
+     ],
+     [
+      0.9521,
+      1.4458,
+      2.2378
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 0,
+   "textures": 22,
+   "texels": 226176,
+   "shader_count": 16
+  },
+  {
+   "id": "vp_am_vantage_07",
+   "textures": 79,
+   "texels": 3604736,
+   "geometries": 799,
+   "vertices": 267093,
+   "triangles": 289864,
+   "models": 125,
+   "max_shader": 51,
+   "body": {
+    "bones": 98,
+    "bounds": [
+     [
+      -0.9263,
+      -0.3525,
+      -2.1338
+     ],
+     [
+      0.9263,
+      0.9585,
+      2.1431
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 128,
+   "shader_count": 52
+  },
+  {
+   "id": "vp_aud_r8_08",
+   "textures": 78,
+   "texels": 3600640,
+   "geometries": 671,
+   "vertices": 279893,
+   "triangles": 307291,
+   "models": 126,
+   "max_shader": 44,
+   "body": {
+    "bones": 78,
+    "bounds": [
+     [
+      -0.9307,
+      -0.2954,
+      -1.688
+     ],
+     [
+      0.9307,
+      1.2568,
+      1.9126
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 127,
+   "shader_count": 45
+  },
+  {
+   "id": "vp_aud_rs4_07",
+   "textures": 87,
+   "texels": 3942976,
+   "geometries": 1035,
+   "vertices": 368579,
+   "triangles": 366025,
+   "models": 178,
+   "max_shader": 51,
+   "body": {
+    "bones": 61,
+    "bounds": [
+     [
+      -0.71,
+      -0.0532,
+      -2.1475
+     ],
+     [
+      0.71,
+      0.9409,
+      1.4307
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 174,
+   "shader_count": 52
+  },
+  {
+   "id": "vp_buk_grandnational_87",
+   "textures": 81,
+   "texels": 3836416,
+   "geometries": 745,
+   "vertices": 265543,
+   "triangles": 295308,
+   "models": 155,
+   "max_shader": 47,
+   "body": {
+    "bones": 71,
+    "bounds": [
+     [
+      -0.4546,
+      -0.0532,
+      -0.8174
+     ],
+     [
+      0.4546,
+      0.4199,
+      1.0967
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 160,
+   "shader_count": 48
+  },
+  {
+   "id": "vp_chv_camaro_06",
+   "textures": 81,
+   "texels": 3606016,
+   "geometries": 671,
+   "vertices": 282306,
+   "triangles": 305936,
+   "models": 142,
+   "max_shader": 45,
+   "body": {
+    "bones": 72,
+    "bounds": [
+     [
+      -0.3115,
+      -0.0532,
+      -1.022
+     ],
+     [
+      0.3115,
+      0.3584,
+      1.519
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 144,
+   "shader_count": 46
+  },
+  {
+   "id": "vp_chv_camaro_06_dub",
+   "textures": 73,
+   "texels": 3497216,
+   "geometries": 381,
+   "vertices": 182820,
+   "triangles": 203097,
+   "models": 62,
+   "max_shader": 40,
+   "body": {
+    "bones": 62,
+    "bounds": [
+     [
+      -1.0103,
+      -0.1104,
+      -2.1265
+     ],
+     [
+      1.0103,
+      1.0264,
+      2.3853
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 64,
+   "shader_count": 41
+  },
+  {
+   "id": "vp_chv_camaross_69",
+   "textures": 88,
+   "texels": 3894016,
+   "geometries": 802,
+   "vertices": 276331,
+   "triangles": 308881,
+   "models": 169,
+   "max_shader": 48,
+   "body": {
+    "bones": 53,
+    "bounds": [
+     [
+      -0.7485,
+      -0.1216,
+      -2.1406
+     ],
+     [
+      0.7485,
+      1.2568,
+      2.3721
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 172,
+   "shader_count": 49
+  },
+  {
+   "id": "vp_chv_cobalt_05",
+   "textures": 87,
+   "texels": 3942976,
+   "geometries": 797,
+   "vertices": 307463,
+   "triangles": 340745,
+   "models": 166,
+   "max_shader": 50,
+   "body": {
+    "bones": 61,
+    "bounds": [
+     [
+      -0.6338,
+      -0.0532,
+      -1.6484
+     ],
+     [
+      0.585,
+      1.0981,
+      2.2339
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 170,
+   "shader_count": 51
+  },
+  {
+   "id": "vp_chv_corvettez06_07",
+   "textures": 85,
+   "texels": 3850496,
+   "geometries": 647,
+   "vertices": 262249,
+   "triangles": 296040,
+   "models": 124,
+   "max_shader": 50,
+   "body": {
+    "bones": 54,
+    "bounds": [
+     [
+      -0.686,
+      -0.0532,
+      -0.8936
+     ],
+     [
+      0.7505,
+      0.8613,
+      1.4692
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 126,
+   "shader_count": 51
+  },
+  {
+   "id": "vp_chv_impala_96",
+   "textures": 79,
+   "texels": 3835136,
+   "geometries": 776,
+   "vertices": 286546,
+   "triangles": 320188,
+   "models": 155,
+   "max_shader": 46,
+   "body": {
+    "bones": 76,
+    "bounds": [
+     [
+      -0.8384,
+      -0.2656,
+      -2.3525
+     ],
+     [
+      0.8384,
+      1.4375,
+      2.7642
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 160,
+   "shader_count": 47
+  },
+  {
+   "id": "vp_chv_police_96",
+   "textures": 19,
+   "texels": 1404928,
+   "geometries": 69,
+   "vertices": 11246,
+   "triangles": 10200,
+   "models": 8,
+   "max_shader": 6,
+   "body": {
+    "bones": 53,
+    "bounds": [
+     [
+      -1.0303,
+      -0.2412,
+      -2.6245
+     ],
+     [
+      1.0303,
+      1.5679,
+      2.873
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 4,
+   "shader_count": 7
+  },
+  {
+   "id": "vp_citybus_07",
+   "geometries": 50,
+   "vertices": 15501,
+   "triangles": 12902,
+   "models": 4,
+   "max_shader": 12,
+   "body": {
+    "bones": 30,
+    "bounds": [
+     [
+      -1.5801,
+      0.3989,
+      -6.4946
+     ],
+     [
+      1.3491,
+      3.6333,
+      7.2734
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 2,
+   "textures": 20,
+   "texels": 825984,
+   "shader_count": 13
+  },
+  {
+   "id": "vp_cry_300c_06",
+   "textures": 81,
+   "texels": 3840256,
+   "geometries": 800,
+   "vertices": 305430,
+   "triangles": 353308,
+   "models": 156,
+   "max_shader": 47,
+   "body": {
+    "bones": 72,
+    "bounds": [
+     [
+      -0.6865,
+      -0.0532,
+      -0.793
+     ],
+     [
+      0.6865,
+      1.1206,
+      2.4946
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 158,
+   "shader_count": 48
+  },
+  {
+   "id": "vp_dge_challenger_06",
+   "textures": 85,
+   "texels": 3846656,
+   "geometries": 665,
+   "vertices": 271939,
+   "triangles": 306193,
+   "models": 138,
+   "max_shader": 52,
+   "body": {
+    "bones": 72,
+    "bounds": [
+     [
+      -0.8633,
+      -0.127,
+      -2.3135
+     ],
+     [
+      0.8633,
+      1.3755,
+      2.4761
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 140,
+   "shader_count": 53
+  },
+  {
+   "id": "vp_dge_challenger_06_dub",
+   "textures": 79,
+   "texels": 3758336,
+   "geometries": 400,
+   "vertices": 167624,
+   "triangles": 196133,
+   "models": 62,
+   "max_shader": 47,
+   "body": {
+    "bones": 55,
+    "bounds": [
+     [
+      -1.1074,
+      -0.127,
+      -2.4639
+     ],
+     [
+      1.1074,
+      1.4624,
+      2.563
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 64,
+   "shader_count": 48
+  },
+  {
+   "id": "vp_dge_challenger_70",
+   "textures": 89,
+   "texels": 4025856,
+   "geometries": 895,
+   "vertices": 323505,
+   "triangles": 369591,
+   "models": 169,
+   "max_shader": 49,
+   "body": {
+    "bones": 55,
+    "bounds": [
+     [
+      -0.7285,
+      -0.1309,
+      -2.3818
+     ],
+     [
+      0.7285,
+      0.9609,
+      2.4585
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 172,
+   "shader_count": 50
+  },
+  {
+   "id": "vp_dge_charger_06",
+   "textures": 85,
+   "texels": 3846656,
+   "geometries": 765,
+   "vertices": 325961,
+   "triangles": 364532,
+   "models": 156,
+   "max_shader": 46,
+   "body": {
+    "bones": 59,
+    "bounds": [
+     [
+      -0.7734,
+      -0.0532,
+      -2.2563
+     ],
+     [
+      0.7734,
+      1.0986,
+      2.4766
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 158,
+   "shader_count": 47
+  },
+  {
+   "id": "vp_dsn_280z_75",
+   "textures": 84,
+   "texels": 3948096,
+   "geometries": 768,
+   "vertices": 296853,
+   "triangles": 332436,
+   "models": 160,
+   "max_shader": 46,
+   "body": {
+    "bones": 64,
+    "bounds": [
+     [
+      -0.561,
+      -0.4595,
+      -1.9756
+     ],
+     [
+      0.561,
+      0.8818,
+      1.2891
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 162,
+   "shader_count": 47
+  },
+  {
+   "id": "vp_duc_999r_06",
+   "textures": 31,
+   "texels": 1996416,
+   "geometries": 263,
+   "vertices": 76796,
+   "triangles": 89182,
+   "models": 25,
+   "max_shader": 19,
+   "body": {
+    "bones": 22,
+    "bounds": [
+     [
+      -0.3506,
+      -0.1001,
+      -0.7788
+     ],
+     [
+      0.3506,
+      1.0,
+      0.9912
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 22,
+   "shader_count": 20
+  },
+  {
+   "id": "vp_duc_monster_s4r_07",
+   "textures": 37,
+   "texels": 2119296,
+   "geometries": 234,
+   "vertices": 80042,
+   "triangles": 81597,
+   "models": 25,
+   "max_shader": 21,
+   "body": {
+    "bones": 24,
+    "bounds": [
+     [
+      -0.4365,
+      -0.1343,
+      -0.5215
+     ],
+     [
+      0.438,
+      0.938,
+      0.9688
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 22,
+   "shader_count": 22
+  },
+  {
+   "id": "vp_frd_boss302_69",
+   "textures": 84,
+   "texels": 3856896,
+   "geometries": 859,
+   "vertices": 338931,
+   "triangles": 347525,
+   "models": 175,
+   "max_shader": 47,
+   "body": {
+    "bones": 60,
+    "bounds": [
+     [
+      -0.561,
+      -0.0532,
+      -0.5566
+     ],
+     [
+      0.561,
+      0.9492,
+      2.3291
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 178,
+   "shader_count": 48
+  },
+  {
+   "id": "vp_frd_cobra_04",
+   "textures": 67,
+   "texels": 3343616,
+   "geometries": 623,
+   "vertices": 259216,
+   "triangles": 297591,
+   "models": 124,
+   "max_shader": 43,
+   "body": {
+    "bones": 53,
+    "bounds": [
+     [
+      -0.7573,
+      -0.0532,
+      -1.6675
+     ],
+     [
+      0.7368,
+      1.1387,
+      2.0132
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 126,
+   "shader_count": 44
+  },
+  {
+   "id": "vp_frd_focus_04",
+   "textures": 92,
+   "texels": 4198976,
+   "geometries": 929,
+   "vertices": 295858,
+   "triangles": 328502,
+   "models": 168,
+   "max_shader": 50,
+   "body": {
+    "bones": 59,
+    "bounds": [
+     [
+      -0.7007,
+      -0.0532,
+      -2.0728
+     ],
+     [
+      0.7007,
+      1.019,
+      1.4102
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 172,
+   "shader_count": 51
+  },
+  {
+   "id": "vp_frd_gt_06",
+   "textures": 75,
+   "texels": 3594496,
+   "geometries": 726,
+   "vertices": 300739,
+   "triangles": 314675,
+   "models": 118,
+   "max_shader": 47,
+   "body": {
+    "bones": 61,
+    "bounds": [
+     [
+      -0.8745,
+      -0.0532,
+      -2.3027
+     ],
+     [
+      0.8745,
+      0.8594,
+      0.6367
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 120,
+   "shader_count": 48
+  },
+  {
+   "id": "vp_frd_mustang_06",
+   "textures": 81,
+   "texels": 3840256,
+   "geometries": 921,
+   "vertices": 318641,
+   "triangles": 360536,
+   "models": 166,
+   "max_shader": 52,
+   "body": {
+    "bones": 68,
+    "bounds": [
+     [
+      -0.814,
+      -0.0532,
+      -0.9165
+     ],
+     [
+      0.814,
+      1.3286,
+      2.3716
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 172,
+   "shader_count": 53
+  },
+  {
+   "id": "vp_kaw_ninja_zx14_06",
+   "textures": 31,
+   "texels": 1689216,
+   "geometries": 279,
+   "vertices": 88472,
+   "triangles": 85582,
+   "models": 25,
+   "max_shader": 20,
+   "body": {
+    "bones": 25,
+    "bounds": [
+     [
+      -0.4199,
+      -0.1401,
+      -0.7734
+     ],
+     [
+      0.4263,
+      1.0527,
+      1.0244
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 22,
+   "shader_count": 21
+  },
+  {
+   "id": "vp_lam_gallardo_06",
+   "textures": 85,
+   "texels": 3850496,
+   "geometries": 747,
+   "vertices": 277544,
+   "triangles": 299287,
+   "models": 129,
+   "max_shader": 48,
+   "body": {
+    "bones": 63,
+    "bounds": [
+     [
+      -0.8755,
+      -0.085,
+      -2.2192
+     ],
+     [
+      0.8755,
+      1.1367,
+      1.9702
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 132,
+   "shader_count": 49
+  },
+  {
+   "id": "vp_lam_miura_71",
+   "textures": 84,
+   "texels": 3860736,
+   "geometries": 671,
+   "vertices": 272452,
+   "triangles": 309520,
+   "models": 120,
+   "max_shader": 42,
+   "body": {
+    "bones": 55,
+    "bounds": [
+     [
+      -0.5444,
+      -0.0532,
+      -0.7173
+     ],
+     [
+      0.71,
+      0.8257,
+      2.0908
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 122,
+   "shader_count": 43
+  },
+  {
+   "id": "vp_lam_murcielago_06",
+   "textures": 79,
+   "texels": 3604736,
+   "geometries": 735,
+   "vertices": 278801,
+   "triangles": 299601,
+   "models": 126,
+   "max_shader": 48,
+   "body": {
+    "bones": 67,
+    "bounds": [
+     [
+      -0.8438,
+      -0.207,
+      -2.1826
+     ],
+     [
+      0.8438,
+      1.0659,
+      1.5327
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 128,
+   "shader_count": 49
+  },
+  {
+   "id": "vp_lam_murcielago_06_dub",
+   "textures": 79,
+   "texels": 3850496,
+   "geometries": 500,
+   "vertices": 189867,
+   "triangles": 206851,
+   "models": 62,
+   "max_shader": 46,
+   "body": {
+    "bones": 67,
+    "bounds": [
+     [
+      -0.5371,
+      -0.207,
+      -1.2114
+     ],
+     [
+      0.5371,
+      0.2231,
+      0.7861
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 64,
+   "shader_count": 47
+  },
+  {
+   "id": "vp_mbz_s600_07",
+   "textures": 77,
+   "texels": 3758336,
+   "geometries": 745,
+   "vertices": 268394,
+   "triangles": 300101,
+   "models": 128,
+   "max_shader": 48,
+   "body": {
+    "bones": 55,
+    "bounds": [
+     [
+      -0.7793,
+      -0.0532,
+      -2.417
+     ],
+     [
+      0.7793,
+      1.0732,
+      2.6855
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 130,
+   "shader_count": 49
+  },
+  {
+   "id": "vp_mbz_s600_07_dub",
+   "textures": 75,
+   "texels": 3676416,
+   "geometries": 460,
+   "vertices": 183649,
+   "triangles": 203167,
+   "models": 62,
+   "max_shader": 45,
+   "body": {
+    "bones": 71,
+    "bounds": [
+     [
+      -1.0781,
+      -0.0532,
+      -2.5068
+     ],
+     [
+      1.0781,
+      1.4644,
+      2.7759
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 64,
+   "shader_count": 46
+  },
+  {
+   "id": "vp_mbz_sl65_07",
+   "textures": 81,
+   "texels": 3840256,
+   "geometries": 879,
+   "vertices": 279349,
+   "triangles": 306178,
+   "models": 125,
+   "max_shader": 50,
+   "body": {
+    "bones": 78,
+    "bounds": [
+     [
+      -0.7686,
+      -0.1997,
+      -2.1914
+     ],
+     [
+      0.7686,
+      1.2935,
+      1.6938
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 128,
+   "shader_count": 51
+  },
+  {
+   "id": "vp_mit_3000gt_99",
+   "textures": 88,
+   "texels": 3954496,
+   "geometries": 870,
+   "vertices": 301276,
+   "triangles": 366415,
+   "models": 164,
+   "max_shader": 52,
+   "body": {
+    "bones": 51,
+    "bounds": [
+     [
+      -0.8027,
+      -0.3931,
+      -2.0894
+     ],
+     [
+      0.9429,
+      1.2461,
+      1.7554
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 166,
+   "shader_count": 53
+  },
+  {
+   "id": "vp_mit_eclipse_99",
+   "textures": 90,
+   "texels": 4055616,
+   "geometries": 826,
+   "vertices": 295629,
+   "triangles": 351829,
+   "models": 164,
+   "max_shader": 54,
+   "body": {
+    "bones": 62,
+    "bounds": [
+     [
+      -0.7808,
+      -0.3647,
+      -2.0469
+     ],
+     [
+      0.7808,
+      1.3149,
+      1.4268
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 166,
+   "shader_count": 55
+  },
+  {
+   "id": "vp_mit_evo_06",
+   "textures": 86,
+   "texels": 3953216,
+   "geometries": 850,
+   "vertices": 292661,
+   "triangles": 333089,
+   "models": 162,
+   "max_shader": 49,
+   "body": {
+    "bones": 65,
+    "bounds": [
+     [
+      -0.7603,
+      -0.3599,
+      -2.1079
+     ],
+     [
+      0.7603,
+      1.5601,
+      2.1895
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 164,
+   "shader_count": 50
+  },
+  {
+   "id": "vp_mzd_rx7_95",
+   "textures": 89,
+   "texels": 3963456,
+   "geometries": 784,
+   "vertices": 314689,
+   "triangles": 354852,
+   "models": 162,
+   "max_shader": 50,
+   "body": {
+    "bones": 58,
+    "bounds": [
+     [
+      -0.7056,
+      -0.3857,
+      -1.584
+     ],
+     [
+      0.7056,
+      1.1528,
+      1.6201
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 164,
+   "shader_count": 51
+  },
+  {
+   "id": "vp_mzd_rx8_06",
+   "textures": 94,
+   "texels": 4127296,
+   "geometries": 861,
+   "vertices": 318615,
+   "triangles": 348950,
+   "models": 160,
+   "max_shader": 49,
+   "body": {
+    "bones": 58,
+    "bounds": [
+     [
+      -0.6807,
+      -0.2354,
+      -1.7354
+     ],
+     [
+      0.6807,
+      1.3413,
+      2.1528
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 162,
+   "shader_count": 50
+  },
+  {
+   "id": "vp_nsn_240sx_98",
+   "textures": 89,
+   "texels": 3963456,
+   "geometries": 830,
+   "vertices": 280019,
+   "triangles": 323494,
+   "models": 174,
+   "max_shader": 51,
+   "body": {
+    "bones": 64,
+    "bounds": [
+     [
+      -0.7417,
+      -0.1089,
+      -2.1265
+     ],
+     [
+      0.7417,
+      1.4526,
+      2.0337
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 176,
+   "shader_count": 52
+  },
+  {
+   "id": "vp_nsn_350z_06",
+   "textures": 88,
+   "texels": 4035136,
+   "geometries": 847,
+   "vertices": 323561,
+   "triangles": 337682,
+   "models": 163,
+   "max_shader": 53,
+   "body": {
+    "bones": 61,
+    "bounds": [
+     [
+      -0.8101,
+      -0.1201,
+      -1.9995
+     ],
+     [
+      0.7822,
+      1.2783,
+      2.082
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 166,
+   "shader_count": 54
+  },
+  {
+   "id": "vp_nsn_gtr_08",
+   "textures": 87,
+   "texels": 3536704,
+   "geometries": 900,
+   "vertices": 338183,
+   "triangles": 375229,
+   "models": 159,
+   "max_shader": 54,
+   "body": {
+    "bones": 76,
+    "bounds": [
+     [
+      -0.5786,
+      -0.1851,
+      -1.0078
+     ],
+     [
+      0.5786,
+      0.4097,
+      1.4448
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 162,
+   "shader_count": 55
+  },
+  {
+   "id": "vp_nsn_skyline_99",
+   "textures": 97,
+   "texels": 4014656,
+   "geometries": 854,
+   "vertices": 322198,
+   "triangles": 373220,
+   "models": 168,
+   "max_shader": 53,
+   "body": {
+    "bones": 65,
+    "bounds": [
+     [
+      -0.7358,
+      -0.0532,
+      -2.1519
+     ],
+     [
+      0.7358,
+      1.0874,
+      2.2793
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 164,
+   "shader_count": 54
+  },
+  {
+   "id": "vp_pon_solstice_06",
+   "textures": 95,
+   "texels": 3994176,
+   "geometries": 839,
+   "vertices": 285732,
+   "triangles": 319656,
+   "models": 161,
+   "max_shader": 54,
+   "body": {
+    "bones": 55,
+    "bounds": [
+     [
+      -0.7729,
+      -0.1221,
+      -1.6572
+     ],
+     [
+      0.7793,
+      1.6021,
+      1.6714
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 164,
+   "shader_count": 55
+  },
+  {
+   "id": "vp_pon_transam_79",
+   "textures": 84,
+   "texels": 3856896,
+   "geometries": 739,
+   "vertices": 267772,
+   "triangles": 312587,
+   "models": 173,
+   "max_shader": 46,
+   "body": {
+    "bones": 49,
+    "bounds": [
+     [
+      -0.8311,
+      -0.1558,
+      -0.6606
+     ],
+     [
+      0.8311,
+      1.2793,
+      1.8828
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 176,
+   "shader_count": 47
+  },
+  {
+   "id": "vp_sln_s281_06",
+   "textures": 81,
+   "texels": 3840256,
+   "geometries": 727,
+   "vertices": 282590,
+   "triangles": 302097,
+   "models": 131,
+   "max_shader": 48,
+   "body": {
+    "bones": 60,
+    "bounds": [
+     [
+      -0.6602,
+      -0.0532,
+      -0.9053
+     ],
+     [
+      0.8032,
+      1.7012,
+      2.3804
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 136,
+   "shader_count": 49
+  },
+  {
+   "id": "vp_sln_s7_06",
+   "textures": 85,
+   "texels": 3850496,
+   "geometries": 693,
+   "vertices": 270937,
+   "triangles": 305641,
+   "models": 122,
+   "max_shader": 45,
+   "body": {
+    "bones": 54,
+    "bounds": [
+     [
+      -0.585,
+      -0.2305,
+      -2.1694
+     ],
+     [
+      0.665,
+      0.875,
+      2.2192
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 124,
+   "shader_count": 46
+  },
+  {
+   "id": "vp_vw_golf_07",
+   "textures": 87,
+   "texels": 3877696,
+   "geometries": 933,
+   "vertices": 338698,
+   "triangles": 364258,
+   "models": 176,
+   "max_shader": 52,
+   "body": {
+    "bones": 60,
+    "bounds": [
+     [
+      -0.7847,
+      -0.7964,
+      -1.6621
+     ],
+     [
+      0.7847,
+      1.4976,
+      1.6626
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 180,
+   "shader_count": 53
+  },
+  {
+   "id": "vp_vw_golf_83",
+   "textures": 88,
+   "texels": 4035136,
+   "geometries": 753,
+   "vertices": 240695,
+   "triangles": 274734,
+   "models": 154,
+   "max_shader": 49,
+   "body": {
+    "bones": 60,
+    "bounds": [
+     [
+      -0.7139,
+      -0.6289,
+      -1.8862
+     ],
+     [
+      0.7402,
+      1.4185,
+      1.7642
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 158,
+   "shader_count": 50
+  },
+  {
+   "id": "vp_vw_scirocco_88",
+   "textures": 85,
+   "texels": 3937856,
+   "geometries": 850,
+   "vertices": 324428,
+   "triangles": 350349,
+   "models": 158,
+   "max_shader": 45,
+   "body": {
+    "bones": 62,
+    "bounds": [
+     [
+      -0.6973,
+      -0.4956,
+      -2.0391
+     ],
+     [
+      0.6973,
+      1.2422,
+      1.6021
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 162,
+   "shader_count": 46
+  },
+  {
+   "id": "vpd_am_db9_08",
+   "textures": 86,
+   "texels": 4010240,
+   "geometries": 707,
+   "vertices": 259598,
+   "triangles": 299493,
+   "models": 124,
+   "max_shader": 51,
+   "body": {
+    "bones": 54,
+    "bounds": [
+     [
+      -0.7759,
+      -0.4038,
+      -2.3223
+     ],
+     [
+      0.6904,
+      1.0781,
+      2.3188
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 126,
+   "shader_count": 52
+  },
+  {
+   "id": "vpd_aud_s5_08",
+   "textures": 88,
+   "texels": 3944000,
+   "geometries": 880,
+   "vertices": 318748,
+   "triangles": 350093,
+   "models": 176,
+   "max_shader": 51,
+   "body": {
+    "bones": 55,
+    "bounds": [
+     [
+      -0.7085,
+      -0.0532,
+      -1.7451
+     ],
+     [
+      0.7085,
+      1.3682,
+      2.3071
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 178,
+   "shader_count": 52
+  },
+  {
+   "id": "vpd_buk_riviera_63",
+   "textures": 66,
+   "texels": 3320320,
+   "geometries": 714,
+   "vertices": 233396,
+   "triangles": 261908,
+   "models": 161,
+   "max_shader": 42,
+   "body": {
+    "bones": 81,
+    "bounds": [
+     [
+      -0.1445,
+      -0.0635,
+      -0.7476
+     ],
+     [
+      0.1411,
+      0.3223,
+      0.0308
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 164,
+   "shader_count": 43
+  },
+  {
+   "id": "vpd_cad_xlrv_08",
+   "textures": 88,
+   "texels": 4107520,
+   "geometries": 850,
+   "vertices": 252130,
+   "triangles": 292549,
+   "models": 127,
+   "max_shader": 55,
+   "body": {
+    "bones": 96,
+    "bounds": [
+     [
+      -0.769,
+      -0.3442,
+      -2.1846
+     ],
+     [
+      0.769,
+      1.269,
+      2.186
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 130,
+   "shader_count": 56
+  },
+  {
+   "id": "vpd_chv_belair_55",
+   "textures": 56,
+   "texels": 2910720,
+   "geometries": 695,
+   "vertices": 258715,
+   "triangles": 284556,
+   "models": 155,
+   "max_shader": 36,
+   "body": {
+    "bones": 61,
+    "bounds": [
+     [
+      -0.8242,
+      -0.5342,
+      -2.106
+     ],
+     [
+      0.8242,
+      1.646,
+      2.5337
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 158,
+   "shader_count": 37
+  },
+  {
+   "id": "vpd_chv_chevelle_70",
+   "textures": 80,
+   "texels": 3755520,
+   "geometries": 737,
+   "vertices": 292522,
+   "triangles": 332211,
+   "models": 171,
+   "max_shader": 45,
+   "body": {
+    "bones": 64,
+    "bounds": [
+     [
+      -0.6997,
+      -0.2354,
+      -2.2524
+     ],
+     [
+      0.6997,
+      0.9653,
+      2.4878
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 174,
+   "shader_count": 46
+  },
+  {
+   "id": "vpd_chv_impala_64",
+   "textures": 65,
+   "texels": 3212800,
+   "geometries": 745,
+   "vertices": 327901,
+   "triangles": 295474,
+   "models": 176,
+   "max_shader": 40,
+   "body": {
+    "bones": 75,
+    "bounds": [
+     [
+      -0.7241,
+      -0.0532,
+      -2.0703
+     ],
+     [
+      0.7324,
+      1.0103,
+      2.6226
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 174,
+   "shader_count": 41
+  },
+  {
+   "id": "vpd_chv_malibu_65",
+   "textures": 62,
+   "texels": 3156480,
+   "geometries": 771,
+   "vertices": 279080,
+   "triangles": 271094,
+   "models": 177,
+   "max_shader": 39,
+   "body": {
+    "bones": 78,
+    "bounds": [
+     [
+      -0.7744,
+      -0.0532,
+      -2.2075
+     ],
+     [
+      0.813,
+      1.7212,
+      2.5947
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 180,
+   "shader_count": 40
+  },
+  {
+   "id": "vpd_duc_1098_07",
+   "textures": 32,
+   "texels": 1705600,
+   "geometries": 413,
+   "vertices": 104523,
+   "triangles": 99922,
+   "models": 25,
+   "max_shader": 24,
+   "body": {
+    "bones": 28,
+    "bounds": [
+     [
+      -0.3359,
+      -0.1343,
+      -0.8091
+     ],
+     [
+      0.3359,
+      0.9775,
+      0.9688
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 22,
+   "shader_count": 25
+  },
+  {
+   "id": "vpd_lr_hse_08",
+   "textures": 84,
+   "texels": 4001280,
+   "geometries": 742,
+   "vertices": 258447,
+   "triangles": 296191,
+   "models": 126,
+   "max_shader": 56,
+   "body": {
+    "bones": 69,
+    "bounds": [
+     [
+      -0.9453,
+      -0.7612,
+      -1.9917
+     ],
+     [
+      0.9453,
+      1.9956,
+      2.5107
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 128,
+   "shader_count": 57
+  },
+  {
+   "id": "vpd_lr_sport_08",
+   "textures": 85,
+   "texels": 4093440,
+   "geometries": 748,
+   "vertices": 259285,
+   "triangles": 297123,
+   "models": 126,
+   "max_shader": 52,
+   "body": {
+    "bones": 77,
+    "bounds": [
+     [
+      -0.9316,
+      -0.5981,
+      -2.0723
+     ],
+     [
+      0.9316,
+      1.8081,
+      2.3521
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 128,
+   "shader_count": 53
+  },
+  {
+   "id": "vpd_mbz_cl65amg_08",
+   "textures": 86,
+   "texels": 4010240,
+   "geometries": 707,
+   "vertices": 258109,
+   "triangles": 299428,
+   "models": 124,
+   "max_shader": 53,
+   "body": {
+    "bones": 74,
+    "bounds": [
+     [
+      -0.9238,
+      -0.3979,
+      -0.9697
+     ],
+     [
+      0.9238,
+      1.0728,
+      1.9927
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 120,
+   "shader_count": 54
+  },
+  {
+   "id": "vpd_mbz_clk63amg_08",
+   "textures": 80,
+   "texels": 3836160,
+   "geometries": 842,
+   "vertices": 306779,
+   "triangles": 359328,
+   "models": 154,
+   "max_shader": 48,
+   "body": {
+    "bones": 69,
+    "bounds": [
+     [
+      -0.7295,
+      -0.4155,
+      -2.0322
+     ],
+     [
+      0.7295,
+      1.0464,
+      2.3589
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 151,
+   "shader_count": 49
+  },
+  {
+   "id": "vpd_mit_eclipse_09",
+   "textures": 90,
+   "texels": 3949120,
+   "geometries": 877,
+   "vertices": 324952,
+   "triangles": 357324,
+   "models": 169,
+   "max_shader": 56,
+   "body": {
+    "bones": 93,
+    "bounds": [
+     [
+      -0.7856,
+      -0.2041,
+      -2.1641
+     ],
+     [
+      0.7856,
+      1.0586,
+      2.1294
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 174,
+   "shader_count": 57
+  },
+  {
+   "id": "vpd_mit_evox_08",
+   "textures": 90,
+   "texels": 3887680,
+   "geometries": 861,
+   "vertices": 300647,
+   "triangles": 344167,
+   "models": 178,
+   "max_shader": 52,
+   "body": {
+    "bones": 53,
+    "bounds": [
+     [
+      -0.7275,
+      -0.0562,
+      -1.7129
+     ],
+     [
+      0.7275,
+      1.4795,
+      1.8027
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 180,
+   "shader_count": 53
+  },
+  {
+   "id": "vpd_pon_gto_66",
+   "textures": 91,
+   "texels": 4038400,
+   "geometries": 823,
+   "vertices": 307686,
+   "triangles": 347900,
+   "models": 173,
+   "max_shader": 48,
+   "body": {
+    "bones": 75,
+    "bounds": [
+     [
+      -0.7158,
+      -0.0532,
+      -2.3184
+     ],
+     [
+      0.7158,
+      0.9585,
+      2.7754
+     ]
+    ]
+   },
+   "tuning_sections": [
+    56,
+    132,
+    132,
+    68,
+    208,
+    52,
+    352,
+    352,
+    244,
+    244,
+    28,
+    28,
+    8780,
+    8780,
+    112,
+    112,
+    68
+   ],
+   "streaming_map_strings": 172,
+   "shader_count": 49
+  }
+ ],
+ "controls": [
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/body_lod_0.xrsc",
+   "mutation": "index equal to the vertex count",
+   "rejected": true,
+   "reason": "index outside the vertex buffer"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/body_lod_0.xrsc",
+   "mutation": "vertex moved 1 km along x",
+   "rejected": true,
+   "reason": "vertex outside its bounding sphere"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/body_lod_0.xrsc",
+   "mutation": "vertex format size off by four",
+   "rejected": true,
+   "reason": "vertex format size 32 differs from its channels (28)"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/body_lod_0.xrsc",
+   "mutation": "primitive type 5 (strip)",
+   "rejected": true,
+   "reason": "primitive type 5 is not a triangle list"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/body_lod_0.xrsc",
+   "mutation": "model VFT replaced",
+   "rejected": true,
+   "reason": "not a model resource (VFT 0x00000001)"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xtp",
+   "mutation": "fetch-constant width changed",
+   "rejected": true,
+   "reason": "fetch-constant size differs from the texture header"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xtp",
+   "mutation": "format code low bit flipped",
+   "rejected": true,
+   "reason": "unsupported texture format 0x07"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xtp",
+   "mutation": "tiled flag cleared",
+   "rejected": true,
+   "reason": "untiled texture"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xtp",
+   "mutation": "texture VFT replaced",
+   "rejected": true,
+   "reason": "not a texture (VFT 0xdb555500)"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xct",
+   "mutation": "vehSim slot names the vehGyro class",
+   "rejected": true,
+   "reason": "slot 6 holds vehGyro, not vehSim"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xct",
+   "mutation": "tuning root VFT replaced",
+   "rejected": true,
+   "reason": "not a tuning resource (VFT 0x500056f0)"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xct",
+   "mutation": "section path pointer moved to the class name",
+   "rejected": true,
+   "reason": "tuning section outside $/tune/vehicle/"
+  },
+  {
+   "file": "va_350z_04/resources/vehicle/va_350z_04/va_350z_04.xtp",
+   "mutation": "row-major instead of Xenos tiled addressing",
+   "rejected": true,
+   "reason": "decoded pixels differ"
+  }
+ ],
+ "claim_limits": [
+  "Structures are decoded to the fixed facts recorded here (counts, sizes, bounds, digests); a decoded value is a reading of its layout, checked for internal consistency, not against game execution.",
+  "Textures: mip level 0 only; DXT1/DXT5/ARGB8888 are the only formats on the car files. Shader parameters other than textures are recorded by name hash; their meaning is not established.",
+  "Tuning: field names are not on the disc; fields are typed 32-bit words by offset, so their meaning (mass, torque, grip and so on) is unknown.",
+  "Shader binding (geometry shader index -> the car .xtp shader group) is a reading supported by the index range join over all cars, not by rendering in the game."
+ ]
+}

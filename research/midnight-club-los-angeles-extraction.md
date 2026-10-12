@@ -1,7 +1,8 @@
 # Midnight Club: Los Angeles native car extraction
 
 Date: 2026-10-12. Scope: set up `midnight-club-los-angeles/` from the supplied archive and extract
-the game's native car files into `midnight-club-los-angeles/cars/`. No geometry or texture decoding.
+the game's native car files into `midnight-club-los-angeles/cars/`. Decompression, decoding and the
+streaming-map name source are in [midnight-club-los-angeles-decoding.md](midnight-club-los-angeles-decoding.md).
 Receipt: [`evidence/midnight-club-los-angeles/extraction.json`](evidence/midnight-club-los-angeles/extraction.json).
 
 ## Input
@@ -59,8 +60,11 @@ What the repo-owned readers implement, and what the real disc confirmed:
    no dotted name, resources take a resource extension, loose files do not. An entry is named only when
    exactly one plausible candidate remains. The first run, without those rules, named directories and
    files with binary noise such as `-tm2.xlm`, `w3hu.dds` and `anaj.xbtm`; with them, 7,426 of 23,931
-   cache entries are named; 8 hashes have more than one raw candidate and 3 cache entries keep several plausible ones. A remaining collision is possible and
-   stays a claim limit.
+   cache entries were named from these strings. Two further sources, the string fields of the
+   LZX-decompressed streaming pack maps and level variants of `_lod_<n>` names, now name 16,169 cache
+   entries in all, every car-package file included; each name records its origin (see the decoding note).
+   8 hashes have more than one raw candidate and 3 cache entries keep several plausible ones. A remaining
+   collision is possible and stays a claim limit.
 
 ## Car files
 
@@ -73,7 +77,7 @@ traffic) are interpretations.
 
 | Resource type | Files in car packages | Resolved extension | Reading (CodeX type table) |
 | ---: | ---: | --- | --- |
-| 63 | 8,849 | `.xrsc` (only `body_lod_0.xrsc` resolves by name) | model resource parts |
+| 63 | 8,849 | `.xrsc` (all named; `body_lod_0.xrsc` from a disc string, the rest from streaming maps and level variants) | model resource parts |
 | 83 | 212 | `.xtp`, `.xtl` | part and damage textures |
 | 50 | 106 | `.xct` | car tuning |
 | 19 | 106 | `.xspm` | streaming pack map |
@@ -84,8 +88,9 @@ file name contains its full code as an underscore-delimited run (the longest cod
 `sh_vp_lam_murcielago_06_dub` goes to the `_dub` car). Rims, tires, brakes, `vehicle/` effects,
 `tune/vehicle/` and configs naming no code go to `shared/`. The other three archives (audio, low audio,
 music) and the preload copy `preload/xarchive_carconfigs.rpf` (a nested RPF3 duplicating the configs)
-are inventoried, not extracted. Result: 106 cars, 10,702 output files, 415,232,242 bytes; 94.3% of the
-9,273 car-package files keep `0x<hash>` names.
+are inventoried, not extracted. Result: 106 cars, 10,702 output files, 416,762,997 bytes (415,232,242 before
+the manifests recorded name origins); all 9,273 car-package files are named (94.3% kept `0x<hash>` names
+before the streaming-map source).
 
 RSC5 resources are written exactly as stored (their LZX-compressed body included); DEFLATE members
 are written inflated, with the stored SHA-256 kept in each manifest.
@@ -94,8 +99,8 @@ are written inflated, with the stored SHA-256 kept in each manifest.
 
 | Command | Result |
 | --- | --- |
-| `python3 tools/extract_mcla_cars.py` | `EXTRACTED 106 cars, 10702 files, 415232242 bytes` (35 s) |
-| `python3 tools/extract_mcla_cars.py --check` | `CHECKED 106 cars, 10702 files, 415232242 bytes`, also under stock Python 3.9.6 |
+| `python3 tools/extract_mcla_cars.py` | `EXTRACTED 106 cars, 10702 files, 416762997 bytes` (32 s) |
+| `python3 tools/extract_mcla_cars.py --check` | `CHECKED 106 cars, 10702 files, 416762997 bytes` |
 | `test_aes_decrypt`, `test_xdvdfs`, `test_xex2`, `test_mcla_rpf`, `test_extract_mcla_cars` | synthetic encrypted disc, XEX and archive with tamper controls: wrong key, unreachable or doubly-parented entries, bad DEFLATE sizes, missing RSC5 header, overlapping extents, XGD2 offset, multi-sector directories, colliding and ambiguous names, missing disc members, unexpected vehicle directory, a disc changed mid-run, rewritten index masking a payload change, extra and linked output |
 
 | `line_coverage` | 100% of executable lines in the four readers and the extractor under their tests |
@@ -104,9 +109,8 @@ are written inflated, with the stored SHA-256 kept in each manifest.
 
 ## Not established
 
-- RSC5/LZX decoding: no model, texture, tuning or streaming-map content is read, so part names inside
-  `.xspm` maps, geometry, materials and wheel placement are unknown. No GLB conversion; the cars are not
-  in either catalog yet.
+- Decoding is covered by the decoding note; part placement, GLB conversion and catalog entries are not
+  part of this extraction.
 - Ownership of shared rims, tires and brakes, runtime dependency closure and load precedence.
 - Meaning of the RPF3 header's unknown word and of the per-directory flag words.
 - Anything about the PS3 release or other builds; only this Xbox 360 disc was read.

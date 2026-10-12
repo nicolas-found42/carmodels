@@ -17,7 +17,7 @@ SHA-256 pin (the key itself is never written out), decrypt the table and recover
 found on the same disc.
 
 `cars/` holds **106 cars** (one per directory under `resources/vehicle/`) and **10,702 files**
-totaling **415,232,242 bytes**. Only `index.json` (every file's SHA-256) and `provenance/` are
+totaling **416,762,997 bytes**. Only `index.json` (every file's SHA-256) and `provenance/` are
 committed; the rest is local and re-derived from the disc (see `.gitignore`):
 
 ```text
@@ -40,15 +40,22 @@ cars/
 Car IDs are directory names: 49 `vp_`, 16 `vpd_` and 41 `va_`. Reading the prefixes as player,
 downloadable-content player and ambient traffic is an interpretation; IDs are not decoded retail names. The disc carries the code `vp_nsn_gtr_08`
 only inside the garage texture name `mr_vp_nsn_gtr_08` (other strings spell it `vpd_nsn_gtr_08`).
-About 94% of the 9,273 files inside car packages keep `0x<hash>` names because no disc string hashes
-to them; resource-type extensions (for example `.xrsc` for type 63) are borrowed only where every
-resolved name of that type agrees.
+All 9,273 files inside car packages are named: most part names come from the string fields of each
+car's LZX-decompressed streaming pack map (`.xspm`) and from level variants of `_lod_<n>` names, and
+every manifest row records its `name_origin`. Elsewhere, entries no candidate hashes to keep `0x<hash>`
+names; resource-type extensions are borrowed only where every resolved name of that type agrees.
 
 From the repository root:
 
 ```sh
 python3 tools/extract_mcla_cars.py --check
+python3 tools/verify_mcla_resources.py   # every RSC5 resource of the disc decompresses to its declared size
+python3 tools/verify_mcla_decoding.py    # every car model, texture, tuning file and streaming map decodes
 ```
+
+The readers are `tools/mcla_lzx.py` (Xbox 360 LZX), `tools/mcla_model.py` (geometry and skeletons),
+`tools/mcla_texture.py` (Xenos untiling, DXT/ARGB to RGBA) and `tools/mcla_tuning.py` (tuning sections);
+formats and readings are in [the decoding note](../research/midnight-club-los-angeles-decoding.md).
 
 The check reads the ISO again and rejects changed, missing, extra or linked output. Initial
 extraction uses the same command without `--check` (`--output` chooses another destination). The
@@ -57,8 +64,8 @@ fresh clone; those files must equal their newly derived bytes, and nothing is ov
 
 ## Not established
 
-RSC5 resources keep their stored Xbox 360 LZX compression; no model, texture or tuning data is
-decoded, and nothing is converted to GLB or added to the catalogs. Part names, runtime dependency
-closure, shared wheel ownership and game-render fidelity remain open. See
+RSC5 resources are stored as on the disc (LZX-compressed); the readers decode them on demand. Tuning
+field names, part assembly, GLB conversion, catalog entries, runtime dependency closure, shared wheel
+ownership and game-render fidelity remain open. See
 [the extraction note](../research/midnight-club-los-angeles-extraction.md) for format sources,
 verification and open items.
