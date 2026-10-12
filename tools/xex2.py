@@ -30,6 +30,8 @@ def load_image(xex):
     if FORMAT_INFO not in headers:
         raise ValueError('XEX2 file format info missing')
     at = headers[FORMAT_INFO]
+    if not 24 + 8 * count <= at <= pe_offset - 8:
+        raise ValueError('XEX2 file format info outside header')
     size, encryption, compression = struct.unpack_from('>IHH', xex, at)
     if compression != 1:
         raise ValueError('only basic XEX2 packing is supported')
@@ -54,7 +56,7 @@ def load_image(xex):
         position += data
     if image[:2] != b'MZ':
         raise ValueError('XEX2 image is not a PE (wrong key or packing)')
-    pe = struct.unpack_from('<I', image, 0x3C)[0]
+    pe = struct.unpack_from('<I', image, 0x3C)[0] if len(image) >= 0x40 else len(image)
     if image[pe:pe + 4] != b'PE\0\0':
         raise ValueError('XEX2 image lacks a PE header')
     return bytes(image), {'image_bytes': image_size, 'encryption': encryption, 'compression': compression,

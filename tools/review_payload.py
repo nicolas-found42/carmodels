@@ -233,6 +233,8 @@ def review_status(bundle, implementer, resolution=None):
                     scores = half.get('scores', {})
                     if not probability(half.get('safe_to_apply')) or set(scores) != {'correctness', 'spec_match', 'test_gap', 'blast_radius'} or any(not probability(s.get('confidence')) for s in scores.values()):
                         raise ValueError('Patch review scores are missing or invalid')
+                if per_file and any(f.get('action') not in ['auto', 'review', 'escalate'] for f in halves):
+                    raise ValueError('Unknown or malformed per-file action')
                 if per_file and any(f.get('action') != 'auto' for f in halves) and action == 'auto':
                     raise ValueError('Auto review contains unresolved files')
             if action not in ['auto', 'review', 'escalate']:

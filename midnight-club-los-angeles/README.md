@@ -51,8 +51,9 @@ python3 tools/extract_mcla_cars.py --check
 ```
 
 The check reads the ISO again and rejects changed, missing, extra or linked output. Initial
-extraction uses the same command without `--check`, into a new or empty destination (`--output`
-chooses another one). It never overwrites.
+extraction uses the same command without `--check` (`--output` chooses another destination). The
+destination must be absent, empty, or hold only the committed `index.json` and `provenance/`, as in a
+fresh clone; those files must equal their newly derived bytes, and nothing is overwritten.
 
 ## Not established
 

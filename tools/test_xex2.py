@@ -84,6 +84,17 @@ class Xex2Tests(unittest.TestCase):
         struct.pack_into('>H', unknown, 0x200 + 4, 2)  # encryption type 2
         with self.assertRaisesRegex(ValueError, 'unsupported XEX2 file format info'):
             load_image(bytes(unknown))
+        far = bytearray(xex_fixture(image))
+        struct.pack_into('>I', far, 28, 0x3FF0)  # file format info offset beyond the header
+        with self.assertRaisesRegex(ValueError, 'file format info outside header'):
+            load_image(bytes(far))
+        past_end = bytearray(pe_image(size=0x2000))
+        struct.pack_into('<I', past_end, 0x3C, 0x2000 - 2)  # PE pointer leaves two bytes of image
+        with self.assertRaisesRegex(ValueError, 'lacks a PE header'):
+            load_image(xex_fixture(bytes(past_end)))
+        tiny = b'MZ' + bytes(0x2E)  # shorter than the 0x3C pointer field
+        with self.assertRaisesRegex(ValueError, 'lacks a PE header'):
+            load_image(xex_fixture(tiny, zero_tail=0x10))
         no_pe = bytearray(image)
         no_pe[0x80:0x84] = b'NE\0\0'
         with self.assertRaisesRegex(ValueError, 'lacks a PE header'):

@@ -407,14 +407,22 @@ def check_extraction(iso, destination):
     return index, files
 
 
+def committed(relative):
+    """The extraction files kept in Git (see .gitignore); a fresh clone already has them."""
+    return relative == 'index.json' or relative.startswith('provenance/')
+
+
 def write_extraction(iso, destination):
+    """Stage the whole extraction, then install it. A destination may already hold only the committed
+    index and provenance files, and each of them must equal its newly derived bytes."""
     destination = Path(destination)
     for parent in (destination, *destination.parents):
         if parent.is_symlink():
             raise ValueError('linked extraction destination')
-    # A destination holding the input is never empty, so this also keeps the input out of it.
-    if destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
-        raise ValueError('destination must be absent or empty')
+    existing = output_files(destination) if destination.is_dir() else set()
+    # A destination holding the input is never empty or committed-only, so this keeps the input out of it.
+    if (destination.exists() and not destination.is_dir()) or any(not committed(r) for r in existing):
+        raise ValueError('destination must be absent or empty, or hold only the committed index.json and provenance/')
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='mcla-stage-', dir=destination.parent) as temp:
         stage = Path(temp) / 'cars'
@@ -426,9 +434,20 @@ def write_extraction(iso, destination):
             with path.open('xb') as stream:
                 stream.write(data)
         index, files = derive(iso, emit)
-        if destination.exists():
-            destination.rmdir()  # Proven empty; no existing content removed.
-        stage.rename(destination)
+        for relative in sorted(existing):
+            staged = stage / relative
+            if not staged.is_file() or file_sha(staged) != file_sha(destination / relative):
+                raise ValueError('committed file differs from the derivation: ' + relative)
+        if not existing:
+            if destination.exists():
+                destination.rmdir()  # Proven empty; no existing content removed.
+            stage.rename(destination)
+        else:
+            for row in files:
+                if row['file'] not in existing:
+                    target = destination / row['file']
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    (stage / row['file']).rename(target)
     return index, files
 
 

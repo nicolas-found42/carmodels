@@ -160,6 +160,12 @@ class Rpf3Tests(unittest.TestCase):
         reopened = opened(bytes(resized))
         with self.assertRaisesRegex(ValueError, 'deflate size mismatch'):
             reopened.payload(reopened.entries[notes['index']])
+        readme = next(e for e in archive.entries if e['hash'] == jenkins('readme.txt'))
+        longer = bytearray(image)
+        struct.pack_into('<I', longer, 0x800 + 16 * readme['index'] + 4, readme['size'] + 1)
+        reopened = opened(bytes(longer))
+        with self.assertRaisesRegex(ValueError, 'stored size differs from file size'):
+            reopened.payload(reopened.entries[readme['index']])
         body = next(e for e in archive.entries if e['hash'] == jenkins('body_lod_0.xrsc'))
         stripped = bytearray(image)
         stripped[body['offset']:body['offset'] + 4] = b'RSC7'

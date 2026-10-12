@@ -134,6 +134,8 @@ class Rpf3Archive:
                 raise ValueError('RPF3 resource without RSC5 header')
             return data
         if not entry['compressed']:
+            if len(data) != entry['size']:
+                raise ValueError('RPF3 stored size differs from file size')
             return data
         inflater = zlib.decompressobj(-15)
         out = inflater.decompress(data, entry['size'] + 1)

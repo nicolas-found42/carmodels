@@ -206,8 +206,11 @@ class ExtractionTests(unittest.TestCase):
         (self.root / 'alias').symlink_to(self.root / 'real')
         with self.assertRaisesRegex(ValueError, 'linked extraction destination'):
             write_extraction(iso, self.root / 'alias' / 'cars')
+        holder = self.root / 'holder'
+        holder.mkdir()
+        (holder / 'source.iso').write_bytes(iso.read_bytes())
         with self.assertRaisesRegex(ValueError, 'absent or empty'):
-            write_extraction(iso, self.root)  # holds the input
+            write_extraction(holder / 'source.iso', holder)  # holds the input
         empty = self.root / 'empty'
         empty.mkdir()
         index, _ = write_extraction(iso, empty)  # an existing empty directory is replaced by the staged output
@@ -215,6 +218,30 @@ class ExtractionTests(unittest.TestCase):
         (empty / 'vp_test_car_01/manifest.json').unlink()
         with self.assertRaisesRegex(ValueError, 'coverage mismatch: missing vp_test_car_01/manifest.json'):
             check_extraction(iso, empty)
+
+    def test_fresh_clone_destination_with_committed_files(self):
+        iso = fixture(self.root / 'source.iso')
+        reference = self.root / 'reference'
+        index, files = write_extraction(iso, reference)
+        clone = self.root / 'clone'
+        committed = [row['file'] for row in files if row['file'] == 'index.json' or row['file'].startswith('provenance/')]
+        for relative in committed:
+            (clone / relative).parent.mkdir(parents=True, exist_ok=True)
+            (clone / relative).write_bytes((reference / relative).read_bytes())
+        repeated, _ = write_extraction(iso, clone)
+        self.assertEqual(repeated, index)
+        check_extraction(iso, clone)
+        stale = self.root / 'stale'
+        (stale / 'provenance').mkdir(parents=True)
+        (stale / 'index.json').write_bytes(b'{}')
+        with self.assertRaisesRegex(ValueError, 'committed file differs from the derivation: index.json'):
+            write_extraction(iso, stale)
+        self.assertEqual(sorted(p.name for p in stale.iterdir()), ['index.json', 'provenance'], 'nothing installed')
+        (stale / 'index.json').unlink()
+        (stale / 'vp_test_car_01').mkdir()
+        (stale / 'vp_test_car_01/manifest.json').write_bytes(b'x')
+        with self.assertRaisesRegex(ValueError, 'absent or empty, or hold only the committed'):
+            write_extraction(iso, stale)
 
     def test_key_pin_and_vehicle_names_are_enforced(self):
         iso = fixture(self.root / 'source.iso')

@@ -184,6 +184,9 @@ class ReviewPayloadTests(unittest.TestCase):
             result['files'] = files[:1]
             self.assertEqual(status()['status'], 'blocked', 'every reviewed file must be accounted for')
             result['files'] = files
+            files[1]['action'], result['action'] = 'approved', 'escalate'
+            self.assertEqual(status()['status'], 'blocked', 'an invented per-file action cannot be resolved')
+            files[1]['action'], result['action'] = 'auto', 'auto'
             files[0]['scores'] = {}
             self.assertEqual(status()['status'], 'blocked')
 
