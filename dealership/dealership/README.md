@@ -77,6 +77,15 @@ Game, source-variant and literal-name filters work offline. The optional TypeSaf
 filter can interpret Redline base-game or add-on requests, with unsupported restrictions and
 uncertain/provider-failure answers leaving the current filter unchanged.
 
+Gran Turismo 4 previews are added with `python3 tools/import_gt4_catalog.py`, then
+`python3 tools/import_gt4_dealership.py` and `python3 tools/build_dealership.py`. The source
+catalog publishes `public/gran-turismo-4/previews/<code>.glb` (static showroom model with decoded
+textures, wheels and tires) and `native/<code>.zip` per car; the dealership owns independent
+copies `models/GT4_<CODE>.glb`. Names, model years and masses come from the decoded spec database;
+ratings, power and body style stay unknown. Repeat imports preserve edits; `--upgrade-unedited`
+refreshes only exact copies of the recorded source. GT4 cars face -Z, so the front camera looks
+from -Z. See [the preview note](../../research/gran-turismo-4-previews.md).
+
 Midnight Club 3 Remix has 94 native source packages and separate static GLB
 inspection conversions. The source catalog retains the original DAT packages.
 The dealership owns independent editable GLBs under `models/MC3_*.glb` and
