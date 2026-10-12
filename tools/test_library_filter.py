@@ -204,6 +204,18 @@ class Tests(unittest.TestCase):
             self.assertNotIn('usage', receipt)
         self.assertEqual(interpret('GT night', CARS, None)['message'], 'Applied Gran Turismo, night variant (exact game and variant words).')
 
+    def test_gran_turismo_4_phrases_do_not_fall_back_to_gran_turismo(self):
+        cars = [*CARS, {'game': 'gran-turismo-4', 'source_variant': 'showroom', 'file': 'gran-turismo-4/previews/a.glb'}]
+        options = options_for(cars)
+        for query, label in [('Gran Turismo 4', 'gran-turismo-4'), ('GT4 cars', 'gran-turismo-4'), ('gt 4', 'gran-turismo-4'),
+                             ('GT4 showroom models', 'gran-turismo-4:showroom'), ('Gran Turismo', 'gran-turismo')]:
+            receipt = interpret(query, cars, None, unavailable='sdk_unavailable')
+            self.assertEqual((receipt['status'], receipt['decided_by'], receipt['filters']), ('ok', 'phrase', options[label]), query)
+        receipt = interpret('GT4 with 3D previews', cars, None, unavailable='sdk_unavailable')
+        self.assertEqual((receipt['status'], receipt['decided_by'], receipt['filters']), ('ok', 'phrase', options['gran-turismo-4']))
+        self.assertEqual(interpret('Gran Turismo 4 night', cars, None, unavailable='sdk_unavailable')['message'],
+                         'Gran Turismo 4 has no night variant; available: showroom models.')
+
     def test_model_experiments_can_bypass_phrase_routing(self):
         client = Fake(answer('redline:addon'))
         receipt = interpret('Redline mods', CARS, client, phrases=False)

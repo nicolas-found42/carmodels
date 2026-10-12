@@ -60,6 +60,30 @@ class ModelCatalogTests(unittest.TestCase):
             (public/'second-game/car.glb').write_bytes(b'changed')
             with self.assertRaisesRegex(ValueError,'hash/size'):model_catalog(public)
 
+    def test_native_packages_route_to_their_game_validator(self):
+        with tempfile.TemporaryDirectory() as directory:
+            public=Path(directory)
+            folder=public/'other-game'
+            folder.mkdir()
+            data=b'native bytes'
+            (folder/'car.dat').write_bytes(data)
+            entry={'code':'CAR','file':'car.dat','bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),
+                   'records':[],'asset_kind':'native-package','native_members':1}
+            (folder/'index.json').write_text(json.dumps({'cars':[entry]}))
+            with self.assertRaisesRegex(ValueError,'Unsupported native package game'):model_catalog(public)
+            folder.rename(public/'gran-turismo-4')
+            # GT4 publishes GLB rows; a native-package row there is not accepted.
+            with self.assertRaisesRegex(ValueError,'Unsupported native package game'):model_catalog(public)
+            (public/'gran-turismo-4/car.glb').write_bytes(data)
+            entry.update(file='car.glb', native_package={'file': 'car.dat'})
+            entry.pop('asset_kind'); entry.pop('native_members')
+            (public/'gran-turismo-4/index.json').write_text(json.dumps({'cars':[entry]}))
+            # A GT4 GLB row must also satisfy the GT4 row validator (preview and native package).
+            with self.assertRaisesRegex(ValueError,'Invalid GT4 source package'):model_catalog(public)
+            entry.pop('native_package')
+            (public/'gran-turismo-4/index.json').write_text(json.dumps({'cars':[entry]}))
+            with self.assertRaisesRegex(ValueError,'Invalid GT4 source package'):model_catalog(public)
+
 
 if __name__=='__main__':
     unittest.main()

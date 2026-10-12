@@ -11,7 +11,7 @@ const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
 const html=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('function updateMaterials('));
-const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','download','retry','error'].map(id=>[id,{
+const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','download','native-download','native-download-wrap','retry','error'].map(id=>[id,{
  value:'',disabled:false,hidden:false,options:[],textContent:'',
  removeAttribute(name){delete this[name];},
  replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},

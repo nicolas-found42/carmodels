@@ -89,6 +89,8 @@ class DealershipBuildTests(unittest.TestCase):
                     original = ROOT / f"dealership/public/{entry['game']}/native/{entry['sourceCode']}.dat"
                     self.assertEqual(native.read_bytes(), original.read_bytes())
                     self.assertFalse(os.path.samefile(native, original))
+                elif entry.get('game') == 'gran-turismo-4':
+                    source = ROOT / f"dealership/public/gran-turismo-4/previews/{entry['sourceCode']}.glb"
                 else:
                     source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
             self.assertFalse(copy.is_symlink())

@@ -175,7 +175,7 @@
     </header>
     <input aria-label="Search cars by name or year" id="search" placeholder="Search name or year…" autocomplete="off">
     <label style="padding:0 16px 8px;font-size:12px">Game <select id="game-filter" aria-label="Filter by game"><option value="all">All games</option></select></label>
-    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="day">Day</option><option value="night">Night</option><option value="arcade">Arcade</option><option value="base">Base game</option><option value="addon">Add-on</option><option value="native">Native packages</option></select></label>
+    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="day">Day</option><option value="night">Night</option><option value="arcade">Arcade</option><option value="base">Base game</option><option value="addon">Add-on</option><option value="native">Native packages</option><option value="showroom">Showroom</option></select></label>
     <div style="padding:0 16px 10px"><input id="semantic-query" aria-label="Describe game and variant filters" placeholder="e.g. Gran Turismo night models" title="Exact game and variant phrases are matched locally. Other wording is sent by the library server to the TypeSafe model (OpenRouter) when it is configured." maxlength="500" style="width:100%"><button type="button" id="semantic-filter">Find game and variant</button><div id="semantic-status" role="status" style="font-size:12px;color:var(--muted)"></div></div>
     <div id="filters"></div>
     <div id="results" role="status" aria-live="polite"></div>
@@ -562,7 +562,7 @@ async function select(c) {
   const sample = c.paint ? c.paint.rgb : [90, 90, 90];
   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
   $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
-  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.game==='midnight-club-3-remix'?'Decoded source textures are shown on lights, trim, badges and wheels; body paint stays a neutral inspection surface with recovered glass tint. Paint colours, paint names and native shader passes have not been decoded.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
+  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.game==='gran-turismo-4'?'Decoded native textures with the default colour set are shown. Other paint colours (Pat0 colour patches), reflections and game shading are not reproduced.':c.game==='midnight-club-3-remix'?'Decoded source textures are shown on lights, trim, badges and wheels; body paint stays a neutral inspection surface with recovered glass tint. Paint colours, paint names and native shader passes have not been decoded.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
     const el = document.createElement('span');
     el.className = 'livery-code';
@@ -618,9 +618,9 @@ function setView(view) {
   const vertical = THREE.MathUtils.degToRad(camera.fov / 2);
   const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
   const distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
-  const nativeZForward = ['redline', 'midnight-club-3-remix'].includes(current?.game);
+  const nativeZForward = ['redline', 'midnight-club-3-remix', 'gran-turismo-4'].includes(current?.game);
   const direction = view === 'side' ? new THREE.Vector3(nativeZForward ? 1 : 0, 0.08, nativeZForward ? 0 : 1) :
-    view === 'front' ? new THREE.Vector3(nativeZForward ? 0 : 1, 0.08, nativeZForward ? (current?.game === 'midnight-club-3-remix' ? -1 : 1) : 0) :
+    view === 'front' ? new THREE.Vector3(nativeZForward ? 0 : 1, 0.08, nativeZForward ? (['midnight-club-3-remix', 'gran-turismo-4'].includes(current?.game) ? -1 : 1) : 0) :
     view === 'top' ? new THREE.Vector3(0.01, 1, 0) : new THREE.Vector3(1, 0.45, 1);
   controls.target.copy(sphere.center);
   camera.position.copy(sphere.center).add(direction.normalize().multiplyScalar(distance));

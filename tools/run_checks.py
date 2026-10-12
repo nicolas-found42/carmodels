@@ -20,9 +20,18 @@ def registry():
              'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
              'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs',
              'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
-             'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership']
+             'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
+             'test_gt4_volume', 'test_extract_gt4_cars', 'test_gt4_model', 'test_gt4_specdb', 'test_gt4_glb',
+             'test_import_gt4_catalog', 'test_import_gt4_dealership']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
+    # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
+    checks.append({'name': 'gt4_catalog', 'command': ['python3', 'tools/import_gt4_catalog.py', '--check'],
+                   'availability': ['python3', 'tools/import_gt4_catalog.py', '--available']})
+    # The disc is never committed; its re-derivation runs only where the pinned ISO is supplied.
+    checks.append({'name': 'gt4_extraction', 'command': ['python3', 'tools/extract_gt4_cars.py', '--check'],
+                   'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
+                                    "'gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso').is_file() else 1)"]})
     for name in ['verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
                  'test_vu1_decode', 'verify_vu_pass_handlers', 'test_vu_pass_handlers']:
         checks.append({'name': name, 'command': ['python3', f'tools/{name}.py'],

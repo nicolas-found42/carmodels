@@ -20,7 +20,8 @@ RUBRIC = ['No supported library filter request, or ambiguous/conflicting instruc
 GAMES = {'ford-racing-2': ('Ford Racing 2 / FR2', (None,)),
          'gran-turismo': ('Gran Turismo / GT1 / GT', ('day', 'night', 'arcade')),
          'redline': ('Redline', ('base', 'addon')),
-         'midnight-club-3-remix': ('Midnight Club 3: DUB Edition Remix / MC3 Remix', ('native',))}
+         'midnight-club-3-remix': ('Midnight Club 3: DUB Edition Remix / MC3 Remix', ('native',)),
+         'gran-turismo-4': ('Gran Turismo 4 / GT4', ('showroom',))}
 MESSAGE = 'This request needs review. Use the game and variant controls, or ask only for those filters.'
 # Calibrated only for the separate ordinary-preview branch; readiness is checked in code.
 PREVIEW_THRESHOLDS = {'support': .8, 'coverage': 1.6, 'coverage_confidence': .4,
@@ -29,12 +30,14 @@ PREVIEW_THRESHOLDS = {'support': .8, 'coverage': 1.6, 'coverage_confidence': .4,
 # answer let an instruction-like request through (research/semantic-filter-teardown-2026-10-11.md).
 RESTRICTION_CONFIDENCE = .5
 VARIANT_NAMES = {'day': 'day', 'night': 'night', 'arcade': 'arcade', 'base': 'base game',
-                 'addon': 'add-on', 'native': 'native packages'}
+                 'addon': 'add-on', 'native': 'native packages', 'showroom': 'showroom models'}
 # Phrase routing: a query is decided in code only when every word is one of these.
 PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing', 'ii'): ('game', 'ford-racing-2'),
            ('fr2',): ('game', 'ford-racing-2'),
            ('gran', 'turismo', '1'): ('game', 'gran-turismo'), ('gran', 'turismo'): ('game', 'gran-turismo'),
            ('gt1',): ('game', 'gran-turismo'), ('gt',): ('game', 'gran-turismo'),
+           ('gran', 'turismo', '4'): ('game', 'gran-turismo-4'), ('gt4',): ('game', 'gran-turismo-4'),
+           ('gt', '4'): ('game', 'gran-turismo-4'),
            ('midnight', 'club', '3', 'dub', 'edition', 'remix'): ('game', 'midnight-club-3-remix'),
            ('midnight', 'club', '3', 'remix'): ('game', 'midnight-club-3-remix'),
            ('midnight', 'club', '3'): ('game', 'midnight-club-3-remix'), ('midnight', 'club'): ('game', 'midnight-club-3-remix'),
@@ -47,6 +50,7 @@ PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing'
            **{words: ('variant', 'addon') for words in (('add', 'on'), ('add', 'ons'), ('addon',), ('addons',), ('mod',),
                                                         ('mods',), ('plug', 'in'), ('plug', 'ins'), ('plugin',), ('plugins',))},
            ('native',): ('variant', 'native'),
+           ('showroom',): ('variant', 'showroom'),
            ('source', 'variant'): ('word', None), ('source', 'variants'): ('word', None),
            **{words: ('all', None) for words in (('all',), ('every',), ('everything',))},
            **{words: ('preview', None) for words in (('with', '3d', 'previews'), ('with', '3d', 'preview'), ('with', 'previews'),

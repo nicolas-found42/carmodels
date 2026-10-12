@@ -8,6 +8,8 @@ single list of what is not yet established; update it when a note closes or open
 | --- | --- |
 | `semantic-filter-teardown-2026-10-11.md` | Natural-language filter teardown: offline phrase routing, fail-closed model composition fixes, availability reporting, frozen labeled before/after measurements and Jev receipts |
 | `gran-turismo-shading-2026-10-11.md` | Why GT cars render shadowed: inverted winding and in-plane stored normals under double-sided lighting, all-728-car rebuild of candidate fixes, headless viewer render matrix, rejected modulation/black-face hypotheses, Jev receipts, ranked fixes |
+| `gran-turismo-4-previews.md` | GT4 CAR4/MDLS/VIF geometry, Tex1/GS texture and SpecDB decoding sources, preview readings (handedness, -Z front, wheel placement, overlay shapes), 730 previews in both catalogs, limits |
+| `gran-turismo-4-extraction.md` | Native GT4 car files from the encrypted GT4.VOL RoFS table: format sources, decoded volume facts, per-car selection, 730 source-catalog packages, controls and limits |
 | `gran-turismo-extraction.md` | Native GT1 simulation/arcade models and texture bundles, shared metadata, source provenance, extraction controls and semantic inventory experiments |
 | `retro-implementation-2026-10-08.md` | Real dealership Blender edit/export regression, display freshness, retained check evidence, bounded review tooling and explicit CI runtimes |
 | `adversarial-teardown-2026-10-08.md` | Executed offline viewer/export teardown, material ownership repairs, failure/keyboard/layout probes, sampling improvement and verification evidence |
@@ -26,6 +28,8 @@ single list of what is not yet established; update it when a note closes or open
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
 ## Open items
+
+- Gran Turismo 4: native extraction ([gran-turismo-4-extraction.md](gran-turismo-4-extraction.md)) and static previews in both catalogs ([gran-turismo-4-previews.md](gran-turismo-4-previews.md)) are established. Paint colour sets (Pat0), reflections and game shading, runtime wheel matrices, race LOD conversion, shared wheel ownership and game-render fidelity remain open.
 
 - Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Static mesh/texture conversion and both library imports are documented in [redline-library.md](redline-library.md); runtime plug-in precedence and game-render fidelity remain open.
 
