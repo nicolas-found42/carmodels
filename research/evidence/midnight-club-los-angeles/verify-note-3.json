@@ -1,0 +1,61 @@
+{
+  "args": {
+    "claims": [
+      "The 32-byte RPF3 archive key is located in the decrypted default.xex image at offset 0x7D8AC4 and only its SHA-256 is recorded.",
+      "Of the 9,273 files inside car packages, 8,743 keep unresolved 0x<hash> names (about 94%)."
+    ],
+    "evidence": [
+      {
+        "id": "extraction-receipt-v2",
+        "text": "{\n \"archive_key\": {\n  \"algorithm\": \"AES-256-ECB, sixteen passes over the 16-byte-aligned table prefix\",\n  \"image_offset\": 8227524,\n  \"image_offset_hex\": \"0x7d8ac4\",\n  \"image_sha256\": \"5a9de5cd05f32ae66d2a7fd3b09a569e18239ffa258bb1a0efb9126de1cff319\",\n  \"key_sha256\": \"71f5abd83015a713952b7c2f2c25289f92f3cf9a9dd740c40a511a62ea5b505c\",\n  \"xex\": {\n   \"block_table\": [\n    {\n     \"stored_bytes\": 8617984,\n     \"zero_fill_bytes\": 1114112\n    },\n    {\n     \"stored_bytes\": 622592,\n     \"zero_fill_bytes\": 0\n    }\n   ],\n   \"blocks\": [\n    [\n     8617984,\n     1114112\n    ],\n    [\n     622592,\n     0\n    ]\n   ],\n   \"compression\": 1,\n   \"encryption\": 1,\n   \"image_bytes\": 10354688\n  },\n  \"xex_sha256\": \"c386f4001fa569e6ad4b982f441f67412f00b3f47c166134555cd4b59854a432\"\n },\n \"archives\": {\n  \"xarchive_audio.rpf\": {\n   \"bytes\": 1615757312,\n   \"entries\": 1822,\n   \"iso_offset\": 3919380480,\n   \"resolved_names\": 1558\n  },\n  \"xarchive_audlo.rpf\": {\n   \"bytes\": 1463189504,\n   \"entries\": 1086,\n   \"iso_offset\": 325419008,\n   \"resolved_names\": 823\n  },\n  \"xarchive_cache.rpf\": {\n   \"bytes\": 2130739200,\n   \"entries\": 23931,\n   \"iso_offset\": 1788608512,\n   \"resolved_names\": 7426\n  },\n  \"xarchive_music.rpf\": {\n   \"bytes\": 780304384,\n   \"entries\": 113,\n   \"iso_offset\": 5535137792,\n   \"resolved_names\": 111\n  }\n },\n \"files\": {\n  \"bytes\": 407692668,\n  \"total\": 10701,\n  \"vehicle_package_names\": {\n   \"files\": 9273,\n   \"resolved\": 530,\n   \"unresolved\": 8743,\n   \"unresolved_percent\": 94.3\n  }\n },\n \"names\": {\n  \"ambiguous_hashes\": 8,\n  \"harvested_strings\": 448917,\n  \"hashes_with_candidates\": 7424,\n  \"sources\": [\n   \"default.xex image\",\n   \"xarchive_cache.rpf loose (non-resource, non-archive) members\"\n  ]\n },\n \"source\": {\n  \"bytes\": 7838695424,\n  \"file\": \"Midnight Club - Los Angeles - Complete Edition (USA, Europe).iso\",\n  \"format\": \"XDVDFS XGD2\",\n  \"sha1\": \"4ca07fcf49427834692042faaf07fcfdefa4b263\",\n  \"sha256\": \"877a9415f695d27f8170d04d3f18aab13e2b4de3cbabda824e04c9338b2914e9\"\n },\n \"vehicles\": {\n  \"by_prefix\": {\n   \"va\": 41,\n   \"vp\": 49,\n   \"vpd\": 16\n  },\n  \"total\": 106\n }\n}"
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_verify",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The 32-byte RPF3 archive key is located in the decrypted default.xex image at offset 0x7D8AC4 and only its SHA-256 is recorded.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.7,
+          "contradicts": 0.22,
+          "says_nothing": 0.08
+        },
+        "confidence": 0.55,
+        "action": "review",
+        "supporting_evidence": null,
+        "same_subject": 0.86
+      },
+      {
+        "id": "claim1",
+        "claim": "Of the 9,273 files inside car packages, 8,743 keep unresolved 0x<hash> names (about 94%).",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": null,
+        "same_subject": 0.95
+      }
+    ],
+    "usage": {
+      "input_tokens": 1976,
+      "output_tokens": 126
+    }
+  }
+}

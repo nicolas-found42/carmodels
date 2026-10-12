@@ -22,7 +22,8 @@ def registry():
              'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
              'test_gt4_volume', 'test_extract_gt4_cars', 'test_gt4_model', 'test_gt4_specdb', 'test_gt4_glb',
-             'test_import_gt4_catalog', 'test_import_gt4_dealership']
+             'test_import_gt4_catalog', 'test_import_gt4_dealership',
+             'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
@@ -32,6 +33,11 @@ def registry():
     checks.append({'name': 'gt4_extraction', 'command': ['python3', 'tools/extract_gt4_cars.py', '--check'],
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
                                     "'gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso').is_file() else 1)"]})
+    # The MCLA disc is never committed either; the same skip applies when it is absent.
+    checks.append({'name': 'mcla_extraction', 'command': ['python3', 'tools/extract_mcla_cars.py', '--check'],
+                   'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
+                                    "'midnight-club-los-angeles/game-files/Midnight Club - Los Angeles - Complete Edition "
+                                    "(USA, Europe).iso').is_file() else 1)"]})
     for name in ['verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
                  'test_vu1_decode', 'verify_vu_pass_handlers', 'test_vu_pass_handlers']:
         checks.append({'name': name, 'command': ['python3', f'tools/{name}.py'],

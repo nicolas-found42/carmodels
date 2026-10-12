@@ -95,3 +95,13 @@ tools/validation-runtime/mc3-ghidra-20261010*
 # warning size (decal_g.ppf); rederive from ISO. No tool reads either.
 midnight-club-3-remix/cars/shared/assets/06472/resources/vehicle/decal.ppf
 midnight-club-3-remix/cars/shared/assets/06474/resources/vehicle/decal_g.ppf
+
+# Locally supplied Midnight Club: Los Angeles disc (the original .7z and its unpacked ISO);
+# never publish a disc image.
+midnight-club-los-angeles/game-files/
+# MCLA native car data (~415 MB) is re-derivable from the local disc (tools/extract_mcla_cars.py).
+# Kept: the extraction index (every file's SHA-256) and provenance (disc listing, decrypted
+# archive tables, archive-key location without the key).
+midnight-club-los-angeles/cars/*
+!midnight-club-los-angeles/cars/index.json
+!midnight-club-los-angeles/cars/provenance/
