@@ -137,3 +137,21 @@ preview readiness. A deterministic readiness check prevents native DAT-only rows
 from satisfying a preview request; uncertainty or provider failures preserve the
 current filters. See [the preview investigation](../../research/midnight-club-3-remix-previews.md)
 for native-format evidence, experiments and verification limits.
+
+Showcase triangle indices use one unsigned 32-bit representation. The compact display schema is
+4; the encoder emits schema 4 and the browser rejects the former 16-bit schema 1, so rebuild showcase data with
+`python3 tools/build_dealership.py` after updating. Textured GLBs use 32-bit index arrays in the
+renderer too. Imported GLBs can retain their source accessor widths; the loader converts their
+indices to 32-bit arrays. This does not change vertex coordinates, triangle order or source files.
+
+Midnight Club: Los Angeles static previews are added with `python3 tools/import_mcla_catalog.py`,
+then `python3 tools/import_mcla_dealership.py`, `python3 tools/build_model_catalog.py` and
+`python3 tools/build_dealership.py`. The source-model showcase has independent LOD 0 GLBs
+and local native ZIP downloads; the dealership owns independent editable `models/MCLA_*.glb`
+copies. Repeat imports preserve edits. `--upgrade-unedited` refreshes only exact copies of
+recorded sources and retains import history. Names use exact English UI key joins for 47 of
+106 source vehicles; the other entries retain source codes. The stock variant identifies the
+explicit static assembly convention. Wheel sizing, neutral paint and material simplification
+are preview approximations; runtime configuration and original rendering remain unverified.
+See [the preview note](../../research/midnight-club-los-angeles-previews.md) and
+[the name note](../../research/midnight-club-los-angeles-names.md).

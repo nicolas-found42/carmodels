@@ -66,6 +66,42 @@ class Tests(unittest.TestCase):
         self.assertNotIn('gran-turismo', options)
         self.assertNotIn('PRIVATE', str(options))
 
+    def test_mcla_stock_and_ready_partial_state(self):
+        game = 'midnight-club-los-angeles'
+        cars = [*CARS, {'game': game, 'source_variant': 'stock', 'file': 'car.glb'}]
+        options = options_for(cars)
+        self.assertEqual(options[game + ':stock'], {'game': game, 'variant': 'stock'})
+        self.assertIn('runtime customization', questions_for(options)['filter']['criteria'][game + ':stock'])
+        for query in ('MCLA stock previews', 'Midnight Club Los Angeles cars', 'MC LA stock'):
+            client = Fake()
+            result = interpret(query, cars, client)
+            self.assertEqual(result['status'], 'ok')
+            self.assertEqual(result['filters']['game'], game)
+            self.assertEqual(client.calls, 0)
+        partial = [*cars, {'game': game, 'source_variant': 'stock', 'file': 'pending.zip', 'asset_kind': 'native-package'}]
+        result = interpret('MCLA stock previews', partial, Fake())
+        self.assertEqual(result['status'], 'review')
+        self.assertIsNone(result['filters'])
+        client = Fake(answer(game, cars))
+        result = interpret('Los Angeles racing machines', cars, client)
+        self.assertEqual(result['filters'], options[game])
+        self.assertEqual(len(client.request['questions']), 4)
+        self.assertNotIn('car.glb', str(client.request['state']))
+        self.assertIn('MCLA', client.request['state']['game_aliases'][game])
+        normalized = state_for('MCLA Nissan cars with original shaders', cars, options)
+        self.assertEqual(normalized['query'], 'Midnight Club Los Angeles Nissan cars with original shaders')
+        self.assertEqual(normalized['original_query'], 'MCLA Nissan cars with original shaders')
+        self.assertEqual(library_filter.model_query('mcla_code GT model MC3'), 'mcla_code GT model Midnight Club 3 Remix')
+        self.assertEqual(interpret('stock MCLA assemblies', cars, None)['filters'], options[game + ':stock'])
+        self.assertEqual(interpret('MCLA night cars', cars, None)['status'], 'review')
+        both = [*cars, {'game': 'midnight-club-3-remix', 'source_variant': 'native'}]
+        family = interpret('Midnight Club cars', both, Fake())
+        self.assertEqual(family['status'], 'review')
+        self.assertIsNone(family['filters'])
+        unknown = interpret('MCLA cars with original shader fidelity', cars, None)
+        self.assertEqual(unknown['status'], 'error')
+        self.assertIsNone(unknown['filters'])
+
     def test_mc3_native_filter_and_no_preview_restriction(self):
         cars = [*CARS, {'game': 'midnight-club-3-remix', 'source_variant': 'native'}]
         options = options_for(cars)

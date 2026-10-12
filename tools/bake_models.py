@@ -114,6 +114,7 @@ def normal_transform(matrix):
 
 
 def bake_car(code, data, expected_sha256=None, *, source_mode=True):
+    """Validate the static scene and emit showcase geometry with 32-bit triangle indices."""
     source_sha = hashlib.sha256(data).hexdigest()
     if expected_sha256 is not None and source_sha != expected_sha256:
         raise ValueError(f'{code}: model GLB differs from manifest pin')
@@ -224,18 +225,16 @@ def bake_car(code, data, expected_sha256=None, *, source_mode=True):
     for kind, part in parts.items():
         if not part['indices']:
             continue
-        if len(part['vertices']) > 65535:
-            raise ValueError('Model exceeds compact index capacity')
         vertices = bytearray()
         for raw in part['vertices']:
             x, y, z, nx, ny, nz, tone = VERTEX.unpack(raw)
             vertices.extend(VERTEX.pack(x - origin[0], y - origin[1], z - origin[2], nx, ny, nz, tone))
         output.append({'kind': kind, 'vertexCount': len(part['vertices']),
                        'vertices': base64.b64encode(vertices).decode(),
-                       'indices': base64.b64encode(struct.pack('<' + 'H' * len(part['indices']), *part['indices'])).decode()})
+                       'indices': base64.b64encode(struct.pack('<' + 'I' * len(part['indices']), *part['indices'])).decode()})
     for hub in hubs:
         hub['position'] = [v - o for v, o in zip(hub['position'], origin)]
-    return {'schema': 1, 'parts': output, 'bounds': [0 if i == 1 else low[i] - origin[i] for i in range(3)] + [high[i] - origin[i] for i in range(3)],
+    return {'schema': 4, 'parts': output, 'bounds': [0 if i == 1 else low[i] - origin[i] for i in range(3)] + [high[i] - origin[i] for i in range(3)],
             'wheelHubs': hubs, 'triangleCount': sum(len(p['indices']) // 3 for p in parts.values()),
             'source': {'glb': f'recovered/{code}.glb', 'sha256': source_sha,
                        'originalModelSha256': doc.get('extras', {}).get('originalModelSha256'),

@@ -25,6 +25,7 @@ function fixture(mutate=()=>{}) {
 }
 const data=fixture();
 assert.equal(parseEditableGLB(data).meshes[0][0].indices.length,3);
+assert(parseEditableGLB(data).meshes[0][0].indices instanceof Uint32Array,'imported16-bit GLB indices normalize to32-bit');
 const colored=fixture(d=>{d.accessors.push({...d.accessors[1]});d.meshes[0].primitives[0].attributes.COLOR_0=4;});
 assert.deepEqual([...parseEditableGLB(colored).meshes[0][0].colors],[0,0,1,0,0,1,0,0,1]);
 for(const mutate of [d=>d.nodes[0].children=[0],d=>d.accessors[0].count=100,d=>d.images[0].uri='https://example.com/secret',d=>d.nodes[0].rotation=[0,0,0,0],d=>d.meshes[0].primitives[0].mode=1,(_d,b)=>b.writeUInt16LE(7,96),(_d,b)=>b.writeFloatLE(NaN,0),d=>d.bufferViews[0].byteOffset=-1,d=>d.nodes[0].scale=[0,1,1]])assert.throws(()=>parseEditableGLB(fixture(mutate)));
@@ -33,7 +34,7 @@ const car={model:{source:{glb:'dealership/models/GT_TEST.glb',sha256:hash}}};
 const texture=new THREE.Texture();let textureDisposals=0;texture.addEventListener('dispose',()=>textureDisposals++);
 const group=await loadEditableGLB(car,{fetchImpl:async()=>data,textureImpl:async()=>texture});
 const bounds=new THREE.Box3().setFromObject(group);assert.equal(bounds.min.y,0);assert.equal(bounds.min.x+bounds.max.x,0);
-const mesh=group.children[0].children[0];assert.equal(mesh.material.map,texture);assert.equal(mesh.material.alphaTest,0.25);assert.equal(mesh.material.transparent,false);
+const mesh=group.children[0].children[0];assert(mesh.geometry.index.array instanceof Uint32Array);assert.equal(mesh.material.map,texture);assert.equal(mesh.material.alphaTest,0.25);assert.equal(mesh.material.transparent,false);
 disposeCar(group);assert.equal(textureDisposals,1);
 const colorHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',colored)),v=>v.toString(16).padStart(2,'0')).join('');
 const colorGroup=await loadEditableGLB({model:{source:{...car.model.source,sha256:colorHash}}},{fetchImpl:async()=>colored,textureImpl:async()=>new THREE.Texture()});

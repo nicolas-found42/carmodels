@@ -37,7 +37,7 @@ function bytes(encoded) {
 export function decodeModel(c) {
   const s = c.model;
   const fail = () => { throw Error(`${c.code}: invalid dealership model.`); };
-  if (!s || s.schema !== 1 || !Array.isArray(s.parts) || s.parts.length < 1 || s.parts.length > 3 ||
+  if (!s || s.schema !== 4 || !Array.isArray(s.parts) || s.parts.length < 1 || s.parts.length > 3 ||
       !Array.isArray(s.bounds) || s.bounds.length !== 6 || !s.bounds.every(Number.isFinite) ||
       !s.source || s.source.glb !== `dealership/models/${c.code}.glb` || !/^[a-f0-9]{64}$/.test(s.source.sha256) ||
       s.source.preset !== 'dealership' || !Array.isArray(s.wheelHubs) || s.wheelHubs.length > 16) fail();
@@ -46,10 +46,10 @@ export function decodeModel(c) {
   let triangles = 0;
   const kinds = new Set();
   const parts = s.parts.map(part => {
-    if (!['body','wheel','detail'].includes(part.kind) || kinds.has(part.kind) || !Number.isInteger(part.vertexCount) || part.vertexCount <= 0 || part.vertexCount > 65535) fail();
+    if (!['body','wheel','detail'].includes(part.kind) || kinds.has(part.kind) || !Number.isSafeInteger(part.vertexCount) || part.vertexCount <= 0 || part.vertexCount > 0x100000000) fail();
     kinds.add(part.kind);
     const raw = bytes(part.vertices), faces = bytes(part.indices);
-    if (raw.byteLength !== part.vertexCount * 25 || !faces.byteLength || faces.byteLength % 6) fail();
+    if (raw.byteLength !== part.vertexCount * 25 || !faces.byteLength || faces.byteLength % 12) fail();
     const view = new DataView(raw.buffer), faceView = new DataView(faces.buffer);
     const positions = new Float32Array(part.vertexCount * 3), normals = new Float32Array(positions.length), colors = new Float32Array(positions.length);
     for (let i = 0; i < part.vertexCount; i++) {
@@ -64,9 +64,9 @@ export function decodeModel(c) {
       const linear = tone <= 0.04045 ? tone/12.92 : ((tone+0.055)/1.055)**2.4;
       colors.fill(linear,i*3,i*3+3);
     }
-    const indices = new Uint16Array(faces.byteLength/2);
+    const indices = new Uint32Array(faces.byteLength/4);
     for (let i = 0; i < indices.length; i++) {
-      indices[i] = faceView.getUint16(i*2,true);
+      indices[i] = faceView.getUint32(i*4,true);
       if (indices[i] >= part.vertexCount) fail();
     }
     triangles += indices.length / 3;
@@ -126,7 +126,7 @@ export function validateCars(cars) {
   for (const c of cars) {
     if (!c || typeof c.code !== 'string' || !/^[A-Z0-9_]+$/.test(c.code) || codes.has(c.code)) throw Error('A vehicle code is missing or duplicated.');
     codes.add(c.code);
-    const unknownSpecs = ['gran-turismo','gran-turismo-4','redline','midnight-club-3-remix'].includes(c.game);
+    const unknownSpecs = ['gran-turismo','gran-turismo-4','redline','midnight-club-3-remix','midnight-club-los-angeles'].includes(c.game);
     if(c.game!=null && !/^[a-z0-9][a-z0-9-]*$/.test(c.game))throw Error(`${c.code}: invalid game.`);
     if(c.gameLabel!=null && typeof c.gameLabel!=='string')throw Error(`${c.code}: invalid game label.`);
     if (typeof c.name !== 'string' || !c.name || !styles.has(c.bodyStyle)) throw Error(`${c.code}: invalid name or illustration style.`);

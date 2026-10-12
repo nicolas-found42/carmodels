@@ -21,7 +21,8 @@ GAMES = {'ford-racing-2': ('Ford Racing 2 / FR2', (None,)),
          'gran-turismo': ('Gran Turismo / GT1 / GT', ('day', 'night', 'arcade')),
          'redline': ('Redline', ('base', 'addon')),
          'midnight-club-3-remix': ('Midnight Club 3: DUB Edition Remix / MC3 Remix', ('native',)),
-         'gran-turismo-4': ('Gran Turismo 4 / GT4', ('showroom',))}
+         'gran-turismo-4': ('Gran Turismo 4 / GT4', ('showroom',)),
+         'midnight-club-los-angeles': ('Midnight Club: Los Angeles / MCLA / MC LA', ('stock',))}
 MESSAGE = 'This request needs review. Use the game and variant controls, or ask only for those filters.'
 # Calibrated only for the separate ordinary-preview branch; readiness is checked in code.
 PREVIEW_THRESHOLDS = {'support': .8, 'coverage': 1.6, 'coverage_confidence': .4,
@@ -30,7 +31,7 @@ PREVIEW_THRESHOLDS = {'support': .8, 'coverage': 1.6, 'coverage_confidence': .4,
 # answer let an instruction-like request through (research/semantic-filter-teardown-2026-10-11.md).
 RESTRICTION_CONFIDENCE = .5
 VARIANT_NAMES = {'day': 'day', 'night': 'night', 'arcade': 'arcade', 'base': 'base game',
-                 'addon': 'add-on', 'native': 'native packages', 'showroom': 'showroom models'}
+                 'addon': 'add-on', 'native': 'native packages', 'showroom': 'showroom models', 'stock': 'static stock assembly'}
 # Phrase routing: a query is decided in code only when every word is one of these.
 PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing', 'ii'): ('game', 'ford-racing-2'),
            ('fr2',): ('game', 'ford-racing-2'),
@@ -40,8 +41,10 @@ PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing'
            ('gt', '4'): ('game', 'gran-turismo-4'),
            ('midnight', 'club', '3', 'dub', 'edition', 'remix'): ('game', 'midnight-club-3-remix'),
            ('midnight', 'club', '3', 'remix'): ('game', 'midnight-club-3-remix'),
-           ('midnight', 'club', '3'): ('game', 'midnight-club-3-remix'), ('midnight', 'club'): ('game', 'midnight-club-3-remix'),
+           ('midnight', 'club', '3'): ('game', 'midnight-club-3-remix'), ('midnight', 'club'): ('family', 'midnight-club'),
            ('mc3', 'remix'): ('game', 'midnight-club-3-remix'), ('mc3',): ('game', 'midnight-club-3-remix'),
+           ('midnight', 'club', 'los', 'angeles'): ('game', 'midnight-club-los-angeles'),
+           ('mcla',): ('game', 'midnight-club-los-angeles'), ('mc', 'la'): ('game', 'midnight-club-los-angeles'),
            ('redline',): ('game', 'redline'),
            **{words: ('variant', 'day') for words in (('day',), ('daytime',), ('daylight',), ('day', 'time'))},
            **{words: ('variant', 'night') for words in (('night',), ('nighttime',), ('night', 'time'))},
@@ -50,14 +53,14 @@ PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing'
            **{words: ('variant', 'addon') for words in (('add', 'on'), ('add', 'ons'), ('addon',), ('addons',), ('mod',),
                                                         ('mods',), ('plug', 'in'), ('plug', 'ins'), ('plugin',), ('plugins',))},
            ('native',): ('variant', 'native'),
-           ('showroom',): ('variant', 'showroom'),
+           ('showroom',): ('variant', 'showroom'), ('stock',): ('variant', 'stock'),
            ('source', 'variant'): ('word', None), ('source', 'variants'): ('word', None),
            **{words: ('all', None) for words in (('all',), ('every',), ('everything',))},
            **{words: ('preview', None) for words in (('with', '3d', 'previews'), ('with', '3d', 'preview'), ('with', 'previews'),
                                                      ('that', 'have', '3d', 'previews'), ('3d', 'previews'), ('previews',))},
            **{(word,): ('word', None) for word in (
                'car', 'cars', 'model', 'models', 'vehicle', 'vehicles', 'entry', 'entries', 'version', 'versions',
-               'variant', 'variants', 'game', 'games', 'package', 'packages',
+               'variant', 'variants', 'game', 'games', 'package', 'packages', 'assembly', 'assemblies', 'collection',
                'show', 'me', 'list', 'display', 'find', 'the', 'from', 'only', 'just', 'of', 'a', 'an', 'please')}}
 LONGEST_PHRASE = max(len(words) for words in PHRASES)
 INVALID = 'Enter a query of 1 to 500 printable characters.'
@@ -130,6 +133,13 @@ def phrase_filter(query, options, state):
                 break
         else:
             return None
+    family = [game for game in options if ':' not in game and game.startswith('midnight-club-')]
+    if any(kind == 'family' for kind, _ in found):
+        if len(family) != 1:
+            return {'status': 'review', 'filters': None, 'decided_by': 'phrase',
+                    'message': 'Name Midnight Club 3 Remix or Midnight Club Los Angeles.',
+                    'signals': {'phrase': {'ambiguous_family': True}}}
+        found.append(('game', family[0]))
     games = {value for kind, value in found if kind == 'game'}
     variants = {value for kind, value in found if kind == 'variant'}
     preview = any(kind == 'preview' for kind, _ in found)
@@ -187,6 +197,13 @@ def options_for(cars):
     return options
 
 
+def model_query(query):
+    """Expand only known, unambiguous game abbreviations; retain every other word."""
+    aliases = {'fr2': 'Ford Racing 2', 'gt1': 'Gran Turismo 1', 'gt4': 'Gran Turismo 4',
+               'mc3': 'Midnight Club 3 Remix', 'mcla': 'Midnight Club Los Angeles'}
+    return re.sub(r'\b(fr2|gt1|gt4|mc3|mcla)\b', lambda match: aliases[match[0].lower()], query, flags=re.I)
+
+
 def state_for(query, cars, options, catalog='source'):
     """Summarize current compiled catalog facts without transmitting asset data."""
     if catalog not in ('source', 'dealership'):
@@ -208,7 +225,7 @@ def state_for(query, cars, options, catalog='source'):
                 available = (car.get('displayMode') != 'native-package' and isinstance(model, dict)
                              and type(model.get('schema')) is int
                              and ((model['schema'] == 2 and car.get('displayMode') == 'textured-glb') or
-                                  (model['schema'] == 1 and isinstance(model.get('parts'), list) and bool(model['parts'])))
+                                  (model['schema'] == 4 and isinstance(model.get('parts'), list) and bool(model['parts'])))
                              and isinstance(model.get('triangleCount'), int)
                              and not isinstance(model['triangleCount'], bool) and model['triangleCount'] > 0
                              and isinstance(model.get('source'), dict)
@@ -217,8 +234,10 @@ def state_for(query, cars, options, catalog='source'):
             ready += int(available)
         facts[label] = {'entries': len(rows), 'preview_ready': ready,
                         'all_have_preview': bool(rows) and ready == len(rows)}
-    return {'query': query, 'catalog': catalog, 'available_filters': options,
+    return {'query': model_query(query), 'original_query': query, 'catalog': catalog, 'available_filters': options,
             'available_games': [game for game in options if game != 'all' and ':' not in game],
+            'game_aliases': {game: GAMES[game][0].split(' / ') for game in options
+                             if game != 'all' and ':' not in game},
             'filter_facts': facts,
             'supported_controls': ['game', 'source_variant'],
             'unsupported_controls': ['texture_fidelity', 'car_statistics', 'make', 'model_name', 'body_style']}
@@ -250,7 +269,8 @@ def questions_for(options, wording='stateful', state=None):
             variant = value['variant']
             meaning = ('base game / original bundled cars' if variant == 'base' else
                        'add-on / addon / mod / plug-in cars' if variant == 'addon' else
-                       'native PS2 source vehicle packages; preview availability is a separate current catalog fact' if variant == 'native' else variant)
+                       'native PS2 source vehicle packages; preview availability is a separate current catalog fact' if variant == 'native' else
+                       'static stock-index assembly; runtime customization and original rendering are not established' if variant == 'stock' else variant)
             criteria[key] = (f"Show {GAMES[value['game']][0]} library entries; " +
                              (f"only source variant {meaning}." if variant else 'all its variants.'))
         if wording == 'stateful' and state is not None:
@@ -260,6 +280,8 @@ def questions_for(options, wording='stateful', state=None):
             criteria[key] += (' This selection satisfies requests for these entries with 3D previews.'
                               if fact['all_have_preview'] else
                               ' This selection cannot satisfy a request limited to entries with 3D previews.')
+    if 'midnight-club-los-angeles' in options and 'midnight-club-3-remix' in options:
+        caution += ' Midnight Club without a version or Los Angeles qualifier is ambiguous between the two available games; use no_match.'
     criteria['no_match'] = 'Unsupported restriction, unrelated request, ambiguity, or no matching filter.'
     questions = {
         'filter': {'type': 'choice', 'criteria': criteria,

@@ -6,13 +6,14 @@ from pathlib import Path
 
 from import_gt4_catalog import GAME as GT4_GAME, source_package as gt4_package
 from import_mc3_catalogs import GAME as MC3_GAME, source_package as mc3_package
+from import_mcla_catalog import GAME as MCLA_GAME, source_package as mcla_package
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'dealership/public'
 # Native-only games publish packages; each game's validator owns its package format.
 NATIVE_PACKAGES = {MC3_GAME: mc3_package}
 # Games whose GLB rows also carry a native package validate the whole row themselves.
-ROW_VALIDATORS = {GT4_GAME: gt4_package}
+ROW_VALIDATORS = {GT4_GAME: gt4_package, MCLA_GAME: mcla_package}
 
 
 def model_catalog(public=PUBLIC):
