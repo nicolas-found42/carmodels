@@ -1,0 +1,1554 @@
+{
+ "module": "tools/library_filter.py",
+ "cases_file": "research/evidence/semantic-filter-teardown-2026-10-11/eval/holdout2-cases.json",
+ "offline": false,
+ "metrics": {
+  "cases": 45,
+  "supported": 25,
+  "applied": 24,
+  "applied_correct": 24,
+  "wrongly_applied": 0,
+  "supported_applied": 24,
+  "correct_action": 44,
+  "errors": 1,
+  "by_source": {
+   "phrase": 28,
+   "model": 16,
+   "null": 1
+  },
+  "input_tokens": 42312,
+  "output_tokens": 3744,
+  "cost": 0.001777104,
+  "provider_calls": 16,
+  "elapsed_seconds": 1.363,
+  "latency_max": 0.3797,
+  "latency_mean": 0.1085
+ },
+ "rows": [
+  {
+   "id": "g01",
+   "query": "GT cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo (exact game and variant words).",
+   "seconds": 0.0021
+  },
+  {
+   "id": "g02",
+   "query": "gran turismo arcade",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:arcade"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:arcade",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "arcade"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, arcade variant (exact game and variant words).",
+   "seconds": 0.0093
+  },
+  {
+   "id": "g03",
+   "query": "Gran Turismo (night)",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, night variant (exact game and variant words).",
+   "seconds": 0.0055
+  },
+  {
+   "id": "g04",
+   "query": "GRAN TURISMO DAY",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:day"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:day",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "day"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, day variant (exact game and variant words).",
+   "seconds": 0.0037
+  },
+  {
+   "id": "g05",
+   "query": "night-time Gran Turismo cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, night variant (exact game and variant words).",
+   "seconds": 0.0052
+  },
+  {
+   "id": "g06",
+   "query": "Gran Turismo nite",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo:night",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 1.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.0
+    },
+    "confidence": 1.0,
+    "support": 0.92,
+    "coverage": 1.97,
+    "coverage_confidence": 0.95,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.74,
+      "preview": 0.25,
+      "other_catalog": 0.0,
+      "unsupported": 0.0,
+      "unclear": 0.01
+     },
+     "confidence": 0.68
+    }
+   },
+   "usage": {
+    "input_tokens": 2643,
+    "output_tokens": 236,
+    "cost": 0.000111006
+   },
+   "message": "Applied Gran Turismo, night variant (interpreted by the TypeSafe model).",
+   "seconds": 0.3797
+  },
+  {
+   "id": "g07",
+   "query": "redline addon cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "ok",
+   "applied_label": "redline:addon",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "addon"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline, add-on variant (exact game and variant words).",
+   "seconds": 0.0055
+  },
+  {
+   "id": "g08",
+   "query": "redline custom cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon",
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "redline",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.8,
+     "redline:base": 0.01,
+     "redline:addon": 0.14,
+     "no_match": 0.05
+    },
+    "confidence": 0.78,
+    "support": 0.68,
+    "coverage": 1.71,
+    "coverage_confidence": 0.55,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.78,
+      "preview": 0.1,
+      "other_catalog": 0.0,
+      "unsupported": 0.1,
+      "unclear": 0.02
+     },
+     "confidence": 0.73
+    }
+   },
+   "usage": {
+    "input_tokens": 2643,
+    "output_tokens": 232,
+    "cost": 0.000111006
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.3735
+  },
+  {
+   "id": "g09",
+   "query": "Redline stock cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:base",
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "redline",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.99,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.01
+    },
+    "confidence": 0.99,
+    "support": 0.87,
+    "coverage": 1.89,
+    "coverage_confidence": 0.83,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.88,
+      "preview": 0.09,
+      "other_catalog": 0.01,
+      "unsupported": 0.01,
+      "unclear": 0.01
+     },
+     "confidence": 0.85
+    }
+   },
+   "usage": {
+    "input_tokens": 2643,
+    "output_tokens": 232,
+    "cost": 0.000111006
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.3658
+  },
+  {
+   "id": "g10",
+   "query": "cars from Redline",
+   "catalog": "dealership",
+   "expected": [
+    "redline"
+   ],
+   "status": "ok",
+   "applied_label": "redline",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline (exact game and variant words).",
+   "seconds": 0.0072
+  },
+  {
+   "id": "g11",
+   "query": "show Redline",
+   "catalog": "dealership",
+   "expected": [
+    "redline"
+   ],
+   "status": "ok",
+   "applied_label": "redline",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g12",
+   "query": "Ford Racing 2 cars please",
+   "catalog": "dealership",
+   "expected": [
+    "ford-racing-2"
+   ],
+   "status": "ok",
+   "applied_label": "ford-racing-2",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "ford-racing-2"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Ford Racing 2 (exact game and variant words).",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g13",
+   "query": "FR2",
+   "catalog": "dealership",
+   "expected": [
+    "ford-racing-2"
+   ],
+   "status": "ok",
+   "applied_label": "ford-racing-2",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "ford-racing-2"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Ford Racing 2 (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g14",
+   "query": "midnight club",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix (exact game and variant words).",
+   "seconds": 0.002
+  },
+  {
+   "id": "g15",
+   "query": "MC3 remix cars",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix (exact game and variant words).",
+   "seconds": 0.002
+  },
+  {
+   "id": "g16",
+   "query": "Midnight Club 3 native",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix:native",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [
+      "native"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix, native packages variant (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g17",
+   "query": "all cars from all games",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g18",
+   "query": "show everything",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g19",
+   "query": "list all vehicles",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g20",
+   "query": "every car",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g21",
+   "query": "I want to see Gran Turismo night models",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo:night",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 1.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.0
+    },
+    "confidence": 1.0,
+    "support": 0.95,
+    "coverage": 1.98,
+    "coverage_confidence": 0.98,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.55,
+      "preview": 0.4,
+      "other_catalog": 0.0,
+      "unsupported": 0.05,
+      "unclear": 0.0
+     },
+     "confidence": 0.44
+    }
+   },
+   "usage": {
+    "input_tokens": 2647,
+    "output_tokens": 236,
+    "cost": 0.000111174
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.3204
+  },
+  {
+   "id": "g22",
+   "query": "Gran Turismo night cars",
+   "catalog": "source",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, night variant (exact game and variant words).",
+   "seconds": 0.003
+  },
+  {
+   "id": "g23",
+   "query": "Redline add-on cars",
+   "catalog": "source",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "ok",
+   "applied_label": "redline:addon",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "addon"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline, add-on variant (exact game and variant words).",
+   "seconds": 0.0022
+  },
+  {
+   "id": "g24",
+   "query": "MC3 Remix",
+   "catalog": "source",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix (exact game and variant words).",
+   "seconds": 0.0024
+  },
+  {
+   "id": "g25",
+   "query": "Gran Turismo arcade cars with 3D previews",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:arcade"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:arcade",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "arcade"
+     ],
+     "preview": true
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, arcade variant (exact game and variant words).",
+   "seconds": 0.0033
+  },
+  {
+   "id": "g26",
+   "query": "all Gran Turismo cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo (exact game and variant words).",
+   "seconds": 0.0029
+  },
+  {
+   "id": "g27",
+   "query": "show only redline mods",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "ok",
+   "applied_label": "redline:addon",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "addon"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline, add-on variant (exact game and variant words).",
+   "seconds": 0.0027
+  },
+  {
+   "id": "g28",
+   "query": "Gran Turismo Skylines",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.86,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.14
+    },
+    "confidence": 0.85,
+    "support": 0.5,
+    "coverage": 1.51,
+    "coverage_confidence": 0.28,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.48,
+      "preview": 0.05,
+      "other_catalog": 0.0,
+      "unsupported": 0.43,
+      "unclear": 0.04
+     },
+     "confidence": 0.35
+    }
+   },
+   "usage": {
+    "input_tokens": 2643,
+    "output_tokens": 234,
+    "cost": 0.000111006
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2846
+  },
+  {
+   "id": "g29",
+   "query": "Redline cars sorted by name",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "redline",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.93,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.07
+    },
+    "confidence": 0.92,
+    "support": 0.52,
+    "coverage": 1.8,
+    "coverage_confidence": 0.7,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.49,
+      "preview": 0.07,
+      "other_catalog": 0.0,
+      "unsupported": 0.43,
+      "unclear": 0.01
+     },
+     "confidence": 0.36
+    }
+   },
+   "usage": {
+    "input_tokens": 2645,
+    "output_tokens": 232,
+    "cost": 0.00011109
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2873
+  },
+  {
+   "id": "g30",
+   "query": "Ford Racing 2 trucks",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "ford-racing-2",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.92,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.08
+    },
+    "confidence": 0.91,
+    "support": 0.51,
+    "coverage": 1.61,
+    "coverage_confidence": 0.41,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.62,
+      "preview": 0.11,
+      "other_catalog": 0.0,
+      "unsupported": 0.26,
+      "unclear": 0.01
+     },
+     "confidence": 0.52
+    }
+   },
+   "usage": {
+    "input_tokens": 2644,
+    "output_tokens": 235,
+    "cost": 0.000111048
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2262
+  },
+  {
+   "id": "g31",
+   "query": "night cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night",
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Name the game for the night variant (Gran Turismo).",
+   "seconds": 0.0024
+  },
+  {
+   "id": "g32",
+   "query": "Gran Turismo except arcade",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.68,
+     "gran-turismo:day": 0.07,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.01,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.23
+    },
+    "confidence": 0.65,
+    "support": 0.65,
+    "coverage": 1.68,
+    "coverage_confidence": 0.5,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.88,
+      "preview": 0.03,
+      "other_catalog": 0.0,
+      "unsupported": 0.08,
+      "unclear": 0.01
+     },
+     "confidence": 0.85
+    }
+   },
+   "usage": {
+    "input_tokens": 2643,
+    "output_tokens": 234,
+    "cost": 0.000111006
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2808
+  },
+  {
+   "id": "g33",
+   "query": "Ford Racing 2 and Redline",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model returned an unusable answer, so no filter was applied. Use the game and variant controls.",
+   "seconds": 0.2132
+  },
+  {
+   "id": "g34",
+   "query": "delete all Redline cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "redline",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.99,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.01
+    },
+    "confidence": 0.99,
+    "support": 0.84,
+    "coverage": 1.75,
+    "coverage_confidence": 0.64,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.49,
+      "preview": 0.02,
+      "other_catalog": 0.0,
+      "unsupported": 0.47,
+      "unclear": 0.02
+     },
+     "confidence": 0.36
+    }
+   },
+   "usage": {
+    "input_tokens": 2644,
+    "output_tokens": 232,
+    "cost": 0.000111048
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2745
+  },
+  {
+   "id": "g35",
+   "query": "Gran Turismo cars with textures",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.9,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.1
+    },
+    "confidence": 0.89,
+    "support": 0.4,
+    "coverage": 1.24,
+    "coverage_confidence": 0.58,
+    "restriction": {
+     "choice": "unsupported",
+     "probabilities": {
+      "none": 0.06,
+      "preview": 0.03,
+      "other_catalog": 0.0,
+      "unsupported": 0.91,
+      "unclear": 0.0
+     },
+     "confidence": 0.89
+    }
+   },
+   "usage": {
+    "input_tokens": 2644,
+    "output_tokens": 234,
+    "cost": 0.000111048
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2232
+  },
+  {
+   "id": "g36",
+   "query": "only the 10 newest MC3 cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "midnight-club-3-remix",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.7,
+     "midnight-club-3-remix:native": 0.02,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.28
+    },
+    "confidence": 0.67,
+    "support": 0.22,
+    "coverage": 1.26,
+    "coverage_confidence": 0.4,
+    "restriction": {
+     "choice": "unsupported",
+     "probabilities": {
+      "none": 0.11,
+      "preview": 0.03,
+      "other_catalog": 0.0,
+      "unsupported": 0.84,
+      "unclear": 0.02
+     },
+     "confidence": 0.8
+    }
+   },
+   "usage": {
+    "input_tokens": 2648,
+    "output_tokens": 239,
+    "cost": 0.000111216
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2434
+  },
+  {
+   "id": "g37",
+   "query": "Redline add-ons by author X",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "redline:addon",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.01,
+     "redline:base": 0.0,
+     "redline:addon": 0.93,
+     "no_match": 0.06
+    },
+    "confidence": 0.92,
+    "support": 0.36,
+    "coverage": 1.64,
+    "coverage_confidence": 0.44,
+    "restriction": {
+     "choice": "none",
+     "probabilities": {
+      "none": 0.54,
+      "preview": 0.06,
+      "other_catalog": 0.01,
+      "unsupported": 0.31,
+      "unclear": 0.08
+     },
+     "confidence": 0.42
+    }
+   },
+   "usage": {
+    "input_tokens": 2646,
+    "output_tokens": 235,
+    "cost": 0.000111132
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2443
+  },
+  {
+   "id": "g38",
+   "query": "Gran Turismo night cars that are not Japanese",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo:night",
+    "probabilities": {
+     "all": 0.0,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.0,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.96,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.04
+    },
+    "confidence": 0.96,
+    "support": 0.19,
+    "coverage": 1.13,
+    "coverage_confidence": 0.8,
+    "restriction": {
+     "choice": "unsupported",
+     "probabilities": {
+      "none": 0.06,
+      "preview": 0.02,
+      "other_catalog": 0.0,
+      "unsupported": 0.92,
+      "unclear": 0.0
+     },
+     "confidence": 0.9
+    }
+   },
+   "usage": {
+    "input_tokens": 2647,
+    "output_tokens": 236,
+    "cost": 0.000111174
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2355
+  },
+  {
+   "id": "g39",
+   "query": "show me the GT-R",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "no_match",
+    "probabilities": {
+     "all": 0.09,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.17,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.74
+    },
+    "confidence": 0.72,
+    "support": 0.27,
+    "coverage": 0.42,
+    "coverage_confidence": 0.37,
+    "restriction": {
+     "choice": "unsupported",
+     "probabilities": {
+      "none": 0.09,
+      "preview": 0.01,
+      "other_catalog": 0.0,
+      "unsupported": 0.86,
+      "unclear": 0.04
+     },
+     "confidence": 0.82
+    }
+   },
+   "usage": {
+    "input_tokens": 2644,
+    "output_tokens": 232,
+    "cost": 0.000111048
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.3203
+  },
+  {
+   "id": "g40",
+   "query": "MC3 night",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Midnight Club 3: DUB Edition Remix has no night variant; available: native packages.",
+   "seconds": 0.0021
+  },
+  {
+   "id": "g41",
+   "query": "Redline arcade",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "arcade"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Redline has no arcade variant; available: base game, add-on.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g42",
+   "query": "every GT car except the arcade ones",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "gran-turismo",
+    "probabilities": {
+     "all": 0.01,
+     "ford-racing-2": 0.0,
+     "gran-turismo": 0.63,
+     "gran-turismo:day": 0.04,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.32
+    },
+    "confidence": 0.6,
+    "support": 0.48,
+    "coverage": 1.32,
+    "coverage_confidence": 0.22,
+    "restriction": {
+     "choice": "unsupported",
+     "probabilities": {
+      "none": 0.28,
+      "preview": 0.03,
+      "other_catalog": 0.0,
+      "unsupported": 0.67,
+      "unclear": 0.02
+     },
+     "confidence": 0.59
+    }
+   },
+   "usage": {
+    "input_tokens": 2646,
+    "output_tokens": 234,
+    "cost": 0.000111132
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2319
+  },
+  {
+   "id": "g43",
+   "query": "Gran Turismo night models in the source catalog",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "other_catalog": true
+    }
+   },
+   "usage": null,
+   "message": "These filters apply to the dealership catalog only. Open the source model inspector (recovered.html) for that library.",
+   "seconds": 0.0064
+  },
+  {
+   "id": "g44",
+   "query": "Redline day",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "day"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Redline has no day variant; available: base game, add-on.",
+   "seconds": 0.005
+  },
+  {
+   "id": "g45",
+   "query": "all Ford cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "model",
+   "signals": {
+    "choice": "all",
+    "probabilities": {
+     "all": 0.47,
+     "ford-racing-2": 0.09,
+     "gran-turismo": 0.01,
+     "gran-turismo:day": 0.0,
+     "gran-turismo:night": 0.0,
+     "gran-turismo:arcade": 0.0,
+     "midnight-club-3-remix": 0.0,
+     "midnight-club-3-remix:native": 0.0,
+     "redline": 0.0,
+     "redline:base": 0.0,
+     "redline:addon": 0.0,
+     "no_match": 0.43
+    },
+    "confidence": 0.42,
+    "support": 0.25,
+    "coverage": 0.53,
+    "coverage_confidence": 0.19,
+    "restriction": {
+     "choice": "unsupported",
+     "probabilities": {
+      "none": 0.05,
+      "preview": 0.0,
+      "other_catalog": 0.0,
+      "unsupported": 0.93,
+      "unclear": 0.01
+     },
+     "confidence": 0.91
+    }
+   },
+   "usage": {
+    "input_tokens": 2642,
+    "output_tokens": 231,
+    "cost": 0.000110964
+   },
+   "message": "This request needs review. Use the game and variant controls, or ask only for those filters.",
+   "seconds": 0.2854
+  }
+ ]
+}

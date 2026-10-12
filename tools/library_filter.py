@@ -47,6 +47,7 @@ PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing'
            **{words: ('variant', 'addon') for words in (('add', 'on'), ('add', 'ons'), ('addon',), ('addons',), ('mod',),
                                                         ('mods',), ('plug', 'in'), ('plug', 'ins'), ('plugin',), ('plugins',))},
            ('native',): ('variant', 'native'),
+           ('source', 'variant'): ('word', None), ('source', 'variants'): ('word', None),
            **{words: ('all', None) for words in (('all',), ('every',), ('everything',))},
            **{words: ('preview', None) for words in (('with', '3d', 'previews'), ('with', '3d', 'preview'), ('with', 'previews'),
                                                      ('that', 'have', '3d', 'previews'), ('3d', 'previews'), ('previews',))},
@@ -90,10 +91,19 @@ def words_of(query):
     return [word for word in re.split(r"[\s.,;:!?()\[\]\"'/_-]+", query.lower()) if word]
 
 
+# 'source' alone also labels the dealership's "Source variant" control, so only these follow-ups name the library.
+SOURCE_LIBRARY = {'catalog', 'library', 'models', 'model', 'inspector', 'page', 'files', 'app', 'showcase'}
+
+
 def other_catalog(query, catalog):
     """A query naming the other library is withheld in code; the model missed this (teardown holdout g43)."""
-    names = {'source': {'dealership'}, 'dealership': {'source', 'recovered', 'inspector'}}[catalog]
-    if names & set(words_of(query)):
+    words = words_of(query)
+    if catalog == 'source':
+        named = 'dealership' in words
+    else:
+        named = bool({'recovered', 'inspector'} & set(words)) or any(
+            word == 'source' and following in SOURCE_LIBRARY for word, following in zip(words, words[1:]))
+    if named:
         page = 'the source model inspector (recovered.html)' if catalog == 'dealership' else 'the dealership (dealership.html)'
         return {'status': 'review', 'filters': None, 'decided_by': 'phrase',
                 'message': f'These filters apply to the {catalog} catalog only. Open {page} for that library.',

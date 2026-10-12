@@ -231,8 +231,13 @@ class Tests(unittest.TestCase):
             receipt = interpret(query, CARS, client, catalog=catalog)
             self.assertEqual((receipt['status'], receipt['filters'], client.calls), ('review', None, 0), query)
             self.assertIn(f'apply to the {catalog} catalog only', receipt['message'])
-        for query, catalog in [('Redline cars in the dealership', 'dealership'), ('Gran Turismo source variants', 'source')]:
-            self.assertIsNone(library_filter.other_catalog(query, catalog))
+        for query, catalog in [('Redline cars in the dealership', 'dealership'), ('Gran Turismo source variants', 'source'),
+                               ('Redline add-on source variant', 'dealership'), ('MC3 source packages', 'dealership')]:
+            self.assertIsNone(library_filter.other_catalog(query, catalog), query)
+        self.assertIsNotNone(library_filter.other_catalog('Redline source models', 'dealership'))
+        for query in ('Redline add-on source variant', 'Redline source variant add-on'):
+            receipt = interpret(query, CARS, None, catalog='dealership', unavailable='sdk_unavailable')
+            self.assertEqual((receipt['status'], receipt['filters']), ('ok', options_for(CARS)['redline:addon']), query)
 
     def test_any_unknown_word_defers_to_the_model(self):
         for query in ('Ford GT', 'GT40', 'blue Gran Turismo cars', 'GT cars except night', 'Gran Turismo 赤い',

@@ -141,6 +141,22 @@ Measurement boundaries:
 - **Status.** Under `docs/agents/review-workflow.md`, these escalations need independent review before
   merge. This section was added after the gate and is documentation only.
 
+## After PR review
+
+Qodo found that the other-catalog guard caught the bare word “source”, which also labels the dealership's
+**Source variant** control. “Redline add-on source variant” was sent to the other page. Now “source” counts as
+an other-catalog request only before a library word (catalog, library, models, inspector, page and similar);
+“recovered” and “inspector” still count, and “source variant(s)” are filler words. Tests cover both directions.
+
+Re-running all three sets about an hour later (`eval/review-fix-*.json`):
+
+- **Offline.** Unchanged: 19/20, 20/22, 23/25 applied with 0 wrong.
+- **Live.** 19/20, 21/22, 24/25 applied with 0 wrong. Two model-path cases that had been applied in both
+  earlier runs were withheld. Neither contains “source”; the model's answers changed: g21's restriction
+  confidence fell to 0.44, below 0.5, and d42's preview support to 0.79, below 0.8. g33 got an
+  `invalid_response`, which failed closed. So “repeat identical” held only within the earlier hour, and the
+  model path varies over time without any wrong applications in these runs.
+
 ## Remaining limits
 
 - **“original” is a Redline base-game alias.** “original Gran Turismo cars” gets an explanation rather than
