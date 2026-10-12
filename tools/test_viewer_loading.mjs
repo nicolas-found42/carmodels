@@ -94,7 +94,7 @@ index.cars.push({id:'gran-turismo/simulation/synthetic/night',game:'gran-turismo
 elements.car.value='gran-turismo/simulation/synthetic/night';await context.loadCar();
 assert.equal(context.selected.game,'gran-turismo');assert.equal(elements.record.value,'scene0');
 assert.equal(context.loaded.groups.length,1);assert.equal(context.loaded.meshes.length,1);
-const mesh=context.loaded.meshes[0];assert(mesh.geometry.index.array.constructor.name==='Uint16Array');assert(mesh.geometry.attributes.normal);assert(mesh.geometry.attributes.color);assert.equal(mesh.material.vertexColors,true);
+const mesh=context.loaded.meshes[0];assert(mesh.geometry.index.array.constructor.name==='Uint32Array');assert(mesh.geometry.attributes.normal);assert(mesh.geometry.attributes.color);assert.equal(mesh.material.vertexColors,true);
 assert.deepEqual(Array.from(mesh.geometry.attributes.color.array),[1,0,0,0,1,0,0,0,1]);
 context.loaded.groups[0].visible=true;const bounds=new THREE.Box3().setFromObject(context.loaded.groups[0]);
 assert.deepEqual(bounds.min.toArray(),[2,6,0]);assert.deepEqual(bounds.max.toArray(),[4,8,0]);

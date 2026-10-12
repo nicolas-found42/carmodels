@@ -84,7 +84,7 @@ def check_bake(code, model):
     triangle_count = 0
     for part in model['parts']:
         vertices = list(struct.iter_unpack('<6fB', base64.b64decode(part['vertices'], validate=True)))
-        indices = [v[0] for v in struct.iter_unpack('<H', base64.b64decode(part['indices'], validate=True))]
+        indices = [v[0] for v in struct.iter_unpack('<I', base64.b64decode(part['indices'], validate=True))]
         triangle_count += len(indices) // 3
         rows = expected['triangles'][part['kind']]
         if len(rows) != len(indices):
@@ -144,8 +144,8 @@ class ModelBakeTests(unittest.TestCase):
             check_bake(code, changed)
         changed = copy.deepcopy(source)
         raw = bytearray(base64.b64decode(changed['parts'][0]['indices']))
-        i = struct.unpack_from('<H', raw)[0]
-        struct.pack_into('<H', raw, 0, (i + 1) % changed['parts'][0]['vertexCount'])
+        i = struct.unpack_from('<I', raw)[0]
+        struct.pack_into('<I', raw, 0, (i + 1) % changed['parts'][0]['vertexCount'])
         changed['parts'][0]['indices'] = base64.b64encode(raw).decode()
         with self.assertRaisesRegex(AssertionError, 'source triangle coordinates differ'):
             check_bake(code, changed)
@@ -172,6 +172,32 @@ class ModelBakeTests(unittest.TestCase):
         self.assertLess(texture_tone((0, 0, 0)), texture_tone((220, 220, 220)))
         self.assertEqual(texture_tone((255, 0, 0)), texture_tone((0, 255, 0)))
         self.assertNotEqual(texture_tone((255, 0, 0), wheel=True), texture_tone((0, 255, 0), wheel=True))
+
+
+class IndexCapacityTests(unittest.TestCase):
+    def test_large_scene_uses_u32_and_keeps_strict_geometry_checks(self):
+        from gt4_glb import Builder
+        b = Builder()
+        count = 65538
+        positions = b.accessor([(float(i), float(i % 3), 0.) for i in range(count)], 'position')
+        normals = b.accessor([(0., 0., 1.)] * count, 'normal')
+        indices = b.accessor(list(range(count)), 'index')
+        b.doc['meshes'] = [{'primitives': [{'attributes': {'POSITION': positions, 'NORMAL': normals},
+                                          'indices': indices}]}]
+        b.doc['nodes'] = [{'mesh': 0}]; b.doc['scenes'] = [{'nodes': [0]}]
+        data = b.finish()
+        descriptor = bake_car('LARGE', data, source_mode=False)
+        self.assertEqual(descriptor['schema'], 4)
+        self.assertEqual(descriptor['triangleCount'], count // 3)
+        part = descriptor['parts'][0]
+        self.assertEqual(part['vertexCount'], count)
+        encoded_indices = base64.b64decode(part['indices'])
+        self.assertEqual(len(encoded_indices), count * 4)
+        self.assertEqual(struct.unpack_from('<I', encoded_indices, (count - 1) * 4)[0], count - 1)
+        view = b.doc['bufferViews'][b.doc['accessors'][indices]['bufferView']]
+        struct.pack_into('<I', b.blob, view['byteOffset'], count)
+        with self.assertRaisesRegex(ValueError, 'triangle index exceeds vertices'):
+            bake_car('LARGE', b.finish(), source_mode=False)
 
 
 if __name__ == '__main__':

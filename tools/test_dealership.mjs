@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -13,8 +13,32 @@ assert.equal(dealershipDownload(cars[0]).href,`./dealership/models/${cars[0].cod
 assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
 assert.match(sourcePage,/<h1>Source model library<\/h1>/);
 assert.equal(validateCars(cars).length, cars.length);
-const compactCars=cars.filter(c=>c.model.schema===1);
+const compactCars=cars.filter(c=>c.model.schema===4);
 assert.equal(compactCars.length,35);
+// Project-owned showcase geometry has one index encoding: unsigned 32-bit.
+const largeCar=structuredClone(compactCars[0]),vertexCount=65538;
+const vertices=Buffer.alloc(vertexCount*25),indices32=Buffer.alloc(vertexCount*4);
+for(let i=0;i<vertexCount;i++) {
+  vertices.writeFloatLE(i,i*25);vertices.writeFloatLE(i%2,i*25+4);vertices.writeFloatLE(i%3,i*25+8);
+  vertices.writeFloatLE(1,i*25+16);vertices.writeUInt8(128,i*25+24);indices32.writeUInt32LE(i,i*4);
+}
+largeCar.model.parts=[{kind:'body',vertexCount,vertices:vertices.toString('base64'),indices:indices32.toString('base64')}];
+largeCar.model.bounds=[0,0,0,vertexCount,2,3];largeCar.model.wheelHubs=[];largeCar.model.triangleCount=vertexCount/3;
+const decodedLarge=decodeModel(largeCar);
+assert(decodedLarge[0].indices instanceof Uint32Array);
+assert.equal(decodedLarge[0].indices.at(-1),65537,'index above65535 must retain its value');
+const largeMesh=makeCar(largeCar);
+assert(largeMesh.children[0].geometry.index.array instanceof Uint32Array);
+assert.equal(largeMesh.children[0].geometry.index.array.at(-1),65537);
+disposeCar(largeMesh);
+assert.throws(()=>decodeModel({...largeCar,model:{...largeCar.model,schema:1}}),/invalid dealership model/,'stale16-bit schema must be rejected');
+for(const width of [2,4]) {
+  const bad=structuredClone(largeCar);
+  const raw=Buffer.from(bad.model.parts[0].indices,'base64');
+  if(width===2)bad.model.parts[0].indices=raw.subarray(0,raw.length-2).toString('base64');
+  else {raw.writeUInt32LE(vertexCount,raw.length-4);bad.model.parts[0].indices=raw.toString('base64');}
+  assert.throws(()=>decodeModel(bad),/invalid dealership model/);
+}
 const gtCars=cars.filter(c=>c.game==='gran-turismo');
 for(const c of gtCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');}
 assert.equal(gameId(compactCars[0]),'ford-racing-2');
@@ -35,7 +59,8 @@ for (const query of ['mustang 1968', '1968 mustang', '  MUSTANG   1968  ', 'must
   assert.deepEqual(cars.filter(createCarSearch(query)).map(c=>c.code), ['MUSTANG_68','MUSTANG_68B'], query);
 }
 for (const query of ['mustang 1967', 'not-a-real-car-xyz', '1968 lightning'])assert.equal(cars.filter(createCarSearch(query)).length,0,query);
-assert.equal(cars.filter(createCarSearch('mustang')).length,15);
+assert.equal(cars.filter(c=>c.game!=='midnight-club-los-angeles').filter(createCarSearch('mustang')).length,15);
+assert(cars.filter(createCarSearch('mustang')).some(c=>c.game==='midnight-club-los-angeles'),'newMCLA names participate in search');
 assert.equal(cars.filter(createCarSearch('')).length,cars.length);
 assert.equal(cars.filter(createCarSearch('f 150')).length,3);
 for(const car of cars)assert(cars.filter(createCarSearch(car.code)).some(c=>c.code===car.code),car.code);
@@ -47,7 +72,7 @@ const availabilityStart=dealershipPage.indexOf('function updateFilterAvailabilit
 const availabilityBody=dealershipPage.slice(availabilityStart,dealershipPage.indexOf('function applyFilters()',availabilityStart));
 const availabilityControls={
   'game-filter':{value:'gran-turismo-4'},
-  'variant-filter':{value:'night',options:['','day','night','arcade','base','addon','native','showroom'].map(value=>({value,textContent:value||'All variants'}))},
+  'variant-filter':{value:'night',options:['','day','night','arcade','base','addon','native','showroom','stock'].map(value=>({value,textContent:value||'All variants'}))},
   'filter-status':{textContent:''},
 };
 const chips=[['SIMULATION',c=>c.group==='SIMULATION'],['COUPE',c=>c.bodyStyle==='coupe']].map(([textContent,pred])=>({
@@ -181,7 +206,7 @@ disposeCar(zero); disposeCar(half);
 const bodyOnly = structuredClone(cars[0]);
 bodyOnly.model.parts = bodyOnly.model.parts.filter(p=>p.kind!=='wheel');
 bodyOnly.model.wheelHubs = [];
-bodyOnly.model.triangleCount = bodyOnly.model.parts.reduce((sum,p)=>sum+Buffer.from(p.indices,'base64').length/6,0);
+bodyOnly.model.triangleCount = bodyOnly.model.parts.reduce((sum,p)=>sum+Buffer.from(p.indices,'base64').length/12,0);
 validateCars([bodyOnly]);
 const custom = makeCar(bodyOnly);
 assert.equal(custom.userData.wheels.length,0,'edited dealership models need not preserve source wheel counts');
@@ -214,7 +239,7 @@ for (const mutate of [
   c=>c.model.triangleCount++,
   c=>{const b=Buffer.from(c.model.parts[0].vertices,'base64');b.writeFloatLE(NaN,0);c.model.parts[0].vertices=b.toString('base64');},
   c=>{const b=Buffer.from(c.model.parts[0].vertices,'base64');b.writeFloatLE(0,12);b.writeFloatLE(0,16);b.writeFloatLE(0,20);c.model.parts[0].vertices=b.toString('base64');},
-  c=>{const b=Buffer.from(c.model.parts[0].indices,'base64');b.writeUInt16LE(65535,0);c.model.parts[0].indices=b.toString('base64');},
+  c=>{const b=Buffer.from(c.model.parts[0].indices,'base64');b.writeUInt32LE(0xffffffff,0);c.model.parts[0].indices=b.toString('base64');},
 ]) {
   const corrupted=structuredClone(cars[0]);mutate(corrupted);
   assert.throws(()=>validateCars([corrupted]),/model/);
@@ -240,4 +265,4 @@ try {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));
 }
-console.log('PASS test_dealership: 1715 searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout');
+console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);

@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def registry():
     checks = [{'name': 'ruff', 'command': ['ruff', 'check', 'tools'], 'requires': 'ruff'}]
     checks += [{'name': n, 'command': ['node', f'tools/{n}.mjs'], 'requires': 'node'} for n in
-               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui']]
+               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui']]
     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
              'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
@@ -25,7 +25,8 @@ def registry():
              'test_import_gt4_catalog', 'test_import_gt4_dealership',
              'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars',
              'test_mcla_lzx', 'test_mcla_resource', 'test_mcla_model', 'test_mcla_texture', 'test_mcla_tuning',
-             'test_verify_mcla_resources', 'test_verify_mcla_decoding', 'test_line_coverage']
+             'test_verify_mcla_resources', 'test_verify_mcla_decoding', 'test_mcla_names', 'test_mcla_preview',
+             'test_import_mcla_catalog', 'test_import_mcla_dealership', 'test_mcla_preview_experiments', 'test_line_coverage']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
@@ -53,6 +54,10 @@ def registry():
                    'availability': ['python3', 'tools/verify_mcla_resources.py', '--available']})
     checks.append({'name': 'mcla_decoding', 'command': ['python3', 'tools/verify_mcla_decoding.py'],
                    'availability': ['python3', 'tools/verify_mcla_decoding.py', '--available']})
+    checks.append({'name': 'mcla_names', 'command': ['python3', 'tools/mcla_names.py'],
+                   'availability': next(c for c in checks if c['name'] == 'mcla_extraction')['availability']})
+    checks.append({'name': 'mcla_catalog', 'command': ['python3', 'tools/import_mcla_catalog.py', '--check'],
+                   'availability': ['python3', 'tools/import_mcla_catalog.py', '--available']})
     for name in ['verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
                  'test_vu1_decode', 'verify_vu_pass_handlers', 'test_vu_pass_handlers']:
         checks.append({'name': name, 'command': ['python3', f'tools/{name}.py'],

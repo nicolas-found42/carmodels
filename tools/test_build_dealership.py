@@ -54,7 +54,7 @@ class DealershipBuildTests(unittest.TestCase):
             self.assertEqual(baked['parts'][0]['kind'], 'body')
             self.assertEqual(baked['wheelHubs'], [])
             vertices = list(VERTEX.iter_unpack(base64.b64decode(baked['parts'][0]['vertices'])))
-            self.assertEqual(struct.unpack('<3H', base64.b64decode(baked['parts'][0]['indices'])), (0, 2, 1))
+            self.assertEqual(struct.unpack('<3I', base64.b64decode(baked['parts'][0]['indices'])), (0, 2, 1))
             for vertex in vertices:
                 self.assertAlmostEqual(math.sqrt(sum(v*v for v in vertex[3:6])), 1, places=6)
             # Independent inverse-transpose result after rotation, scale and axis conversion.
@@ -89,8 +89,8 @@ class DealershipBuildTests(unittest.TestCase):
                     original = ROOT / f"dealership/public/{entry['game']}/native/{entry['sourceCode']}.dat"
                     self.assertEqual(native.read_bytes(), original.read_bytes())
                     self.assertFalse(os.path.samefile(native, original))
-                elif entry.get('game') == 'gran-turismo-4':
-                    source = ROOT / f"dealership/public/gran-turismo-4/previews/{entry['sourceCode']}.glb"
+                elif entry.get('game') in ('gran-turismo-4', 'midnight-club-los-angeles'):
+                    source = ROOT / f"dealership/public/{entry['game']}/previews/{entry['sourceCode']}.glb"
                 else:
                     source = ROOT / (f"dealership/public/{entry['game']}/{entry['sourceCode']}.glb" if entry.get('game') in ('gran-turismo', 'redline') else f'dealership/public/ford-racing-2/{code}.glb')
             self.assertFalse(copy.is_symlink())

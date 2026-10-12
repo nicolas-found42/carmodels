@@ -21,7 +21,7 @@ export function parseEditableGLB(buffer) {
        !Number.isInteger(a.count) || a.count<=0 || a.count>1000000 || (integer ? a.componentType===5126 : a.componentType!==5126)) throw Error('Invalid GLB accessor.');
     const v=view(a.bufferView), step=width*Type.BYTES_PER_ELEMENT, stride=v.byteStride??step, offset=a.byteOffset??0;
     if(!Number.isInteger(offset) || offset<0 || !Number.isInteger(stride) || stride<step || offset+(a.count-1)*stride+step>v.byteLength) throw Error('GLB accessor exceeds buffer.');
-    const data=new DataView(bin), out=new Type(a.count*width), method={5121:'getUint8',5123:'getUint16',5125:'getUint32',5126:'getFloat32'}[a.componentType];
+    const data=new DataView(bin), out=integer?new Uint32Array(a.count*width):new Type(a.count*width), method={5121:'getUint8',5123:'getUint16',5125:'getUint32',5126:'getFloat32'}[a.componentType];
     for(let i=0;i<a.count;i++)for(let j=0;j<width;j++) {
       const value=data[method]((v.byteOffset??0)+offset+i*stride+j*Type.BYTES_PER_ELEMENT,true);
       if(!Number.isFinite(value)) throw Error('Non-finite GLB attribute.');

@@ -38,8 +38,10 @@ class CheckRunnerTests(unittest.TestCase):
 
     def test_actual_javascript_registry_requires_node(self):
         checks = [c for c in registry() if c['command'][0] == 'node']
-        self.assertEqual(len(checks), 8)
-        self.assertIn('test_native_catalog_ui', {c['name'] for c in checks})
+        self.assertEqual({c['name'] for c in checks}, {
+            'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
+            'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui',
+            'test_mcla_preview_ui'})
         self.assertTrue(all(c['requires'] == 'node' for c in checks))
         with tempfile.TemporaryDirectory() as temp, patch('run_checks.shutil.which', return_value=None):
             self.assertEqual(run_checks(checks, temp, Path(temp) / 'ci', ci=True), 1)
