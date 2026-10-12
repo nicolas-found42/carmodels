@@ -136,13 +136,14 @@ def with_body(data, body):
 def run_controls(data, digest):
     """Each corruption of a real resource must fail for the reason named beside it."""
     body = data[20:]
+    header = 5 if body[0] == 0xFF else 2
+    length = struct.unpack_from('>H', body, header - 2)[0]
+    need(header + length == len(body), 'control sample must be a single chunk')
     flipped_type = bytearray(data)
-    flipped_type[20 + (5 if body[0] == 0xFF else 2) + 1] ^= 0x40  # stream bit 1: verbatim 001 becomes 101
+    flipped_type[20 + header + 1] ^= 0x40  # stream bit 1 of the block type
     flipped_body = bytearray(data)
     flipped_body[len(data) - 64] ^= 0x01
-    last = body[5:] if body[0] == 0xFF else body[2:]
-    need(len(last) + (5 if body[0] == 0xFF else 2) == len(body), 'control sample must be a single chunk')
-    truncated = body[:1] + struct.pack('>HH', struct.unpack_from('>H', body, 1)[0], len(last) - 4) + last[:-4]
+    truncated = body[:header - 2] + struct.pack('>H', length - 4) + body[header:-4]
     controls = [
         ('truncated stream (last 4 bytes of the chunk removed, lengths adjusted)', with_body(data, truncated), {},
          'truncated'),

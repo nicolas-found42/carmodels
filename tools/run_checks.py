@@ -24,7 +24,8 @@ def registry():
              'test_gt4_volume', 'test_extract_gt4_cars', 'test_gt4_model', 'test_gt4_specdb', 'test_gt4_glb',
              'test_import_gt4_catalog', 'test_import_gt4_dealership',
              'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars',
-             'test_line_coverage']
+             'test_mcla_lzx', 'test_mcla_resource', 'test_mcla_model', 'test_mcla_texture', 'test_mcla_tuning',
+             'test_verify_mcla_resources', 'test_verify_mcla_decoding', 'test_line_coverage']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
@@ -35,7 +36,9 @@ def registry():
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
                                     "'gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso').is_file() else 1)"]})
     # Line coverage of the MCLA readers and the review bundle builder under their own tests (stdlib trace).
-    covered = ['aes_decrypt', 'xdvdfs', 'xex2', 'mcla_rpf', 'extract_mcla_cars', 'review_payload']
+    covered = ['aes_decrypt', 'xdvdfs', 'xex2', 'mcla_rpf', 'extract_mcla_cars', 'review_payload', 'mcla_lzx',
+               'mcla_resource', 'mcla_model', 'mcla_texture', 'mcla_tuning', 'verify_mcla_resources',
+               'verify_mcla_decoding']
     checks.append({'name': 'line_coverage', 'command': ['python3', 'tools/line_coverage.py', '--minimum', '95', '--modules',
                                                         *[f'tools/{n}.py' for n in covered], '--tests',
                                                         *[f'tools/test_{n}.py' for n in covered]]})
@@ -44,6 +47,12 @@ def registry():
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
                                     "'midnight-club-los-angeles/game-files/Midnight Club - Los Angeles - Complete Edition "
                                     "(USA, Europe).iso').is_file() else 1)"]})
+    # Every RSC5 resource of the disc decompressed to its declared size (needs the ISO), then every car model,
+    # texture, tuning and streaming map of the local extraction decoded (needs the extraction).
+    checks.append({'name': 'mcla_resources', 'command': ['python3', 'tools/verify_mcla_resources.py'],
+                   'availability': ['python3', 'tools/verify_mcla_resources.py', '--available']})
+    checks.append({'name': 'mcla_decoding', 'command': ['python3', 'tools/verify_mcla_decoding.py'],
+                   'availability': ['python3', 'tools/verify_mcla_decoding.py', '--available']})
     for name in ['verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
                  'test_vu1_decode', 'verify_vu_pass_handlers', 'test_vu_pass_handlers']:
         checks.append({'name': name, 'command': ['python3', f'tools/{name}.py'],
