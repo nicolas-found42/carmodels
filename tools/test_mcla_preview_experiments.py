@@ -1,10 +1,42 @@
 """MCLA experiment readiness, failure accounting and unchanged-input controls."""
+from contextlib import nullcontext, redirect_stdout
+import hashlib
+import io
+import json
+from pathlib import Path
+import tempfile
 import unittest
-from mcla_preview_experiments import GAME, fixtures, run
+from unittest.mock import patch
+from mcla_preview_experiments import GAME, fixtures, main, run
 from library_filter import options_for, state_for
 
 
 class Tests(unittest.TestCase):
+    def test_receipt_pins_the_catalog_bytes_used_before_provider_calls(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            source, dealer, output = [root / name for name in ('source.json', 'dealer.json', 'receipt.json')]
+            cars = [{'game': GAME, 'source_variant': 'stock', 'file': 'car.glb'}]
+            initial = {source: json.dumps({'cars': cars}).encode(), dealer: json.dumps(cars).encode()}
+            for path, data in initial.items():
+                path.write_bytes(data)
+            class Changed:
+                def system_one(self, **kwargs):
+                    for path in initial:
+                        path.write_bytes(b'changed while provider was running')
+                    raise RuntimeError('private exception')
+            with patch('sys.argv', ['experiment', '--live', '--source', str(source), '--dealership', str(dealer),
+                                    '--output', str(output)]), patch('mcla_preview_experiments.make_client',
+                                    return_value=nullcontext(Changed())), redirect_stdout(io.StringIO()):
+                self.assertEqual(main(), 1)
+            record = json.loads(output.read_text())
+            for path, data in initial.items():
+                self.assertEqual(record['input_pins'][str(path)], hashlib.sha256(data).hexdigest())
+                self.assertNotEqual(record['input_pins'][str(path)], hashlib.sha256(path.read_bytes()).hexdigest())
+            self.assertEqual(record['metrics']['grounded']['attempted'], 1)
+            self.assertEqual(record['metrics']['grounded']['errors'], 1)
+            self.assertNotIn('private exception', str(record))
+
     def test_ready_and_partial_states(self):
         source = [{'game': GAME, 'source_variant': 'stock', 'file': 'car.glb'}]
         dealer = [{'game': GAME, 'sourceVariant': 'stock', 'displayMode': 'textured-glb',

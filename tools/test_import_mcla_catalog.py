@@ -49,6 +49,27 @@ def export(extraction, output, identities):
 
 
 class Tests(unittest.TestCase):
+    def test_availability_distinguishes_missing_disc_and_partial_extraction(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            extraction, _, _ = fixture(root)
+            iso = root / 'disc.iso'
+            def available():
+                with patch('sys.argv', ['import_mcla_catalog', '--available', '--iso', str(iso),
+                                        '--extraction', str(extraction)]):
+                    return catalog.main()
+            self.assertEqual(available(), 1, 'complete extraction without optional disc must skip')
+            iso.write_bytes(b'available input')
+            self.assertEqual(available(), 0)
+            index = json.loads((extraction / 'index.json').read_text())
+            index['vehicles'].append({'id': 'vp_missing', 'manifest': 'vp_missing/manifest.json'})
+            (extraction / 'index.json').write_text(json.dumps(index))
+            self.assertEqual(available(), 2, 'partial extraction must fail')
+            iso.unlink()
+            self.assertEqual(available(), 2, 'missing disc must not hide partial extraction')
+            (extraction / CODE / 'manifest.json').unlink()
+            self.assertEqual(available(), 1, 'committed index without local files must skip')
+
     def test_export_repeat_and_rederive(self):
         with tempfile.TemporaryDirectory() as temp:
             extraction, output, identities = fixture(Path(temp).resolve())

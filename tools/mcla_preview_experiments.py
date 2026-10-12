@@ -79,14 +79,17 @@ def main():
     if not args.live: parser.error('Use --live for explicitly authorized provider requests')
     if args.output.exists(): parser.error('Output exists; preserve previous experiments')
     source, dealer = args.source.read_bytes(), args.dealership.read_bytes()
+    pinned_inputs = [(args.source, source), (args.dealership, dealer),
+                     (Path(__file__), Path(__file__).read_bytes()),
+                     (ROOT / 'tools/library_filter.py', (ROOT / 'tools/library_filter.py').read_bytes())]
     started = time.monotonic()
     try:
         with make_client() as client: record = run(json.loads(source)['cars'], json.loads(dealer), client)
     except Exception:
         record = {'schema': 1, 'status': 'error', 'claim_limits': LIMITS,
                   'stopped_reason': 'Client or catalog setup failed; credentials and exception details withheld.'}
-    record['input_pins'] = {str(p.relative_to(ROOT) if p.is_relative_to(ROOT) else p): hashlib.sha256(p.read_bytes()).hexdigest()
-                            for p in (args.source, args.dealership, Path(__file__), ROOT / 'tools/library_filter.py')}
+    record['input_pins'] = {str(p.relative_to(ROOT) if p.is_relative_to(ROOT) else p): hashlib.sha256(data).hexdigest()
+                            for p, data in pinned_inputs}
     record['elapsed_seconds'] = time.monotonic() - started
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(record, indent=2, allow_nan=False) + '\n')

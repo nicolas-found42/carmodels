@@ -303,7 +303,9 @@ def main():
     if args.available:
         index = json.loads((args.extraction / 'index.json').read_text())
         present = sum((args.extraction / v['manifest']).is_file() for v in index['vehicles'])
-        return 0 if args.iso.is_file() and present == len(index['vehicles']) else 1 if not present else 2
+        if present and present != len(index['vehicles']):
+            return 2
+        return 0 if args.iso.is_file() and present else 1
     if not 1 <= args.workers <= 16:
         parser.error('workers must be 1 to 16')
     index = json.loads((args.extraction / 'index.json').read_text())
