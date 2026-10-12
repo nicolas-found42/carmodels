@@ -1,0 +1,33 @@
+{
+  "bundle_sha256": "15d98b676ddf8b0dafbfa358869006389a31c93788fc585b991b484ede029e43",
+  "reviewer": "decoder_fix (independent of root camera implementation)",
+  "verdict": "approve",
+  "approved_paths": [
+    "dealership/recovered.html"
+  ],
+  "rationale": "Read the complete two-line camera diff, live showRecord and orbit setup, original gate/claim distributions, executed four-check manifest and all complete logs. Independently reran all four viewer regressions with current pinned HTML; all passed, resolving the original .81support/.72confidence check claim. The only behavior change is near=max(extent/100,.0001); far, FOV, target and fitted camera position are unchanged. Since extent>=.1 and each bounding dimension, near=.01extent and far=100extent produce a10000:1 ratio. Fitted eye distance is sqrt(2*.95^2+.55^2)*extent; bounding radius<=sqrt(3)/2*extent, so every finite bbox vertex is conservatively more than.585extent from the camera depth plane, well beyond.01extent, and within far. This supplements test-gap/blast-radius uncertainty with an explicit general fit bound. Read the nine actual Metal24-depth camera-only controls: each car uses the same GLB hash, camera position and far plane across divisors10000,100,20; full CL65 before/after images visibly remove the large jagged rearwindow perimeter at divisor100, and GT-R/S7 controls retain exterior framing. S7 residual persists and is explicitly separate. Final106public source captures pin exactly the reviewed viewer hash, have exact network/selected-ID/loaded readbacks and no error/pageErrors, and parts source review plus independent dealer review found no new camera clipping. This is justified component approval; original Jev escalation remains preserved and is not retried.",
+  "current_file_sha256": {
+    "dealership/recovered.html": "b494b3fb376ab337b3c8127c4a1e97926d23205d1d59a9e3ebbf8cfc40da3808"
+  },
+  "evidence": {
+    "independent_checks": ".scratch/mcla-assembly-fix/camera-independent-checks/results.json",
+    "boundary_and_capture_checks": ".scratch/mcla-assembly-fix/final-gates/camera/independent-boundary-evidence.json",
+    "camera_controls": ".scratch/mcla-assembly-fix/cl65-material/camera-views/results.json",
+    "public106source": ".scratch/mcla-assembly-fix/final-global-v2-source/capture.json",
+    "before_image": ".scratch/mcla-assembly-fix/cl65-material/camera-views/vpd_mbz_cl65amg_08-near10000-initial.png",
+    "after_image": ".scratch/mcla-assembly-fix/cl65-material/camera-views/vpd_mbz_cl65amg_08-near100-initial.png"
+  },
+  "claim_limits": [
+    "Close inspection at extreme zoom can clip surfaces within1%model extent of the eye, as an ordinary near plane; no minDistance or zoom-dependent near policy was added.",
+    "The106pixel audit is MCLA. Other-source compatibility is supported by finite-bbox math and existing35-car viewer scenes checks, not exhaustive pixels for every game.",
+    "No claim of original native shader execution, universal coplanar-depth resolution, hidden-face fidelity, S7 repair completion or whole-task approval.",
+    "Changes to reviewed HTML invalidate this file-pin approval."
+  ],
+  "preserved_original_jev": {
+    "safe_to_apply": 0.57,
+    "test_gap_confidence": 0,
+    "blast_radius_confidence": 0,
+    "check_claim_verified_probability": 0.81,
+    "check_claim_confidence": 0.72
+  }
+}

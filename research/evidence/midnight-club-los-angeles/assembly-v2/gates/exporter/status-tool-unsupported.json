@@ -1,0 +1,15 @@
+{
+  "command": "python3 tools/review_payload.py status --bundle .scratch/mcla-assembly-fix/final-gates/exporter/bundle.json --implementer root --resolution .scratch/mcla-assembly-fix/final-gates/exporter/independent-resolution.json",
+  "exit_code": 2,
+  "stdout": {
+    "status": "blocked",
+    "blocked": [
+      ".scratch/mcla-assembly-fix/final-gates/exporter/gate.json"
+    ],
+    "unresolved": [],
+    "claim_limits": [
+      "Resolution records a reviewer decision; it is not identity authentication."
+    ]
+  },
+  "diagnosis": "review_payload.py review_status interprets every non-jev_verify receipt as flat jev_review; the nested jev_gate review.files and verification.results schema is unsupported. The actual gate is valid/escalated and needs independently bound resolution. This attempt is not recorded as accepted and did not mutate the original receipt."
+}

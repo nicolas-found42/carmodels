@@ -1,0 +1,232 @@
+{
+  "bundle_sha256": "87fb8bf9d2711f0b1028556a560a75537cc7126c6b3f2f1804c28ee81c927f63",
+  "reviewer": "decoder_fix-independent-final-helper-bounded-evidence",
+  "verdict": "approve",
+  "file_pins": {
+    "tools/mcla_preview_geometry.py": "6f84f6b4eca1fd1817b6cbe377b51e28bf0a9fd1d9c9a843d6ae4df0d968337c",
+    "tools/test_mcla_preview_geometry.py": "4c6a6c8b46bc262065f76531ba72c327295f6c02651921a1b3cd09cb5d4f85b6"
+  },
+  "original_gate_sha256": "16cddd3a80e33b516741dcd72694fb603ec4c4aff03b0264f4d546fa2b23cfca",
+  "original_gate_scores_preserved": {
+    "mode": "per-file",
+    "action": "escalate",
+    "composite": 0.855,
+    "safe_to_apply": 0.45,
+    "reason_codes": [
+      "confidence_below_review",
+      "safe_to_apply_below_review",
+      "safe_to_apply_below_auto_accept",
+      "confidence_below_auto_accept"
+    ],
+    "limiting": [
+      {
+        "file": "tools/mcla_preview_geometry.py",
+        "rubrics": [
+          "blast_radius"
+        ]
+      },
+      {
+        "file": "tools/test_mcla_preview_geometry.py",
+        "rubrics": [
+          "spec_match"
+        ]
+      }
+    ],
+    "weights": {
+      "correctness": 0.4,
+      "spec_match": 0.3,
+      "test_gap": 0.15,
+      "blast_radius": 0.15
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5,
+      "composite_floor": 0.7
+    },
+    "files": [
+      {
+        "path": "tools/mcla_preview_geometry.py",
+        "safe_to_apply": 0.45,
+        "scores": {
+          "correctness": {
+            "score": 1.72,
+            "confidence": 0.58,
+            "probabilities": {
+              "0": 0.07,
+              "1": 0.14,
+              "2": 0.79
+            }
+          },
+          "spec_match": {
+            "score": 1.86,
+            "confidence": 0.79,
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.12,
+              "2": 0.87
+            }
+          },
+          "test_gap": {
+            "score": 0.48,
+            "confidence": 0.28,
+            "probabilities": {
+              "0": 0.64,
+              "1": 0.24,
+              "2": 0.12
+            }
+          },
+          "blast_radius": {
+            "score": 0.55,
+            "confidence": 0.17,
+            "probabilities": {
+              "0": 0.59,
+              "1": 0.27,
+              "2": 0.14
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "escalate",
+        "composite": 0.84575,
+        "reason_codes": [
+          "confidence_below_review",
+          "safe_to_apply_below_review"
+        ],
+        "limiting_rubrics": [
+          "blast_radius"
+        ]
+      },
+      {
+        "path": "tools/test_mcla_preview_geometry.py",
+        "safe_to_apply": 0.52,
+        "scores": {
+          "correctness": {
+            "score": 1.76,
+            "confidence": 0.66,
+            "probabilities": {
+              "0": 0.05,
+              "1": 0.13,
+              "2": 0.81
+            }
+          },
+          "spec_match": {
+            "score": 1.7,
+            "confidence": 0.55,
+            "probabilities": {
+              "0": 0.06,
+              "1": 0.18,
+              "2": 0.76
+            }
+          },
+          "test_gap": {
+            "score": 0.29,
+            "confidence": 0.56,
+            "probabilities": {
+              "0": 0.78,
+              "1": 0.15,
+              "2": 0.07
+            }
+          },
+          "blast_radius": {
+            "score": 0.28,
+            "confidence": 0.58,
+            "probabilities": {
+              "0": 0.79,
+              "1": 0.14,
+              "2": 0.07
+            }
+          }
+        },
+        "weights": {
+          "correctness": 0.4,
+          "spec_match": 0.3,
+          "test_gap": 0.15,
+          "blast_radius": 0.15
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5,
+          "composite_floor": 0.7
+        },
+        "action": "review",
+        "composite": 0.86425,
+        "reason_codes": [
+          "safe_to_apply_below_auto_accept",
+          "confidence_below_auto_accept"
+        ],
+        "limiting_rubrics": [
+          "spec_match"
+        ]
+      }
+    ]
+  },
+  "original_claim_verification_preserved": {
+    "action": "auto",
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0,
+      "invalid_response": 0
+    },
+    "thresholds": {
+      "auto_accept": 0.8,
+      "review_at": 0.5
+    },
+    "results": [
+      {
+        "claim": "test_mcla_preview_geometry passed10 tests including the available real native test; helper line coverage was110/110 executable lines.",
+        "verdict": "verified",
+        "confidence": 0.94,
+        "probabilities": {
+          "verified": 0.96,
+          "contradicted": 0.03,
+          "unsupported": 0.01
+        },
+        "action": "auto"
+      },
+      {
+        "claim": "Independent source-corpus comparison found105 byte-identical other GLBs,4439 unchanged native poses/bindings, and only one S7 primitive position/normal arrays changed.",
+        "verdict": "verified",
+        "confidence": 0.94,
+        "probabilities": {
+          "verified": 0.96,
+          "contradicted": 0.02,
+          "unsupported": 0.02
+        },
+        "action": "auto"
+      }
+    ]
+  },
+  "limits": [
+    "Two actual orbital views per model; no hidden-face perfection, zero contacts, native shader/runtime fidelity or absolute clipping absence approved.",
+    "Scope excludes decoder implementation, which this reviewer authored and cannot approve.",
+    "Original valid Jev probabilities/confidences/escalations retained; no unchanged judgment retry performed."
+  ],
+  "rationale": "Complete raw added-file diffs exactly reconstruct unchanged live helper/test pins; complete scoped ten-test and coverage logs were read. Independent ten real-native helper tests and26 exporter wiring tests passed, and110/110 helper coverage is explicitly logged. Independent source coordinate graph reconstructs twelve components: two1633-triangle main shells, four38-triangle upper fins and six32-triangle lower fins; selected ten component sets match pinned ranges exactly. Independent affine replay yields position error0 and inverse-transpose normal error2.54e-16 for292 fin vertices, positive determinant.01. Native Y spans, original indices, coordinate welds and all unselected positions/normals/attributes stay exact; final helper output equals the accepted prototype geometry. Exact compressed-source/model/geometry/full-decoded fingerprint guards reject mutated input and repeated repair; unrelated inputs return by identity. Final106 byte comparison proves blast-radius confinement:105 other GLBs exact,4439 native node poses/bindings exact,12875 primitives checked and only qualified S7 POSITION/NORMAL digests change. All six named corruption controls reject intended errors. Final generated S7 receipt appears once and binds actual input SHA/output digest. Fresh actual S7 dealer images show reduced broad fin intrusion while thin endpoints and native cavity remain; strict intersection counterevidence114-to144 pairs and.438378m remaining segments is retained. This is user-authorized bounded derived thinning, not exact native trimming or zero-contact/game fidelity. Exact geometry math, native preservation tests, emitted output and corpus controls resolve blast-radius/spec-match escalation for this valid bounded-evidence gate. Earlier max_tokens_exceeded receipt has no judgment and is not approved or overwritten.",
+  "evidence": [
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/helper-replay.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-review-001/independent-resolution-decoder.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/corpus-comparison.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/comparison-controls-002/comparison-controls.json",
+    ".scratch/mcla-assembly-fix/s7-cleanup-independent/emitted-target-proof.json",
+    ".scratch/mcla-assembly-fix/final-cleanup-dealership-review/observations.json",
+    ".scratch/mcla-assembly-fix/s7-inner-door/final-helper-findings.md"
+  ],
+  "preserved_operational_failure": {
+    "path": ".scratch/mcla-assembly-fix/final-gates/helper/gate.json",
+    "sha256": "d749a19d43a64d282355cea6c20a1bc4aa84ef10d08c15403198cd275c9b5ddc",
+    "error": "OpenRouter decisions API400 max_tokens_exceeded",
+    "disposition": "No judgment; this failed receipt is not approved. Replacement bundle reduces redundant evidence only, with full raw diffs/scoped logs/product pins unchanged."
+  }
+}

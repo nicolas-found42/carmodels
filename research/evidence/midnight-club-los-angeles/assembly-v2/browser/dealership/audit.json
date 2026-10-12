@@ -1,0 +1,43 @@
+{
+  "args": {
+    "source": "vp_sln_s7_06 dealership, final e80a6f8bed28be7bd5d665dd84f342c07d3f74ee1bded1699c13de3c38e9eb85 GLB: Both fresh rear-quarter and rotated side/front views show the main body, doors, mirrors, wheels, rear lights and wing seated together. The side intake dividers remain present. Relative to the inspected prior views, the broad fin faces extending across the rocker boundary are reduced, leaving thin divider ends. Dark and gray surfaces remain inside the skirt cavity, including the upper rear intake background; these retained native main-skirt surfaces are not evidence of a newly detached door. This is a deliberately modified derived preview with bounded fin thinning. Small blade-to-shell contacts remain; these two views do not prove zero intersections, hidden-face contact clearance, or original-game shader fidelity.\n",
+    "records": [
+      {
+        "id": "vp_sln_s7_06",
+        "request": "Summarize the stated visible final S7 condition, preserving reduced broad fin intrusion and remaining endpoints/cavity/zero-contact/fidelity limitations. Use only the supplied host vision transcript.",
+        "value": "S7 broad fin intrusion reduced; thin endpoints and native cavity surfaces remain. Body, doors and wheels are seated in the two views. Zero-contact and game-rendering fidelity remain unverified."
+      }
+    ]
+  },
+  "result": {
+    "tool": "jev_audit",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "action": "pass",
+    "wrong_at": 0.7,
+    "truncated": false,
+    "summary": {
+      "records": 1,
+      "flagged": 0,
+      "invalid": 0
+    },
+    "records": [
+      {
+        "id": "vp_sln_s7_06",
+        "value": "S7 broad fin intrusion reduced; thin endpoints and native cavity surfaces remain. Body, doors and wheels are seated in the two views. Zero-contact and game-rendering fidelity remain unverified.",
+        "checks": {
+          "hallucinated": 0.07,
+          "off_target": 0.06,
+          "incomplete": 0.32,
+          "format": 0.09
+        },
+        "p_wrong": 0.32,
+        "action": "ok"
+      }
+    ],
+    "usage": {
+      "input_tokens": 988,
+      "output_tokens": 86
+    }
+  }
+}

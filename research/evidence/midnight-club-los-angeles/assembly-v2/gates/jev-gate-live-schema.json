@@ -1,0 +1,127 @@
+{
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "request": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the user asked for; this is not evidence of completion."
+    },
+    "diff": {
+      "description": "Proposed patch, file excerpt, or change summary (whole-change review). Truncated at 50000 chars. Provide exactly one of diff or files.",
+      "type": "string",
+      "minLength": 1
+    },
+    "files": {
+      "description": "Per-file review: one { path, diff } per file. The rubric is asked once per file, all in one request; the whole change is auto only when every file is auto, and the review names the limiting file and rubric. Each diff is truncated at 50000 chars; up to 16 files, and request + tests + all diffs together must stay within 200,000 chars. Provide exactly one of diff or files.",
+      "minItems": 1,
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "diff": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "path",
+          "diff"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "minItems": 1,
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Completion claims to check against evidence, each truncated at 2000 chars. Up to 16 per call."
+    },
+    "evidence": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "A single evidence document."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Short identifier for this evidence item.",
+              "type": "string"
+            },
+            "text": {
+              "type": "string",
+              "description": "The evidence text."
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false,
+          "description": "A single evidence item."
+        },
+        {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Short identifier for this evidence item (e.g. 'site-html', 'rfc-4.1.3').",
+                "type": "string"
+              },
+              "text": {
+                "type": "string",
+                "description": "The evidence text."
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Multiple evidence items; each claim is also matched to the item it rests on."
+        }
+      ]
+    },
+    "tests": {
+      "description": "Reported test output for the patch review. Truncated at the same cap.",
+      "type": "string"
+    },
+    "auto_accept": {
+      "description": "Review and per-claim confidence at or above this may stand automatically. Default 0.8.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "review_at": {
+      "description": "Score, safe_to_apply, or per-claim confidence below this escalates. Must be <= auto_accept. Default min(0.5, auto_accept).",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "composite_floor": {
+      "description": "Weighted composite at or above this is required for auto. Default 0.7.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": [
+    "request",
+    "claims",
+    "evidence"
+  ],
+  "additionalProperties": false
+}

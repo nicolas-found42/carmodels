@@ -1,0 +1,56 @@
+{
+  "bundle_sha256": "c1c3e6c3900fefffc7daf9115ae3c30332f3694d4340da20d9af5d4f944f2b98",
+  "reviewer": "parts_probe-independent-final-review",
+  "verdict": "approve",
+  "rationale": "I read the COMPLETE bundle: all six raw diffs, request, tests/scope facts, all13 evidence items and complete15-check logs, plus every rubric/distribution and the untruncated original gate. The documentation valid escalation is safety0.33/composite0.7926666667; limiting rubrics are CONTRIBUTING spec_match, dealership README test_gap/blast_radius, research index and evidence README blast_radius, preview research test_gap, and runner registration blast_radius. CONTRIBUTING and run_checks only add the targeted helper test and its module/test to the existing minimum95%line-coverage battery; I inspected registry consumers and independently asserted exactly one registration, then re-ran the runner's3 tests successfully. The published15-check manifest has15 distinct entries, each statuspass/exit0, with aggregateexit0 and no skips; all bundled full logs exactly match retained logs. Literal fail/skip/missing-node lines in test_run_checks.log are expected nested negative controls from test_failure_cannot_be_masked_by_later_success, test_selection_and_missing_node_in_ci, and test_actual_javascript_registry_requires_node, ending Ran3tests/OK; they do not contradict the15 passing outer checks. This specifically resolves the verified-but-low-confidence no-skips claim. The prose accurately bounds recovered native source algebra, camera precision, guarded source/dealer workflow and deliberate S7 reconstruction: about10%fin area,93.437mm movement, retained endpoints/cavity,114\u2192144 crossing pairs, reduced finite segment length, three appearance/pose uncertainties, five intentional trailers, and no game/runtime/zero-contact/hidden-face guarantee. No runtime behavior is changed by the prose; consumer/integration/native/source/corpus checks provide the relevant test evidence rather than prose-only assertions. I independently replayed the root-authored final capture assertion against current files, confirming106 source IDs,106 dealership IDs,424 distinct PNGs and all actual/catalog/network hashes/pins. I authored browser evidence but none of the reviewed product code, documentation or check registration, and used this separate assertion instead of treating my own summary as proof. Exact current six file pins, complete call digest and raw gate args match. Approval applies to these valid confidence escalations only; separate helper max_tokens_exceeded input failures and any earlier contradicted receipt are excluded. Original gates remain retained and no judgment was rerun.",
+  "bundle_file_sha256": "b814376a8692cb974d45aef5e71a532d1bc87149ee7ec0fab711f8ff87452460",
+  "gate_sha256": "1027c1a912247db15802b3907a691eabf5e1a360dfc0b96dc4cd9ccd187e5d29",
+  "current_file_pins": {
+    "CONTRIBUTING.md": "f62a46910cebf06506cd72e3f4094e83cc0ae9575722d59fd6f74fcee29bf086",
+    "tools/run_checks.py": "6887777484559d297d8a921746dc64b1c1dfde857f8ca68ea0bf1e2e370d3c2a",
+    "research/README.md": "55af2b8b2c932c181953d7586cd7f23399638a7f653a1550a751062e682e8b70",
+    "research/midnight-club-los-angeles-previews.md": "e6f401016897a58a5dfd41530e8d7dcc72bc8f9cec485ff9de844806e3724595",
+    "dealership/dealership/README.md": "75901edb5f5b3102b2cb3e5315dbf141d748b048ef2461f0f76c3fdce7725478",
+    "research/evidence/midnight-club-los-angeles/assembly-v2/README.md": "5aacf17f5a80427bf1b7a90b1c0e0e376b872806ea53761d77d1ce0ed434c575"
+  },
+  "complete_bundle_read": true,
+  "evidence_commands": [
+    {
+      "command": "python3 tools/test_import_mcla_catalog.py",
+      "exit_code": 0,
+      "log": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/refresh-independent-tests.log",
+      "outcome": "Ran16 tests;OK. Fixtures explicitly reject corrupt pins, wrong identity/profile/limits, extra files, rehashed wrong native members and symlinks; preserve exact ZIP encoding and edited dealership data; roll back install/final-verification failures."
+    },
+    {
+      "command": "python3 tools/test_run_checks.py",
+      "exit_code": 0,
+      "log": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/documentation-independent-runner-tests.log",
+      "outcome": "Ran3 tests;OK. fail/skip/missing-runtime output is expected negative-control execution inside a passing unittest runner."
+    },
+    {
+      "command": "python3 .scratch/mcla-assembly-fix/assert-capture-independent.py --phase final-cleanup-v2 --output .scratch/mcla-assembly-fix/parts-probe/documentation-independent-capture-current.json",
+      "exit_code": 0,
+      "log": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/documentation-independent-capture-current.log",
+      "outcome": "106source+106dealer exact IDs;424 distinct PNG paths/headers/dimensions/hashes; exact local/catalog/network GLB hashes; current viewer/catalog pins; no errors; Metal24depthbits."
+    },
+    {
+      "command": "Independent Python bundle/digest/pin/log/registry assertion",
+      "exit_code": 0,
+      "outcome": "Both complete call digests and args match raw gates; eight current product file pins exact;15 distinct outer manifest pass/exit0/no skips; complete bundled logs equal retained disk logs; helper test and minimum95%coverage registration present exactly once."
+    },
+    {
+      "command": "Independent Python baseline/native/current-corpus preservation assertion",
+      "exit_code": 0,
+      "receipt": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/parts-probe/refresh-independent-current-preservation.json",
+      "outcome": "106 native ZIP metadata/size/SHA equal original baseline pins;106 source/dealer byte pairs equal; editable catalog bytes and other-game rows exact;3336 tracked other-game GLB bytes individually equal baseline Git blob objects."
+    }
+  ],
+  "original_gate_action": "escalate",
+  "original_safe_to_apply": 0.33,
+  "original_composite": 0.7926666666666667,
+  "limits": [
+    "Valid review/escalation only; no operational or contradicted claim approved.",
+    "Original probabilities and failure evidence preserved.",
+    "No product files changed by this reviewer."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "args": {
+    "decision": "Which bounded fin-only preview candidate should enter implementation and independent review?",
+    "candidates": [
+      {
+        "id": "slim10",
+        "description": "Implement source-pinned coherent10% X/Z residual thinning plus10mm inset, inverse-transpose native normals, qualified finite contacts/separate gray background owner; tests/independentreview stillrequired."
+      },
+      {
+        "id": "yz25",
+        "description": "Implement source-pinned2.5% Z-only residualthinning with finnormals andlimits."
+      },
+      {
+        "id": "finiteoutside",
+        "description": "Implement finiteoutside subtraction despite severe lowerfinarea loss."
+      },
+      {
+        "id": "investigate",
+        "description": "Keep exportblocked, gather more endpoint evidence before anyimplementation."
+      }
+    ],
+    "evidence": "Native pinned S7 skirts model0 geometry1:12 coordinate components (two main shell1633triangles each; ten fins4upper38tris+6lower32tris). User explicitly chose derived preview geometry cleanup, original ZIP preserved. Independent Parts new color/no-fin captures confirm wide gray upper background panels survive complete fin removal and have another owner; Parts investigates separately. Confirmed lower white tooth-like projections disappear with wholefin removal (negativecontrol only). All exports remain blocked pending candidate tests/review.\nA slim10: unique native-coordinate least-squares X(Y),Z(Y) centerlines; positive10% X/Z residual contraction plus10mm lateralinset, nativeYspans/indices/all10sourcegroups exact retained; coherent attribute-seam copies/weldsplit0. Inverse-transpose native normals292indices only. Main positions/normals,UV/color/tangent exact unchanged. Eachfinarea9.978–9.992% native: explicitly thin-blade reconstruction, not exacttrim/nativepose. Maxdisplacement93.436848mm, residualZwidth13.67–14.11mm. Root independently prefers original-normal slim10 bothviews overYZ25; fresh inverse-transpose/face-normal captures similar. Narrow upperlines and lowergrayedges replace widewhiteprojections; broad uppergraybackground remains. Parts earlier slim10colored review shows thinuegreen/faintlowerblue; freshcorrectnormalreview pending. Endpoints could intended vsresidual; do notclaimallclippingresolved. Propercrossings114→144 (no countreduction); sum finite intersectionsegment lengths2.436969m→.438378m, max65.077→13.037mm. This metric is not area/visibleproof.\nB YZ25: preserveX/Y, Zresidual2.5%, finareas17.3%upper/42.7%lower, max101.192mm; propercrossings98,sumsegments1.01376m. Rootlesspreferred; Parts seesdarkends whose intended/protrusion status bounded.\nC finiteoutside: exactmain and newtrianglesinsourcenativefaces, but lowerarea1.69–7.97%, faintstubs; independentlyrejectedretention/cleanup. Prior contactretractions tornweld10/11andvisibleartifacts. No product/nativebytes changed. Exactreadonlygeometry/nativecontrolsfired. Tests and final source/dealer/public checks pending.",
+    "priorities": "Clean confirmed fin protrusion, preserve ten readable divider groups and original native ZIP, exact otherprimitives untouched. Favor coherentwelds/normals source-derived reconstruction. Do notclaimoriginalgamefidelity,zerocrossings,allS7fixed orfinalcompletion before independent/tests/browser checks.",
+    "requirements": [
+      "Main shell positions/normals exact unchanged.",
+      "Allten sourceblade groups and nativeYspans survive.",
+      "Confirmed broadlowerfin protrusions visibly reduced in bothviews."
+    ],
+    "escalate_on_contradiction": true,
+    "escape_hatches": false
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_decide\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"recommendation\": {\n    \"selected\": \"slim10\",\n    \"escaped\": false,\n    \"confidence\": 0.97,\n    \"probabilities\": {\n      \"slim10\": 0.98,\n      \"yz25\": 0.01,\n      \"finiteoutside\": 0,\n      \"investigate\": 0.01\n    },\n    \"contradicted_requirements\": []\n  },\n  \"requirements_checked\": 3,\n  \"checks\": [\n    {\n      \"candidate\": \"slim10\",\n      \"requirement\": 0,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"slim10\",\n      \"requirement\": 1,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"slim10\",\n      \"requirement\": 2,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"yz25\",\n      \"requirement\": 0,\n      \"answer\": \"unknown\"\n    },\n    {\n      \"candidate\": \"yz25\",\n      \"requirement\": 1,\n      \"answer\": \"unknown\"\n    },\n    {\n      \"candidate\": \"yz25\",\n      \"requirement\": 2,\n      \"answer\": \"unknown\"\n    },\n    {\n      \"candidate\": \"finiteoutside\",\n      \"requirement\": 0,\n      \"answer\": \"supported\"\n    },\n    {\n      \"candidate\": \"finiteoutside\",\n      \"requirement\": 1,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"finiteoutside\",\n      \"requirement\": 2,\n      \"answer\": \"contradicted\"\n    },\n    {\n      \"candidate\": \"investigate\",\n      \"requirement\": 0,\n      \"answer\": \"unknown\"\n    },\n    {\n      \"candidate\": \"investigate\",\n      \"requirement\": 1,\n      \"answer\": \"unknown\"\n    },\n    {\n      \"candidate\": \"investigate\",\n      \"requirement\": 2,\n      \"answer\": \"unknown\"\n    }\n  ],\n  \"warnings\": [],\n  \"usage\": {\n    \"input_tokens\": 2974,\n    \"output_tokens\": 568\n  }\n}"
+      }
+    ]
+  }
+}

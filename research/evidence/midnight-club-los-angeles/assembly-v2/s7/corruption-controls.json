@@ -1,0 +1,44 @@
+[
+  {
+    "case": "unrelated_bytes",
+    "rejected": true,
+    "assertion": "('unrelated model bytes changed', 'va_350z_04')",
+    "expected_reason": "unrelated model bytes changed",
+    "expected_reason_matched": true
+  },
+  {
+    "case": "target_pose",
+    "rejected": true,
+    "assertion": "('vp_sln_s7_06', 'vp_sln_s7_06/resources/vehicle/vp_sln_s7_06/skirts0_lod_0.xrsc@ss/model0')",
+    "expected_reason": "vp_sln_s7_06/resources/vehicle/vp_sln_s7_06/skirts0_lod_0.xrsc@ss/model0",
+    "expected_reason_matched": true
+  },
+  {
+    "case": "target_binding",
+    "rejected": true,
+    "assertion": "('vp_sln_s7_06', 'vp_sln_s7_06/resources/vehicle/vp_sln_s7_06/skirts0_lod_0.xrsc@ss/model0')",
+    "expected_reason": "vp_sln_s7_06/resources/vehicle/vp_sln_s7_06/skirts0_lod_0.xrsc@ss/model0",
+    "expected_reason_matched": true
+  },
+  {
+    "case": "target_uv",
+    "rejected": true,
+    "assertion": "('non-position/normal target array changed', 'TEXCOORD_0')",
+    "expected_reason": "non-position/normal target array changed",
+    "expected_reason_matched": true
+  },
+  {
+    "case": "target_uint16",
+    "rejected": true,
+    "assertion": "preview triangle indices must be UInt32 (componentType 5125)",
+    "expected_reason": "preview triangle indices must be UInt32",
+    "expected_reason_matched": true
+  },
+  {
+    "case": "receipt_source",
+    "rejected": true,
+    "assertion": "S7 repair receipt source SHA256 differs from the qualified native source hash",
+    "expected_reason": "S7 repair receipt source SHA256 differs",
+    "expected_reason_matched": true
+  }
+]

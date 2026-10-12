@@ -1,0 +1,43 @@
+{
+  "args": {
+    "classes": [
+      {
+        "id": "no_clear_placement_issue",
+        "description": "Coherent structural parts in observed views, no specific placement defect. Minor generic shader/seam fidelity limits alone belong here. Does not establish all-angle or native-game equivalence."
+      },
+      {
+        "id": "intentional_partial_model",
+        "description": "Caption explicitly describes a native cabless trailer, flatbed or separate partial vehicle model with aligned parts; absence of cab is intentional source scope."
+      },
+      {
+        "id": "native_pose_or_appearance_review",
+        "description": "A specific authored native accessory or resting pose remains uncertain (roof light, raised garbage lifting frame, cone/bumper/ladder), requiring source/runtime interpretation; no definitive exporter-caused placement defect established."
+      },
+      {
+        "id": "visible_residual",
+        "description": "Specific unresolved visible clipping, overlapping or jagged rendering defect remains, even if broad assembly is coherent; takes precedence over no_clear issue."
+      },
+      {
+        "id": "clear_placement_defect",
+        "description": "Caption explicitly establishes detached or wrongly situated structural part such as floating wheel or door; not only material seams."
+      }
+    ],
+    "items": [
+      {
+        "id": "vp_sln_s7_06",
+        "text": "Fresh final public S7 source rear-quarter and rotated front-quarter images show the body shell, doors, roof, wheels and skirts seated. Compared with the prior original S7, broad white fin slabs and staircase-like protrusions are reduced to thin intake divider edges. Fine short gray fin endpoints remain visible near the lower rocker opening; native main-shell and blackmatte cavity surfaces remain gray behind the upper intake. Independent no-fin ownership and native identity-frame probes locate those cavity walls in the same skirts0 resource, rather than a separately misplaced attachment. The cleanup deliberately thins all ten fin groups; exact indices/topology/Y spans/welded copies are retained. Native surface contacts and game shader fidelity are unestablished, and no zero-contact/all-angle guarantee is claimed."
+      }
+    ],
+    "purpose": "Triage only the newly changed S7 final public source preview after geometry cleanup; retain original judgments for the other105 unchanged model assets.",
+    "context": "Host inspected both full final public S7 source PNGs and all212 source views. Small finite fin endpoints/native cavity walls are retained limitations, not evidence by themselves of a detached attachment or conspicuous remaining broad slab. Do not infer all-angle, zero-contact, or native game fidelity from no_clear classification."
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"tool\": \"jev_classify\",\n  \"model\": \"typesafe/jev-1.13-20260917\",\n  \"provider\": \"openrouter\",\n  \"summary\": {\n    \"items\": 1,\n    \"auto\": 1,\n    \"review\": 0,\n    \"invalid_response\": 0,\n    \"by_class\": {\n      \"no_clear_placement_issue\": 1\n    }\n  },\n  \"thresholds\": {\n    \"auto_accept\": 0.85,\n    \"minimum_margin\": 0.5\n  },\n  \"results\": [\n    {\n      \"id\": \"vp_sln_s7_06\",\n      \"classification\": \"no_clear_placement_issue\",\n      \"probabilities\": {\n        \"no_clear_placement_issue\": 0.96,\n        \"intentional_partial_model\": 0,\n        \"native_pose_or_appearance_review\": 0.01,\n        \"visible_residual\": 0.03,\n        \"clear_placement_defect\": 0\n      },\n      \"confidence\": 0.95,\n      \"margin\": 0.9299999999999999,\n      \"top_probability\": 0.96,\n      \"decision\": \"auto\"\n    }\n  ],\n  \"usage\": {\n    \"input_tokens\": 856,\n    \"output_tokens\": 59\n  }\n}"
+      }
+    ]
+  },
+  "elapsed_ms": 304
+}

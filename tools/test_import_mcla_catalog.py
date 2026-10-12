@@ -51,6 +51,158 @@ def export(extraction, output, identities):
 
 
 class Tests(unittest.TestCase):
+    def old_edition(self, extraction, output, identities):
+        with patch.object(catalog, 'PROFILE', catalog.PREVIOUS_PROFILE), patch.object(catalog, 'LIMITS', catalog.PREVIOUS_LIMITS):
+            export(extraction, output, identities)
+
+    def refreshed(self, extraction, output, identities):
+        with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'), patch.object(catalog, 'build_car', preview):
+            return catalog.export_catalog(extraction, output, identities, refresh=True)
+
+    def snapshot(self, output):
+        return {p.relative_to(output).as_posix(): p.read_bytes() for p in output.rglob('*') if p.is_file()}
+
+    def test_refresh_migrates_old_profile_and_preserves_exact_zip_encoding(self):
+        with tempfile.TemporaryDirectory() as temp:
+            extraction, output, identities = fixture(Path(temp).resolve())
+            self.old_edition(extraction, output, identities)
+            current = json.loads((output / 'index.json').read_text())
+            row = current['cars'][0]
+            native = output / row['native_package']['file']
+            members = catalog.package_members(CODE, native.read_bytes())
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_STORED) as archive:
+                for name, data in members.items(): archive.writestr(name, data)
+            native.write_bytes(buffer.getvalue())
+            row['native_package'].update(bytes=native.stat().st_size, sha256=catalog.sha(native.read_bytes()))
+            (output / 'index.json').write_text(json.dumps(current))
+            old = self.snapshot(output)
+            with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'):
+                with self.assertRaisesRegex(ValueError, 'index differs'):
+                    export(extraction, output, identities)
+            self.assertEqual(self.snapshot(output), old)
+            self.assertEqual(self.refreshed(extraction, output, identities), 1)
+            updated = json.loads((output / 'index.json').read_text())['cars'][0]
+            self.assertEqual(updated['source_profile'], 'mcla-xbox360-static-stock-v2')
+            self.assertEqual(read_glb((output / updated['file']).read_bytes())[0]['extras']['source_profile'], updated['source_profile'])
+            self.assertEqual(native.read_bytes(), old[row['native_package']['file']])
+            self.assertNotEqual((output / row['file']).read_bytes(), old[row['file']])
+
+    def test_refresh_corrupt_old_files_and_unsupported_metadata_fail_before_write(self):
+        for mutation in ('glb', 'native', 'profile', 'source', 'limits', 'extra', 'native-rehashed'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temp:
+                extraction, output, identities = fixture(Path(temp).resolve())
+                self.old_edition(extraction, output, identities)
+                current = json.loads((output / 'index.json').read_text()); row = current['cars'][0]
+                if mutation in ('glb', 'native'):
+                    name = row['file'] if mutation == 'glb' else row['native_package']['file']
+                    (output / name).write_bytes(b'corrupt old bytes')
+                elif mutation == 'profile': row['source_profile'] = 'unrecognized'
+                elif mutation == 'source': current['source'] = {'sha256': 'b' * 64}
+                elif mutation == 'limits': current['claim_limits'] = ['unsupported promise']
+                elif mutation == 'extra': (output / 'unexpected.txt').write_text('user file')
+                else:
+                    native = output / row['native_package']['file']
+                    members = catalog.package_members(CODE, native.read_bytes())
+                    file = 'resources/vehicle/' + CODE + '/body_lod_0.xrsc'
+                    members[file] = b'other data'
+                    manifest = json.loads(members['manifest.json'])
+                    manifest['files'][0].update(bytes=len(members[file]), sha256=catalog.sha(members[file]))
+                    members['manifest.json'] = json.dumps(manifest).encode()
+                    buffer = io.BytesIO()
+                    with zipfile.ZipFile(buffer, 'w') as archive:
+                        for name, data in members.items(): archive.writestr(name, data)
+                    native.write_bytes(buffer.getvalue())
+                    row['native_package'].update(bytes=native.stat().st_size, sha256=catalog.sha(native.read_bytes()))
+                (output / 'index.json').write_text(json.dumps(current))
+                old = self.snapshot(output)
+                reason = {'glb': 'hash/size', 'native': 'hash/size', 'profile': 'Unsupported',
+                          'source': 'identity/coverage', 'limits': 'claim limits', 'extra': 'file coverage',
+                          'native-rehashed': 'differs from extraction'}[mutation]
+                with self.assertRaisesRegex(ValueError, reason): self.refreshed(extraction, output, identities)
+                self.assertEqual(self.snapshot(output), old)
+
+    def test_refresh_missing_native_requires_old_pin_and_restores_matching_zip(self):
+        for corrupt_pin in (False, True):
+            with self.subTest(corrupt_pin=corrupt_pin), tempfile.TemporaryDirectory() as temp:
+                extraction, output, identities = fixture(Path(temp).resolve())
+                self.old_edition(extraction, output, identities)
+                current = json.loads((output / 'index.json').read_text()); row = current['cars'][0]
+                native = output / row['native_package']['file']; original = native.read_bytes(); native.unlink()
+                if corrupt_pin:
+                    row['native_package']['sha256'] = 'b' * 64
+                    (output / 'index.json').write_text(json.dumps(current))
+                    old = self.snapshot(output)
+                    with self.assertRaisesRegex(ValueError, 'differs from its pin'):
+                        self.refreshed(extraction, output, identities)
+                    self.assertEqual(self.snapshot(output), old)
+                else:
+                    self.refreshed(extraction, output, identities)
+                    self.assertEqual(native.read_bytes(), original)
+
+    def test_refresh_symlinks_fail_without_modifying_their_targets(self):
+        for target in ('directory', 'model', 'native', 'index'):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp).resolve()
+                extraction, output, identities = fixture(root)
+                self.old_edition(extraction, output, identities)
+                before = self.snapshot(output)
+                if target == 'directory':
+                    saved = root / 'saved'; output.rename(saved); output.symlink_to(saved, target_is_directory=True)
+                    link = output
+                else:
+                    name = {'model': 'previews/' + CODE + '.glb', 'native': 'native/' + CODE + '.zip', 'index': 'index.json'}[target]
+                    link = output / name; saved = root / 'saved'; link.rename(saved); link.symlink_to(saved)
+                saved_bytes = saved.read_bytes() if saved.is_file() else None
+                with self.assertRaisesRegex(ValueError, 'symlinks'): self.refreshed(extraction, output, identities)
+                self.assertTrue(link.is_symlink())
+                if saved_bytes is not None: self.assertEqual(saved.read_bytes(), saved_bytes)
+                else: self.assertEqual(self.snapshot(saved), before)
+
+    def test_source_refresh_keeps_edited_dealership_model_and_metadata(self):
+        from import_mcla_dealership import import_cars
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            extraction, output, identities = fixture(root)
+            self.old_edition(extraction, output, identities)
+            dealer = root / 'dealer'; dealer.mkdir(); (dealer / 'models').mkdir()
+            (dealer / 'catalog.json').write_text(json.dumps([{'code': 'EXISTING'}]))
+            (dealer / 'origins.json').write_text(json.dumps({'schema': 1, 'cars': []}))
+            with patch.object(catalog, 'PROFILE', catalog.PREVIOUS_PROFILE), patch.object(catalog, 'LIMITS', catalog.PREVIOUS_LIMITS):
+                import_cars(output, dealer)
+            model = dealer / 'models' / ('MCLA_' + CODE.upper() + '.glb')
+            model.write_bytes(b'edited dealership model')
+            metadata = json.loads((dealer / 'catalog.json').read_text())
+            metadata[-1]['name'] = 'User name'
+            (dealer / 'catalog.json').write_text(json.dumps(metadata))
+            old = self.snapshot(dealer)
+            self.refreshed(extraction, output, identities)
+            with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'):
+                self.assertEqual(import_cars(output, dealer, upgrade_unedited=True), 0)
+            self.assertEqual(self.snapshot(dealer), old)
+
+    def test_refresh_rolls_back_directory_on_failed_install_or_final_verification(self):
+        for failure in ('install', 'verify'):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as temp:
+                extraction, output, identities = fixture(Path(temp).resolve())
+                self.old_edition(extraction, output, identities)
+                old = self.snapshot(output)
+                rename = Path.rename
+                verify = catalog.verify_published
+                def failed_rename(path, destination):
+                    if failure == 'install' and path.name == 'source' and Path(destination) == output:
+                        raise OSError('injected install failure')
+                    return rename(path, destination)
+                def failed_verify(extraction, destination, *args, **kwargs):
+                    if failure == 'verify' and destination == output:
+                        raise ValueError('injected final verification failure')
+                    return verify(extraction, destination, *args, **kwargs)
+                with patch.object(Path, 'rename', failed_rename), patch.object(catalog, 'verify_published', failed_verify):
+                    with self.assertRaisesRegex((OSError, ValueError), 'injected'):
+                        self.refreshed(extraction, output, identities)
+                self.assertEqual(self.snapshot(output), old)
+                self.assertFalse(list(output.parent.glob('.mcla-refresh-*')))
+
     def test_availability_cli_never_skips_malformed_metadata(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp).resolve()

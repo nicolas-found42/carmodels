@@ -28,6 +28,16 @@ LIMITS = [
     'Native ZIPs hold this car manifest and its extracted files, excluding separately shared rims, tires and brakes.',
     'Ambient and player namespace entries remain distinct; this is not a verified playable roster.',
 ]
+PREVIOUS_PROFILE = 'mcla-xbox360-static-stock-v1'
+PREVIOUS_LIMITS = [
+    'Static LOD 0 stock-index assembly with half-resolution diffuse textures and neutral paint; '
+    'slot attachment, wheel placement and material interpretation are readings, not runtime observations. Shared wheel radius and width use geometric approximations because runtime tire-size configuration is undecoded.',
+    'Runtime customization, animation, damage, paint, reflections and original shader passes are not reproduced.',
+    'Names use exact English UI-string key joins when available; other entries retain source codes. '
+    'Retail year, manufacturer and performance are not inferred from codes.',
+    'Native ZIPs hold this car manifest and its extracted files, excluding separately shared rims, tires and brakes.',
+    'Ambient and player namespace entries remain distinct; this is not a verified playable roster.',
+]
 MAX_FILE = 128 * 1024 * 1024
 STAMP = (1980, 1, 1, 0, 0, 0)
 
@@ -141,13 +151,15 @@ def validate_identity(row):
         raise ValueError('MCLA unknown display identity must retain its source code')
 
 
-def source_package(row, source):
+def source_package(row, source, *, expected_profile=None, expected_limits=None):
+    expected_profile = PROFILE if expected_profile is None else expected_profile
+    expected_limits = LIMITS if expected_limits is None else expected_limits
     code = row.get('code') if isinstance(row, dict) else None
     package = row.get('native_package') if isinstance(row, dict) else None
     if (not isinstance(code, str) or not CODE.fullmatch(code)
             or row.get('file') != f'previews/{code}.glb' or row.get('source_code') != code
-            or row.get('asset_kind', 'glb') != 'glb' or row.get('source_profile') != PROFILE
-            or row.get('source_variant') != VARIANT or row.get('claim_limits') != LIMITS
+            or row.get('asset_kind', 'glb') != 'glb' or row.get('source_profile') != expected_profile
+            or row.get('source_variant') != VARIANT or row.get('claim_limits') != expected_limits
             or not isinstance(row.get('display_name'), str) or not row['display_name'].strip()
             or not isinstance(row.get('records'), list) or len(row['records']) != 1
             or not isinstance(package, dict) or package.get('profile') != NATIVE_PROFILE
@@ -161,7 +173,7 @@ def source_package(row, source):
     data = checked_file(Path(source) / row['file'], row.get('bytes'), row.get('sha256'))
     doc, _ = read_glb(data)
     extras = doc.get('extras', {})
-    if extras.get('car') != code or extras.get('source_profile') != PROFILE:
+    if extras.get('car') != code or extras.get('source_profile') != expected_profile:
         raise ValueError('MCLA preview GLB identity differs')
     record = row['records'][0]
     if record.get('role') != 'stock' or type(record.get('triangles')) is not int or record['triangles'] <= 0:
@@ -243,7 +255,78 @@ def verify_published(extraction, output, index, outputs, identities, allow_missi
     return len(current['cars'])
 
 
-def export_catalog(extraction, output, identities, workers=1):
+
+def refresh_catalog(output, index, outputs, identities):
+    """Migrate only a complete, pinned known-profile source edition, with directory rollback."""
+    regular(output / 'index.json')
+    current = json.loads((output / 'index.json').read_text())
+    rows = current.get('cars')
+    expected_rows = catalog_rows(index, outputs, identities)
+    if (not isinstance(rows, list) or not rows or current.get('source') != index['source']
+            or [r.get('code') for r in rows] != [r['code'] for r in expected_rows]):
+        raise ValueError('MCLA refresh source identity/coverage differs')
+    profiles = {row.get('source_profile') for row in rows}
+    if profiles == {PROFILE}:
+        profile, limits = PROFILE, LIMITS
+    elif profiles == {PREVIOUS_PROFILE}:
+        profile, limits = PREVIOUS_PROFILE, PREVIOUS_LIMITS
+    else:
+        raise ValueError('Unsupported MCLA refresh profile')
+    if current.get('claim_limits') != limits:
+        raise ValueError('MCLA refresh claim limits differ')
+    expected_files = {'index.json'} | {r['file'] for r in expected_rows}
+    native_payloads = {}
+    for row, expected in zip(rows, expected_rows):
+        source_package(row, output, expected_profile=profile, expected_limits=limits)
+        if (row['display_name'] != expected['display_name'] or row['name_source'] != expected['name_source']
+                or row['native_package']['members'] != expected['native_package']['members']):
+            raise ValueError('MCLA refresh source metadata differs')
+        native = output / row['native_package']['file']
+        derived = outputs[row['code']][2]
+        if native.exists():
+            data = native.read_bytes()  # Already verified against the old index by source_package.
+            expected_files.add(row['native_package']['file'])
+            if package_members(row['code'], data) != package_members(row['code'], derived):
+                raise ValueError('MCLA refresh native package differs from extraction')
+        else:
+            data = derived
+            if sha(data) != row['native_package']['sha256'] or len(data) != row['native_package']['bytes']:
+                raise ValueError('Rebuilt MCLA ZIP differs from its pin; nothing overwritten')
+        native_payloads[row['code']] = data
+        expected['native_package'].update(bytes=len(data), sha256=sha(data))
+    paths = list(output.rglob('*'))
+    for path in paths:
+        regular(path)
+    if {p.relative_to(output).as_posix() for p in paths if p.is_file()} != expected_files:
+        raise ValueError('MCLA refresh file coverage differs')
+    # Both staged verification and post-swap verification are read-only. A failed swap/check
+    # restores the entire original directory, including its exact index and ZIP encodings.
+    with tempfile.TemporaryDirectory(prefix='.mcla-refresh-', dir=output.parent) as temp:
+        stage, backup = Path(temp) / 'source', Path(temp) / 'previous'
+        stage.mkdir()
+        for row in expected_rows:
+            for name, data in ((row['file'], outputs[row['code']][0]),
+                               (row['native_package']['file'], native_payloads[row['code']])):
+                path = stage / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(data)
+        (stage / 'index.json').write_text(text({'cars': expected_rows, 'source': index['source'], 'claim_limits': LIMITS}))
+        verify_published(None, stage, index, outputs, identities)
+        output.rename(backup)
+        installed = False
+        try:
+            stage.rename(output)
+            installed = True
+            verify_published(None, output, index, outputs, identities)
+        except BaseException:
+            if installed:
+                output.rename(stage)
+            backup.rename(output)
+            raise
+    return len(expected_rows)
+
+
+def export_catalog(extraction, output, identities, workers=1, refresh=False):
     extraction, output = Path(extraction), Path(output)
     regular(extraction); regular(output)
     if output.resolve().is_relative_to(extraction.resolve()) or extraction.resolve().is_relative_to(output.resolve()):
@@ -256,6 +339,8 @@ def export_catalog(extraction, output, identities, workers=1):
     if set(identities) != {vehicle['id'] for vehicle in index['vehicles']}:
         raise ValueError('MCLA display identity coverage differs')
     outputs = derive_outputs(extraction, index, workers)
+    if output.exists() and refresh:
+        return refresh_catalog(output, index, outputs, identities)
     if output.exists():
         verify_published(extraction, output, index, outputs, identities, allow_missing_native=True)
         rows = json.loads((output / 'index.json').read_text())['cars']
@@ -330,7 +415,10 @@ def main():
     parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')
     parser.add_argument('--output', type=Path, default=ROOT / 'dealership/public' / GAME)
     parser.add_argument('--workers', type=int, default=8)
-    parser.add_argument('--check', action='store_true')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--check', action='store_true')
+    mode.add_argument('--refresh', action='store_true',
+                      help='Replace verified prior source previews; preserve checked native packages')
     parser.add_argument('--available', action='store_true')
     args = parser.parse_args()
     if args.available:
@@ -345,7 +433,7 @@ def main():
                                  derive_outputs(args.extraction, index, args.workers), identities)
     else:
         check_extraction(args.iso, args.extraction)
-        count = export_catalog(args.extraction, args.output, identities, args.workers)
+        count = export_catalog(args.extraction, args.output, identities, args.workers, refresh=args.refresh)
     print(f'{"CHECKED" if args.check else "EXPORTED"} {count} MCLA previews and native packages')
     return 0
 

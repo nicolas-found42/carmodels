@@ -1,0 +1,47 @@
+{
+  "bundle_sha256": "13ff7687ff8e4405d10c97f7c788e3de80b5926c5c5321434cd94eb69f549be2",
+  "reviewer": "decoder_fix-independent-helper-review",
+  "verdict": "approve",
+  "rationale": "Reviewed complete raw new-file diffs and confirmed they exactly reconstruct both live helper/test files. Independently ran all ten helper tests, including actual pinned native source with no skip, and all26 exporter tests; Ruff passed for all four helper/exporter files. Independently rediscovered all12 exact-coordinate source components: two1633-triangle main shells, four38-triangle upper fins, six32-triangle lower fins. Their ten sets exactly match selected ranges. Independent affine reconstruction replay for292 source fin vertices gives max position error0 and normal error2.5438405243138006e-16 using explicit A-transpose solve, determinant.01. All source Y values, index topology, coordinate seams, unselected positions/normals and other attributes remain exact; output equals accepted controlled prototype geometry exactly. Exact file/hash/model/geometry guards plus full decoded fingerprint reject mismatched/mutated/repeated target input; unrelated geometry returns by identity. Both actual candidate images inspected: broad boundary intrusion improved, retained native cavity/fin endpoints remain. Tests include nontrivial perpendicular normals, coherent coordinate seam copies, invalid source/fields/scales/normals/fingerprint, repeated repair and displacement-bound controls. This resolves low-confidence correctness/test-gap/blast-radius escalation narrowly for helper/test scope, with original scores preserved. No all106 public output or zero-intersection/gamefidelity completion claim approved.",
+  "file_pins": {
+    "tools/mcla_preview_geometry.py": "6f84f6b4eca1fd1817b6cbe377b51e28bf0a9fd1d9c9a843d6ae4df0d968337c",
+    "tools/test_mcla_preview_geometry.py": "4c6a6c8b46bc262065f76531ba72c327295f6c02651921a1b3cd09cb5d4f85b6"
+  },
+  "check_evidence": {
+    "helper_tests": {
+      "command": "python3 -m unittest discover -s tools -p 'test_mcla_preview_geometry.py' -v",
+      "exit": 0,
+      "passed": 10,
+      "native_skipped": false,
+      "tool_chunk": "879eff"
+    },
+    "exporter_tests": {
+      "command": "python3 -m unittest discover -s tools -p 'test_mcla_preview.py' -v",
+      "exit": 0,
+      "passed": 26,
+      "tool_chunk": "b5d1ef"
+    },
+    "ruff": {
+      "exit": 0,
+      "tool_chunk": "e0ef79"
+    },
+    "native_replay": "/Users/Nicolas/Documents/github/hermes/projects/carmodels/.scratch/mcla-assembly-fix/s7-cleanup-independent/helper-replay.json"
+  },
+  "original_judgments_preserved": {
+    "helper_safe": 0.22,
+    "helper_composite": 0.6887500000000001,
+    "helper_correctness_confidence": 0.05,
+    "helper_testgap_confidence": 0,
+    "tests_safe": 0.62,
+    "tests_composite": 0.8410000000000001,
+    "tests_blast_confidence": 0.35,
+    "check_claim_support": 0.84,
+    "check_claim_confidence": 0.76
+  },
+  "limits": [
+    "Deliberate source-pinned derived divider thinning, not source-faithful trimming or game shader behavior.",
+    "114\u2192144 strict crossing pairs and .438378m remaining total contact segments retained as counterevidence; no zero-contact assertion.",
+    "Generated106 corpus comparison and fresh both-page public captures remain completion requirements.",
+    "This reviewer does not approve own decoder changes."
+  ]
+}

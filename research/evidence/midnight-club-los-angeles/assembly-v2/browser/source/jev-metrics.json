@@ -1,0 +1,64 @@
+{
+  "calls": [
+    {
+      "tool": "screen",
+      "elapsed_ms": 353,
+      "usage": {
+        "input_tokens": 674,
+        "output_tokens": 57
+      },
+      "decision": {
+        "action": "pass",
+        "reason": "no signals above thresholds"
+      }
+    },
+    {
+      "tool": "audit",
+      "elapsed_ms": 1879,
+      "usage": {
+        "input_tokens": 924,
+        "output_tokens": 86
+      },
+      "decision": "pass"
+    },
+    {
+      "tool": "classify",
+      "elapsed_ms": 304,
+      "usage": {
+        "input_tokens": 856,
+        "output_tokens": 59
+      },
+      "decision": {
+        "items": 1,
+        "auto": 1,
+        "review": 0,
+        "invalid_response": 0,
+        "by_class": {
+          "no_clear_placement_issue": 1
+        }
+      }
+    },
+    {
+      "tool": "verify",
+      "elapsed_ms": 405,
+      "usage": {
+        "input_tokens": 1372,
+        "output_tokens": 226
+      },
+      "decision": {
+        "verified": 2,
+        "contradicted": 0,
+        "unsupported": 0,
+        "needs_review": 0
+      }
+    }
+  ],
+  "input_tokens": 3826,
+  "output_tokens": 428,
+  "sum_tool_elapsed_ms": 2941,
+  "billed_cost": null,
+  "limits": [
+    "Changed final S7 state only; the other105 original judgments and distributions are retained.",
+    "Exact model price and billed costs remain unavailable; null is not zero cost."
+  ]
+}

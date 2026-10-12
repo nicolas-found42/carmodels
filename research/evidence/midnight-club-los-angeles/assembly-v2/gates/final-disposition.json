@@ -1,0 +1,317 @@
+{
+  "scopes": [
+    {
+      "scope": "decoder-valid-input",
+      "bundle_sha256": "d5d2e2cf831ad4f139cbbefe744275f0d692e7b1d355b65af6b80e7421eceac0",
+      "original_action": "escalate",
+      "composite": 0.769625,
+      "safe_to_apply": 0.25,
+      "verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The retained decoder checks passed 19 model tests and 6 verifier tests, including malformed binding/cache controls.",
+            "verdict": "verified",
+            "confidence": 0.97,
+            "probabilities": {
+              "verified": 0.98,
+              "contradicted": 0.01,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "Independent source-byte reconstruction matched current draw orientations and translations for 1,491 selected resources and 7,453 bones within 1.36e-7.",
+            "verdict": "verified",
+            "confidence": 0.88,
+            "probabilities": {
+              "verified": 0.92,
+              "contradicted": 0.01,
+              "unsupported": 0.07
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 9989,
+        "output_tokens": 265
+      },
+      "independent_reviewer": "root (independent of decoder implementation agent)",
+      "disposition": "accepted by bound independent review",
+      "gate_sha256": "41571479d9a1ac1f2eb56a2c3ef2f190fc799b7f9594cd450d2a8326f03f9b08",
+      "resolution_sha256": "265b3137d5cbfb84175a1efd5abcaad31aebc4b03b531f3fa41ffd813445eb4c"
+    },
+    {
+      "scope": "camera",
+      "bundle_sha256": "15d98b676ddf8b0dafbfa358869006389a31c93788fc585b991b484ede029e43",
+      "original_action": "escalate",
+      "composite": 0.77425,
+      "safe_to_apply": 0.57,
+      "verification": {
+        "action": "review",
+        "summary": {
+          "verified": 1,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "The four retained viewer regression checks passed with the fitted near plane in recovered.html.",
+            "verdict": "verified",
+            "confidence": 0.72,
+            "probabilities": {
+              "verified": 0.81,
+              "contradicted": 0.01,
+              "unsupported": 0.18
+            },
+            "action": "review"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 3563,
+        "output_tokens": 134
+      },
+      "independent_reviewer": "decoder_fix (independent of root camera implementation)",
+      "disposition": "accepted by bound independent review",
+      "gate_sha256": "66db68a59b49723db6658eabefb996081457f335ee9284a98f40b50bcfd44651",
+      "resolution_sha256": "cdc4307222fe41d23d1e0db303f9013f7c41bbdc71916894ed1f5acc7fb74fb8"
+    },
+    {
+      "scope": "exporter",
+      "bundle_sha256": "c67907b5eb31827736cacb6211c76cda262bc37b05dd5ecad45d699e68f09689",
+      "original_action": "escalate",
+      "composite": 0.77525,
+      "safe_to_apply": 0.37,
+      "verification": {
+        "action": "review",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "test_mcla_preview passed26 exporter and cleanup-wiring tests.",
+            "verdict": "verified",
+            "confidence": 0.97,
+            "probabilities": {
+              "verified": 0.98,
+              "contradicted": 0.01,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "The independent final browser assertion script passed106 expected IDs in each page,424 distinct PNGs and matching actual source/dealership/catalog/network GLB hashes, with no recorded viewer/page errors.",
+            "verdict": "verified",
+            "confidence": 0.74,
+            "probabilities": {
+              "verified": 0.83,
+              "contradicted": 0.08,
+              "unsupported": 0.09
+            },
+            "action": "review"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 26266,
+        "output_tokens": 265
+      },
+      "independent_reviewer": "decoder_fix-independent-final-exporter",
+      "disposition": "accepted by bound independent review",
+      "gate_sha256": "58d413bb5418e599ed912d1ed29e5b26b6eb4b1ed91db53bdfbba59bbdef2bc4",
+      "resolution_sha256": "ce000ed72ba5faa3386a83c20bd728c4e53be6332c2ff5aa138720ac1ee4869e"
+    },
+    {
+      "scope": "helper-bounded-evidence",
+      "bundle_sha256": "87fb8bf9d2711f0b1028556a560a75537cc7126c6b3f2f1804c28ee81c927f63",
+      "original_action": "escalate",
+      "composite": 0.855,
+      "safe_to_apply": 0.45,
+      "verification": {
+        "action": "auto",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 0,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "test_mcla_preview_geometry passed10 tests including the available real native test; helper line coverage was110/110 executable lines.",
+            "verdict": "verified",
+            "confidence": 0.94,
+            "probabilities": {
+              "verified": 0.96,
+              "contradicted": 0.03,
+              "unsupported": 0.01
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "Independent source-corpus comparison found105 byte-identical other GLBs,4439 unchanged native poses/bindings, and only one S7 primitive position/normal arrays changed.",
+            "verdict": "verified",
+            "confidence": 0.94,
+            "probabilities": {
+              "verified": 0.96,
+              "contradicted": 0.02,
+              "unsupported": 0.02
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 19011,
+        "output_tokens": 265
+      },
+      "independent_reviewer": "decoder_fix-independent-final-helper-bounded-evidence",
+      "disposition": "accepted by bound independent review",
+      "gate_sha256": "16cddd3a80e33b516741dcd72694fb603ec4c4aff03b0264f4d546fa2b23cfca",
+      "resolution_sha256": "86a350a79c6332f1d52ccc1e77743b697c50c5bb20a97453d45923eea2c80a0d"
+    },
+    {
+      "scope": "refresh",
+      "bundle_sha256": "b7af3dc005a1a4859c41eeaece2d7dbdb62c24f8c5afeec0d10c10f5c5c040ec",
+      "original_action": "escalate",
+      "composite": 0.7385,
+      "safe_to_apply": 0.46,
+      "verification": {
+        "action": "review",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "test_import_mcla_catalog passed16 guarded refresh,corruption and rollback tests.",
+            "verdict": "verified",
+            "confidence": 0.8,
+            "probabilities": {
+              "verified": 0.87,
+              "contradicted": 0.04,
+              "unsupported": 0.09
+            },
+            "action": "auto"
+          },
+          {
+            "claim": "Final preservation checker verified original native ZIP metadata/bytes for106 models, unchanged editable catalog bytes and unchanged other-game catalog rows/GLBs.",
+            "verdict": "verified",
+            "confidence": 0.73,
+            "probabilities": {
+              "verified": 0.82,
+              "contradicted": 0.1,
+              "unsupported": 0.08
+            },
+            "action": "review"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 11092,
+        "output_tokens": 265
+      },
+      "independent_reviewer": "parts_probe-independent-final-review",
+      "disposition": "accepted by bound independent review",
+      "gate_sha256": "456566b0549d71dd20c5e71bf3108f0a9e2349426b697a2ebcb1aa2fc92f0900",
+      "resolution_sha256": "7066afb9de916761f0f793225531c5c36f0f712499ef79664c680eae2c00acfd"
+    },
+    {
+      "scope": "documentation",
+      "bundle_sha256": "c1c3e6c3900fefffc7daf9115ae3c30332f3694d4340da20d9af5d4f944f2b98",
+      "original_action": "escalate",
+      "composite": 0.7926666666666667,
+      "safe_to_apply": 0.33,
+      "verification": {
+        "action": "escalate",
+        "summary": {
+          "verified": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "needs_review": 1,
+          "invalid_response": 0
+        },
+        "thresholds": {
+          "auto_accept": 0.8,
+          "review_at": 0.5
+        },
+        "results": [
+          {
+            "claim": "All15 final-published-checks executed checks passed with no skips.",
+            "verdict": "verified",
+            "confidence": 0.33,
+            "probabilities": {
+              "verified": 0.55,
+              "contradicted": 0.4,
+              "unsupported": 0.05
+            },
+            "action": "escalate"
+          },
+          {
+            "claim": "Final independent capture assertions passed106 expected source IDs,106 expected dealership IDs and424 distinct PNGs with matching GLB/catalog/network hashes.",
+            "verdict": "verified",
+            "confidence": 0.85,
+            "probabilities": {
+              "verified": 0.9,
+              "contradicted": 0.06,
+              "unsupported": 0.04
+            },
+            "action": "auto"
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 25468,
+        "output_tokens": 629
+      },
+      "independent_reviewer": "parts_probe-independent-final-review",
+      "disposition": "accepted by bound independent review",
+      "gate_sha256": "1027c1a912247db15802b3907a691eabf5e1a360dfc0b96dc4cd9ccd187e5d29",
+      "resolution_sha256": "cb03dad513b633d4e90e098e7c076a8692b5d4357a1bdca79fec29f2e6b63851"
+    }
+  ],
+  "status": "accepted",
+  "claim_limits": [
+    "No original Jev escalation or scores were replaced.",
+    "Operational decoder/helper input failures and the prior contradicted capture claim are excluded from accepted completion claims, with original receipts retained.",
+    "Generated assets are separately verified by executable source/corpus/preservation/browser hash assertions."
+  ]
+}

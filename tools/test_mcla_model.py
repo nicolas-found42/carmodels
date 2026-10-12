@@ -23,7 +23,7 @@ def build(vertex_sets=None, bones=None):
                                              ('hd', 0, (0.0, 0.5, -1.0), (0.0, 0.0, 0.0))]
     b, at = Builder(), {}
     root = b.alloc(0x40)
-    lod, models = b.alloc(8), b.alloc(4)
+    lod, models = b.alloc(16), b.alloc(4)
     model = b.alloc(0x1C)
     count = len(vertex_sets)
     geometries = b.alloc(4 * count)
@@ -76,7 +76,17 @@ def build(vertex_sets=None, bones=None):
             base = model_space[parent] if parent >= 0 else (0.0, 0.0, 0.0)
             model_space.append(tuple(p + q for p, q in zip(base, local)))
             b.put(bone + 0x60, '3f', *model_space[-1])
-        at.update(skeleton=skeleton, bones=array)
+        binding = b.alloc(4)
+        b.put(lod + 8, 'IHH', b.pointer(binding), 1, 1)
+        b.put(binding, 'I', 0)
+        cache = b.alloc(0x20 + 48 * len(bones))
+        b.put(root + 0x30, 'I', b.pointer(cache))
+        b.put(cache, 'HH', len(bones), len(bones))
+        for i in range(len(bones)):
+            relative = tuple(model_space[i][k] - model_space[0][k] for k in range(3))
+            struct.pack_into('<12f', b.data, cache + 0x20 + 48 * i,
+                             1., 0., 0., relative[0], 0., 1., 0., relative[1], 0., 0., 1., relative[2])
+        at.update(skeleton=skeleton, bones=array, binding=binding, cache=cache)
     data, virtual, physical = b.segment()
     return bytearray(data), virtual, physical, at
 
@@ -88,6 +98,92 @@ def patched(data, at, fmt, *values):
 
 
 class Decoding(unittest.TestCase):
+    def test_cached_draw_pose_restores_noncommuting_ancestor_bind_chain(self):
+        bones = [('root', -1, (2., 3., 4.), (0., 0., 0.)),
+                 ('child', 0, (1., 0., 0.), (0., 0., 0.)),
+                 ('grandchild', 1, (0., 1., 0.), (0., 0., 0.)),
+                 ('sibling', 0, (0., 0., 1.), (0., 0., 0.))]
+        data, virtual, physical, at = build(bones=bones)
+        quarter = 1.5707963267948966
+        # Root Y, child Z, grandchild X are not interchangeable. Raw cached
+        # rotations also differ from parent draw rotations, so neither a local
+        # orient alone nor a parent draw-pose product gives the expected axes.
+        orientations = ((0., quarter, 0.), (0., 0., quarter), (quarter, 0., 0.), (0., 0., 0.))
+        caches = ((1., 0., 0., 10., 0., 1., 0., 20., 0., 0., 1., 30.),
+                  (0., 0., 1., 11., 0., 1., 0., 22., -1., 0., 0., 33.),
+                  (0., -1., 0., 14., 1., 0., 0., 25., 0., 0., 1., 36.),
+                  (1., 0., 0., 17., 0., 1., 0., 28., 0., 0., 1., 39.))
+        for index, (orient, cache) in enumerate(zip(orientations, caches)):
+            data = patched(data, at['bones'] + index * 224 + 0x70, '3f', *orient)
+            struct.pack_into('<12f', data, at['cache'] + 0x20 + index * 48, *cache)
+        data = patched(data, at['binding'], 'I', 2)
+        decoded = decode(bytes(data), virtual, physical)
+        expected_axes = ((0., 0., -1., 0., 0., 1., 0., 0., 1., 0., 0., 0.),
+                         (0., 1., 0., 0., 1., 0., 0., 0., 0., 0., -1., 0.),
+                         (-1., 0., 0., 0., 0., 1., 0., 0., 0., 0., -1., 0.),
+                         (0., 0., -1., 0., 0., 1., 0., 0., 1., 0., 0., 0.))
+        for index, bone in enumerate(decoded['skeleton']):
+            for got, want in zip(bone['matrix'][:12], expected_axes[index]):
+                self.assertAlmostEqual(got, want, places=6)
+            raw = tuple(caches[index][row * 4 + col] if row < 3 else float(col == 3)
+                        for col in range(4) for row in range(4))
+            self.assertEqual(bone['cached_matrix'], raw)
+            self.assertEqual(bone['matrix'][12:15], tuple(caches[index][i * 4 + 3] - caches[0][i * 4 + 3] + bones[0][2][i] for i in range(3)))
+        self.assertEqual(decoded['models'][0]['bone_index'], 2)
+        self.assertEqual(summary(decoded)['vertices'], 7)
+
+    def test_cached_bind_basis_restores_mixed_axis_preorientation_on_right(self):
+        data, virtual, physical, at = build()
+        # Cache is Y quarter turn; orient is Z quarter turn after Y quarter turn.
+        # Order and multiplication side both matter for this native factorization.
+        struct.pack_into('<12f', data, at['cache'] + 0x20,
+                         0., 0., 1., 0., 0., 1., 0., 0., -1., 0., 0., 0.)
+        data = patched(data, at['bones'] + 0x70, '3f', 0., 1.5707963267948966, 1.5707963267948966)
+        bone = decode(bytes(data), virtual, physical)['skeleton'][0]
+        expected = (-1., 0., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 1.)
+        for got, want in zip(bone['matrix'], expected):
+            self.assertAlmostEqual(got, want, places=6)
+        self.assertEqual(bone['cached_matrix'][:3], (0., 0., -1.))
+
+    def test_cached_translation_rebases_root_and_descendant_separately(self):
+        bones = [('root', -1, (2., 3., 4.), (0., 0., 0.)),
+                 ('child', 0, (0., .5, -1.), (0., 0., 0.))]
+        data, virtual, physical, at = build(bones=bones)
+        for index, xyz in enumerate(((10., 20., 30.), (11., 22., 33.))):
+            struct.pack_into('<12f', data, at['cache'] + 0x20 + index * 48,
+                             1., 0., 0., xyz[0], 0., 1., 0., xyz[1], 0., 0., 1., xyz[2])
+        root, child = decode(bytes(data), virtual, physical)['skeleton']
+        self.assertEqual(root['cached_matrix'][12:15], (10., 20., 30.))
+        self.assertEqual(root['matrix'][12:15], (2., 3., 4.))
+        self.assertEqual(child['cached_matrix'][12:15], (11., 22., 33.))
+        self.assertEqual(child['matrix'][12:15], (3., 5., 7.))
+        self.assertEqual(child['model'], (2., 3.5, 3.))
+
+    def test_binding_and_cached_orientation_preserve_authored_translation(self):
+        data, virtual, physical, at = build(bones=[('root', -1, (2., 3., 4.), (0., 1.5707963, 0.))])
+        # Native row-major Y rotation: X axis goes toward -Z. Cached root T is zero.
+        struct.pack_into('<12f', data, at['cache'] + 0x20,
+                         0., 0., 1., 0., 0., 1., 0., 0., -1., 0., 0., 0.)
+        decoded = decode(bytes(data), virtual, physical)
+        self.assertEqual(decoded['models'][0]['bone_index'], 0)
+        bone = decoded['skeleton'][0]
+        self.assertEqual(bone['cached_matrix'][12:15], (0., 0., 0.))
+        self.assertEqual(bone['matrix'], (0., 0., -1., 0., 0., 1., 0., 0., 1., 0., 0., 0., 2., 3., 4., 1.))
+
+    def test_nonzero_binding_is_not_the_model_matrix_index(self):
+        data, virtual, physical, at = build()
+        data = patched(data, at['binding'], 'I', 1)
+        model = decode(bytes(data), virtual, physical)['models'][0]
+        self.assertEqual((model['bone_index'], model['matrix_index']), (1, 0))
+
+    def test_optional_cache_and_binding_are_explicit(self):
+        data, virtual, physical, at = build()
+        data = patched(patched(data, 0x30, 'I', 0), at['lod'] + 8, 'IHH', 0, 0, 0)
+        decoded = decode(bytes(data), virtual, physical)
+        self.assertIsNone(decoded['models'][0]['bone_index'])
+        self.assertIsNone(decoded['skeleton'][1]['cached_matrix'])
+        self.assertEqual(decoded['skeleton'][1]['matrix'][12:15], (0., .5, -1.))
+
     def test_geometry_channels_skeleton_and_summary(self):
         data, virtual, physical, _ = build()
         decoded = decode(bytes(data), virtual, physical)
@@ -194,6 +290,31 @@ class Rejections(unittest.TestCase):
         self.rejects(patched(self.data, bones + 224 + 0x14, 'H', 7), 'index field differs')
         self.rejects(patched(self.data, bones + 224 + 0x40, 'f', 0.5), 'rotation quaternion')
         self.rejects(patched(self.data, bones + 224 + 0x64, 'f', 0.75), 'differs from its parent chain')
+        self.rejects(patched(self.data, bones + 0x30, 'f', float('inf')), 'transform is not finite')
+
+    def test_binding_counts_bounds_and_indices(self):
+        lod = self.at['lod']
+        self.rejects(patched(self.data, lod + 6, 'H', 0), 'model count exceeds capacity')
+        self.rejects(patched(self.data, lod + 14, 'H', 0), 'binding count exceeds capacity')
+        self.rejects(patched(self.data, lod + 12, 'HH', 2, 2), 'binding count differs')
+        self.rejects(patched(self.data, lod + 8, 'I', 0), 'binding count differs')
+        self.rejects(patched(self.data, self.at['binding'], 'I', 2), 'binding outside skeleton')
+        self.rejects(patched(self.data, lod + 8, 'I', Builder.pointer(self.virtual - 2)), 'outside its segment')
+        self.rejects(patched(self.data, lod, 'I', Builder.pointer(self.virtual - 2)), 'outside its segment')
+
+    def test_cache_counts_bounds_and_rotation_controls(self):
+        cache = self.at['cache']
+        self.rejects(patched(self.data, cache, 'H', 1), 'cache counts differ')
+        self.rejects(patched(self.data, cache + 2, 'H', 1), 'cache counts differ')
+        # The cache header fits; the inline matrix array does not.
+        self.rejects(patched(self.data, 0x30, 'I', Builder.pointer(self.virtual - 32)), 'outside its segment')
+        data = bytearray(self.data)
+        for value, reason in ((float('nan'), 'not finite'), (2., 'not orthogonal'), (-1., 'not a proper rotation')):
+            struct.pack_into('<f', data, cache + 0x20, value)
+            self.rejects(data, reason)
+        data = patched(patched(self.data, 0x30, 'I', 0), self.at['bones'] + 0x70, 'f', .5)
+        self.rejects(data, 'rotated skeleton without matrix cache')
+        self.rejects(patched(self.data, 0x24, 'I', 0), 'matrix cache without skeleton')
 
     def test_struct_errors_become_model_errors(self):
         original = mcla_model.skeleton
