@@ -1,0 +1,220 @@
+{
+ "schema": 1,
+ "tool": "tools/verify_mcla_resources.py",
+ "decoder": "tools/mcla_lzx.py",
+ "window_bits": 17,
+ "source": {
+  "file": "Midnight Club - Los Angeles - Complete Edition (USA, Europe).iso",
+  "sha256": "877a9415f695d27f8170d04d3f18aab13e2b4de3cbabda824e04c9338b2914e9"
+ },
+ "archives": {
+  "xarchive_audio.rpf": {
+   "resources": 276,
+   "stored_bytes": 31737026,
+   "output_bytes": 88788992,
+   "chunks": 2810,
+   "outputs_sha256": "b11eac41bd03cbfeb7ba7fb9b827be91dede4eef3dabe13e590cb989ebb72901"
+  },
+  "xarchive_audlo.rpf": {
+   "resources": 276,
+   "stored_bytes": 31737026,
+   "output_bytes": 88788992,
+   "chunks": 2810,
+   "outputs_sha256": "e6199055ab075e7a23ef9d2340eef27b70b7a9149f7f6caca3255506c3297f11"
+  },
+  "xarchive_cache.rpf": {
+   "resources": 14928,
+   "stored_bytes": 2044656851,
+   "output_bytes": 6060011520,
+   "chunks": 192071,
+   "outputs_sha256": "35194750a9a1e26c3e8c091345109d3cd2977cd59df53d6b107b70d80763bccb"
+  }
+ },
+ "by_type": {
+  "1": {
+   "resources": 2269,
+   "output_bytes": 3640442880
+  },
+  "2": {
+   "resources": 300,
+   "output_bytes": 668098560
+  },
+  "3": {
+   "resources": 247,
+   "output_bytes": 5369856
+  },
+  "6": {
+   "resources": 327,
+   "output_bytes": 445693952
+  },
+  "9": {
+   "resources": 1711,
+   "output_bytes": 135172096
+  },
+  "19": {
+   "resources": 116,
+   "output_bytes": 1650688
+  },
+  "26": {
+   "resources": 1,
+   "output_bytes": 4243456
+  },
+  "27": {
+   "resources": 21,
+   "output_bytes": 25935872
+  },
+  "28": {
+   "resources": 4,
+   "output_bytes": 12951552
+  },
+  "50": {
+   "resources": 116,
+   "output_bytes": 3801088
+  },
+  "51": {
+   "resources": 120,
+   "output_bytes": 2949120
+  },
+  "62": {
+   "resources": 1,
+   "output_bytes": 1114112
+  },
+  "63": {
+   "resources": 9516,
+   "output_bytes": 810856448
+  },
+  "66": {
+   "resources": 4,
+   "output_bytes": 3670016
+  },
+  "83": {
+   "resources": 427,
+   "output_bytes": 352129024
+  },
+  "87": {
+   "resources": 3,
+   "output_bytes": 53248
+  },
+  "102": {
+   "resources": 131,
+   "output_bytes": 66007040
+  },
+  "107": {
+   "resources": 1,
+   "output_bytes": 6397952
+  },
+  "131": {
+   "resources": 1,
+   "output_bytes": 11321344
+  },
+  "134": {
+   "resources": 1,
+   "output_bytes": 5767168
+  },
+  "155": {
+   "resources": 41,
+   "output_bytes": 606208
+  },
+  "189": {
+   "resources": 120,
+   "output_bytes": 30687232
+  },
+  "198": {
+   "resources": 1,
+   "output_bytes": 573440
+  },
+  "226": {
+   "resources": 1,
+   "output_bytes": 2097152
+  }
+ },
+ "nested_archives": [
+  {
+   "archive": "xarchive_cache.rpf",
+   "entry": 21882,
+   "entries": 443,
+   "resources": 0
+  },
+  {
+   "archive": "xarchive_cache.rpf",
+   "entry": 21883,
+   "entries": 405,
+   "resources": 0
+  },
+  {
+   "archive": "xarchive_cache.rpf",
+   "entry": 21884,
+   "entries": 624,
+   "resources": 0
+  },
+  {
+   "archive": "xarchive_cache.rpf",
+   "entry": 21885,
+   "entries": 792,
+   "resources": 0
+  }
+ ],
+ "header_constant": "0x0ff512ef",
+ "totals": {
+  "resources": 15480,
+  "output_bytes": 6237589504,
+  "chunks": 197691
+ },
+ "controls": {
+  "sample": {
+   "archive": "xarchive_cache.rpf",
+   "entry": 11729,
+   "stored_bytes": 461,
+   "output_sha256": "ff08c972a313a944667602edcd8585b4d8350d51a8834b8013f507a07146d7c4"
+  },
+  "results": [
+   {
+    "mutation": "truncated stream (last 4 bytes of the chunk removed, lengths adjusted)",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "LZX chunk truncated"
+   },
+   {
+    "mutation": "flipped block-type bit",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "LZX block type 6"
+   },
+   {
+    "mutation": "declared size 4096 bytes short",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "LZX output exceeds declared size"
+   },
+   {
+    "mutation": "declared size 4096 bytes long",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "LZX output 12288 bytes, declared 16384"
+   },
+   {
+    "mutation": "window 2**16 instead of 2**17",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "LZX length run past its tree"
+   },
+   {
+    "mutation": "window 2**18 instead of 2**17",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "main tree over-subscribed"
+   },
+   {
+    "mutation": "flipped bit near the end of the body",
+    "rejected": true,
+    "by": "decoder error",
+    "reason": "LZX match ran past its chunk"
+   }
+  ]
+ },
+ "claim_limits": [
+  "Establishes byte-exact decompression of every RSC5 resource to its declared size and records output digests; it does not decode the structures inside the outputs (see the model, texture and tuning checks).",
+  "The chunk framing and the constant header word are readings checked on this disc only.",
+  "The Intel E8 translation of LZX is not implemented; no resource on this disc sets it (the reader rejects it)."
+ ]
+}
