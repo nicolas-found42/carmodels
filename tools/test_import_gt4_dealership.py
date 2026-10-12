@@ -17,10 +17,9 @@ CODES = ('acra0001', 'chev0001')
 def fixture(root):
     source, dest = root / 'source', root / 'dealership'
     rows = [r for r in json.loads((PUBLIC / 'index.json').read_text())['cars'] if r['code'] in CODES]
-    for row in rows:
-        for name in (row['file'], row['native_package']['file']):
-            (source / name).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(PUBLIC / name, source / name)
+    for row in rows:  # Native ZIPs are local only; the import validates previews without them.
+        (source / row['file']).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(PUBLIC / row['file'], source / row['file'])
     (source / 'index.json').write_text(json.dumps({'cars': rows}))
     (dest / 'models').mkdir(parents=True)
     (dest / 'catalog.json').write_text(json.dumps([{'code': 'EXISTING_CAR', 'game': 'redline'}]))

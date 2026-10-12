@@ -80,7 +80,9 @@ package through a per-game validator and lists them as `gran-turismo-4/<code>` w
 
 Equality is judged on decoded members, not ZIP bytes: a different zlib build may encode
 DEFLATE differently. The offline check (`import_gt4_catalog.py --check`, check name
-`gt4_catalog`) requires every member to equal the committed extraction byte for byte.
+`gt4_catalog`) requires every member to equal the extraction byte for byte. The extraction and the
+ZIPs are local (about 590 MB of git objects, two copies of the same native data); the committed
+`cars/index.json` and source `index.json` pin every file's SHA-256.
 
 ## Verification
 

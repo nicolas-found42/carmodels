@@ -11,7 +11,9 @@ reader `tools/gt4_volume.py` decodes the table (21,188 files in 432 directories)
 and the PS2Zip payloads. Every selected file inflates to exactly its table size.
 
 `cars/` holds **730 cars** (one per eight-character model code in `car/lod/`) and
-**6,591 files** totaling **942,613,925 bytes**:
+**6,591 files** totaling **942,613,925 bytes**. Only `index.json` (every file's SHA-256),
+`provenance/` and the fixture car `acra0001/` are committed; the rest is local and
+re-derived from the disc (see `.gitignore`):
 
 ```text
 cars/
@@ -50,11 +52,14 @@ database (for example "Chevrolet Camaro Z28 302 '69"):
 - Source catalog (`recovered.html`): `dealership/public/gran-turismo-4/previews/<code>.glb` is a
   static textured preview of the showroom model with four wheels and tires;
   `native/<code>.zip` holds the car's native files and manifest (the "Native files (.zip)" link).
+  The ZIPs are local: after extracting, `import_gt4_catalog.py` restores any missing ZIP whose
+  rebuilt bytes equal the SHA-256 pinned in the committed `index.json`.
 - Dealership (`dealership.html`): independent editable copies `GT4_<CODE>.glb` with the decoded
   model year and mass.
 
 ```sh
-python3 tools/import_gt4_catalog.py          # previews + native ZIPs from the ISO-verified extraction
+python3 tools/extract_gt4_cars.py            # local extraction from the ISO (needs an empty destination)
+python3 tools/import_gt4_catalog.py          # previews + native ZIPs; restores missing pinned ZIPs
 python3 tools/import_gt4_catalog.py --check  # offline: re-derive every preview and ZIP and compare
 python3 tools/import_gt4_dealership.py       # editable copies; existing edits are preserved
 python3 tools/build_model_catalog.py

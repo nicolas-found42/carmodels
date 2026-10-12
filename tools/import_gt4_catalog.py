@@ -30,6 +30,8 @@ LIMITS = ['Static showroom-model preview decoded from native CAR4/MDLS/Tex1 data
           'The native ZIP holds the files matched to this model code; shared wheels, tires, wings and spec-database rows are not included in it.']
 MAX_PACKAGE = 64 * 1024 * 1024
 STAMP = (1980, 1, 1, 0, 0, 0)  # Fixed member time: the manifest keeps each volume timestamp.
+# The extraction and native ZIPs are local; only these cars' files are committed, as test fixtures.
+FIXTURES = ('acra0001',)
 
 
 def sha(data):
@@ -111,9 +113,13 @@ def source_package(row, source):
     extras = doc.get('extras', {})
     if extras.get('source_profile') != PREVIEW_PROFILE or extras.get('car') != code:
         raise ValueError('GT4 preview GLB identity differs from its row')
-    data = checked_file(Path(source) / package['file'], package['bytes'], package['sha256'])
-    if len(package_members(code, data)) - 1 != package['members']:
-        raise ValueError('GT4 package member count differs')
+    native = Path(source) / package['file']
+    # Native ZIPs are local (rebuilt from the extraction, not committed); a present one must match its pin.
+    # verify_published requires every ZIP.
+    if native.exists() or native.is_symlink():
+        data = checked_file(native, package['bytes'], package['sha256'])
+        if len(package_members(code, data)) - 1 != package['members']:
+            raise ValueError('GT4 package member count differs')
     return glb
 
 
@@ -223,6 +229,33 @@ def verify_published(extraction, output, index, specs, outputs):
     return len(rows)
 
 
+def restore_packages(output, index, specs, outputs):
+    """Write native ZIPs missing from a committed export, only where the rebuilt bytes equal their pin."""
+    rows = json.loads((output / 'index.json').read_text())['cars']
+    if comparable(rows) != comparable(catalog_rows(index, specs, outputs)):
+        raise ValueError('GT4 source index differs from extraction')
+    restored = 0
+    for row in rows:
+        path = output / row['native_package']['file']
+        regular(path)
+        if path.exists():
+            continue
+        package = outputs[row['code']][2]
+        if sha(package) != row['native_package']['sha256']:
+            raise ValueError('rebuilt native ZIP differs from its pin (different zlib build?): ' + row['code'])
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(package)
+        restored += 1
+    return restored
+
+
+def extraction_available(extraction):
+    """0: full local extraction; 1: only the committed fixture cars; 2: a partial extraction."""
+    vehicles = json.loads((Path(extraction) / 'index.json').read_text())['vehicles']
+    present = sum((Path(extraction) / v['manifest']).is_file() for v in vehicles)
+    return 0 if present == len(vehicles) else 1 if present <= len(FIXTURES) else 2
+
+
 def export_packages(iso, extraction, output):
     extraction, output, iso = Path(extraction), Path(output), Path(iso)
     regular(output)
@@ -235,10 +268,11 @@ def export_packages(iso, extraction, output):
     if output.exists():
         # Existing outputs stand only when they equal a fresh conversion; nothing is overwritten.
         try:
+            restored = restore_packages(output, index, specs, outputs)
             verify_published(extraction, output, index, specs, outputs)
         except (ValueError, OSError, KeyError) as error:
             raise ValueError('Existing GT4 source export differs; nothing overwritten (' + str(error) + ')') from error
-        return 0
+        return restored
     rows = catalog_rows(index, specs, outputs)
     contents = text({'cars': rows, 'source': index['source'], 'claim_limits': LIMITS})
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -271,7 +305,10 @@ if __name__ == '__main__':
     parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')
     parser.add_argument('--output', type=Path, default=ROOT / 'dealership/public' / GAME)
     parser.add_argument('--check', action='store_true', help='Offline: compare published files with a fresh conversion.')
+    parser.add_argument('--available', action='store_true', help='Exit 0 with a full local extraction, 1 without, 2 if partial.')
     args = parser.parse_args()
+    if args.available:
+        raise SystemExit(extraction_available(args.extraction))
     try:
         if args.check:
             print(f'CHECKED {check_export(args.extraction, args.output)} GT4 source previews and packages')

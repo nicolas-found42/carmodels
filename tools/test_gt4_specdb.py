@@ -1,4 +1,5 @@
 """GT4 SpecDB decoding: joins and values pinned on the committed spec database, plus controls."""
+import json
 from pathlib import Path
 import shutil
 import tempfile
@@ -16,7 +17,9 @@ class SpecTests(unittest.TestCase):
         cls.specs = car_specs(SPECDB)
 
     def test_every_model_code_joins_once_with_a_name(self):
-        codes = {p.name for p in (ROOT / 'gran-turismo-4/cars').iterdir() if p.is_dir()} - {'shared', 'provenance'}
+        # The committed extraction index lists every code; most car folders are local only.
+        index = json.loads((ROOT / 'gran-turismo-4/cars/index.json').read_text())
+        codes = {vehicle['id'] for vehicle in index['vehicles']}
         self.assertEqual(set(self.specs), codes)
         self.assertEqual(len(codes), 730)
         self.assertTrue(all(spec['name'] for spec in self.specs.values()))

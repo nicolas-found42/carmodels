@@ -25,7 +25,9 @@ def registry():
              'test_import_gt4_catalog', 'test_import_gt4_dealership']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
-    checks.append({'name': 'gt4_catalog', 'command': ['python3', 'tools/import_gt4_catalog.py', '--check']})
+    # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
+    checks.append({'name': 'gt4_catalog', 'command': ['python3', 'tools/import_gt4_catalog.py', '--check'],
+                   'availability': ['python3', 'tools/import_gt4_catalog.py', '--available']})
     # The disc is never committed; its re-derivation runs only where the pinned ISO is supplied.
     checks.append({'name': 'gt4_extraction', 'command': ['python3', 'tools/extract_gt4_cars.py', '--check'],
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("

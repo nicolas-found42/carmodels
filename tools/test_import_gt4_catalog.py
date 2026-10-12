@@ -12,7 +12,8 @@ from build_model_catalog import model_catalog
 from extract_gt4_cars import write_extraction
 import gt4_glb
 from gt4_specdb import car_specs
-from import_gt4_catalog import GAME, check_export, export_packages, source_package
+import import_gt4_catalog
+from import_gt4_catalog import GAME, check_export, export_packages, extraction_available, source_package
 from test_extract_gt4_cars import CAR, SHARED, fixture
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -87,6 +88,37 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(first['native_package']['members'], 7)
             with zipfile.ZipFile(output / 'native/test0001.zip') as archive:
                 self.assertEqual(archive.read('car/lod/test0001.pat'), b'Pat0\0\0\0\0')
+
+    @converted
+    def test_local_native_packages(self):
+        """ZIPs are not committed: catalogs accept their absence, the full check does not, export restores them."""
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve(); iso, public, output = setup(root)
+            export_packages(iso, root / 'cars', output)
+            package = output / 'native/test0001.zip'
+            original = package.read_bytes()
+            package.unlink()
+            self.assertEqual(len(model_catalog(public)['cars']), 2)
+            with self.assertRaisesRegex(ValueError, 'file coverage differs'):
+                check_export(root / 'cars', output)
+            self.assertEqual(export_packages(iso, root / 'cars', output), 1)
+            self.assertEqual(package.read_bytes(), original)
+            self.assertEqual(check_export(root / 'cars', output), 2)
+            package.unlink()
+            rewrite(output, lambda rows: rows[0]['native_package'].__setitem__('sha256', '0' * 64))
+            with self.assertRaisesRegex(ValueError, 'differs from its pin'):
+                export_packages(iso, root / 'cars', output)
+            self.assertFalse(package.exists())
+
+    def test_extraction_availability(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve(); setup(root)
+            cars = root / 'cars'
+            self.assertEqual(extraction_available(cars), 0)
+            (cars / 'test0002/manifest.json').unlink()
+            with patch.object(import_gt4_catalog, 'FIXTURES', ()):
+                self.assertEqual(extraction_available(cars), 2)  # A partial extraction is an error, not a skip.
+            self.assertEqual(extraction_available(cars), 1)
 
     @converted
     def test_tamper_controls(self):

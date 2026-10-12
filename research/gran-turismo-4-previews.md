@@ -81,9 +81,11 @@ and the claim limits. `python3 tools/import_gt4_dealership.py` adds independent 
 as `dealership/dealership/models/GT4_<CODE>.glb` with names, model years and masses from the spec
 database. Rebuild with `tools/build_model_catalog.py` and `tools/build_dealership.py`.
 
-`import_gt4_catalog.py --check` (check `gt4_catalog`) re-derives every preview from the committed
+`import_gt4_catalog.py --check` (check `gt4_catalog`) re-derives every preview from the local
 extraction and compares geometry and JSON exactly and textures by decoded pixels, so a different
-zlib build cannot cause a false failure.
+zlib build cannot cause a false failure. The extraction (except `index.json`, `provenance/` and the
+fixture car `acra0001`) and the native ZIPs are not committed, so the check is skipped where they
+are absent; the catalog build then validates each committed preview against its pinned hash.
 
 ## Not established
 
