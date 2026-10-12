@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -30,47 +30,127 @@ assert.match(sourcePage,/'redline':'Redline'/);
 assert(matchesVariant({sourceVariant:'night'},'night'));
 assert(!matchesVariant({sourceVariant:'day'},'night'));
 assert(matchesVariant({sourceCollection:'arcade'},'arcade'));
+// Frozen name/year cases and negative controls; all complete IDs remain discoverable.
+for (const query of ['mustang 1968', '1968 mustang', '  MUSTANG   1968  ', 'mustang, 1968', 'ｍｕｓｔａｎｇ 1968']) {
+  assert.deepEqual(cars.filter(createCarSearch(query)).map(c=>c.code), ['MUSTANG_68','MUSTANG_68B'], query);
+}
+for (const query of ['mustang 1967', 'not-a-real-car-xyz', '1968 lightning'])assert.equal(cars.filter(createCarSearch(query)).length,0,query);
+assert.equal(cars.filter(createCarSearch('mustang')).length,15);
+assert.equal(cars.filter(createCarSearch('')).length,cars.length);
+assert.equal(cars.filter(createCarSearch('f 150')).length,3);
+for(const car of cars)assert(cars.filter(createCarSearch(car.code)).some(c=>c.code===car.code),car.code);
+assert.equal(createCarSearch('!!!')(cars[0]),false,'punctuation-only input must not match every car');
+assert(createCarSearch('_')({name:'test',code:'GT_TEST',year:null}),'literal identifier punctuation remains searchable');
+
+// Run the actual dependent-filter reconciliation against real cars and native-like controls.
+const availabilityStart=dealershipPage.indexOf('function updateFilterAvailability()');
+const availabilityBody=dealershipPage.slice(availabilityStart,dealershipPage.indexOf('function applyFilters()',availabilityStart));
+const availabilityControls={
+  'game-filter':{value:'gran-turismo-4'},
+  'variant-filter':{value:'night',options:['','day','night','arcade','base','addon','native','showroom'].map(value=>({value,textContent:value||'All variants'}))},
+  'filter-status':{textContent:''},
+};
+const chips=[['SIMULATION',c=>c.group==='SIMULATION'],['COUPE',c=>c.bodyStyle==='coupe']].map(([textContent,pred])=>({
+  textContent,_pred:pred,on:true,setAttribute(key,value){this[key]=value;},classList:{contains(){return this.owner.on;},remove(){this.owner.on=false;}}}));
+for(const chip of chips)chip.classList.owner=chip;
+const reconcile=new Function('$','CARS','document','gameId','matchesVariant',availabilityBody+'return updateFilterAvailability;')(
+  id=>availabilityControls[id],cars,{querySelectorAll:()=>chips},gameId,matchesVariant);
+reconcile();
+assert.equal(availabilityControls['variant-filter'].value,'');
+assert.deepEqual(availabilityControls['variant-filter'].options.filter(o=>!o.disabled).map(o=>o.value),['','showroom']);
+assert(chips.every(c=>c.disabled && !c.on && c['aria-pressed']==='false'));
+assert.match(availabilityControls['filter-status'].textContent,/night, SIMULATION, COUPE/);
+availabilityControls['game-filter'].value='all';availabilityControls['variant-filter'].value='night';reconcile();
+assert.equal(availabilityControls['variant-filter'].value,'night','available cross-game restriction must stay');
+availabilityControls['game-filter'].value='gran-turismo';reconcile();
+assert.equal(availabilityControls['variant-filter'].value,'night','valid game-specific restriction must stay');
+availabilityControls['game-filter'].value='redline';reconcile();
+assert.deepEqual(availabilityControls['variant-filter'].options.filter(o=>!o.disabled).map(o=>o.value),['','base','addon']);
+
 // Run the page's actual semantic handlers with a delayed transport response.
 // Manual controls must invalidate that pending response before it can apply.
-const semanticStart=dealershipPage.indexOf("$('search').addEventListener('input'");
+const semanticStart=dealershipPage.indexOf('function invalidateSemantic()');
 const semanticEnd=dealershipPage.indexOf('function buildList()',semanticStart);
 const callbacks=dealershipPage.slice(semanticStart,semanticEnd);
 assert(semanticStart>0 && semanticEnd>semanticStart);
 for(const action of ['game','variant','search','query','clear']) {
   const controls={};
-  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-filter','semantic-status','clear-filters'])controls[id]={value:'',textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback;},focus(){}};
+  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-form','semantic-filter','semantic-status','clear-filters'])controls[id]={value:'',textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback;},focus(){}};
   controls['game-filter'].value='all';controls['game-filter'].options=[{value:'all'},{value:'gran-turismo'}];
   controls['variant-filter'].options=['','day','night','arcade'].map(value=>({value}));
   controls['semantic-query'].value='Gran Turismo night';
   let resolveResponse, applications=0;
   const pending=new Promise(resolve=>{resolveResponse=resolve;});
-  new Function('$','document','applyFilters','fetch',`let semanticId=0;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>applications++,()=>pending);
-  const request=controls['semantic-filter'].onclick();
+  let signal;
+  new Function('$','document','applyFilters','updateFilterAvailability','fetch',`let semanticId=0,semanticController=null;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>applications++,()=>{},(_url,options)=>{signal=options.signal;return pending;});
+  const request=controls['semantic-form'].onsubmit({preventDefault(){}});
+  assert.equal(controls['semantic-filter'].disabled,true);
   if(action==='game'){controls['game-filter'].value='all';controls['game-filter'].onchange();}
   if(action==='variant'){controls['variant-filter'].value='day';controls['variant-filter'].onchange();}
   if(action==='search')controls.search.listeners.input();
   if(action==='query')controls['semantic-query'].listeners.input();
   if(action==='clear')controls['clear-filters'].onclick();
+  assert(signal.aborted,`obsolete ${action} request was not cancelled`);
+  assert.equal(controls['semantic-status'].textContent,'');
+  assert.equal(controls['semantic-filter'].disabled,false);
+  if(action==='clear')assert.equal(controls['semantic-query'].value,'');
   const before={game:controls['game-filter'].value,variant:controls['variant-filter'].value,applications};
   resolveResponse({ok:true,json:async()=>({status:'ok',filters:{game:'gran-turismo',variant:'night'}})});
   await request;
   assert.deepEqual({game:controls['game-filter'].value,variant:controls['variant-filter'].value,applications},before,`stale semantic response overwrote ${action}`);
 }
-assert.match(dealershipPage,/el\.onclick = \(\) => \{ semanticId\+\+;/,'chip changes invalidate semantic requests');
+assert.match(dealershipPage,/el\.onclick = \(\) => \{ invalidateSemantic\(\);/,'chip changes invalidate semantic requests');
+assert.match(dealershipPage,/<form id="semantic-form">/);
+assert.match(dealershipPage,/<button type="submit" id="semantic-filter">/);
+assert.match(dealershipPage,/aria-describedby="semantic-help"/);
 // Failure statuses show the server's own explanation, a server without the API names the fix,
 // and a timeout is explained instead of showing the browser's abort text.
 for (const [transport, expected] of [
   [async()=>({ok:false,json:async()=>({status:'error',message:'A filter request is already running.'})}),'A filter request is already running.'],
   [async()=>({ok:false,json:async()=>{throw SyntaxError('HTML error page');}}),/needs the library server \(python3 tools\/serve_library\.py\)/],
-  [async()=>{throw Object.assign(Error('signal is aborted without reason'),{name:'AbortError'});},'Interpreting took longer than 20 seconds. Use the game and variant selectors.']]) {
+  [async()=>{throw Object.assign(Error('signal is aborted without reason'),{name:'AbortError'});},'Interpreting took longer than 35 seconds. Use the game and variant selectors.']]) {
   const controls={};
-  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-filter','semantic-status','clear-filters'])controls[id]={value:'',textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback;},focus(){}};
+  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-form','semantic-filter','semantic-status','clear-filters'])controls[id]={value:'',textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback;},focus(){}};
   controls['game-filter'].value='all';controls['semantic-query'].value='Gran Turismo night';
-  new Function('$','document','applyFilters','fetch',`let semanticId=0;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>assert.fail('failure applied filters'),transport);
-  await controls['semantic-filter'].onclick();
+  new Function('$','document','applyFilters','fetch',`let semanticId=0,semanticController=null;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>assert.fail('failure applied filters'),transport);
+  await controls['semantic-form'].onsubmit({preventDefault(){}});
   if(typeof expected==='string')assert.equal(controls['semantic-status'].textContent,expected);
   else assert.match(controls['semantic-status'].textContent,expected);
   assert.equal(controls['game-filter'].value,'all');
+  assert.equal(controls['semantic-filter'].disabled,false);
+}
+// A valid response applies through the real path; nonexistent game/variant pairs leave it unchanged.
+for(const [filters,expected] of [[{game:'gran-turismo',variant:'night'},true],[{game:'gran-turismo-4',variant:'night'},false]]) {
+  const controls={};
+  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-form','semantic-filter','semantic-status','clear-filters'])
+    controls[id]={value:'',textContent:'',addEventListener(){},focus(){}};
+  controls['game-filter'].value='all';controls['game-filter'].options=['all','gran-turismo','gran-turismo-4'].map(value=>({value}));
+  controls['variant-filter'].options=['','night'].map(value=>({value}));controls['semantic-query'].value='a non-sensitive fixture';
+  let applied=0,reconciled=0;
+  new Function('$','document','applyFilters','updateFilterAvailability','fetch','CARS','gameId','matchesVariant',
+    `let semanticId=0,semanticController=null;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>applied++,()=>reconciled++,
+    async()=>({ok:true,json:async()=>({status:'ok',filters})}),cars,gameId,matchesVariant);
+  await controls['semantic-form'].onsubmit({preventDefault(){}});
+  assert.equal(applied,Number(expected));assert.equal(reconciled,Number(expected));
+  assert.equal(controls['game-filter'].value,expected?'gran-turismo':'all');
+  if(!expected)assert.match(controls['semantic-status'].textContent,/no entries/);
+  assert.equal(controls['semantic-filter'].disabled,false);
+}
+// Exercise the real timeout callback without waiting 35 seconds; an abort-aware transport rejects.
+{
+  const controls={};
+  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-form','semantic-filter','semantic-status','clear-filters'])
+    controls[id]={value:'',textContent:'',addEventListener(){},focus(){}};
+  controls['semantic-query'].value='non-sensitive timeout fixture';
+  let expire,delay,cleared=false;
+  new Function('$','document','applyFilters','fetch','setTimeout','clearTimeout',
+    `let semanticId=0,semanticController=null;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>assert.fail('timeout applied filters'),
+    (_url,{signal})=>new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(Object.assign(Error('aborted'),{name:'AbortError'})),{once:true})),
+    (callback,ms)=>{expire=callback;delay=ms;return 17;},timer=>{assert.equal(timer,17);cleared=true;});
+  const request=controls['semantic-form'].onsubmit({preventDefault(){}});
+  assert.equal(delay,35000,'UI must allow the existing 30-second provider budget');expire();await request;
+  assert(cleared);assert.match(controls['semantic-status'].textContent,/35 seconds/);
+  assert.equal(controls['semantic-filter'].disabled,false);
 }
 for (const car of compactCars) {
   const mesh = makeCar(car);
@@ -160,4 +240,4 @@ try {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));
 }
-console.log('PASS test_dealership: 35 dealership meshes, editable wheel counts, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed mesh controls, editable model data, corpus errors and real HTTP body timeout');
+console.log('PASS test_dealership: 1715 searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout');

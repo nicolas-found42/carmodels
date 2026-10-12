@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "reviewer": "independent_verification (/root/independent_verification), separately assigned Codex reviewer",
+  "verdict": "approve_with_stated_claim_limits",
+  "scope": "Resolve the three consequential low-confidence claim judgments and independently inspect the complete product.diff and current product/tests. Product files were not edited.",
+  "reviewed_sha256": {
+    "dealership/dealership.html": "f54c8d4f5600c086573a82bb40ca5a6e0343a0476b3c8c53b5814eb2a995a2b1",
+    "dealership/dealership.mjs": "1d1c2e635f5ef74b7754e88fd485f90d45e35c7d26368dc093d306c08854f04e",
+    "tools/test_dealership.mjs": "ca7f3c42836efc05000800e91a1f6374546562257d9c27cc13c13ff370ef0874",
+    "tools/library_filter.py": "cbe449057214e611ac3dd3c006c38cc663e78ccceba08f28c3c48848ff4bcfb8",
+    "tools/gt_asset_judgments.py": "c6fc918ae9fc32b479139409f0d511f5c0f496981017135ec24c301f2cb713ae",
+    "tools/serve_library.py": "c3f81f6ac537703314c550780a22a5309322bfc6c10244a5cd12af58338b65b9",
+    ".scratch/dealership-teardown-2026-10-12/product.diff": "183bb7d1d56b5972b4ea477e3bcad4d200b1e55b6b6f1e34c5e1f43b10a08c7f"
+  },
+  "resolutions": [
+    {
+      "receipt": "J07-enter-cancellation-verification.json",
+      "claim_id": "claim0",
+      "original_signal": {
+        "supports": 0.56,
+        "contradicts": 0.31,
+        "says_nothing": 0.13,
+        "confidence": 0.34,
+        "action": "review"
+      },
+      "resolution": "accepted_with_evidence_boundary",
+      "rationale": "E10 directly records Applied Gran Turismo, night variant (exact game and variant words), game gran-turismo, variant night, enabled button, and unchanged local URL. E01 is the contemporaneous record of actual Chrome fill and Enter and of launching serve_library with OPENROUTER_API_KEY and TYPESAFE_API_KEY removed; E10 alone is an outcome snapshot, not an input-event trace. The final HTML has a native form, required text input, submit button and preventDefault submit handler. library_filter._decide returns a recognized phrase before client.system_one; live_interpret supplies no client when model_status reports sdk_unavailable. gt_asset_judgments.make_client is environment-key based and is reached lazily only on the model path. Independent direct execution confirmed this exact phrase succeeds with both env keys removed and SDK absent.",
+      "evidence": [
+        "E10-live-enter.json",
+        "E01-first-use.txt",
+        "dealership/dealership.html:196",
+        "dealership/dealership.html:476",
+        "tools/library_filter.py:84",
+        "tools/library_filter.py:374",
+        "tools/library_filter.py:416",
+        "tools/gt_asset_judgments.py:237"
+      ],
+      "limits": [
+        "Real Enter attribution relies on E01 action notes plus E10 outcome, not a retained raw key-event trace.",
+        "This establishes the exact local phrase under the tested server environment, not an empty-HOME installation or arbitrary natural-language success."
+      ]
+    },
+    {
+      "receipt": "J07-enter-cancellation-verification.json",
+      "claim_id": "claim1",
+      "original_signal": {
+        "supports": 0.62,
+        "contradicts": 0.37,
+        "says_nothing": 0.01,
+        "confidence": 0.43,
+        "action": "review"
+      },
+      "resolution": "accepted_for_browser_fixture_only",
+      "rationale": "E14 explicitly identifies an abort-aware API fixture with real form handlers and scripted input. It records pending text and disabled submission before, one request, aborted true, blank text and enabled submission after, and game all. The final handler increments semanticId, aborts its stored controller and resets the UI; both post-JSON and error/finally paths guard against stale IDs. Current tests exercise game, variant, search, query and clear invalidation with a deliberately late response, ensuring old results cannot apply, plus timeout and invalid-pair controls. I independently ran that test successfully.",
+      "evidence": [
+        "E14-final-cancellation.json",
+        "dealership/dealership.html:467",
+        "dealership/dealership.html:487",
+        "tools/test_dealership.mjs",
+        "tools/serve_library.py:75"
+      ],
+      "limits": [
+        "The fixture establishes browser fetch abortion and UI recovery, not server-side or provider-side termination.",
+        "serve_library calls judgment synchronously and releases its API lock afterward; browser abortion does not itself cancel that work."
+      ]
+    },
+    {
+      "receipt": "research-verify.json",
+      "claim_id": "claim2",
+      "original_signal": {
+        "supports": 0.71,
+        "contradicts": 0.07,
+        "says_nothing": 0.22,
+        "confidence": 0.56,
+        "action": "review"
+      },
+      "resolution": "accepted_as_conditional_specification_claim",
+      "rationale": "The retained WHATWG source in research-sources-2.json, lines 2384\u20132386, defines the default button and explicitly conditions implicit-submission click behavior on user-agent support and an enabled button with activation behavior. The claim retains that condition and correctly declines to infer browser execution from a specification. Final dealership markup supplies the described form and submit button, while E10/E01 independently address the tested browser outcome.",
+      "evidence": [
+        "research-sources-2.json (WHATWG lines 2384\u20132386)",
+        "dealership/dealership.html:196",
+        "E10-live-enter.json",
+        "E01-first-use.txt"
+      ],
+      "limits": [
+        "Normative source explains expected behavior; it does not prove execution in every browser/platform."
+      ]
+    }
+  ],
+  "patch_review": {
+    "material_concerns": [],
+    "rationale": "Read the entire raw three-file product diff and relevant current HTML/server paths. Search retains literal substring/identifier matches while adding normalized token-prefix conjunction, with positive and negative corpus controls. Dependent variants/chips are reconciled against selected game/variant and unavailable active values are cleared with visible feedback. Semantic submissions validate actual catalog pairs; invalidation aborts the browser request and guards all old-response mutation paths. Existing UI runtime fixtures and independently passing tests support the bounded changes.",
+    "test": {
+      "command": "node tools/test_dealership.mjs",
+      "exit_code": 0,
+      "observed_output": "PASS test_dealership: 1715 searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout"
+    },
+    "independent_local_phrase_probe": {
+      "environment": "env -u OPENROUTER_API_KEY -u TYPESAFE_API_KEY python3",
+      "query": "Gran Turismo night models",
+      "sdk_absent": true,
+      "model_status": "sdk_unavailable",
+      "status": "ok",
+      "filters": {
+        "game": "gran-turismo",
+        "variant": "night"
+      },
+      "decided_by": "phrase",
+      "exit_code": 0
+    }
+  },
+  "claim_limits": [
+    "This is an independent escalation resolution, not a replacement or retry of the original Jev distributions.",
+    "No complete final-check-suite pass is claimed here; the parent is collecting that separate evidence.",
+    "No independent browser interaction was added by this reviewer; saved live artifacts and current executable handler/corpus tests were inspected.",
+    "This record is scoped to named claims and product diff, not a whole-bundle completion authorization."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "status": "partial_formal_completion_blocked",
+  "baseline_revision": "6c9cc06a068f2d276bd41820f15eb9922af76e7a",
+  "branch": "bugfix/dealership-forgiving-browsing",
+  "final_checks": {
+    "top_level_passes": 72,
+    "top_level_failures": 0,
+    "top_level_skips": 0,
+    "exit_code": 0,
+    "elapsed_command_seconds": 887.542,
+    "nested_optional_skips": [
+      {
+        "test": "test_redline_texture.test_optional_pillow_images",
+        "reason": "Pillow is not installed in this interpreter"
+      }
+    ],
+    "boundary": "Full run before last one-line startup diagnostic correction; affected checks rerun afterward."
+  },
+  "elapsed_task_seconds_at_final_checks": 1899,
+  "research_budget_seconds": 5400,
+  "limits": [
+    "No live hosted inference, real touch hardware, screen reader, cross-browser runtime or complete game fidelity established."
+  ],
+  "previous_bundle": "review-bundle/bundle.json (blocked; retained)",
+  "implementation": "all accepted dealership findings implemented and relevant checks verified",
+  "final_repair_checks": {
+    "checks": [
+      "test_viewer_loading",
+      "test_dealership"
+    ],
+    "passes": 2,
+    "exit_code": 0
+  },
+  "raw_review": {
+    "status": "accepted_with_independent_resolution",
+    "bundle": "review-bundle-revised/bundle.json",
+    "bundle_sha256": "c4c3a91ceabc425f11c5f2b211ce235ee209c827dc42e65cbe1012bd25fad056",
+    "resolution": "revised-bundle-resolution.json"
+  },
+  "final_gate": {
+    "status": "blocked",
+    "receipt": "J11-final-gate-4.json",
+    "claim": "Qualified full-suite and repair-check execution summary",
+    "verdict": "contradicted",
+    "confidence": 0.09,
+    "probabilities": {
+      "verified": 0.33,
+      "contradicted": 0.39,
+      "unsupported": 0.28
+    },
+    "independent_source_audit": "Supports the corrected claim; no further factual correction warranted.",
+    "resolution_limit": "Repository rule prohibits independent approval of a contradicted claim. Explicit user direction required for an exception.",
+    "independent_review": "final-gate-independent-review.json"
+  },
+  "user_direction_requested": true,
+  "user_override_received": false,
+  "elapsed_task_seconds": 2780,
+  "resource_cleanup": "Only three task-created HTTP servers and two task-created browser tabs closed."
+}

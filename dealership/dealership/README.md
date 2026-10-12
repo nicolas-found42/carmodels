@@ -42,6 +42,11 @@ a rebuild. Game and source-variant selectors work offline. The optional natural
 language filter (served by `tools/serve_library.py`) matches exact game/variant phrases
 locally and sends other wording to the TypeSafe model; uncertain or unavailable
 judgments leave existing filters unchanged and show a status message naming the reason.
+The optional form is under **More filters**, submits with Enter, and displays the provider
+routing explanation beside the field. Name/year/code search stays offline, accepts words in
+either order and keeps unknown names/unsupported spellings as explicit empty results. When
+changing games or source variants, incompatible choices are cleared with a visible explanation;
+still-available restrictions remain selected.
 
 The display baker supports static node translations, quaternion rotations, affine matrices,
 nonuniform scale and triangle indices of 8, 16 or 32 bits. Preserve normal attributes and

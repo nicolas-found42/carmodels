@@ -1,0 +1,26 @@
+{
+  "experiment_id": "RE-01",
+  "revision": "6c9cc06a068f2d276bd41820f15eb9922af76e7a",
+  "catalog_sha256": "17b6f78d9a797b51458ca95fa0b46480f18a05660a991cc02d2573798cc0601b",
+  "environment": {
+    "node": "v26.9.0",
+    "python": "3.14.7",
+    "date": "2026-10-12",
+    "cwd": "/Users/Nicolas/Documents/github/hermes/projects/carmodels"
+  },
+  "hypothesis": "All-whitespace-token substring matching repairs name-plus-year field separation without turning the tested impossible queries into matches.",
+  "control": "Current concatenated name/code/year contiguous-substring predicate.",
+  "command": "node --input-type=module <<'JS'\nimport fs from 'node:fs';\nconst cars=JSON.parse(fs.readFileSync('dealership/public/dealership/cars.json','utf8'));\nconst corpus=car=>`${car.name} ${car.code} ${car.year}`.toLowerCase();\nconst token=(car,q)=>q.toLowerCase().trim().split(/\\s+/u).every(t=>corpus(car).includes(t));\nfor(const q of ['mustang 1968','1968 mustang','mustang 1967','MUSTANG   1968','xxxxxxxx 1968','mustang',''])console.log(JSON.stringify({q,baseline:cars.filter(c=>corpus(c).includes(q.toLowerCase().trim())).length,token:cars.filter(c=>token(c,q)).length}));\nconsole.log(JSON.stringify({cars:cars.length,gt4:cars.filter(c=>c.game==='gran-turismo-4').length,gt4Night:cars.filter(c=>c.game==='gran-turismo-4'&&c.sourceVariant==='night').length}));\nJS",
+  "result": {
+    "chunk_id": "9ee687",
+    "wall_time_seconds": 0.000005958,
+    "exit_code": 0,
+    "original_token_count": 85,
+    "output": "{\"q\":\"mustang 1968\",\"baseline\":0,\"token\":2}\n{\"q\":\"1968 mustang\",\"baseline\":0,\"token\":2}\n{\"q\":\"mustang 1967\",\"baseline\":0,\"token\":0}\n{\"q\":\"MUSTANG   1968\",\"baseline\":0,\"token\":2}\n{\"q\":\"xxxxxxxx 1968\",\"baseline\":0,\"token\":0}\n{\"q\":\"mustang\",\"baseline\":15,\"token\":15}\n{\"q\":\"\",\"baseline\":1715,\"token\":1715}\n{\"cars\":1715,\"gt4\":730,\"gt4Night\":0}\n"
+  },
+  "claim_limits": [
+    "Function prototype over current real compiled catalog; not browser behavior or final code.",
+    "Seven queries only; not a precision/recall benchmark.",
+    "No fuzzy dependency installation or operation."
+  ]
+}

@@ -1,0 +1,19 @@
+Target baseline: 6c9cc06a068f2d276bd41820f15eb9922af76e7a.
+Initial branch: feature/gran-turismo-4-car-extraction; main is older and omits GT4 work.
+Task branch: bugfix/dealership-forgiving-browsing, based on the supplied checkout revision.
+Static server: python3 -m http.server 8765 --bind 127.0.0.1 --directory dealership.
+Actual browser entry: http://127.0.0.1:8765/dealership.html, isolated context dealership-teardown-20261012.
+Default Gran Torino preview loaded; corpus1715 records. Search ford mustang gave2GT4 results.
+Search mustang1968 (entered as mustang 1968) gave0; mustang gave15.
+Optional server: env -u OPENROUTER_API_KEY -u TYPESAFE_API_KEY python3 tools/serve_library.py --port8766.
+Observed startup: exact game/variant phrases work offline; other wording needs the TypeSafe SDK (typesafe-sdk), which this Python cannot import.
+Exact Gran Turismo night models was submitted with real Chrome fill and Enter after the native-form change.
+Observed status Applied Gran Turismo, night variant (exact game and variant words); game gran-turismo; variant night; URL unchanged.
+No provider call or private query was needed. Empty HOME was not claimed; no new dependency was installed.
+Normal install path needs Python/localHTTP and shipped JS; build_dealership --check passed in baseline72check run.
+Fault fixture source was inspected before execution; bound127.0.0.1:8767; one catalog503 then normal file, one GT4_FORD0008 model503 then normal file.
+Actual retry loading cars restored the catalog; the GT4 model error exposed Retry model; retry restored the same named preview.
+Fault server log uses request paths only. No production/source file was mutated by this probe.
+E04 initial option actions failed because the browser tool expected labels rather than values; only E04a is the finding reproduction.
+E08 requested375px via resize but host clamped500px; E08a uses actual375px mobile emulation.
+E09 stale element references after emulation did not exercise product behavior; only E09a is the confirmed delayed-response reproduction.

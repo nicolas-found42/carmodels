@@ -1,0 +1,9 @@
+[
+  {
+    "file": "dealership/dealership.html",
+    "start": 416,
+    "end": 437,
+    "p": 0.72,
+    "text": "function activePreds() {\n  return [...document.querySelectorAll('.chip.on')];\n}\nfunction updateFilterAvailability() {\n  const game = $('game-filter').value;\n  const scope = CARS.filter(c => game === 'all' || gameId(c) === game);\n  const removed = [];\n  for (const option of $('variant-filter').options) {\n    option.disabled = !scope.some(c => matchesVariant(c, option.value));\n    if (option.disabled && option.value === $('variant-filter').value) {\n      removed.push(option.textContent); $('variant-filter').value = '';\n    }\n  }\n  const variantScope = scope.filter(c => matchesVariant(c, $('variant-filter').value));\n  for (const chip of document.querySelectorAll('.chip')) {\n    chip.disabled = !variantScope.some(chip._pred);\n    if (chip.disabled && chip.classList.contains('on')) {\n      removed.push(chip.textContent); chip.classList.remove('on'); chip.setAttribute('aria-pressed', 'false');\n    }\n  }\n  $('filter-status').textContent = removed.length ? `Cleared unavailable filters: ${removed.join(', ')}.` : '';\n}"
+  }
+]

@@ -1,6 +1,6 @@
 # Ford Racing 2 — Car Model Explorer
 
-Static three.js viewers for the 35-car reference corpus. Two independent showcases: `recovered.html` displays the recovered source models; `dealership.html` displays an editable dealership edition. `index.html` redirects to the dealership.
+Local three.js viewers for Ford Racing 2, Gran Turismo, Redline, Midnight Club 3 Remix and Gran Turismo 4. Two independent showcases: `recovered.html` displays the recovered source models; `dealership.html` displays an editable dealership edition. `index.html` redirects to the dealership. Ford Racing 2 retains the 35-car reference corpus; the other games have separate catalogs and documented decoding limits.
 
 ## Run
 
@@ -17,7 +17,7 @@ The source inspector reads the shared `public/models.json` catalog, built from h
 
 The dealership has its own editing inputs:
 
-- `dealership/dealership/models/<CAR>.glb`: 35 independent regular GLB files. Edit geometry here.
+- `dealership/dealership/models/<CAR>.glb`: independent regular GLB files for each converted car. Edit geometry here.
 - `dealership/dealership/catalog.json`: editable dealership names, metadata and icon colour samples.
 - `dealership/dealership.mjs`: dealership rendering and material styling.
 - `dealership/public/dealership/cars.json`: compiled display data; rebuild this from the editing inputs.
@@ -49,7 +49,7 @@ Failed car loads clear the previous preview and download link, disable geometry/
 - Manifest data: name, year, group, in-game BHP, mass, top speed, handling ratings, liveries, sound bank.
 - Illustration-family filters from a recorded batched Jev classification, with the two low-confidence cases resolved from their model names (Explorer Sport Trac → SUV, FR500 → coupe family).
 - Car-specific 3D display models baked from the dealership’s editable GLBs. The initial copies came from the recovered first-tree low-speed assembly. Driver helmets and baked shadow planes are omitted. Identical vertices are welded; geometry is not decimated or stretched by handling ratings.
-- Up to three meshes per car, no runtime texture or full GLB loading. Desaturated vertex tones approximate dark surface details; icon colour provides an illustrative body tint. This is not semantic glass/paint segmentation or original game shading.
+- Ford Racing 2: up to three meshes per car, no runtime texture or full GLB loading. Desaturated vertex tones approximate dark surface details; icon colour provides an illustrative body tint. Other converted games load their independent working GLBs and embedded textures, checking the compiled source hash. Native-only entries offer the native download with an explicit unavailable-preview message. These previews do not establish original game shading.
 
 The dealership viewport has its own space beside the performance panel on wide screens,
 with details below it on smaller screens. **Side**, **Front**, **Top**, and **Reset view**
@@ -60,9 +60,27 @@ These native controls support keyboard activation. Drag/zoom still require a poi
 Search and filters show the result count and identify the retained preview. A zero-result
 search has an explanation and **Clear search and filters** restores the list. Group choices
 combine with OR, style choices with OR, and the two categories combine with AND.
+Name/year/code search accepts words in either order and ignores punctuation between words,
+for example `mustang 1968` or `1968 mustang`. Multiword terms match word prefixes; a single
+literal term also retains substring lookup. It does not correct spelling or infer undecoded names.
+Game and variant selectors disable unavailable choices. Changing either selector clears
+incompatible variant/group/style choices and announces which were cleared; available restrictions
+and the name query are preserved. Body-style filtering excludes entries whose style is unknown.
+**More filters** contains catalog groups, body styles and optional natural-language filtering,
+with the active chip count visible when collapsed. The sidebar can scroll at short heights.
 Vehicle data failures offer **Retry loading cars**. HTTP failures, empty/duplicate records,
 invalid values, and a 15-second header/body timeout are reported before building the list.
 Missing library files and direct `file://` use have separate startup guidance.
+
+For optional natural-language filtering, serve with `python3 tools/serve_library.py` and open
+the printed local address. The form accepts Enter and explains provider routing before submission:
+exact game/variant phrases work locally; other wording needs the existing configured TypeSafe
+provider. Manual filters and text edits cancel obsolete requests and clear their pending status.
+The UI allows 35 seconds, including the provider's 30-second request budget and local processing;
+timeouts and provider/server failures retain the current filters. Canceling in the browser does
+not guarantee cancellation of server-side provider work; the server's existing concurrency limit
+may temporarily return a busy response. The ordinary static server supports name search/selectors
+and shows guidance if the optional API is requested.
 
 Icon samples now come only from the decoded, clipped 165×98 reference icon pixels,
 checked against each manifest's SHA-256. Opaque saturated pixels are preferred, with a

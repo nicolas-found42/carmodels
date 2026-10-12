@@ -1,0 +1,15 @@
+Source: https://fal.ai/models/fal-ai/trellis-2-lora-trainer (fetched 2026-10-11)
+Each request is billed a one-time dataset-preparation charge of $0.10023 per input object (10-object minimum, waived when you reuse a prepared dataset) plus a per-denoiser training charge of $8.34 / $3.25 / $3.38 per 1,000 steps for sparse_structure / geometry / texture, scaled by your rank (×0.5 / ×1 / ×2 for 16 / 32 / 64) and resolution (×1 / ×2 for 512 / 1024).
+Supported file types: .glb .gltf .obj .fbx .stl .ply .blend
+This endpoint does not expose captions, prompts, or trigger phrases; training is based on the 3D assets and the image-condition views generated during preprocessing.
+The archive download limit is 8192 MB, and the extracted dataset is capped at 8 GB.
+lora_file: Trained .safetensors LoRA adapter for this stage.
+For texture LoRAs, include assets with useful material and texture information. Geometry-only files with little appearance data will not teach strong texture behavior.
+If outputs copy the training set too aggressively, try fewer training steps, a lower rank, or a more varied dataset.
+Source: https://fal.ai/models/fal-ai/trellis-2-lora (fetched 2026-10-11)
+Your request will cost 0.25 $ for 512p resolution, and 0.3 $ for 1024p resolution.
+image_url (required) URL of the input image to convert to a 3D model.
+decimation_target Default:500000 Range:5000 to 2000000 Target vertex count for the exported GLB.
+texture_size Default:2048 Allowed values:1024, 2048, 4096
+seed: Random seed for reproducible generation.
+Only the stages you provide are customized.

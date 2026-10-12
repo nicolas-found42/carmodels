@@ -11,6 +11,18 @@ export function dealershipDownload(c) {
 export function matchesVariant(c, variant) {
   return !variant || (variant==='arcade' ? c.sourceCollection==='arcade' : c.sourceVariant===variant);
 }
+// Every word must match; name/year order and punctuation do not matter.
+// Keep literal identifier fragments searchable, including punctuation-only ones.
+export function createCarSearch(query) {
+  const normalize = text => text.normalize('NFKC').toLowerCase();
+  const words = text => normalize(text).replace(/[^\p{L}\p{N}]+/gu, ' ').trim().split(/\s+/).filter(Boolean);
+  const raw = normalize(query.trim()), terms = words(raw);
+  return car => {
+    const text = normalize(`${car.name} ${car.code} ${car.year ?? ''}`);
+    const searchable = words(text);
+    return !raw || text.includes(raw) || terms.length > 0 && terms.every(term => searchable.some(word => word.startsWith(term)));
+  };
+}
 export async function loadCar(c, options={}) {
   if(isNativePackage(c))throw Error('3D preview unavailable for this native package.');
   return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);

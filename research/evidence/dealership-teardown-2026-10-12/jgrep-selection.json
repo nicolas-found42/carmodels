@@ -1,0 +1,9 @@
+[
+  {
+    "file": "dealership/dealership.html",
+    "start": 461,
+    "end": 466,
+    "p": 0.92,
+    "text": "let autoSelectTimer=0;\nfunction selectFirstVisibleIfHidden() {\n  const rows=[...document.querySelectorAll('.car-row')];\n  const first=rows.find(r=>!r.hidden);\n  if(first && current && rows.find(r=>r._code===current.code)?.hidden) select(CARS.find(c=>c.code===first._code));\n}"
+  }
+]
