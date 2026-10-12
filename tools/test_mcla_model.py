@@ -179,6 +179,13 @@ class Rejections(unittest.TestCase):
         self.rejects(patched(self.data, g['idata'], 'H', 3), 'index outside the vertex buffer')
         self.rejects(patched(self.data, g['vdata'], 'f', 9.0), 'outside its bounding sphere')
 
+    def test_required_null_pointers_raise_model_errors(self):
+        models = struct.unpack_from('>I', self.data, self.at['lod'])[0] & 0x0FFFFFFF
+        geometries = struct.unpack_from('>I', self.data, self.at['model'] + 4)[0] & 0x0FFFFFFF
+        for at in (models, geometries, self.g['vb'] + 0x10):
+            with self.subTest(at=at):
+                self.rejects(patched(self.data, at, 'I', 0), 'not a resource pointer')
+
     def test_skeleton(self):
         bones, skeleton = self.at['bones'], self.at['skeleton']
         self.rejects(patched(self.data, skeleton + 0x14, 'H', 0), 'skeleton without bones')

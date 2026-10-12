@@ -131,7 +131,7 @@ def geometry(r, at, sphere):
     need(r.u16(vb + 4) == vertex_count, 'vertex buffer count differs from the geometry')
     need(r.u32(vb + 0x0C) == stride, 'vertex buffer stride differs from the geometry')
     need(r.u32(vb + 0x08) == r.u32(vb + 0x18), 'locked vertex data differs from vertex data')
-    fvf = r.pointer(vb + 0x10, 16)
+    fvf = r.offset(r.u32(vb + 0x10), 16)
     layout = vertex_format(r.u32(fvf), r.u8(fvf + 4), r.unpack('Q', fvf + 8)[0])
     need(r.u8(fvf + 4) == stride, 'vertex format size differs from the stride')
     data_at = r.offset(r.u32(vb + 0x18), vertex_count * stride)
@@ -166,7 +166,7 @@ def model(r, at):
     geometries = []
     for i in range(count):
         sphere = None if spheres is None else spheres[i + 1 if count > 1 else 0]
-        g = geometry(r, r.pointer(geometries_at + 4 * i, 0x50), sphere)
+        g = geometry(r, r.offset(r.u32(geometries_at + 4 * i), 0x50), sphere)
         g['shader'] = shaders[i]
         geometries.append(g)
     return {'geometries': geometries, 'sphere': None if spheres is None else spheres[0],
@@ -184,7 +184,7 @@ def decode(data, virtual, physical):
         need(count > 0 and models_at is not None, 'drawable LOD without models')
         skeleton_at = r.pointer(0x24, 0x40)
         bones = skeleton(r, skeleton_at) if skeleton_at is not None else []
-        models = [model(r, r.pointer(models_at + 4 * i, 0x1C)) for i in range(count)]
+        models = [model(r, r.offset(r.u32(models_at + 4 * i), 0x1C)) for i in range(count)]
     except (ResourceError, struct.error) as error:
         raise ModelError(str(error)) from None
     return {'skeleton': bones, 'models': models}

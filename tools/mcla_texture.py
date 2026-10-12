@@ -172,6 +172,8 @@ def dictionary(r, at):
     hashes_at, count = r.pointer(at + 0x10), r.u16(at + 0x14)
     textures = texture_array(r, at + 0x18)
     need(count == len(textures), 'dictionary hash and texture counts differ')
+    need(count == 0 or hashes_at is not None, 'dictionary without name hashes')
+    need(all(tex is not None for tex in textures), 'dictionary with a null texture')
     return [{'hash': r.u32(hashes_at + 4 * i), **textures[i]} for i in range(count)]
 
 
@@ -188,6 +190,8 @@ def shader(r, at):
     need(r.u32(at) in SHADER_VFTS, 'not a shader (VFT 0x%08x)' % r.u32(at))
     count = r.u16(at + 0x18)
     values, types, names = r.pointer(at + 0x10), r.pointer(at + 0x1C), r.pointer(at + 0x24)
+    need(count == 0 or all(p is not None for p in (values, types, names)),
+         'shader without parameter arrays')
     params = []
     for i in range(count):
         kind, pointer, name = r.u8(types + i), r.u32(values + 4 * i), r.u32(names + 4 * i)

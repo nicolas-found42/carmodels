@@ -229,6 +229,26 @@ class Rejections(unittest.TestCase):
         with self.assertRaisesRegex(TextureError, 'hash and texture counts differ'):
             decode(bytes(patched(data, root + 0x14, 'H', 2)), virtual, physical, 9)
 
+    def test_required_null_arrays_raise_texture_errors(self):
+        for offset in (0x10, 0x1C, 0x24):
+            with self.subTest(offset=offset):
+                self.rejects(patched(self.data, self.at['shader'] + offset, 'I', 0),
+                             'without parameter arrays')
+        data, virtual, physical, root = build_dictionary()
+        items = struct.unpack_from('>I', data, root + 0x18)[0] & 0x0FFFFFFF
+        for offset, reason in ((root + 0x10, 'without name hashes'), (items, 'null texture')):
+            with self.subTest(offset=offset):
+                with self.assertRaisesRegex(TextureError, reason):
+                    decode(bytes(patched(data, offset, 'I', 0)), virtual, physical, 9)
+        # Empty shaders and dictionaries still allow null arrays.
+        empty_shader = patched(self.data, self.at['shader'] + 0x18, 'H', 0)
+        for offset in (0x10, 0x1C, 0x24):
+            empty_shader = patched(empty_shader, self.at['shader'] + offset, 'I', 0)
+        decoded, _ = decode(bytes(empty_shader), self.virtual, self.physical, 83)
+        self.assertEqual(decoded['shader_group']['shaders'][0]['params'], [])
+        empty = patched(data, root + 0x10, 'IHHIHH', 0, 0, 0, 0, 0, 0)
+        self.assertEqual(decode(bytes(empty), virtual, physical, 9)[0]['textures'], [])
+
     def test_texture_array_edges(self):
         b = Builder()
         at = b.alloc(16)
