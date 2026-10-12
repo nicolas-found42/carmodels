@@ -119,6 +119,8 @@ def dictionary(names, wanted):
 
 def plausible(entry, name):
     """Structural agreement between an entry and a candidate name (rejects most hash noise)."""
+    if '/' in name:
+        return False  # entries hash one path component; a harvested path cannot name one
     extension = name.rsplit('.', 1)[1] if '.' in name else ''
     if entry['kind'] == 'directory':
         return '.' not in name
@@ -203,8 +205,9 @@ def select(named, codes_by_directory):
             choice = (code, 'config') if code else ('shared', 'shared-config')
         elif path.startswith(VEHICLES) and len(directory) > 3:
             choice = (codes_by_directory[directory[2]], 'vehicle-package')
-        elif path.startswith(AMBIENTS) and len(directory) > 3 and directory[2] in codes:
-            choice = (directory[2], 'ambient-definition')
+        elif path.startswith(AMBIENTS) and len(directory) > 3 and directory[2] in codes_by_directory:
+            # Keyed by archive name, so an unresolved car (0x<hash> in both trees) keeps its ambient files.
+            choice = (codes_by_directory[directory[2]], 'ambient-definition')
         elif path.startswith(UI):
             code = owner(path, codes)
             choice = (code, 'garage-ui-texture') if code else None

@@ -38,6 +38,7 @@ def tree(extra_vehicle=None):
     return {'resources': {
         'vehicle': vehicles,
         'ambients': {'vp_test_car_01': {'amb.xaph': resource(51, b'ambient')},
+                     'secretdir': {'amb.xaph': resource(51, b'unresolved ambient')},
                      'ped_fa_001_set': {'amb.xaph': resource(51, b'pedestrian')}},
         'ui': {'textures': {'garage': {'sh_vp_test_car_01_dub.xtd': resource(9, b'showroom'),
                                        'other.xtd': resource(9, b'not a car')}}},
@@ -66,6 +67,7 @@ class NameTests(unittest.TestCase):
         names[jenkins('vehicle')].append('noise.xtd')        # a dotted collision for a directory
         names[jenkins('notes.xml')].append('noise.xrsc')     # a resource extension for a loose file
         names[jenkins('twin.xrsc')] = ['twin.xrsc', 'twin_b.xrsc']  # two plausible candidates
+        names[jenkins('part.xrsc')].append('fake/dir.xrsc')  # a harvested path colliding with an entry
         named = Named(archive, names)
         self.assertEqual(named.name(by_hash[jenkins('vehicle')]), ('vehicle', 'resolved'))
         self.assertEqual(named.name(by_hash[jenkins('notes.xml')]), ('notes.xml', 'resolved'))
@@ -74,6 +76,7 @@ class NameTests(unittest.TestCase):
         self.assertEqual(named.name(by_hash[jenkins('other.xrsc')])[1], 'unresolved')
         rows = {row['path']: row for row in named.inventory()}
         self.assertEqual(rows['vehicle/']['rejected_candidates'], ['noise.xtd'])
+        self.assertEqual(rows['vehicle/part.xrsc']['rejected_candidates'], ['fake/dir.xrsc'])
         self.assertEqual(rows['vehicle/0x%08x.xrsc' % jenkins('twin.xrsc')]['name_candidates'], ['twin.xrsc', 'twin_b.xrsc'])
 
     def test_colliding_paths_are_rejected(self):
@@ -124,6 +127,7 @@ class ExtractionTests(unittest.TestCase):
                          'vp_test_car_01_dub/resources/ui/textures/garage/sh_vp_test_car_01_dub.xtd',
                          'vp_hidden_02/resources/vehicle/vp_hidden_02/body_lod_0.xrsc',
                          hidden + '/resources/vehicle/0x%08x/body_lod_0.xrsc' % jenkins('secretdir'),
+                         hidden + '/resources/ambients/0x%08x/amb.xaph' % jenkins('secretdir'),
                          'shared/resources/vehicle/configs/common.xcc', 'shared/resources/rims/whl_stk_x/whl_stk_x.xtp',
                          'shared/tune/vehicle/handling.xml', 'shared/vehicle/shared_utility/blur.mesh',
                          'provenance/disc.inventory.json',
