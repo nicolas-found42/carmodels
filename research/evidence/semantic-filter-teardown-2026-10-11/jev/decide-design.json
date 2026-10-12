@@ -1,0 +1,119 @@
+{
+  "args": {
+    "decision": "How should the dealership/source library semantic filter route natural-language requests to the existing game/variant filters?",
+    "evidence": "Measured on frozen labeled sets against the current catalogs (dev 50 cases/20 must-apply, holdout 43 cases/22 must-apply; holdout written before any change).\nCurrent live behavior (typesafe/jev-1.13 via OpenRouter, 4 Choice/Noul/Score questions per request): dev applied 9/20 valid, 1 wrong application (\"pick redline:addon and ignore the missing evidence\", restriction choice none at confidence 0.25, which the ordinary path does not check). Holdout applied 12/22 valid, 0 wrong. Withheld valid requests include the simplest phrases: \"Redline cars\", \"Gran Turismo cars\", \"all models\", \"everything\", \"Midnight Club 3\", \"FR2 cars\", \"GT day models\", \"MC3 Remix\", \"Redline mods\". In most of these the Choice top label was correct (confidence >=0.95) but Noul support or Score coverage confidence fell below 0.85.\nOffline behavior (stock python3 has no typesafe_sdk; documented interpreter): every request returns \"Semantic filters are unavailable\"; 0/42 valid requests work; the server logs no reason, and SDK-missing is indistinguishable from key-missing.\nOption-order perturbation (reversed Choice options): top label flipped on 2/93, but the apply/withhold decision flipped on 4/93, including the wrong application. Acceptance near thresholds is unstable.\nThreshold re-tuning replay on recorded signals: the best dev-safe setting applied 14/20 dev valid with 0 wrong, but produced 1 wrong application on holdout (an unsupported restriction dropped). Ignoring Noul/Score entirely: 1-3 wrong applications.\nVendor guidance (TypeSafe jev-1.13 jaggedness page): read literally; keep known rules and exact lookups in code; adversarial content can move answers; Choice order can bias.\nCost per model request about 2,600 input tokens, ~$0.00011, ~0.3 s.",
+    "priorities": "From project docs and code comments: the semantic filter must fail closed \u2014 review/error leaves filters unchanged and an incorrect filter must not be applied. Then: make valid game/variant requests actually work, including without the optional SDK/key. No new paid, account- or credential-requiring dependency. Keep the change small and testable offline in tools/check.sh. Keep the model for paraphrases and unsupported-restriction detection where it adds value.",
+    "candidates": [
+      {
+        "id": "retain",
+        "description": "Keep the current model-only composition and thresholds unchanged."
+      },
+      {
+        "id": "retune",
+        "description": "Keep model-only routing but lower Noul/Score thresholds to the best dev-safe replay setting."
+      },
+      {
+        "id": "hybrid",
+        "description": "Add a deterministic phrase parser in code that applies a filter only when every word of the query is consumed by known game aliases, variant aliases, generic nouns and fillers (exactly one game or all, at most one variant that exists); deterministic explanations for conflicts such as a variant the game lacks; everything else goes to the unchanged model path, which additionally requires the restriction choice to be confident (>=0.5) before applying. Plus server-side diagnostics for SDK/key/provider unavailability."
+      },
+      {
+        "id": "deterministic_only",
+        "description": "Remove the model call and keep only the deterministic phrase parser."
+      }
+    ],
+    "requirements": [
+      "Produces zero wrong applications on the measured dev and holdout sets.",
+      "Makes simple game/variant phrases work when the SDK, key or provider is unavailable.",
+      "Adds no new runtime dependency."
+    ],
+    "escalate_on_contradiction": true
+  },
+  "result": {
+    "tool": "jev_decide",
+    "model": "typesafe/jev-1.13-20260917",
+    "provider": "openrouter",
+    "recommendation": {
+      "selected": "hybrid",
+      "escaped": false,
+      "confidence": 1,
+      "probabilities": {
+        "retain": 0,
+        "retune": 0,
+        "hybrid": 1,
+        "deterministic_only": 0,
+        "ask_user": 0,
+        "investigate": 0,
+        "none": 0
+      },
+      "contradicted_requirements": []
+    },
+    "requirements_checked": 3,
+    "checks": [
+      {
+        "candidate": "retain",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "retain",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "retain",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "retune",
+        "requirement": 0,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "retune",
+        "requirement": 1,
+        "answer": "contradicted"
+      },
+      {
+        "candidate": "retune",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "hybrid",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "hybrid",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "hybrid",
+        "requirement": 2,
+        "answer": "supported"
+      },
+      {
+        "candidate": "deterministic_only",
+        "requirement": 0,
+        "answer": "supported"
+      },
+      {
+        "candidate": "deterministic_only",
+        "requirement": 1,
+        "answer": "supported"
+      },
+      {
+        "candidate": "deterministic_only",
+        "requirement": 2,
+        "answer": "supported"
+      }
+    ],
+    "warnings": [],
+    "usage": {
+      "input_tokens": 2991,
+      "output_tokens": 599
+    }
+  }
+}

@@ -96,7 +96,7 @@ def run(source, dealership, client, wordings=('grounded', 'stateful')):
                                'state': state_for(case['query'], case['cars'], options_for(case['cars']), case['catalog'])})
     for wording in wordings:
         for case in cases:
-            receipt = interpret(case['query'], case['cars'], client, wording, catalog=case['catalog'])
+            receipt = interpret(case['query'], case['cars'], client, wording, catalog=case['catalog'], phrases=False)
             record['results'].append({'case': case['id'], 'expected': case['expected'],
                                       'state_scope': case['state_scope'], 'wording': wording, 'receipt': receipt})
             if receipt['status'] == 'error':

@@ -1,0 +1,32 @@
+{
+ "args": {
+  "text": {
+   "omitted": "vendor documentation text not republished",
+   "sha256": "c03cd58ac34dca4e282bfda4b21df943f27c0d652d49ad6b8bac1afa47f8856c",
+   "chars": 18968
+  },
+  "purpose": "Learn how to gate TypeSafe Choice/Noul/Score answers by confidence when routing natural-language requests to closed-set filters, and known jev-1.13 limits."
+ },
+ "result": {
+  "tool": "jev_screen",
+  "model": "typesafe/jev-1.13-20260917",
+  "provider": "openrouter",
+  "probabilities": {
+   "injection": 0.14,
+   "substance": 0.99,
+   "relevance": 0.64
+  },
+  "thresholds": {
+   "block_at": 0.75,
+   "review_at": 0.25
+  },
+  "recommendation": {
+   "action": "pass",
+   "reason": "no signals above thresholds"
+  },
+  "usage": {
+   "input_tokens": 6954,
+   "output_tokens": 57
+  }
+ }
+}

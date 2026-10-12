@@ -57,6 +57,21 @@ for(const action of ['game','variant','search','query','clear']) {
   assert.deepEqual({game:controls['game-filter'].value,variant:controls['variant-filter'].value,applications},before,`stale semantic response overwrote ${action}`);
 }
 assert.match(dealershipPage,/el\.onclick = \(\) => \{ semanticId\+\+;/,'chip changes invalidate semantic requests');
+// Failure statuses show the server's own explanation, a server without the API names the fix,
+// and a timeout is explained instead of showing the browser's abort text.
+for (const [transport, expected] of [
+  [async()=>({ok:false,json:async()=>({status:'error',message:'A filter request is already running.'})}),'A filter request is already running.'],
+  [async()=>({ok:false,json:async()=>{throw SyntaxError('HTML error page');}}),/needs the library server \(python3 tools\/serve_library\.py\)/],
+  [async()=>{throw Object.assign(Error('signal is aborted without reason'),{name:'AbortError'});},'Interpreting took longer than 20 seconds. Use the game and variant selectors.']]) {
+  const controls={};
+  for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-filter','semantic-status','clear-filters'])controls[id]={value:'',textContent:'',listeners:{},addEventListener(type,callback){this.listeners[type]=callback;},focus(){}};
+  controls['game-filter'].value='all';controls['semantic-query'].value='Gran Turismo night';
+  new Function('$','document','applyFilters','fetch',`let semanticId=0;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>assert.fail('failure applied filters'),transport);
+  await controls['semantic-filter'].onclick();
+  if(typeof expected==='string')assert.equal(controls['semantic-status'].textContent,expected);
+  else assert.match(controls['semantic-status'].textContent,expected);
+  assert.equal(controls['game-filter'].value,'all');
+}
 for (const car of compactCars) {
   const mesh = makeCar(car);
   const bounds = new THREE.Box3().setFromObject(mesh);

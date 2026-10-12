@@ -7,9 +7,11 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
+from unittest import mock
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
-from serve_library import LibraryHandler
+import library_filter
+from serve_library import STARTUP, LibraryHandler
 
 
 class Tests(unittest.TestCase):
@@ -67,6 +69,47 @@ class Tests(unittest.TestCase):
                     request(b'{}', path=url+'-unknown')
                 self.assertEqual(caught.exception.code, 404)
                 caught.exception.close()
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join()
+
+    def test_startup_explains_every_model_status(self):
+        statuses = set()
+        for spec, key in [(None, 'set'), (object(), ''), (object(), 'set')]:
+            with mock.patch.object(library_filter.importlib.util, 'find_spec', return_value=spec), \
+                    mock.patch.dict('os.environ', {'OPENROUTER_API_KEY': key}):
+                statuses.add(library_filter.model_status())
+        self.assertEqual(statuses, set(STARTUP))
+
+    def test_real_phrase_routing_without_sdk_or_provider(self):
+        logged = []
+        class Handler(LibraryHandler):
+            def log_message(self, format, *args):
+                logged.append(format % args)
+        cars = [{'game': 'gran-turismo', 'sourceVariant': v} for v in ('day', 'night')]
+        with tempfile.TemporaryDirectory() as folder, \
+                mock.patch.object(library_filter.importlib.util, 'find_spec', return_value=None):
+            (Path(folder)/'public/dealership').mkdir(parents=True)
+            (Path(folder)/'public/dealership/cars.json').write_text(json.dumps(cars))
+            server = ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Handler, directory=folder))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                def ask(query):
+                    data = json.dumps({'query': query, 'catalog': 'dealership'}).encode()
+                    with urlopen(Request(f'http://127.0.0.1:{server.server_port}/api/library-filter', data=data,
+                                         headers={'Content-Type': 'application/json'}), timeout=3) as response:
+                        return json.load(response)
+                output = ask('Gran Turismo night cars')
+                self.assertEqual((output['status'], output['decided_by'], output['filters']),
+                                 ('ok', 'phrase', {'game': 'gran-turismo', 'variant': 'night'}))
+                output = ask('private wording about blue night cars')
+                self.assertEqual((output['status'], output['reason'], output['filters']), ('error', 'sdk_unavailable', None))
+                self.assertIn('SDK is not installed', output['message'])
+                self.assertIn('library filter: ok by phrase', logged)
+                self.assertIn('library filter: error by nothing (sdk_unavailable)', logged)
+                self.assertNotIn('private', str(logged))
             finally:
                 server.shutdown()
                 server.server_close()

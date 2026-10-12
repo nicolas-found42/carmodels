@@ -39,8 +39,9 @@ The Gran Turismo display uses each working GLB's default scene and embedded PNG
 textures, rather than compact surface tones. Other LOD scenes remain in the download.
 The viewer checks the compiled model hash when loading, so a later GLB edit requires
 a rebuild. Game and source-variant selectors work offline. The optional natural
-language filter calls the local server's TypeSafe endpoint; uncertain or unavailable
-judgments leave existing filters unchanged and show a status message.
+language filter (served by `tools/serve_library.py`) matches exact game/variant phrases
+locally and sends other wording to the TypeSafe model; uncertain or unavailable
+judgments leave existing filters unchanged and show a status message naming the reason.
 
 The display baker supports static node translations, quaternion rotations, affine matrices,
 nonuniform scale and triangle indices of 8, 16 or 32 bits. Preserve normal attributes and

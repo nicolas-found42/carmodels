@@ -1,0 +1,989 @@
+{
+ "module": ".scratch/teardown-2026-10-11/final_library_filter.py",
+ "cases_file": ".scratch/teardown-2026-10-11/holdout2-cases.json",
+ "offline": true,
+ "metrics": {
+  "cases": 45,
+  "supported": 25,
+  "applied": 23,
+  "applied_correct": 23,
+  "wrongly_applied": 0,
+  "supported_applied": 23,
+  "correct_action": 43,
+  "errors": 18,
+  "by_source": {
+   "phrase": 27,
+   "null": 18
+  },
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost": 0.0,
+  "provider_calls": 0,
+  "elapsed_seconds": 0.077,
+  "latency_max": 0.0261,
+  "latency_mean": 0.0045
+ },
+ "rows": [
+  {
+   "id": "g01",
+   "query": "GT cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo (exact game and variant words).",
+   "seconds": 0.0019
+  },
+  {
+   "id": "g02",
+   "query": "gran turismo arcade",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:arcade"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:arcade",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "arcade"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, arcade variant (exact game and variant words).",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g03",
+   "query": "Gran Turismo (night)",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, night variant (exact game and variant words).",
+   "seconds": 0.0016
+  },
+  {
+   "id": "g04",
+   "query": "GRAN TURISMO DAY",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:day"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:day",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "day"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, day variant (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g05",
+   "query": "night-time Gran Turismo cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, night variant (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g06",
+   "query": "Gran Turismo nite",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g07",
+   "query": "redline addon cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "ok",
+   "applied_label": "redline:addon",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "addon"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline, add-on variant (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g08",
+   "query": "redline custom cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon",
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g09",
+   "query": "Redline stock cars",
+   "catalog": "dealership",
+   "expected": [
+    "redline:base",
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g10",
+   "query": "cars from Redline",
+   "catalog": "dealership",
+   "expected": [
+    "redline"
+   ],
+   "status": "ok",
+   "applied_label": "redline",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g11",
+   "query": "show Redline",
+   "catalog": "dealership",
+   "expected": [
+    "redline"
+   ],
+   "status": "ok",
+   "applied_label": "redline",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g12",
+   "query": "Ford Racing 2 cars please",
+   "catalog": "dealership",
+   "expected": [
+    "ford-racing-2"
+   ],
+   "status": "ok",
+   "applied_label": "ford-racing-2",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "ford-racing-2"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Ford Racing 2 (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g13",
+   "query": "FR2",
+   "catalog": "dealership",
+   "expected": [
+    "ford-racing-2"
+   ],
+   "status": "ok",
+   "applied_label": "ford-racing-2",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "ford-racing-2"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Ford Racing 2 (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g14",
+   "query": "midnight club",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g15",
+   "query": "MC3 remix cars",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g16",
+   "query": "Midnight Club 3 native",
+   "catalog": "dealership",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix:native",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [
+      "native"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix, native packages variant (exact game and variant words).",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g17",
+   "query": "all cars from all games",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g18",
+   "query": "show everything",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0205
+  },
+  {
+   "id": "g19",
+   "query": "list all vehicles",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g20",
+   "query": "every car",
+   "catalog": "dealership",
+   "expected": [
+    "all"
+   ],
+   "status": "ok",
+   "applied_label": "all",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied all games (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g21",
+   "query": "I want to see Gran Turismo night models",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": false,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0205
+  },
+  {
+   "id": "g22",
+   "query": "Gran Turismo night cars",
+   "catalog": "source",
+   "expected": [
+    "gran-turismo:night"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:night",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, night variant (exact game and variant words).",
+   "seconds": 0.0013
+  },
+  {
+   "id": "g23",
+   "query": "Redline add-on cars",
+   "catalog": "source",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "ok",
+   "applied_label": "redline:addon",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "addon"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline, add-on variant (exact game and variant words).",
+   "seconds": 0.0011
+  },
+  {
+   "id": "g24",
+   "query": "MC3 Remix",
+   "catalog": "source",
+   "expected": [
+    "midnight-club-3-remix",
+    "midnight-club-3-remix:native"
+   ],
+   "status": "ok",
+   "applied_label": "midnight-club-3-remix",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Midnight Club 3: DUB Edition Remix (exact game and variant words).",
+   "seconds": 0.0011
+  },
+  {
+   "id": "g25",
+   "query": "Gran Turismo arcade cars with 3D previews",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:arcade"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo:arcade",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [
+      "arcade"
+     ],
+     "preview": true
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo, arcade variant (exact game and variant words).",
+   "seconds": 0.0205
+  },
+  {
+   "id": "g26",
+   "query": "all Gran Turismo cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo"
+   ],
+   "status": "ok",
+   "applied_label": "gran-turismo",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "gran-turismo"
+     ],
+     "variants": [],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Gran Turismo (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g27",
+   "query": "show only redline mods",
+   "catalog": "dealership",
+   "expected": [
+    "redline:addon"
+   ],
+   "status": "ok",
+   "applied_label": "redline:addon",
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "addon"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Applied Redline, add-on variant (exact game and variant words).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g28",
+   "query": "Gran Turismo Skylines",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0261
+  },
+  {
+   "id": "g29",
+   "query": "Redline cars sorted by name",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g30",
+   "query": "Ford Racing 2 trucks",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g31",
+   "query": "night cars",
+   "catalog": "dealership",
+   "expected": [
+    "gran-turismo:night",
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Name the game for the night variant (Gran Turismo).",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g32",
+   "query": "Gran Turismo except arcade",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0143
+  },
+  {
+   "id": "g33",
+   "query": "Ford Racing 2 and Redline",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0016
+  },
+  {
+   "id": "g34",
+   "query": "delete all Redline cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0018
+  },
+  {
+   "id": "g35",
+   "query": "Gran Turismo cars with textures",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g36",
+   "query": "only the 10 newest MC3 cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0176
+  },
+  {
+   "id": "g37",
+   "query": "Redline add-ons by author X",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g38",
+   "query": "Gran Turismo night cars that are not Japanese",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g39",
+   "query": "show me the GT-R",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g40",
+   "query": "MC3 night",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "midnight-club-3-remix"
+     ],
+     "variants": [
+      "night"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Midnight Club 3: DUB Edition Remix has no night variant; available: native packages.",
+   "seconds": 0.0131
+  },
+  {
+   "id": "g41",
+   "query": "Redline arcade",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "arcade"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Redline has no arcade variant; available: base game, add-on.",
+   "seconds": 0.0016
+  },
+  {
+   "id": "g42",
+   "query": "every GT car except the arcade ones",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g43",
+   "query": "Gran Turismo night models in the source catalog",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0069
+  },
+  {
+   "id": "g44",
+   "query": "Redline day",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "review",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": "phrase",
+   "signals": {
+    "phrase": {
+     "games": [
+      "redline"
+     ],
+     "variants": [
+      "day"
+     ],
+     "preview": false
+    }
+   },
+   "usage": null,
+   "message": "Redline has no day variant; available: base game, add-on.",
+   "seconds": 0.0017
+  },
+  {
+   "id": "g45",
+   "query": "all Ford cars",
+   "catalog": "dealership",
+   "expected": [
+    "no_match"
+   ],
+   "status": "error",
+   "applied_label": null,
+   "correct_action": true,
+   "decided_by": null,
+   "signals": null,
+   "usage": null,
+   "message": "The TypeSafe model did not answer. Exact game and variant phrases still work; otherwise use the game and variant controls.",
+   "seconds": 0.0018
+  }
+ ]
+}
