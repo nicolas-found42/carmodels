@@ -16,7 +16,7 @@ needs_disc = unittest.skipUnless(NATIVE_DISC.is_file(), 'supplied game disc sour
 
 class ExportBoundaryTests(unittest.TestCase):
     def fixture(self, base):
-        native = ROOT / 'midnight-club-3-remix/cars'
+        native = ROOT / 'games/midnight-club-3-remix/cars'
         index = json.loads((native / 'index.json').read_text())
         vehicle = next(v for v in index['vehicles'] if v['id'] == 'vp_350z_04')
         manifest = json.loads((native / vehicle['manifest']).read_text())

@@ -16,7 +16,7 @@ from mc3_archive import CookedDisc
 from import_mc3_catalogs import ROOT, regular
 
 PROFILE = 'mc3-ps2-static-preview-v1'
-NATIVE_DISC = ROOT/'midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso'
+NATIVE_DISC = ROOT/'games/midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso'
 LIMITS = [
     'Static inspection preview of native PS2 geometry; animation and damage are not emulated.',
     'Triangle strips use the native normal-X ADC restart bit; runtime clipping and winding are not emulated.',

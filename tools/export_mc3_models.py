@@ -11,10 +11,10 @@ from mc3_model import PROFILE, preview_vehicle, sha, source_path, native_executa
 from import_mc3_catalogs import regular
 from mc3_wheels import scanned_once
 
-DEFAULT = ROOT / 'midnight-club-3-remix/recovered-models'
+DEFAULT = ROOT / 'games/midnight-club-3-remix/recovered-models'
 
 
-def export(extraction=ROOT / 'midnight-club-3-remix/cars', output=DEFAULT):
+def export(extraction=ROOT / 'games/midnight-club-3-remix/cars', output=DEFAULT):
     extraction, output = Path(extraction), Path(output)
     regular(output)
     if extraction.resolve().is_relative_to(output.resolve()) or output.resolve().is_relative_to(extraction.resolve()):
@@ -66,7 +66,7 @@ def export(extraction=ROOT / 'midnight-club-3-remix/cars', output=DEFAULT):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--extraction', type=Path, default=ROOT/'midnight-club-3-remix/cars')
+    p.add_argument('--extraction', type=Path, default=ROOT/'games/midnight-club-3-remix/cars')
     p.add_argument('--output', type=Path, default=DEFAULT)
     a = p.parse_args()
     print(f'Exported {export(a.extraction, a.output)} source-bound static MC3 previews')

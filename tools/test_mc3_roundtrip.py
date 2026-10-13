@@ -16,7 +16,7 @@ from build_dealership import build, check
 def run():
     assert bpy.app.version == (4, 5, 14), 'Use pinned Blender 4.5.14'
     catalog = json.loads((ROOT / 'dealership/dealership/catalog.json').read_text())
-    models = list((ROOT / 'midnight-club-3-remix/recovered-models').glob('*.glb'))
+    models = list((ROOT / 'games/midnight-club-3-remix/recovered-models').glob('*.glb'))
     models += list((ROOT / 'dealership/dealership/models').glob('MC3_*.glb'))
     before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in models}
     assert len(before) == 188, 'Expected 94 conversions and 94 independent working copies'

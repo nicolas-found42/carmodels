@@ -224,8 +224,8 @@ def assess_inventory(items):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--iso', type=Path, default=ROOT / 'midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso')
-    parser.add_argument('--output', type=Path, default=ROOT / 'midnight-club-3-remix/cars')
+    parser.add_argument('--iso', type=Path, default=ROOT / 'games/midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso')
+    parser.add_argument('--output', type=Path, default=ROOT / 'games/midnight-club-3-remix/cars')
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--assess-output', type=Path, help='Opt in to screened live inventory judgments; save outside cars.')
     args = parser.parse_args()
