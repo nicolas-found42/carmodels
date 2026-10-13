@@ -6,7 +6,10 @@ Repo configuration for the engineering skills.
 
 The repo is a showcase of recovered car models; the per-game extraction and recovery tooling exists to
 produce those models, which are committed. `tools/check.sh` (and CI) verifies the models and the showcase.
-After changing extraction, conversion, import or recovery tooling, also run `tools/check.sh --games`.
+After changing extraction, conversion, import or recovery tooling, run `tools/check.sh --game <slug>`
+for each affected game; use `--games` for shared tooling. Add `--full` when changing derivation logic
+or regenerating receipts, or use `--only` for the affected verifiers. `--full` without `--game` runs
+all disc, corpus and private-input checks.
 
 Read `CONTRIBUTING.md` before changing or verifying anything: it lists the checks and their tiers,
 the static inputs some verifiers need, and how to read a verifier's pass (self-checking against tamper

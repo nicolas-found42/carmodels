@@ -33,7 +33,7 @@ without them the server says so at startup and in the page. Uncertain answers ne
 - `dealership/` — both app entry points, shared vendor libraries and compiled browser data. See [the app guide](dealership/README.md).
 - `dealership/dealership/` — independent editable GLBs, catalog and initial-fork provenance. See [the editing guide](dealership/dealership/README.md).
 - `games/<game>/` — each game's source tree, with a README indexing its tools, notes, evidence and published files ([ADR 0003](docs/adr/0003-game-sources-live-under-games.md)).
-- `ford-racing-2/` — original models, textures, sounds and configuration; `recovered/` beneath it holds canonical manifests.
+- `games/ford-racing-2/` — original models, textures, sounds and configuration; `recovered/` beneath it holds canonical manifests.
 - `dealership/public/ford-racing-2/` — exported source GLBs and their per-game index.
 - `research/` — recovery notes and evidence receipts.
 - `tools/` — recovery, export, build and verifier scripts.

@@ -21,7 +21,7 @@ def test_parsers():
         assert hashlib.sha256((ROOT / 'tools' / name).read_bytes()).hexdigest() == pin, name
     textures = 0
     for car in census['cars']:
-        raw = next((ROOT / 'ford-racing-2/cars' / car['code'] / 'model').iterdir()).read_bytes()
+        raw = next((ROOT / 'games/ford-racing-2/cars' / car['code'] / 'model').iterdir()).read_bytes()
         parsed = ps2_sections.parse(raw)
         assert json.loads(json.dumps(parsed['geometry'])) == car['geometry'], car['code']
         assert len(parsed['textures']['items']) == len(car['textures'])

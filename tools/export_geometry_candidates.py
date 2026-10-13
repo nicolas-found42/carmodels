@@ -227,7 +227,7 @@ def main():
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=True)
     census=json.loads((EVIDENCE/'car-asset-census.json').read_text());entries=[]
     for car in census['cars']:
-        data=next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'games/ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=car['sha256']:raise ValueError('model hash changed')
         glb,records,stats,assemblies=build(car,data);filename=car['code']+'.glb';(args.output/filename).write_bytes(glb)
         entries.append({'code':car['code'],'file':filename,'sha256':hashlib.sha256(glb).hexdigest(),'bytes':len(glb),'records':records,'assemblies':assemblies,'stats':stats,'textureSelectorIds':json.loads(glb[20:20+struct.unpack_from('<I',glb,12)[0]])['extras']['textureSelectorIds']})

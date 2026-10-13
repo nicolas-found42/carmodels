@@ -77,7 +77,7 @@ def main():
     for car in cars:
         raw=(ROOT/'dealership/public/ford-racing-2'/f'{car["code"]}.glb').read_bytes();size,kind=struct.unpack_from('<II',raw,12)
         if kind!=0x4e4f534a:raise ValueError('missing JSON chunk')
-        doc=json.loads(raw[20:20+size]);source=next((ROOT/'ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
+        doc=json.loads(raw[20:20+size]);source=next((ROOT/'games/ford-racing-2/cars'/car['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(source).hexdigest()!=car['sha256']:raise ValueError('original source hash differs')
         original_flags(source,car['textures']);result=check(car,doc)
         rows.append({'car':car['code'],'glb_sha256':hashlib.sha256(raw).hexdigest(),**result})

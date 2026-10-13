@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-CARS = ROOT / "ford-racing-2" / "cars"
+CARS = ROOT / "games/ford-racing-2" / "cars"
 OUT = ROOT / "viewer" / "public"
 
 def sample_icon_rgba(rgba):
