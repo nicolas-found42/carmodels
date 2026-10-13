@@ -11,6 +11,117 @@ from run_checks import registry, run_checks, select
 
 
 class CheckRunnerTests(unittest.TestCase):
+    def probe(self, name, code, parallel=True):
+        return {'name': name, 'parallel': parallel,
+                'command': [sys.executable, '-c', 'from pathlib import Path\nimport time\n' + code]}
+
+    def test_parallel_overlap_bound_failure_and_incremental_manifest(self):
+        # File rendezvous proves overlap without a speed threshold. A timeout fails the probe,
+        # rather than hanging CI if scheduling becomes serial or stops after the failure.
+        wait = ('deadline = time.monotonic() + 15\n'
+                'while not Path({peer!r}).exists():\n'
+                '    assert time.monotonic() < deadline, "peer never started"\n'
+                '    time.sleep(.01)\n')
+        checks = [self.probe('a', 'Path("a.start").touch()\n' + wait.format(peer='b.start') +
+                             'Path("a.end").touch()\nprint("a failed")\nraise SystemExit(7)'),
+                  self.probe('b', 'Path("b.start").touch()\n' + wait.format(peer='c.start') +
+                             'print("b passed")'),
+                  self.probe('c', 'assert Path("a.end").exists(), "more than two checks started"\n'
+                             'import json\nreceipt = json.loads(Path("out/results.json").read_text())\n'
+                             'assert receipt["exit_code"] == 1\n'
+                             'assert [r["name"] for r in receipt["checks"]] == ["a"]\n'
+                             'assert receipt["pending"] == ["b", "c"]\n'
+                             'Path("c.start").touch()\nprint("c passed")')]
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / 'out'
+            self.assertEqual(run_checks(checks, temp, out, jobs=2), 1)
+            receipt = json.loads((out / 'results.json').read_text())
+            self.assertEqual([r['name'] for r in receipt['checks']], ['a', 'b', 'c'])
+            self.assertEqual([r['exit_code'] for r in receipt['checks']], [7, 0, 0])
+            self.assertEqual(receipt['pending'], [])
+            self.assertEqual(receipt['jobs'], 2)
+            self.assertGreater(receipt['elapsed_seconds'], 0)
+            self.assertEqual((out / 'a.log').read_text(), 'a failed\n')
+            self.assertEqual((out / 'b.log').read_text(), 'b passed\n')
+            self.assertEqual((out / 'c.log').read_text(), 'c passed\n')
+
+    def test_exclusive_checks_are_barriers_in_both_directions(self):
+        wait = ('deadline = time.monotonic() + 15\n'
+                'while not Path({peer!r}).exists():\n'
+                '    assert time.monotonic() < deadline\n    time.sleep(.01)\n')
+        checks = [self.probe('before', 'Path("before.start").touch()\n' + wait.format(peer='other.start') +
+                             'Path("before.end").touch()'),
+                  self.probe('other', 'Path("other.start").touch()\n' + wait.format(peer='before.start') +
+                             'Path("other.end").touch()'),
+                  self.probe('receipt', 'assert Path("before.end").exists()\nassert Path("other.end").exists()\n'
+                             'assert not Path("after.start").exists()\nPath("receipt.end").touch()', False),
+                  self.probe('pool', 'assert Path("receipt.end").exists()\n'
+                             'assert not Path("after.start").exists()\nPath("pool.end").touch()', False),
+                  self.probe('after', 'assert Path("pool.end").exists()\nPath("after.start").touch()')]
+        # Missing metadata is also exclusive, including a newly registered check.
+        checks[3].pop('parallel')
+        with tempfile.TemporaryDirectory() as temp:
+            self.assertEqual(run_checks(checks, temp, Path(temp) / 'out', jobs=4), 0)
+
+    def test_one_job_preserves_serial_order_even_for_parallel_checks(self):
+        checks = [self.probe('first', 'Path("first.end").touch()'),
+                  self.probe('second', 'assert Path("first.end").exists()')]
+        with tempfile.TemporaryDirectory() as temp:
+            self.assertEqual(run_checks(checks, temp, Path(temp) / 'out', jobs=1), 0)
+
+    def test_invalid_jobs_and_duplicate_names_are_refused_before_execution(self):
+        check = self.probe('same', 'raise AssertionError("must not execute")')
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / 'out'
+            for jobs in (0, -1, 1.5, True):
+                with self.assertRaisesRegex(ValueError, 'positive integer'):
+                    run_checks([check], temp, out, jobs=jobs)
+            with self.assertRaisesRegex(ValueError, 'unique'):
+                run_checks([check, check], temp, out, jobs=2)
+            self.assertFalse(out.exists())
+
+    def test_parallel_availability_and_launch_errors_keep_skip_fail_semantics(self):
+        checks = [self.probe('absent', 'raise AssertionError("must skip")'),
+                  self.probe('bad_pin', 'raise AssertionError("must not execute")'),
+                  self.probe('bad_probe', 'raise AssertionError("must not execute")'),
+                  {'name': 'bad_command', 'parallel': True, 'command': ['carmodels-command-does-not-exist']}]
+        checks[0]['availability'] = [sys.executable, '-c', 'print("missing");raise SystemExit(1)']
+        checks[1]['availability'] = [sys.executable, '-c', 'print("wrong pin");raise SystemExit(2)']
+        checks[2]['availability'] = ['carmodels-probe-does-not-exist']
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / 'out'
+            self.assertEqual(run_checks(checks, temp, out, jobs=2), 1)
+            rows = json.loads((out / 'results.json').read_text())['checks']
+            self.assertEqual([r['status'] for r in rows], ['skip', 'fail', 'fail', 'fail'])
+            self.assertEqual([r['exit_code'] for r in rows], [None, 2, 127, 127])
+            self.assertIn('missing', (out / 'absent.log').read_text())
+            self.assertIn('wrong pin', (out / 'bad_pin.log').read_text())
+
+    def test_shared_receipts_existing_pools_and_bulk_checks_stay_exclusive(self):
+        checks = registry()
+        self.assertLessEqual(runner.PARALLEL_SAFE, {c['name'] for c in checks})
+        protected = runner.FULL_ONLY | {'verify_recovered_asset_index', 'test_build_dealership',
+                     'dealership_freshness', 'test_verify_mcla_resources', 'test_verify_mcla_decoding',
+                     'dealership_roundtrip', 'redline_roundtrip', 'mc3_roundtrip'}
+        self.assertTrue(all(not c['parallel'] for c in checks if c['name'] in protected))
+        self.assertTrue(all(c['parallel'] for c in checks if c['name'] in {
+            'test_import_gt4_catalog', 'test_import_gt4_dealership', 'test_mc3_preview'}))
+
+    def test_cli_jobs_default_override_and_invalid_values(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(runner, 'run_checks', return_value=0) as ran, \
+                patch('builtins.print'):
+            for flags, expected in (([], runner.DEFAULT_JOBS), (['--jobs', '1'], 1), (['--jobs', '3'], 3)):
+                with patch.object(sys, 'argv', ['run_checks', '--evidence-dir', temp, *flags]):
+                    self.assertEqual(runner.main(), 0)
+                self.assertEqual(ran.call_args.kwargs['jobs'], expected)
+            ran.reset_mock()
+            for value in ('0', '-1', 'many'):
+                with patch.object(sys, 'argv', ['run_checks', '--jobs', value]), patch.object(sys, 'stderr'), \
+                        self.assertRaises(SystemExit) as error:
+                    runner.main()
+                self.assertEqual(error.exception.code, 2)
+            ran.assert_not_called()
+
     def test_failure_cannot_be_masked_by_later_success(self):
         checks = [{'name': 'broken', 'command': [sys.executable, '-c', 'print("first line");print("last line");raise SystemExit(7)']},
                   {'name': 'green', 'command': [sys.executable, '-c', 'print("success")']}]
@@ -136,4 +247,4 @@ class CheckRunnerTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

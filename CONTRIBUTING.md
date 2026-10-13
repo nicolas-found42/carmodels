@@ -81,11 +81,27 @@ private-input checks belong in `FULL_ONLY`, preserving explicit `--full` and `--
 
 `tools/check.sh --list` lists every stable check name. Combine it with tier flags to preview a selection
 without running it, for example `tools/check.sh --game gran-turismo-4 --full --list`.
+Checks audited as independent run concurrently, up to four at a time (fewer on machines with
+fewer CPUs). `--jobs N` sets the limit; `--jobs 1` preserves serial execution in registry order.
+Shared receipt writers, whole-corpus checks, Blender and checks that exercise existing process
+pools run alone, after all earlier checks finish and before any later checks start. These
+safeguards apply within one invocation; run separate invocations sequentially in the same checkout.
+New checks run alone by default. Add an exact name to `PARALLEL_SAFE` in `tools/run_checks.py`
+only after auditing its transitive calls for shared writes and process pools. Revisit that
+classification when changing a check's fixtures or callees: GT4 catalog tests currently stay
+below the pool threshold, and MCLA catalog tests use one worker.
+
 Every run retains complete per-command logs, exit codes, durations and pass/fail/skip states
 in `results.json`; the printed evidence directory defaults to a unique `.scratch/checks/run-*`.
 Pass `--evidence-dir <empty-directory>` to choose the location. Existing logs are preserved.
 A later successful command cannot mask an earlier failure. CI uploads this evidence even
 when checks fail. Optional private-input skips remain visible and do not count as passes.
+Completion messages appear as checks finish; manifest rows retain registry order. The coordinator
+atomically replaces the manifest after each completion. `jobs` and total `elapsed_seconds`
+record the run configuration and wall time; each row includes `parallel` and `started_seconds`
+relative to run start. `pending` lists selected checks still running or waiting, so an interrupted
+run remains distinguishable from a completed run. `not_run` lists checks excluded by selection.
+The review bundle builder refuses manifests with pending checks; older completed manifests remain usable.
 
 The `dealership_roundtrip` check uses `CARMODELS_BLENDER`, `blender` on PATH, or the locally
 mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender`.
