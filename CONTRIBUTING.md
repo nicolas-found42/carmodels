@@ -69,12 +69,18 @@ Blender edit roundtrips. CI runs the same default.
 
 The game checks — per-game extractors, decoders and importers, disc and executable re-derivations, and the
 recovery research verifiers — are opt-in. The car models they produced are committed, so they matter only
-when you change extraction, conversion or recovery tooling: `tools/check.sh --games` runs every check, and
-`--only name1,name2` runs named checks of either kind. A default run records the game checks it left out
+when you change extraction, conversion or recovery tooling. `tools/check.sh --games` adds game-tool
+tests without bulk corpus, disc or private-input re-derivation. `tools/check.sh --game <slug>` adds only
+that game's tests; repeat `--game` to select several games. Both include the normal showcase checks.
+Use `tools/check.sh --full` for every check, or `--game <slug> --full` for the showcase and one game's
+complete coverage. `--only name1,name2` runs explicitly named checks of either kind, including expensive
+checks, and cannot be combined with tier flags. A default run records the game checks it left out
 under `not_run` in `results.json`. A new check joins the default only when it is listed in `SHOWCASE` in
-`tools/run_checks.py`.
+`tools/run_checks.py`. Game-tool checks are selected by the `GAMES` prefixes. Whole-corpus and
+private-input checks belong in `FULL_ONLY`, preserving explicit `--full` and `--only` execution.
 
-`tools/check.sh --list` lists stable check names.
+`tools/check.sh --list` lists every stable check name. Combine it with tier flags to preview a selection
+without running it, for example `tools/check.sh --game gran-turismo-4 --full --list`.
 Every run retains complete per-command logs, exit codes, durations and pass/fail/skip states
 in `results.json`; the printed evidence directory defaults to a unique `.scratch/checks/run-*`.
 Pass `--evidence-dir <empty-directory>` to choose the location. Existing logs are preserved.
@@ -86,8 +92,10 @@ mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Bl
 CI downloads and hash-checks the pinned Linux Blender release. The check operates entirely
 on temporary model copies; production dealership/source GLBs are verified unchanged.
 
-In the table, the rows through the viewer tests are in the default run and the rows from GT4 on run with
-`--games`, except `test_mcla_preview_ui.mjs` in the MCLA row, which runs by default. Of the commands listed after the table, `--games` runs those `--list` names;
+In the table, the rows through the viewer tests are in the default run and the game-tool tests run with
+`--games`, except `test_mcla_preview_ui.mjs` in the MCLA row, which runs by default. Whole-corpus,
+disc, coverage and private/captured-input checks require `--full` or an explicit `--only`. Of the
+commands listed after the table, `--full` runs those `--list` names;
 `test_car_mips.py`, `verify_selector_word.py` and `validate_blender_import.py` are standalone and run
 only directly.
 
