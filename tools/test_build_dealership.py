@@ -8,7 +8,7 @@ import shutil
 import struct
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from bake_models import ROOT, VERTEX, bake_car, read_glb
 import base64
@@ -171,9 +171,11 @@ class DealershipBuildTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'invalid or duplicated'):
                     load_all(work)
                 (work / 'catalog.json').write_text(json.dumps(catalog))
-                with patch.object(build_dealership, 'bake_car', side_effect=AssertionError('baked in-process')):
+                pool = MagicMock(wraps=build_dealership.ProcessPoolExecutor)
+                with patch.object(build_dealership, 'ProcessPoolExecutor', pool):
                     with self.assertRaises(ValueError):  # The worker's own bake error, re-raised here.
                         load_all(work)
+                pool.assert_called_once()
 
     def test_link_and_invalid_catalog_controls(self):
         entry = json.loads((DEALERSHIP / 'catalog.json').read_text())[0]
