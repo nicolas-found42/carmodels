@@ -245,7 +245,7 @@ def bake_car(code, data, expected_sha256=None, *, source_mode=True):
 
 
 def load_source_model(code):
-    manifest = json.loads((ROOT / 'ford-racing-2/recovered/cars' / code / 'manifest.json').read_text())
+    manifest = json.loads((ROOT / 'games/ford-racing-2/recovered/cars' / code / 'manifest.json').read_text())
     entry = next(a for a in manifest['assets'] if a['kind'] == 'glb')
     if entry['path'] != f'dealership/public/ford-racing-2/{code}.glb':
         raise ValueError(f'{code}: unexpected model source path')

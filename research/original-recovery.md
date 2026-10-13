@@ -16,7 +16,7 @@ The continuation has recovered all 94 stored extra mip levels, joined all source
 
 ![Ford GT translated tree candidate](evidence/original-recovery/ford-gt-assembly-preview.png)
 
-The [canonical per-car recovery index](../ford-racing-2/recovered/index.json) now links 2,579 hash-verified files for all 35 roster cars. Each car has a manifest under `ford-racing-2/recovered/cars/<CAR>/manifest.json`. The index excludes diagnostic palette controls and approximate cache previews. [Independent ownership/file-set/hash audit](evidence/continuation/source-refresh/recovered-asset-index-validation.json). The verifier now rejects rehashed cross-car model swaps and altered schema/fidelity/status/limit declarations, as well as corrupt hashes; rendering completion is explicitly false in every manifest.
+The [canonical per-car recovery index](../ford-racing-2/recovered/index.json) now links 2,579 hash-verified files for all 35 roster cars. Each car has a manifest under `games/ford-racing-2/recovered/cars/<CAR>/manifest.json`. The index excludes diagnostic palette controls and approximate cache previews. [Independent ownership/file-set/hash audit](evidence/continuation/source-refresh/recovered-asset-index-validation.json). The verifier now rejects rehashed cross-car model swaps and altered schema/fidelity/status/limit declarations, as well as corrupt hashes; rendering completion is explicitly false in every manifest.
 
 ## Corpus and provenance
 

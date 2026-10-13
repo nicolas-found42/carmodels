@@ -58,7 +58,7 @@ def main():
         length, kind = struct.unpack_from('<II', blob, 12)
         assert kind == 0x4e4f534a
         document = json.loads(blob[20:20+length])
-        data = next((ROOT/'ford-racing-2/cars'/entry['code']/'model').iterdir()).read_bytes()
+        data = next((ROOT/'games/ford-racing-2/cars'/entry['code']/'model').iterdir()).read_bytes()
         assert hashlib.sha256(data).hexdigest() == document['extras']['originalModelSha256']
         result = check(data, document)
         rows.append({'car': entry['code'], 'glb_sha256': hashlib.sha256(blob).hexdigest(), **result})

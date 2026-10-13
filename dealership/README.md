@@ -23,7 +23,7 @@ The dealership has its own editing inputs:
 - `dealership/public/dealership/cars.json`: compiled display data; rebuild this from the editing inputs.
 - `dealership/dealership/origins.json`: historical provenance of the initial fork, not a current-model hash constraint.
 
-`python3 tools/build_dealership.py` reads only the dealership catalog and working GLBs, and writes only compiled dealership data. It preserves model/catalog edits. Source recovery and export commands write `ford-racing-2/`, `ford-racing-2/recovered/` and `dealership/public/ford-racing-2/`; they do not update dealership copies. Shared vendor library code is not shared model storage.
+`python3 tools/build_dealership.py` reads only the dealership catalog and working GLBs, and writes only compiled dealership data. It preserves model/catalog edits. Source recovery and export commands write `games/ford-racing-2/`, `games/ford-racing-2/recovered/` and `dealership/public/ford-racing-2/`; they do not update dealership copies. Shared vendor library code is not shared model storage.
 
 The working GLBs were explicitly forked once with `python3 tools/seed_dealership.py`. Running that command again preserves an existing dealership without reading source assets or replacing edits. New source recovery output is not silently pulled into the dealership. The old `tools/build_showcase.py` command remains a compatibility entry point for the safe dealership build.
 

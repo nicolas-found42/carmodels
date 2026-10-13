@@ -148,7 +148,15 @@ class DealershipBuildTests(unittest.TestCase):
                 self.assertFalse(seed(work))
             self.assertEqual(sha(model), edited_hash)
             self.assertEqual(json.loads((work / 'catalog.json').read_text())[0]['name'], 'Custom Gran Torino')
-            for forbidden in [work / 'models' / 'GRAN_TORINO.glb', ROOT / 'dealership/public/ford-racing-2/GRAN_TORINO.glb', ROOT / 'ford-racing-2/unwanted.json', ROOT / 'games/gran-turismo/unwanted.json', ROOT / 'games/redline/unwanted.json', ROOT / 'dealership/public/models.json']:
+            forbidden_outputs = [work / 'models' / 'GRAN_TORINO.glb',
+                                 ROOT / 'dealership/public/ford-racing-2/GRAN_TORINO.glb',
+                                 ROOT / 'games', ROOT / 'games/ford-racing-2/unwanted.json',
+                                 ROOT / 'games/gran-turismo/unwanted.json', ROOT / 'games/redline/unwanted.json',
+                                 ROOT / 'games/gran-turismo-4/unwanted.json',
+                                 ROOT / 'games/midnight-club-los-angeles/unwanted.json',
+                                 ROOT / 'games/midnight-club-3-remix/unwanted.json',
+                                 ROOT / 'games/future-game/unwanted.json', ROOT / 'dealership/public/models.json']
+            for forbidden in forbidden_outputs:
                 with self.assertRaisesRegex(ValueError, 'must not replace source or editable'):
                     build(work, forbidden)
         self.assertEqual({p: sha(p) for p in source_hashes}, source_hashes)

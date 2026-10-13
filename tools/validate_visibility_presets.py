@@ -86,7 +86,7 @@ def main():
         raw=(ROOT/'dealership/public/ford-racing-2'/c['file']).read_bytes()
         if hashlib.sha256(raw).hexdigest()!=c['sha256']:raise ValueError('GLB index identity differs')
         length=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+length])
-        data=next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).read_bytes()
+        data=next((ROOT/'games/ford-racing-2/cars'/c['code']/'model').iterdir()).read_bytes()
         if hashlib.sha256(data).hexdigest()!=doc['extras']['originalModelSha256']:raise ValueError('original model identity differs')
         checked=check(data,doc);results.append({'car':c['code'],'glb_sha256':c['sha256'],'preset_nodes':checked})
         if not negative:

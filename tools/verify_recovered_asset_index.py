@@ -16,7 +16,7 @@ def expected_records(receipts):
         by_car[car][path]={'path':path,'kind':kind,'sha256':digest,
                            'bytes':(ROOT/path).stat().st_size,**metadata}
     for c in receipts['model_census']['cars']:
-        code=c['code'];models=list((ROOT/'ford-racing-2/cars'/code/'model').iterdir())
+        code=c['code'];models=list((ROOT/'games/ford-racing-2/cars'/code/'model').iterdir())
         if len(models)!=1:raise ValueError('ambiguous original model')
         add(code,models[0].relative_to(ROOT).as_posix(),'original_model',c['sha256'])
         g=next(x for x in receipts['glbs']['cars'] if x['code']==code)
@@ -49,8 +49,8 @@ def check(index, manifest_overrides=None):
         raise ValueError('index schema/fidelity declaration mismatch')
     if index['status']!='Asset/index integrity checked. Rendering-fidelity completion not asserted.':
         raise ValueError('index status declaration mismatch')
-    roster=json.loads((ROOT/'ford-racing-2/inventory.json').read_text())['cars'];names=[x['car'] for x in index['cars']]
-    disk={p.name for p in (ROOT/'ford-racing-2/recovered/cars').iterdir() if p.is_dir()}
+    roster=json.loads((ROOT/'games/ford-racing-2/inventory.json').read_text())['cars'];names=[x['car'] for x in index['cars']]
+    disk={p.name for p in (ROOT/'games/ford-racing-2/recovered/cars').iterdir() if p.is_dir()}
     if len(names)!=len(set(names)) or set(names)!=set(roster) or disk!=set(names):raise ValueError('roster/index/disk mismatch')
     for item in index['source_receipts'].values():
         if hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest()!=item['sha256']:raise ValueError('source receipt changed')
@@ -92,7 +92,7 @@ def check(index, manifest_overrides=None):
     # Independently derive the complete canonical path set from producer receipts.
     expected_paths=set()
     for c in receipts['model_census']['cars']:
-        expected_paths.add(next((ROOT/'ford-racing-2/cars'/c['code']/'model').iterdir()).relative_to(ROOT).as_posix())
+        expected_paths.add(next((ROOT/'games/ford-racing-2/cars'/c['code']/'model').iterdir()).relative_to(ROOT).as_posix())
         expected_paths.add('dealership/public/ford-racing-2/'+c['code']+'.glb')
         for t in c['textures']:
             expected_paths.update('research/evidence/original-recovery/'+t[k] for k in ['png','raw_alpha_png'])
@@ -107,7 +107,7 @@ def check(index, manifest_overrides=None):
 
 
 def main():
-    p=ROOT/'ford-racing-2/recovered/index.json';index=json.loads(p.read_text());result=check(index)
+    p=ROOT/'games/ford-racing-2/recovered/index.json';index=json.loads(p.read_text());result=check(index)
     bad=copy.deepcopy(index);bad['cars'][0]['manifest_sha256']='0'*64
     try:check(bad)
     except ValueError:result['corrupt_manifest_hash_rejected']=True
