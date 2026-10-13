@@ -32,6 +32,35 @@ def write_glb(path, doc, binary):
 
 
 class DealershipBuildTests(unittest.TestCase):
+    def test_textured_worker_retains_only_used_fields_after_full_validation(self):
+        entry = json.loads((DEALERSHIP / 'catalog.json').read_text())[0]
+        code = entry['code']
+        path = DEALERSHIP / 'models' / f'{code}.glb'
+        complete, error = build_dealership._bake((code, str(path), False))
+        self.assertIsNone(error)
+        compact, error = build_dealership._bake((code, str(path), True))
+        self.assertIsNone(error)
+        self.assertEqual(compact, {key: complete[key] for key in ('source', 'triangleCount')})
+        self.assertGreater(len(json.dumps(complete)), len(json.dumps(compact)))
+        # Retaining fewer output fields must still reject a corrupted referenced normal.
+        doc, binary = read_glb(path.read_bytes())
+        primitive = doc['meshes'][0]['primitives'][0]
+        normal = doc['accessors'][primitive['attributes']['NORMAL']]
+        view = doc['bufferViews'][normal['bufferView']]
+        changed = bytearray(binary)
+        start = view.get('byteOffset', 0) + normal.get('byteOffset', 0)
+        stride = view.get('byteStride', 12)
+        for index in range(normal['count']):
+            changed[start + index * stride:start + index * stride + 12] = bytes(12)
+        with tempfile.TemporaryDirectory() as temp:
+            model = Path(temp) / 'bad.glb'
+            write_glb(model, doc, changed)
+            for textured in (False, True):
+                baked, error = build_dealership._bake((code, str(model), textured))
+                self.assertIsNone(baked)
+                self.assertIsInstance(error, ValueError)
+                self.assertIn('normal is zero', str(error))
+
     def test_static_edited_export_without_recovery_metadata(self):
         # A replacement static mesh need not retain source extras or material names.
         positions = [(0, 0, 0), (1, 0, 0), (0, 1, 1)]
@@ -221,4 +250,4 @@ class DealershipBuildTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

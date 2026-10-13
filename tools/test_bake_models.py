@@ -175,6 +175,22 @@ class ModelBakeTests(unittest.TestCase):
 
 
 class IndexCapacityTests(unittest.TestCase):
+    def test_affine_cancellation_retains_float_sum_accuracy(self):
+        # Ordinary chained addition loses the middle term; the baker's sum must retain it.
+        from gt4_glb import Builder
+        builder = Builder()
+        positions = builder.accessor([(1, 0, 1), (1, 1, 1), (1, 2, 1)], 'position')
+        normals = builder.accessor([(0, 0, 1)] * 3, 'normal')
+        indices = builder.accessor([0, 1, 2], 'index')
+        builder.doc['meshes'] = [{'primitives': [{'attributes': {'POSITION': positions, 'NORMAL': normals},
+                                                  'indices': indices}]}]
+        builder.doc['nodes'] = [{'mesh': 0, 'matrix': [1e30, 0, 0, 0, 1, 1, 0, 0,
+                                                      -1e30, 0, 1, 0, 0, 0, 0, 1]}]
+        builder.doc['scenes'] = [{'nodes': [0]}]
+        baked = bake_car('CANCELLATION', builder.finish(), source_mode=False)
+        vertices = list(struct.iter_unpack('<6fB', base64.b64decode(baked['parts'][0]['vertices'])))
+        self.assertEqual([v[:3] for v in vertices], [(0, 0, 1), (0, 1, 0), (0, 2, -1)])
+
     def test_large_scene_uses_u32_and_keeps_strict_geometry_checks(self):
         from gt4_glb import Builder
         b = Builder()
@@ -201,4 +217,4 @@ class IndexCapacityTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
