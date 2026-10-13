@@ -9,7 +9,7 @@ import tempfile
 from gt_model import LIMITS, build_glb, sha
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT/'gran-turismo/cars'
+SOURCE = ROOT/'games/gran-turismo/cars'
 OUTPUT = ROOT/'dealership/public/gran-turismo'
 
 

@@ -3,7 +3,7 @@
 The supplied raw Mode 2 Form 1 CD image contains the `GRAN_TURISMO` ISO volume
 and `SCUS_941.94` boot configuration. Its SHA-256 is
 `e1ba7def96b7f213637fa82658b53c34a3a5f6c54df7d7e5ab9c3f53a2d41f03`;
-size is 693,668,304 bytes. Original inputs remain in `gran-turismo/game-files/`.
+size is 693,668,304 bytes. Original inputs remain in `games/gran-turismo/game-files/`.
 
 ## Established extraction boundary
 
