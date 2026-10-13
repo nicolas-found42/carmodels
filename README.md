@@ -32,6 +32,7 @@ without them the server says so at startup and in the page. Uncertain answers ne
 
 - `dealership/` — both app entry points, shared vendor libraries and compiled browser data. See [the app guide](dealership/README.md).
 - `dealership/dealership/` — independent editable GLBs, catalog and initial-fork provenance. See [the editing guide](dealership/dealership/README.md).
+- `games/<game>/` — each game's source tree, with a README indexing its tools, notes, evidence and published files ([ADR 0003](docs/adr/0003-game-sources-live-under-games.md)).
 - `ford-racing-2/` — original models, textures, sounds and configuration; `recovered/` beneath it holds canonical manifests.
 - `dealership/public/ford-racing-2/` — exported source GLBs and their per-game index.
 - `research/` — recovery notes and evidence receipts.
@@ -41,7 +42,7 @@ without them the server says so at startup and in the page. Uncertain answers ne
 
 ## Adding games
 
-Put source assets in a root folder named for the game, using lowercase words separated by hyphens. Keep original models, textures, configuration, sounds and recovery manifests together. Put exported source GLBs and an `index.json` under `dealership/public/<game>/`. Each index has `cars` records with `code`, `file`, `bytes`, `sha256` and `records`.
+Put source assets in `games/<game>/`, named with lowercase words separated by hyphens. Keep original models, textures, configuration, sounds and recovery manifests together. Put exported source GLBs and an `index.json` under `dealership/public/<game>/`. Each index has `cars` records with `code`, `file`, `bytes`, `sha256` and `records`.
 
 Run `python3 tools/build_model_catalog.py` to rebuild `dealership/public/models.json`. The source inspector identifies models by game plus code, so different games can share a car code. The dealership remains an independently edited edition; source catalog updates do not replace it.
 

@@ -4,7 +4,7 @@ The supplied Redline DMG and add-on collection have been inspected as native
 archives. The extraction preserves base resources and car add-on carriers, records
 each native car configuration variant separately, and decodes the retained named
 members with a bounded reconstruction of the shipped i386 decoder. The index is
-`redline/cars/index.json`. Retained compact receipts are in
+`games/redline/cars/index.json`. Retained compact receipts are in
 [`evidence/redline-extraction/`](evidence/redline-extraction/), including the
 extraction summary, independent output audit, native corpus comparison, check
 manifests, source preservation and semantic experiment measurements. Full source
@@ -15,8 +15,8 @@ inventories, native instruction spans and raw Jev/API receipts remain in the loc
 
 | Input | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `redline/game-files/Redline.dmg` | 191577525 | `5a13296c7d7f861eb6927e2d3407d82606f71663985be0b1d623d911d03c42da` |
-| `redline/game-files/redline_addons.sit` | 480219651 | `1f729115120016d0053076297a9fbf61a9adab1f627990fc01137e6bf527c6f2` |
+| `games/redline/game-files/Redline.dmg` | 191577525 | `5a13296c7d7f861eb6927e2d3407d82606f71663985be0b1d623d911d03c42da` |
+| `games/redline/game-files/redline_addons.sit` | 480219651 | `1f729115120016d0053076297a9fbf61a9adab1f627990fc01137e6bf527c6f2` |
 | Base `data.redplug` | 214022786 | `ecd95f91ec9ecdee45de2af44a5f79650c1d32e35f9260effc41ed8d282a5379` |
 | Shipped FAT executable | 5376560 | `7af974e1431ce875ed8729d41354073ac453998a1df26764db6c92d1c5aff7be` |
 | Extracted i386 slice | 1149488 | `b2ac41a4335a1a75f71f9e88a4867c08cc514a74426576733e58aa6a05547e22` |

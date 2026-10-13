@@ -1,5 +1,17 @@
 # Redline native car extraction
 
+Everything about Redline in this repository:
+
+| What | Where |
+| --- | --- |
+| Native extraction (this folder) | `cars/` (tracked), `game-files/` (local installers, ignored) |
+| Tools | `tools/extract_redline_cars.py`, `tools/export_redline_models.py`, `tools/import_redline_dealership.py`, `tools/redline_{archive,mesh,model,texture}.py` and their `tools/test_*.py` |
+| Research notes | [`research/redline-extraction.md`](../../research/redline-extraction.md), [`research/redline-library.md`](../../research/redline-library.md) |
+| Evidence | `research/evidence/redline-extraction/`, `research/evidence/redline-library/` |
+| Source-model showcase files | `dealership/public/redline/` (`index.json`, `base/`, `addon/`) |
+| Dealership copies | `dealership/dealership/models/REDLINE_*.glb` |
+| Checks | `tools/check.sh --games` (the `*redline*` checks); `redline_roundtrip` runs by default |
+
 `cars/index.json` records the extracted car configuration variants and their source
 hashes. Base game cars live under `cars/shared/base/assets/`. Add-on cars live in
 separate `cars/addons/` namespaces, with the original car envelope under `source/`,
@@ -28,20 +40,20 @@ outputs represent their regular data forks and embedded metadata sidecars.
 
 ## Reproduce and verify
 
-The native reader requires Python 3.9 or newer and no third-party packages. The
+The native reader requires Python 3.12 or newer and no third-party packages. The
 HFS/StuffIt staging step was performed with a read-only raw HFS image and the
 installed XADMaster framework from The Unarchiver. This tool accepts that staged
 base package and add-on manifest; it does not implement HFS or StuffIt itself.
 The original DMG and StuffIt hashes, staging evidence, framework coverage limits,
 and native decoder evidence are documented in
-[`research/redline-extraction.md`](../research/redline-extraction.md).
+[`research/redline-extraction.md`](../../research/redline-extraction.md).
 
 The retained staging for this run is in `.scratch/redline/`. To rederive and check
 the existing extraction without overwriting it:
 
 ```sh
 python3 tools/extract_redline_cars.py \
-  --base-package redline/cars/shared/base/data.redplug \
+  --base-package games/redline/cars/shared/base/data.redplug \
   --addons-manifest .scratch/redline/addons/car-assets-manifest.json \
   --addons-root .scratch/redline/addons \
   --check
@@ -64,6 +76,6 @@ key or network access.
 
 Native mesh/texture conversion and library import now publish 128 drawable cars
 from 129 configurations into both source and dealership catalogs. See
-[conversion and library evidence](../research/redline-library.md) for rebuilding,
+[conversion and library evidence](../../research/redline-library.md) for rebuilding,
 verified checks and per-car omissions. Extraction and static conversion have not
 established game execution or game-render fidelity.
