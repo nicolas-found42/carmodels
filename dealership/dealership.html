@@ -189,7 +189,7 @@
     </header>
     <input aria-label="Search cars by name, year or code" id="search" placeholder="Name, year or code · e.g. mustang 1968" autocomplete="off">
     <label style="padding:0 16px 8px;font-size:12px">Game <select id="game-filter" aria-label="Filter by game"><option value="all">All games</option></select></label>
-    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="day">Day</option><option value="night">Night</option><option value="arcade">Arcade</option><option value="base">Base game</option><option value="addon">Add-on</option><option value="native">Native source</option><option value="showroom">Showroom</option>
+    <label style="padding:0 16px 8px;font-size:12px">Source variant <select id="variant-filter" aria-label="Filter by source variant"><option value="">All variants</option><option value="canonical">Canonical</option><option value="base">Base game</option><option value="addon">Add-on</option><option value="native">Native source</option><option value="showroom">Showroom</option>
               <option value="stock">Static stock assembly</option></select></label>
     <details id="more-filters">
       <summary id="filter-summary">More filters</summary>
@@ -328,7 +328,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload } from './dealership.mjs';
+import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias } from './dealership.mjs';
 
 const $ = id => document.getElementById(id);
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
@@ -374,7 +374,12 @@ async function loadCorpus() {
     buildFilters();
     buildList();
     updateFilterAvailability();
-    await select(CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
+    const parameters = new URLSearchParams(location.search);
+    const preferred = resolveCarAlias(CARS, parameters.get('car'), 'code');
+    const requestedGame = preferred ? gameId(preferred) : parameters.get('game');
+    if ([...$('game-filter').options].some(option => option.value === requestedGame)) $('game-filter').value = requestedGame;
+    updateFilterAvailability();
+    await select(preferred || CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
     applyFilters();
     boot.loaded = true;
     boot.failed = false;

@@ -21,11 +21,18 @@ showcase's download link serves the separately stored recovered original.
 Gran Turismo exports are added with `python3 tools/import_gt_dealership.py`, then
 `python3 tools/build_dealership.py`. The importer verifies the source index hashes
 and static GLB profile before adding independent copies. Repeat imports preserve
-existing dealership models and metadata, including user edits. Asset identities
-are namespaced as `GT_SIMULATION_<CODE>_<DAY|NIGHT>` or
-`GT_ARCADE_PAIR_<ORDINAL>`; simulation day/night and arcade variants remain
-separate entries. These are archive identifiers, not decoded retail vehicle names.
+existing dealership models and metadata, including user edits. Canonical asset identities
+are namespaced as `GT_SIMULATION_<CODE>`: one day-derived model and first native
+paint colour per retained vehicle family. Distinct bodies and racing liveries remain
+separate; night editions, exact arcade duplicates and the two special logo/cup families
+are excluded from public car entries. Old selection IDs are aliases of canonical cars. These are archive identifiers, not decoded retail vehicle names.
 Performance values and body styles remain unknown until supported by decoded data.
+
+Migrate the older variant catalog with `python3 tools/import_gt_dealership.py
+--consolidate --upgrade-unedited`, then rebuild. The migration carries custom day
+metadata into the canonical entry and records retired metadata/provenance in
+`origins.json`; an edited duplicate aborts before any files change. Edited day models
+are retained as canonical working copies. The native extraction is preserved.
 
 Source improvements can be applied with `python3 tools/import_gt_dealership.py
 --upgrade-unedited`, followed by the rebuild. A working model is refreshed only

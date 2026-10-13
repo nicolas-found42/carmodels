@@ -7,6 +7,7 @@ import shutil
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from bake_models import ROOT, read_glb
 from build_dealership import build, check
@@ -14,6 +15,88 @@ from import_gt_dealership import import_cars, imported_entry
 
 
 class GTImportTests(unittest.TestCase):
+    def legacy_fixture(self, base):
+        source, dest, day = self.fixture(base)
+        night = {**day, 'code':'simulation/_test/night', 'file':'simulation/_test/night.glb'}
+        (source/night['file']).write_bytes((source/day['file']).read_bytes())
+        (source/'index.json').write_text(json.dumps({'cars':[day, night]}))
+        import_cars(source, dest)
+        catalog = json.loads((dest/'catalog.json').read_text())
+        catalog[1]['name'] = 'Owner name'
+        catalog[1]['ownerNote'] = 'Keep me'
+        catalog[2]['ownerNote'] = 'Night history'
+        (dest/'catalog.json').write_text(json.dumps(catalog))
+        canonical = {**day, 'code':'simulation/_test', 'file':'simulation/_test.glb',
+                     'canonical_source_id':day['code'], 'aliases':[day['code'], night['code']]}
+        (source/canonical['file']).write_bytes((source/day['file']).read_bytes())
+        (source/'index.json').write_text(json.dumps({'cars':[canonical]}))
+        return source, dest, canonical
+
+    def test_consolidation_preserves_custom_metadata_and_retired_history(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source, dest, row = self.legacy_fixture(Path(tmp))
+            before = {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+            with self.assertRaisesRegex(ValueError, '--consolidate'):
+                import_cars(source, dest, upgrade_unedited=True)
+            self.assertEqual(before, {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+            self.assertEqual(import_cars(source, dest, True, True), 1)
+            catalog = json.loads((dest/'catalog.json').read_text())
+            self.assertEqual(len(catalog), 2)
+            car = catalog[1]
+            self.assertEqual((car['code'], car['sourceVariant'], car['name'], car['ownerNote']),
+                             ('GT_SIMULATION__TEST', 'canonical', 'Owner name', 'Keep me'))
+            self.assertEqual(car['sourceAliases'], ['GT_SIMULATION__TEST_DAY', 'GT_SIMULATION__TEST_NIGHT'])
+            origin = json.loads((dest/'origins.json').read_text())['cars'][0]
+            self.assertEqual(origin['initialSource']['code'], 'simulation/_test/day')
+            self.assertEqual(origin['latestSource']['code'], row['code'])
+            self.assertEqual(origin['retiredVariants'][1]['catalog']['ownerNote'], 'Night history')
+            self.assertFalse((dest/'models/GT_SIMULATION__TEST_DAY.glb').exists())
+            self.assertFalse((dest/'models/GT_SIMULATION__TEST_NIGHT.glb').exists())
+            self.assertEqual((dest/'models/GT_SIMULATION__TEST.glb').read_bytes(), (source/row['file']).read_bytes())
+            after = {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+            self.assertEqual(import_cars(source, dest, True, True), 0)
+            self.assertEqual(after, {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+
+    def test_consolidation_invalid_source_or_edited_duplicate_leaves_all_files_intact(self):
+        for mutation in ('source', 'duplicate'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as tmp:
+                source, dest, row = self.legacy_fixture(Path(tmp))
+                if mutation == 'source':
+                    row['sha256'] = '0'*64
+                    (source/'index.json').write_text(json.dumps({'cars':[row]}))
+                else:
+                    path = dest/'models/GT_SIMULATION__TEST_NIGHT.glb'
+                    path.write_bytes(path.read_bytes()+b'owned edit')
+                before = {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+                with self.assertRaisesRegex(ValueError, 'hash/size|edited duplicate'):
+                    import_cars(source, dest, True, True)
+                self.assertEqual(before, {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+
+    def test_consolidation_rolls_back_retirement_when_metadata_install_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source, dest, _ = self.legacy_fixture(Path(tmp))
+            before = {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+            replace = Path.replace
+            def fail_metadata(path, target):
+                if path.name == 'catalog.json' and path.parent.name.startswith('.gt-import-'):
+                    raise OSError('simulated metadata failure')
+                return replace(path, target)
+            with patch.object(Path, 'replace', fail_metadata):
+                with self.assertRaisesRegex(OSError, 'simulated'):
+                    import_cars(source, dest, True, True)
+            self.assertEqual(before, {p:p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+
+    def test_consolidation_carries_edited_day_model_into_canonical_copy(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source, dest, row = self.legacy_fixture(Path(tmp))
+            original, original_row = (source/row['file']).read_bytes(), dict(row)
+            edited = self.change_source(source, row)
+            (dest/'models/GT_SIMULATION__TEST_DAY.glb').write_bytes(edited)
+            (source/row['file']).write_bytes(original)
+            (source/'index.json').write_text(json.dumps({'cars':[original_row]}))
+            self.assertEqual(import_cars(source, dest, True, True), 1)
+            self.assertEqual((dest/'models/GT_SIMULATION__TEST.glb').read_bytes(), edited)
+            self.assertEqual(import_cars(source, dest, True, True), 0)
     def change_source(self, source, row):
         path = source / row['file']
         doc, binary = read_glb(path.read_bytes())
@@ -145,4 +228,4 @@ class GTImportTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -28,6 +28,7 @@ SHOWCASE = {
 
 # Keep whole-corpus and captured/private-input checks out of routine tooling runs.
 FULL_ONLY = {
+    'gt_models', 'gt_extraction',
     'gt4_catalog', 'gt4_extraction', 'mcla_extraction', 'mcla_resources', 'mcla_decoding',
     'mcla_names', 'mcla_catalog', 'line_coverage',
     'verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
@@ -37,7 +38,7 @@ FULL_ONLY = {
 }
 
 GAMES = {
-    'gran-turismo': ('test_gt_', 'test_import_gt_'),
+    'gran-turismo': ('test_gt_', 'test_import_gt_', 'gt_'),
     'gran-turismo-4': ('test_gt4_', 'test_extract_gt4_', 'test_import_gt4_', 'gt4_'),
     'redline': ('test_redline_', 'test_extract_redline_', 'test_export_redline_', 'test_import_redline_'),
     'midnight-club-3-remix': ('test_mc3_', 'test_extract_mc3_', 'test_import_mc3_', 'test_export_mc3_'),
@@ -92,6 +93,10 @@ def registry():
              'test_import_mcla_catalog', 'test_import_mcla_dealership', 'test_mcla_preview_experiments', 'test_line_coverage']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
+    checks.append({'name':'gt_models', 'command':['python3', 'tools/export_gt_models.py', '--check']})
+    checks.append({'name':'gt_extraction', 'command':['python3', 'tools/extract_gt_cars.py', '--check'],
+                   'availability':['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
+                                   "'games/gran-turismo/game-files/gran-turismo.bin').is_file() else 1)"]})
     # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
     checks.append({'name': 'gt4_catalog', 'command': ['python3', 'tools/import_gt4_catalog.py', '--check'],
                    'availability': ['python3', 'tools/import_gt4_catalog.py', '--available']})

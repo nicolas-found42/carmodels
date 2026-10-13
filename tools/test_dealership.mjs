@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -40,6 +40,11 @@ for(const width of [2,4]) {
   assert.throws(()=>decodeModel(bad),/invalid dealership model/);
 }
 const gtCars=cars.filter(c=>c.game==='gran-turismo');
+assert.equal(gtCars.length,342);
+assert(gtCars.every(c=>c.sourceVariant==='canonical'&&!/_(DAY|NIGHT)$/.test(c.code)));
+assert(!dealershipPage.includes('<option value="night">')&&!dealershipPage.includes('<option value="day">'));
+for(const c of gtCars){for(const alias of c.sourceAliases)assert.equal(resolveCarAlias(cars,alias,'code'),c);}
+assert.equal(resolveCarAlias(cars,'missing','code'),undefined);
 for(const c of gtCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');}
 assert.equal(gameId(compactCars[0]),'ford-racing-2');
 const redlineCars=cars.filter(c=>c.game==='redline');
@@ -72,7 +77,7 @@ const availabilityStart=dealershipPage.indexOf('function updateFilterAvailabilit
 const availabilityBody=dealershipPage.slice(availabilityStart,dealershipPage.indexOf('function applyFilters()',availabilityStart));
 const availabilityControls={
   'game-filter':{value:'gran-turismo-4'},
-  'variant-filter':{value:'night',options:['','day','night','arcade','base','addon','native','showroom','stock'].map(value=>({value,textContent:value||'All variants'}))},
+  'variant-filter':{value:'night',options:['','canonical','day','night','arcade','base','addon','native','showroom','stock'].map(value=>({value,textContent:value||'All variants'}))},
   'filter-status':{textContent:''},
 };
 const chips=[['SIMULATION',c=>c.group==='SIMULATION'],['COUPE',c=>c.bodyStyle==='coupe']].map(([textContent,pred])=>({
@@ -85,10 +90,10 @@ assert.equal(availabilityControls['variant-filter'].value,'');
 assert.deepEqual(availabilityControls['variant-filter'].options.filter(o=>!o.disabled).map(o=>o.value),['','showroom']);
 assert(chips.every(c=>c.disabled && !c.on && c['aria-pressed']==='false'));
 assert.match(availabilityControls['filter-status'].textContent,/night, SIMULATION, COUPE/);
-availabilityControls['game-filter'].value='all';availabilityControls['variant-filter'].value='night';reconcile();
-assert.equal(availabilityControls['variant-filter'].value,'night','available cross-game restriction must stay');
+availabilityControls['game-filter'].value='all';availabilityControls['variant-filter'].value='canonical';reconcile();
+assert.equal(availabilityControls['variant-filter'].value,'canonical','available cross-game restriction must stay');
 availabilityControls['game-filter'].value='gran-turismo';reconcile();
-assert.equal(availabilityControls['variant-filter'].value,'night','valid game-specific restriction must stay');
+assert.equal(availabilityControls['variant-filter'].value,'canonical','valid game-specific restriction must stay');
 availabilityControls['game-filter'].value='redline';reconcile();
 assert.deepEqual(availabilityControls['variant-filter'].options.filter(o=>!o.disabled).map(o=>o.value),['','base','addon']);
 
@@ -145,12 +150,12 @@ for (const [transport, expected] of [
   assert.equal(controls['semantic-filter'].disabled,false);
 }
 // A valid response applies through the real path; nonexistent game/variant pairs leave it unchanged.
-for(const [filters,expected] of [[{game:'gran-turismo',variant:'night'},true],[{game:'gran-turismo-4',variant:'night'},false]]) {
+for(const [filters,expected] of [[{game:'gran-turismo',variant:'canonical'},true],[{game:'gran-turismo-4',variant:'night'},false]]) {
   const controls={};
   for(const id of ['search','game-filter','variant-filter','semantic-query','semantic-form','semantic-filter','semantic-status','clear-filters'])
     controls[id]={value:'',textContent:'',addEventListener(){},focus(){}};
   controls['game-filter'].value='all';controls['game-filter'].options=['all','gran-turismo','gran-turismo-4'].map(value=>({value}));
-  controls['variant-filter'].options=['','night'].map(value=>({value}));controls['semantic-query'].value='a non-sensitive fixture';
+  controls['variant-filter'].options=['','canonical','night'].map(value=>({value}));controls['semantic-query'].value='a non-sensitive fixture';
   let applied=0,reconciled=0;
   new Function('$','document','applyFilters','updateFilterAvailability','fetch','CARS','gameId','matchesVariant',
     `let semanticId=0,semanticController=null;${callbacks}`)(id=>controls[id],{querySelectorAll:()=>[]},()=>applied++,()=>reconciled++,

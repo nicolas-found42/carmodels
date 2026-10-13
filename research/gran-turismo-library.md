@@ -7,6 +7,34 @@ import evidence below remain historical observations.
 
 This task adds native GT1 car conversions to the source library and imports independent editable copies into the dealership. Source codes, day/night variants and arcade ordinals remain separate; retail names and specifications have not been inferred.
 
+## Canonical library update (2026-10-13)
+
+The public library now contains 342 candidate vehicle families, with one day-derived
+GLB and first native colour set per family. Distinct source bodies and racing liveries
+remain separate. The two known special families `_0logn` and `_lcupn` are excluded;
+night and exact arcade editions remain native recovery inputs. This is not a verified
+count of distinct selectable retail cars. Five arcade pairs match multiple simulation
+families exactly; old arcade IDs resolve to the first matching day family in lexical
+order, without collapsing the simulation families.
+
+Body winding and ambiguous normals use the measured repair from the shading note.
+Positions, UVs, palette pixels, nearest sampling and alpha-cutout policy are retained.
+Original PS1 semi-transparency and runtime rendering remain unverified. Downloaded
+GLBs retain all three LOD scenes and native wheel assembly.
+
+`export_gt_models.py` preflights every native extraction pin, stages canonical outputs,
+and replaces only the prior indexed exports. Existing outputs are quarantined until
+installation is verified. `import_gt_dealership.py --consolidate --upgrade-unedited`
+migrates independent working models, carries custom day metadata forward, retains
+retired catalog/provenance records, and refuses to retire edited duplicates. Both
+viewers resolve old car-selection IDs through recorded aliases. Direct retired GLB
+file URLs are no longer published.
+
+Run `tools/check.sh --game gran-turismo --full` for the showcase, GT tools, canonical
+export re-derivation and local disc extraction re-derivation. The corpus test reads
+all 728 retained native pairs and checks emitted normal/winding agreement on every
+canonical car. The sections below record the historical 728-edition import.
+
 ## Library outputs and reproduction
 
 The source catalog contains 728 retained GT archive pairs: 344 simulation day variants, 344 simulation night variants and 40 arcade variants. Each GLB contains three body LOD scenes, totaling 2,184 LODs and 383,027 triangles across all LODs; source GLBs total 132,852,040 bytes. These are asset variants, including possible logo/UI families, not 728 distinct drivable vehicles.

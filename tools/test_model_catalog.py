@@ -10,6 +10,25 @@ from build_model_catalog import model_catalog
 
 
 class ModelCatalogTests(unittest.TestCase):
+    def test_aliases_are_namespaced_and_collisions_or_traversal_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            public = Path(tmp)
+            folder = public/'gran-turismo'
+            folder.mkdir()
+            data = b'canonical model'
+            (folder/'car.glb').write_bytes(data)
+            row = {'code':'simulation/test', 'file':'car.glb', 'bytes':len(data),
+                   'sha256':hashlib.sha256(data).hexdigest(), 'records':[],
+                   'aliases':['simulation/test/day', 'arcade/pair-0000']}
+            index = folder/'index.json'
+            index.write_text(json.dumps({'cars':[row]}))
+            self.assertEqual(model_catalog(public)['cars'][0]['aliases'],
+                             ['gran-turismo/simulation/test/day', 'gran-turismo/arcade/pair-0000'])
+            for aliases in (['../escape'], ['simulation/test'], ['alias', 'alias'], 'bad'):
+                row['aliases'] = aliases
+                index.write_text(json.dumps({'cars':[row]}))
+                with self.assertRaisesRegex(ValueError, 'alias'):
+                    model_catalog(public)
     def test_two_games_and_corruption_controls(self):
         with tempfile.TemporaryDirectory() as directory:
             public=Path(directory)

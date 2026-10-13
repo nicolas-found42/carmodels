@@ -167,6 +167,14 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertFalse(selected & runner.FULL_ONLY)
         self.assertTrue(runner.FULL_ONLY <= {c['name'] for c in checks})
 
+    def test_gt1_full_checks_include_exports_and_disc_rederivation(self):
+        checks = registry()
+        fast = {c['name'] for c in select(checks, [], game=['gran-turismo'])}
+        full = {c['name'] for c in select(checks, [], game=['gran-turismo'], full=True)}
+        self.assertNotIn('gt_models', fast)
+        self.assertNotIn('gt_extraction', fast)
+        self.assertTrue({'gt_models', 'gt_extraction', 'test_gt_model', 'test_import_gt_dealership'} <= full)
+
     def test_one_game_selects_its_tools_and_shared_showcase_checks(self):
         checks = registry()
         selected = {c['name'] for c in select(checks, [], game=['gran-turismo-4'])}

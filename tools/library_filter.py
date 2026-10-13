@@ -18,7 +18,7 @@ RUBRIC = ['No supported library filter request, or ambiguous/conflicting instruc
           'Partly supported request, with another requested restriction unavailable in this catalog.',
           'Entire request is expressible by one available game/variant filter, with no unsupported restriction.']
 GAMES = {'ford-racing-2': ('Ford Racing 2 / FR2', (None,)),
-         'gran-turismo': ('Gran Turismo / GT1 / GT', ('day', 'night', 'arcade')),
+         'gran-turismo': ('Gran Turismo / GT1 / GT', ('canonical', 'day', 'night', 'arcade')),
          'redline': ('Redline', ('base', 'addon')),
          'midnight-club-3-remix': ('Midnight Club 3: DUB Edition Remix / MC3 Remix', ('native',)),
          'gran-turismo-4': ('Gran Turismo 4 / GT4', ('showroom',)),
@@ -31,6 +31,7 @@ PREVIEW_THRESHOLDS = {'support': .8, 'coverage': 1.6, 'coverage_confidence': .4,
 # answer let an instruction-like request through (research/semantic-filter-teardown-2026-10-11.md).
 RESTRICTION_CONFIDENCE = .5
 VARIANT_NAMES = {'day': 'day', 'night': 'night', 'arcade': 'arcade', 'base': 'base game',
+                 'canonical': 'canonical models',
                  'addon': 'add-on', 'native': 'native packages', 'showroom': 'showroom models', 'stock': 'static stock assembly'}
 # Phrase routing: a query is decided in code only when every word is one of these.
 PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing', 'ii'): ('game', 'ford-racing-2'),
@@ -49,6 +50,7 @@ PHRASES = {('ford', 'racing', '2'): ('game', 'ford-racing-2'), ('ford', 'racing'
            **{words: ('variant', 'day') for words in (('day',), ('daytime',), ('daylight',), ('day', 'time'))},
            **{words: ('variant', 'night') for words in (('night',), ('nighttime',), ('night', 'time'))},
            ('arcade',): ('variant', 'arcade'),
+           ('canonical',): ('variant', 'canonical'),
            **{words: ('variant', 'base') for words in (('base', 'game'), ('base',), ('original',), ('bundled',))},
            **{words: ('variant', 'addon') for words in (('add', 'on'), ('add', 'ons'), ('addon',), ('addons',), ('mod',),
                                                         ('mods',), ('plug', 'in'), ('plug', 'ins'), ('plugin',), ('plugins',))},
