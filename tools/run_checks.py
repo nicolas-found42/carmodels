@@ -11,6 +11,15 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 MIN_PYTHON = (3, 12)  # CI's version; the runner and every check invoke python3 from PATH.
+# The default run covers the car models and the showcase that displays them. Every other check
+# exists for extracting, re-deriving or researching game data; it runs with --games or --only.
+SHOWCASE = {
+    'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
+    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
+    'verify_recovered_asset_index', 'test_export_materials', 'test_bake_models', 'test_model_png', 'test_model_catalog',
+    'test_build_showcase', 'test_build_dealership', 'dealership_freshness', 'test_library_filter', 'test_serve_library',
+    'dealership_roundtrip', 'redline_roundtrip', 'mc3_roundtrip', 'test_run_checks', 'test_review_payload',
+}
 
 
 def registry():
@@ -87,15 +96,18 @@ def registry():
     return checks
 
 
-def select(checks, names):
+def select(checks, names, games=False):
+    """Named checks when given; otherwise the showcase checks, plus the game checks with `games`."""
     requested = set(names)
     unknown = requested - {c['name'] for c in checks}
     if unknown:
         raise ValueError('Unknown checks: ' + ', '.join(sorted(unknown)))
-    return [c for c in checks if not requested or c['name'] in requested]
+    if requested:
+        return [c for c in checks if c['name'] in requested]
+    return [c for c in checks if games or c['name'] in SHOWCASE]
 
 
-def run_checks(checks, root, evidence, ci=False):
+def run_checks(checks, root, evidence, ci=False, not_run=()):
     root, evidence = Path(root), Path(evidence)
     evidence.mkdir(parents=True, exist_ok=True)
     if any(evidence.iterdir()):
@@ -133,6 +145,7 @@ def run_checks(checks, root, evidence, ci=False):
             print('\n'.join(log.read_text(errors='replace').splitlines()[-20:]), flush=True)
         status = 1 if any(r['status'] == 'fail' for r in rows) else 0
         (evidence / 'results.json').write_text(json.dumps({'schema': 1, 'exit_code': status, 'checks': rows,
+            'not_run': list(not_run),
             'claim_limits': ['Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.']}, indent=2) + '\n')
     return 1 if any(r['status'] == 'fail' for r in rows) else 0
 
@@ -144,6 +157,8 @@ def main():
         return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--only', action='append', default=[], help='Check names, comma separated; repeatable')
+    parser.add_argument('--games', action='store_true',
+                        help='Also run the game extraction, re-derivation and research checks')
     parser.add_argument('--list', action='store_true')
     parser.add_argument('--evidence-dir', type=Path, help='Empty directory for full logs and results.json')
     args = parser.parse_args()
@@ -152,7 +167,9 @@ def main():
         print('\n'.join(c['name'] for c in checks))
         return 0
     try:
-        checks = select(checks, [n for group in args.only for n in group.split(',')])
+        selected = select(checks, [n for group in args.only for n in group.split(',')], args.games)
+        not_run = [c['name'] for c in checks if c not in selected]
+        checks = selected
         if args.evidence_dir is None:
             parent = ROOT / '.scratch/checks'
             parent.mkdir(parents=True, exist_ok=True)
@@ -160,7 +177,9 @@ def main():
         else:
             evidence = args.evidence_dir.resolve()
         print(f'Evidence: {evidence}', flush=True)
-        return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')))
+        if not_run and not args.only:
+            print(f'{len(not_run)} game checks not run (tools/check.sh --games runs them)', flush=True)
+        return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')), not_run=not_run)
     except ValueError as error:
         parser.error(str(error))
 
