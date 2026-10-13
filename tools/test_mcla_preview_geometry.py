@@ -156,7 +156,7 @@ class PreviewGeometryTests(unittest.TestCase):
 
 class NativePreviewGeometryTests(unittest.TestCase):
     def test_pinned_native_cleanup_scope_and_determinism(self):
-        path = ROOT/'midnight-club-los-angeles/cars'/repair.TARGET_FILE
+        path = ROOT/'games/midnight-club-los-angeles/cars'/repair.TARGET_FILE
         if not path.exists():
             self.skipTest('Private native S7 extraction absent; synthetic controls still run')
         import mcla_lzx

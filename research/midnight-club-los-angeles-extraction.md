@@ -1,7 +1,7 @@
 # Midnight Club: Los Angeles native car extraction
 
-Date: 2026-10-12. Scope: set up `midnight-club-los-angeles/` from the supplied archive and extract
-the game's native car files into `midnight-club-los-angeles/cars/`. Decompression, decoding and the
+Date: 2026-10-12. Scope: set up `games/midnight-club-los-angeles/` from the supplied archive and extract
+the game's native car files into `games/midnight-club-los-angeles/cars/`. Decompression, decoding and the
 streaming-map name source are in [midnight-club-los-angeles-decoding.md](midnight-club-los-angeles-decoding.md).
 Receipt: [`evidence/midnight-club-los-angeles/extraction.json`](evidence/midnight-club-los-angeles/extraction.json).
 

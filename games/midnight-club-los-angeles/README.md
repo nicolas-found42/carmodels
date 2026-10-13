@@ -1,5 +1,17 @@
 # Midnight Club: Los Angeles — native car files
 
+Everything about this game in this repository:
+
+| What | Where |
+| --- | --- |
+| Source tree (this folder) | `cars/`, `game-files/` (local inputs, ignored) |
+| Tools | `tools/extract_mcla_cars.py`, `tools/verify_mcla_{resources,decoding}.py`, `tools/import_mcla_{catalog,dealership}.py`, `tools/mcla_*.py` and their tests |
+| Research notes | [`research/midnight-club-los-angeles-catalogs.md`](../../research/midnight-club-los-angeles-catalogs.md), [`research/midnight-club-los-angeles-decoding.md`](../../research/midnight-club-los-angeles-decoding.md), [`research/midnight-club-los-angeles-extraction.md`](../../research/midnight-club-los-angeles-extraction.md), [`research/midnight-club-los-angeles-names.md`](../../research/midnight-club-los-angeles-names.md), [`research/midnight-club-los-angeles-previews.md`](../../research/midnight-club-los-angeles-previews.md) |
+| Evidence | `research/evidence/midnight-club-los-angeles/` |
+| Source-model showcase files | `dealership/public/midnight-club-los-angeles/` |
+| Dealership copies | `dealership/dealership/models/MCLA_*.glb` |
+| Checks | `tools/check.sh --game midnight-club-los-angeles` (the `*mcla*` checks); add `--full` for corpus re-derivation |
+
 Extracted from the supplied Xbox 360 disc image, Complete Edition (USA, Europe). The original
 `.7z` and the ISO unpacked from it remain under `game-files/` and are never committed or edited:
 
@@ -55,7 +67,7 @@ python3 tools/verify_mcla_decoding.py    # every car model, texture, tuning file
 
 The readers are `tools/mcla_lzx.py` (Xbox 360 LZX), `tools/mcla_model.py` (geometry and skeletons),
 `tools/mcla_texture.py` (Xenos untiling, DXT/ARGB to RGBA) and `tools/mcla_tuning.py` (tuning sections);
-formats and readings are in [the decoding note](../research/midnight-club-los-angeles-decoding.md).
+formats and readings are in [the decoding note](../../research/midnight-club-los-angeles-decoding.md).
 
 The check reads the ISO again and rejects changed, missing, extra or linked output. Initial
 extraction uses the same command without `--check` (`--output` chooses another destination). The
@@ -67,5 +79,5 @@ fresh clone; those files must equal their newly derived bytes, and nothing is ov
 RSC5 resources are stored as on the disc (LZX-compressed); the readers decode them on demand. Tuning
 field names, part assembly, GLB conversion, catalog entries, runtime dependency closure, shared wheel
 ownership and game-render fidelity remain open. See
-[the extraction note](../research/midnight-club-los-angeles-extraction.md) for format sources,
+[the extraction note](../../research/midnight-club-los-angeles-extraction.md) for format sources,
 verification and open items.

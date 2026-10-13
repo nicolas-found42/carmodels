@@ -81,7 +81,7 @@ def registry():
     # The MCLA disc is never committed either; the same skip applies when it is absent.
     checks.append({'name': 'mcla_extraction', 'command': ['python3', 'tools/extract_mcla_cars.py', '--check'],
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
-                                    "'midnight-club-los-angeles/game-files/Midnight Club - Los Angeles - Complete Edition "
+                                    "'games/midnight-club-los-angeles/game-files/Midnight Club - Los Angeles - Complete Edition "
                                     "(USA, Europe).iso').is_file() else 1)"]})
     # Every RSC5 resource of the disc decompressed to its declared size (needs the ISO), then every car model,
     # texture, tuning and streaming map of the local extraction decoded (needs the extraction).

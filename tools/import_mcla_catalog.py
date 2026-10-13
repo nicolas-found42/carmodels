@@ -412,7 +412,7 @@ def main():
     from mcla_names import load_from_disc, identities_for
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--iso', type=Path, default=DEFAULT_ISO)
-    parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')
+    parser.add_argument('--extraction', type=Path, default=ROOT / 'games' / GAME / 'cars')
     parser.add_argument('--output', type=Path, default=ROOT / 'dealership/public' / GAME)
     parser.add_argument('--workers', type=int, default=8)
     mode = parser.add_mutually_exclusive_group()
