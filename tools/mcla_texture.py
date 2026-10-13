@@ -119,11 +119,6 @@ def _palette(raw, at, opaque_only):
     return [bytes(c) for c in colours], bits
 
 
-def _colour_block(raw, at, opaque_only):
-    colours, bits = _palette(raw, at, opaque_only)
-    return [tuple(colours[bits >> (2 * i) & 3]) for i in range(16)]
-
-
 def _alpha_block(raw, at):
     a0, a1 = raw[at], raw[at + 1]
     bits = int.from_bytes(raw[at + 2:at + 8], 'little')

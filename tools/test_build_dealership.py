@@ -173,9 +173,17 @@ class DealershipBuildTests(unittest.TestCase):
                 (work / 'catalog.json').write_text(json.dumps(catalog))
                 pool = MagicMock(wraps=build_dealership.ProcessPoolExecutor)
                 with patch.object(build_dealership, 'ProcessPoolExecutor', pool):
-                    with self.assertRaises(ValueError):  # The worker's own bake error, re-raised here.
+                    with self.assertRaises(ValueError) as caught:  # The worker's own bake error, re-raised here.
                         load_all(work)
                 pool.assert_called_once()
+                self.assertIn('In the bake worker', '\n'.join(getattr(caught.exception, '__notes__', [])))
+            # An invalid entry fails before any model is baked.
+            (work / 'catalog.json').write_text(json.dumps([{**catalog[0], 'code': '../BAD'}, catalog[1]]))
+            spy = MagicMock(wraps=build_dealership.bake_car)
+            with patch.object(build_dealership, 'bake_car', spy):
+                with self.assertRaisesRegex(ValueError, 'invalid or duplicated'):
+                    load_all(work)
+            spy.assert_not_called()
 
     def test_link_and_invalid_catalog_controls(self):
         entry = json.loads((DEALERSHIP / 'catalog.json').read_text())[0]

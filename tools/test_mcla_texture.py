@@ -164,12 +164,18 @@ class Decoding(unittest.TestCase):
         self.assertEqual(texel(scratch, 32, 31, 31), (1, 2, 3, 128))
 
     def test_dxt_modes(self):
-        self.assertEqual(mcla_texture._colour_block(dxt1(BLUE, RED, [3] * 16), 0, False)[0], (0, 0, 0, 0))
-        self.assertEqual(mcla_texture._colour_block(dxt1(BLUE, RED, [2] * 16), 0, False)[0], (127, 0, 127, 255))
-        self.assertEqual(mcla_texture._colour_block(dxt1(RED, BLUE, [2] * 16), 0, False)[0], (170, 0, 85, 255))
-        self.assertEqual(mcla_texture._colour_block(dxt1(BLUE, RED, [3] * 16), 0, True)[0], (170, 0, 85, 255))
-        self.assertEqual(mcla_texture._alpha_block(dxt5(10, 200, [6, 7, 2] + [0] * 13, b''), 0)[:3], [0, 255, 48])
-        self.assertEqual(mcla_texture._alpha_block(dxt5(200, 10, [2] + [0] * 15, b''), 0)[0], 172)
+        def block(raw, kind):  # The decoder's production path, from stored (8-in-16 swapped) bytes.
+            rgba = mcla_texture._block_rgba(swap16(raw), kind)
+            return [tuple(rgba[4 * i:4 * i + 4]) for i in range(16)]
+        self.assertEqual(block(dxt1(BLUE, RED, [3] * 16), 'dxt1')[0], (0, 0, 0, 0))
+        self.assertEqual(block(dxt1(BLUE, RED, [2] * 16), 'dxt1')[0], (127, 0, 127, 255))
+        self.assertEqual(block(dxt1(RED, BLUE, [2] * 16), 'dxt1')[0], (170, 0, 85, 255))
+        # DXT5 colour is always four-colour (opaque) and takes each texel's alpha from the alpha block.
+        self.assertEqual(block(dxt5(10, 200, [6, 7, 2] + [0] * 13, dxt1(BLUE, RED, [3] * 16)), 'dxt5')[:3],
+                         [(170, 0, 85, 0), (170, 0, 85, 255), (170, 0, 85, 48)])
+        self.assertEqual(block(dxt5(200, 10, [2] + [0] * 15, dxt1(RED, BLUE, [1, 0] + [0] * 14)), 'dxt5')[:2],
+                         [(0, 0, 255, 172), (255, 0, 0, 200)])
+        self.assertEqual(len(block(dxt1(RED, BLUE, [0] * 16), 'dxt1')), 16)
 
     def test_texture_dictionary_resource(self):
         data, virtual, physical, _ = build_dictionary()

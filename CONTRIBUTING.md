@@ -19,9 +19,9 @@ check the result. Two corpora:
 - **Python 3.12 or newer** as `python3`, with no third-party packages. CI runs 3.12; `tools/check.sh`
   refuses an older interpreter (macOS's `/usr/bin/python3` is 3.9 — put a newer one first on `PATH`).
   `tools/check.sh` also runs `ruff` when it is installed (`pip install ruff`; CI installs it). Tools
-  that read zstd-compressed savestate members (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`,
-  `trace_car_packets.py`, `gsdump.py`, `independent_packet_color_check.py`) need the `zstd` command;
-  `probe_mark_exhaustive.py` also needs Python 3.14 and numpy.
+  that read zstd-compressed captures (`trace_car_packets.py`, `gsdump.py`,
+  `independent_packet_color_check.py`) need the `zstd` command; `probe_mark_exhaustive.py` and
+  `independent_packet_color_check.py` also need numpy, and `probe_mark_exhaustive.py` Python 3.14.
 - **Node.js 22** — explicitly provisioned in CI for the viewer regressions. Missing Node is a CI failure;
   local runs record a skip when it is unavailable.
 - **Blender 4.5.14** — for the dealership import/edit/export regression and `tools/validate_blender_import.py`. The pinned vendor dmg sits in
@@ -86,8 +86,10 @@ mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Bl
 CI downloads and hash-checks the pinned Linux Blender release. The check operates entirely
 on temporary model copies; production dealership/source GLBs are verified unchanged.
 
-In the table, the rows through the viewer tests are in the default run; the rows from GT4 on, and every
-check listed after the table, run with `--games`.
+In the table, the rows through the viewer tests are in the default run and the rows from GT4 on run with
+`--games`. Of the commands listed after the table, `--games` runs those `--list` names;
+`test_car_mips.py`, `verify_selector_word.py` and `validate_blender_import.py` are standalone and run
+only directly.
 
 | Command | What it covers | Inputs |
 | --- | --- | --- |
