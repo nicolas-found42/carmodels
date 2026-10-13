@@ -4,7 +4,11 @@ Repo configuration for the engineering skills.
 
 ## Working in this repo
 
-Read `CONTRIBUTING.md` before changing or verifying anything: it lists the offline checks (`tools/check.sh`),
+The repo is a showcase of recovered car models; the per-game extraction and recovery tooling exists to
+produce those models, which are committed. `tools/check.sh` (and CI) verifies the models and the showcase.
+After changing extraction, conversion, import or recovery tooling, also run `tools/check.sh --games`.
+
+Read `CONTRIBUTING.md` before changing or verifying anything: it lists the checks and their tiers,
 the static inputs some verifiers need, and how to read a verifier's pass (self-checking against tamper
 controls, not merely "no exception"). Review against `CODING_STANDARDS.md`. Research notes and their open
 items are indexed in `research/README.md`.
