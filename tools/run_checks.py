@@ -12,13 +12,36 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 MIN_PYTHON = (3, 12)  # CI's version; the runner and every check invoke python3 from PATH.
 # The default run covers the car models and the showcase that displays them. Every other check
-# exists for extracting, re-deriving or researching game data; it runs with --games or --only.
+# exists for game tooling or corpus re-derivation; fast tooling runs with --games,
+# and bulk/private-input re-derivation requires --full or an explicit --only.
 SHOWCASE = {
     'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
     'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
     'verify_recovered_asset_index', 'test_export_materials', 'test_bake_models', 'test_model_png', 'test_model_catalog',
     'test_build_showcase', 'test_build_dealership', 'dealership_freshness', 'test_library_filter', 'test_serve_library',
     'dealership_roundtrip', 'redline_roundtrip', 'mc3_roundtrip', 'test_run_checks', 'test_review_payload',
+}
+
+# Keep whole-corpus and captured/private-input checks out of routine tooling runs.
+FULL_ONLY = {
+    'gt4_catalog', 'gt4_extraction', 'mcla_extraction', 'mcla_resources', 'mcla_decoding',
+    'mcla_names', 'mcla_catalog', 'line_coverage',
+    'verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
+    'test_vu1_decode', 'verify_vu_pass_handlers', 'test_vu_pass_handlers',
+    'verify_vu_handler_dump', 'test_vu_handler_dump', 'recover_dump_reference_frame',
+    'test_recover_dump_reference_frame', 'verify_pass_source_join', 'test_pass_source_join',
+}
+
+GAMES = {
+    'gran-turismo': ('test_gt_', 'test_import_gt_'),
+    'gran-turismo-4': ('test_gt4_', 'test_extract_gt4_', 'test_import_gt4_', 'gt4_'),
+    'redline': ('test_redline_', 'test_extract_redline_', 'test_export_redline_', 'test_import_redline_'),
+    'midnight-club-3-remix': ('test_mc3_', 'test_extract_mc3_', 'test_import_mc3_', 'test_export_mc3_'),
+    'midnight-club-los-angeles': ('test_mcla_', 'test_extract_mcla_', 'test_import_mcla_',
+                                'test_verify_mcla_', 'mcla_', 'test_aes_decrypt', 'test_xdvdfs',
+                                'test_xex2', 'line_coverage', 'test_line_coverage'),
+    'ford-racing-2': ('test_static_inputs', 'test_recovery_inputs', 'verify_', 'test_vu',
+                      'recover_dump_reference_frame', 'test_recover_dump_reference_frame', 'test_pass_source_join'),
 }
 
 
@@ -96,15 +119,21 @@ def registry():
     return checks
 
 
-def select(checks, names, games=False):
-    """Named checks when given; otherwise the showcase checks, plus the game checks with `games`."""
+def select(checks, names, games=False, full=False, game=()):
+    """Select explicit checks or the showcase with requested game coverage."""
     requested = set(names)
     unknown = requested - {c['name'] for c in checks}
     if unknown:
         raise ValueError('Unknown checks: ' + ', '.join(sorted(unknown)))
     if requested:
         return [c for c in checks if c['name'] in requested]
-    return [c for c in checks if games or c['name'] in SHOWCASE]
+    unknown_games = set(game) - GAMES.keys()
+    if unknown_games:
+        raise ValueError('Unknown game: ' + ', '.join(sorted(unknown_games)))
+    prefixes = tuple(prefix for slug in game for prefix in GAMES[slug])
+    return [c for c in checks if c['name'] in SHOWCASE or
+            ((c['name'].startswith(prefixes) if game else games or full) and
+             (full or c['name'] not in FULL_ONLY))]
 
 
 def run_checks(checks, root, evidence, ci=False, not_run=()):
@@ -158,16 +187,26 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--only', action='append', default=[], help='Check names, comma separated; repeatable')
     parser.add_argument('--games', action='store_true',
-                        help='Also run the game extraction, re-derivation and research checks')
+                        help='Also run game-tool tests; bulk re-derivation requires --full')
+    parser.add_argument('--full', action='store_true',
+                        help='Include bulk corpus, disc and private-input checks (optionally restricted by --game)')
+    parser.add_argument('--game', action='append', choices=tuple(GAMES), default=[],
+                        help='Include checks for this game plus the showcase; repeatable, add --full for re-derivation')
     parser.add_argument('--list', action='store_true')
     parser.add_argument('--evidence-dir', type=Path, help='Empty directory for full logs and results.json')
     args = parser.parse_args()
     checks = registry()
-    if args.list:
-        print('\n'.join(c['name'] for c in checks))
-        return 0
     try:
-        selected = select(checks, [n for group in args.only for n in group.split(',')], args.games)
+        if args.only and (args.games or args.full or args.game):
+            parser.error('--only cannot be combined with --games, --game or --full')
+        if args.games and args.game:
+            parser.error('choose --games for all games or --game for selected games')
+        selected = select(checks, [n for group in args.only for n in group.split(',')],
+                          games=args.games, full=args.full, game=args.game)
+        if args.list:
+            listed = selected if args.only or args.games or args.full or args.game else checks
+            print('\n'.join(c['name'] for c in listed))
+            return 0
         not_run = [c['name'] for c in checks if c not in selected]
         checks = selected
         if args.evidence_dir is None:
@@ -178,7 +217,7 @@ def main():
             evidence = args.evidence_dir.resolve()
         print(f'Evidence: {evidence}', flush=True)
         if not_run and not args.only:
-            print(f'{len(not_run)} game checks not run (tools/check.sh --games runs them)', flush=True)
+            print(f'{len(not_run)} checks not run (tools/check.sh --full runs every check)', flush=True)
         return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')), not_run=not_run)
     except ValueError as error:
         parser.error(str(error))
