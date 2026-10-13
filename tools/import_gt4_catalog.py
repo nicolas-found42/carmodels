@@ -7,9 +7,11 @@ is a ZIP of that car's extracted native files at their GT4.VOL paths plus its ma
 Display names come from the decoded spec database.
 """
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import re
 import tempfile
@@ -32,6 +34,8 @@ MAX_PACKAGE = 64 * 1024 * 1024
 STAMP = (1980, 1, 1, 0, 0, 0)  # Fixed member time: the manifest keeps each volume timestamp.
 # The extraction and native ZIPs are local; only these cars' files are committed, as test fixtures.
 FIXTURES = ('acra0001',)
+# Spawned workers cost a few hundred milliseconds; fewer cars convert faster in-process.
+PARALLEL_MIN = 16
 
 
 def sha(data):
@@ -169,31 +173,47 @@ def same_glb(a, b):
 
 
 def catalog_rows(index, specs, outputs):
+    """A package of None (check mode) leaves its bytes and digest unset; `comparable` ignores both."""
     rows = []
     for vehicle in index['vehicles']:
         code = vehicle['id']
         glb, record, package, members = outputs[code]
         spec = specs[code]
+        size, digest = (None, None) if package is None else (len(package), sha(package))
         rows.append(dict(code=code, file=f'previews/{code}.glb', bytes=len(glb), sha256=sha(glb),
                          records=[{'role': 'showroom', 'triangles': record['triangles'], 'textures': record['textures']}],
                          display_name=display_name(spec['name']), source_profile=PREVIEW_PROFILE,
                          source_variant=VARIANT, source_code=code, spec_label=spec['label'],
-                         native_package={'file': f'native/{code}.zip', 'profile': PROFILE, 'bytes': len(package),
-                                         'sha256': sha(package), 'members': members},
+                         native_package={'file': f'native/{code}.zip', 'profile': PROFILE, 'bytes': size,
+                                         'sha256': digest, 'members': members},
                          claim_limits=LIMITS))
     return rows
 
 
-def derive_outputs(extraction, index):
+def derive_one(extraction, vehicle, spec, packages):
+    glb, record = build_preview(extraction, vehicle, spec)
+    if packages:
+        package, members = build_package(extraction, vehicle)
+    else:  # Check mode compares published members with the extraction, not package bytes.
+        package, members = None, len(json.loads((Path(extraction) / vehicle['manifest']).read_text())['files'])
+    return glb, record, package, members
+
+
+def _derive_star(args):
+    return derive_one(*args)
+
+
+def derive_outputs(extraction, index, packages=True):
     specs = car_specs(Path(extraction) / SPECDB)
     if set(specs) != {v['id'] for v in index['vehicles']}:
         raise ValueError('GT4 spec database and extracted model codes differ')
-    outputs = {}
-    for vehicle in index['vehicles']:
-        glb, record = build_preview(extraction, vehicle, specs[vehicle['id']])
-        package, members = build_package(extraction, vehicle)
-        outputs[vehicle['id']] = (glb, record, package, members)
-    return specs, outputs
+    jobs = [(extraction, vehicle, specs[vehicle['id']], packages) for vehicle in index['vehicles']]
+    if len(jobs) < PARALLEL_MIN:
+        results = [derive_one(*job) for job in jobs]
+    else:
+        with ProcessPoolExecutor(os.cpu_count() or 1) as pool:
+            results = list(pool.map(_derive_star, jobs, chunksize=4))
+    return specs, {vehicle['id']: result for vehicle, result in zip(index['vehicles'], results)}
 
 
 def comparable(rows):
@@ -295,7 +315,7 @@ def check_export(extraction, output):
     """Offline: re-derive every preview and package from the committed extraction and compare."""
     extraction, output = Path(extraction), Path(output)
     index = json.loads((extraction / 'index.json').read_text())
-    specs, outputs = derive_outputs(extraction, index)
+    specs, outputs = derive_outputs(extraction, index, packages=False)
     return verify_published(extraction, output, index, specs, outputs)
 
 

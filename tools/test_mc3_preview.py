@@ -8,6 +8,7 @@ from bake_models import ROOT, bake_car, read_glb
 from export_mc3_models import DEFAULT
 from mc3_model import NATIVE_DISC, preview_vehicle, sha, native_executable
 from mc3_pck import read_vehicle
+from mc3_wheels import scanned_once
 
 needs_disc = unittest.skipUnless(NATIVE_DISC.is_file(), 'supplied game disc source input unavailable')
 
@@ -23,6 +24,7 @@ class PreviewCorpusTests(unittest.TestCase):
         self.assertEqual(set(rows), {v['id'] for v in index['vehicles']})
         total, wheel_count, bikes = 0, 0, 0
         executable = native_executable()
+        self.enterContext(scanned_once())  # The committed tree is unchanged while the corpus converts.
         for vehicle in index['vehicles']:
             manifest = json.loads((extraction/vehicle['manifest']).read_text())
             data, evidence = preview_vehicle(extraction, manifest, index, executable)

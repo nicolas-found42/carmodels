@@ -16,11 +16,12 @@ check the result. Two corpora:
 - **Repo-owned parsers.** The recovery parsers are in `tools/`. Their corpus regression runs on the
   committed reference models. Full archive and VU checks need private static inputs; provision them
   with `tools/provision_static_inputs.py` (see [the input guide](docs/static-inputs.md)).
-- **`python3`.** The basic checks run on the stock interpreter with no third-party
-  packages — 3.9.6 and 3.14.7 were the observed runtimes. `tools/check.sh` also runs `ruff` when it
-  is installed (`pip install ruff`; CI installs it). Tools that read zstd-compressed savestate members
-  (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`, `trace_car_packets.py`, `gsdump.py`,
-  `independent_packet_color_check.py`) need a zstd-capable interpreter, which the stock one is not.
+- **Python 3.12 or newer** as `python3`, with no third-party packages. CI runs 3.12; `tools/check.sh`
+  refuses an older interpreter (macOS's `/usr/bin/python3` is 3.9 — put a newer one first on `PATH`).
+  `tools/check.sh` also runs `ruff` when it is installed (`pip install ruff`; CI installs it). Tools
+  that read zstd-compressed captures (`trace_car_packets.py`, `gsdump.py`,
+  `independent_packet_color_check.py`) need the `zstd` command; `probe_mark_exhaustive.py` and
+  `independent_packet_color_check.py` also need numpy, and `probe_mark_exhaustive.py` Python 3.14.
 - **Node.js 22** — explicitly provisioned in CI for the viewer regressions. Missing Node is a CI failure;
   local runs record a skip when it is unavailable.
 - **Blender 4.5.14** — for the dealership import/edit/export regression and `tools/validate_blender_import.py`. The pinned vendor dmg sits in
@@ -62,10 +63,18 @@ Scripts resolve paths from their own location (`Path(__file__).resolve().parents
 
 ## The check to run before a PR
 
-Run `tools/check.sh`: it lints `tools/` with `ruff`, runs the asset-index verifier and basic tests, and runs the
-archive/executable checks when the inputs are set. CI runs the same script. The checks and their input requirements are:
+Run `tools/check.sh`. By default it runs the car-model showcase checks: `ruff`, the viewer and dealership
+tests, model integrity (asset index, bakes, materials, source catalogs), dealership freshness and the
+Blender edit roundtrips. CI runs the same default.
 
-`tools/check.sh --list` lists stable check names. Use `--only name1,name2` for a focused run.
+The game checks — per-game extractors, decoders and importers, disc and executable re-derivations, and the
+recovery research verifiers — are opt-in. The car models they produced are committed, so they matter only
+when you change extraction, conversion or recovery tooling: `tools/check.sh --games` runs every check, and
+`--only name1,name2` runs named checks of either kind. A default run records the game checks it left out
+under `not_run` in `results.json`. A new check joins the default only when it is listed in `SHOWCASE` in
+`tools/run_checks.py`.
+
+`tools/check.sh --list` lists stable check names.
 Every run retains complete per-command logs, exit codes, durations and pass/fail/skip states
 in `results.json`; the printed evidence directory defaults to a unique `.scratch/checks/run-*`.
 Pass `--evidence-dir <empty-directory>` to choose the location. Existing logs are preserved.
@@ -76,6 +85,11 @@ The `dealership_roundtrip` check uses `CARMODELS_BLENDER`, `blender` on PATH, or
 mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender`.
 CI downloads and hash-checks the pinned Linux Blender release. The check operates entirely
 on temporary model copies; production dealership/source GLBs are verified unchanged.
+
+In the table, the rows through the viewer tests are in the default run and the rows from GT4 on run with
+`--games`, except `test_mcla_preview_ui.mjs` in the MCLA row, which runs by default. Of the commands listed after the table, `--games` runs those `--list` names;
+`test_car_mips.py`, `verify_selector_word.py` and `validate_blender_import.py` are standalone and run
+only directly.
 
 | Command | What it covers | Inputs |
 | --- | --- | --- |

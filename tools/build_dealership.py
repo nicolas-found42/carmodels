@@ -1,15 +1,53 @@
 #!/usr/bin/env python3
 """Compile the editable dealership catalog/GLBs; never read or regenerate recovery assets."""
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import json
+import os
 from pathlib import Path
 import re
+import traceback
 
 from bake_models import ROOT, bake_car
 from import_mc3_catalogs import native_model
 
 DEALERSHIP = ROOT / 'dealership/dealership'
 OUTPUT = ROOT / 'dealership/public/dealership/cars.json'
+# Spawned workers cost a few hundred milliseconds; small catalogs bake faster in-process.
+PARALLEL_MIN = 16
+
+
+def _bake(job):
+    """Bake one independent model file, returning the error and its traceback instead of raising."""
+    code, path = job
+    try:
+        return bake_car(code, Path(path).read_bytes(), source_mode=False), None
+    except Exception as error:  # Re-raised at this entry's place in the catalog order.
+        error.add_note('In the bake worker:\n' + traceback.format_exc().rstrip())
+        return None, error
+
+
+def _valid_prefix(catalog):
+    """Entries before the first one `load_all` rejects without baking (code, duplicate, generated geometry)."""
+    seen = set()
+    for index, entry in enumerate(catalog):
+        code = entry.get('code') if isinstance(entry, dict) else None
+        if (not isinstance(code, str) or not re.fullmatch(r'[A-Z0-9_]+', code) or code in seen
+                or 'model' in entry or 'silhouette' in entry):
+            return catalog[:index]
+        seen.add(code)
+    return catalog
+
+
+def bake_all(dealership, catalog):
+    """Baked models of the catalog's GLB entries, keyed by code; each bake reads only its own file."""
+    jobs = [(entry['code'], str(Path(dealership) / 'models' / f"{entry['code']}.glb")) for entry in catalog
+            if entry.get('displayMode') != 'native-package'
+            and not (Path(dealership) / 'models' / f"{entry['code']}.glb").is_symlink()]
+    if len(jobs) < PARALLEL_MIN:
+        return {code: _bake((code, path)) for code, path in jobs}
+    with ProcessPoolExecutor(os.cpu_count() or 1) as pool:
+        return {code: result for (code, _), result in zip(jobs, pool.map(_bake, jobs, chunksize=16))}
 
 
 def load_all(dealership=DEALERSHIP):
@@ -17,6 +55,7 @@ def load_all(dealership=DEALERSHIP):
     catalog = json.loads((dealership / 'catalog.json').read_text())
     if not isinstance(catalog, list) or not catalog:
         raise ValueError('Dealership catalog is empty or not an array')
+    bakes = bake_all(dealership, _valid_prefix(catalog))
     cars, seen = [], set()
     for entry in catalog:
         code = entry.get('code') if isinstance(entry, dict) else None
@@ -31,7 +70,9 @@ def load_all(dealership=DEALERSHIP):
         model = dealership / 'models' / f'{code}.glb'
         if model.is_symlink() or model.stat().st_nlink != 1:
             raise ValueError(f'{code}: dealership model must be an independent file')
-        baked = bake_car(code, model.read_bytes(), source_mode=False)
+        baked, error = bakes[code]
+        if error is not None:
+            raise error
         baked['source']['glb'] = f'dealership/models/{code}.glb'
         baked['source']['preset'] = 'dealership'
         baked['source'].pop('originalModelSha256', None)

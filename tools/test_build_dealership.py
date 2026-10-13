@@ -8,11 +8,12 @@ import shutil
 import struct
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from bake_models import ROOT, VERTEX, bake_car, read_glb
 import base64
 import math
+import build_dealership
 from build_dealership import DEALERSHIP, build, check, load_all
 from seed_dealership import seed
 
@@ -151,6 +152,38 @@ class DealershipBuildTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'must not replace source or editable'):
                     build(work, forbidden)
         self.assertEqual({p: sha(p) for p in source_hashes}, source_hashes)
+
+    def test_parallel_bakes_equal_in_process_bakes_and_keep_catalog_error_order(self):
+        catalog = [e for e in json.loads((DEALERSHIP / 'catalog.json').read_text())
+                   if e.get('displayMode') != 'native-package'][:3]
+        with tempfile.TemporaryDirectory() as temp:
+            work = Path(temp)
+            (work / 'models').mkdir()
+            for entry in catalog:
+                shutil.copyfile(DEALERSHIP / 'models' / f"{entry['code']}.glb", work / 'models' / f"{entry['code']}.glb")
+            (work / 'catalog.json').write_text(json.dumps(catalog))
+            serial = load_all(work)
+            with patch.object(build_dealership, 'PARALLEL_MIN', 1):
+                self.assertEqual(load_all(work), serial)
+                # A broken later model and an earlier duplicate: the duplicate is still reported first.
+                (work / 'models' / f"{catalog[2]['code']}.glb").write_bytes(b'not a glb')
+                (work / 'catalog.json').write_text(json.dumps([catalog[0], catalog[0], catalog[2]]))
+                with self.assertRaisesRegex(ValueError, 'invalid or duplicated'):
+                    load_all(work)
+                (work / 'catalog.json').write_text(json.dumps(catalog))
+                pool = MagicMock(wraps=build_dealership.ProcessPoolExecutor)
+                with patch.object(build_dealership, 'ProcessPoolExecutor', pool):
+                    with self.assertRaises(ValueError) as caught:  # The worker's own bake error, re-raised here.
+                        load_all(work)
+                pool.assert_called_once()
+                self.assertIn('In the bake worker', '\n'.join(getattr(caught.exception, '__notes__', [])))
+            # An invalid entry fails before any model is baked.
+            (work / 'catalog.json').write_text(json.dumps([{**catalog[0], 'code': '../BAD'}, catalog[1]]))
+            spy = MagicMock(wraps=build_dealership.bake_car)
+            with patch.object(build_dealership, 'bake_car', spy):
+                with self.assertRaisesRegex(ValueError, 'invalid or duplicated'):
+                    load_all(work)
+            spy.assert_not_called()
 
     def test_link_and_invalid_catalog_controls(self):
         entry = json.loads((DEALERSHIP / 'catalog.json').read_text())[0]

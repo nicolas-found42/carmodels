@@ -9,6 +9,7 @@ import tempfile
 from bake_models import ROOT, bake_car
 from mc3_model import PROFILE, preview_vehicle, sha, source_path, native_executable
 from import_mc3_catalogs import regular
+from mc3_wheels import scanned_once
 
 DEFAULT = ROOT / 'midnight-club-3-remix/recovered-models'
 
@@ -31,17 +32,18 @@ def export(extraction=ROOT / 'midnight-club-3-remix/cars', output=DEFAULT):
         raise ValueError('native preview corpus is empty')
     rows, files = [], {}
     executable = native_executable()
-    for car in index['vehicles']:
-        manifest = json.loads(source_path(extraction, car['manifest']).read_text())
-        if manifest['id'] != car['id']:
-            raise ValueError('preview manifest identity differs')
-        data, evidence = preview_vehicle(extraction, manifest, index, executable)
-        code = car['id']
-        baked = bake_car('MC3_'+code.upper(), data, source_mode=False)
-        # Export provenance paths remain relative to the repository, never machine-specific.
-        rows.append({'code': code, 'file': code+'.glb', 'source_profile': PROFILE,
-                     'bytes': len(data), 'sha256': sha(data), 'triangle_count': baked['triangleCount'], **evidence})
-        files[code+'.glb'] = data
+    with scanned_once():
+        for car in index['vehicles']:
+            manifest = json.loads(source_path(extraction, car['manifest']).read_text())
+            if manifest['id'] != car['id']:
+                raise ValueError('preview manifest identity differs')
+            data, evidence = preview_vehicle(extraction, manifest, index, executable)
+            code = car['id']
+            baked = bake_car('MC3_'+code.upper(), data, source_mode=False)
+            # Export provenance paths remain relative to the repository, never machine-specific.
+            rows.append({'code': code, 'file': code+'.glb', 'source_profile': PROFILE,
+                         'bytes': len(data), 'sha256': sha(data), 'triangle_count': baked['triangleCount'], **evidence})
+            files[code+'.glb'] = data
     files['index.json'] = (json.dumps({'schema': 1, 'cars': rows, 'source': index['source']}, indent=1)+'\n').encode()
     if output.exists():
         expected = set(files)

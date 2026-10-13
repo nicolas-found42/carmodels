@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+import run_checks as runner
 from run_checks import registry, run_checks, select
 
 
@@ -22,6 +23,28 @@ class CheckRunnerTests(unittest.TestCase):
             self.assertEqual((out / 'broken.log').read_text(), 'first line\nlast line\n')
             with self.assertRaisesRegex(ValueError, 'must be empty'):
                 run_checks(checks, Path(temp), out)
+
+    def test_older_python_is_refused_before_any_check(self):
+        with patch.object(runner.sys, 'version_info', (3, 11, 9)), patch('builtins.print') as shown, \
+                patch.object(runner, 'run_checks') as ran:
+            self.assertEqual(runner.main(), 2)
+        ran.assert_not_called()
+        self.assertIn('needs Python 3.12 or newer; python3 is 3.11', shown.call_args[0][0])
+
+    def test_default_run_is_the_showcase_and_games_are_opt_in(self):
+        checks = registry()
+        names = {c['name'] for c in checks}
+        self.assertLessEqual(runner.SHOWCASE, names)  # Every showcase name is a real check.
+        self.assertEqual({c['name'] for c in select(checks, [])}, runner.SHOWCASE)
+        self.assertEqual(select(checks, [], games=True), checks)
+        self.assertEqual([c['name'] for c in select(checks, ['mcla_resources'])], ['mcla_resources'])
+        self.assertNotIn('mcla_resources', runner.SHOWCASE)
+        self.assertIn('dealership_freshness', runner.SHOWCASE)
+        with tempfile.TemporaryDirectory() as temp:
+            green = [{'name': 'green', 'command': [sys.executable, '-c', 'pass']}]
+            self.assertEqual(run_checks(green, temp, Path(temp) / 'out', not_run=['gt4_catalog']), 0)
+            # Checks left out by the tier are recorded, so a showcase run is never read as a full one.
+            self.assertEqual(json.loads((Path(temp) / 'out/results.json').read_text())['not_run'], ['gt4_catalog'])
 
     def test_selection_and_missing_node_in_ci(self):
         checks = [{'name': 'node', 'command': ['missing-runtime'], 'requires': 'carmodels-runtime-does-not-exist'}]
