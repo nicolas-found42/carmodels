@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+import run_checks as runner
 from run_checks import registry, run_checks, select
 
 
@@ -22,6 +23,13 @@ class CheckRunnerTests(unittest.TestCase):
             self.assertEqual((out / 'broken.log').read_text(), 'first line\nlast line\n')
             with self.assertRaisesRegex(ValueError, 'must be empty'):
                 run_checks(checks, Path(temp), out)
+
+    def test_older_python_is_refused_before_any_check(self):
+        with patch.object(runner.sys, 'version_info', (3, 11, 9)), patch('builtins.print') as shown, \
+                patch.object(runner, 'run_checks') as ran:
+            self.assertEqual(runner.main(), 2)
+        ran.assert_not_called()
+        self.assertIn('needs Python 3.12 or newer; python3 is 3.11', shown.call_args[0][0])
 
     def test_selection_and_missing_node_in_ci(self):
         checks = [{'name': 'node', 'command': ['missing-runtime'], 'requires': 'carmodels-runtime-does-not-exist'}]

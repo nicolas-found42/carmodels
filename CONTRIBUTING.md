@@ -16,11 +16,12 @@ check the result. Two corpora:
 - **Repo-owned parsers.** The recovery parsers are in `tools/`. Their corpus regression runs on the
   committed reference models. Full archive and VU checks need private static inputs; provision them
   with `tools/provision_static_inputs.py` (see [the input guide](docs/static-inputs.md)).
-- **`python3`.** The basic checks run on the stock interpreter with no third-party
-  packages — 3.9.6 and 3.14.7 were the observed runtimes. `tools/check.sh` also runs `ruff` when it
-  is installed (`pip install ruff`; CI installs it). Tools that read zstd-compressed savestate members
-  (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`, `trace_car_packets.py`, `gsdump.py`,
-  `independent_packet_color_check.py`) need a zstd-capable interpreter, which the stock one is not.
+- **Python 3.12 or newer** as `python3`, with no third-party packages. CI runs 3.12; `tools/check.sh`
+  refuses an older interpreter (macOS's `/usr/bin/python3` is 3.9 — put a newer one first on `PATH`).
+  `tools/check.sh` also runs `ruff` when it is installed (`pip install ruff`; CI installs it). Tools
+  that read zstd-compressed savestate members (`probe_mark_exhaustive.py`, `scan_slot102_selectors.py`,
+  `trace_car_packets.py`, `gsdump.py`, `independent_packet_color_check.py`) need the `zstd` command;
+  `probe_mark_exhaustive.py` also needs Python 3.14 and numpy.
 - **Node.js 22** — explicitly provisioned in CI for the viewer regressions. Missing Node is a CI failure;
   local runs record a skip when it is unavailable.
 - **Blender 4.5.14** — for the dealership import/edit/export regression and `tools/validate_blender_import.py`. The pinned vendor dmg sits in

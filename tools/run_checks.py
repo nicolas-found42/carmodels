@@ -5,10 +5,12 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+MIN_PYTHON = (3, 12)  # CI's version; the runner and every check invoke python3 from PATH.
 
 
 def registry():
@@ -136,6 +138,10 @@ def run_checks(checks, root, evidence, ci=False):
 
 
 def main():
+    if sys.version_info < MIN_PYTHON:
+        print('ERROR: tools/check.sh needs Python %d.%d or newer; python3 is %d.%d (%s)'
+              % (*MIN_PYTHON, *sys.version_info[:2], sys.executable))
+        return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--only', action='append', default=[], help='Check names, comma separated; repeatable')
     parser.add_argument('--list', action='store_true')
