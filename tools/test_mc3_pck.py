@@ -1,7 +1,10 @@
 """Real corpus and synthetic VIF controls for MC3 PS2 geometry."""
 from pathlib import Path
+import random
 import struct
+import tempfile
 import unittest
+import mc3_pck
 
 from mc3_pck import MAX_VERTICES, Pck, decode_batches, read_bones, read_mesh_object, read_resource_group, read_vehicle, strip_indices, vif_planes
 
@@ -40,6 +43,40 @@ def fixture():
 
 
 class PacketTests(unittest.TestCase):
+    def test_root_marker_search_matches_word_scan_at_alignment_and_tail_boundaries(self):
+        randomizer = random.Random(71355)
+        for length in range(128, 260):
+            for marker in mc3_pck.MODEL_VTABLES:
+                data = bytearray(randomizer.randbytes(length))
+                stop = length - 28
+                for offset in (0, 124, 127, 128, 133, (stop - 1) // 4 * 4,
+                               (stop + 3) // 4 * 4, length - 4):
+                    if 0 <= offset <= length - 4:
+                        struct.pack_into('<I', data, offset, marker)
+                expected = [offset for offset in range(128, stop, 4)
+                            if struct.unpack_from('<I', data, offset)[0] in mc3_pck.MODEL_VTABLES]
+                with self.subTest(length=length, marker=marker):
+                    self.assertEqual(mc3_pck._model_candidates(bytes(data)), expected)
+        # Mixed profiles retain source order, including repeated markers; none may be skipped.
+        data = bytearray(260)
+        for offset, marker in zip((128, 144, 200, 228), (0x7AA728, 0x7A9620, 0x7A9420, 0x7AA728)):
+            struct.pack_into('<I', data, offset, marker)
+        self.assertEqual(mc3_pck._model_candidates(bytes(data)), [128, 144, 200, 228])
+
+    def test_duplicate_valid_model_roots_still_reject(self):
+        path = next((ROOT / 'games/midnight-club-3-remix/cars/vp_350z_04').rglob('vp_350z_04.pck'))
+        vehicle = read_vehicle(path)
+        data = bytearray(path.read_bytes())
+        model = vehicle['model_offset']
+        data.extend(bytes(-len(data) % 4))
+        data.extend(data[model:model + 108])
+        struct.pack_into('<I', data, 12, len(data) - 128)
+        with tempfile.TemporaryDirectory() as temp:
+            duplicate = Path(temp) / 'duplicate.pck'
+            duplicate.write_bytes(data)
+            with self.assertRaisesRegex(ValueError, 'model root missing or ambiguous'):
+                read_vehicle(duplicate)
+
     def test_destination_skip_cycles_do_not_become_contiguous_geometry(self):
         stream = packet()
         # CL=2, WL=1 writes VU addresses start, start+2, start+4, ...
@@ -210,4 +247,4 @@ class PacketTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -1,6 +1,5 @@
 """Convert source-bound MC3 static packet geometry to an editable GLB preview."""
 import hashlib
-import copy
 import json
 import math
 from pathlib import Path
@@ -158,6 +157,21 @@ def native_executable():
         disc.close()
 
 
+def _remap_mesh(mesh, material_base, packet_base=None):
+    """Copy attachment metadata; conversion only reads the large decoded geometry arrays."""
+    draws = []
+    for original in mesh['draws']:
+        batches = []
+        for batch in original['batches']:
+            mapped = dict(batch)
+            if packet_base is not None:
+                mapped['packet_offset'] += packet_base
+            batches.append(mapped)
+        draws.append({**original, 'native_material_index': original['material'],
+                      'material': original['material'] + material_base, 'batches': batches})
+    return {**mesh, 'draws': draws}
+
+
 def attach_wheels(folder, index, code, vehicle, executable, materials, sources, textures=None, shared_rows=None):
     bones = vehicle['skeleton']['bones']
     slots = wheel_slots(bones)
@@ -219,11 +233,7 @@ def attach_wheels(folder, index, code, vehicle, executable, materials, sources, 
             base = len(materials)
             materials.extend(component['model']['materials'])
             for ordinal, original in enumerate(component['model']['lods']['high']):
-                mesh = copy.deepcopy(original)
-                for draw in mesh['draws']:
-                    draw['native_material_index'] = draw['material'];draw['material'] += base
-                    for batch in draw['batches']:
-                        batch['packet_offset'] += component['model']['model_file_offset'] - 128
+                mesh = _remap_mesh(original, base, model['model_file_offset'] - 128)
                 parts.append({'name': f"whl_{slot['bone']}_{component['component']}_{ordinal}",
                     'bone': slot['bone'], 'mesh': mesh, 'translation': slot['translation'],
                     'rotation_raw': [0., 0., 0.],
@@ -528,10 +538,7 @@ def preview_vehicle(folder, manifest, extraction_index=None, executable=None):
                 if shared_part is None:
                     omitted.append(part['name'])
                     continue
-                mesh = copy.deepcopy(shared_part['mesh'])
-                for draw in mesh['draws']:
-                    draw['native_material_index'] = draw['material']
-                    draw['material'] += shared_material_base
+                mesh = _remap_mesh(shared_part['mesh'], shared_material_base)
                 parts.append({**part, 'mesh': mesh})
                 continue
             mesh = read_mesh(source)

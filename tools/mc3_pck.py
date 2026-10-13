@@ -361,12 +361,25 @@ def read_bones(pck: Pck, offset: int) -> dict:
             "header_words_raw": list(struct.unpack_from("<4H", pck.data, offset)), "bones": bones}
 
 
+def _model_candidates(data: bytes) -> list[int]:
+    """Find the same aligned words as range(128, len(data) - 28, 4), in source order."""
+    offsets = []
+    stop = len(data) - 28
+    for marker in MODEL_VTABLES:
+        pattern = struct.pack('<I', marker)
+        cursor = 128
+        while (offset := data.find(pattern, cursor, stop + 3)) >= 0:
+            if offset % 4 == 0:
+                offsets.append(offset)
+            cursor = offset + 1
+    return sorted(offsets)
+
+
 def read_vehicle(path: Path | str) -> dict:
     pck = Pck.file(path)
     if pck.kind != 0x38E030:
         raise ValueError("unknown vehicle carrier profile")
-    candidates = [offset for offset in range(128, len(pck.data) - 28, 4)
-                  if struct.unpack_from("<I", pck.data, offset)[0] in MODEL_VTABLES]
+    candidates = _model_candidates(pck.data)
     valid = []
     for candidate in candidates:
         try:
