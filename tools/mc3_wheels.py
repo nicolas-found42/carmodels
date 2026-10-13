@@ -7,6 +7,7 @@ wheel sizing, game deformation and joint rotation are separate renderer work.
 from __future__ import annotations
 
 from contextlib import contextmanager
+import copy
 import hashlib
 import math
 from pathlib import Path
@@ -234,11 +235,19 @@ def read_default_wheels(root: Path | str, vehicle_id: str, *, bike: bool = False
         archives[name] = (path, data)
         sources[name] = _fingerprint(path, data)
         sources[name + "_copies"] = copies
+    # At most three selections, using the archive bytes read and checked above.
+    # Reuse only within this call; duplicate results retain independent mutable state.
+    decoded = {}
     for selection in selections:
         path, data = archives[selection["component"]]
         page = ppf_page(data, selection["page"])
         selection["page_record"] = page
-        selection["model"] = read_page_model(data, page, str(path))
+        key = (selection["component"], selection["page"])
+        if key not in decoded:
+            decoded[key] = read_page_model(data, page, str(path))
+            selection["model"] = decoded[key]
+        else:
+            selection["model"] = copy.deepcopy(decoded[key])
     return {"config": config, "sources": sources, "bike": bike, "components": selections}
 
 

@@ -105,7 +105,7 @@ Jev's initial copying hypothesis was uncertain (.80), so it did not authorize a 
 The bounded proposal classification called metadata copying an equivalence candidate (.96), page
 reuse a further-instrumentation candidate (1.00), and skipping regeneration a coverage loss (.98).
 Source inspection, the aliasing mutation, exact outputs and actual checks supply the evidence.
-Page reuse, packet-decoder changes and PNG reuse are deferred: each needs separate mutation,
+At that stage, page reuse, packet-decoder changes and PNG reuse were deferred: each needed separate mutation,
 memory-bound and equality controls. The static-preview fidelity limits remain open.
 
 Four new live calls to the existing optional advisor used two actual profile summaries and
@@ -116,6 +116,46 @@ and the positives were false withholdings (2/4 correct composed outcomes, zero w
 The fixed questions and gates remain unchanged. Usage was 4,116 input and 550 output tokens,
 reported cost $0.000172872 and 2.179s experiment wall time. These results strengthen the existing
 natural-profile calibration limit rather than establishing accuracy or granting approval.
+
+## MC3 wheel-page decoding
+
+The next change reuses a decoded page within one `read_default_wheels` call. The dictionary is
+bounded by the three selected components and keyed by `(component, page)`, so equal numeric pages
+in rim and tire archives remain separate. Archive bytes are freshly read and verified before this
+dictionary exists. Each selection still runs `ppf_page`. A duplicate receives a full deep copy of
+the decoded model, preserving independently mutable geometry, materials, texture records and
+binding flags. Both axle models still undergo their own texture binding. Cache lifetime ends with
+the read call; subsequent calls read and derive their own inputs.
+
+The original 350Z probe decoded three components for two distinct identities and failed its
+unique-decode budget. The new reader decodes twice and matches the complete original result.
+Operation sampling found full deep copies cheaper than decoding again, so the implementation
+preserves the public reader's full mutable independence. Jev's bounded decision selected this
+per-call/full-copy option at probability 1, with all three requirements supported and no warnings.
+That judgment informed scope; executable checks establish the behavior.
+
+Twenty alternating old/new reader pairs each for the 350Z and cop bike include fresh source checks
+and compare every returned field. All 40 pairs match the reader from `9f224db0`:
+
+| Reader median | Before | After |
+| --- | ---: | ---: |
+| 350Z | 37.201ms | 35.831ms |
+| Cop bike | 37.829ms | 36.968ms |
+
+The reader reductions are about 3.7% and 2.3%. These are modest operation-level savings, not full
+preview-check or CI guarantees. Separate instrumented full preview-suite samples reproduce all
+94 exact GLBs and conversion evidence, 749,843 triangles and 346 wheel slots. Decode calls fall
+285 to 194, while `_source` calls stay 475 and page-table checks stay 285. These counts include the
+wheel-source hash control. Sample wall times are 20.514s/19.864s; one sample each does not establish
+repeatable end-to-end latency savings. Evidence is retained in `.scratch/research/mc3-wheel-pages/`
+and `.scratch/checks/mc3-wheel-pages-*`.
+
+New reader controls cover archive namespace collisions, distinct axle pages, all nested mutable
+state, changed bytes on a later call, failed decodes and conflicting sources. The controls fail
+under three intentional mutations: shared models, page-only keys, and a persistent stale cache.
+The existing real page/header, source-hash, pointer, linked-file and sizing controls remain intact.
+Cross-vehicle reuse still needs separate source-lifetime and bounded-memory design; packet/PNG
+optimization and the existing static-preview fidelity limits remain open.
 
 ## Optional TypeSafe advice
 
@@ -175,6 +215,6 @@ transport low relevance despite the measured additional saving: rankings remain 
 patch/claim gating uses actual diffs and check logs.
 
 Remaining work: general accuracy and false-withholding calibration on natural profiles; measured
-chunk utilization before altering batching; deeper MC3 page/packet/PNG profiling with appropriate
-aliasing and bounded-reuse controls. PNG decoding was a small share of the six-car dealership sample,
+chunk utilization before altering batching; cross-vehicle MC3 page reuse and deeper packet/PNG
+profiling with appropriate source-lifetime and bounded-memory controls. PNG decoding was a small share of the six-car dealership sample,
 so dealership cache changes are deferred.
