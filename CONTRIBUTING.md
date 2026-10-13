@@ -87,7 +87,7 @@ CI downloads and hash-checks the pinned Linux Blender release. The check operate
 on temporary model copies; production dealership/source GLBs are verified unchanged.
 
 In the table, the rows through the viewer tests are in the default run and the rows from GT4 on run with
-`--games`. Of the commands listed after the table, `--games` runs those `--list` names;
+`--games`, except `test_mcla_preview_ui.mjs` in the MCLA row, which runs by default. Of the commands listed after the table, `--games` runs those `--list` names;
 `test_car_mips.py`, `verify_selector_word.py` and `validate_blender_import.py` are standalone and run
 only directly.
 

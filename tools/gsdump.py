@@ -1,9 +1,10 @@
 """Minimal PCSX2 GSDump reader shared by the retained-packet scripts (transfer events only)."""
 import hashlib
+import shutil
 import struct
 import subprocess
 
-ZSTD = '/opt/homebrew/bin/zstd'
+ZSTD = shutil.which('zstd') or '/opt/homebrew/bin/zstd'
 
 
 def load_transfers(path, compressed_sha256=None):
