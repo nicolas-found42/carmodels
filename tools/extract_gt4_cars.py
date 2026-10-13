@@ -217,8 +217,8 @@ def write_extraction(iso, destination):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--iso', type=Path, default=ROOT / 'gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso')
-    parser.add_argument('--output', type=Path, default=ROOT / 'gran-turismo-4/cars')
+    parser.add_argument('--iso', type=Path, default=ROOT / 'games/gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso')
+    parser.add_argument('--output', type=Path, default=ROOT / 'games/gran-turismo-4/cars')
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     try:

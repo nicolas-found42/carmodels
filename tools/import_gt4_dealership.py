@@ -15,7 +15,7 @@ from import_gt4_catalog import GAME, LIMITS, source_package
 from gt4_specdb import car_specs
 
 GAME_LABEL = 'Gran Turismo 4'
-SPECDB = ROOT / 'gran-turismo-4/cars/provenance/specdb/GT4_EU2560'
+SPECDB = ROOT / 'games/gran-turismo-4/cars/provenance/specdb/GT4_EU2560'
 
 
 def sha(data):

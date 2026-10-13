@@ -7,7 +7,7 @@ from gt4_glb import LIMITS, PROFILE, build_car, wheel_layout
 from gt4_specdb import car_specs
 
 ROOT = Path(__file__).resolve().parents[1]
-CARS = ROOT / 'gran-turismo-4/cars'
+CARS = ROOT / 'games/gran-turismo-4/cars'
 
 
 class GlbTests(unittest.TestCase):
