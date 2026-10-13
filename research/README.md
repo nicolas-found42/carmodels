@@ -6,6 +6,7 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `check-performance.md` | Freshness profiling and equivalent optimizations, optional TypeSafe advice, labeled wording/holdout experiments and calibration limits |
 | `dealership-teardown-2026-10-12.md` | Novice-user dealership teardown, search/filter/layout/request recovery improvements, coverage ledger, original reproductions and final verification |
 | `dealership-usability-alternatives-2026-10-12.md` | Primary-source comparison of native search/filter/form/disclosure improvements and deferred fuzzy search, with eligibility limits |
 | `ai-agent-reverse-engineering-workflow-2026-10-11.md` | Primary-source tool comparisons, a bounded agent workflow, reusable prompts, September 27–October 11 releases and videos, and source-quality checks |
@@ -37,6 +38,8 @@ single list of what is not yet established; update it when a note closes or open
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
 ## Open items
+
+- Check performance: natural-profile advisor accuracy and false-withholding calibration, isolated MC3 preview profiling and chunk-utilization measurements remain open; see [the performance note](check-performance.md).
 
 - AI-agent reversing workflow: recommendations and dated resources are documented in [the workflow research](ai-agent-reverse-engineering-workflow-2026-10-11.md); local harness comparisons, PS2-specific provider coverage and restart/resume behavior remain to be measured.
 
