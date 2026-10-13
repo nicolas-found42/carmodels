@@ -180,8 +180,8 @@ def extract(image, destination, check=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--image', type=Path, default=ROOT / 'gran-turismo/game-files/gran-turismo.bin')
-    parser.add_argument('--output', type=Path, default=ROOT / 'gran-turismo/cars')
+    parser.add_argument('--image', type=Path, default=ROOT / 'games/gran-turismo/game-files/gran-turismo.bin')
+    parser.add_argument('--output', type=Path, default=ROOT / 'games/gran-turismo/cars')
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--semantic-report', type=Path, help='Opt-in live TypeSafe inventory assessment, outside extracted tree')
     args = parser.parse_args()

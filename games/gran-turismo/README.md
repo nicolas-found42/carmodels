@@ -1,5 +1,17 @@
 # Gran Turismo source assets
 
+Everything about this game in this repository:
+
+| What | Where |
+| --- | --- |
+| Source tree (this folder) | `cars/`, `game-files/` (local inputs, ignored) |
+| Tools | `tools/extract_gt_cars.py`, `tools/export_gt_models.py`, `tools/import_gt_dealership.py`, `tools/gt_{archive,model,wheels}.py`, `tools/gt1/` and their tests |
+| Research notes | [`research/gran-turismo-extraction.md`](../../research/gran-turismo-extraction.md), [`research/gran-turismo-library.md`](../../research/gran-turismo-library.md), [`research/gran-turismo-shading-2026-10-11.md`](../../research/gran-turismo-shading-2026-10-11.md), [`research/gran-turismo-wheels.md`](../../research/gran-turismo-wheels.md) |
+| Evidence | `research/evidence/gran-turismo-wheels/` |
+| Source-model showcase files | `dealership/public/gran-turismo/` |
+| Dealership copies | `dealership/dealership/models/GT_*.glb` |
+| Checks | `tools/check.sh --game gran-turismo` (the `*gt_*` checks); `python3 tools/extract_gt_cars.py --check` re-derives the local disc extraction |
+
 The local `game-files/gran-turismo.bin` is a raw PlayStation CD image. Its boot
 configuration identifies `SCUS_941.94`, and its ISO volume is `GRAN_TURISMO`.
 The input image and accompanying user-supplied files are preserved.
@@ -57,7 +69,7 @@ attachment data and its colour-set-0 wheel texture. Retail names, equipment
 and performance joins remain unresolved. Neither extraction nor conversion
 establishes game-render equivalence.
 
-See [the library conversion note](../research/gran-turismo-library.md) for exact
+See [the library conversion note](../../research/gran-turismo-library.md) for exact
 counts, checks, limitations and reproduction commands. Add newly extracted pairs
 by running `tools/export_gt_models.py`, `tools/build_model_catalog.py`,
 `tools/import_gt_dealership.py` and `tools/build_dealership.py` from the repo root.
@@ -65,5 +77,5 @@ Reimporting preserves existing working models and edits.
 After improving source exports, use `tools/import_gt_dealership.py --upgrade-unedited`
 to refresh only copies that still match their recorded source. This preserves edited
 models, custom catalog fields and original import provenance. See the
-[wheel recovery note](../research/gran-turismo-wheels.md) for source pins, native
+[wheel recovery note](../../research/gran-turismo-wheels.md) for source pins, native
 dimensions, special-asset display policy and remaining rendering limits.

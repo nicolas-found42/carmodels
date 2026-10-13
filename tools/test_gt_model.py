@@ -141,7 +141,7 @@ class GTModelTests(unittest.TestCase):
                 export(source,output)
 
     def test_real_native_corpus_complete_lods(self):
-        source=ROOT/'gran-turismo/cars'
+        source=ROOT/'games/gran-turismo/cars'
         index=json.loads((source/'index.json').read_text())
         models=lods=gouraud=0
         for row in index['cars']:

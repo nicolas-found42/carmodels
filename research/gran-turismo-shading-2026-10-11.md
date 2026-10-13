@@ -41,7 +41,7 @@ rotation.
 **What the data shows.** For each body triangle, the scripts compare the geometric CCW normal with the sum of the
 triangle's stored corner normals, weighted by area. Wheels are excluded, because the exporter derives their
 normals from the emitted winding (`tools/gt_model.py:228-241`). `glb_measure.py` reads the 344 day GLBs the
-dealership loads. `experiments/winding_variants.py` rebuilds all 728 native pairs from `gran-turismo/cars/`.
+dealership loads. `experiments/winding_variants.py` rebuilds all 728 native pairs from `games/gran-turismo/cars/`.
 
 | Body area whose CCW front agrees with the stored normal | cars | min | p10 | median | max | cars < 0.5 | cars ≥ 0.99 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
