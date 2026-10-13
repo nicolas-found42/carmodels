@@ -2,11 +2,38 @@
 import copy
 import math
 import unittest
+import mc3_model
 from mc3_model import strip_triangles, build_glb, wheel_slots, native_rest_frames, rotated_point
 from bake_models import read_glb
 
 
 class PreviewGeometryTest(unittest.TestCase):
+    def test_remapped_mesh_metadata_is_independent_and_geometry_is_read_only(self):
+        batch = {'positions': [(0, 0, 0), (1, 0, 0), (0, 1, 0)],
+                 'uvs': [(0, 0), (1, 0), (0, 1)], 'adc': [False] * 3, 'packet_offset': 128}
+        mesh = {'source': {'sha256': 'a' * 64}, 'draws': [{'material': 2, 'batches': [batch]}]}
+        before = copy.deepcopy(mesh)
+        first = mc3_model._remap_mesh(mesh, 3, 4096)
+        second = mc3_model._remap_mesh(mesh, 7, 8192)
+        stock = mc3_model._remap_mesh(mesh, 5)
+        for remapped, material, offset in ((first, 5, 4224), (second, 9, 8320), (stock, 7, 128)):
+            draw = remapped['draws'][0]
+            self.assertEqual((draw['material'], draw['native_material_index']), (material, 2))
+            self.assertEqual(draw['batches'][0]['packet_offset'], offset)
+            materials = [{'shader_category': 'unmapped', 'base_color': [.65]*3+[1],
+                          'alpha_mode': 'OPAQUE'} for _ in range(material + 1)]
+            reference = copy.deepcopy(mesh)
+            reference['draws'][0].update(material=material, native_material_index=2)
+            reference['draws'][0]['batches'][0]['packet_offset'] = offset
+            part = {'name': 'wheel', 'bone': 0}
+            self.assertEqual(build_glb('vp_test', [{**part, 'mesh': remapped}], materials, []),
+                             build_glb('vp_test', [{**part, 'mesh': reference}], materials, []))
+        self.assertEqual(mesh, before)  # Both metadata rebasing and GLB building leave the input intact.
+        first['draws'][0]['material'] = 100
+        first['draws'][0]['batches'][0]['packet_offset'] = 100
+        self.assertEqual(mesh, before)
+        self.assertEqual(second['draws'][0]['batches'][0]['packet_offset'], 8320)
+
     def test_native_xyz_order_parent_rotation_and_invalid_frames(self):
         bones = [{'parent': None, 'local_position': [10, 0, 0], 'rotation_raw': [0, 0, math.pi/2]},
                  {'parent': 0, 'local_position': [1, 0, 0], 'rotation_raw': [math.pi/2, math.pi/2, 0]}]
@@ -65,4 +92,4 @@ class PreviewGeometryTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
