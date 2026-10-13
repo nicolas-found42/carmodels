@@ -1,5 +1,7 @@
 """Named offline checks with retained per-command logs and a machine-readable manifest."""
 import argparse
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
+from itertools import groupby
 import json
 import os
 from pathlib import Path
@@ -11,6 +13,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 MIN_PYTHON = (3, 12)  # CI's version; the runner and every check invoke python3 from PATH.
+DEFAULT_JOBS = min(4, os.cpu_count() or 1)
 # The default run covers the car models and the showcase that displays them. Every other check
 # exists for game tooling or corpus re-derivation; fast tooling runs with --games,
 # and bulk/private-input re-derivation requires --full or an explicit --only.
@@ -42,6 +45,30 @@ GAMES = {
                                 'test_xex2', 'line_coverage', 'test_line_coverage'),
     'ford-racing-2': ('test_static_inputs', 'test_recovery_inputs', 'verify_', 'test_vu',
                       'recover_dump_reference_frame', 'test_recover_dump_reference_frame', 'test_pass_source_join'),
+}
+
+# Audited read-only checks or tests whose mutations are confined to private temporary
+# directories. Opt in by exact name after auditing transitive calls, not by test_* prefix.
+# All other checks are barriers: drain running checks, run alone, then resume. This protects
+# shared receipts and readers as well as whole-corpus work, Blender and existing process pools.
+# GT4 catalog tests derive only two fixture cars, below its 16-car pool threshold; MCLA
+# catalog tests use the default single worker. Re-audit these when their fixtures change.
+PARALLEL_SAFE = {
+    'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
+    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
+    'test_export_materials', 'test_build_showcase', 'test_bake_models', 'test_model_catalog', 'test_model_png',
+    'test_review_payload', 'test_static_inputs', 'test_recovery_inputs',
+    'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
+    'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars',
+    'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs', 'test_mc3_pck', 'test_mc3_wheels',
+    'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview',
+    'test_import_mc3_previews', 'test_mc3_preview_experiments', 'test_redline_mesh', 'test_redline_texture',
+    'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
+    'test_gt4_volume', 'test_extract_gt4_cars', 'test_gt4_model', 'test_gt4_specdb', 'test_gt4_glb',
+    'test_import_gt4_catalog', 'test_import_gt4_dealership', 'test_aes_decrypt', 'test_xdvdfs', 'test_xex2',
+    'test_mcla_rpf', 'test_extract_mcla_cars', 'test_mcla_lzx', 'test_mcla_resource', 'test_mcla_model',
+    'test_mcla_texture', 'test_mcla_tuning', 'test_mcla_names', 'test_mcla_preview', 'test_mcla_preview_geometry',
+    'test_import_mcla_catalog', 'test_import_mcla_dealership', 'test_mcla_preview_experiments', 'test_line_coverage',
 }
 
 
@@ -116,6 +143,8 @@ def registry():
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path('dealership/public/redline/index.json').is_file() else 1)"]})
     checks.append({'name': 'mc3_roundtrip', 'command': [blender or 'blender', '--background', '--python-exit-code', '1',
                                                      '--python', 'tools/test_mc3_roundtrip.py'], 'requires': blender or 'blender'})
+    for check in checks:
+        check['parallel'] = check['name'] in PARALLEL_SAFE
     return checks
 
 
@@ -136,47 +165,90 @@ def select(checks, names, games=False, full=False, game=()):
              (full or c['name'] not in FULL_ONLY))]
 
 
-def run_checks(checks, root, evidence, ci=False, not_run=()):
+def _run_check(check, root, evidence, ci, started):
+    """Run one check with a private log. Only the coordinator writes the manifest or prints."""
+    name, command = check['name'], check['command']
+    start = time.monotonic()
+    row = {'name': name, 'command': command, 'status': 'pass', 'exit_code': 0, 'log': name + '.log',
+           'parallel': check.get('parallel') is True, 'started_seconds': round(start - started, 3)}
+    log = evidence / row['log']
+    with log.open('w') as stream:
+        try:
+            requirement = check.get('requires')
+            if requirement and not shutil.which(requirement):
+                row.update(status='fail' if ci else 'skip', exit_code=127 if ci else None,
+                           reason=f'Required runtime unavailable: {requirement}')
+                stream.write(row['reason'] + '\n')
+            else:
+                available = subprocess.run(check['availability'], cwd=root, capture_output=True, text=True) if 'availability' in check else None
+                if available is not None and available.returncode:
+                    row.update(status='skip' if available.returncode == 1 else 'fail',
+                               exit_code=None if available.returncode == 1 else available.returncode,
+                               reason='Optional pinned inputs unavailable' if available.returncode == 1 else 'Input availability check failed')
+                    stream.write(row['reason'] + '\n' + available.stdout + available.stderr)
+                else:
+                    result = subprocess.run(command, cwd=root, stdout=stream, stderr=subprocess.STDOUT)
+                    row.update(exit_code=result.returncode, status='pass' if result.returncode == 0 else 'fail')
+        except OSError as error:
+            stream.write(str(error) + '\n')
+            row.update(status='fail', exit_code=127)
+    row['elapsed_seconds'] = round(time.monotonic() - start, 3)
+    return row
+
+
+def run_checks(checks, root, evidence, ci=False, not_run=(), jobs=1):
+    """Bound subprocess concurrency within each audited group; other checks run alone."""
+    if type(jobs) is not int or jobs < 1:
+        raise ValueError('jobs must be a positive integer')
+    if len({c['name'] for c in checks}) != len(checks):
+        raise ValueError('Check names must be unique; each log has one owner')
     root, evidence = Path(root), Path(evidence)
     evidence.mkdir(parents=True, exist_ok=True)
     if any(evidence.iterdir()):
         raise ValueError('Evidence directory must be empty; previous logs are preserved')
-    rows = []
-    for check in checks:
-        name, command = check['name'], check['command']
-        start = time.monotonic()
-        row = {'name': name, 'command': command, 'status': 'pass', 'exit_code': 0, 'log': name + '.log'}
-        log = evidence / row['log']
-        requirement = check.get('requires')
-        if requirement and not shutil.which(requirement):
-            row.update(status='fail' if ci else 'skip', exit_code=127 if ci else None,
-                       reason=f'Required runtime unavailable: {requirement}')
-            log.write_text(row['reason'] + '\n')
-        else:
-            available = subprocess.run(check['availability'], cwd=root, capture_output=True, text=True) if 'availability' in check else None
-            if available is not None and available.returncode:
-                row.update(status='skip' if available.returncode == 1 else 'fail',
-                           exit_code=None if available.returncode == 1 else available.returncode,
-                           reason='Optional pinned inputs unavailable' if available.returncode == 1 else 'Input availability check failed')
-                log.write_text(row['reason'] + '\n' + available.stdout + available.stderr)
-            else:
-                with log.open('w') as stream:
-                    try:
-                        result = subprocess.run(command, cwd=root, stdout=stream, stderr=subprocess.STDOUT)
-                        row.update(exit_code=result.returncode, status='pass' if result.returncode == 0 else 'fail')
-                    except OSError as error:
-                        stream.write(str(error) + '\n')
-                        row.update(status='fail', exit_code=127)
-        row['elapsed_seconds'] = round(time.monotonic() - start, 3)
-        rows.append(row)
-        print(f"{row['status']:4}  {name}  ({row['log']})", flush=True)
-        if row['status'] == 'fail':
-            print('\n'.join(log.read_text(errors='replace').splitlines()[-20:]), flush=True)
-        status = 1 if any(r['status'] == 'fail' for r in rows) else 0
-        (evidence / 'results.json').write_text(json.dumps({'schema': 1, 'exit_code': status, 'checks': rows,
-            'not_run': list(not_run),
+    started = time.monotonic()
+    rows = {}
+
+    def manifest():
+        ordered = [rows[c['name']] for c in checks if c['name'] in rows]
+        status = 1 if any(r['status'] == 'fail' for r in ordered) else 0
+        # Atomic replacement lets readers inspect a complete JSON document during execution.
+        temporary = evidence / '.results.json.tmp'
+        temporary.write_text(json.dumps({'schema': 1, 'exit_code': status, 'checks': ordered,
+            'jobs': jobs, 'elapsed_seconds': round(time.monotonic() - started, 3),
+            'pending': [c['name'] for c in checks if c['name'] not in rows], 'not_run': list(not_run),
             'claim_limits': ['Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.']}, indent=2) + '\n')
-    return 1 if any(r['status'] == 'fail' for r in rows) else 0
+        temporary.replace(evidence / 'results.json')
+        return status
+
+    def record(row):
+        rows[row['name']] = row
+        manifest()
+        print(f"{row['status']:4}  {row['name']}  ({row['log']})", flush=True)
+        if row['status'] == 'fail':
+            print('\n'.join((evidence / row['log']).read_text(errors='replace').splitlines()[-20:]), flush=True)
+
+    manifest()
+    with ThreadPoolExecutor(max_workers=min(jobs, len(checks) or 1)) as pool:
+        for parallel, group in groupby(checks, key=lambda c: c.get('parallel') is True):
+            if not parallel or jobs == 1:
+                for check in group:
+                    record(_run_check(check, root, evidence, ci, started))
+                continue
+            pending = set()
+            exhausted = False
+            while pending or not exhausted:
+                while len(pending) < jobs and not exhausted:
+                    check = next(group, None)
+                    if check is None:
+                        exhausted = True
+                    else:
+                        pending.add(pool.submit(_run_check, check, root, evidence, ci, started))
+                if pending:
+                    done, pending = wait(pending, return_when=FIRST_COMPLETED)
+                    for future in done:
+                        record(future.result())
+    return manifest()
 
 
 def main():
@@ -193,8 +265,12 @@ def main():
     parser.add_argument('--game', action='append', choices=tuple(GAMES), default=[],
                         help='Include checks for this game plus the showcase; repeatable, add --full for re-derivation')
     parser.add_argument('--list', action='store_true')
+    parser.add_argument('--jobs', type=int, default=DEFAULT_JOBS,
+                        help=f'Maximum concurrent audited checks (default {DEFAULT_JOBS}); 1 runs serially')
     parser.add_argument('--evidence-dir', type=Path, help='Empty directory for full logs and results.json')
     args = parser.parse_args()
+    if args.jobs < 1:
+        parser.error('--jobs must be a positive integer')
     checks = registry()
     try:
         if args.only and (args.games or args.full or args.game):
@@ -218,7 +294,8 @@ def main():
         print(f'Evidence: {evidence}', flush=True)
         if not_run and not args.only:
             print(f'{len(not_run)} checks not run (tools/check.sh --full runs every check)', flush=True)
-        return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')), not_run=not_run)
+        print(f'Jobs: {args.jobs} (exclusive checks run alone)', flush=True)
+        return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')), not_run=not_run, jobs=args.jobs)
     except ValueError as error:
         parser.error(str(error))
 

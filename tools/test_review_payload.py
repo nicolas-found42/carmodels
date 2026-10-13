@@ -130,6 +130,7 @@ class ReviewPayloadTests(unittest.TestCase):
                     self.assertRaisesRegex(ValueError, 'never truncate logs'):
                 build()
             for bad, message in [({'schema': 2, 'checks': manifest['checks']}, 'check manifest'),
+                                 ({**manifest, 'pending': ['still_running']}, 'pending checks'),
                                  ({**manifest, 'checks': [{**manifest['checks'][0], 'log': '../a.log'}]}, 'evidence directory')]:
                 (checks / 'results.json').write_text(json.dumps(bad))
                 with self.subTest(message), self.assertRaisesRegex(ValueError, message):

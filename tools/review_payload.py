@@ -146,6 +146,8 @@ def prepare(baseline, root, request, checks_dir, claims, output, max_diff_chars=
     receipt = json.loads((checks_dir / 'results.json').read_text())
     if receipt.get('schema') != 1 or not receipt.get('checks'):
         raise ValueError('Invalid or empty check manifest')
+    if receipt.get('pending'):
+        raise ValueError('Check manifest has pending checks; wait for the run to finish')
     manifest = {'id': 'check-manifest', 'text': check_summary(receipt) + '\n' + json.dumps(receipt, indent=2)}
     # Full logs are independent of the exit summary. Bundle them without dropping their tails.
     logs = {}
