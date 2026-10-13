@@ -6,8 +6,11 @@ research/gran-turismo-4-previews.md for pinned commits. Every offset is bounds-c
 This module decodes static geometry and textures only; runtime VM state is not executed.
 """
 from array import array
+from functools import lru_cache
 import math
+from operator import itemgetter
 import struct
+import sys
 
 MDLS = b'MDLS'
 TEX1 = b'Tex1'
@@ -406,6 +409,23 @@ for _py in range(128):
         _i = _x + (_y % 4) * 32
         T4_PAGE.append(((T4_BLOCKS[_bx + _by * 4] * 64 + _col * 16 + T4_WORDS[_col & 1][_i]) << 3) | T4_NIBBLES[_i])
 GS_WORDS = 1 << 20
+# Page-at-a-time gathers: page word d holds the pixel at row-major page position CT32_FROM[d].
+CT32_FROM = [0] * 2048
+for _i, _d in enumerate(CT32_PAGE):
+    CT32_FROM[_d] = _i
+CT32_GATHER = itemgetter(*CT32_FROM)
+NIBBLE_LOW = bytes(i & 0x0F for i in range(256))
+NIBBLE_HIGH = bytes(i >> 4 for i in range(256))
+
+
+@lru_cache(maxsize=None)
+def _index_gather(psm, width, height):
+    """Byte positions, within one page's little-endian bytes, of a width x height corner region."""
+    if psm == PSMT8:
+        return itemgetter(*[T8_PAGE[y * 128 + x] for y in range(height) for x in range(width)])
+    # T4: low nibbles occupy the first 8192 bytes of the gathered source, high nibbles the next.
+    return itemgetter(*[(loc >> 1) + (loc & 1) * 8192
+                        for loc in (T4_PAGE[y * 128 + x] for y in range(height) for x in range(width))])
 
 
 class GSMemory:
@@ -419,17 +439,28 @@ class GSMemory:
         src.frombytes(bytes(data[:4 * width * height]))
         if src.itemsize != 4:
             raise ValueError('unsupported array word size')
-        words, base, i = self.words, bp * 64, 0
+        words, base = self.words, bp * 64
         bw = max(bw, 1)
-        for y in range(height):
-            row_page = (y // 32) * bw
-            row_off = (y % 32) * 64
-            for x in range(width):
-                address = base + (x // 64 + row_page) * 2048 + CT32_PAGE[row_off + (x % 64)]
-                if address >= GS_WORDS:
-                    raise ValueError('GS transfer outside memory')
-                words[address] = src[i]
-                i += 1
+        # Pages are visited band by band, so an overlapping later band still overwrites an earlier
+        # one exactly as the row-major pixel order would; pages within one band never overlap.
+        for page_y in range(0, height, 32):
+            for page_x in range(0, width, 64):
+                page = base + (page_x // 64 + (page_y // 32) * bw) * 2048
+                if page_x + 64 <= width and page_y + 32 <= height:
+                    if page + 2048 > GS_WORDS:
+                        raise ValueError('GS transfer outside memory')
+                    block = array('I')
+                    for y in range(page_y, page_y + 32):
+                        block += src[y * width + page_x:y * width + page_x + 64]
+                    words[page:page + 2048] = array('I', CT32_GATHER(block))
+                    continue
+                for y in range(page_y, min(page_y + 32, height)):
+                    row_off = (y % 32) * 64
+                    for x in range(page_x, min(page_x + 64, width)):
+                        address = page + CT32_PAGE[row_off + (x % 64)]
+                        if address >= GS_WORDS:
+                            raise ValueError('GS transfer outside memory')
+                        words[address] = src[y * width + x]
 
     def read_ct32(self, bp, bw, width, height, offset_words=0):
         words, base, out = self.words, bp * 64, []
@@ -443,18 +474,24 @@ class GSMemory:
     def read_indices(self, psm, bp, bw, width, height):
         words, base, out = self.words, bp * 64, bytearray(width * height)
         bw = max(bw >> 1, 1)  # TBW is in 64-pixel units; T8/T4 pages are 128 pixels wide.
-        i = 0
-        for y in range(height):
-            for x in range(width):
-                if psm == PSMT8:
-                    loc = T8_PAGE[(y % 64) * 128 + (x % 128)]
-                    address = base + (x // 128 + (y // 64) * bw) * 2048 + (loc >> 2)
-                    out[i] = (words[address % GS_WORDS] >> (8 * (loc & 3))) & 0xFF
-                else:
-                    loc = T4_PAGE[(y % 128) * 128 + (x % 128)]
-                    address = base + (x // 128 + (y // 128) * bw) * 2048 + (loc >> 3)
-                    out[i] = (words[address % GS_WORDS] >> (4 * (loc & 7))) & 0x0F
-                i += 1
+        page_h = 64 if psm == PSMT8 else 128
+        for page_y in range(0, height, page_h):
+            for page_x in range(0, width, 128):
+                start = (base + (page_x // 128 + (page_y // page_h) * bw) * 2048) % GS_WORDS
+                page = words[start:start + 2048]
+                if len(page) < 2048:  # The page wraps around the end of GS memory.
+                    page += words[:2048 - len(page)]
+                if sys.byteorder != 'little':
+                    page.byteswap()
+                source = page.tobytes()
+                if psm != PSMT8:
+                    source = source.translate(NIBBLE_LOW) + source.translate(NIBBLE_HIGH)
+                w, h = min(128, width - page_x), min(page_h, height - page_y)
+                region = _index_gather(psm, w, h)(source)
+                region = bytes(region) if w * h > 1 else bytes((region,))
+                for y in range(h):
+                    at = (page_y + y) * width + page_x
+                    out[at:at + w] = region[y * w:(y + 1) * w]
         return out
 
 
@@ -521,7 +558,7 @@ class TextureSet:
                 for i, colour in enumerate(raw):
                     palette[((i // 32) * 2 + (i // 8) % 2) * 16 + ((i // 16) % 2) * 8 + i % 8] = colour
             colours = [_rgba(c) for c in palette]
-            rgba = b''.join(colours[i] for i in indices)
+            rgba = b''.join(map(colours.__getitem__, indices))
         elif t['psm'] == PSMCT32:
             rgba = b''.join(_rgba(c) for c in gs.read_ct32(t['tbp'], t['tbw'], width, height))
         else:

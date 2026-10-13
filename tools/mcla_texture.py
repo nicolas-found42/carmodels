@@ -21,6 +21,7 @@ Base levels are untiled with the Xenos 2D tiled address function (independently 
 mapping is a permutation of the padded surface, which the tests check) and DXT blocks are decoded
 to RGBA8. Only mip level 0 is decoded.
 """
+from functools import lru_cache
 import struct
 
 from mcla_resource import Resource, ResourceError
@@ -106,15 +107,21 @@ def _rgb565(value):
     return (r << 3 | r >> 2, g << 2 | g >> 4, b << 3 | b >> 2)
 
 
-def _colour_block(raw, at, opaque_only):
+def _palette(raw, at, opaque_only):
+    """The four RGBA8 colours of a DXT colour block, as bytes, and its 2-bit index word."""
     c0, c1, bits = struct.unpack_from('<HHI', raw, at)
     a, b = _rgb565(c0), _rgb565(c1)
     if c0 > c1 or opaque_only:
-        palette = [a + (255,), b + (255,), tuple((2 * p + q) // 3 for p, q in zip(a, b)) + (255,),
-                   tuple((p + 2 * q) // 3 for p, q in zip(a, b)) + (255,)]
+        colours = (a + (255,), b + (255,), tuple((2 * p + q) // 3 for p, q in zip(a, b)) + (255,),
+                   tuple((p + 2 * q) // 3 for p, q in zip(a, b)) + (255,))
     else:
-        palette = [a + (255,), b + (255,), tuple((p + q) // 2 for p, q in zip(a, b)) + (255,), (0, 0, 0, 0)]
-    return [palette[bits >> (2 * i) & 3] for i in range(16)]
+        colours = (a + (255,), b + (255,), tuple((p + q) // 2 for p, q in zip(a, b)) + (255,), (0, 0, 0, 0))
+    return [bytes(c) for c in colours], bits
+
+
+def _colour_block(raw, at, opaque_only):
+    colours, bits = _palette(raw, at, opaque_only)
+    return [tuple(colours[bits >> (2 * i) & 3]) for i in range(16)]
 
 
 def _alpha_block(raw, at):
@@ -125,6 +132,19 @@ def _alpha_block(raw, at):
     else:
         table = [a0, a1] + [((5 - i) * a0 + i * a1) // 5 for i in range(1, 5)] + [0, 255]
     return [table[bits >> (3 * i) & 7] for i in range(16)]
+
+
+@lru_cache(maxsize=1 << 16)
+def _block_rgba(stored, kind):
+    """RGBA8 rows (4 x 16 bytes) of one stored DXT block; blocks repeat, so decodes are cached."""
+    raw = bytearray(stored)
+    raw[0::2], raw[1::2] = raw[1::2], raw[0::2]  # 8-in-16 endian swap
+    if kind == 'dxt1':
+        colours, bits = _palette(raw, 0, False)
+        return b''.join([colours[bits >> (2 * i) & 3] for i in range(16)])
+    colours, bits = _palette(raw, 8, True)
+    alpha = _alpha_block(raw, 0)
+    return b''.join([colours[bits >> (2 * i) & 3][:3] + bytes((alpha[i],)) for i in range(16)])
 
 
 def pixels(r, tex):
@@ -142,18 +162,11 @@ def pixels(r, tex):
                 o = (by * width + bx) * 4
                 out[o:o + 4] = bytes((red, g, b, a))
                 continue
-            raw = bytearray(data[at:at + size])
-            raw[0::2], raw[1::2] = raw[1::2], raw[0::2]  # 8-in-16 endian swap
-            if tex['format'] == 'dxt1':
-                texels = _colour_block(raw, 0, False)
-            else:
-                alpha = _alpha_block(raw, 0)
-                texels = [c[:3] + (al,) for c, al in zip(_colour_block(raw, 8, True), alpha)]
-            for i, texel in enumerate(texels):
-                x, y = bx * 4 + (i & 3), by * 4 + (i >> 2)
-                if x < width and y < height:
-                    o = (y * width + x) * 4
-                    out[o:o + 4] = bytes(texel)
+            rgba = _block_rgba(bytes(data[at:at + size]), tex['format'])
+            span = 4 * min(4, width - bx * 4)
+            for row in range(min(4, height - by * 4)):
+                o = ((by * 4 + row) * width + bx * 4) * 4
+                out[o:o + span] = rgba[16 * row:16 * row + span]
     return bytes(out)
 
 

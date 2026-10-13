@@ -6,8 +6,8 @@ import unittest
 import os
 
 from mc3_pck import Pck
-from mc3_wheels import (_elf_address, ppf_page, read_default_config, read_default_wheels,
-                        read_page_model, read_vehicle_class, read_wheel_sizing, select_handle)
+from mc3_wheels import (_elf_address, _source, ppf_page, read_default_config, read_default_wheels,
+                        read_page_model, read_vehicle_class, read_wheel_sizing, scanned_once, select_handle)
 
 
 class WheelTests(unittest.TestCase):
@@ -55,6 +55,27 @@ class WheelTests(unittest.TestCase):
                 read_default_config(root, 'vp_350z_04')
             with self.assertRaisesRegex(ValueError, 'invalid vehicle source ID'):
                 read_default_config(root, '../vp_350z_04')
+
+    def test_scanned_once_lists_each_tree_once_and_still_reads_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            first = root / 'shared' / '0'
+            first.mkdir(parents=True)
+            (first / 'decal.pck').write_bytes(b'first')
+            with scanned_once():
+                self.assertEqual(_source(root, 'decal.pck')[1], b'first')
+                (first / 'decal.pck').write_bytes(b'changed')  # Contents are still read per lookup.
+                self.assertEqual(_source(root, 'decal.pck')[1], b'changed')
+                second = root / 'shared' / '1'
+                second.mkdir()
+                (second / 'decal.pck').write_bytes(b'other')
+                # The listing is fixed for the block: a copy added after the scan is not seen.
+                self.assertEqual(len(_source(root, 'decal.pck')[2]), 1)
+                with self.assertRaisesRegex(ValueError, 'missing shared wheel source'):
+                    _source(root, 'rim.ppf')
+            # Outside the block every lookup lists the tree again, so the conflict is found.
+            with self.assertRaisesRegex(ValueError, 'conflicting shared wheel source copies'):
+                _source(root, 'decal.pck')
 
     def test_recovered_350z_join_and_native_geometry(self):
         root = Path(__file__).resolve().parents[1] / 'midnight-club-3-remix/cars'

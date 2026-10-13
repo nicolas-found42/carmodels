@@ -12,7 +12,7 @@ from bake_models import ROOT, read_glb
 from mc3_materials import read_material_table
 from mc3_model import bind_textures, build_glb
 from mc3_pck import read_vehicle
-from mc3_wheels import read_default_wheels
+from mc3_wheels import read_default_wheels, scanned_once
 from mc3_textures import (SLOT_CLASS, TextureError, bind_material_textures, indexed_to_rgba,
                           material_bindings, palette_csm1, read_page_slots, read_slot_textures,
                           read_tex, shared_texture_rows, smoothness, texture_policy)
@@ -551,6 +551,7 @@ class CorpusTests(unittest.TestCase):
                   'vp_d_tokyo_cop_01', 'vp_esprit_04', 'vp_sl500_04', 'vp_ninja_03', 'vp_hummer_02',
                   'vp_cuevito_99', 'vp_ducati_999r_04', 'vp_kwz_cop_98', 'vp_monster_sr4_04', 'vp_murcielago_04',
                   'vp_gto_70', 'vp_golfr32_04', 'vp_d_yukon_05', 'vp_skully_01', 'vp_viper_03'}
+        self.enterContext(scanned_once())  # The committed tree is unchanged while the sample reads.
         for vehicle in (v for v in self.index['vehicles'] if v['id'] in sample):
             wheels = None
             for bike in (False, True):

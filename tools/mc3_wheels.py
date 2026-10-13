@@ -6,6 +6,7 @@ wheel sizing, game deformation and joint rotation are separate renderer work.
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
 import hashlib
 import math
 from pathlib import Path
@@ -27,12 +28,41 @@ def _fingerprint(path: Path, data: bytes) -> dict:
             "sha256": hashlib.sha256(data).hexdigest()}
 
 
+_SCANS: dict | None = None
+
+
+@contextmanager
+def scanned_once():
+    """Within the block, each shared tree is listed once instead of once per lookup.
+
+    For batch conversions whose source tree does not change while they run; the files found
+    are still checked and read on every lookup.
+    """
+    global _SCANS
+    outer, _SCANS = _SCANS, {} if _SCANS is None else _SCANS
+    try:
+        yield
+    finally:
+        _SCANS = outer
+
+
+def _find(shared: Path, filename: str) -> list[Path]:
+    if _SCANS is None:
+        return sorted(shared.rglob(filename))
+    if shared not in _SCANS:
+        listing: dict[str, list[Path]] = {}
+        for path in shared.rglob("*"):
+            listing.setdefault(path.name, []).append(path)
+        _SCANS[shared] = listing
+    return sorted(_SCANS[shared].get(filename, []))
+
+
 def _source(root: Path, filename: str) -> tuple[Path, bytes, list[dict]]:
     shared = (root / "shared").absolute()
     for entry in [shared, *shared.parents]:
         if entry.is_symlink():
             raise ValueError("symlink in shared wheel source ancestry")
-    paths = sorted((root / "shared").rglob(filename))
+    paths = _find(root / "shared", filename)
     if not paths:
         raise ValueError(f"missing shared wheel source: {filename}")
     for path in paths:
