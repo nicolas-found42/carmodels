@@ -1,9 +1,13 @@
 """Native wheel page/handle controls and optional recovered-source checks."""
 from pathlib import Path
+from contextlib import contextmanager
+import copy
 import struct
 import tempfile
 import unittest
 import os
+from unittest.mock import patch
+import mc3_wheels
 
 from mc3_pck import Pck
 from mc3_wheels import (_elf_address, _source, ppf_page, read_default_config, read_default_wheels,
@@ -11,6 +15,82 @@ from mc3_wheels import (_elf_address, _source, ppf_page, read_default_config, re
 
 
 class WheelTests(unittest.TestCase):
+    @contextmanager
+    def page_fixture(self, pages=(6, 6, 6)):
+        root = Path('/controlled-wheel-source')
+        base = 0x6800000
+        library = bytearray(640)
+        struct.pack_into('<4I', library, 0, base, 0x25, 1, len(library) - 128)
+        for field, value in ((0x28, base + 80), (0x2C, base + 112),
+                             (0x30, base + 80), (0x44, 8)):
+            struct.pack_into('<I', library, 128 + field, value)
+        for profile in range(8):
+            struct.pack_into('<I', library, 240 + profile * 4, base + 80 + profile * 16)
+        archive = bytearray(8192)
+        struct.pack_into('<4sII', archive, 0, b'pf05', 16, 2048)
+        for page in range(16):
+            struct.pack_into('<I', archive, 12 + page * 4, (1 << 20) | 2)
+        inputs = {'decal.pck': bytes(library), 'rim.ppf': bytes(archive), 'tire.ppf': bytes(archive)}
+        config = {'fields': {'RimMdlIdx': 0, 'TireMdlIdx': 0, 'BikeTireMdlIdx': 0,
+                             'TireProfile0': 0, 'TireProfile1': 1}}
+        def source(folder, name):
+            path, data = folder / 'shared' / name, inputs[name]
+            return path, data, [mc3_wheels._fingerprint(path, data)]
+        def handle(library, collection, index, archive):
+            page = pages[0] if archive == 5 else pages[1 if collection == 208 else 2]
+            return {'page': page, 'archive': archive, 'config_index': index}
+        def decode(data, page, source):
+            return {'source': source, 'input_sha256': mc3_wheels._fingerprint(Path(source), data)['sha256'],
+                    'materials': [{'base_color': [1, 1, 1, 1], 'claim_limits': ['original']}],
+                    'lods': {'high': [{'draws': [{'batches': [{'positions': [(1, 2, 3)],
+                                                               'uvs': [(0, 0)], 'adc': [0]}]}]}]},
+                    'texture_records': [{'resolved': [{'name': 'original'}]}],
+                    'texture_slots': {'image': {'rgba': bytes(4)}}}
+        with patch.object(mc3_wheels, 'read_default_config', return_value=config), \
+                patch.object(mc3_wheels, '_source', side_effect=source) as reads, \
+                patch.object(mc3_wheels, 'select_handle', side_effect=handle), \
+                patch.object(mc3_wheels, 'read_page_model', side_effect=decode) as decoder, \
+                patch.object(mc3_wheels, 'ppf_page', wraps=mc3_wheels.ppf_page) as page_checks:
+            yield root, inputs, reads, decoder, page_checks
+
+    def test_repeated_pages_decode_once_with_independent_nested_models(self):
+        with self.page_fixture() as (root, _, reads, decoder, page_checks):
+            result = read_default_wheels(root, 'vp_test')
+            rim, front, rear = [c['model'] for c in result['components']]
+            self.assertEqual(decoder.call_count, 2)  # Equal numeric pages in different archives stay distinct.
+            self.assertEqual(page_checks.call_count, 3)
+            self.assertEqual(reads.call_count, 3)
+            self.assertNotEqual(rim['source'], front['source'])
+            self.assertEqual(front, rear)
+            before = copy.deepcopy(rear)
+            front['textures_bound'] = True
+            front['materials'][0]['base_color'][0] = 0
+            front['materials'][0]['claim_limits'].append('changed')
+            front['lods']['high'][0]['draws'][0]['batches'][0]['positions'][0] = (0, 0, 0)
+            front['texture_records'][0]['resolved'][0]['name'] = 'changed'
+            self.assertEqual(rear, before)
+            self.assertNotIn('textures_bound', rear)
+
+    def test_different_selected_pages_and_later_calls_decode_fresh_sources(self):
+        with self.page_fixture((6, 6, 7)) as (root, _, _, decoder, page_checks):
+            result = read_default_wheels(root, 'vp_test')
+            self.assertEqual([c['page'] for c in result['components']], [6, 6, 7])
+            self.assertEqual((decoder.call_count, page_checks.call_count), (3, 3))
+        with self.page_fixture() as (root, inputs, reads, decoder, page_checks):
+            first = read_default_wheels(root, 'vp_test')
+            changed = bytearray(inputs['tire.ppf']);changed[-1] = 1
+            inputs['tire.ppf'] = bytes(changed)
+            second = read_default_wheels(root, 'vp_test')
+            self.assertNotEqual(first['components'][1]['model']['input_sha256'],
+                                second['components'][1]['model']['input_sha256'])
+            self.assertEqual((decoder.call_count, reads.call_count, page_checks.call_count), (4, 6, 6))
+            decoder.side_effect = ValueError('wheel model body missing or ambiguous')
+            with self.assertRaisesRegex(ValueError, 'body missing or ambiguous'):
+                read_default_wheels(root, 'vp_test')
+            reads.side_effect = ValueError('conflicting shared wheel source copies')
+            with self.assertRaisesRegex(ValueError, 'conflicting shared wheel source copies'):
+                read_default_wheels(root, 'vp_test')
+
     def test_native_ppf_offset_mask_and_length(self):
         data = bytearray(8192)
         struct.pack_into('<4s3I', data, 0, b'pf05', 1, 2048, (1 << 20) | 2)
@@ -200,4 +280,4 @@ class WheelTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
