@@ -3,7 +3,7 @@
 The 2026-10-09 import processed all 129 extracted car configurations. It published
 128 static GLBs (19 base-game configurations and 109 add-ons), plus 128 separate,
 editable dealership copies. Both catalogs now contain 891 entries. The native
-extraction in `redline/cars` remains unchanged.
+extraction in `games/redline/cars` remains unchanged.
 
 ## Conversion
 

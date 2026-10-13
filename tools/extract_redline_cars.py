@@ -319,9 +319,9 @@ def main():
     parser.add_argument('--base-package', type=Path, required=True)
     parser.add_argument('--addons-manifest', type=Path, required=True)
     parser.add_argument('--addons-root', type=Path, required=True)
-    parser.add_argument('--dmg', type=Path, default=ROOT / 'redline/game-files/Redline.dmg')
-    parser.add_argument('--sit', type=Path, default=ROOT / 'redline/game-files/redline_addons.sit')
-    parser.add_argument('--output', type=Path, default=ROOT / 'redline/cars')
+    parser.add_argument('--dmg', type=Path, default=ROOT / 'games/redline/game-files/Redline.dmg')
+    parser.add_argument('--sit', type=Path, default=ROOT / 'games/redline/game-files/redline_addons.sit')
+    parser.add_argument('--output', type=Path, default=ROOT / 'games/redline/cars')
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--assess-output', type=Path,
                         help='Explicit opt-in: send bounded inventory to Jev and save advisory receipt outside cars.')

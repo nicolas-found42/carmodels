@@ -9,7 +9,7 @@ import tempfile
 from redline_model import LIMITS, PROFILE, NoDrawableGeometry, build_glb, safe_file, sha
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'redline/cars'
+SOURCE = ROOT / 'games/redline/cars'
 OUTPUT = ROOT / 'dealership/public/redline'
 
 
