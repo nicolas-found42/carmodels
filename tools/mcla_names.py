@@ -209,7 +209,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--iso', type=Path, default=DEFAULT_ISO)
     parser.add_argument('--table', type=Path, help='Pinned loose UI table instead of disc input')
-    parser.add_argument('--index', type=Path, default=ROOT / 'midnight-club-los-angeles/cars/index.json')
+    parser.add_argument('--index', type=Path, default=ROOT / 'games/midnight-club-los-angeles/cars/index.json')
     parser.add_argument('--receipt', type=Path, default=RECEIPT)
     parser.add_argument('--write', action='store_true')
     args = parser.parse_args(argv)

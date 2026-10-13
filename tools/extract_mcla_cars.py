@@ -26,7 +26,7 @@ from xex2 import load_image
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = 'Midnight Club: Los Angeles'
-DEFAULT_ISO = ROOT / 'midnight-club-los-angeles/game-files/Midnight Club - Los Angeles - Complete Edition (USA, Europe).iso'
+DEFAULT_ISO = ROOT / 'games/midnight-club-los-angeles/game-files/Midnight Club - Los Angeles - Complete Edition (USA, Europe).iso'
 KEY_SHA256 = '71f5abd83015a713952b7c2f2c25289f92f3cf9a9dd740c40a511a62ea5b505c'
 CACHE = 'xarchive_cache.rpf'
 VEHICLES = 'resources/vehicle/'
@@ -508,7 +508,7 @@ def write_extraction(iso, destination):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--iso', type=Path, default=DEFAULT_ISO)
-    parser.add_argument('--output', type=Path, default=ROOT / 'midnight-club-los-angeles/cars')
+    parser.add_argument('--output', type=Path, default=ROOT / 'games/midnight-club-los-angeles/cars')
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     try:

@@ -26,7 +26,7 @@ from xdvdfs import XdvdfsDisc
 
 ROOT = Path(__file__).resolve().parents[1]
 RECEIPT = ROOT / 'research/evidence/midnight-club-los-angeles/resources.json'
-INDEX = ROOT / 'midnight-club-los-angeles/cars/index.json'
+INDEX = ROOT / 'games/midnight-club-los-angeles/cars/index.json'
 LIMITS = [
     'Establishes byte-exact decompression of every RSC5 resource to its declared size and records output '
     'digests; it does not decode the structures inside the outputs (see the model, texture and tuning checks).',

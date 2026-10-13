@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify the decoding of every Midnight Club: Los Angeles car model, texture, tuning and streaming map.
 
-Inputs are the local extraction (`midnight-club-los-angeles/cars/`, re-derived from the disc by
+Inputs are the local extraction (`games/midnight-club-los-angeles/cars/`, re-derived from the disc by
 `tools/extract_mcla_cars.py`); every file is pinned by the SHA-256 the committed `index.json` records.
 Each RSC5 file of types 63 (models), 9 and 83 (textures), 50 (tuning) and 19 (streaming maps) is
 decompressed and decoded with the repo-owned readers; texture base levels are decoded to RGBA.
@@ -32,7 +32,7 @@ import mcla_tuning
 import verifier_common
 
 ROOT = Path(__file__).resolve().parents[1]
-CARS = ROOT / 'midnight-club-los-angeles/cars'
+CARS = ROOT / 'games/midnight-club-los-angeles/cars'
 RECEIPT = ROOT / 'research/evidence/midnight-club-los-angeles/decoding.json'
 TYPES = {63: 'model', 9: 'texture-dictionary', 83: 'texture-pack', 50: 'tuning', 19: 'streaming-map'}
 LIMITS = [
@@ -326,7 +326,7 @@ def derive(processes):
     return {'schema': 1, 'tool': 'tools/verify_mcla_decoding.py',
             'decoders': ['tools/mcla_lzx.py', 'tools/mcla_model.py', 'tools/mcla_texture.py', 'tools/mcla_tuning.py',
                          'tools/mcla_resource.py'],
-            'source': {'index': 'midnight-club-los-angeles/cars/index.json', 'disc_sha256': index['source']['sha256']},
+            'source': {'index': 'games/midnight-club-los-angeles/cars/index.json', 'disc_sha256': index['source']['sha256']},
             'totals': totals(results), 'tuning_layout': tuning_layout(results), 'cars': car_rows(results, index),
             'controls': run_controls(results), 'claim_limits': LIMITS}
 
