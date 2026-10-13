@@ -157,6 +157,54 @@ The existing real page/header, source-hash, pointer, linked-file and sizing cont
 Cross-vehicle reuse still needs separate source-lifetime and bounded-memory design; packet/PNG
 optimization and the existing static-preview fidelity limits remain open.
 
+## MC3 PNG output reuse
+
+A fresh complete-preview profile after wheel-page reuse recorded 696 PNG encodes
+(3.433s cumulative, 3.410s in compression), while packet batch decoding took 5.220s.
+The scalar-unpack hypothesis was ruled out: the packet reader already bulk-unpacks
+attribute planes. A separate complete-suite probe found only 251 distinct dimensions/pixel
+combinations among those 696 encodes and failed its redundant-compression assertion.
+That assertion identifies the opportunity; bounded reuse deliberately retains some misses.
+
+`encode_png` now validates RGBA length on every call, then reuses pure output bytes in
+an LRU of 16 `(width, height, rgba)` entries. Only exact immutable bytes and positive integer
+dimensions up to 512 are eligible. Mutable buffers, larger inputs and other previously
+accepted dimension types use the original uncached writer. The cache retains at most 16MiB
+of pixel-key data plus the corresponding bounded PNG outputs; it never holds source paths,
+models or receipts. Sources are still read, pinned and decoded before encoding. Changed
+pixels/dimensions miss without a source-lifetime assumption. Cache bookkeeping is provided
+by the stdlib; simultaneous misses may compute twice, with identical immutable results.
+Check selection, process pools, output layouts and compiled assets are unchanged.
+
+Replaying the actual sequence at capacities 8/16/32/64 predicts 139/279/359/413 hits.
+The 16-entry simulation peaks at 2,143,521 bytes of retained pixels plus PNGs, excluding
+Python/cache overhead; this is not an RSS measurement. Jev selected 16 entries with
+probability .95/confidence .94, all three requirements supported and no warnings.
+This judgment chose scope; executable comparisons establish behavior.
+
+Three alternating subprocess pairs against the exact `7f1a6a2d` writer start with cold
+caches and execute the entire existing preview suite. Each run reproduces all 94 exact
+GLBs and evidence, 749,843 triangles and 346 wheel slots, with all three tests passing
+and no skips. Compressions fall from 696 to 417 in every pair (279 hits, 40.1% fewer).
+
+| Pair | Before wall | After wall | Before CPU | After CPU |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 20.727s | 18.802s | 20.076s | 18.176s |
+| 2 | 19.674s | 18.355s | 19.044s | 17.805s |
+| 3 | 20.292s | 18.685s | 19.602s | 18.040s |
+| Median | 20.292s | 18.685s | 19.602s | 18.040s |
+
+The local medians are 7.9% lower wall time and
+8.0% lower CPU time. These are bounded local measurements,
+not a CI speed guarantee. Ninety seeded comparisons span uniform, alternating and random
+pixels, dimensions from 1 to 512, oversize dimensions and mutable buffers; every complete
+PNG matches the original writer and decodes to the original pixels. New controls check
+content/dimension separation, length rejection, eviction and mutable/oversize bypass.
+Intentional unbounded, pixel-only and dimension-only cache mutations fail for their intended
+reasons. Evidence lives under `.scratch/research/mc3-next-preview/` and
+`.scratch/checks/mc3-next-preview-*`. Packet attribute assembly, face normals and broader
+source/page reuse remain separate work; static-render fidelity limits are unchanged.
+
 ## Optional TypeSafe advice
 
 `tools/check_advice.py` supplies a profiling direction over explicitly supplied bounded diagnostics.
@@ -215,6 +263,6 @@ transport low relevance despite the measured additional saving: rankings remain 
 patch/claim gating uses actual diffs and check logs.
 
 Remaining work: general accuracy and false-withholding calibration on natural profiles; measured
-chunk utilization before altering batching; cross-vehicle MC3 page reuse and deeper packet/PNG
+chunk utilization before altering batching; cross-vehicle MC3 page reuse and deeper packet/normal
 profiling with appropriate source-lifetime and bounded-memory controls. PNG decoding was a small share of the six-car dealership sample,
 so dealership cache changes are deferred.

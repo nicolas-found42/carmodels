@@ -7,6 +7,10 @@ choices (block swizzle, palette order) to beat their alternatives.
 import json
 import struct
 import unittest
+from unittest.mock import patch
+
+import mc3_textures
+from model_png import decode_png
 
 from bake_models import ROOT, read_glb
 from mc3_materials import read_material_table
@@ -73,6 +77,44 @@ def slot_fixture(delta=0, levels=1, name=b'vp_test', width=0x100):
 
 
 class PaletteAndImageTests(unittest.TestCase):
+    def setUp(self):
+        cached = getattr(mc3_textures, '_cached_png', None)
+        if cached is not None:
+            cached.cache_clear()
+            self.addCleanup(cached.cache_clear)
+
+    def test_png_reuse_keeps_exact_pixels_dimensions_and_length_checks(self):
+        pixels = bytes((0, 1, 2, 255, 255, 128, 64, 0))
+        with patch.object(mc3_textures.zlib, 'compress', wraps=mc3_textures.zlib.compress) as compress:
+            first = mc3_textures.encode_png(2, 1, pixels)
+            self.assertEqual(mc3_textures.encode_png(2, 1, bytes(bytearray(pixels))), first)
+            self.assertEqual(compress.call_count, 1)
+            tall = mc3_textures.encode_png(1, 2, pixels)
+            changed = mc3_textures.encode_png(2, 1, b'\xff' + pixels[1:])
+            self.assertNotEqual(tall, first)
+            self.assertNotEqual(changed, first)
+            self.assertEqual(compress.call_count, 3)
+            self.assertEqual(decode_png(first), (2, 1, pixels))
+            self.assertEqual(decode_png(tall), (1, 2, pixels))
+            for invalid in (pixels[:-1], pixels + b'\0'):
+                with self.assertRaisesRegex(TextureError, 'length differs'):
+                    mc3_textures.encode_png(2, 1, invalid)
+            self.assertEqual(compress.call_count, 3)
+
+    def test_png_reuse_is_bounded_and_mutable_or_large_inputs_stay_fresh(self):
+        with patch.object(mc3_textures.zlib, 'compress', wraps=mc3_textures.zlib.compress) as compress:
+            expected = [mc3_textures.encode_png(1, 1, bytes((i, 0, 0, 255))) for i in range(17)]
+            self.assertEqual(mc3_textures.encode_png(1, 1, bytes((0, 0, 0, 255))), expected[0])
+            self.assertEqual(compress.call_count, 18)  # The first of 17 entries was evicted.
+            mutable = bytearray((42, 0, 0, 255))
+            before = mc3_textures.encode_png(1, 1, mutable)
+            self.assertEqual(mc3_textures.encode_png(1, 1, mutable), before)
+            mutable[0] = 43
+            self.assertNotEqual(mc3_textures.encode_png(1, 1, mutable), before)
+            large = bytes((7, 0, 0, 255)) * 513
+            self.assertEqual(mc3_textures.encode_png(513, 1, large), mc3_textures.encode_png(513, 1, large))
+            self.assertEqual(compress.call_count, 23)
+
     def test_csm1_is_a_bijection_that_swaps_blocks_eight_and_sixteen(self):
         entries = bytes(i for i in range(256) for _ in range(4))
         order = [entry[0] for entry in palette_csm1(entries)]
@@ -598,4 +640,4 @@ class CorpusTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
