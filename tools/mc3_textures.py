@@ -16,6 +16,7 @@ against the original GS. Native shader blending is not emulated.
 import re
 import struct
 import zlib
+from functools import lru_cache
 
 from ps2_container import unswizzle8
 
@@ -50,7 +51,20 @@ def encode_png(width, height, rgba):
     """Small RGBA8 PNG writer; no filtering, so the decoded bytes stay exact."""
     if len(rgba) != width * height * 4:
         raise TextureError('RGBA length differs from dimensions')
+    # Cache pure output bytes, never source reads/decodes. Limit both entry count
+    # and pixel size; mutable and larger inputs retain the uncached writer.
+    if (type(rgba) is bytes and type(width) is int and type(height) is int
+            and 0 < width <= MAX_DIMENSION and 0 < height <= MAX_DIMENSION):
+        return _cached_png(width, height, rgba)
+    return _encode_png(width, height, rgba)
 
+
+@lru_cache(maxsize=16)
+def _cached_png(width, height, rgba):
+    return _encode_png(width, height, rgba)
+
+
+def _encode_png(width, height, rgba):
     def chunk(kind, payload):
         return struct.pack('>I', len(payload)) + kind + payload + struct.pack('>I', zlib.crc32(kind + payload))
 
