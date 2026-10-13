@@ -78,7 +78,7 @@ class WheelTests(unittest.TestCase):
                 _source(root, 'decal.pck')
 
     def test_recovered_350z_join_and_native_geometry(self):
-        root = Path(__file__).resolve().parents[1] / 'midnight-club-3-remix/cars'
+        root = Path(__file__).resolve().parents[1] / 'games/midnight-club-3-remix/cars'
         if not (root / 'shared').exists():
             self.skipTest('recovered shared source inputs unavailable')
         result = read_default_wheels(root, 'vp_350z_04')
@@ -95,7 +95,7 @@ class WheelTests(unittest.TestCase):
             self.assertTrue(component['model']['materials'])
 
     def test_source_model_corruption_controls(self):
-        root = Path(__file__).resolve().parents[1] / 'midnight-club-3-remix/cars'
+        root = Path(__file__).resolve().parents[1] / 'games/midnight-club-3-remix/cars'
         paths = sorted((root / 'shared').rglob('rim.ppf'))
         if not paths:
             self.skipTest('recovered shared source inputs unavailable')
@@ -144,13 +144,13 @@ class WheelTests(unittest.TestCase):
 
     def test_native_sizing_car_bike_and_failure_controls(self):
         root = Path(__file__).resolve().parents[1]
-        disc = root / 'midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso'
+        disc = root / 'games/midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso'
         if not disc.is_file():
             self.skipTest('supplied game disc source input unavailable')
         from mc3_model import native_executable
         source = native_executable()
-        config = read_default_config(root / 'midnight-club-3-remix/cars', 'vp_350z_04')['fields']
-        cop_class = read_vehicle_class(root / 'midnight-club-3-remix/cars', 'vp_kwz_cop_98')
+        config = read_default_config(root / 'games/midnight-club-3-remix/cars', 'vp_350z_04')['fields']
+        cop_class = read_vehicle_class(root / 'games/midnight-club-3-remix/cars', 'vp_kwz_cop_98')
         self.assertEqual((cop_class['class'], cop_class['native_class_value']), ('COPBIKE', 10))
         result = read_wheel_sizing(source, config, axle=0)
         self.assertAlmostEqual(result['rim_scale'][0], 0.4300000071525574)

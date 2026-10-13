@@ -62,8 +62,8 @@ class PacketTests(unittest.TestCase):
 
     def test_shared_group_recovers_exact_missing_body(self):
         code = "vp_belair_57"
-        main = read_vehicle(next((ROOT / "midnight-club-3-remix/cars" / code).rglob(code + ".pck")))
-        path = next((ROOT / "midnight-club-3-remix/cars/shared").rglob(code + "_g.pck"))
+        main = read_vehicle(next((ROOT / "games/midnight-club-3-remix/cars" / code).rglob(code + ".pck")))
+        path = next((ROOT / "games/midnight-club-3-remix/cars/shared").rglob(code + "_g.pck"))
         group = read_resource_group(path)
         name = "vroot_body_chptp_stk_rkstrsd_bel57_chptp_stk_rkstrsd_bel57_LOD_hlod_group_shell_h.mesh"
         missing = next(part for part in main["lods"]["high"] if part["name"] == name)
@@ -88,7 +88,7 @@ class PacketTests(unittest.TestCase):
             decode_batches(planes)
 
     def test_native_rest_tree_and_corruption_controls(self):
-        path = next((ROOT / "midnight-club-3-remix/cars/vp_350z_04").rglob("vp_350z_04.pck"))
+        path = next((ROOT / "games/midnight-club-3-remix/cars/vp_350z_04").rglob("vp_350z_04.pck"))
         vehicle = read_vehicle(path)
         skeleton = vehicle["skeleton"]
         bones = skeleton["bones"]
@@ -191,7 +191,7 @@ class PacketTests(unittest.TestCase):
             strip_indices({"positions": [(0, float("nan"), 0)], "adc": [1]})
 
     def test_all_94_exact_main_sources_and_native_profiles(self):
-        folders = sorted((ROOT / "midnight-club-3-remix/cars").glob("vp_*"))
+        folders = sorted((ROOT / "games/midnight-club-3-remix/cars").glob("vp_*"))
         self.assertEqual(len(folders), 94)
         profiles = set()
         for folder in folders:

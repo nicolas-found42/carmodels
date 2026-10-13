@@ -107,7 +107,7 @@ def check(dealership=DEALERSHIP, output=OUTPUT):
 def build(dealership=DEALERSHIP, output=OUTPUT):
     output = Path(output)
     public = ROOT / 'dealership/public'
-    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'games/gran-turismo', ROOT / 'games/redline', ROOT / 'midnight-club-3-remix',
+    protected_paths = [ROOT / 'ford-racing-2', ROOT / 'games/gran-turismo', ROOT / 'games/redline', ROOT / 'games/midnight-club-3-remix',
                        public / 'models.json', Path(dealership)]
     protected_paths.extend(path for path in public.iterdir()
                            if path.is_dir() and path.name != 'dealership')

@@ -18,7 +18,7 @@ from mc3_textures import (SLOT_CLASS, TextureError, bind_material_textures, inde
                           read_tex, shared_texture_rows, smoothness, texture_policy)
 from ps2_container import _block_order8, unswizzle8
 
-CARS = ROOT / 'midnight-club-3-remix/cars'
+CARS = ROOT / 'games/midnight-club-3-remix/cars'
 PARAMETER = 0x7A1260
 BASE = 0x6800000
 

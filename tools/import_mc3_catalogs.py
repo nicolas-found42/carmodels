@@ -196,8 +196,8 @@ def import_packages(source=ROOT / 'dealership/public' / GAME, destination=ROOT /
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--iso', type=Path, default=ROOT / GAME / 'game-files/Midnight Club 3 - DUB Edition Remix.iso')
-    parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')
+    parser.add_argument('--iso', type=Path, default=ROOT / 'games' / GAME / 'game-files/Midnight Club 3 - DUB Edition Remix.iso')
+    parser.add_argument('--extraction', type=Path, default=ROOT / 'games' / GAME / 'cars')
     parser.add_argument('--source', type=Path, default=ROOT / 'dealership/public' / GAME)
     parser.add_argument('--destination', type=Path, default=ROOT / 'dealership/dealership')
     args = parser.parse_args()

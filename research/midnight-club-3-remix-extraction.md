@@ -2,11 +2,11 @@
 
 The supplied 8,539,963,392-byte cooked PS2 ISO contains boot serial `SLUS_213.55`.
 Its SHA-256 is `de199f7e7f57b7cb603a129217f7482d50644fd66558450dfeb5612857b732f9`.
-The original image remains in `midnight-club-3-remix/game-files/`.
+The original image remains in `games/midnight-club-3-remix/game-files/`.
 
 ## Recovered files and boundary
 
-The extraction under `midnight-club-3-remix/cars/` contains 94 root `vp_*.dat`
+The extraction under `games/midnight-club-3-remix/cars/` contains 94 root `vp_*.dat`
 vehicle carriers, all 4,323 nested native member payloads, and the shared outer
 vehicle namespaces. The corpus has 7,283 files totaling 569,084,266 bytes,
 including carriers, manifests, index and provenance. The index lists 7,282 files

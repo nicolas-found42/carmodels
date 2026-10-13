@@ -16,7 +16,7 @@ needs_disc = unittest.skipUnless(NATIVE_DISC.is_file(), 'supplied game disc sour
 class PreviewCorpusTests(unittest.TestCase):
     @needs_disc
     def test_complete_native_conversion_and_rest_frames(self):
-        extraction = ROOT/'midnight-club-3-remix/cars'
+        extraction = ROOT/'games/midnight-club-3-remix/cars'
         index = json.loads((extraction/'index.json').read_text())
         output = json.loads((DEFAULT/'index.json').read_text())
         rows = {r['code']: r for r in output['cars']}
@@ -77,7 +77,7 @@ class PreviewCorpusTests(unittest.TestCase):
         print(f'PASS canonical MC3 conversions: 94 source-derived GLBs, {total} triangles, 346 native wheel slots (79 cars/15 bikes); exact bytes, rest frames, sizing and resource pins')
 
     def test_source_hash_and_duplicate_identity_controls(self):
-        extraction = ROOT/'midnight-club-3-remix/cars'
+        extraction = ROOT/'games/midnight-club-3-remix/cars'
         vehicle = next(v for v in json.loads((extraction/'index.json').read_text())['vehicles'] if v['id'] == 'vp_350z_04')
         manifest = json.loads((extraction/vehicle['manifest']).read_text())
         changed = copy.deepcopy(manifest)
@@ -92,7 +92,7 @@ class PreviewCorpusTests(unittest.TestCase):
 
     @needs_disc
     def test_wheel_source_hash_control(self):
-        extraction = ROOT/'midnight-club-3-remix/cars'
+        extraction = ROOT/'games/midnight-club-3-remix/cars'
         vehicle = next(v for v in json.loads((extraction/'index.json').read_text())['vehicles'] if v['id'] == 'vp_350z_04')
         manifest = json.loads((extraction/vehicle['manifest']).read_text())
         index = json.loads((extraction/'index.json').read_text())

@@ -108,7 +108,7 @@ python3 tools/build_dealership.py
 ```
 
 The exporter reads pinned native PCK geometry, stock-named parts, shared body
-resources and default rims/tires into `midnight-club-3-remix/recovered-models/`. It verifies packet bounds,
+resources and default rims/tires into `games/midnight-club-3-remix/recovered-models/`. It verifies packet bounds,
 material indices, source hashes and static GLB validity. An existing conversion
 folder must match exactly; differing outputs are never overwritten. Use a separate
 `--output` directory for a different conversion profile.
