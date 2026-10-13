@@ -17,7 +17,7 @@ from import_gt4_catalog import GAME, check_export, export_packages, extraction_a
 from test_extract_gt4_cars import CAR, SHARED, fixture
 
 ROOT = Path(__file__).resolve().parents[1]
-REAL = ROOT / 'gran-turismo-4/cars'
+REAL = ROOT / 'games/gran-turismo-4/cars'
 OTHER = [(path.replace('test0001', 'test0002'), data + b'2', compressed) for path, data, compressed in CAR[:3]]
 REAL_MENU = (REAL / 'acra0001/car/menu/acra0001').read_bytes()
 REAL_SPEC = car_specs(REAL / 'provenance/specdb/GT4_EU2560')['acra0001']

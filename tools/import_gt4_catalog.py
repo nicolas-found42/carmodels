@@ -321,8 +321,8 @@ def check_export(extraction, output):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--iso', type=Path, default=ROOT / GAME / 'game-files/Gran Turismo 4 (axekin.com).iso')
-    parser.add_argument('--extraction', type=Path, default=ROOT / GAME / 'cars')
+    parser.add_argument('--iso', type=Path, default=ROOT / 'games' / GAME / 'game-files/Gran Turismo 4 (axekin.com).iso')
+    parser.add_argument('--extraction', type=Path, default=ROOT / 'games' / GAME / 'cars')
     parser.add_argument('--output', type=Path, default=ROOT / 'dealership/public' / GAME)
     parser.add_argument('--check', action='store_true', help='Offline: compare published files with a fresh conversion.')
     parser.add_argument('--available', action='store_true', help='Exit 0 with a full local extraction, 1 without, 2 if partial.')

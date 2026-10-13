@@ -70,7 +70,7 @@ def registry():
     # The disc is never committed; its re-derivation runs only where the pinned ISO is supplied.
     checks.append({'name': 'gt4_extraction', 'command': ['python3', 'tools/extract_gt4_cars.py', '--check'],
                    'availability': ['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
-                                    "'gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso').is_file() else 1)"]})
+                                    "'games/gran-turismo-4/game-files/Gran Turismo 4 (axekin.com).iso').is_file() else 1)"]})
     # Line coverage of the MCLA readers and the review bundle builder under their own tests (stdlib trace).
     covered = ['aes_decrypt', 'xdvdfs', 'xex2', 'mcla_rpf', 'extract_mcla_cars', 'review_payload', 'mcla_lzx',
                'mcla_resource', 'mcla_model', 'mcla_texture', 'mcla_tuning', 'verify_mcla_resources',

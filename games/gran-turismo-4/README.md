@@ -1,5 +1,17 @@
 # Gran Turismo 4 — native car files
 
+Everything about this game in this repository:
+
+| What | Where |
+| --- | --- |
+| Source tree (this folder) | `cars/`, `game-files/` (local inputs, ignored) |
+| Tools | `tools/extract_gt4_cars.py`, `tools/import_gt4_catalog.py`, `tools/import_gt4_dealership.py`, `tools/gt4_{volume,model,specdb,glb}.py` and their tests |
+| Research notes | [`research/gran-turismo-4-extraction.md`](../../research/gran-turismo-4-extraction.md), [`research/gran-turismo-4-previews.md`](../../research/gran-turismo-4-previews.md) |
+| Evidence | `cars/index.json`, `cars/provenance/` and per-car `manifest.json` (source identity and hashes) |
+| Source-model showcase files | `dealership/public/gran-turismo-4/` |
+| Dealership copies | `dealership/dealership/models/GT4_*.glb` |
+| Checks | `tools/check.sh --game gran-turismo-4` (the `*gt4*` checks); add `--full` for corpus re-derivation |
+
 Extracted from the supplied PAL PS2 DVD image (boot `SCES_517.19`, ISO volume
 `GRANTURISMO4`). The original input remains under `game-files/` and is never
 committed or edited; its SHA-256 is
@@ -66,12 +78,12 @@ python3 tools/build_model_catalog.py
 python3 tools/build_dealership.py
 ```
 
-See [the preview note](../research/gran-turismo-4-previews.md) for decoding sources and readings.
+See [the preview note](../../research/gran-turismo-4-previews.md) for decoding sources and readings.
 
 ## Not established
 
 Previews are static: colour set 0 only (Pat0 colour patches are not applied), no reflections,
 lighting, animation or runtime wheel matrices; wheel placement is a reading of spec values.
 Race (LOD) models are extracted but not converted. Game-render fidelity is unverified.
-See [the extraction note](../research/gran-turismo-4-extraction.md) for format
+See [the extraction note](../../research/gran-turismo-4-extraction.md) for format
 sources, verification and open items.

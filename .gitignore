@@ -62,16 +62,16 @@ research/evidence/job-b-live/members/
 
 # Locally supplied Gran Turismo disc inputs; never publish a disc image.
 games/gran-turismo/game-files/
-gran-turismo-4/game-files/
+games/gran-turismo-4/game-files/
 
 # Gran Turismo 4 native data is ~1.2 GB and re-derivable from the local disc
 # (tools/extract_gt4_cars.py, then tools/import_gt4_catalog.py restores the ZIPs).
 # Kept: the extraction index (every file's SHA-256), the spec database and volume
 # inventory under provenance/, one fixture car for tests, and the viewer GLBs.
-gran-turismo-4/cars/*
-!gran-turismo-4/cars/index.json
-!gran-turismo-4/cars/provenance/
-!gran-turismo-4/cars/acra0001/
+games/gran-turismo-4/cars/*
+!games/gran-turismo-4/cars/index.json
+!games/gran-turismo-4/cars/provenance/
+!games/gran-turismo-4/cars/acra0001/
 dealership/public/gran-turismo-4/native/
 
 # Locally supplied Redline installers and the retained base package (>100 MB).

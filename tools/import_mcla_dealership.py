@@ -14,7 +14,7 @@ from bake_models import ROOT, bake_car, read_glb
 from import_mcla_catalog import GAME, LIMITS, regular, source_package
 
 GAME_LABEL = 'Midnight Club: Los Angeles'
-SPECDB = ROOT / 'gran-turismo-4/cars/provenance/specdb/MCLA_EU2560'
+SPECDB = ROOT / 'games/gran-turismo-4/cars/provenance/specdb/MCLA_EU2560'
 
 
 def sha(data):

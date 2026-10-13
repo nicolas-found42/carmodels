@@ -7,7 +7,7 @@ and list them in the source catalog. No geometry or texture decoding.
 
 | Fact | Value | How established |
 | --- | --- | --- |
-| Disc image | `Gran Turismo 4 (axekin.com).iso`, 5,660,540,928 bytes, SHA-256 `efcb2ac8…830ef5` | hashed locally; pinned in `gran-turismo-4/cars/index.json` |
+| Disc image | `Gran Turismo 4 (axekin.com).iso`, 5,660,540,928 bytes, SHA-256 `efcb2ac8…830ef5` | hashed locally; pinned in `games/gran-turismo-4/cars/index.json` |
 | Region/boot | `SYSTEM.CNF`: `BOOT2 = cdrom0:\SCES_517.19;1`, `VMODE = PAL` | read from the ISO9660 tree |
 | Volume | `GT4.VOL;1`, LBA 105,879, 3,084,849,152 bytes | ISO9660 directory record |
 | Disc layout | The ISO9660 volume covers 1,622,400 sectors; the image has 2,763,936. Every selected GT4.VOL extent lies inside the file's ISO9660 extent, so no data past it is read | extent bounds checked per file |

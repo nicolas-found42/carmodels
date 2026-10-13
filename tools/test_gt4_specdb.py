@@ -8,7 +8,7 @@ import unittest
 from gt4_specdb import Table, car_specs, strings
 
 ROOT = Path(__file__).resolve().parents[1]
-SPECDB = ROOT / 'gran-turismo-4/cars/provenance/specdb/GT4_EU2560'
+SPECDB = ROOT / 'games/gran-turismo-4/cars/provenance/specdb/GT4_EU2560'
 
 
 class SpecTests(unittest.TestCase):
@@ -18,7 +18,7 @@ class SpecTests(unittest.TestCase):
 
     def test_every_model_code_joins_once_with_a_name(self):
         # The committed extraction index lists every code; most car folders are local only.
-        index = json.loads((ROOT / 'gran-turismo-4/cars/index.json').read_text())
+        index = json.loads((ROOT / 'games/gran-turismo-4/cars/index.json').read_text())
         codes = {vehicle['id'] for vehicle in index['vehicles']}
         self.assertEqual(set(self.specs), codes)
         self.assertEqual(len(codes), 730)

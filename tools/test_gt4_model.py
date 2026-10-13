@@ -8,7 +8,7 @@ from gt4_model import (GSMemory, ModelSet, PSMT8, car4_slots, car_info, collisio
                        packet_geometry, vif_commands, walk_model)
 
 ROOT = Path(__file__).resolve().parents[1]
-MENU = ROOT / 'gran-turismo-4/cars/acra0001/car/menu/acra0001'
+MENU = ROOT / 'games/gran-turismo-4/cars/acra0001/car/menu/acra0001'
 MENU_SHA = 'a73725cfd7696daef93f21c297aba9921119ba6fa6ef55348fd8fc9362bd223c'
 
 
