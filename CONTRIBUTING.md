@@ -158,6 +158,12 @@ Verifiers write their JSON receipt under `research/evidence/<area>/`. Those rece
 re-running a verifier should reproduce its receipt and leave the tree otherwise unchanged. A run that
 modifies a committed receipt is a finding, not a cleanup.
 
+`.gitignore` tracks an evidence area only when a verifier writes it or a check reads it; a new verifier
+adds its own `!research/evidence/<area>/` line. One-off session output (teardowns, Jev batteries, review
+screenshots and logs) belongs in `.scratch/research/<session>/`, never in a new dated area. Run logs, raw
+continuation dumps and capture screenshots stay local even inside tracked areas; their receipts pin them
+by sha256.
+
 The `battery_*` scripts are historical model-judgment experiments, not routine check entry points.
 Recovery tools use the local input bundle and repo-owned parsers. Historical receipts preserve their
 original provenance text; it is a record of an earlier run, not a current dependency.

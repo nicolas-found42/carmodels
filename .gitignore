@@ -108,3 +108,35 @@ midnight-club-los-angeles/cars/*
 
 # MCLA native ZIP downloads are locally regenerated from the pinned extraction.
 dealership/public/midnight-club-los-angeles/native/
+
+# Research evidence is allowlist-only: an area is tracked when a verifier or check writes or reads
+# it (proven by running tools/check.sh --games without the candidate files). One-off session output —
+# teardowns, Jev batteries, review screenshots — goes to .scratch/research/<session>/. Files already
+# tracked in other areas stay tracked; new files there are ignored.
+research/evidence/*
+!research/evidence/carselection-2026-10-05/
+!research/evidence/continuation/
+!research/evidence/gran-turismo-wheels/
+!research/evidence/job-b-live/
+!research/evidence/matrix-continuation/
+!research/evidence/midnight-club-3-remix/
+!research/evidence/midnight-club-los-angeles/
+!research/evidence/mip-continuation/
+!research/evidence/original-recovery/
+!research/evidence/packet-continuation/
+!research/evidence/ptg-continuation/
+!research/evidence/ptg-investigation/
+!research/evidence/reference-frames/
+!research/evidence/vehicle-completeness/
+!research/evidence/vu-dispatch/
+# Within tracked areas, run logs and raw continuation dumps stay local; committed receipts pin their
+# sha256. The recovered mip planes (mip-continuation/**/*.bin) and native liveries
+# (matrix-continuation/originals/**/*.ptg;1) are corpus files read by verify_recovered_asset_index.
+research/evidence/**/*.log
+research/evidence/continuation/**/*.bin
+# Emulator and browser screenshots, pinned by their receipts.
+research/evidence/continuation/runtime/linux/**/*.png
+research/evidence/midnight-club-los-angeles/assembly-v2/browser/examples/*.png
+
+# Jev Browser run artifacts.
+.jev-browser/
