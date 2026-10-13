@@ -181,12 +181,20 @@ def bake_car(code, data, expected_sha256=None, *, source_mode=True):
                 pixels = image(doc['textures'][texture['index']]['source']) if texture else None
                 remap = {}
                 for i in sorted(set(indices)):
-                    x, y, z = (sum(transform[j][k] * positions[i][k] for k in range(3)) + transform[j][3] for j in range(3))
-                    normal = [sum(normal_matrix[j][k] * normals[i][k] for k in range(3)) for j in range(3)]
-                    length = math.sqrt(sum(v*v for v in normal))
+                    vx, vy, vz = positions[i]
+                    # Keep sum's float accumulation (including compensation on Python 3.12+)
+                    # and product order; tuples avoid millions of generator resumptions.
+                    x = sum((transform[0][0] * vx, transform[0][1] * vy, transform[0][2] * vz)) + transform[0][3]
+                    y = sum((transform[1][0] * vx, transform[1][1] * vy, transform[1][2] * vz)) + transform[1][3]
+                    z = sum((transform[2][0] * vx, transform[2][1] * vy, transform[2][2] * vz)) + transform[2][3]
+                    a, b, c = normals[i]
+                    nx = sum((normal_matrix[0][0] * a, normal_matrix[0][1] * b, normal_matrix[0][2] * c))
+                    ny = sum((normal_matrix[1][0] * a, normal_matrix[1][1] * b, normal_matrix[1][2] * c))
+                    nz = sum((normal_matrix[2][0] * a, normal_matrix[2][1] * b, normal_matrix[2][2] * c))
+                    length = math.sqrt(sum((nx * nx, ny * ny, nz * nz)))
                     if not length:
                         raise ValueError('Model source normal is zero')
-                    nx, ny, nz = [v / length for v in normal]
+                    nx, ny, nz = nx / length, ny / length, nz / length
                     if pixels:
                         if uv is None:
                             raise ValueError('Model textured source has no UVs')

@@ -19,9 +19,12 @@ PARALLEL_MIN = 16
 
 def _bake(job):
     """Bake one independent model file, returning the error and its traceback instead of raising."""
-    code, path = job
+    code, path, textured = job
     try:
-        return bake_car(code, Path(path).read_bytes(), source_mode=False), None
+        baked = bake_car(code, Path(path).read_bytes(), source_mode=False)
+        # Validation is complete before reducing the worker result. Textured rows use
+        # their GLB directly; sending unused compact geometry through the pool wastes memory.
+        return ({key: baked[key] for key in ('source', 'triangleCount')} if textured else baked), None
     except Exception as error:  # Re-raised at this entry's place in the catalog order.
         error.add_note('In the bake worker:\n' + traceback.format_exc().rstrip())
         return None, error
@@ -41,13 +44,14 @@ def _valid_prefix(catalog):
 
 def bake_all(dealership, catalog):
     """Baked models of the catalog's GLB entries, keyed by code; each bake reads only its own file."""
-    jobs = [(entry['code'], str(Path(dealership) / 'models' / f"{entry['code']}.glb")) for entry in catalog
+    jobs = [(entry['code'], str(Path(dealership) / 'models' / f"{entry['code']}.glb"),
+             entry.get('displayMode') == 'textured-glb') for entry in catalog
             if entry.get('displayMode') != 'native-package'
             and not (Path(dealership) / 'models' / f"{entry['code']}.glb").is_symlink()]
     if len(jobs) < PARALLEL_MIN:
-        return {code: _bake((code, path)) for code, path in jobs}
+        return {job[0]: _bake(job) for job in jobs}
     with ProcessPoolExecutor(os.cpu_count() or 1) as pool:
-        return {code: result for (code, _), result in zip(jobs, pool.map(_bake, jobs, chunksize=16))}
+        return {job[0]: result for job, result in zip(jobs, pool.map(_bake, jobs, chunksize=16))}
 
 
 def load_all(dealership=DEALERSHIP):

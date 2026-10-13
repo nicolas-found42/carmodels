@@ -103,6 +103,17 @@ relative to run start. `pending` lists selected checks still running or waiting,
 run remains distinguishable from a completed run. `not_run` lists checks excluded by selection.
 The review bundle builder refuses manifests with pending checks; older completed manifests remain usable.
 
+Optional profiling advice is available with
+`python3 tools/check_advice.py diagnostics.json --live --output new-receipt.json`. It uses the existing
+optional TypeSafe SDK and server-side `OPENROUTER_API_KEY`. Diagnostics contain only a `question`
+(up to 500 characters) and `observations` (1–12 strings, each up to 1200 characters). Supply measured
+public diagnostics, never credentials or private asset contents. This explicit command sends them to
+OpenRouter; normal checks and its offline tests never call the model. Choice selects a fixed profiling
+direction or no-match, independent Nouls check each direction's fit, and Score rates measurement
+specificity. Code retains distributions and withholds weak or invalid suggestions. Advice never
+executes, changes, skips or approves checks. The output must be a new file. See
+[the performance investigation](research/check-performance.md) for experiments and accuracy limits.
+
 The `dealership_roundtrip` check uses `CARMODELS_BLENDER`, `blender` on PATH, or the locally
 mounted pinned runtime at `.scratch/blender-4.5.14/Blender.app/Contents/MacOS/Blender`.
 CI downloads and hash-checks the pinned Linux Blender release. The check operates entirely
