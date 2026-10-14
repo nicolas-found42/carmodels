@@ -4,6 +4,10 @@ import {loadEditableGLB} from './editable-glb.mjs';
 export const gameId = c => c.game || 'ford-racing-2';
 export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
 export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';
+export function resolveCarAlias(cars, requested, key='id') {
+  return cars.find(car=>car[key]===requested) || cars.find(car=>
+    (key==='id'?car.aliases:car.sourceAliases)?.includes(requested));
+}
 export function dealershipDownload(c) {
   return isNativePackage(c) ? {href:'./'+c.model.source.package, filename:c.code+'-dealership.dat', label:'Download native package (.dat)'} :
     {href:`./dealership/models/${c.code}.glb`, filename:c.code+'-dealership.glb', label:'Download dealership model (.glb)'};

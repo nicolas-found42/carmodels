@@ -46,6 +46,12 @@ def model_catalog(public=PUBLIC):
                 elif 'native_package' in entry:
                     raise ValueError('Unsupported native package game: ' + identifier)
             metadata = {key: entry[key] for key in ["code", "sha256", "bytes", "records"]}
+            if 'aliases' in entry:
+                aliases = entry['aliases']
+                if (not isinstance(aliases, list) or any(not isinstance(alias, str) or not alias
+                        or Path(alias).is_absolute() or '..' in Path(alias).parts for alias in aliases)):
+                    raise ValueError('Invalid model aliases: ' + identifier)
+                metadata['aliases'] = [game + '/' + alias for alias in aliases]
             # Exporters can describe source identities without inventing display names.
             for key in ["display_name", "source_profile", "source_variant", "claim_limits", "asset_kind", "native_members",
                         "native_package"]:
@@ -66,6 +72,12 @@ def model_catalog(public=PUBLIC):
                     metadata[key] = value
             cars.append({**metadata, "id": identifier, "game": game,
                          "file": model.relative_to(public).as_posix()})
+    aliases = set()
+    for car in cars:
+        for alias in car.get('aliases', []):
+            if alias in ids or alias in aliases:
+                raise ValueError('Duplicate model alias: ' + alias)
+            aliases.add(alias)
     return {"cars": cars}
 
 if __name__ == '__main__':

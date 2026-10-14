@@ -33,6 +33,15 @@ class Fake:
 
 
 class Tests(unittest.TestCase):
+    def test_current_gt_catalog_has_only_canonical_filters(self):
+        cars = [{'game':'gran-turismo', 'source_variant':'canonical'}]
+        options = options_for(cars)
+        self.assertEqual(set(options), {'all', 'gran-turismo', 'gran-turismo:canonical'})
+        self.assertEqual(interpret('GT1 canonical models', cars, None)['filters'], options['gran-turismo:canonical'])
+        for query in ('GT1 night', 'GT1 day', 'GT1 arcade'):
+            receipt = interpret(query, cars, None)
+            self.assertEqual(receipt['status'], 'review')
+            self.assertIn('has no', receipt['message'])
     def test_accept_and_no_match(self):
         client = Fake()
         receipt = interpret('nocturnal Gran Turismo machines', CARS, client)

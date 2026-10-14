@@ -5,7 +5,7 @@ import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {createMaterial} from '../dealership/materials.mjs';
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
-import {isNativePackage} from '../dealership/dealership.mjs';
+import {isNativePackage,resolveCarAlias} from '../dealership/dealership.mjs';
 
 const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
@@ -159,8 +159,15 @@ await interpret.events.click();assert.match(filterStatus.textContent,/needs the 
 assert.equal(gameSelect.value,'ford-racing-2');
 // Run the actual startup sequence with an empty native select and a non-first ID.
 const startup=html.slice(html.indexOf('const parameters='),html.indexOf('new ResizeObserver('));
+filterContext.resolveCarAlias=resolveCarAlias;
 carSelect.replaceChildren();filterContext.location.search='?game=gran-turismo&variant=day&car=gran-turismo%2Fsimulation%2Fother%2Fday';
 vm.runInContext(startup,filterContext);assert.equal(carSelect.value,'gran-turismo/simulation/other/day');assert.equal(gameSelect.value,'gran-turismo');assert.equal(sourceVariant.value,'day');
 filterContext.location.search='?game=gran-turismo&variant=day&car=missing';
 vm.runInContext('{'+startup+'}',filterContext);assert.equal(carSelect.value,'gran-turismo/simulation/synthetic/day');
+filterContext.index.cars.push({id:'gran-turismo/simulation/canonical',game:'gran-turismo',code:'simulation/canonical',source_variant:'canonical',aliases:['gran-turismo/simulation/canonical/night','gran-turismo/arcade/pair-0000']});
+sourceVariant.options.push({value:'canonical'});
+for(const alias of filterContext.index.cars.at(-1).aliases){
+ filterContext.location.search='?game=gran-turismo&car='+encodeURIComponent(alias);sourceVariant.value='';
+ vm.runInContext('{'+startup+'}',filterContext);assert.equal(carSelect.value,'gran-turismo/simulation/canonical');
+}
 console.log('PASS test_viewer_loading: actual callback, success, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup');

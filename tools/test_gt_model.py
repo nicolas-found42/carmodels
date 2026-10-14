@@ -1,13 +1,15 @@
 """Independent fixture, corruption and full native-corpus controls for GT1 conversion."""
 import json
+import math
 from pathlib import Path
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from bake_models import read_glb
-from export_gt_models import export
-from gt_model import build_glb, parse_car, parse_tex, png, sha
+from export_gt_models import SPECIAL_FAMILIES, canonical_pairs, export, install
+from gt_model import body_face_frame, build_glb, parse_car, parse_tex, png, sha
 from model_png import decode_png
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +49,105 @@ def tex_fixture():
     return bytes(data)
 
 
+def accessor_values(doc, binary, index):
+    row = doc['accessors'][index]
+    width = {'SCALAR':1, 'VEC2':2, 'VEC3':3}[row['type']]
+    offset = doc['bufferViews'][row['bufferView']]['byteOffset'] + row.get('byteOffset', 0)
+    kind = 'I' if row['componentType'] == 5125 else 'f'
+    return struct.unpack_from('<' + kind*row['count']*width, binary, offset)
+
+
+def body_alignment(doc, binary):
+    """Independent triangle-area check on emitted positions, indices and normals."""
+    aligned = total = 0.0
+    for mesh in doc['meshes']:
+        if not mesh['name'].startswith('LOD'):
+            continue
+        for primitive in mesh['primitives']:
+            positions = accessor_values(doc, binary, primitive['attributes']['POSITION'])
+            normals = accessor_values(doc, binary, primitive['attributes']['NORMAL'])
+            indices = accessor_values(doc, binary, primitive['indices'])
+            for i in range(0, len(indices), 3):
+                refs = indices[i:i+3]
+                p = [positions[3*v:3*v+3] for v in refs]
+                a = [p[1][j]-p[0][j] for j in range(3)]
+                b = [p[2][j]-p[0][j] for j in range(3)]
+                cross = [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]
+                area = math.sqrt(sum(x*x for x in cross))
+                total += area
+                summed = [sum(normals[3*v+j] for v in refs) for j in range(3)]
+                if sum(cross[j]*summed[j] for j in range(3)) > 0:
+                    aligned += area
+    return aligned/total if total else 1.0
+
+
 class GTModelTests(unittest.TestCase):
+    def test_export_install_rolls_back_partial_write_and_retirement(self):
+        for partial in (False, True):
+            with self.subTest(partial=partial):
+                self.check_failed_install(partial)
+
+    def check_failed_install(self, partial):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output, stage = root/'output', root/'stage'
+            (output/'simulation/test').mkdir(parents=True)
+            stage.mkdir()
+            old = b'old indexed model'
+            (output/'simulation/test/day.glb').write_bytes(old)
+            (output/'index.json').write_text(json.dumps({'game':'gran-turismo', 'cars':[
+                {'file':'simulation/test/day.glb', 'bytes':len(old), 'sha256':sha(old)}]}))
+            (stage/'test.glb').write_bytes(b'new indexed model')
+            before = {p.relative_to(output):p.read_bytes() for p in output.rglob('*') if p.is_file()}
+            write = Path.write_bytes
+            def partial_write(path, data):
+                if path == output/'simulation/test.glb':
+                    if partial:
+                        write(path, data[:4])
+                    raise OSError('simulated write failure')
+                return write(path, data)
+            with patch.object(Path, 'write_bytes', partial_write):
+                with self.assertRaisesRegex(OSError, 'simulated write failure'):
+                    install(stage, output, {'simulation/test.glb':stage/'test.glb'})
+            self.assertEqual(before, {p.relative_to(output):p.read_bytes() for p in output.rglob('*') if p.is_file()})
+    def test_winding_and_ambiguous_normals_are_repaired_without_uv_changes(self):
+        for normal in ((0, 0, -4096), (0, 0, 4096), (0, 4096, 0)):
+            native = bytearray(car_fixture())
+            struct.pack_into('<4h', native, 192, *normal, 0)
+            doc, binary = read_glb(build_glb(bytes(native), tex_fixture(), 'test')[0])
+            self.assertEqual(body_alignment(doc, binary), 1.0)
+            primitive = doc['meshes'][-1]['primitives'][0]
+            self.assertEqual(accessor_values(doc, binary, primitive['attributes']['TEXCOORD_0']),
+                             (0.5/256, 0.5/256, 255.5/256, 0.5/256, 0.5/256, 255.5/256))
+            # Deliberately reverse the emitted winding; this check must notice.
+            indices = doc['accessors'][primitive['indices']]
+            offset = doc['bufferViews'][indices['bufferView']]['byteOffset']
+            bad = bytearray(binary)
+            a, b, c = struct.unpack_from('<3I', bad, offset)
+            struct.pack_into('<3I', bad, offset, a, c, b)
+            self.assertEqual(body_alignment(doc, bad), 0.0)
+        lod = parse_car(car_fixture())['lods'][0]
+        face = lod['faces'][0]
+        lod['vertices'] = [(0, 0, 0)] * 3
+        normals, _, repaired = body_face_frame(lod, face, (0, 0, 0))
+        self.assertFalse(repaired)
+        self.assertTrue(all(n == (0, 0, 1) for n in normals))
+
+    def test_canonical_policy_exact_arcade_matches_and_special_exclusions(self):
+        assets = [{'file':'model.car', 'sha256':'car'}, {'file':'textures.tex', 'sha256':'tex'}]
+        def row(code, variant='day'):
+            return {'id':f'simulation/{code}/{variant}', 'code':code, 'mode':'simulation',
+                    'variant':variant, 'assets':assets}
+        arcade = {'id':'arcade/pair-0000', 'code':'pair-0000', 'mode':'arcade', 'assets':assets}
+        pairs = canonical_pairs([row('test'), row('test', 'night'), arcade])
+        self.assertEqual(pairs[0][1], ['arcade/pair-0000', 'simulation/test/day', 'simulation/test/night'])
+        self.assertEqual(canonical_pairs([row('_0logn'), row('_lcupn')]), [])
+        self.assertEqual(canonical_pairs([row('zzz'), row('aaa'), arcade])[1][1],
+                         ['arcade/pair-0000', 'simulation/aaa/day'])
+        with self.assertRaisesRegex(ValueError, 'exact simulation'):
+            canonical_pairs([row('test'), {**arcade, 'assets':[{'file':'model.car', 'sha256':'wrong'}]}])
+        with self.assertRaisesRegex(ValueError, 'canonical day'):
+            canonical_pairs([row('test', 'night')])
     def test_independent_geometry_and_texture_pixels(self):
         c = parse_car(car_fixture())
         self.assertEqual(c['lods'][0]['vertices'],[(0.0,0.0,0.0),(1.0,0.0,0.0),(0.0,1.0,0.0)])
@@ -129,7 +229,7 @@ class GTModelTests(unittest.TestCase):
             (source/'index.json').write_text(json.dumps(index))
             self.assertEqual(export(source,output)['models'],1)
             export(source,output,True)
-            exported=output/'simulation/test/day.glb';exported.write_bytes(exported.read_bytes()[:-1])
+            exported=output/'simulation/test.glb';exported.write_bytes(exported.read_bytes()[:-1])
             with self.assertRaisesRegex(ValueError,'byte comparison'):
                 export(source,output,True)
             (source/'model.car').write_bytes(car_fixture()+b'x')
@@ -143,26 +243,24 @@ class GTModelTests(unittest.TestCase):
     def test_real_native_corpus_complete_lods(self):
         source=ROOT/'games/gran-turismo/cars'
         index=json.loads((source/'index.json').read_text())
-        models=lods=gouraud=0
+        models=lods=gouraud=exports=0
         for row in index['cars']:
             files={Path(a['file']).suffix:(source/a['file']).read_bytes() for a in row['assets']}
             for asset in row['assets']:
                 data=files[Path(asset['file']).suffix]
                 self.assertEqual((len(data),sha(data)),(asset['decoded_bytes'],asset['sha256']),row['id'])
             car=parse_car(files['.car']);parse_tex(files['.tex']);models+=1;lods+=len(car['lods'])
-            exported = ROOT/'dealership/public/gran-turismo'/f"{row['id']}.glb"
-            doc, _ = read_glb(exported.read_bytes())
-            self.assertEqual(doc['extras']['sourceCarSha256'],sha(files['.car']))
-            self.assertEqual(doc['extras']['sourceTexSha256'],sha(files['.tex']))
-            self.assertEqual(doc['extras']['wheelAssembly']['wheels'],4)
-            self.assertEqual(len([n for n in doc['nodes'] if 'nativeWheelIndex' in n.get('extras',{})]),4)
             special = row['id'].split('/')[1]
-            self.assertEqual([len(s['nodes'])-1 for s in doc['scenes']],
-                             {'_0logn':[0,0,4], '_lcupn':[0,4,4]}.get(special,[4,4,4]),row['id'])
-            for node in doc['nodes']:
-                if 'nativeWheelIndex' in node.get('extras',{}):
-                    primitive = doc['meshes'][node['mesh']]['primitives'][0]
-                    self.assertEqual(doc['accessors'][primitive['indices']]['count'],186)
+            if row['mode'] == 'simulation' and row['variant'] == 'day' and special not in SPECIAL_FAMILIES:
+                exported = ROOT/'dealership/public/gran-turismo'/f"simulation/{special}.glb"
+                doc, binary = read_glb(exported.read_bytes())
+                self.assertEqual(doc['extras']['sourceCarSha256'],sha(files['.car']))
+                self.assertEqual(doc['extras']['sourceTexSha256'],sha(files['.tex']))
+                self.assertEqual(doc['extras']['displayedColourSet'],0)
+                self.assertEqual(doc['extras']['wheelAssembly']['wheels'],4)
+                self.assertEqual([len(s['nodes'])-1 for s in doc['scenes']], [4,4,4], row['id'])
+                self.assertGreaterEqual(body_alignment(doc, binary), .99, row['id'])
+                exports += 1
             self.assertEqual(car['trailing_bytes'],0,row['id'])
             gouraud+=sum('corner_colours' in f for lod in car['lods'] for f in lod['faces'])
             for lod in car['lods']:
@@ -170,7 +268,8 @@ class GTModelTests(unittest.TestCase):
                     for normal in face['normals']:
                         self.assertNotEqual(lod['normals'][normal],(0,0,0))
         self.assertEqual((models,lods,gouraud),(728,2184,1042))
+        self.assertEqual(exports, 342)
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

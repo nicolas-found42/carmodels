@@ -21,6 +21,7 @@ LIMITS = [
     'First source colour set is displayed; every colour set remains in the original CTEX payload.',
     'PS1 semi-transparency, illumination/paint flags and game shading are not reproduced.',
     'Shadow records are preserved in metadata and omitted from visible body scenes.',
+    'Body winding follows stored normals; ambiguous face normals use geometry oriented away from the LOD centroid, a static display heuristic.',
 ]
 
 
@@ -174,6 +175,36 @@ def wheel_bounds_fit(car, lod):
     return not all(outside)
 
 
+def body_face_frame(lod, face, centre):
+    """Repair lit glTF orientation without changing native positions, UVs or colours.
+
+    Stored normals carry direction on ordinary faces. Near-perpendicular or
+    cancelling sums need a geometric fallback; the centroid is a documented
+    approximation for these faces, not evidence of the game's lighting.
+    """
+    points = [lod['vertices'][v] for v in face['vertices']]
+    normals = [lod['normals'][n] for n in face['normals']]
+    geometric = [0.0, 0.0, 0.0]
+    for j in range(1, len(points) - 1):
+        a = [points[j][i] - points[0][i] for i in range(3)]
+        b = [points[j + 1][i] - points[0][i] for i in range(3)]
+        cross = [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]
+        geometric = [geometric[i] + cross[i] for i in range(3)]
+    length = math.sqrt(sum(x*x for x in geometric))
+    if length < 1e-12:
+        return normals, False, False  # Keep nonzero stored normals on zero-area faces.
+    summed = [sum(n[i] for n in normals) for i in range(3)]
+    magnitude = math.sqrt(sum(x*x for x in summed))
+    cosine = sum(geometric[i]*summed[i] for i in range(3))/length/magnitude if magnitude > 1e-9 else 0.0
+    repaired = abs(cosine) < 0.15
+    if repaired:
+        outward = [sum(p[i] for p in points)/len(points)-centre[i] for i in range(3)]
+        cosine = sum(geometric[i]*outward[i] for i in range(3))
+        sign = 1 if cosine >= 0 else -1
+        normals = [tuple(sign*x/length for x in geometric)] * len(points)
+    return normals, cosine < 0, repaired
+
+
 def build_glb(car_data, tex_data, identity):
     car, tex = parse_car(car_data), parse_tex(tex_data)
     binary = bytearray()
@@ -253,6 +284,8 @@ def build_glb(car_data, tex_data, identity):
                                       'basis':'Native CAR units /4096; entire assembly reflects Z',
                                       'pose':'Neutral showroom steering and spin'}
     for lod in car['lods']:
+        centre = [sum(v[i] for v in lod['vertices'])/len(lod['vertices']) for i in range(3)]
+        repaired_faces = reversed_faces = 0
         groups = {}
         for face in lod['faces']:
             key = 'gouraud' if 'corner_colours' in face else face['clut'] if face['clut'] is not None else ('colour',tuple(face['colour']))
@@ -267,19 +300,23 @@ def build_glb(car_data, tex_data, identity):
             positions,normals,uvs,indices,colours = [],[],[],[],[]
             for face in faces:
                 base = len(positions)//3
+                face_normals, reverse, repaired = body_face_frame(lod, face, centre)
+                repaired_faces += repaired
+                reversed_faces += reverse
                 for corner,v in enumerate(face['vertices']):
                     positions.extend(lod['vertices'][v])
-                    normals.extend(lod['normals'][face['normals'][corner]])
+                    normals.extend(face_normals[corner])
                     if 'corner_colours' in face:
                         # glTF vertex colours are linear; native RGB bytes are display encoded.
                         colours.extend([srgb(v/255) for v in face['corner_colours'][corner]])
                     if face['clut'] is not None:
                         uvs.extend([(c+0.5)/256 for c in face['uv'][corner]])
                 # Native CAR quads follow boundary order (0,1,2),(0,2,3).
-                # Z reflection reverses winding; doubleSided also preserves uncertain culling.
-                indices.extend([base,base+2,base+1])
-                if face['quad']:
-                    indices.extend([base,base+3,base+2])
+                # Agree with the repaired normals so double-sided lighting faces outward.
+                triangles = [(0, 1, 2), (0, 2, 3)] if face['quad'] else [(0, 1, 2)]
+                for triangle in triangles:
+                    indices.extend(base+j for j in (triangle if not reverse else
+                                                    (triangle[0], triangle[2], triangle[1])))
             attrs = {'POSITION':accessor(positions,3,bounds=True),'NORMAL':accessor(normals,3)}
             if colours:
                 attrs['COLOR_0'] = accessor(colours,3)
@@ -296,6 +333,7 @@ def build_glb(car_data, tex_data, identity):
                         'vertices':len(lod['vertices']),'normals':len(lod['normals']),
                         'zero_normals':sum(n==(0.0,0.0,0.0) for n in lod['normals']),
                         'polygons':len(lod['faces']),'triangles':sum(2 if f['quad'] else 1 for f in lod['faces']),
+                        'geometric_normal_repairs':repaired_faces,'reoriented_faces':reversed_faces,
                         'wheel_template_lod':0,'wheel_triangles':62*len(visible_wheels),
                         'wheel_assembly_suppressed':bool(wheel_nodes and not visible_wheels)})
     doc['buffers'] = [{'byteLength':len(binary)}]

@@ -5,6 +5,7 @@ Existing catalog entries and models are preserved, including later edits. No
 performance or retail names are inferred from community archive identifiers.
 """
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -22,7 +23,10 @@ def imported_entry(row):
     if not isinstance(row, dict) or not isinstance(row.get('code'), str):
         raise ValueError('Invalid GT export record')
     parts = row['code'].split('/')
-    if len(parts) == 2 and parts[0] == 'arcade':
+    if len(parts) == 2 and parts[0] == 'simulation':
+        collection, identifier = parts
+        variant = 'canonical'
+    elif len(parts) == 2 and parts[0] == 'arcade':
         collection, identifier = parts
         variant = 'arcade'
     elif len(parts) == 3 and parts[0] == 'simulation':
@@ -30,14 +34,19 @@ def imported_entry(row):
     else:
         raise ValueError('Invalid GT collection/variant identifier')
     if (not re.fullmatch(r'[a-z0-9_-]+', identifier) or
-            variant not in ('day', 'night', 'arcade')):
+            variant not in ('day', 'night', 'arcade', 'canonical')):
         raise ValueError('Invalid GT asset identifier')
     code = 'GT_' + '_'.join(parts).upper().replace('-', '_')
     limits = row.get('claim_limits', [])
     if not isinstance(limits, list) or any(not isinstance(value, str) for value in limits):
         raise ValueError('Invalid GT conversion claim limits')
-    return dict(code=code, name=f'{identifier} · {collection} · {variant}',
+    aliases = row.get('aliases', [])
+    if not isinstance(aliases, list) or any(not isinstance(a, str) for a in aliases):
+        raise ValueError('Invalid GT aliases')
+    alias_codes = [imported_entry({'code': alias})['code'] for alias in aliases]
+    return dict(code=code, name=identifier if variant == 'canonical' else f'{identifier} · {collection} · {variant}',
                 game='gran-turismo', gameLabel='Gran Turismo', sourceCode=row['code'],
+                sourceAliases=alias_codes,
                 sourceCollection=collection, sourceVariant=variant,
                 displayMode='textured-glb', bodyStyle='unknown', group=collection.upper(),
                 year=None, topSpeed=None, bhp=None, kg=None, agility=None, accel=None,
@@ -46,8 +55,86 @@ def imported_entry(row):
                              'Independent editable copy; native source files remain separate.', *limits])
 
 
+def legacy_migrations(rows, catalog, origins, destination, upgrade_unedited, consolidate):
+    """Preflight retirement and carry custom metadata/history into the canonical car."""
+    existing = {entry['code']: entry for entry in catalog}
+    provenance = {entry['code']: entry for entry in origins['cars']}
+    migrations, retired, history = {}, {}, []
+
+    def retire(old, allow_edit=False):
+        code = old['code']
+        target = destination/'models'/f'{code}.glb'
+        if target.is_symlink() or target.resolve().parent != (destination/'models').resolve():
+            raise ValueError('Editable GT model path is invalid')
+        data = target.read_bytes()
+        origin = provenance.get(code)
+        previous = origin.get('latestSource', origin.get('initialSource', {})) if origin else {}
+        if previous.get('game') != 'gran-turismo' or previous.get('code') != old.get('sourceCode'):
+            raise ValueError('Editable GT source provenance conflicts')
+        edited = sha(data) != previous.get('sha256')
+        if edited and not allow_edit:
+            raise ValueError(f'{code}: edited duplicate cannot be retired')
+        bake_car(code, data, source_mode=False)
+        retired[code] = (target, data)
+        return {'catalog': old, 'origin': origin}, data, previous, edited
+
+    for row in rows:
+        entry = imported_entry(row)
+        if entry['sourceVariant'] != 'canonical':
+            continue
+        old_codes = entry['sourceAliases']
+        olds = [existing[code] for code in old_codes if code in existing]
+        if not olds:
+            continue
+        if not consolidate:
+            raise ValueError('GT legacy variants require --consolidate')
+        if entry['code'] in existing:
+            raise ValueError('GT canonical and legacy entries coexist')
+        day_code = imported_entry({'code': row['canonical_source_id']})['code']
+        preferred = existing.get(day_code)
+        records = []
+        chosen = None
+        for old in olds:
+            if old.get('game') != 'gran-turismo' or old.get('sourceCode') not in row['aliases']:
+                raise ValueError('GT legacy alias conflicts with existing entry')
+            record, data, previous, edited = retire(old, old is preferred)
+            records.append(record)
+            if old is preferred:
+                chosen = data, previous, edited
+        origin = {'code': entry['code'], 'retiredVariants': records}
+        if preferred:
+            default = imported_entry({'code': preferred['sourceCode']})
+            custom = {key: value for key, value in preferred.items() if value != default.get(key)}
+            # Identity/filter fields belong to this migration, even if older metadata differs.
+            for key in ('code', 'game', 'sourceCode', 'sourceCollection', 'sourceVariant', 'sourceAliases', 'claimLimits'):
+                custom.pop(key, None)
+            entry.update(custom)
+            entry['claimLimits'] = list(dict.fromkeys([*entry['claimLimits'], *preferred.get('claimLimits', [])]))
+            origin.update({key: copy.deepcopy(value) for key, value in provenance[day_code].items() if key != 'code'})
+            origin['retiredVariants'] = records
+            data, previous, edited = chosen
+            use_source = upgrade_unedited and not edited
+            origin['latestSource'] = {'game':'gran-turismo', 'code':row['code'],
+                                      'glb':'public/gran-turismo/'+row['file'],
+                                      'sha256':row['sha256'] if use_source else previous['sha256']}
+            if use_source:
+                origin.setdefault('sourceUpgrades', []).append({'fromSha256':previous['sha256'], 'toSha256':row['sha256']})
+            migrations[entry['code']] = entry, origin, None if use_source else data
+        else:
+            origin['initialSource'] = {'game':'gran-turismo', 'code':row['code'],
+                                       'glb':'public/gran-turismo/'+row['file'], 'sha256':row['sha256']}
+            migrations[entry['code']] = entry, origin, None
+    if consolidate:
+        for old in catalog:
+            if (old.get('game') == 'gran-turismo' and old.get('sourceCode') in
+                    {f'simulation/{code}/{edition}' for code in ('_0logn', '_lcupn') for edition in ('day', 'night')}):
+                record, _, _, _ = retire(old)
+                history.append(record)
+    return migrations, retired, history
+
+
 def import_cars(source=ROOT / 'dealership/public/gran-turismo',
-                destination=ROOT / 'dealership/dealership', upgrade_unedited=False):
+                destination=ROOT / 'dealership/dealership', upgrade_unedited=False, consolidate=False):
     source, destination = Path(source), Path(destination)
     if (source.resolve() == destination.resolve() or source.resolve() in destination.resolve().parents
             or destination.resolve() in source.resolve().parents):
@@ -66,6 +153,13 @@ def import_cars(source=ROOT / 'dealership/public/gran-turismo',
     index = json.loads((source / 'index.json').read_text())
     if not isinstance(index.get('cars'), list) or not index['cars']:
         raise ValueError('GT source index has no cars')
+    migrations, retired, excluded = legacy_migrations(index['cars'], catalog, origins, destination,
+                                                     upgrade_unedited, consolidate)
+    if retired:
+        catalog = [entry for entry in catalog if entry['code'] not in retired]
+        origins['cars'] = [entry for entry in origins['cars'] if entry['code'] not in retired]
+        origins.setdefault('excludedGTAssets', []).extend(excluded)
+        existing = {entry['code']: entry for entry in catalog}
     added, seen, payloads, upgraded = [], set(), [], 0
     for row in index['cars']:
         entry = imported_entry(row)
@@ -125,12 +219,20 @@ def import_cars(source=ROOT / 'dealership/public/gran-turismo',
         if target.exists() or target.is_symlink():
             raise ValueError('An uncatalogued dealership model occupies the GT identifier')
         bake_car(code, data, source_mode=False)  # Fail before any destination mutation.
+        migration = migrations.get(code)
+        if migration:
+            entry, origin, working = migration
+            if working is not None:
+                data = working
+                bake_car(code, data, source_mode=False)
+        else:
+            origin = {'code': code, 'initialSource': {
+                'game': 'gran-turismo', 'code': row['code'],
+                'glb': 'public/gran-turismo/' + row['file'], 'sha256': row['sha256']}}
         added.append(entry)
         payloads.append((target, data, None))
-        origins['cars'].append({'code': code, 'initialSource': {
-            'game': 'gran-turismo', 'code': row['code'],
-            'glb': 'public/gran-turismo/' + row['file'], 'sha256': row['sha256']}})
-    if not added and not upgraded:
+        origins['cars'].append(origin)
+    if not added and not upgraded and not retired:
         return 0
     original_catalog, original_origins = catalog_path.read_bytes(), origins_path.read_bytes()
     # Stage every copy and metadata before touching the working dealership.
@@ -140,11 +242,17 @@ def import_cars(source=ROOT / 'dealership/public/gran-turismo',
             (stage / target.name).write_bytes(data)
         (stage / 'catalog.json').write_text(json.dumps(catalog + added, indent=1) + '\n')
         (stage / 'origins.json').write_text(json.dumps(origins, indent=1) + '\n')
-        moved = []
+        moved, quarantined = [], []
         try:
-            for target, _, previous_data in payloads:
+            for target, _ in retired.values():
+                saved = stage/('retired-'+target.name)
+                target.replace(saved)
+                quarantined.append((target, saved))
+            for target, data, previous_data in payloads:
                 (stage / target.name).replace(target)
                 moved.append((target, previous_data))
+                if target.read_bytes() != data:
+                    raise ValueError('GT editable installation byte comparison differs')
             (stage / 'origins.json').replace(origins_path)
             (stage / 'catalog.json').replace(catalog_path)
         except BaseException:
@@ -155,6 +263,8 @@ def import_cars(source=ROOT / 'dealership/public/gran-turismo',
                     target.unlink()
                 else:
                     target.write_bytes(previous_data)
+            for target, saved in quarantined:
+                saved.replace(target)
             raise
     return len(added) + upgraded
 
@@ -165,9 +275,10 @@ if __name__ == '__main__':
     parser.add_argument('--destination', type=Path, default=ROOT / 'dealership/dealership')
     parser.add_argument('--upgrade-unedited', action='store_true',
                         help='Refresh only models equal to their recorded source; preserve edited models')
+    parser.add_argument('--consolidate', action='store_true', help='Migrate legacy variants to canonical entries; retire only unedited duplicates')
     args = parser.parse_args()
     try:
-        count = import_cars(args.source, args.destination, args.upgrade_unedited)
+        count = import_cars(args.source, args.destination, args.upgrade_unedited, args.consolidate)
     except (ValueError, OSError, KeyError, TypeError) as error:
         parser.exit(1, f'{error}\n')
     print(f'Imported {count} independent editable GT models; existing dealership entries preserved')

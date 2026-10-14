@@ -34,8 +34,8 @@ cars/
 
 There are 344 simulation asset families, each with day and night pairs, plus
 40 arcade pairs: 728 models and 728 texture bundles in total. Every arcade pair
-has an exact model-and-texture hash match recorded in the simulation set. All
-variants remain separate. These counts do not establish how many distinct cars
+has an exact model-and-texture hash match recorded in the simulation set. All native
+variants remain retained as recovery inputs. These counts do not establish how many distinct cars
 are selectable in the game.
 
 Every asset manifest records archive ordinal, archive-relative offset, stored
@@ -61,9 +61,13 @@ and needs an explicit live request plus a server-side `OPENROUTER_API_KEY`.
 The offline extraction and tests have no SDK, network or API-key dependency.
 
 These are the game's native `GT-CAR` model and `GT-CTEX` texture payloads.
-Static body LODs and the first source colour set are now converted to GLB in
-`dealership/public/gran-turismo/`, indexed by the shared source library. All 728
-retained pairs also have independent editable copies in the dealership. Wheels
+Canonical day body LODs and the first source colour set are converted to GLB in
+`dealership/public/gran-turismo/`, indexed by the shared source library. The public source catalog and dealership each contain 342 candidate vehicle families: one
+day-derived model per family, excluding the special `_0logn` and `_lcupn` families.
+Distinct bodies and racing liveries remain separate; night editions and exact arcade
+duplicates are retained only in the native extraction. Old car-selection IDs resolve to
+canonical entries. Arcade IDs with several exact day matches resolve to the first family
+in lexical order; matching simulation families stay distinct. Wheels
 use shared native templates recovered from the packed game executable, each car's
 attachment data and its colour-set-0 wheel texture. Retail names, equipment
 and performance joins remain unresolved. Neither extraction nor conversion
@@ -74,6 +78,13 @@ counts, checks, limitations and reproduction commands. Add newly extracted pairs
 by running `tools/export_gt_models.py`, `tools/build_model_catalog.py`,
 `tools/import_gt_dealership.py` and `tools/build_dealership.py` from the repo root.
 Reimporting preserves existing working models and edits.
+To migrate an older dealership, run `python3 tools/import_gt_dealership.py
+--consolidate --upgrade-unedited`, then `python3 tools/build_dealership.py`. The migration
+preserves custom day metadata and retired catalog/provenance records, and refuses to
+retire an edited duplicate. Body winding follows stored normals; ambiguous normals use
+the documented geometric/centroid fallback. Native texture pixels, UVs and first paint
+palette remain unchanged.
+
 After improving source exports, use `tools/import_gt_dealership.py --upgrade-unedited`
 to refresh only copies that still match their recorded source. This preserves edited
 models, custom catalog fields and original import provenance. See the

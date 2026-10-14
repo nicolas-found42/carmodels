@@ -183,6 +183,20 @@ What the renders show:
   gives flat, PS1-like texels. Jev's `jev_noul` put "environment lighting is necessary once the winding is
   repaired" at 0.11.
 
+## Implementation update (2026-10-13)
+
+The measured per-face repair is now implemented in `tools/gt_model.py` as
+`body_face_frame`: stored normals orient ordinary faces; near-perpendicular or
+cancelling sums use a geometric normal oriented away from the LOD centroid.
+Zero-area faces keep their stored normals. The canonical public exports and working
+copies use day sources and colour set 0. Texture pixels, UVs, materials and viewer
+lighting are retained. The corpus regression independently measures winding/normal
+agreement from emitted GLB accessors, with a deliberately reversed-winding control.
+
+The centroid fallback remains a heuristic for non-convex shapes; connectivity-based
+orientation and original PS1 rendering fidelity remain open. The archived experiment
+scripts below describe the pre-repair exporter and are historical reproductions.
+
 ## Recommended fixes, in order
 
 1. **Repair the exporter's winding and normals** (`tools/gt_model.py:278-282`). Port the per-face logic from
