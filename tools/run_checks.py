@@ -60,7 +60,7 @@ PARALLEL_SAFE = {
     'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
     'test_export_materials', 'test_build_showcase', 'test_bake_models', 'test_model_catalog', 'test_model_png',
     'test_review_payload', 'test_check_advice', 'test_static_inputs', 'test_recovery_inputs',
-    'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
+    'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_callback_triage', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
     'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars',
     'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs', 'test_mc3_pck', 'test_mc3_wheels',
     'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview',
@@ -80,7 +80,7 @@ def registry():
                ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui']]
     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
-             'test_check_advice', 'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
+             'test_check_advice', 'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_callback_triage', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
              'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs',
              'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
