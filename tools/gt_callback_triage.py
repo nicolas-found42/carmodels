@@ -53,12 +53,12 @@ def validate_sites(sites):
                 or len(site) != 10
                 or any(c not in '0123456789abcdef' for c in site[2:])):
             raise TriageJudgmentError('site must be a 0x-prefixed 8-hex-digit address')
-        if (site in seen
+        if (((image, site) in seen)
                 or not isinstance(item.get('asm'), str) or not 1 <= len(item['asm']) <= 64
                 or any(ord(c) < 32 or ord(c) > 126 for c in item['asm'])
                 or not isinstance(item.get('owner'), str) or not 1 <= len(item['owner']) <= 16):
             raise TriageJudgmentError('invalid or duplicate site evidence')
-        seen.add(site)
+        seen.add((image, site))
         output.append({'image': image, 'site': site, 'asm': item['asm'], 'owner': item['owner']})
     return output
 
@@ -75,11 +75,14 @@ def questions_for(sites, wording='grounded'):
                    else ' Use only the supplied site evidence.')
         questions[f'scenario_{index}'] = {'type': 'choice', 'criteria': SCENARIOS,
                                           'instructions': f'Which scenario most plausibly reaches `{ref}`?{caution}'}
-        questions[f'support_{index}'] = {
-            'type': 'noul', 'instructions':
-            f'Does `{ref}` substantively support a specific gameplay scenario?{caution}',
-            'criteria': {'true': 'Substantive scenario-specific evidence exists.',
-                         'false': 'Only generic or insufficient evidence exists.'}}
+        for scenario in SCENARIOS:
+            if scenario == 'unknown':
+                continue
+            questions[f'support_{index}_{scenario}'] = {
+                'type': 'noul', 'instructions':
+                f'Does `{ref}` substantively support `{scenario}`?{caution}',
+                'criteria': {'true': f'Substantive evidence for `{scenario}` exists.',
+                             'false': f'Only generic or insufficient evidence for `{scenario}` exists.'}}
     return questions
 
 
@@ -128,18 +131,18 @@ def compose_results(sites, raw, thresholds=None):
     if cost is not None and (type(cost) not in (float, int) or not math.isfinite(cost) or cost < 0):
         raise TriageJudgmentError('invalid provider cost')
     answers = raw.get('answers')
-    expected = {f'{kind}_{i}' for i in range(len(sites)) for kind in ('scenario', 'support')}
+    expected = {f'scenario_{i}' for i in range(len(sites))}
+    expected |= {f'support_{i}_{scenario}' for i in range(len(sites)) for scenario in SCENARIOS if scenario != 'unknown'}
     if not isinstance(answers, dict) or set(answers) != expected:
         raise TriageJudgmentError('provider answer coverage differs from request')
     results = []
     for index, item in enumerate(sites):
-        choice, noul = (answers[f'{kind}_{index}'] for kind in ('scenario', 'support'))
-        if not all(isinstance(answer, dict) for answer in (choice, noul)):
+        choice = answers[f'scenario_{index}']
+        if not isinstance(choice, dict):
             raise TriageJudgmentError('malformed answer')
-        if any(answer.get('status', 'ok') not in ('ok', 'success') or answer.get('warnings')
-               for answer in (choice, noul)):
+        if choice.get('status', 'ok') not in ('ok', 'success') or choice.get('warnings'):
             raise TriageJudgmentError('answer status or warning requires review')
-        if [answer.get('type') for answer in (choice, noul)] != ['choice', 'noul']:
+        if choice.get('type') != 'choice':
             raise TriageJudgmentError('answer primitive type mismatch')
         probabilities = _distribution(choice.get('probabilities'), SCENARIOS)
         confidence = _number(choice.get('confidence'))
@@ -149,14 +152,25 @@ def compose_results(sites, raw, thresholds=None):
         derived_confidence = (probabilities[label] - .2) / .8
         if not math.isclose(confidence, derived_confidence, abs_tol=.012):
             raise TriageJudgmentError('choice confidence disagrees with distribution')
-        support = _number(noul.get('noul'))
+        supports = {}
+        for scenario in SCENARIOS:
+            if scenario == 'unknown':
+                continue
+            noul = answers[f'support_{index}_{scenario}']
+            if not isinstance(noul, dict):
+                raise TriageJudgmentError('malformed answer')
+            if noul.get('status', 'ok') not in ('ok', 'success') or noul.get('warnings'):
+                raise TriageJudgmentError('answer status or warning requires review')
+            if noul.get('type') != 'noul':
+                raise TriageJudgmentError('answer primitive type mismatch')
+            supports[scenario] = _number(noul.get('noul'))
         ranked = sorted(probabilities.values(), reverse=True)
         margin = ranked[0] - ranked[1]
+        support = supports.get(label, 0)
         accepted = (label != 'unknown' and ranked[0] >= thresholds['top']
                     and margin >= thresholds['margin']
                     and confidence >= thresholds['top']
-                    and (support <= 1 - thresholds['support'] if label == 'ending_transition'
-                         else support >= thresholds['support']))
+                    and support >= thresholds['support'])
         results.append({'image': item['image'], 'site': item['site'],
                         'label': label, 'decision': 'advisory' if accepted else 'review',
                         'probabilities': probabilities, 'confidence': confidence, 'margin': margin,
