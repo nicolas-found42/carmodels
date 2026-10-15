@@ -124,7 +124,7 @@ const sourceVariant=control('');sourceVariant.options=[{value:''},{value:'night'
 const search=control(''),filterStatus=control(),carSelect=control(),interpret=control();
 // Native select values cannot refer to options which have not yet been added.
 Object.defineProperty(carSelect,'value',{get(){return this.options.some(o=>o.value===this.selectedValue)?this.selectedValue:this.options[0]?.value||'';},set(value){this.selectedValue=this.options.some(o=>o.value===value)?value:'';}});
-const filterElements={interpret,download:control(),retry:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
+const filterElements={interpret,download:control(),retry:control(),'clear-filters':control(),'native-download':control(),'native-download-wrap':control(),'source-description':control(),error:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
 let delayedResolve=null;
 const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,index:{cars:[
  {id:'ford-racing-2/COBRA',game:'ford-racing-2',code:'COBRA'},
@@ -138,7 +138,17 @@ const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,inde
 vm.createContext(filterContext);const filters=html.slice(html.indexOf('function filterCars('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
 filterContext.filterCars();assert.equal(carSelect.options.length,4);assert.equal(modelLoads,1);
 gameSelect.value='gran-turismo';sourceVariant.value='night';filterContext.filterCars();assert.equal(carSelect.options.length,1);assert.match(carSelect.value,/night$/);
+filterElements['native-download'].href='public/previous.zip';filterElements['native-download-wrap'].hidden=false;filterElements['source-description'].textContent='Previous car';filterElements.error.textContent='Previous failure';
 search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source entries/);
+assert.equal(filterElements['native-download'].href,undefined,'empty results must not offer the previous car ZIP');
+assert.equal(filterElements['native-download-wrap'].hidden,true);
+assert.equal(filterElements.error.textContent,'');
+assert.match(filterElements['source-description'].textContent,/Browse recovered cars/);
+assert.equal(carSelect.disabled,true);
+filterElements['clear-filters'].events.click();
+assert.equal(gameSelect.value,'all');assert.equal(sourceVariant.value,'');assert.equal(search.value,'');
+assert.equal(carSelect.options.length,4);assert.equal(carSelect.disabled,false);
+
 search.value='night cars from Gran Turismo';await interpret.events.click();assert.equal(search.value,'night cars from Gran Turismo');assert.equal(filterStatus.textContent,'Choose filters directly.');
 responseJSON={status:'ok',filters:{game:'gran-turismo',variant:'day'}};await interpret.events.click();assert.equal(search.value,'');assert.equal(carSelect.options.length,2);assert.match(carSelect.value,/day$/);
 responseJSON={status:'ok',filters:{game:'invented-game',variant:null}};await interpret.events.click();assert.match(filterStatus.textContent,/unknown filter/);assert.equal(gameSelect.value,'gran-turismo');
