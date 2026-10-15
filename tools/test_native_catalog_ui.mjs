@@ -162,3 +162,36 @@ showNativeSpecifications({nativeMetadata:{identity:{status:'unresolved'},specifi
 assert.equal($('native-specs').hidden,true);assert.equal($('native-specs').children.length,0,'unresolved racing entries do not display stock specifications');
 showNativeSpecifications(native);assert.equal($('native-specs').hidden,true);
 console.log('PASS native catalog UI: native package downloads and preview state; factory/custom picker and hex/reset controls, actual source material callbacks, GLB-backed colour selection, missing-variant edits, verified specifications, rotary display and unresolved-identity controls');
+
+// Execute source filtering with a real catalog: incompatible variants recover,
+// while valid restrictions and explicit empty searches keep their meaning.
+{
+  const catalog=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url),'utf8'));
+  const nodes=new Map(),get=id=>{if(!nodes.has(id))nodes.set(id,element());return nodes.get(id);};
+  const game=get('#game'),variant=get('#source-variant'),car=get('#car'),search=get('#search');
+  game.value='gran-turismo';variant.value='canonical';
+  variant.options=['','canonical','showroom','native','stock','base','addon'].map(value=>({value,textContent:value}));
+  let loads=0,aborts=0,disposals=0;
+  const filterStart=sourcePage.indexOf('function updateFilterAvailability()');
+  const filterEnd=sourcePage.indexOf("document.querySelector('#interpret').addEventListener",filterStart);
+  const filter=new Function('index','document','gameSelect','sourceVariant','carSelect','recordSelect','search','filterStatus','gameNames','dispose','setLoading','loadCar','onAbort',
+    `const status=document.querySelector('#status');let filterRevision=0,requestId=0,pendingRequest={abort(){onAbort();}};${sourcePage.slice(filterStart,filterEnd)}return filterCars;`)(
+    catalog,{querySelector:get,createElement:element},game,variant,car,get('#record'),search,get('#filter-status'),{},
+    ()=>disposals++,()=>{},()=>loads++,()=>aborts++);
+  filter();assert.equal(variant.value,'canonical');assert.equal(car.options.length,342);
+  game.value='redline';filter();assert.equal(variant.value,'');assert(car.options.length>0);
+  assert.match(get('#filter-status').textContent,/Cleared unavailable variant: canonical/);
+  assert(variant.options.find(o=>o.value==='canonical').disabled);
+  variant.value='base';game.value='all';filter();assert.equal(variant.value,'base','available restriction survives');
+  get('#native-download').href='old.zip';get('#native-download-wrap').hidden=false;get('#error').textContent='Old failure';
+  get('#record').options=[{value:'old'}];get('#variant').options=[{value:'old'}];
+  search.value='no-such-car-xyz';filter();assert.equal(car.options.length,0);assert(car.disabled);
+  assert.equal(get('#record').options.length,0);assert.equal(get('#variant').options.length,0);
+  assert(get('#native-download-wrap').hidden);assert.equal(get('#native-download').href,undefined);
+  assert.equal(get('#error').textContent,'');assert.match(get('#source-description').textContent,/No car selected/);
+  assert(aborts>0&&disposals>0);
+  search.focus=()=>{search.focused=true;};get('#clear-filters').listeners.click();
+  assert.equal(search.value,'');assert.equal(game.value,'all');assert.equal(variant.value,'');
+  assert.equal(car.options.length,catalog.cars.length);assert.equal(car.disabled,false);assert(search.focused);assert(loads>0);
+}
+console.log('PASS source filter recovery: incompatible variants, preserved valid filters, stale empty-state cleanup and clear action');

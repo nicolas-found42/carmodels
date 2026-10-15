@@ -124,7 +124,7 @@ const sourceVariant=control('');sourceVariant.options=[{value:''},{value:'night'
 const search=control(''),filterStatus=control(),carSelect=control(),interpret=control();
 // Native select values cannot refer to options which have not yet been added.
 Object.defineProperty(carSelect,'value',{get(){return this.options.some(o=>o.value===this.selectedValue)?this.selectedValue:this.options[0]?.value||'';},set(value){this.selectedValue=this.options.some(o=>o.value===value)?value:'';}});
-const filterElements={interpret,download:control(),retry:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
+const filterElements={interpret,download:control(),retry:control(), 'clear-filters':control(), 'native-download':control(), 'native-download-wrap':control(),error:control(),'source-description':control(),variant:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
 let delayedResolve=null;
 const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,index:{cars:[
  {id:'ford-racing-2/COBRA',game:'ford-racing-2',code:'COBRA'},
@@ -132,10 +132,10 @@ const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,inde
  {id:'gran-turismo/simulation/synthetic/day',game:'gran-turismo',code:'simulation/_0logn/day',source_variant:'day'},
  {id:'gran-turismo/simulation/other/day',game:'gran-turismo',code:'simulation/other/day',source_variant:'day'}]},
  AbortController,setTimeout,clearTimeout,URLSearchParams,location:{search:''},gameNames:{'ford-racing-2':'Ford Racing 2','gran-turismo':'Gran Turismo'},filterRevision:0,requestId:0,pendingRequest:null,
- status:control(),dispose(){disposed++;},setLoading(){},loadCar(){modelLoads++;},
+ recordSelect:control(),status:control(),dispose(){disposed++;},setLoading(){},loadCar(){modelLoads++;},
  document:{querySelector(selector){return filterElements[selector.slice(1)];},createElement(){return {};}},
  fetch:async()=>({ok:true,json:async()=>delayedResolve?new Promise(resolve=>{delayedResolve=resolve;}):responseJSON})};
-vm.createContext(filterContext);const filters=html.slice(html.indexOf('function filterCars('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
+vm.createContext(filterContext);const filters=html.slice(html.indexOf('function updateFilterAvailability('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
 filterContext.filterCars();assert.equal(carSelect.options.length,4);assert.equal(modelLoads,1);
 gameSelect.value='gran-turismo';sourceVariant.value='night';filterContext.filterCars();assert.equal(carSelect.options.length,1);assert.match(carSelect.value,/night$/);
 search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source entries/);
