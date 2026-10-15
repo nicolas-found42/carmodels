@@ -28,7 +28,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;}},
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+ readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,rememberCar(){},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
  async fetchModel(url,signal){
   requests.push(url);
   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');

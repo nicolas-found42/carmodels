@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias, sourceCarId} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias, sourceCarId, rememberCar} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -297,3 +297,17 @@ for(const car of cars){
 }
 assert.equal(resolveCarAlias(cars,'unknown/source','code'),undefined);
 console.log('PASS viewer navigation identities: every editable car resolves to its source and back');
+
+// Replace the current entry rather than growing history for every car click.
+{
+  const browser={location:{href:'http://localhost:8080/dealership.html?game=gran-turismo&car=old&variant=canonical&debug=1#viewer'},history:{state:{scroll:42},replaceState(state,title,href){this.saved={state,title,href};}}};
+  const target=cars.find(car=>car.code==='MUSTANG_68B');
+  rememberCar(target,browser);
+  const saved=new URL(browser.history.saved.href);
+  assert.equal(saved.searchParams.get('car'),sourceCarId(target));assert.equal(saved.searchParams.get('game'),'ford-racing-2');
+  assert.equal(saved.searchParams.has('variant'),false);assert.equal(saved.searchParams.get('debug'),'1');assert.equal(saved.hash,'#viewer');
+  assert.equal(browser.history.saved.state,browser.history.state);
+  assert.equal(resolveCarAlias(cars,saved.searchParams.get('car'),'code'),target);
+  assert.equal(resolveCarAlias(sourceCatalog,saved.searchParams.get('car')).code,'MUSTANG_68B');
+}
+console.log('PASS selected identity replaces current URL and survives startup resolution');

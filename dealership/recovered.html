@@ -27,7 +27,7 @@ import {OrbitControls} from './vendor/OrbitControls.js';
 import {fetchModel,readGLB} from './model-load.mjs';
 import {createMaterial,applyMaterial} from './materials.mjs';
 import {sceneLabel,geometryOptions,defaultGeometryValue} from './scene-options.mjs';
-import {isNativePackage,resolveCarAlias} from './dealership.mjs';
+import {isNativePackage,resolveCarAlias,rememberCar} from './dealership.mjs';
 import {createColourControls} from './colour-controls.mjs';
 const stage=document.querySelector('#stage'), carSelect=document.querySelector('#car'), recordSelect=document.querySelector('#record'), status=document.querySelector('#status');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));stage.append(renderer.domElement);
@@ -42,6 +42,7 @@ function setLoading(busy){stage.setAttribute('aria-busy',String(busy));recordSel
 async function loadCar(){
  const id=++requestId;pendingRequest?.abort();const controller=new AbortController();pendingRequest=controller;dispose();setLoading(true);document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=true;let state=null;status.textContent='Loading '+carSelect.value+'…';document.querySelector('#error').textContent='';
  try{const entry=index.cars.find(c=>c.id===carSelect.value);
+ rememberCar(entry);
  document.querySelector('#dealership-link').href='dealership.html?'+new URLSearchParams({game:entry.game,car:entry.id});
  const download=document.querySelector('#download');
  const nativeLink=document.querySelector('#native-download'),nativePackage=entry.native_package;

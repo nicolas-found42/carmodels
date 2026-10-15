@@ -34,11 +34,11 @@ const entry={id:'midnight-club-3-remix/vp_test_04',code:'vp_test_04',game:'midni
 node('#car').value=entry.id;node('#retry').hidden=false;
 let fetches=0,disposals=0;
 const runSource=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
-  'readGLB','dispose','setLoading','updateDescription',
+  'readGLB','dispose','setLoading','updateDescription','rememberCar',
   `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
   {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[entry]},isNativePackage,
   async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
-  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{});
+  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},()=>{});
 await runSource();
 assert.equal(fetches,0);assert.equal(disposals,1);assert(node('#record').disabled);assert(node('#retry').hidden);
 assert.equal(node('#download').href,'public/midnight-club-3-remix/native/vp_test_04.dat');
@@ -51,11 +51,11 @@ const gt4={id:'gran-turismo-4/test0001',code:'test0001',game:'gran-turismo-4',as
   file:'gran-turismo-4/native/test0001.zip',native_members:5};
 node('#car').value=gt4.id;
 const runGt4=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
-  'readGLB','dispose','setLoading','updateDescription',
+  'readGLB','dispose','setLoading','updateDescription','rememberCar',
   `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
   {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[gt4]},isNativePackage,
   async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
-  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{});
+  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},()=>{});
 await runGt4();
 assert.equal(fetches,0);assert.equal(node('#download').href,'public/gran-turismo-4/native/test0001.zip');
 assert.equal(node('#download').download,'test0001.zip');assert.match(node('#download').textContent,/native package \(\.zip\)/);
@@ -69,10 +69,10 @@ const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerEle
 // Start enabled, as after a loaded 3D preview, so native selection must disable the controls.
 const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
-  'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId',
+  'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId','rememberCar',
   `let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
   $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
-  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls,gameId,sourceCarId);
+  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls,gameId,sourceCarId,()=>{});
 await select(native);
 assert.equal(modelLoads,0);assert.equal(removed,1);assert.equal(disposed,1);assert.equal(filters,1);
 assert.equal($('download-model').href,dealershipDownload(native).href);assert.equal(new URLSearchParams($('source-link').href.split('?')[1]).get('car'),sourceCarId(native));

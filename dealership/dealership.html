@@ -349,7 +349,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias, sourceCarId } from './dealership.mjs';
+import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias, sourceCarId, rememberCar } from './dealership.mjs';
 import {createColourControls} from './colour-controls.mjs';
 
 const $ = id => document.getElementById(id);
@@ -625,6 +625,7 @@ async function select(c) {
   const id=++selectionId;selectionController?.abort();selectionController=new AbortController();
   colourControls.setEnabled(false);
   current = c;
+  rememberCar(c);
   $('source-link').href='recovered.html?'+new URLSearchParams({game:gameId(c),car:sourceCarId(c)});
   document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
   const sel = [...document.querySelectorAll('.car-row')].find(r => r._code === c.code);
