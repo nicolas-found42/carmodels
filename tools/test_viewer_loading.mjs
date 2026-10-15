@@ -11,7 +11,7 @@ const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
 const html=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('function updateMaterials('));
-const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','download','native-download','native-download-wrap','retry','error'].map(id=>[id,{
+const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','download','native-download','native-download-wrap','retry','error','dealership-link'].map(id=>[id,{
  value:'',disabled:false,hidden:false,options:[],textContent:'',
  removeAttribute(name){delete this[name];},
  replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},
@@ -20,15 +20,15 @@ const stage={setAttribute(name,value){this[name]=value;}};
 const status={textContent:''};
 const scene=new THREE.Scene();
 const urls=new Set();
-let mode='success',pending=[],disposals=0;const requests=[];
+let mode='success',pending=[],disposals=0;const requests=[],remembered=[];
 const context={THREE:{...THREE,TextureLoader:class {
  async loadAsync(){const t=new THREE.Texture();t.addEventListener('dispose',()=>disposals++);return t;}
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;}},
- loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,
+ loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+ readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,rememberCar(car){remembered.push(car);},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
  async fetchModel(url,signal){
   requests.push(url);
   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');
@@ -41,7 +41,7 @@ const context={THREE:{...THREE,TextureLoader:class {
 };
 vm.createContext(context);vm.runInContext(callback,context);
 elements.car.value='ford-racing-2/GRAN_TORINO';await context.loadCar();
-assert.equal(context.selected.code,'GRAN_TORINO');
+assert.equal(context.selected.code,'GRAN_TORINO');assert.equal(remembered.at(-1),context.selected);
 assert.match(elements.download.href,/GRAN_TORINO/);
 assert.equal(elements.record.disabled,false);
 assert.equal(context.colourControls.enabled,true);
@@ -66,7 +66,7 @@ assert.equal(elements.record.disabled,true);
 assert.equal(stage['aria-busy'],'true');
 assert.equal(context.colourControls.enabled,false,'pending selections disable preview-colour editing');
 mode='success';elements.car.value='ford-racing-2/F350';await context.loadCar();await stale;
-assert.equal(context.selected.code,'F350');
+assert.equal(context.selected.code,'F350');assert.equal(remembered.at(-1),context.selected);
 assert.match(elements.download.href,/F350/);
 assert.equal(elements.error.textContent,'');
 assert.equal(stage['aria-busy'],'false');
@@ -120,11 +120,11 @@ context.dispose();assert.equal(scene.children.length,0);assert.equal(urls.size,0
 const control=(value='')=>({value,options:[],events:{},disabled:false,textContent:'',
  addEventListener(event,fn){this.events[event]=fn;},replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},removeAttribute(name){delete this[name];}});
 const gameSelect=control('all');gameSelect.options=[{value:'all'},{value:'ford-racing-2'},{value:'gran-turismo'}];
-const sourceVariant=control('');sourceVariant.options=[{value:''},{value:'night'},{value:'day'},{value:'arcade'}];
-const search=control(''),filterStatus=control(),carSelect=control(),interpret=control();
+const sourceVariant=control('');sourceVariant.options=['','night','day','arcade'].map(value=>({value,textContent:value}));
+const search=control(''),filterStatus=control(),carSelect=control(),interpret=control();search.focus=()=>{};
 // Native select values cannot refer to options which have not yet been added.
 Object.defineProperty(carSelect,'value',{get(){return this.options.some(o=>o.value===this.selectedValue)?this.selectedValue:this.options[0]?.value||'';},set(value){this.selectedValue=this.options.some(o=>o.value===value)?value:'';}});
-const filterElements={interpret,download:control(),retry:control(),'clear-filters':control(),'native-download':control(),'native-download-wrap':control(),'source-description':control(),error:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
+const filterElements={interpret,download:control(),retry:control(), 'clear-filters':control(), 'native-download':control(), 'native-download-wrap':control(),error:control(),'source-description':control(),variant:control(),'dealership-link':control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
 let delayedResolve=null;
 const filterContext={createCarSearch,gameSelect,sourceVariant,search,filterStatus,carSelect,index:{cars:[
  {id:'ford-racing-2/COBRA',game:'ford-racing-2',code:'COBRA',display_name:'Gran Torino'},
@@ -132,10 +132,10 @@ const filterContext={createCarSearch,gameSelect,sourceVariant,search,filterStatu
  {id:'gran-turismo/simulation/synthetic/day',game:'gran-turismo',code:'simulation/_0logn/day',source_variant:'day'},
  {id:'gran-turismo/simulation/other/day',game:'gran-turismo',code:'simulation/other/day',source_variant:'day'}]},
  AbortController,setTimeout,clearTimeout,URLSearchParams,location:{search:''},gameNames:{'ford-racing-2':'Ford Racing 2','gran-turismo':'Gran Turismo'},filterRevision:0,requestId:0,pendingRequest:null,
- status:control(),dispose(){disposed++;},setLoading(){},loadCar(){modelLoads++;},
+ recordSelect:control(),status:control(),dispose(){disposed++;},setLoading(){},loadCar(){modelLoads++;},
  document:{querySelector(selector){return filterElements[selector.slice(1)];},createElement(){return {};}},
  fetch:async()=>({ok:true,json:async()=>delayedResolve?new Promise(resolve=>{delayedResolve=resolve;}):responseJSON})};
-vm.createContext(filterContext);const filters=html.slice(html.indexOf('function filterCars('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
+vm.createContext(filterContext);const filters=html.slice(html.indexOf('function updateFilterAvailability('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
 filterContext.filterCars();assert.equal(carSelect.options.length,4);assert.equal(modelLoads,1);
 gameSelect.value='gran-turismo';sourceVariant.value='night';filterContext.filterCars();assert.equal(carSelect.options.length,1);assert.match(carSelect.value,/night$/);
 filterElements['native-download'].href='public/previous.zip';filterElements['native-download-wrap'].hidden=false;filterElements['source-description'].textContent='Previous car';filterElements.error.textContent='Previous failure';
@@ -143,7 +143,7 @@ search.value='missing';filterContext.filterCars();assert.equal(carSelect.options
 assert.equal(filterElements['native-download'].href,undefined,'empty results must not offer the previous car ZIP');
 assert.equal(filterElements['native-download-wrap'].hidden,true);
 assert.equal(filterElements.error.textContent,'');
-assert.match(filterElements['source-description'].textContent,/Browse recovered cars/);
+assert.match(filterElements['source-description'].textContent,/No car selected/);
 assert.equal(carSelect.disabled,true);
 filterElements['clear-filters'].events.click();
 assert.equal(gameSelect.value,'all');assert.equal(sourceVariant.value,'');assert.equal(search.value,'');
@@ -177,7 +177,7 @@ gameSelect.value='ford-racing-2';sourceVariant.value='';search.value='';filterCo
 assert.equal(gameSelect.value,'ford-racing-2');assert.equal(carSelect.value,'ford-racing-2/COBRA');assert.equal(interpret.disabled,false);
 // A stalled semantic endpoint is aborted and the button becomes usable again.
 let timeoutCallback,cleared=false;
-filterContext.setTimeout=(callback,ms)=>{assert.equal(ms,20000);timeoutCallback=callback;return 7;};
+filterContext.setTimeout=(callback,ms)=>{assert.equal(ms,35000);timeoutCallback=callback;return 7;};
 filterContext.clearTimeout=id=>{assert.equal(id,7);cleared=true;};
 filterContext.fetch=async(url,options)=>new Promise((resolve,reject)=>{options.signal.addEventListener('abort',()=>reject(new Error('Request timed out')),{once:true});});
 const stalled=interpret.events.click();timeoutCallback();await stalled;
@@ -185,12 +185,22 @@ assert.equal(interpret.disabled,false);assert(cleared);assert.match(filterStatus
 // A browser abort is explained; failure statuses show the server's message or name the library server.
 filterContext.fetch=async(url,options)=>new Promise((resolve,reject)=>{options.signal.addEventListener('abort',()=>reject(Object.assign(new Error('signal is aborted without reason'),{name:'AbortError'})),{once:true});});
 const aborted=interpret.events.click();timeoutCallback();await aborted;
-assert.equal(filterStatus.textContent,'Interpreting took longer than 20 seconds; game, variant and literal search are still available.');
+assert.equal(filterStatus.textContent,'Interpreting took longer than 35 seconds; game, variant and literal search are still available.');
 filterContext.fetch=async()=>({ok:false,json:async()=>({status:'error',message:'A filter request is already running.'})});
 await interpret.events.click();assert.equal(filterStatus.textContent,'A filter request is already running; game, variant and literal search are still available.');
 filterContext.fetch=async()=>({ok:false,json:async()=>{throw new SyntaxError('HTML error page');}});
 await interpret.events.click();assert.match(filterStatus.textContent,/needs the library server \(python3 tools\/serve_library\.py\); game, variant/);
 assert.equal(gameSelect.value,'ford-racing-2');
+filterContext.fetch=async()=>({ok:true,json:async()=>responseJSON});
+// Enter invokes the same action as the button; IME commits and held keys do not.
+interpret.click=()=>{if(!interpret.disabled)return interpret.events.click();};
+responseJSON={status:'ok',filters:{game:'gran-turismo',variant:'night'}};
+delayedResolve=null;search.value='Gran Turismo night';let prevented=0;
+search.events.keydown({key:'Enter',preventDefault(){prevented++;}});
+await new Promise(resolve=>setImmediate(resolve));
+assert.equal(prevented,1);assert.equal(sourceVariant.value,'night');assert.equal(search.value,'');
+for(const event of [{key:'Escape'},{key:'Enter',isComposing:true},{key:'Enter',repeat:true}])
+ search.events.keydown({...event,preventDefault(){assert.fail('unrelated key was consumed');}});
 // Run the actual startup sequence with an empty native select and a non-first ID.
 const startup=html.slice(html.indexOf('const parameters='),html.indexOf('new ResizeObserver('));
 filterContext.resolveCarAlias=resolveCarAlias;

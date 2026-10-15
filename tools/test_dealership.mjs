@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias, sourceCarId, rememberCar} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -284,3 +284,65 @@ try {
   await new Promise(resolve => server.close(resolve));
 }
 console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, compact body tint/reset with wheel/detail preservation, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);
+
+// Both viewers share source identities even when editable codes are namespaced.
+const sourceCatalog=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url),'utf8')).cars;
+for(const car of cars){
+  const source=sourceCatalog.find(entry=>entry.id===sourceCarId(car));
+  assert(source,car.code);
+  assert.equal(resolveCarAlias(cars,source.id,'code'),car);
+  assert.equal(resolveCarAlias(sourceCatalog,sourceCarId(car)),source);
+  const query=new URLSearchParams({game:gameId(car),car:sourceCarId(car)});
+  assert.equal(resolveCarAlias(cars,new URLSearchParams(String(query)).get('car'),'code'),car);
+}
+assert.equal(resolveCarAlias(cars,'unknown/source','code'),undefined);
+console.log('PASS viewer navigation identities: every editable car resolves to its source and back');
+
+// Replace the current entry rather than growing history for every car click.
+{
+  const browser={location:{href:'http://localhost:8080/dealership.html?game=gran-turismo&car=old&variant=canonical&debug=1#viewer'},history:{state:{scroll:42},replaceState(state,title,href){this.saved={state,title,href};}}};
+  const target=cars.find(car=>car.code==='MUSTANG_68B');
+  rememberCar(target,browser);await Promise.resolve();
+  const saved=new URL(browser.history.saved.href);
+  assert.equal(saved.searchParams.get('car'),sourceCarId(target));assert.equal(saved.searchParams.get('game'),'ford-racing-2');
+  assert.equal(saved.searchParams.has('variant'),false);assert.equal(saved.searchParams.get('debug'),'1');assert.equal(saved.hash,'#viewer');
+  assert.equal(browser.history.saved.state,browser.history.state);
+  assert.equal(resolveCarAlias(cars,saved.searchParams.get('car'),'code'),target);
+  assert.equal(resolveCarAlias(sourceCatalog,saved.searchParams.get('car')).code,'MUSTANG_68B');
+}
+console.log('PASS selected identity replaces current URL and survives startup resolution');
+
+// History writes are best effort and coalesced: browser quotas cannot abort selection.
+{
+  const writes=[];
+  const browser={location:{href:'http://localhost:8080/recovered.html?variant=canonical'},history:{state:null,replaceState(_state,_title,href){writes.push(href);}}};
+  const source=sourceCatalog.find(c=>c.game==='gran-turismo');
+  rememberCar(source,browser);
+  assert.equal(writes.length,0,'selection must defer history writes');
+  await Promise.resolve();
+  assert.equal(new URL(writes.at(-1)).searchParams.get('variant'),'canonical','valid source variant survives reload');
+  writes.length=0;
+  const first=cars.find(c=>c.code==='MUSTANG_68'),last=cars.find(c=>c.code==='MUSTANG_68B');
+  rememberCar(first,browser);rememberCar(last,browser);await Promise.resolve();
+  assert.equal(writes.length,1,'rapid selections coalesce to one URL update');
+  assert.equal(new URL(writes[0]).searchParams.get('car'),sourceCarId(last));
+  assert.equal(new URL(writes[0]).searchParams.has('variant'),false,'incompatible variant is cleared');
+  browser.history.replaceState=()=>{throw new DOMException('History quota exceeded','SecurityError');};
+  assert.doesNotThrow(()=>rememberCar(last,browser));await Promise.resolve();
+}
+
+// Exercise the actual startup selection for a game-only URL before history is written.
+{
+  const start=dealershipPage.indexOf('    const parameters = new URLSearchParams(location.search);');
+  const end=dealershipPage.indexOf('    applyFilters();',start);
+  const bootSelection=new Function('CARS','$','location','resolveCarAlias','gameId','updateFilterAvailability','select',
+    `return (async()=>{${dealershipPage.slice(start,end)}})();`);
+  for(const game of ['redline','gran-turismo','midnight-club-3-remix','all']){
+    const filter={value:'all',options:['all','redline','gran-turismo','midnight-club-3-remix'].map(value=>({value}))};
+    let selected;
+    await bootSelection(cars,()=>filter,{search:'?game='+game},resolveCarAlias,gameId,()=>{},async car=>{selected=car;});
+    assert.equal(filter.value,game);assert(selected);
+    assert(game==='all'||gameId(selected)===game,'game-only startup must select within requested game');
+  }
+}
+console.log('PASS startup game restrictions, coalesced history, valid variants and history quota recovery');
