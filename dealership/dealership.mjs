@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {loadEditableGLB} from './editable-glb.mjs';
+import {normaliseColourTint} from './materials.mjs';
 
 export const gameId = c => c.game || 'ford-racing-2';
 export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
@@ -93,6 +94,13 @@ export function makeCar(c) {
   };
   g.userData.wheels = [];
   g.userData.source = c.model.source;
+  g.userData.colourTint=null;
+  g.userData.setColourTint=(value=null)=>{
+    const tint=normaliseColourTint(value);
+    materials.body.color.copy(bodyColor);
+    if(tint!==null)materials.body.color.multiply(new THREE.Color(tint));
+    g.userData.colourTint=tint;
+  };
   for (const part of parts) {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position',new THREE.BufferAttribute(part.positions,3));

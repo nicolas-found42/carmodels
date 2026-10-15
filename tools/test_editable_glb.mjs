@@ -91,6 +91,17 @@ variantGroup.userData.setColourVariant(0);
 assert.equal(variantMesh.material.map,variantTextures[0]);assert.equal(variantMesh.material.alphaTest,0.25);
 assert.equal(variantMesh.material.transparent,false);assert.equal(variantMesh.material.vertexColors,true);
 assert.equal(variantMesh.material.side,THREE.DoubleSide);assert.equal(variantMesh.material.depthWrite,true);
+const geometryBefore=variantMesh.geometry.attributes.position.array.slice(),colourBefore=variantMesh.geometry.attributes.color.array.slice();
+variantGroup.userData.setColourTint('#FF0000');assert.equal(variantGroup.userData.colourTint,'#ff0000');
+assert.deepEqual(variantMesh.material.color.toArray(),[1,0,0]);
+assert.equal(variantMesh.material.map,variantTextures[0]);assert.equal(variantMesh.material.alphaTest,.25);
+assert.deepEqual(variantMesh.geometry.attributes.color.array,colourBefore);assert.deepEqual(variantMesh.geometry.attributes.position.array,geometryBefore);
+variantGroup.userData.setColourTint('#0000ff');assert.deepEqual(variantMesh.material.color.toArray(),[0,0,1]);
+variantGroup.userData.setColourVariant(1);assert.deepEqual(variantMesh.material.color.toArray(),[.6,.2,.1],'transparent native variant keeps its stored colour');
+variantGroup.userData.setColourVariant(0);assert.deepEqual(variantMesh.material.color.toArray(),[0,0,1],'custom preview survives a material reapplication');
+assert.throws(()=>variantGroup.userData.setColourTint('red'),/Invalid custom colour/);assert.equal(variantGroup.userData.colourTint,'#0000ff');
+variantGroup.userData.setColourTint();assert.deepEqual(variantMesh.material.color.toArray(),[1,1,1]);assert.equal(variantGroup.userData.colourTint,null);
+assert.equal(variantMesh.material,initialMaterial,'custom changes also reuse the material');
 variantGroup.userData.setColourVariant(1);variantGroup.userData.setColourVariant();
 assert.equal(variantMesh.material.map,variantTextures[0]);assert.equal(variantGroup.userData.colourVariant,null);
 for(const index of [-1,2,0.5,'1'])assert.throws(()=>variantGroup.userData.setColourVariant(index),/Invalid colour variant selection/);
@@ -106,5 +117,5 @@ const indexURL=new URL('../dealership/public/gran-turismo/index.json',import.met
 if(fs.existsSync(indexURL)) {
   const index=JSON.parse(fs.readFileSync(indexURL));
   for(const row of index.cars){const raw=fs.readFileSync(new URL('../dealership/public/gran-turismo/'+row.file,import.meta.url));parseEditableGLB(raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength));}
-  console.log(`PASS test_editable_glb: ${index.cars.length} GT GLBs; native variant texture/alpha/vertex-colour switches, mapping corruption controls, embedded triangles, transforms, hash mismatch, cancellation and disposal`);
+  console.log(`PASS test_editable_glb: ${index.cars.length} GT GLBs; native variant and custom tint texture/alpha/vertex-colour switches, mapping corruption controls, embedded triangles, transforms, hash mismatch, cancellation and disposal`);
 } else console.log('PASS test_editable_glb: synthetic native variant switches, textured triangles and failure controls; GT export not present');

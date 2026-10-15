@@ -149,6 +149,13 @@
   #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
   #download-model { font-size: 12px; color: var(--accent-2); padding: 7px 0; }
   #colour-variant { max-width: 230px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 4px; padding: 6px; font: inherit; }
+  #custom-colour-controls { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  #custom-colour-controls label { display: inline-flex; align-items: center; gap: 6px; }
+  #custom-colour { width: 42px; height: 34px; padding: 2px; background: var(--panel-2); border: 1px solid var(--line); cursor: pointer; }
+  #custom-colour-hex { width: 90px; padding: 7px; font: 12px ui-monospace, monospace; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 4px; }
+  #custom-colour-hex[aria-invalid="true"] { border-color: #ff9c8f; }
+  #custom-colour-status, #colour-help { font-size: 12px; color: var(--muted); }
+  #colour-help { flex-basis: 100%; line-height: 1.4; }
   #native-specs { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 7px; }
   #native-specs .kv { align-items: baseline; gap: 12px; }
   #native-specs b { text-align: right; font-size: 12px; }
@@ -227,7 +234,14 @@
         <button type="button" data-view="side">Side</button>
         <button type="button" data-view="front">Front</button>
         <button type="button" data-view="top">Top</button>
-        <label id="colour-control" hidden>Native colour <select id="colour-variant" aria-label="Native colour"></select></label>
+        <label id="colour-control" hidden>Factory colour <select id="colour-variant" aria-label="Factory colour"></select></label>
+        <div id="custom-colour-controls">
+          <label>Custom colour <input id="custom-colour" type="color" value="#ffffff" aria-label="Custom preview colour" aria-describedby="colour-help" disabled></label>
+          <input id="custom-colour-hex" value="#ffffff" maxlength="7" aria-label="Custom colour hex code" aria-describedby="colour-help custom-colour-status" spellcheck="false" disabled>
+          <button id="reset-colour" type="button" disabled>Reset colour</button>
+          <span id="custom-colour-status" role="status" aria-live="polite"></span>
+          <p id="colour-help">Custom tints are previews and may also colour trim or wheels. Downloads keep the model's stored colours.</p>
+        </div>
         <a id="download-model" download>Download dealership model (.glb)</a>
       </div>
       <div id="panel">
@@ -336,6 +350,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias } from './dealership.mjs';
+import {createColourControls} from './colour-controls.mjs';
 
 const $ = id => document.getElementById(id);
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
@@ -343,6 +358,9 @@ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
 let CARS = [];
 let current = null;
 let carMesh = null;
+const colourControls=createColourControls({onTint:tint=>carMesh?.userData.setColourTint(tint),onReset:()=>{
+  carMesh?.userData.setColourVariant?.(null);$('colour-variant').value='';
+}});
 let selectionId = 0, selectionController = null, semanticId = 0, semanticController = null;
 const groups = new Set();
 
@@ -605,6 +623,7 @@ resize();
 /* ---------- selection ---------- */
 async function select(c) {
   const id=++selectionId;selectionController?.abort();selectionController=new AbortController();
+  colourControls.setEnabled(false);
   current = c;
   document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
   const sel = [...document.querySelectorAll('.car-row')].find(r => r._code === c.code);
@@ -658,7 +677,7 @@ async function select(c) {
   try {
     const model=await loadCar(c,{signal:selectionController.signal});
     if(id!==selectionId){disposeCar(model);return;}
-    carMesh=model;scene.add(carMesh);showColourVariants(carMesh);setView('reset');$('loading').hidden=true;
+    carMesh=model;scene.add(carMesh);showColourVariants(carMesh);colourControls.setEnabled(true);setView('reset');$('loading').hidden=true;
   } catch(error){
     if(id!==selectionId)return;
     $('loading').classList.add('error');$('loading').textContent='This model could not be loaded: '+error.message;
@@ -704,6 +723,7 @@ function showNativeSpecifications(car) {
 $('colour-variant').addEventListener('change',()=>{
   const value=$('colour-variant').value;
   if(carMesh?.userData.setColourVariant)carMesh.userData.setColourVariant(value===''?null:Number(value));
+  colourControls.clear();
 });
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 $('auto-rotate').checked = !motion.matches;

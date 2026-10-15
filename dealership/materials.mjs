@@ -1,7 +1,14 @@
 import * as THREE from './vendor/three.module.js';
 
+export function normaliseColourTint(value) {
+ if(value==null)return null;
+ if(typeof value!=='string' || !/^#[0-9a-f]{6}$/i.test(value))throw Error('Invalid custom colour. Use #RRGGBB.');
+ return value.toLowerCase();
+}
+
 // Material, texture and image indices are separate glTF namespaces.
 export function applyMaterial(material, doc, images, materialIndex, options={}) {
+ const tint=normaliseColourTint(options.colourTint);
  const source=doc.materials[materialIndex], pbr=source.pbrMetallicRoughness||{};
  const factor=pbr.baseColorFactor||[1,1,1,1];
  const textureIndex=pbr.baseColorTexture?.index;
@@ -16,6 +23,8 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
   material.map.needsUpdate=true;
  }
  material.color.fromArray(factor); // glTF factors already use linear RGB.
+ // CSS picker colours are sRGB. Blend surfaces retain their stored glass colour.
+ if(tint!==null && source.alphaMode!=='BLEND')material.color.multiply(new THREE.Color(tint));
  material.opacity=factor[3];
  material.transparent=source.alphaMode==='BLEND';
  material.alphaTest=source.alphaMode==='MASK'?(source.alphaCutoff??.5):0;

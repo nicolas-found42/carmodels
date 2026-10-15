@@ -181,3 +181,19 @@ See [the preview note](../../research/midnight-club-los-angeles-previews.md) and
 MCLA profile v2 retains native submodel bone bindings, restores joint orientation and composed descendant placement, and corrects shared-wheel and attachment frames. For a source upgrade, use `python3 tools/import_mcla_catalog.py --refresh`, then the `--upgrade-unedited` dealership import and both catalog builds. Source refresh validates the existing edition before installation and preserves checked native ZIPs. Regular exterior parts exclude alternative wide kits; DUB packages without regular exterior slots use their required wide family. Player citybus uses a guarded wheel-only join from its matching ambient family, with donor source hashes retained. Original gameplay configuration and shader fidelity remain outside the static profile.
 
 The S7 preview also carries a source-pinned divider-profile reconstruction in its GLB `preview_geometry_repairs`. Native model/attachment frames stay unchanged; only ten divider components of one skirt primitive are thinned, with before/after measurements recorded. The original native geometry remains in its ZIP. This documented preview cleanup is separate from recovered game deformation or shader behavior.
+
+## Preview colours
+
+Both showcases offer recovered factory colour variants where the loaded GLB
+contains them, plus a custom colour picker and a `#RRGGBB` field for any 3D preview.
+A factory selection clears the custom tint; **Reset colour** restores the stored
+default materials. Changing cars clears the custom tint. Colour controls disable
+while loading, after failures, and for native packages without a 3D preview.
+
+Custom colours multiply the opaque materials in linear RGB after converting the
+picker's sRGB colour. They retain texture detail and vertex shading, but can also
+tint trim or wheels when native paint regions are unavailable. Transparent glass
+keeps its stored colour. Compact dealership models have a separate body material,
+so their known wheel/detail materials are excluded. This is a preview adjustment;
+it does not establish native paint semantics or modify catalogs, GLBs, downloads
+or saved settings.

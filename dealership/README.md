@@ -106,3 +106,19 @@ The dealership separation and verification are recorded in [`../research/dealers
 - `../research/visualization-libraries.md` — primary-source tooling research and citations.
 - `../research/format-notes.md` — verified file structure, experiments, confidence, and remaining reverse-engineering tasks.
 - `../research/original-recovery.md` — current synthesis, validation receipts, Jev experiments and research leads.
+
+## Preview colours
+
+Both showcases offer recovered factory colour variants where the loaded GLB
+contains them, plus a custom colour picker and a `#RRGGBB` field for any 3D preview.
+A factory selection clears the custom tint; **Reset colour** restores the stored
+default materials. Changing cars clears the custom tint. Colour controls disable
+while loading, after failures, and for native packages without a 3D preview.
+
+Custom colours multiply the opaque materials in linear RGB after converting the
+picker's sRGB colour. They retain texture detail and vertex shading, but can also
+tint trim or wheels when native paint regions are unavailable. Transparent glass
+keeps its stored colour. Compact dealership models have a separate body material,
+so their known wheel/detail materials are excluded. This is a preview adjustment;
+it does not establish native paint semantics or modify catalogs, GLBs, downloads
+or saved settings.
