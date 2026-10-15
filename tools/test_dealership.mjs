@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias, sourceCarId} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -284,3 +284,16 @@ try {
   await new Promise(resolve => server.close(resolve));
 }
 console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, compact body tint/reset with wheel/detail preservation, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);
+
+// Both viewers share source identities even when editable codes are namespaced.
+const sourceCatalog=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url),'utf8')).cars;
+for(const car of cars){
+  const source=sourceCatalog.find(entry=>entry.id===sourceCarId(car));
+  assert(source,car.code);
+  assert.equal(resolveCarAlias(cars,source.id,'code'),car);
+  assert.equal(resolveCarAlias(sourceCatalog,sourceCarId(car)),source);
+  const query=new URLSearchParams({game:gameId(car),car:sourceCarId(car)});
+  assert.equal(resolveCarAlias(cars,new URLSearchParams(String(query)).get('car'),'code'),car);
+}
+assert.equal(resolveCarAlias(cars,'unknown/source','code'),undefined);
+console.log('PASS viewer navigation identities: every editable car resolves to its source and back');

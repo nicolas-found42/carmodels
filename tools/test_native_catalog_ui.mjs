@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {isNativePackage, dealershipDownload, loadCar, validateCars} from '../dealership/dealership.mjs';
+import {isNativePackage, dealershipDownload, loadCar, validateCars, gameId, sourceCarId} from '../dealership/dealership.mjs';
 import {createColourControls} from '../dealership/colour-controls.mjs';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {applyMaterial} from '../dealership/materials.mjs';
@@ -44,7 +44,7 @@ assert.equal(fetches,0);assert.equal(disposals,1);assert(node('#record').disable
 assert.equal(node('#download').href,'public/midnight-club-3-remix/native/vp_test_04.dat');
 assert.match(node('#download').textContent,/native package/);assert.match(node('#status').textContent,/3D preview unavailable/);
 assert.equal(node('#error').textContent,'');
-assert.equal(node('#download').download,'vp_test_04.dat');assert.match(node('#download').textContent,/\(\.dat\)/);
+assert.equal(node('#download').download,'vp_test_04.dat');assert.equal(new URLSearchParams(node('#dealership-link').href.split('?')[1]).get('car'),entry.id);assert.match(node('#download').textContent,/\(\.dat\)/);
 
 // GT4 packages are ZIPs: the label and saved name follow the published file, not a fixed extension.
 const gt4={id:'gran-turismo-4/test0001',code:'test0001',game:'gran-turismo-4',asset_kind:'native-package',
@@ -69,13 +69,13 @@ const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerEle
 // Start enabled, as after a loaded 3D preview, so native selection must disable the controls.
 const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
-  'loadCar','applyFilters','fmt','colourControls',
+  'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId',
   `let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
   $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
-  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls);
+  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls,gameId,sourceCarId);
 await select(native);
 assert.equal(modelLoads,0);assert.equal(removed,1);assert.equal(disposed,1);assert.equal(filters,1);
-assert.equal($('download-model').href,dealershipDownload(native).href);
+assert.equal($('download-model').href,dealershipDownload(native).href);assert.equal(new URLSearchParams($('source-link').href.split('?')[1]).get('car'),sourceCarId(native));
 assert.match($('loading').textContent,/3D preview unavailable/);assert.equal($('loading').hidden,false);
 assert.equal($('v-sp').textContent,'Not decoded');assert.equal($('k-liv').textContent,'Not decoded');
 assert.match($('paint-caveat').textContent,/not been converted/);

@@ -11,7 +11,7 @@ const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
 const html=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('function updateMaterials('));
-const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','download','native-download','native-download-wrap','retry','error'].map(id=>[id,{
+const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','download','native-download','native-download-wrap','retry','error','dealership-link'].map(id=>[id,{
  value:'',disabled:false,hidden:false,options:[],textContent:'',
  removeAttribute(name){delete this[name];},
  replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},
@@ -26,7 +26,7 @@ const context={THREE:{...THREE,TextureLoader:class {
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;}},
- loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,
+ loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
  readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
  async fetchModel(url,signal){
@@ -124,7 +124,7 @@ const sourceVariant=control('');sourceVariant.options=[{value:''},{value:'night'
 const search=control(''),filterStatus=control(),carSelect=control(),interpret=control();
 // Native select values cannot refer to options which have not yet been added.
 Object.defineProperty(carSelect,'value',{get(){return this.options.some(o=>o.value===this.selectedValue)?this.selectedValue:this.options[0]?.value||'';},set(value){this.selectedValue=this.options.some(o=>o.value===value)?value:'';}});
-const filterElements={interpret,download:control(),retry:control(), 'clear-filters':control(), 'native-download':control(), 'native-download-wrap':control(),error:control(),'source-description':control(),variant:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
+const filterElements={interpret,download:control(),retry:control(), 'clear-filters':control(), 'native-download':control(), 'native-download-wrap':control(),error:control(),'source-description':control(),variant:control(),'dealership-link':control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
 let delayedResolve=null;
 const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,index:{cars:[
  {id:'ford-racing-2/COBRA',game:'ford-racing-2',code:'COBRA'},

@@ -5,8 +5,10 @@ import {normaliseColourTint} from './materials.mjs';
 export const gameId = c => c.game || 'ford-racing-2';
 export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
 export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';
+// Shared identity connects the editable edition to its recovered source row.
+export const sourceCarId = c => c.id || `${gameId(c)}/${c.sourceCode || c.code}`;
 export function resolveCarAlias(cars, requested, key='id') {
-  return cars.find(car=>car[key]===requested) || cars.find(car=>
+  return cars.find(car=>car[key]===requested) || (key==='code'&&cars.find(car=>sourceCarId(car)===requested)) || cars.find(car=>
     (key==='id'?car.aliases:car.sourceAliases)?.includes(requested));
 }
 export function dealershipDownload(c) {
