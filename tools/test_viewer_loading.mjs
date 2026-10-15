@@ -5,7 +5,7 @@ import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {createMaterial} from '../dealership/materials.mjs';
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
-import {isNativePackage,resolveCarAlias} from '../dealership/dealership.mjs';
+import {isNativePackage,resolveCarAlias,createCarSearch} from '../dealership/dealership.mjs';
 
 const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
@@ -124,10 +124,10 @@ const sourceVariant=control('');sourceVariant.options=[{value:''},{value:'night'
 const search=control(''),filterStatus=control(),carSelect=control(),interpret=control();
 // Native select values cannot refer to options which have not yet been added.
 Object.defineProperty(carSelect,'value',{get(){return this.options.some(o=>o.value===this.selectedValue)?this.selectedValue:this.options[0]?.value||'';},set(value){this.selectedValue=this.options.some(o=>o.value===value)?value:'';}});
-const filterElements={interpret,download:control(),retry:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
+const filterElements={interpret,download:control(),retry:control(),'clear-filters':control(),'native-download':control(),'native-download-wrap':control(),'source-description':control(),error:control()};let modelLoads=0,disposed=0,responseJSON={status:'review',message:'Choose filters directly.'};
 let delayedResolve=null;
-const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,index:{cars:[
- {id:'ford-racing-2/COBRA',game:'ford-racing-2',code:'COBRA'},
+const filterContext={createCarSearch,gameSelect,sourceVariant,search,filterStatus,carSelect,index:{cars:[
+ {id:'ford-racing-2/COBRA',game:'ford-racing-2',code:'COBRA',display_name:'Gran Torino'},
  {id:'gran-turismo/simulation/synthetic/night',game:'gran-turismo',code:'simulation/_0logn/night',source_variant:'night'},
  {id:'gran-turismo/simulation/synthetic/day',game:'gran-turismo',code:'simulation/_0logn/day',source_variant:'day'},
  {id:'gran-turismo/simulation/other/day',game:'gran-turismo',code:'simulation/other/day',source_variant:'day'}]},
@@ -138,7 +138,36 @@ const filterContext={gameSelect,sourceVariant,search,filterStatus,carSelect,inde
 vm.createContext(filterContext);const filters=html.slice(html.indexOf('function filterCars('),html.indexOf("carSelect.addEventListener('change',loadCar)"));vm.runInContext(filters,filterContext);
 filterContext.filterCars();assert.equal(carSelect.options.length,4);assert.equal(modelLoads,1);
 gameSelect.value='gran-turismo';sourceVariant.value='night';filterContext.filterCars();assert.equal(carSelect.options.length,1);assert.match(carSelect.value,/night$/);
+filterElements['native-download'].href='public/previous.zip';filterElements['native-download-wrap'].hidden=false;filterElements['source-description'].textContent='Previous car';filterElements.error.textContent='Previous failure';
 search.value='missing';filterContext.filterCars();assert.equal(carSelect.options.length,0);assert.equal(disposed,1);assert.match(filterContext.status.textContent,/No source entries/);
+assert.equal(filterElements['native-download'].href,undefined,'empty results must not offer the previous car ZIP');
+assert.equal(filterElements['native-download-wrap'].hidden,true);
+assert.equal(filterElements.error.textContent,'');
+assert.match(filterElements['source-description'].textContent,/Browse recovered cars/);
+assert.equal(carSelect.disabled,true);
+filterElements['clear-filters'].events.click();
+assert.equal(gameSelect.value,'all');assert.equal(sourceVariant.value,'');assert.equal(search.value,'');
+assert.equal(carSelect.options.length,4);assert.equal(carSelect.disabled,false);
+
+// Changing games clears only incompatible variants and preserves the literal query.
+gameSelect.value='gran-turismo';sourceVariant.value='night';search.value='';filterContext.filterCars();
+gameSelect.value='ford-racing-2';search.value='COBRA';gameSelect.events.change();
+assert.equal(sourceVariant.value,'','a game change must not retain an impossible variant');
+assert.equal(search.value,'COBRA');assert.equal(carSelect.value,'ford-racing-2/COBRA');
+assert.match(filterStatus.textContent,/Cleared.*night/);
+assert.equal(sourceVariant.options.find(o=>o.value==='night').disabled,true);
+gameSelect.value='gran-turismo';search.value='';gameSelect.events.change();
+assert.equal(sourceVariant.options.find(o=>o.value==='night').disabled,false);
+sourceVariant.value='night';sourceVariant.events.change();
+gameSelect.value='all';gameSelect.events.change();assert.equal(sourceVariant.value,'night','compatible choices survive game changes');
+filterElements['clear-filters'].events.click();
+for(const query of ['Torino Gran','gran-torino','GRAN TORINO']){
+ search.value=query;filterContext.filterCars();assert.equal(carSelect.value,'ford-racing-2/COBRA',query+' should match every name word');
+}
+filterContext.index.cars[0].display_name='';filterContext.index.cars[0].code='GRAN_TORINO';
+search.value='gran torino';filterContext.filterCars();assert.equal(carSelect.value,'ford-racing-2/COBRA','human spacing should match a source code');
+filterContext.index.cars[0].code='COBRA';search.value='gibberish-no-model';filterContext.filterCars();assert.equal(carSelect.options.length,0,'unknown names remain empty');
+filterElements['clear-filters'].events.click();
 search.value='night cars from Gran Turismo';await interpret.events.click();assert.equal(search.value,'night cars from Gran Turismo');assert.equal(filterStatus.textContent,'Choose filters directly.');
 responseJSON={status:'ok',filters:{game:'gran-turismo',variant:'day'}};await interpret.events.click();assert.equal(search.value,'');assert.equal(carSelect.options.length,2);assert.match(carSelect.value,/day$/);
 responseJSON={status:'ok',filters:{game:'invented-game',variant:null}};await interpret.events.click();assert.match(filterStatus.textContent,/unknown filter/);assert.equal(gameSelect.value,'gran-turismo');
