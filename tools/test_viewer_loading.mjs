@@ -25,6 +25,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  async loadAsync(){const t=new THREE.Texture();t.addEventListener('dispose',()=>disposals++);return t;}
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
+ colourControls:{enabled:false,setEnabled(value){this.enabled=value;}},
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
  readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,showRecord(){status.textContent=context.selected.code;},updateDescription(){},
@@ -43,12 +44,14 @@ elements.car.value='ford-racing-2/GRAN_TORINO';await context.loadCar();
 assert.equal(context.selected.code,'GRAN_TORINO');
 assert.match(elements.download.href,/GRAN_TORINO/);
 assert.equal(elements.record.disabled,false);
+assert.equal(context.colourControls.enabled,true);
 mode='failure';elements.car.value='ford-racing-2/COBRA';await context.loadCar();
 assert.equal(context.loaded,null);
 assert.equal(scene.children.length,0);
 assert.equal(urls.size,0);
 assert.equal(elements.download.href,undefined);
 assert.equal(elements.record.disabled,true);
+assert.equal(context.colourControls.enabled,false,'failed loads disable preview-colour editing');
 assert.equal(elements.retry.hidden,false);
 assert.match(elements.error.textContent,/COBRA.*HTTP 404/);
 const failureStatus=status.textContent;context.showRecord=()=>{};
@@ -61,6 +64,7 @@ mode='pending';elements.car.value='ford-racing-2/FOCUS_WRC';const stale=context.
 assert.equal(elements.download.href,undefined);
 assert.equal(elements.record.disabled,true);
 assert.equal(stage['aria-busy'],'true');
+assert.equal(context.colourControls.enabled,false,'pending selections disable preview-colour editing');
 mode='success';elements.car.value='ford-racing-2/F350';await context.loadCar();await stale;
 assert.equal(context.selected.code,'F350');
 assert.match(elements.download.href,/F350/);
@@ -105,6 +109,7 @@ const beforeNativeRequests=requests.length;
 elements.car.value='midnight-club-3-remix/native-fixture';await context.loadCar();
 assert.equal(requests.length,beforeNativeRequests,'native selection must not fetch/parse a DAT as GLB');
 assert.equal(context.loaded,null);assert.equal(scene.children.length,0);assert.equal(urls.size,0);
+assert.equal(context.colourControls.enabled,false,'native packages without a 3D preview cannot be tinted');
 assert.equal(elements.record.disabled,true);assert.equal(elements.retry.hidden,true);
 assert.match(elements.download.href,/vp_fixture\.dat$/);assert.match(status.textContent,/3D preview unavailable/);
 assert.equal(elements.download.download,'vp_fixture.dat');

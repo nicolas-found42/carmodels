@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {fetchModel, readGLB} from './model-load.mjs';
-import {createMaterial, applyMaterial} from './materials.mjs';
+import {createMaterial, applyMaterial, normaliseColourTint} from './materials.mjs';
 
 // Decode only embedded, static triangle GLBs. Bounds and accessor extents are
 // checked before allocating meshes; texture failures dispose all prior resources.
@@ -113,11 +113,19 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
   group.userData.textures=textures;group.userData.wheels=[];group.userData.source=car.model.source;
   group.userData.colourVariants=colourVariants.map((variant,index)=>({index,name:variant.name}));
   group.userData.colourVariant=null;
+  group.userData.colourTint=null;
+  function updateColours() {
+    const index=group.userData.colourVariant;
+    for(const {mesh,primitive} of variantMeshes)applyMaterial(mesh.material,doc,textures,
+      index===null?primitive.material:primitive.variantMaterials.get(index)??primitive.material,
+      {colourTint:group.userData.colourTint});
+  }
   group.userData.setColourVariant=(index=null)=>{
     if(index!==null && (!Number.isInteger(index) || index<0 || index>=colourVariants.length))throw Error('Invalid colour variant selection.');
-    for(const {mesh,primitive} of variantMeshes)applyMaterial(mesh.material,doc,textures,index===null?primitive.material:primitive.variantMaterials.get(index)??primitive.material);
     group.userData.colourVariant=index;
+    updateColours();
   };
+  group.userData.setColourTint=(value=null)=>{group.userData.colourTint=normaliseColourTint(value);updateColours();};
   try {
     for(const image of images)textures.push(await textureImpl(image,signal));
     if(signal?.aborted)throw Error('Model selection cancelled.');

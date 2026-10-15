@@ -31,6 +31,15 @@ const largeMesh=makeCar(largeCar);
 assert(largeMesh.children[0].geometry.index.array instanceof Uint32Array);
 assert.equal(largeMesh.children[0].geometry.index.array.at(-1),65537);
 disposeCar(largeMesh);
+const tintCar=makeCar(compactCars[0]),tintBody=tintCar.children.find(n=>n.name==='body');
+const stored=tintBody.material.color.clone(),storedSource=JSON.stringify(compactCars[0]);
+const otherMaterials=tintCar.children.filter(n=>n.name!=='body').map(n=>[n.material,n.material.color.clone()]);
+tintCar.userData.setColourTint('#ff0000');assert.deepEqual(tintBody.material.color.toArray(),[stored.r,0,0]);
+tintCar.userData.setColourTint('#0000ff');assert.deepEqual(tintBody.material.color.toArray(),[0,0,stored.b]);
+for(const [material,colour] of otherMaterials)assert(material.color.equals(colour),'known compact wheel/detail materials keep their colour');
+assert.throws(()=>tintCar.userData.setColourTint('red'),/Invalid custom colour/);
+assert.equal(tintCar.userData.colourTint,'#0000ff');tintCar.userData.setColourTint();assert(tintBody.material.color.equals(stored));
+assert.equal(JSON.stringify(compactCars[0]),storedSource);disposeCar(tintCar);
 assert.throws(()=>decodeModel({...largeCar,model:{...largeCar.model,schema:1}}),/invalid dealership model/,'stale16-bit schema must be rejected');
 for(const width of [2,4]) {
   const bad=structuredClone(largeCar);
@@ -274,4 +283,4 @@ try {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));
 }
-console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);
+console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, compact body tint/reset with wheel/detail preservation, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);
