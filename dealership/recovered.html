@@ -27,7 +27,7 @@ import {OrbitControls} from './vendor/OrbitControls.js';
 import {fetchModel,readGLB} from './model-load.mjs';
 import {createMaterial,applyMaterial} from './materials.mjs';
 import {sceneLabel,geometryOptions,defaultGeometryValue} from './scene-options.mjs';
-import {isNativePackage,resolveCarAlias,rememberCar} from './dealership.mjs';
+import {isNativePackage,resolveCarAlias,rememberCar,createCarSearch} from './dealership.mjs';
 import {createColourControls} from './colour-controls.mjs';
 const stage=document.querySelector('#stage'), carSelect=document.querySelector('#car'), recordSelect=document.querySelector('#record'), status=document.querySelector('#status');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));stage.append(renderer.domElement);
@@ -101,7 +101,8 @@ function updateFilterAvailability(){
 function filterCars(literal=true,preferred=carSelect.value){
  filterRevision++;
  const feedback=updateFilterAvailability(),previous=carSelect.value,query=literal?search.value.toLowerCase().trim():'';
- const cars=index.cars.filter(c=>(gameSelect.value==='all'||c.game===gameSelect.value)&&(!sourceVariant.value||c.source_variant===sourceVariant.value)&&(!query||[c.code,c.display_name||'',c.game,c.source_variant||''].join(' ').toLowerCase().includes(query)));
+ const matchesSearch=createCarSearch(query);
+ const cars=index.cars.filter(c=>(gameSelect.value==='all'||c.game===gameSelect.value)&&(!sourceVariant.value||c.source_variant===sourceVariant.value)&&matchesSearch({code:c.code,name:[c.display_name||'',c.game,gameNames[c.game]||'',c.source_variant||''].join(' ')}));
  carSelect.replaceChildren(...cars.map(c=>Object.assign(document.createElement('option'),{value:c.id,textContent:(gameNames[c.game]||c.game)+' · '+(c.display_name||c.code)})));
  carSelect.value=(cars.find(c=>c.id===preferred)||cars.find(c=>c.id==='ford-racing-2/GRAN_TORINO')||cars[0])?.id||'';
  carSelect.disabled=!cars.length;filterStatus.textContent=`${cars.length} source entries${feedback}`;

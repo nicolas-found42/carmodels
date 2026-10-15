@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {isNativePackage, dealershipDownload, loadCar, validateCars, gameId, sourceCarId} from '../dealership/dealership.mjs';
+import {isNativePackage, dealershipDownload, loadCar, validateCars, gameId, sourceCarId, createCarSearch} from '../dealership/dealership.mjs';
 import {createColourControls} from '../dealership/colour-controls.mjs';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {applyMaterial} from '../dealership/materials.mjs';
@@ -174,10 +174,10 @@ console.log('PASS native catalog UI: native package downloads and preview state;
   let loads=0,aborts=0,disposals=0;
   const filterStart=sourcePage.indexOf('function updateFilterAvailability()');
   const filterEnd=sourcePage.indexOf("document.querySelector('#interpret').addEventListener",filterStart);
-  const filter=new Function('index','document','gameSelect','sourceVariant','carSelect','recordSelect','search','filterStatus','gameNames','dispose','setLoading','loadCar','onAbort',
+  const filter=new Function('index','document','gameSelect','sourceVariant','carSelect','recordSelect','search','filterStatus','gameNames','dispose','setLoading','loadCar','onAbort','createCarSearch',
     `const status=document.querySelector('#status');let filterRevision=0,requestId=0,pendingRequest={abort(){onAbort();}};${sourcePage.slice(filterStart,filterEnd)}return filterCars;`)(
     catalog,{querySelector:get,createElement:element},game,variant,car,get('#record'),search,get('#filter-status'),{},
-    ()=>disposals++,()=>{},()=>loads++,()=>aborts++);
+    ()=>disposals++,()=>{},()=>loads++,()=>aborts++,createCarSearch);
   filter();assert.equal(variant.value,'canonical');assert.equal(car.options.length,342);
   game.value='redline';filter();assert.equal(variant.value,'');assert(car.options.length>0);
   assert.match(get('#filter-status').textContent,/Cleared unavailable variant: canonical/);
