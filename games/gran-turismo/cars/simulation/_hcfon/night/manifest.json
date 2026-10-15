@@ -27,15 +27,164 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_hcfon",
   "id": "simulation/_hcfon/night",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 52,
+        "index": 0,
+        "label": "VOGUE SILVER METALLIC",
+        "name": "VOGUE SILVER METALLIC"
+      },
+      {
+        "colour_id": 53,
+        "index": 1,
+        "label": "PHANTOM GRAY PEARL",
+        "name": "PHANTOM GRAY PEARL"
+      },
+      {
+        "colour_id": 109,
+        "index": 2,
+        "label": "LAUSANNE GREEN PEARL",
+        "name": "LAUSANNE GREEN PEARL"
+      },
+      {
+        "colour_id": 115,
+        "index": 3,
+        "label": "HERBERT BLUE PEARL",
+        "name": "HERBERT BLUE PEARL"
+      }
+    ],
+    "identity": {
+      "name": "CIVIC '93 Sedan",
+      "spec_index": 109,
+      "status": "verified"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 52,
+          "matching_slots": [
+            {
+              "colour_id": 52,
+              "name": "VOGUE SILVER METALLIC",
+              "slot": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 53,
+          "matching_slots": [
+            {
+              "colour_id": 53,
+              "name": "PHANTOM GRAY PEARL",
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "lookup_colour_id": 109,
+          "matching_slots": [
+            {
+              "colour_id": 109,
+              "name": "LAUSANNE GREEN PEARL",
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "lookup_colour_id": 115,
+          "matching_slots": [
+            {
+              "colour_id": 115,
+              "name": "HERBERT BLUE PEARL",
+              "slot": 3
+            }
+          ]
+        }
+      ],
+      "colour_source_slots": [
+        {
+          "colour_id": 52,
+          "name": "VOGUE SILVER METALLIC",
+          "slot": 0
+        },
+        {
+          "colour_id": 53,
+          "name": "PHANTOM GRAY PEARL",
+          "slot": 1
+        },
+        {
+          "colour_id": 109,
+          "name": "LAUSANNE GREEN PEARL",
+          "slot": 2
+        },
+        {
+          "colour_id": 115,
+          "name": "HERBERT BLUE PEARL",
+          "slot": 3
+        }
+      ],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "hcfon",
+      "native_directory_index": 76,
+      "native_grade_name": "Sedan",
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "native_model_name": "CIVIC '93",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": {
+      "aspiration": "Normal",
+      "displacement_cc": 1595,
+      "displacement_display_kind": "cc",
+      "displacement_raw": 1595,
+      "displacement_rotary_chamber_cc": null,
+      "displacement_rotary_factor": null,
+      "drive": "FF",
+      "engine_configuration": "L4",
+      "engine_type": "DOHC",
+      "front_tread_mm": 1475,
+      "height_mm": 1375,
+      "length_mm": 4395,
+      "mass_kg": 1032,
+      "power_conversion": "floor(raw * 1000 / 1014); native display label HP",
+      "power_hp_game": 125,
+      "power_raw": 127,
+      "power_rpm": 7800,
+      "rear_tread_mm": 1465,
+      "specification_scope": "native-base",
+      "suspension_front": "Double Wishbone",
+      "suspension_rear": "Double Wishbone",
+      "torque_kgm": 14.7,
+      "torque_raw": 1470,
+      "torque_rpm": 7300,
+      "wheelbase_mm": 2620,
+      "width_mm": 1695
+    }
+  },
   "pair_index": 420,
   "variant": "night"
 }

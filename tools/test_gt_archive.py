@@ -147,6 +147,62 @@ class GTArchiveTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Truncated disc'):
                 Disc(path)
 
+    def test_metadata_refresh_preserves_native_files_and_rejects_tampering(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            image, destination = root / 'disc.bin', root / 'cars'
+            image.write_bytes(image_bytes())
+            extractor.extract(image, destination)
+            native = destination / 'simulation/pair-0000/model.car'
+            before = native.read_bytes(), native.stat().st_ino
+            index = json.loads((destination / 'index.json').read_text())
+            index['schema'] = 1
+            (destination / 'index.json').write_text(json.dumps(index))
+            extractor.extract(image, destination, refresh=True)
+            self.assertEqual(before, (native.read_bytes(), native.stat().st_ino))
+            extractor.extract(image, destination, check=True)
+            tree = {p: p.read_bytes() for p in destination.rglob('*') if p.is_file()}
+            extractor.extract(image, destination, refresh=True)
+            self.assertEqual(tree, {p: p.read_bytes() for p in destination.rglob('*') if p.is_file()})
+            with self.assertRaisesRegex(ValueError, 'cannot be combined'):
+                extractor.extract(image, destination, check=True, refresh=True)
+            native.write_bytes(b'owner changed native file')
+            changed = {p: p.read_bytes() for p in destination.rglob('*') if p.is_file()}
+            with self.assertRaisesRegex(ValueError, 'native byte mismatch'):
+                extractor.extract(image, destination, refresh=True)
+            self.assertEqual(changed, {p: p.read_bytes() for p in destination.rglob('*') if p.is_file()})
+
+    def test_metadata_refresh_rolls_back_partial_install_and_rejects_extra_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            image, destination = root / 'disc.bin', root / 'cars'
+            image.write_bytes(image_bytes())
+            extractor.extract(image, destination)
+            (destination / 'owner.txt').write_text('keep')
+            with self.assertRaisesRegex(ValueError, 'inventory mismatch'):
+                extractor.extract(image, destination, refresh=True)
+            (destination / 'owner.txt').unlink()
+            for name in ['index.json', 'simulation/pair-0000/manifest.json']:
+                path = destination / name
+                value = json.loads(path.read_text())
+                value['claim_limits'] = ['Prior generated metadata']
+                path.write_text(json.dumps(value))
+            # Prior index and per-car manifests must agree before upgrading.
+            path = destination / 'index.json'
+            value = json.loads(path.read_text())
+            value['cars'][0]['claim_limits'] = ['Prior generated metadata']
+            path.write_text(json.dumps(value))
+            before = {p: p.read_bytes() for p in destination.rglob('*') if p.is_file()}
+            replace = Path.replace
+            def fail_index(path, target):
+                if path.name == 'index.json' and path.parent.name.startswith('.gt-metadata-'):
+                    raise OSError('simulated metadata commit failure')
+                return replace(path, target)
+            with patch.object(Path, 'replace', fail_index):
+                with self.assertRaisesRegex(OSError, 'simulated metadata commit'):
+                    extractor.extract(image, destination, refresh=True)
+            self.assertEqual(before, {p: p.read_bytes() for p in destination.rglob('*') if p.is_file()})
+
     def test_source_mapping_is_pinned_and_bounded(self):
         self.assertEqual(len(extractor.names_for_disc(b'SCUS_941.94;1', [None] * 1376)), 1376)
         self.assertEqual(extractor.names_for_disc(b'UNKNOWN;1', [None] * 1376), {})

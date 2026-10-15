@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Extract all native GT1 car/texture pairs and shared car metadata from a PS1 disc.
 
-Never replaces an existing nonempty destination. --check recomputes the entire
+Never replaces an existing nonempty destination without --refresh-metadata. --check recomputes the entire
 expected tree from the disc, including hashes and manifests, and checks every
 output byte. This is extraction, not mesh/texture conversion or render recovery.
 """
@@ -9,6 +9,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+import struct
 import tempfile
 
 from gt_archive import Disc, archive_entries, car_pairs, decompress, digest, file_digest
@@ -20,9 +21,9 @@ CODE_SHA256 = 'f8796a0e9fcd77ba905c056ad22e8d606c75f06052ab02dbbba7776ad5080472'
 LIMITS = [
     'Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.',
     'All archive variants retained; pair counts are not counts of distinct drivable cars.',
-    'Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.',
+    'Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.',
     'Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.',
-    'Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.',
+    'Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.',
     'No game execution, rendered fidelity or dealership integration is established.'
 ]
 
@@ -110,6 +111,9 @@ def derive(image):
         tree['_metadata/CARINF.DAT'] = packed_metadata
         tree['_metadata/CARINF.decoded.arc'] = metadata
         tree['_metadata/SYSTEM.CNF'] = boot
+        system = disc.read(files['/SYSTEM.DAT;1']) if '/SYSTEM.DAT;1' in files else None
+        if system is not None:
+            tree['_metadata/SYSTEM.DAT'] = system
         section_records = []
         for section in sections:
             path = f"_metadata/sections/{section['index']:02d}.bin"
@@ -117,8 +121,28 @@ def derive(image):
             section_records.append(entry_manifest(section, path, 'CARINF.decoded.arc'))
         tree['_metadata/manifest.json'] = json_bytes(metadata_iso | {'sha256': digest(packed_metadata),
             'decoded_sha256': digest(metadata), 'decoded_bytes': len(metadata), 'sections': section_records,
+            'system': ({'file': '_metadata/SYSTEM.DAT', 'bytes': len(system), 'sha256': digest(system)}
+                       if system is not None else None),
             'claim_limits': LIMITS})
-        index = {'schema': 1, 'game': 'gran-turismo', 'volume': disc.volume,
+        if b'SCUS_941.94;1' in boot:
+            from gt_metadata import database_from_bytes, model_metadata
+            if system is None or len(sections) != 39:
+                raise ValueError('USA metadata requires SYSTEM.DAT and all CARINF sections')
+            database = database_from_bytes(sections[13]['data'], sections[38]['data'], system)
+            mapped = [car['code'].removeprefix('_') for car in cars
+                      if car['mode'] == 'simulation' and car['variant'] == 'day']
+            if mapped != database['native_codes']:
+                raise ValueError('USA archive code map differs from native SYSTEM directory')
+            for car in cars:
+                if car['mode'] != 'simulation':
+                    continue  # An arcade hash alias does not establish its retail identity.
+                texture = tree[car['assets'][0]['file']]
+                count, = struct.unpack_from('<H', texture, 14)
+                if not 1 <= count <= 16 or len(texture) != 0x8060 + count * 512:
+                    raise ValueError('Native CTEX colour count/length differs')
+                car['native_metadata'] = model_metadata(database, car['code'], list(texture[16:16 + count]))
+                tree[car['id'] + '/manifest.json'] = json_bytes(car)
+        index = {'schema': 2, 'game': 'gran-turismo', 'volume': disc.volume,
                  'source': {'file': Path(image).name, 'bytes': disc.size, 'sha256': source_hash,
                             'sector_bytes': disc.stride, 'iso_inventory': disc.entries},
                  'archives': archive_records, 'car_pairs': len(cars),
@@ -152,15 +176,77 @@ def check_tree(destination, expected):
             raise ValueError('Extraction byte mismatch: ' + name)
 
 
-def extract(image, destination, check=False):
+def refresh_metadata(destination, expected, index):
+    """Upgrade derived metadata only after every retained native byte is rederived."""
+    destination = Path(destination)
+    if destination.is_symlink() or not destination.is_dir():
+        raise ValueError('Extraction destination is not a regular directory')
+    actual = {}
+    for path in destination.rglob('*'):
+        if path.is_symlink():
+            raise ValueError('Extraction contains a symlink')
+        if path.is_file():
+            actual[path.relative_to(destination).as_posix()] = path
+    if set(actual) - set(expected):
+        raise ValueError('Extraction file inventory mismatch during metadata refresh')
+    prior = json.loads((destination / 'index.json').read_text())
+    if prior.get('game') != 'gran-turismo' or prior.get('source') != index['source']:
+        raise ValueError('Metadata refresh source identity differs')
+    source_rows = {row['id']: row for row in index['cars']}
+    prior_rows = {row['id']: row for row in prior['cars']}
+    if len(prior_rows) != len(prior['cars']) or set(prior_rows) != set(source_rows):
+        raise ValueError('Metadata refresh car inventory differs')
+    for identity, row in prior_rows.items():
+        if row['assets'] != source_rows[identity]['assets']:
+            raise ValueError('Metadata refresh native asset declarations differ')
+        if json.loads((destination / identity / 'manifest.json').read_text()) != row:
+            raise ValueError('Metadata refresh prior car manifest differs')
+    mutable = {'index.json', '_metadata/manifest.json'} | {row['id'] + '/manifest.json' for row in index['cars']}
+    additions = {'_metadata/SYSTEM.DAT'}
+    for name, data in expected.items():
+        if name not in mutable:
+            if name not in actual and name in additions:
+                continue
+            if name not in actual or actual[name].read_bytes() != data:
+                raise ValueError('Metadata refresh native byte mismatch: ' + name)
+    changed = {name: data for name, data in expected.items()
+               if name not in actual or actual[name].read_bytes() != data}
+    previous = {name: actual[name].read_bytes() if name in actual else None for name in changed}
+    with tempfile.TemporaryDirectory(prefix='.gt-metadata-', dir=destination.parent) as temporary:
+        stage = Path(temporary)
+        for name, data in changed.items():
+            path = stage / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        installed = []
+        try:
+            for name in changed:
+                target = destination / name
+                (stage / name).replace(target)
+                installed.append(name)
+            check_tree(destination, expected)
+        except BaseException:
+            for name in installed:
+                if previous[name] is None:
+                    (destination / name).unlink()
+                else:
+                    (destination / name).write_bytes(previous[name])
+            raise
+
+
+def extract(image, destination, check=False, refresh=False):
     image, destination = Path(image).resolve(), Path(destination).absolute()
     if destination.is_symlink() or destination.resolve() == image or destination.resolve() in image.parents:
         raise ValueError('Unsafe extraction destination')
-    if not check and destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
+    if check and refresh:
+        raise ValueError('--check and --refresh-metadata cannot be combined')
+    if not check and not refresh and destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
         raise ValueError('Refusing to replace nonempty extraction destination; use --check')
     tree, index, inventory = derive(image)
     if check:
         check_tree(destination, tree)
+    elif refresh:
+        refresh_metadata(destination, tree, index)
     else:
         destination.parent.mkdir(parents=True, exist_ok=True)
         # Existing empty cars/ is user-supplied. Stage complete contents alongside it.
@@ -180,9 +266,12 @@ def extract(image, destination, check=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--image', type=Path, default=ROOT / 'games/gran-turismo/game-files/gran-turismo.bin')
+    legacy = ROOT / 'games/gran-turismo/game-files/gran-turismo.bin'
+    image = legacy if legacy.is_file() else ROOT / 'games/source-data/PS1/gran-turismo/gran-turismo.bin'
+    parser.add_argument('--image', type=Path, default=image)
     parser.add_argument('--output', type=Path, default=ROOT / 'games/gran-turismo/cars')
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--refresh-metadata', action='store_true', help='Upgrade metadata after verifying all existing native bytes')
     parser.add_argument('--semantic-report', type=Path, help='Opt-in live TypeSafe inventory assessment, outside extracted tree')
     args = parser.parse_args()
     try:
@@ -190,7 +279,7 @@ def main():
                                     args.output.resolve() == args.semantic_report.resolve() or
                                     args.output.resolve() in args.semantic_report.resolve().parents):
             raise ValueError('Semantic report must be separate from source image and extracted tree')
-        index, inventory = extract(args.image, args.output, args.check)
+        index, inventory = extract(args.image, args.output, args.check, args.refresh_metadata)
         if args.semantic_report:
             from gt_asset_judgments import live_receipt
             receipt = live_receipt(inventory)

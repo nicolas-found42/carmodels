@@ -148,6 +148,10 @@
   button, #view-controls label { font: inherit; font-size: 12px; }
   #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
   #download-model { font-size: 12px; color: var(--accent-2); padding: 7px 0; }
+  #colour-variant { max-width: 230px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 4px; padding: 6px; font: inherit; }
+  #native-specs { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 7px; }
+  #native-specs .kv { align-items: baseline; gap: 12px; }
+  #native-specs b { text-align: right; font-size: 12px; }
   #download-model:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
   button:focus-visible, input:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
   #legend { position: static; padding: 0 16px 10px; grid-column: 1; }
@@ -223,6 +227,7 @@
         <button type="button" data-view="side">Side</button>
         <button type="button" data-view="front">Front</button>
         <button type="button" data-view="top">Top</button>
+        <label id="colour-control" hidden>Native colour <select id="colour-variant" aria-label="Native colour"></select></label>
         <a id="download-model" download>Download dealership model (.glb)</a>
       </div>
       <div id="panel">
@@ -236,7 +241,9 @@
         <div class="kv"><span>Weight</span><b id="k-kg">—</b></div>
         <div class="kv"><span>Top speed</span><b id="k-ts">—</b></div>
         <div class="kv"><span>Liveries</span><b id="k-liv">—</b></div>
+        <div class="kv"><span>Native colour sets</span><b id="k-colours">—</b></div>
         <div class="kv"><span>Sound bank</span><b id="k-snd" style="font-size:12px">—</b></div>
+        <div id="native-specs" hidden></div>
         <div id="paint-evidence">
           <div class="paint-head"><div id="paint-swatch"></div><div>Icon paint sample</div><span id="paint-rgb" style="margin-left:auto">—</span></div>
           <div id="paint-caveat">Approximate icon colour. The sample comes from decoded menu-icon pixels; it does not identify the car’s real paint.</div>
@@ -525,7 +532,7 @@ function buildList() {
     meta.className = 'meta'; meta.textContent = `${c.year && c.year !== '0' ? c.year + ' · ' : ''}${c.bodyStyle==='unknown'?gameLabel(c)+' · '+c.sourceVariant:c.bodyStyle}`;
     txt.append(name, meta);
     const bhp = document.createElement('span');
-    bhp.className = 'bhp'; bhp.textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '';
+    bhp.className = 'bhp'; bhp.textContent = c.bhp ? Math.round(c.bhp) + (c.game==='gran-turismo'?' HP':' bhp') : '';
     row.append(sw, txt, bhp);
     row.onclick = () => select(c);
     list.appendChild(row);
@@ -623,15 +630,16 @@ async function select(c) {
   $('b-sp').style.width = ((c.speed??0) * 100) + '%';
   $('b-we').parentElement.hidden=c.weight==null;
   $('b-we').style.width = ((c.weight??0) * 100) + '%';
-  $('k-bhp').textContent = c.bhp ? Math.round(c.bhp) + ' bhp' : '—';
+  $('k-bhp').textContent = c.bhp ? Math.round(c.bhp) + (c.game==='gran-turismo'?' HP (game)':' bhp') : '—';
   $('k-kg').textContent = c.kg ? fmt(c.kg) + ' kg' : '—';
   $('k-ts').textContent = c.topSpeed ? Math.round(c.topSpeed) + ' mph' : '—';
   $('k-liv').textContent = c.model.schema!==4?'Not decoded':c.liveries ? c.liveries.length : '—';
   $('k-snd').textContent = (c.sound || '').split(';')[0].replace(' (in _shared/sounds/)', '');
+  showNativeSpecifications(c);showColourVariants();
   const sample = c.paint ? c.paint.rgb : [90, 90, 90];
   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
   $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
-  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.game==='midnight-club-los-angeles'?'Decoded diffuse textures on a static stock-index assembly; neutral paint, runtime customization and native shader passes remain unverified.':c.game==='gran-turismo-4'?'Decoded native textures with the default colour set are shown. Other paint colours (Pat0 colour patches), reflections and game shading are not reproduced.':c.game==='midnight-club-3-remix'?'Decoded source textures are shown on lights, trim, badges and wheels; body paint stays a neutral inspection surface with recovered glass tint. Paint colours, paint names and native shader passes have not been decoded.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
+  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.game==='gran-turismo'?'Embedded native colour sets are available from the colour selector when retained in this model. Factory names appear only for verified colour-ID matches. Game shading remains unverified.':c.game==='midnight-club-los-angeles'?'Decoded diffuse textures on a static stock-index assembly; neutral paint, runtime customization and native shader passes remain unverified.':c.game==='gran-turismo-4'?'Decoded native textures with the default colour set are shown. Other paint colours (Pat0 colour patches), reflections and game shading are not reproduced.':c.game==='midnight-club-3-remix'?'Decoded source textures are shown on lights, trim, badges and wheels; body paint stays a neutral inspection surface with recovered glass tint. Paint colours, paint names and native shader passes have not been decoded.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
     const el = document.createElement('span');
     el.className = 'livery-code';
@@ -650,7 +658,7 @@ async function select(c) {
   try {
     const model=await loadCar(c,{signal:selectionController.signal});
     if(id!==selectionId){disposeCar(model);return;}
-    carMesh=model;scene.add(carMesh);setView('reset');$('loading').hidden=true;
+    carMesh=model;scene.add(carMesh);showColourVariants(carMesh);setView('reset');$('loading').hidden=true;
   } catch(error){
     if(id!==selectionId)return;
     $('loading').classList.add('error');$('loading').textContent='This model could not be loaded: '+error.message;
@@ -659,7 +667,44 @@ async function select(c) {
   applyFilters();
 }
 
+function showColourVariants(model=null) {
+  const variants=model?.userData.colourVariants??[];
+  const options=variants.map(variant=>Object.assign(document.createElement('option'),{value:String(variant.index),textContent:variant.name}));
+  if(variants.length)options.unshift(Object.assign(document.createElement('option'),{value:'',textContent:'Original / default colour'}));
+  $('colour-variant').replaceChildren(...options);
+  $('colour-control').hidden=!variants.length;
+  $('colour-variant').disabled=!variants.length;
+  $('colour-variant').value=model?.userData.colourVariant==null?'':String(model.userData.colourVariant);
+  $('k-colours').textContent=variants.length?String(variants.length):'Not available';
+}
+
+function showNativeSpecifications(car) {
+  const target=$('native-specs');target.replaceChildren();
+  const specs=car.nativeMetadata?.identity?.status==='verified'?(car.specifications??car.nativeMetadata.specifications):null;
+  function add(label,value) {
+    const row=document.createElement('div'),name=document.createElement('span'),text=document.createElement('b');
+    row.className='kv';name.textContent=label;text.textContent=value;row.append(name,text);target.append(row);
+  }
+  if(specs?.displacement_display_kind==='rotary-chamber-times-factor' && specs.displacement_rotary_chamber_cc!=null && specs.displacement_rotary_factor!=null)
+    add('Displacement',`${specs.displacement_rotary_chamber_cc} cc × ${specs.displacement_rotary_factor}`);
+  for(const [key,label,unit] of [
+    ['drive','Drive',''],['engine_type','Engine type',''],['engine_configuration','Engine configuration',''],['aspiration','Aspiration',''],
+    ['displacement_cc','Displacement',' cc'],['length_mm','Length',' mm'],['width_mm','Width',' mm'],['height_mm','Height',' mm'],
+    ['wheelbase_mm','Wheelbase',' mm'],['front_tread_mm','Front tread',' mm'],['rear_tread_mm','Rear tread',' mm'],
+    ['power_rpm','Power at',' rpm'],['torque_kgm','Torque',' kg·m'],['torque_rpm','Torque at',' rpm'],
+    ['suspension_front','Front suspension',''],['suspension_rear','Rear suspension','']
+  ]) {
+    const value=specs?.[key];if(value==null || value==='')continue;
+    add(label,String(value)+unit);
+  }
+  target.hidden=!target.childElementCount;
+}
+
 /* ---------- inspection controls ---------- */
+$('colour-variant').addEventListener('change',()=>{
+  const value=$('colour-variant').value;
+  if(carMesh?.userData.setColourVariant)carMesh.userData.setColourVariant(value===''?null:Number(value));
+});
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 $('auto-rotate').checked = !motion.matches;
 controls.autoRotate = $('auto-rotate').checked;

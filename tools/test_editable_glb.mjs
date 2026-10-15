@@ -28,6 +28,35 @@ assert.equal(parseEditableGLB(data).meshes[0][0].indices.length,3);
 assert(parseEditableGLB(data).meshes[0][0].indices instanceof Uint32Array,'imported16-bit GLB indices normalize to32-bit');
 const colored=fixture(d=>{d.accessors.push({...d.accessors[1]});d.meshes[0].primitives[0].attributes.COLOR_0=4;});
 assert.deepEqual([...parseEditableGLB(colored).meshes[0][0].colors],[0,0,1,0,0,1,0,0,1]);
+function addVariants(d) {
+  d.extensionsUsed=['KHR_materials_variants'];
+  d.extensions={KHR_materials_variants:{variants:[{name:'Native white'},{name:'Native red'}]}};
+  d.materials.push({alphaMode:'BLEND',pbrMetallicRoughness:{baseColorFactor:[0.6,0.2,0.1,0.4],baseColorTexture:{index:1},roughnessFactor:0.3,metallicFactor:0.2}});
+  d.images.push({...d.images[0]});d.textures.push({source:1});
+  d.meshes[0].primitives[0].extensions={KHR_materials_variants:{mappings:[{material:0,variants:[0]},{material:1,variants:[1]}]}};
+  d.accessors.push({...d.accessors[1]});d.meshes[0].primitives[0].attributes.COLOR_0=4;
+  d.meshes[0].primitives.push({...d.meshes[0].primitives[0],extensions:undefined});
+}
+const variantData=fixture(addVariants);
+assert.deepEqual(parseEditableGLB(variantData).colourVariants.map(v=>v.name),['Native white','Native red']);
+for(const [mutate,reason] of [
+  [d=>d.extensionsRequired=['KHR_materials_variants'],/Unsupported/],
+  [d=>delete d.extensionsUsed,/Invalid GLB colour variants/],
+  [d=>d.extensions.KHR_materials_variants.variants=[],/Invalid GLB colour variants/],
+  [d=>d.extensions.KHR_materials_variants.variants[0].name=7,/Invalid GLB colour variants/],
+  [d=>delete d.extensions,/Invalid GLB colour mappings/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings=null,/Invalid GLB colour mappings/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[0].variants=[],/Invalid GLB colour mappings/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[1].variants=[0],/duplicate GLB colour variant/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[1].variants=[1,1],/duplicate GLB colour variant/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[1].variants=[2],/Invalid or duplicate/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[1].variants=[-1],/Invalid or duplicate/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[1].variants=['1'],/Invalid or duplicate/],
+  [d=>d.meshes[0].primitives[0].extensions.KHR_materials_variants.mappings[1].material=2,/Missing GLB material/],
+  [d=>d.materials[1].pbrMetallicRoughness.baseColorTexture.index=2,/Invalid GLB texture mapping/],
+  [d=>{delete d.meshes[0].primitives[0].attributes.TEXCOORD_0;delete d.materials[0].pbrMetallicRoughness.baseColorTexture;},/Invalid GLB texture mapping/],
+  [d=>d.meshes[0].primitives[0].extensions.UNKNOWN_extension={},/static triangles/]
+])assert.throws(()=>parseEditableGLB(fixture(d=>{addVariants(d);mutate(d);})),reason);
 for(const mutate of [d=>d.nodes[0].children=[0],d=>d.accessors[0].count=100,d=>d.images[0].uri='https://example.com/secret',d=>d.nodes[0].rotation=[0,0,0,0],d=>d.meshes[0].primitives[0].mode=1,(_d,b)=>b.writeUInt16LE(7,96),(_d,b)=>b.writeFloatLE(NaN,0),d=>d.bufferViews[0].byteOffset=-1,d=>d.nodes[0].scale=[0,1,1]])assert.throws(()=>parseEditableGLB(fixture(mutate)));
 const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data)),v=>v.toString(16).padStart(2,'0')).join('');
 const car={model:{source:{glb:'dealership/models/GT_TEST.glb',sha256:hash}}};
@@ -41,6 +70,32 @@ const colorGroup=await loadEditableGLB({model:{source:{...car.model.source,sha25
 assert.equal(colorGroup.children[0].children[0].material.vertexColors,true);
 assert.equal(colorGroup.children[0].children[0].geometry.attributes.color.count,3);
 disposeCar(colorGroup);
+const variantHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',variantData)),v=>v.toString(16).padStart(2,'0')).join('');
+const variantTextures=[new THREE.Texture(),new THREE.Texture()];let variantDecodes=0,variantTextureDisposals=0,materialDisposals=0;
+for(const t of variantTextures)t.addEventListener('dispose',()=>variantTextureDisposals++);
+const variantGroup=await loadEditableGLB({model:{source:{...car.model.source,sha256:variantHash}}},{fetchImpl:async()=>variantData,textureImpl:async()=>variantTextures[variantDecodes++]});
+const [variantMesh,unchangedMesh]=variantGroup.children[0].children;
+variantMesh.material.addEventListener('dispose',()=>materialDisposals++);
+assert.deepEqual(variantGroup.userData.colourVariants,[{index:0,name:'Native white'},{index:1,name:'Native red'}]);
+assert.equal(variantGroup.userData.colourVariant,null);
+const initialMaterial=variantMesh.material;
+variantGroup.userData.setColourVariant(1);
+assert.equal(variantMesh.material,initialMaterial,'switching variants reuses the material');
+assert.equal(variantMesh.material.map,variantTextures[1]);assert.equal(variantMesh.material.vertexColors,true);
+assert.equal(variantMesh.material.transparent,true);assert.equal(variantMesh.material.opacity,0.4);
+assert.equal(variantMesh.material.alphaTest,0);assert.equal(variantMesh.material.depthWrite,false);
+assert.equal(variantMesh.material.roughness,0.3);assert.equal(variantMesh.material.metalness,0.2);
+assert.equal(variantMesh.material.side,THREE.FrontSide);assert.deepEqual(variantMesh.material.color.toArray(),[0.6,0.2,0.1]);
+assert.equal(unchangedMesh.material.map,variantTextures[0],'unmapped primitives retain their base material');
+variantGroup.userData.setColourVariant(0);
+assert.equal(variantMesh.material.map,variantTextures[0]);assert.equal(variantMesh.material.alphaTest,0.25);
+assert.equal(variantMesh.material.transparent,false);assert.equal(variantMesh.material.vertexColors,true);
+assert.equal(variantMesh.material.side,THREE.DoubleSide);assert.equal(variantMesh.material.depthWrite,true);
+variantGroup.userData.setColourVariant(1);variantGroup.userData.setColourVariant();
+assert.equal(variantMesh.material.map,variantTextures[0]);assert.equal(variantGroup.userData.colourVariant,null);
+for(const index of [-1,2,0.5,'1'])assert.throws(()=>variantGroup.userData.setColourVariant(index),/Invalid colour variant selection/);
+assert.equal(materialDisposals,0);assert.equal(variantTextureDisposals,0);
+disposeCar(variantGroup);assert.equal(materialDisposals,1);assert.equal(variantTextureDisposals,2);
 await assert.rejects(loadEditableGLB({model:{source:{...car.model.source,sha256:'0'.repeat(64)}}},{fetchImpl:async()=>data,textureImpl:async()=>texture}),/changed/);
 await assert.rejects(loadEditableGLB(car,{fetchImpl:async()=>data,textureImpl:async()=>{throw Error('decode fail');}}),/decode fail/);
 const controller=new AbortController();controller.abort();
@@ -51,5 +106,5 @@ const indexURL=new URL('../dealership/public/gran-turismo/index.json',import.met
 if(fs.existsSync(indexURL)) {
   const index=JSON.parse(fs.readFileSync(indexURL));
   for(const row of index.cars){const raw=fs.readFileSync(new URL('../dealership/public/gran-turismo/'+row.file,import.meta.url));parseEditableGLB(raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength));}
-  console.log(`PASS test_editable_glb: ${index.cars.length} GT GLBs, embedded textured triangles, MASK alpha, transforms, independent paths, hash mismatch, cancellation and disposal controls`);
-} else console.log('PASS test_editable_glb: synthetic textured triangles and failure controls; GT export not present');
+  console.log(`PASS test_editable_glb: ${index.cars.length} GT GLBs; native variant texture/alpha/vertex-colour switches, mapping corruption controls, embedded triangles, transforms, hash mismatch, cancellation and disposal`);
+} else console.log('PASS test_editable_glb: synthetic native variant switches, textured triangles and failure controls; GT export not present');
