@@ -66,7 +66,8 @@ const selectStart=page.indexOf('async function select(c) {'),selectEnd=page.inde
 assert(selectStart>0 && selectEnd>selectStart);
 let modelLoads=0,removed=0,disposed=0,filters=0;
 const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerElements.set(id,element());return dealerElements.get(id);};
-const colourControls={enabled:false,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
+// Start enabled, as after a loaded 3D preview, so native selection must disable the controls.
+const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
   'loadCar','applyFilters','fmt','colourControls',
   `let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
