@@ -149,6 +149,18 @@ filterElements['clear-filters'].events.click();
 assert.equal(gameSelect.value,'all');assert.equal(sourceVariant.value,'');assert.equal(search.value,'');
 assert.equal(carSelect.options.length,4);assert.equal(carSelect.disabled,false);
 
+// Changing games clears only incompatible variants and preserves the literal query.
+gameSelect.value='gran-turismo';sourceVariant.value='night';search.value='';filterContext.filterCars();
+gameSelect.value='ford-racing-2';search.value='COBRA';gameSelect.events.change();
+assert.equal(sourceVariant.value,'','a game change must not retain an impossible variant');
+assert.equal(search.value,'COBRA');assert.equal(carSelect.value,'ford-racing-2/COBRA');
+assert.match(filterStatus.textContent,/Cleared.*night/);
+assert.equal(sourceVariant.options.find(o=>o.value==='night').disabled,true);
+gameSelect.value='gran-turismo';search.value='';gameSelect.events.change();
+assert.equal(sourceVariant.options.find(o=>o.value==='night').disabled,false);
+sourceVariant.value='night';sourceVariant.events.change();
+gameSelect.value='all';gameSelect.events.change();assert.equal(sourceVariant.value,'night','compatible choices survive game changes');
+filterElements['clear-filters'].events.click();
 search.value='night cars from Gran Turismo';await interpret.events.click();assert.equal(search.value,'night cars from Gran Turismo');assert.equal(filterStatus.textContent,'Choose filters directly.');
 responseJSON={status:'ok',filters:{game:'gran-turismo',variant:'day'}};await interpret.events.click();assert.equal(search.value,'');assert.equal(carSelect.options.length,2);assert.match(carSelect.value,/day$/);
 responseJSON={status:'ok',filters:{game:'invented-game',variant:null}};await interpret.events.click();assert.match(filterStatus.textContent,/unknown filter/);assert.equal(gameSelect.value,'gran-turismo');

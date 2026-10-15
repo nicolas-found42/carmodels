@@ -87,7 +87,30 @@ const gameNames={'ford-racing-2':'Ford Racing 2','gran-turismo':'Gran Turismo','
 for(const game of ['all',...new Set(index.cars.map(c=>c.game))])gameSelect.append(Object.assign(document.createElement('option'),{value:game,textContent:game==='all'?'All games':gameNames[game]||game}));
 for(const variant of [...new Set(index.cars.map(c=>c.source_variant).filter(Boolean))])sourceVariant.append(Object.assign(document.createElement('option'),{value:variant,textContent:variant}));
 let filterRevision=0;
-function filterCars(literal=true,preferred=carSelect.value){filterRevision++;const previous=carSelect.value,query=literal?search.value.toLowerCase().trim():'';const cars=index.cars.filter(c=>(gameSelect.value==='all'||c.game===gameSelect.value)&&(!sourceVariant.value||c.source_variant===sourceVariant.value)&&(!query||[c.code,c.display_name||'',c.game,c.source_variant||''].join(' ').toLowerCase().includes(query)));carSelect.replaceChildren(...cars.map(c=>Object.assign(document.createElement('option'),{value:c.id,textContent:(gameNames[c.game]||c.game)+' · '+(c.display_name||c.code)})));carSelect.value=(cars.find(c=>c.id===preferred)||cars.find(c=>c.id==='ford-racing-2/GRAN_TORINO')||cars[0])?.id||'';carSelect.disabled=!cars.length;filterStatus.textContent=`${cars.length} source entries`;if(!cars.length){++requestId;pendingRequest?.abort();dispose();setLoading(false);document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=true;document.querySelector('#native-download').removeAttribute('href');document.querySelector('#native-download-wrap').hidden=true;document.querySelector('#error').textContent='';document.querySelector('#source-description').textContent='Browse recovered cars by game and source identity. Each model’s conversion limits appear below.';status.textContent='No source entries match these filters. Clear search and filters to browse all cars.';}else if(carSelect.value!==previous)loadCar();}
+function filterCars(literal=true,preferred=carSelect.value){
+ filterRevision++;
+ const previous=carSelect.value,query=literal?search.value.toLowerCase().trim():'';
+ const gameCars=index.cars.filter(c=>gameSelect.value==='all'||c.game===gameSelect.value);
+ const availableVariants=new Set(gameCars.map(c=>c.source_variant));
+ const clearedVariant=sourceVariant.value&&!availableVariants.has(sourceVariant.value)?sourceVariant.value:'';
+ if(clearedVariant)sourceVariant.value='';
+ for(const option of sourceVariant.options)option.disabled=!!option.value&&!availableVariants.has(option.value);
+ const cars=gameCars.filter(c=>(!sourceVariant.value||c.source_variant===sourceVariant.value)&&(!query||[c.code,c.display_name||'',c.game,c.source_variant||''].join(' ').toLowerCase().includes(query)));
+ carSelect.replaceChildren(...cars.map(c=>Object.assign(document.createElement('option'),{value:c.id,textContent:(gameNames[c.game]||c.game)+' · '+(c.display_name||c.code)})));
+ carSelect.value=(cars.find(c=>c.id===preferred)||cars.find(c=>c.id==='ford-racing-2/GRAN_TORINO')||cars[0])?.id||'';
+ carSelect.disabled=!cars.length;
+ filterStatus.textContent=`${cars.length} source entries`+(clearedVariant?` · Cleared unavailable variant “${clearedVariant}” for this game.`:'');
+ if(!cars.length){
+  ++requestId;pendingRequest?.abort();dispose();setLoading(false);
+  document.querySelector('#download').removeAttribute('href');
+  document.querySelector('#retry').hidden=true;
+  document.querySelector('#native-download').removeAttribute('href');
+  document.querySelector('#native-download-wrap').hidden=true;
+  document.querySelector('#error').textContent='';
+  document.querySelector('#source-description').textContent='Browse recovered cars by game and source identity. Each model’s conversion limits appear below.';
+  status.textContent='No source entries match these filters. Clear search and filters to browse all cars.';
+ }else if(carSelect.value!==previous)loadCar();
+}
 document.querySelector('#clear-filters').addEventListener('click',()=>{gameSelect.value='all';sourceVariant.value='';search.value='';filterCars();});
 for(const control of [gameSelect,sourceVariant])control.addEventListener('change',()=>filterCars());search.addEventListener('input',()=>filterCars());
 document.querySelector('#interpret').addEventListener('click',async()=>{const button=document.querySelector('#interpret'),revision=filterRevision,query=search.value,controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),20000);button.disabled=true;filterStatus.textContent='Interpreting search…';try{const response=await fetch('/api/library-filter',{method:'POST',headers:{'Content-Type':'application/json'},signal:controller.signal,body:JSON.stringify({query,catalog:'source'})});if(!response.ok){const failure=await response.json().catch(()=>null);throw Error(failure?.message?.replace(/\.$/,'')||'Natural-language search needs the library server (python3 tools/serve_library.py)');}const result=await response.json();if(revision!==filterRevision)return;if(result.status!=='ok'){filterStatus.textContent=result.message||'This search needs review; choose game and variant directly.';return;}if(![...gameSelect.options].some(o=>o.value===result.filters.game)||![...sourceVariant.options].some(o=>o.value===(result.filters.variant||'')))throw Error('The server returned an unknown filter');gameSelect.value=result.filters.game;sourceVariant.value=result.filters.variant||'';search.value='';filterCars(false);filterStatus.textContent+=' · semantic filters applied';}catch(error){if(revision!==filterRevision)return;filterStatus.textContent=(error.name==='AbortError'?'Interpreting took longer than 20 seconds':error.message)+'; game, variant and literal search are still available.';}finally{clearTimeout(timeout);button.disabled=false;}});
