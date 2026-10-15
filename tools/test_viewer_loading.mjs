@@ -20,7 +20,7 @@ const stage={setAttribute(name,value){this[name]=value;}};
 const status={textContent:''};
 const scene=new THREE.Scene();
 const urls=new Set();
-let mode='success',pending=[],disposals=0;const requests=[];
+let mode='success',pending=[],disposals=0;const requests=[],remembered=[];
 const context={THREE:{...THREE,TextureLoader:class {
  async loadAsync(){const t=new THREE.Texture();t.addEventListener('dispose',()=>disposals++);return t;}
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
@@ -28,7 +28,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;}},
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,rememberCar(){},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+ readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,rememberCar(car){remembered.push(car);},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
  async fetchModel(url,signal){
   requests.push(url);
   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');
@@ -41,7 +41,7 @@ const context={THREE:{...THREE,TextureLoader:class {
 };
 vm.createContext(context);vm.runInContext(callback,context);
 elements.car.value='ford-racing-2/GRAN_TORINO';await context.loadCar();
-assert.equal(context.selected.code,'GRAN_TORINO');
+assert.equal(context.selected.code,'GRAN_TORINO');assert.equal(remembered.at(-1),context.selected);
 assert.match(elements.download.href,/GRAN_TORINO/);
 assert.equal(elements.record.disabled,false);
 assert.equal(context.colourControls.enabled,true);
@@ -66,7 +66,7 @@ assert.equal(elements.record.disabled,true);
 assert.equal(stage['aria-busy'],'true');
 assert.equal(context.colourControls.enabled,false,'pending selections disable preview-colour editing');
 mode='success';elements.car.value='ford-racing-2/F350';await context.loadCar();await stale;
-assert.equal(context.selected.code,'F350');
+assert.equal(context.selected.code,'F350');assert.equal(remembered.at(-1),context.selected);
 assert.match(elements.download.href,/F350/);
 assert.equal(elements.error.textContent,'');
 assert.equal(stage['aria-busy'],'false');

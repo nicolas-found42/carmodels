@@ -302,7 +302,7 @@ console.log('PASS viewer navigation identities: every editable car resolves to i
 {
   const browser={location:{href:'http://localhost:8080/dealership.html?game=gran-turismo&car=old&variant=canonical&debug=1#viewer'},history:{state:{scroll:42},replaceState(state,title,href){this.saved={state,title,href};}}};
   const target=cars.find(car=>car.code==='MUSTANG_68B');
-  rememberCar(target,browser);
+  rememberCar(target,browser);await Promise.resolve();
   const saved=new URL(browser.history.saved.href);
   assert.equal(saved.searchParams.get('car'),sourceCarId(target));assert.equal(saved.searchParams.get('game'),'ford-racing-2');
   assert.equal(saved.searchParams.has('variant'),false);assert.equal(saved.searchParams.get('debug'),'1');assert.equal(saved.hash,'#viewer');
@@ -311,3 +311,38 @@ console.log('PASS viewer navigation identities: every editable car resolves to i
   assert.equal(resolveCarAlias(sourceCatalog,saved.searchParams.get('car')).code,'MUSTANG_68B');
 }
 console.log('PASS selected identity replaces current URL and survives startup resolution');
+
+// History writes are best effort and coalesced: browser quotas cannot abort selection.
+{
+  const writes=[];
+  const browser={location:{href:'http://localhost:8080/recovered.html?variant=canonical'},history:{state:null,replaceState(_state,_title,href){writes.push(href);}}};
+  const source=sourceCatalog.find(c=>c.game==='gran-turismo');
+  rememberCar(source,browser);
+  assert.equal(writes.length,0,'selection must defer history writes');
+  await Promise.resolve();
+  assert.equal(new URL(writes.at(-1)).searchParams.get('variant'),'canonical','valid source variant survives reload');
+  writes.length=0;
+  const first=cars.find(c=>c.code==='MUSTANG_68'),last=cars.find(c=>c.code==='MUSTANG_68B');
+  rememberCar(first,browser);rememberCar(last,browser);await Promise.resolve();
+  assert.equal(writes.length,1,'rapid selections coalesce to one URL update');
+  assert.equal(new URL(writes[0]).searchParams.get('car'),sourceCarId(last));
+  assert.equal(new URL(writes[0]).searchParams.has('variant'),false,'incompatible variant is cleared');
+  browser.history.replaceState=()=>{throw new DOMException('History quota exceeded','SecurityError');};
+  assert.doesNotThrow(()=>rememberCar(last,browser));await Promise.resolve();
+}
+
+// Exercise the actual startup selection for a game-only URL before history is written.
+{
+  const start=dealershipPage.indexOf('    const parameters = new URLSearchParams(location.search);');
+  const end=dealershipPage.indexOf('    applyFilters();',start);
+  const bootSelection=new Function('CARS','$','location','resolveCarAlias','gameId','updateFilterAvailability','select',
+    `return (async()=>{${dealershipPage.slice(start,end)}})();`);
+  for(const game of ['redline','gran-turismo','midnight-club-3-remix','all']){
+    const filter={value:'all',options:['all','redline','gran-turismo','midnight-club-3-remix'].map(value=>({value}))};
+    let selected;
+    await bootSelection(cars,()=>filter,{search:'?game='+game},resolveCarAlias,gameId,()=>{},async car=>{selected=car;});
+    assert.equal(filter.value,game);assert(selected);
+    assert(game==='all'||gameId(selected)===game,'game-only startup must select within requested game');
+  }
+}
+console.log('PASS startup game restrictions, coalesced history, valid variants and history quota recovery');

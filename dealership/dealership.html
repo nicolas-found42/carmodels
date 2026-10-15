@@ -404,7 +404,8 @@ async function loadCorpus() {
     const requestedGame = preferred ? gameId(preferred) : parameters.get('game');
     if ([...$('game-filter').options].some(option => option.value === requestedGame)) $('game-filter').value = requestedGame;
     updateFilterAvailability();
-    await select(preferred || CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
+    const scope = CARS.filter(c => $('game-filter').value === 'all' || gameId(c) === $('game-filter').value);
+    await select(preferred || scope.find(c => c.code === 'GRAN_TORINO') || scope[0] || CARS[0]);
     applyFilters();
     boot.loaded = true;
     boot.failed = false;
