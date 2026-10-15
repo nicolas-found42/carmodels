@@ -27,15 +27,68 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_aminr",
   "id": "simulation/_aminr/night",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 49,
+        "index": 0,
+        "label": "Native colour 1 (0x31)",
+        "name": null
+      },
+      {
+        "colour_id": 109,
+        "index": 1,
+        "label": "Native colour 2 (0x6d)",
+        "name": null
+      }
+    ],
+    "identity": {
+      "name": null,
+      "spec_index": null,
+      "status": "unresolved"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 49,
+          "matching_slots": []
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 109,
+          "matching_slots": []
+        }
+      ],
+      "colour_source_slots": [],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "aminr",
+      "native_directory_index": 36,
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": null
+  },
   "pair_index": 380,
   "variant": "night"
 }

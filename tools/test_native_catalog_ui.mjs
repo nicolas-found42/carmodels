@@ -18,7 +18,9 @@ for(const change of [c=>c.model.source.package='../wrong.dat',c=>c.model.source.
 }
 
 function element(){return {textContent:'',hidden:false,disabled:false,value:'',options:[],style:{},attributes:{},
-  classList:{add(){},remove(){}},parentElement:{},replaceChildren(...nodes){this.options=nodes;},
+  children:[],childElementCount:0,listeners:{},append(...nodes){this.children.push(...nodes);this.childElementCount=this.children.length;},
+  addEventListener(type,listener){this.listeners[type]=listener;},
+  classList:{add(){},remove(){}},parentElement:{},replaceChildren(...nodes){this.options=nodes;this.children=[...nodes];this.childElementCount=nodes.length;},
   removeAttribute(k){delete this.attributes[k];if(k==='href')delete this.href;},setAttribute(k,v){this.attributes[k]=v;}};}
 const sourcePage=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 const start=sourcePage.indexOf('async function loadCar(){'),end=sourcePage.indexOf('function updateMaterials()',start);
@@ -64,7 +66,7 @@ const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerEle
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
   'loadCar','applyFilters','fmt',
   `let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
-  $,{querySelectorAll:()=>[]},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
+  $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
   ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String);
 await select(native);
 assert.equal(modelLoads,0);assert.equal(removed,1);assert.equal(disposed,1);assert.equal(filters,1);
@@ -74,4 +76,36 @@ assert.equal($('v-sp').textContent,'Not decoded');assert.equal($('k-liv').textCo
 assert.match($('paint-caveat').textContent,/not been converted/);
 assert.equal($('auto-rotate').disabled,true);
 await select(native);assert.equal(removed,1);assert.equal(modelLoads,0);
-console.log('PASS native catalog UI: native selection clears prior models, enables DAT and ZIP downloads, skips GLB/GPU loading, exposes preview state, validates identity and rejects corrupt metadata');
+const helpersStart=page.indexOf('function showColourVariants('),helpersEnd=page.indexOf('/* ---------- inspection controls',helpersStart);
+const {showColourVariants,showNativeSpecifications}=new Function('$','document',
+  `${page.slice(helpersStart,helpersEnd)}return {showColourVariants,showNativeSpecifications};`)($,{createElement:element});
+showColourVariants({userData:{colourVariants:[{index:0,name:'Native white'},{index:1,name:'Native red'}]}});
+assert.equal($('colour-control').hidden,false);assert.equal($('colour-variant').disabled,false);
+assert.equal($('colour-variant').value,'');assert.equal($('k-colours').textContent,'2');
+assert.deepEqual($('colour-variant').options.map(o=>o.textContent),['Original / default colour','Native white','Native red']);
+assert.equal($('colour-variant').options[0].value,'','initial label describes the GLB default, which can differ from variant zero');
+showColourVariants({userData:{colourVariants:[{index:0,name:'Native white'},{index:1,name:'Native red'}],colourVariant:1}});
+assert.equal($('colour-variant').value,'1','a previously applied material selection retains its label');
+showColourVariants({userData:{colourVariants:[]}});
+assert.equal($('colour-control').hidden,true);assert.equal($('colour-variant').options.length,0);
+assert.equal($('k-colours').textContent,'Not available','edited model without embedded variants does not advertise catalog colours');
+showColourVariants({userData:{colourVariants:[{index:0,name:'Only native set'}]}});
+assert.equal($('colour-control').hidden,false);assert.equal($('colour-variant').disabled,false,'one variant can still differ from the GLB default');
+let switched=null;
+const handlerStart=page.indexOf("$('colour-variant').addEventListener('change'"),handlerEnd=page.indexOf('const motion',handlerStart);
+new Function('$','carMesh',page.slice(handlerStart,handlerEnd))($,{userData:{setColourVariant:index=>switched=index}});
+$('colour-variant').value='1';$('colour-variant').listeners.change();assert.equal(switched,1);
+$('colour-variant').value='';$('colour-variant').listeners.change();assert.equal(switched,null,'the original/default option restores the base materials');
+showNativeSpecifications({nativeMetadata:{identity:{status:'verified'},specifications:{drive:'FR',engine_type:'DOHC',
+  length_mm:4310,power_rpm:6500,torque_kgm:28.5,suspension_front:'Double wishbone',displacement_cc:1998}}});
+assert.equal($('native-specs').hidden,false);
+const specRows=()=>Object.fromEntries($('native-specs').children.map(row=>row.children.map(n=>n.textContent)));
+assert.equal(specRows().Drive,'FR');assert.equal(specRows().Length,'4310 mm');assert.equal(specRows()['Power at'],'6500 rpm');
+assert.equal(specRows().Torque,'28.5 kg·m');assert.equal(specRows().Displacement,'1998 cc');
+showNativeSpecifications({nativeMetadata:{identity:{status:'verified'}},specifications:{
+  displacement_display_kind:'rotary-chamber-times-factor',displacement_rotary_chamber_cc:654,displacement_rotary_factor:2,displacement_cc:null}});
+assert.equal(specRows().Displacement,'654 cc × 2');
+showNativeSpecifications({nativeMetadata:{identity:{status:'unresolved'},specifications:{drive:'FR',mass_kg:1200}}});
+assert.equal($('native-specs').hidden,true);assert.equal($('native-specs').children.length,0,'unresolved racing entries do not display stock specifications');
+showNativeSpecifications(native);assert.equal($('native-specs').hidden,true);
+console.log('PASS native catalog UI: native package downloads and preview state; GLB-backed colour selection, missing-variant edits, verified specifications, rotary display and unresolved-identity controls');

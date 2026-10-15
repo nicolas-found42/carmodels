@@ -27,15 +27,296 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_cc67n",
   "id": "simulation/_cc67n/day",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 49,
+        "index": 0,
+        "label": "ERMINE WHITE",
+        "name": "ERMINE WHITE"
+      },
+      {
+        "colour_id": 52,
+        "index": 1,
+        "label": "SILVER PEARL",
+        "name": "SILVER PEARL"
+      },
+      {
+        "colour_id": 54,
+        "index": 2,
+        "label": "TUXEDO BLACK",
+        "name": "TUXEDO BLACK"
+      },
+      {
+        "colour_id": 98,
+        "index": 3,
+        "label": "RALLY RED",
+        "name": "RALLY RED"
+      },
+      {
+        "colour_id": 99,
+        "index": 4,
+        "label": "MARLBORO MAROON",
+        "name": "MARLBORO MAROON"
+      },
+      {
+        "colour_id": 104,
+        "index": 5,
+        "label": "SUNFIRE YELLOW",
+        "name": "SUNFIRE YELLOW"
+      },
+      {
+        "colour_id": 108,
+        "index": 6,
+        "label": "GOODWOOD GREEN",
+        "name": "GOODWOOD GREEN"
+      },
+      {
+        "colour_id": 111,
+        "index": 7,
+        "label": "ELKHART BLUE",
+        "name": "ELKHART BLUE"
+      },
+      {
+        "colour_id": 113,
+        "index": 8,
+        "label": "LYNNDALE BLUE",
+        "name": "LYNNDALE BLUE"
+      },
+      {
+        "colour_id": 115,
+        "index": 9,
+        "label": "MARINA BLUE",
+        "name": "MARINA BLUE"
+      }
+    ],
+    "identity": {
+      "name": "Corvette '67 427COUPE",
+      "spec_index": 176,
+      "status": "verified"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 49,
+          "matching_slots": [
+            {
+              "colour_id": 49,
+              "name": "ERMINE WHITE",
+              "slot": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 52,
+          "matching_slots": [
+            {
+              "colour_id": 52,
+              "name": "SILVER PEARL",
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "lookup_colour_id": 54,
+          "matching_slots": [
+            {
+              "colour_id": 54,
+              "name": "TUXEDO BLACK",
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "lookup_colour_id": 98,
+          "matching_slots": [
+            {
+              "colour_id": 98,
+              "name": "RALLY RED",
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "lookup_colour_id": 99,
+          "matching_slots": [
+            {
+              "colour_id": 99,
+              "name": "MARLBORO MAROON",
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "lookup_colour_id": 104,
+          "matching_slots": [
+            {
+              "colour_id": 104,
+              "name": "SUNFIRE YELLOW",
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "lookup_colour_id": 108,
+          "matching_slots": [
+            {
+              "colour_id": 108,
+              "name": "GOODWOOD GREEN",
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "lookup_colour_id": 111,
+          "matching_slots": [
+            {
+              "colour_id": 111,
+              "name": "ELKHART BLUE",
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "lookup_colour_id": 113,
+          "matching_slots": [
+            {
+              "colour_id": 113,
+              "name": "LYNNDALE BLUE",
+              "slot": 8
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "lookup_colour_id": 115,
+          "matching_slots": [
+            {
+              "colour_id": 115,
+              "name": "MARINA BLUE",
+              "slot": 9
+            }
+          ]
+        }
+      ],
+      "colour_source_slots": [
+        {
+          "colour_id": 49,
+          "name": "ERMINE WHITE",
+          "slot": 0
+        },
+        {
+          "colour_id": 52,
+          "name": "SILVER PEARL",
+          "slot": 1
+        },
+        {
+          "colour_id": 54,
+          "name": "TUXEDO BLACK",
+          "slot": 2
+        },
+        {
+          "colour_id": 98,
+          "name": "RALLY RED",
+          "slot": 3
+        },
+        {
+          "colour_id": 99,
+          "name": "MARLBORO MAROON",
+          "slot": 4
+        },
+        {
+          "colour_id": 104,
+          "name": "SUNFIRE YELLOW",
+          "slot": 5
+        },
+        {
+          "colour_id": 108,
+          "name": "GOODWOOD GREEN",
+          "slot": 6
+        },
+        {
+          "colour_id": 111,
+          "name": "ELKHART BLUE",
+          "slot": 7
+        },
+        {
+          "colour_id": 113,
+          "name": "LYNNDALE BLUE",
+          "slot": 8
+        },
+        {
+          "colour_id": 115,
+          "name": "MARINA BLUE",
+          "slot": 9
+        }
+      ],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "cc67n",
+      "native_directory_index": 51,
+      "native_grade_name": "427COUPE",
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "native_model_name": "Corvette '67",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": {
+      "aspiration": "Normal",
+      "displacement_cc": 6997,
+      "displacement_display_kind": "cc",
+      "displacement_raw": 6997,
+      "displacement_rotary_chamber_cc": null,
+      "displacement_rotary_factor": null,
+      "drive": "FR",
+      "engine_configuration": "V8",
+      "engine_type": "OHV",
+      "front_tread_mm": 1463,
+      "height_mm": 1265,
+      "length_mm": 4448,
+      "mass_kg": 1540,
+      "power_conversion": "floor(raw * 1000 / 1014); native display label HP",
+      "power_hp_game": 434,
+      "power_raw": 441,
+      "power_rpm": 5800,
+      "rear_tread_mm": 1483,
+      "specification_scope": "native-base",
+      "suspension_front": "Double Wishbone",
+      "suspension_rear": "Double Wishbone",
+      "torque_kgm": 66.4,
+      "torque_raw": 6640,
+      "torque_rpm": 4000,
+      "wheelbase_mm": 2489,
+      "width_mm": 1768
+    }
+  },
   "pair_index": 51,
   "variant": "day"
 }

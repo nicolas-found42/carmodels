@@ -45,7 +45,11 @@ assert(gtCars.every(c=>c.sourceVariant==='canonical'&&!/_(DAY|NIGHT)$/.test(c.co
 assert(!dealershipPage.includes('<option value="night">')&&!dealershipPage.includes('<option value="day">'));
 for(const c of gtCars){for(const alias of c.sourceAliases)assert.equal(resolveCarAlias(cars,alias,'code'),c);}
 assert.equal(resolveCarAlias(cars,'missing','code'),undefined);
-for(const c of gtCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');}
+for(const c of gtCars){
+  const specs=c.nativeMetadata?.identity?.status==='verified'?c.nativeMetadata.specifications:null;
+  assert.equal(c.model.schema,2);assert.equal(c.bhp,specs?.power_hp_game??null);assert.equal(c.kg,specs?.mass_kg??null);
+  assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');
+}
 assert.equal(gameId(compactCars[0]),'ford-racing-2');
 const redlineCars=cars.filter(c=>c.game==='redline');
 for(const c of redlineCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'redline');}

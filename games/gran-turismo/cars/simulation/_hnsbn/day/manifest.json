@@ -27,15 +27,384 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_hnsbn",
   "id": "simulation/_hnsbn/day",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 49,
+        "index": 0,
+        "label": "GRANDPRIX WHITE",
+        "name": "GRANDPRIX WHITE"
+      },
+      {
+        "colour_id": 50,
+        "index": 1,
+        "label": "NEUTRON WHITE PEARL",
+        "name": "NEUTRON WHITE PEARL"
+      },
+      {
+        "colour_id": 51,
+        "index": 2,
+        "label": "PLATINUM WHITE PEARL",
+        "name": "PLATINUM WHITE PEARL"
+      },
+      {
+        "colour_id": 52,
+        "index": 3,
+        "label": "SEBRING SILVER METALLIC",
+        "name": "SEBRING SILVER METALLIC"
+      },
+      {
+        "colour_id": 53,
+        "index": 4,
+        "label": "KAISER SILVER METALLIC",
+        "name": "KAISER SILVER METALLIC"
+      },
+      {
+        "colour_id": 54,
+        "index": 5,
+        "label": "MAGNUM GRAY PEARL",
+        "name": "MAGNUM GRAY PEARL"
+      },
+      {
+        "colour_id": 55,
+        "index": 6,
+        "label": "BERLINA BLACK",
+        "name": "BERLINA BLACK"
+      },
+      {
+        "colour_id": 98,
+        "index": 7,
+        "label": "GRANDPRIX RED",
+        "name": "GRANDPRIX RED"
+      },
+      {
+        "colour_id": 100,
+        "index": 8,
+        "label": "FORMULA RED",
+        "name": "FORMULA RED"
+      },
+      {
+        "colour_id": 104,
+        "index": 9,
+        "label": "INDY YELLOW PEARL",
+        "name": "INDY YELLOW PEARL"
+      },
+      {
+        "colour_id": 108,
+        "index": 10,
+        "label": "ESTORIL TURQUOISE PEARL",
+        "name": "ESTORIL TURQUOISE PEARL"
+      },
+      {
+        "colour_id": 113,
+        "index": 11,
+        "label": "PHOENIX BLUE",
+        "name": "PHOENIX BLUE"
+      },
+      {
+        "colour_id": 115,
+        "index": 12,
+        "label": "MONTE CARLO BLUE PEARL",
+        "name": "MONTE CARLO BLUE PEARL"
+      },
+      {
+        "colour_id": 117,
+        "index": 13,
+        "label": "MIDNIGHT PEARL",
+        "name": "MIDNIGHT PEARL"
+      }
+    ],
+    "identity": {
+      "name": "NSX",
+      "spec_index": 92,
+      "status": "verified"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 49,
+          "matching_slots": [
+            {
+              "colour_id": 49,
+              "name": "GRANDPRIX WHITE",
+              "slot": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 50,
+          "matching_slots": [
+            {
+              "colour_id": 50,
+              "name": "NEUTRON WHITE PEARL",
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "lookup_colour_id": 51,
+          "matching_slots": [
+            {
+              "colour_id": 51,
+              "name": "PLATINUM WHITE PEARL",
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "lookup_colour_id": 52,
+          "matching_slots": [
+            {
+              "colour_id": 52,
+              "name": "SEBRING SILVER METALLIC",
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "lookup_colour_id": 53,
+          "matching_slots": [
+            {
+              "colour_id": 53,
+              "name": "KAISER SILVER METALLIC",
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "lookup_colour_id": 54,
+          "matching_slots": [
+            {
+              "colour_id": 54,
+              "name": "MAGNUM GRAY PEARL",
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "lookup_colour_id": 55,
+          "matching_slots": [
+            {
+              "colour_id": 55,
+              "name": "BERLINA BLACK",
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "lookup_colour_id": 98,
+          "matching_slots": [
+            {
+              "colour_id": 98,
+              "name": "GRANDPRIX RED",
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "lookup_colour_id": 100,
+          "matching_slots": [
+            {
+              "colour_id": 100,
+              "name": "FORMULA RED",
+              "slot": 8
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "lookup_colour_id": 104,
+          "matching_slots": [
+            {
+              "colour_id": 104,
+              "name": "INDY YELLOW PEARL",
+              "slot": 9
+            }
+          ]
+        },
+        {
+          "index": 10,
+          "lookup_colour_id": 108,
+          "matching_slots": [
+            {
+              "colour_id": 108,
+              "name": "ESTORIL TURQUOISE PEARL",
+              "slot": 10
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "lookup_colour_id": 113,
+          "matching_slots": [
+            {
+              "colour_id": 113,
+              "name": "PHOENIX BLUE",
+              "slot": 11
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "lookup_colour_id": 115,
+          "matching_slots": [
+            {
+              "colour_id": 115,
+              "name": "MONTE CARLO BLUE PEARL",
+              "slot": 12
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "lookup_colour_id": 117,
+          "matching_slots": [
+            {
+              "colour_id": 117,
+              "name": "MIDNIGHT PEARL",
+              "slot": 13
+            }
+          ]
+        }
+      ],
+      "colour_source_slots": [
+        {
+          "colour_id": 49,
+          "name": "GRANDPRIX WHITE",
+          "slot": 0
+        },
+        {
+          "colour_id": 50,
+          "name": "NEUTRON WHITE PEARL",
+          "slot": 1
+        },
+        {
+          "colour_id": 51,
+          "name": "PLATINUM WHITE PEARL",
+          "slot": 2
+        },
+        {
+          "colour_id": 52,
+          "name": "SEBRING SILVER METALLIC",
+          "slot": 3
+        },
+        {
+          "colour_id": 53,
+          "name": "KAISER SILVER METALLIC",
+          "slot": 4
+        },
+        {
+          "colour_id": 54,
+          "name": "MAGNUM GRAY PEARL",
+          "slot": 5
+        },
+        {
+          "colour_id": 55,
+          "name": "BERLINA BLACK",
+          "slot": 6
+        },
+        {
+          "colour_id": 98,
+          "name": "GRANDPRIX RED",
+          "slot": 7
+        },
+        {
+          "colour_id": 100,
+          "name": "FORMULA RED",
+          "slot": 8
+        },
+        {
+          "colour_id": 104,
+          "name": "INDY YELLOW PEARL",
+          "slot": 9
+        },
+        {
+          "colour_id": 108,
+          "name": "ESTORIL TURQUOISE PEARL",
+          "slot": 10
+        },
+        {
+          "colour_id": 113,
+          "name": "PHOENIX BLUE",
+          "slot": 11
+        },
+        {
+          "colour_id": 115,
+          "name": "MONTE CARLO BLUE PEARL",
+          "slot": 12
+        },
+        {
+          "colour_id": 117,
+          "name": "MIDNIGHT PEARL",
+          "slot": 13
+        }
+      ],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "hnsbn",
+      "native_directory_index": 98,
+      "native_grade_name": "",
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "native_model_name": "NSX ",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": {
+      "aspiration": "Normal",
+      "displacement_cc": 3179,
+      "displacement_display_kind": "cc",
+      "displacement_raw": 3179,
+      "displacement_rotary_chamber_cc": null,
+      "displacement_rotary_factor": null,
+      "drive": "MR",
+      "engine_configuration": "V6",
+      "engine_type": "DOHC",
+      "front_tread_mm": 1510,
+      "height_mm": 1170,
+      "length_mm": 4430,
+      "mass_kg": 1392,
+      "power_conversion": "floor(raw * 1000 / 1014); native display label HP",
+      "power_hp_game": 290,
+      "power_raw": 295,
+      "power_rpm": 7300,
+      "rear_tread_mm": 1530,
+      "specification_scope": "native-base",
+      "suspension_front": "Double Wishbone",
+      "suspension_rear": "Double Wishbone",
+      "torque_kgm": 31.0,
+      "torque_raw": 3100,
+      "torque_rpm": 5300,
+      "wheelbase_mm": 2530,
+      "width_mm": 1810
+    }
+  },
   "pair_index": 98,
   "variant": "day"
 }

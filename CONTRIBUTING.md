@@ -139,6 +139,7 @@ only directly.
 | `tools/test_gt4_*.py`, `test_extract_gt4_cars.py`, `test_import_gt4_catalog.py`, `test_import_gt4_dealership.py` | RoFS, VIF, Tex1, SpecDB, GLB and import tamper controls with pinned real-data values | Python + committed GT4 fixture car, spec database and previews |
 | `tools/test_gt_*.py`, `test_import_gt_dealership.py` | GT1 archive, wheel/body/CTEX, repaired normal/winding and canonical migration controls; all 728 native pairs and 342 public families | Python + local GT1 extraction and committed canonical exports |
 | `python3 tools/export_gt_models.py --check` (`gt_models`) | Re-derives all canonical GT1 exports, aliases and file inventory; selected with `--game gran-turismo --full` | Local GT1 extraction |
+| `python3 tools/test_gt_metadata.py`, `python3 tools/test_gt_native_data.py` | Exact SPEC/colour joins, unresolved identities, native source/face/shadow/LOD/wheel preservation, all material variants and corrupt-input controls | Committed native GT1 metadata and compact lookup receipts |
 | `python3 tools/extract_gt_cars.py --check` (`gt_extraction`) | Re-derives all retained GT1 native assets from the local disc; skips when the disc is absent | Local GT1 CD image |
 | `python3 tools/import_gt4_catalog.py --check` (`gt4_catalog`) | Re-derives all 730 GT4 previews and native ZIPs from the local extraction; skipped when only the committed fixture is present, failed when the extraction is partial | Local GT4 extraction and native ZIPs |
 | `python3 tools/extract_gt4_cars.py --check` (`gt4_extraction`) | Re-derives all 6,591 GT4 extraction files from the disc; skipped when the ISO is absent | Local GT4 ISO |
@@ -191,6 +192,15 @@ record `render_fidelity_complete: false` deliberately — geometry, textures, li
 are covered by other verifiers, and full game-render equivalence is still open.
 
 ## Receipts
+
+GT1 metadata upgrades use `python3 tools/extract_gt_cars.py --refresh-metadata`,
+then `python3 tools/export_gt_models.py`, `python3 tools/build_model_catalog.py`,
+`python3 tools/import_gt_dealership.py --upgrade-unedited` and
+`python3 tools/build_dealership.py`. The extraction refresh rederives every native
+asset before replacing derived manifests; changed native bytes or unexpected files
+abort the refresh. It retains `SYSTEM.DAT` alongside CARINF. The disc can be supplied
+under `games/source-data/PS1/gran-turismo/` or the historical `game-files/` path.
+Run `tools/check.sh --game gran-turismo --full` after this derivation changes.
 
 Verifiers write their JSON receipt under `research/evidence/<area>/`. Those receipts are committed:
 re-running a verifier should reproduce its receipt and leave the tree otherwise unchanged. A run that

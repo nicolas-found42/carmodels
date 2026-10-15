@@ -22,11 +22,16 @@ Gran Turismo exports are added with `python3 tools/import_gt_dealership.py`, the
 `python3 tools/build_dealership.py`. The importer verifies the source index hashes
 and static GLB profile before adding independent copies. Repeat imports preserve
 existing dealership models and metadata, including user edits. Canonical asset identities
-are namespaced as `GT_SIMULATION_<CODE>`: one day-derived model and first native
-paint colour per retained vehicle family. Distinct bodies and racing liveries remain
+are namespaced as `GT_SIMULATION_<CODE>`: one day-derived model per retained vehicle
+family, with every native colour set embedded as a material variant. Distinct bodies and racing liveries remain
 separate; night editions, exact arcade duplicates and the two special logo/cup families
-are excluded from public car entries. Old selection IDs are aliases of canonical cars. These are archive identifiers, not decoded retail vehicle names.
-Performance values and body styles remain unknown until supported by decoded data.
+are excluded from public car entries. Old selection IDs are aliases of canonical cars.
+Exact native SPEC-code joins supply retail names and base specifications for 178
+families. Other identities and racing specifications remain unassigned; year,
+manufacturer, body style, top speed and ratings are not inferred. The native game
+power conversion is labelled HP (game), and rotary displacement retains its
+chamber/factor representation. Factory colour names use native colour-ID joins;
+unmatched sets keep explicit native identifiers.
 
 Migrate the older variant catalog with `python3 tools/import_gt_dealership.py
 --consolidate --upgrade-unedited`, then rebuild. The migration carries custom day
@@ -41,6 +46,16 @@ catalog fields are preserved; original import provenance remains in `initialSour
 with subsequent source hashes recorded in `latestSource` and `sourceUpgrades`.
 The Gran Turismo source exports include recovered native wheel templates and
 per-car attachment/texture data; their static assembly limits travel with each copy.
+Metadata upgrades fill prior generated defaults and keep custom names, values and
+notes. `origins.json` retains the latest source metadata independently of owner
+overrides. Edited working geometry is preserved. The colour selector reads the
+loaded working GLB, so it does not offer source variants absent from an edited copy.
+
+Each enriched source GLB retains complete CAR/CTEX payloads, raw palettes, shadow
+records, original normals and face packets, source-to-triangle mappings, native
+LOD descriptors, all five wheel templates and neutral attachment pivots. These
+records preserve native inputs; they do not implement original GTE effects,
+semi-transparency, lighting palette rewrites, shadows or animation.
 
 The Gran Turismo display uses each working GLB's default scene and embedded PNG
 textures, rather than compact surface tones. Other LOD scenes remain in the download.

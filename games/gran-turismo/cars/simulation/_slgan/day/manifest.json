@@ -27,15 +27,252 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_slgan",
   "id": "simulation/_slgan/day",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 49,
+        "index": 0,
+        "label": "PURE WHITE",
+        "name": "PURE WHITE"
+      },
+      {
+        "colour_id": 52,
+        "index": 1,
+        "label": "LIGHT SILVER METALLIC",
+        "name": "LIGHT SILVER METALLIC"
+      },
+      {
+        "colour_id": 53,
+        "index": 2,
+        "label": "GRAY OPAL",
+        "name": "GRAY OPAL"
+      },
+      {
+        "colour_id": 54,
+        "index": 3,
+        "label": "BLACK MICA",
+        "name": "BLACK MICA"
+      },
+      {
+        "colour_id": 101,
+        "index": 4,
+        "label": "DEEP RED MICA",
+        "name": "DEEP RED MICA"
+      },
+      {
+        "colour_id": 104,
+        "index": 5,
+        "label": "CASHMERE YELLOW",
+        "name": "CASHMERE YELLOW"
+      },
+      {
+        "colour_id": 109,
+        "index": 6,
+        "label": "VINTAGE GREEN MICA",
+        "name": "VINTAGE GREEN MICA"
+      },
+      {
+        "colour_id": 115,
+        "index": 7,
+        "label": "ROYAL BLUE MICA",
+        "name": "ROYAL BLUE MICA"
+      }
+    ],
+    "identity": {
+      "name": "LEGACY TouringWagonGT-B",
+      "spec_index": 143,
+      "status": "verified"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 49,
+          "matching_slots": [
+            {
+              "colour_id": 49,
+              "name": "PURE WHITE",
+              "slot": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 52,
+          "matching_slots": [
+            {
+              "colour_id": 52,
+              "name": "LIGHT SILVER METALLIC",
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "lookup_colour_id": 53,
+          "matching_slots": [
+            {
+              "colour_id": 53,
+              "name": "GRAY OPAL",
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "lookup_colour_id": 54,
+          "matching_slots": [
+            {
+              "colour_id": 54,
+              "name": "BLACK MICA",
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "lookup_colour_id": 101,
+          "matching_slots": [
+            {
+              "colour_id": 101,
+              "name": "DEEP RED MICA",
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "lookup_colour_id": 104,
+          "matching_slots": [
+            {
+              "colour_id": 104,
+              "name": "CASHMERE YELLOW",
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "lookup_colour_id": 109,
+          "matching_slots": [
+            {
+              "colour_id": 109,
+              "name": "VINTAGE GREEN MICA",
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "lookup_colour_id": 115,
+          "matching_slots": [
+            {
+              "colour_id": 115,
+              "name": "ROYAL BLUE MICA",
+              "slot": 7
+            }
+          ]
+        }
+      ],
+      "colour_source_slots": [
+        {
+          "colour_id": 49,
+          "name": "PURE WHITE",
+          "slot": 0
+        },
+        {
+          "colour_id": 52,
+          "name": "LIGHT SILVER METALLIC",
+          "slot": 1
+        },
+        {
+          "colour_id": 53,
+          "name": "GRAY OPAL",
+          "slot": 2
+        },
+        {
+          "colour_id": 54,
+          "name": "BLACK MICA",
+          "slot": 3
+        },
+        {
+          "colour_id": 101,
+          "name": "DEEP RED MICA",
+          "slot": 4
+        },
+        {
+          "colour_id": 104,
+          "name": "CASHMERE YELLOW",
+          "slot": 5
+        },
+        {
+          "colour_id": 109,
+          "name": "VINTAGE GREEN MICA",
+          "slot": 6
+        },
+        {
+          "colour_id": 115,
+          "name": "ROYAL BLUE MICA",
+          "slot": 7
+        }
+      ],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "slgan",
+      "native_directory_index": 266,
+      "native_grade_name": "TouringWagonGT-B",
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "native_model_name": "LEGACY",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": {
+      "aspiration": "Turbo",
+      "displacement_cc": 1994,
+      "displacement_display_kind": "cc",
+      "displacement_raw": 1994,
+      "displacement_rotary_chamber_cc": null,
+      "displacement_rotary_factor": null,
+      "drive": "4WD",
+      "engine_configuration": "Boxer4",
+      "engine_type": "DOHC",
+      "front_tread_mm": 1470,
+      "height_mm": 1490,
+      "length_mm": 4680,
+      "mass_kg": 1430,
+      "power_conversion": "floor(raw * 1000 / 1014); native display label HP",
+      "power_hp_game": 276,
+      "power_raw": 280,
+      "power_rpm": 6500,
+      "rear_tread_mm": 1460,
+      "specification_scope": "native-base",
+      "suspension_front": "Strut",
+      "suspension_rear": "Strut",
+      "torque_kgm": 34.5,
+      "torque_raw": 3450,
+      "torque_rpm": 5000,
+      "wheelbase_mm": 2630,
+      "width_mm": 1695
+    }
+  },
   "pair_index": 266,
   "variant": "day"
 }

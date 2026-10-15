@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {fetchModel, readGLB} from './model-load.mjs';
-import {createMaterial} from './materials.mjs';
+import {createMaterial, applyMaterial} from './materials.mjs';
 
 // Decode only embedded, static triangle GLBs. Bounds and accessor extents are
 // checked before allocating meshes; texture failures dispose all prior resources.
@@ -9,6 +9,10 @@ export function parseEditableGLB(buffer) {
   if (doc.animations?.length || doc.skins?.length || doc.extensionsRequired?.length ||
       doc.buffers?.length !== 1 || doc.buffers[0].uri || !Array.isArray(doc.nodes) ||
       !doc.scenes?.[doc.scene ?? 0] || doc.nodes.length > 10000) throw Error('Unsupported editable static GLB.');
+  const variantExtension=doc.extensions?.KHR_materials_variants;
+  const colourVariants=variantExtension?.variants??[];
+  if(variantExtension!==undefined && (!variantExtension || !Array.isArray(doc.extensionsUsed) || !doc.extensionsUsed.includes('KHR_materials_variants') ||
+     !Array.isArray(colourVariants) || !colourVariants.length || colourVariants.some(v=>!v || typeof v.name!=='string' || !v.name.trim()))) throw Error('Invalid GLB colour variants.');
   function view(index) {
     const v=doc.bufferViews?.[index];
     if(!v || v.buffer!==0 || !Number.isInteger(v.byteLength) || v.byteLength<=0 ||
@@ -33,8 +37,16 @@ export function parseEditableGLB(buffer) {
     if(image.uri || image.mimeType!=='image/png')throw Error('Editable textures must be embedded PNG.');
     const v=view(image.bufferView);return new Uint8Array(bin,v.byteOffset??0,v.byteLength);
   });
+  function material(index, uv) {
+    const definition=doc.materials?.[index];
+    if(!Number.isInteger(index) || index<0 || !definition)throw Error('Missing GLB material.');
+    const texture=definition.pbrMetallicRoughness?.baseColorTexture;
+    if(texture && (!uv || !Number.isInteger(texture.index) || texture.index<0 ||
+       !Number.isInteger(doc.textures?.[texture.index]?.source) || doc.textures[texture.index].source<0 ||
+       !images[doc.textures[texture.index].source]))throw Error('Invalid GLB texture mapping.');
+  }
   const meshes=(doc.meshes??[]).map(mesh=>mesh.primitives.map(p=>{
-    if((p.mode??4)!==4 || p.extensions)throw Error('Editable mesh must use static triangles.');
+    if((p.mode??4)!==4 || p.extensions && Object.keys(p.extensions).some(key=>key!=='KHR_materials_variants'))throw Error('Editable mesh must use static triangles.');
     const positions=values(p.attributes?.POSITION,3), normals=values(p.attributes?.NORMAL,3), indices=values(p.indices,1,true);
     const uv=p.attributes.TEXCOORD_0===undefined?null:values(p.attributes.TEXCOORD_0,2);
     const colorWidth=doc.accessors?.[p.attributes.COLOR_0]?.type==='VEC4'?4:3;
@@ -43,11 +55,20 @@ export function parseEditableGLB(buffer) {
        indices.some(i=>i>=positions.length/3))throw Error('GLB mesh attribute/index mismatch.');
     if(colors && (colors.length!==positions.length/3*colorWidth || colors.some(v=>v<0 || v>1)))throw Error('Invalid GLB vertex colours.');
     for(let i=0;i<normals.length;i+=3)if(Math.hypot(...normals.subarray(i,i+3))<1e-8)throw Error('GLB normal is zero.');
-    const material=doc.materials?.[p.material];
-    if(!material)throw Error('Missing GLB material.');
-    const texture=material.pbrMetallicRoughness?.baseColorTexture;
-    if(texture && (!uv || !doc.textures?.[texture.index] || !images[doc.textures[texture.index].source]))throw Error('Invalid GLB texture mapping.');
-    return {positions,normals,indices,uv,colors,colorWidth,material:p.material};
+    material(p.material,uv);
+    const extension=p.extensions?.KHR_materials_variants, variantMaterials=new Map();
+    if(extension!==undefined) {
+      if(!extension || !variantExtension || !Array.isArray(extension.mappings) || !extension.mappings.length)throw Error('Invalid GLB colour mappings.');
+      for(const mapping of extension.mappings) {
+        if(!mapping || !Array.isArray(mapping.variants) || !mapping.variants.length)throw Error('Invalid GLB colour mappings.');
+        material(mapping.material,uv);
+        for(const index of mapping.variants) {
+          if(!Number.isInteger(index) || index<0 || index>=colourVariants.length || variantMaterials.has(index))throw Error('Invalid or duplicate GLB colour variant index.');
+          variantMaterials.set(index,mapping.material);
+        }
+      }
+    }
+    return {positions,normals,indices,uv,colors,colorWidth,material:p.material,variantMaterials};
   }));
   const seen=new Set(), active=new Set();
   function walk(index) {
@@ -63,7 +84,7 @@ export function parseEditableGLB(buffer) {
   }
   for(const node of doc.scenes[doc.scene??0].nodes??[])walk(node);
   if(!seen.size || ![...seen].some(i=>doc.nodes[i].mesh!==undefined))throw Error('Editable scene has no geometry.');
-  return {doc,images,meshes};
+  return {doc,images,meshes,colourVariants};
 }
 
 async function loadTexture(bytes, signal) {
@@ -88,8 +109,15 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
   const buffer=await fetchImpl('./'+car.model.source.glb,signal);
   const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer)),v=>v.toString(16).padStart(2,'0')).join('');
   if(hash!==car.model.source.sha256)throw Error('Editable model changed; rebuild the dealership data.');
-  const {doc,images,meshes}=parseEditableGLB(buffer), textures=[], group=new THREE.Group();
+  const {doc,images,meshes,colourVariants}=parseEditableGLB(buffer), textures=[], group=new THREE.Group(), variantMeshes=[];
   group.userData.textures=textures;group.userData.wheels=[];group.userData.source=car.model.source;
+  group.userData.colourVariants=colourVariants.map((variant,index)=>({index,name:variant.name}));
+  group.userData.colourVariant=null;
+  group.userData.setColourVariant=(index=null)=>{
+    if(index!==null && (!Number.isInteger(index) || index<0 || index>=colourVariants.length))throw Error('Invalid colour variant selection.');
+    for(const {mesh,primitive} of variantMeshes)applyMaterial(mesh.material,doc,textures,index===null?primitive.material:primitive.variantMaterials.get(index)??primitive.material);
+    group.userData.colourVariant=index;
+  };
   try {
     for(const image of images)textures.push(await textureImpl(image,signal));
     if(signal?.aborted)throw Error('Model selection cancelled.');
@@ -105,6 +133,7 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
         material.vertexColors=!!p.colors;
         material.alphaTest=definition.alphaMode==='MASK'?(definition.alphaCutoff??0.5):0;
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;g.add(mesh);
+        variantMeshes.push({mesh,primitive:p});
       }
       for(const child of source.children??[])g.add(node(child));return g;
     }

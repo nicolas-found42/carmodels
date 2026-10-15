@@ -80,7 +80,7 @@ def registry():
                ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui']]
     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
-             'test_check_advice', 'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
+             'test_check_advice', 'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_metadata', 'test_gt_native_data', 'test_gt_model', 'test_import_gt_dealership',
              'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs',
              'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
@@ -95,8 +95,8 @@ def registry():
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     checks.append({'name':'gt_models', 'command':['python3', 'tools/export_gt_models.py', '--check']})
     checks.append({'name':'gt_extraction', 'command':['python3', 'tools/extract_gt_cars.py', '--check'],
-                   'availability':['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if Path("
-                                   "'games/gran-turismo/game-files/gran-turismo.bin').is_file() else 1)"]})
+                   'availability':['python3', '-c', "from pathlib import Path; import sys; sys.exit(0 if any(Path(p).is_file() for p in ["
+                                   "'games/gran-turismo/game-files/gran-turismo.bin', 'games/source-data/PS1/gran-turismo/gran-turismo.bin']) else 1)"]})
     # The full GT4 extraction and native ZIPs stay local; the re-derivation runs only where they exist.
     checks.append({'name': 'gt4_catalog', 'command': ['python3', 'tools/import_gt4_catalog.py', '--check'],
                    'availability': ['python3', 'tools/import_gt4_catalog.py', '--available']})

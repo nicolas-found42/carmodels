@@ -6,6 +6,7 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `gran-turismo-model-data.md` | Native SPEC and colour-ID joins, all palette variants, retained face/shadow/LOD/wheel inputs, catalog upgrades and unresolved identities |
 | `check-performance.md` | Freshness and MC3 preview/wheel-page/PNG profiling, equivalent optimizations, optional TypeSafe advice, labeled wording/holdout experiments and calibration limits |
 | `dealership-teardown-2026-10-12.md` | Novice-user dealership teardown, search/filter/layout/request recovery improvements, coverage ledger, original reproductions and final verification |
 | `dealership-usability-alternatives-2026-10-12.md` | Primary-source comparison of native search/filter/form/disclosure improvements and deferred fuzzy search, with eligibility limits |
@@ -51,7 +52,7 @@ single list of what is not yet established; update it when a note closes or open
 
 - Redline native extraction is documented in [redline-extraction.md](redline-extraction.md). Static mesh/texture conversion and both library imports are documented in [redline-library.md](redline-library.md); runtime plug-in precedence and game-render fidelity remain open.
 
-- Gran Turismo dynamic wheel behavior, additional colour sets, PS1 rendering fidelity, runtime LOD selection, per-car metadata joins and retail identities remain open. Native extraction is established in `gran-turismo-extraction.md`; static body/first-colour conversion and dealership import are established in `gran-turismo-library.md`; native wheel templates and neutral assembly are established in `gran-turismo-wheels.md`. The shadowed dealership look is traced to inverted body winding and in-plane stored normals in `gran-turismo-shading-2026-10-11.md`, with the measured exporter repair now applied to 342 canonical day-derived families; connectivity-based orientation, runtime colour/raw-bit rewrites and the in-game look of black flat faces remain open.
+- Gran Turismo exact SPEC-code identities/base specifications and all source colour sets are exported, with supported native colour-ID names; original rendering inputs are retained in each canonical GLB ([model data](gran-turismo-model-data.md)). Racing-equipment joins and unresolved identities, dynamic wheels, PS1 rendering fidelity, runtime LOD selection, second-mask paint semantics, connectivity-based normal orientation and game appearance remain open. Native extraction is established in `gran-turismo-extraction.md`; canonical export policy in `gran-turismo-library.md`; neutral wheel assembly in `gran-turismo-wheels.md`; the measured winding/normal repair in `gran-turismo-shading-2026-10-11.md`.
 
 - Natural-language filter: exact phrases are decided offline and measured in [the filter teardown](semantic-filter-teardown-2026-10-11.md). The dealership now has visible provider disclosure, Enter submission, request recovery and a 35 s UI budget for the existing 30 s provider request, verified in [the dealership teardown](dealership-teardown-2026-10-12.md). Model-path option-order stability, the `original` alias outside Redline, and the source viewer's disclosure/20 s timeout remain open.
 
