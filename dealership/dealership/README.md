@@ -85,6 +85,14 @@ properties retain source part/wheel names used by the display baker. Keep altern
 state collections out of the export. This route is tested for the Gran Torino with a real
 import, geometry edit, image re-encoding, export and rebuild; other cars/exporters need checking.
 
+Before importing MC3 GLBs in Blender 4.5.14, run `tools/blender_gltf_compat.py` in
+Blender's scripting workspace. Its pinned importer mixes unordered custom-attribute
+names with ordered value arrays. The script repairs that ordering for the current
+session, checks the importer source hash, and leaves installed files and GLBs intact.
+The MC3 roundtrip check uses this repair and verifies exact native attribute values
+before importing, editing and exporting three real cars. Unmodified Blender 4.5.14
+can reject these models or associate custom attributes incorrectly.
+
 `python3 tools/build_dealership.py --check` verifies display freshness without writing any
 files. It also runs in the normal check suite, so an unrecompiled model or catalog edit fails.
 `tools/check.sh --only test_build_dealership,dealership_freshness,dealership_roundtrip` runs
