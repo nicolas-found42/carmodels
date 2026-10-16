@@ -18,6 +18,39 @@ Open `/dealership.html` for this edition, and `/recovered.html` for the source-m
 showcase. The dealership's download link serves the working GLB copy. The source-model
 showcase's download link serves the separately stored recovered original.
 
+### Enhanced Gran Turismo 4 edition
+
+GT4 dealership models are automatically enhanced on load. **Enhanced GT4 edition**
+switches between the working model and a modern studio presentation; the comparison
+keeps the camera position. The source viewer and all stored source/working GLBs remain
+separate and unchanged. A dealership download contains the selected paint, refined
+geometry, factory variants, original texture bytes and enhancement provenance.
+The studio environment belongs to the viewer; it is not embedded in the download.
+
+The deterministic PN-triangle pass samples supported native-normal curvature at four
+segments per edge. Original vertices and render-domain boundaries are anchors;
+UV/normal/colour seams and material variants stay separate. Cutout silhouettes,
+unsupported attributes, folded candidates and geometry over the budget retain their
+original parts. New samples move at most 6 mm from their source barycentric position.
+The GLB retains source-face/sample mappings for independent displacement and attribute
+checks. These bounds are safeguards, not a measurement of real-car accuracy.
+
+Known native tire parts get a rubber response; materials with native specular input
+get a labelled artistic clearcoat translation. Unidentified finishes remain unchanged,
+and no chrome or paint mask is guessed from a name or colour difference. Factory
+texture pixels are retained, with mip filtering and anisotropy in the enhanced preview.
+Exact-car external measurements/reconstructions have not been established for this
+batch, so it uses the agreed conservative source-mesh fallback rather than inventing
+hidden details or changing dimensions from unmatched references.
+
+Run `tools/check.sh --only test_gt4_refinement,gt4_refinement_corpus` to exercise the
+unit/integration checks and every catalog car. `node tools/audit_gt4_refinement.mjs
+--output .scratch/new-gt4-audit.json` additionally retains a per-car receipt at a new
+path. The audit checks source hashes, original binary/image preservation, factory
+variants/transforms, source corners, measured displacement, UV/colour correspondence
+and orientation. It does not prove visual identity. Research and reconstruction
+limits are in [the fidelity note](../../research/gran-turismo-4-model-fidelity.md).
+
 Gran Turismo exports are added with `python3 tools/import_gt_dealership.py`, then
 `python3 tools/build_dealership.py`. The importer verifies the source index hashes
 and static GLB profile before adding independent copies. Repeat imports preserve

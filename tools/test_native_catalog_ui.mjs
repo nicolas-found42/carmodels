@@ -68,7 +68,7 @@ const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerEle
 const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
   'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId','rememberCar',
-  `const paintDownload={clear(){}};let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
+  `const gt4Studio={setEnabled(){}},floor={material:{}};const paintDownload={clear(){}};let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
   $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
   ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls,gameId,sourceCarId,car=>rememberedDealership.push(car));
 await select(native);assert.deepEqual(rememberedDealership,[native]);
@@ -90,7 +90,7 @@ await select(native);assert.equal(removed,1);assert.equal(modelLoads,0);
   const paintControls={enabled:false,setEnabled(v){this.enabled=v;},bind(){throw Error('Invalid recovered paint metadata');}};
   const run=new Function('$','document','gameLabel','gameId','isNativePackage','dealershipDownload','scene','disposeCar',
     'loadCar','applyFilters','fmt','colourControls','paintDownload','paletteReady','gamePalette','paletteError','renderer','prepareMC3Environment','sourceCarId','rememberCar',
-    `let selectionId=0,selectionController=null,current=null,carMesh=null;${page.slice(selectStart,selectEnd)}return select;`)(
+    `const gt4Studio={setEnabled(){}},floor={material:{}};let selectionId=0,selectionController=null,current=null,carMesh=null;${page.slice(selectStart,selectEnd)}return select;`)(
     $,{querySelectorAll:()=>[],createElement:element},()=>preview.gameLabel,c=>c.game,isNativePackage,dealershipDownload,
     {add(){active=true;},remove(){active=false;}},()=>freed++,async()=>model,()=>{},String,paintControls,
     {clear(){cleared++;}},Promise.resolve(),[],'',renderer,

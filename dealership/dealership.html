@@ -148,6 +148,7 @@
   button, #view-controls label { font: inherit; font-size: 12px; }
   #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
   #download-model { font-size: 12px; color: var(--accent-2); padding: 7px 0; }
+  #gt4-enhance-status { flex-basis: 100%; min-height: 1.4em; color: var(--muted); }
   #colour-variant { max-width: 230px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 4px; padding: 6px; font: inherit; }
   #native-specs { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 7px; }
   #native-specs .kv { align-items: baseline; gap: 12px; }
@@ -227,6 +228,8 @@
         <button type="button" data-view="side">Side</button>
         <button type="button" data-view="front">Front</button>
         <button type="button" data-view="top">Top</button>
+        <label id="gt4-enhance-control" hidden><input type="checkbox" id="gt4-enhance" checked> Enhanced GT4 edition</label>
+        <span id="gt4-enhance-status" role="status"></span>
         <label id="colour-control" hidden>Native preset <select id="colour-variant" aria-label="Native preset"></select></label>
         <div id="game-paint-controls" aria-label="Game paint choices"></div>
         <a id="download-model" download>Download dealership model (.glb)</a>
@@ -342,6 +345,7 @@ import {createColourControls} from './colour-controls.mjs';
 import {fetchGamePalette} from './game-paint.mjs';
 import {createPaintDownload} from './paint-export.mjs';
 import {prepareMC3Environment,disposeMC3Environment} from './mc3-environment.mjs';
+import {createGT4Studio} from './gt4-studio.mjs';
 let gamePalette=[],paletteError='';
 const paletteReady=fetchGamePalette().then(colors=>{gamePalette=colors;}).catch(error=>{paletteError=error.message;});
 
@@ -563,6 +567,8 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 stage.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
+const gt4Studio=createGT4Studio(renderer);
+window.addEventListener('pagehide',event=>{if(!event.persisted)gt4Studio.dispose();});
 scene.background = new THREE.Color(0x14161a);
 scene.fog = new THREE.Fog(0x14161a, 30, 90);
 
@@ -623,6 +629,11 @@ async function select(c) {
   colourControls.setEnabled(false);
   paintDownload.clear();
   current = c;
+  $('gt4-enhance-control').hidden=gameId(c)!=='gran-turismo-4';
+  $('gt4-enhance-status').hidden=gameId(c)!=='gran-turismo-4';
+  $('gt4-enhance-status').textContent=gameId(c)==='gran-turismo-4'?'Original working model · scene lighting':'';
+  gt4Studio.setEnabled(scene,gameId(c)==='gran-turismo-4'&&$('gt4-enhance').checked);
+  floor.material.envMapIntensity=gameId(c)==='gran-turismo-4'&&$('gt4-enhance').checked ? .15 : 1;
   rememberCar(c);
   $('source-link').href='recovered.html?'+new URLSearchParams({game:gameId(c),car:sourceCarId(c)});
   document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
@@ -677,10 +688,17 @@ async function select(c) {
   try {
     if(gameId(c)==='midnight-club-3-remix')await prepareMC3Environment(renderer);
     if(id!==selectionId)return;
-    const model=await loadCar(c,{signal:selectionController.signal});
+    const model=await loadCar(c,{signal:selectionController.signal,enhance:$('gt4-enhance').checked});
     await paletteReady;
     if(id!==selectionId){disposeCar(model);return;}
     carMesh=model;scene.add(carMesh);showColourVariants(carMesh);colourControls.setEnabled(true);
+    const enhancement=carMesh.userData.gt4Enhancement;
+    if(enhancement) {
+      $('gt4-enhance-status').textContent='Refined curves · studio finish';
+      for(const texture of carMesh.userData.textures)texture.anisotropy=Math.min(16,renderer.capabilities.getMaxAnisotropy());
+      $('model-limits').textContent=[...enhancement.claimLimits,...(c.claimLimits||c.model.claimLimits||[])].join(' ');
+      $('download-model').textContent='Download enhanced dealership model (.glb)';
+    }
     colourControls.bind({model:carMesh.userData.paintDoc,game:gameId(c),carId:c.code,colors:gamePalette,error:paletteError});
     setView('reset');$('loading').hidden=true;
   } catch(error){
@@ -727,6 +745,14 @@ function showNativeSpecifications(car) {
 }
 
 /* ---------- inspection controls ---------- */
+$('gt4-enhance').addEventListener('change',async()=>{
+  if(!current)return;
+  const selected=current,id=selectionId+1,position=camera.position.clone(),target=controls.target.clone();
+  setRotation(false);await select(selected);
+  // Control rows and the ResizeObserver may settle after the model promise.
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  if(current===selected&&selectionId===id&&carMesh){camera.position.copy(position);controls.target.copy(target);controls.update();}
+});
 $('colour-variant').addEventListener('change',()=>{
   const value=$('colour-variant').value;
   colourControls.setPreset(value===''?null:Number(value));
@@ -757,11 +783,22 @@ function setView(view) {
   const sphere = bounds.getBoundingSphere(new THREE.Sphere());
   const vertical = THREE.MathUtils.degToRad(camera.fov / 2);
   const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
-  const distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
+  let distance = sphere.radius / Math.sin(Math.min(vertical, horizontal)) * 1.12;
   const nativeZForward = ['redline', 'midnight-club-3-remix', 'gran-turismo-4', 'midnight-club-los-angeles'].includes(current?.game);
   const direction = view === 'side' ? new THREE.Vector3(nativeZForward ? 1 : 0, 0.08, nativeZForward ? 0 : 1) :
     view === 'front' ? new THREE.Vector3(nativeZForward ? 0 : 1, 0.08, nativeZForward ? (['midnight-club-3-remix', 'gran-turismo-4', 'midnight-club-los-angeles'].includes(current?.game) ? -1 : 1) : 0) :
     view === 'top' ? new THREE.Vector3(0.01, 1, 0) : new THREE.Vector3(1, 0.45, 1);
+  // Fit the actual GT4 bounds in the chosen view. A bounding sphere wastes
+  // most of a low, long car's viewport, hiding the detail being inspected.
+  if(current?.game==='gran-turismo-4') {
+    const forward=direction.clone().normalize(),right=new THREE.Vector3().crossVectors(camera.up,forward).normalize(),up=new THREE.Vector3().crossVectors(forward,right);
+    distance=0;
+    for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]) {
+      const point=new THREE.Vector3(x,y,z).sub(sphere.center);
+      distance=Math.max(distance,point.dot(forward)+Math.max(Math.abs(point.dot(right))/Math.tan(horizontal),Math.abs(point.dot(up))/Math.tan(vertical)));
+    }
+    distance=Math.max(controls.minDistance,distance*1.12);
+  }
   controls.target.copy(sphere.center);
   camera.position.copy(sphere.center).add(direction.normalize().multiplyScalar(distance));
   controls.maxDistance = Math.max(22, distance * 2);

@@ -19,7 +19,7 @@ DEFAULT_JOBS = min(4, os.cpu_count() or 1)
 # and bulk/private-input re-derivation requires --full or an explicit --only.
 SHOWCASE = {
     'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
-    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
+    'test_dealership', 'test_editable_glb', 'test_gt4_refinement', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
     'verify_recovered_asset_index', 'test_export_materials', 'test_bake_models', 'test_model_png', 'test_model_catalog',
     'test_build_showcase', 'test_build_dealership', 'dealership_freshness', 'test_library_filter', 'test_serve_library',
     'dealership_roundtrip', 'redline_roundtrip', 'mc3_roundtrip', 'test_run_checks', 'test_review_payload',
@@ -29,7 +29,7 @@ SHOWCASE = {
 # Keep whole-corpus and captured/private-input checks out of routine tooling runs.
 FULL_ONLY = {
     'gt_models', 'gt_extraction', 'mc3_tire_alpha_native', 'mc3_raster_reference_native',
-    'gt4_catalog', 'gt4_extraction', 'mcla_extraction', 'mcla_resources', 'mcla_decoding',
+    'gt4_refinement_corpus', 'gt4_catalog', 'gt4_extraction', 'mcla_extraction', 'mcla_resources', 'mcla_decoding',
     'mcla_names', 'mcla_catalog', 'line_coverage',
     'verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
     'test_vu1_decode', 'verify_vu_pass_handlers', 'test_vu_pass_handlers',
@@ -57,7 +57,7 @@ GAMES = {
 # catalog tests use the default single worker. Re-audit these when their fixtures change.
 PARALLEL_SAFE = {
     'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
-    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
+    'test_dealership', 'test_editable_glb', 'test_gt4_refinement', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
     'test_export_materials', 'test_build_showcase', 'test_bake_models', 'test_model_catalog', 'test_model_png',
     'test_review_payload', 'test_check_advice', 'test_static_inputs', 'test_recovery_inputs',
     'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_callback_triage', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
@@ -78,7 +78,7 @@ PARALLEL_SAFE = {
 def registry():
     checks = [{'name': 'ruff', 'command': ['ruff', 'check', 'tools'], 'requires': 'ruff'}]
     checks += [{'name': n, 'command': ['node', f'tools/{n.removesuffix("_js")}.mjs'], 'requires': 'node'} for n in
-               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui', 'test_mc3_tire_material', 'test_mc3_vehicle_math', 'test_mc3_vehicle_resources', 'test_mc3_vu_interpreter', 'test_mc3_vehicle_bindings_js', 'test_mc3_vehicle_deformation_js', 'test_mc3_vehicle_fragment_js', 'test_mc3_vehicle_raster_js', 'test_mc3_vehicle_programs_js', 'test_mc3_vehicle_gif_js', 'test_mc3_vehicle_state_js', 'test_mc3_vif_decoder', 'test_mc3_vehicle_pipeline', 'test_mc3_vehicle_sampler_js', 'test_mc3_vehicle_sprite_js', 'test_mc3_ee', 'test_mc3_ee_division_js', 'test_mc3_vehicle_transfer_reference_js', 'test_mc3_vehicle_nearest_js', 'test_mc3_vehicle_vram_js', 'test_mc3_vehicle_depth32_js', 'test_mc3_vehicle_vram_pipeline', 'test_mc3_vehicle_mip_js', 'test_mc3_vehicle_paint_factory_js', 'test_mc3_vehicle_mip_pipeline', 'test_mc3_vehicle_paint_factory_pipeline', 'test_mc3_vehicle_high_z_js', 'test_mc3_vehicle_variable_mip_js', 'test_mc3_vehicle_initialization_js', 'test_mc3_vehicle_target_js', 'test_mc3_vehicle_high_z_pipeline', 'test_mc3_vehicle_depth_trace_js', 'test_mc3_vehicle_variable_mip_pipeline', 'test_mc3_specular', 'test_mc3_environment', 'test_mc3_gs_raster', 'test_game_paint']]
+               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_gt4_refinement', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui', 'test_mc3_tire_material', 'test_mc3_vehicle_math', 'test_mc3_vehicle_resources', 'test_mc3_vu_interpreter', 'test_mc3_vehicle_bindings_js', 'test_mc3_vehicle_deformation_js', 'test_mc3_vehicle_fragment_js', 'test_mc3_vehicle_raster_js', 'test_mc3_vehicle_programs_js', 'test_mc3_vehicle_gif_js', 'test_mc3_vehicle_state_js', 'test_mc3_vif_decoder', 'test_mc3_vehicle_pipeline', 'test_mc3_vehicle_sampler_js', 'test_mc3_vehicle_sprite_js', 'test_mc3_ee', 'test_mc3_ee_division_js', 'test_mc3_vehicle_transfer_reference_js', 'test_mc3_vehicle_nearest_js', 'test_mc3_vehicle_vram_js', 'test_mc3_vehicle_depth32_js', 'test_mc3_vehicle_vram_pipeline', 'test_mc3_vehicle_mip_js', 'test_mc3_vehicle_paint_factory_js', 'test_mc3_vehicle_mip_pipeline', 'test_mc3_vehicle_paint_factory_pipeline', 'test_mc3_vehicle_high_z_js', 'test_mc3_vehicle_variable_mip_js', 'test_mc3_vehicle_initialization_js', 'test_mc3_vehicle_target_js', 'test_mc3_vehicle_high_z_pipeline', 'test_mc3_vehicle_depth_trace_js', 'test_mc3_vehicle_variable_mip_pipeline', 'test_mc3_specular', 'test_mc3_environment', 'test_mc3_gs_raster', 'test_game_paint']]
     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
              'test_check_advice', 'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_callback_triage', 'test_gt_wheels', 'test_gt_metadata', 'test_gt_native_data', 'test_gt_model', 'test_import_gt_dealership',
@@ -100,6 +100,7 @@ def registry():
     checks.append({'name': 'mc3_raster_reference_native',
                    'command': ['python3', 'tools/verify_mc3_raster_reference.py'],
                    'availability': ['python3', 'tools/verify_mc3_raster_reference.py', '--available']})
+    checks.append({'name': 'gt4_refinement_corpus', 'command': ['node', 'tools/audit_gt4_refinement.mjs'], 'requires': 'node'})
     checks.append({'name': 'game_paints_freshness', 'command': ['python3', 'tools/build_game_paints.py', '--check']})
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     checks.append({'name':'gt_models', 'command':['python3', 'tools/export_gt_models.py', '--check']})

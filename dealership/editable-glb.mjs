@@ -4,6 +4,7 @@ import {createMaterial, applyMaterial, normaliseColourTint} from './materials.mj
 import {applyPaintMaterial} from './game-paint.mjs';
 import {requiresNativeTireNormal} from './mc3-tire-material.mjs';
 import {loadNativeVehicleResources,bindNativeVehicleResources} from './mc3-vehicle-resources.mjs';
+import {enhanceGT4GLB} from './gt4-refinement.mjs';
 
 // Decode only embedded, static triangle GLBs. Bounds and accessor extents are
 // checked before allocating meshes; texture failures dispose all prior resources.
@@ -140,11 +141,19 @@ async function loadTexture(bytes, signal) {
   } finally {URL.revokeObjectURL(url);}
 }
 
-export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureImpl=loadTexture}={}) {
-  const buffer=await fetchImpl('./'+car.model.source.glb,signal);
+export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureImpl=loadTexture,enhance=true}={}) {
+  let buffer=await fetchImpl('./'+car.model.source.glb,signal);
   const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer)),v=>v.toString(16).padStart(2,'0')).join('');
   if(hash!==car.model.source.sha256)throw Error('Editable model changed; rebuild the dealership data.');
-  const {doc,images,meshes,colourVariants}=parseEditableGLB(buffer), textures=[], group=new THREE.Group(), variantMeshes=[];
+  if(signal?.aborted)throw Error('Model selection cancelled.');
+  let parsed=parseEditableGLB(buffer),enhancement=null;
+  if(car.game==='gran-turismo-4'&&enhance) {
+    if(car.sourceCode&&car.sourceCode!==parsed.doc.extras?.car)throw Error('GT4 working model identity differs from its catalog.');
+    const result=enhanceGT4GLB(buffer,parsed,{sourceHash:hash});
+    buffer=result.buffer;enhancement=result.report;parsed=parseEditableGLB(buffer);
+  }
+  const {doc,images,meshes,colourVariants}=parsed, textures=[], group=new THREE.Group(), variantMeshes=[];
+  group.userData.gt4Enhancement=enhancement;
   if(doc.extras?.source_profile==='mc3-ps2-static-preview-v1'&&doc.extras.nativeVertexInputs==='mc3-vif-vertex-inputs-v1')bindNativeVehicleResources(group,await loadNativeVehicleResources(buffer));
   const ford=car.game==='ford-racing-2';
   group.userData.textures=textures;group.userData.wheels=[];group.userData.source=car.model.source;

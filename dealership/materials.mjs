@@ -32,6 +32,11 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
  material.depthWrite=!material.transparent;
  material.roughness=pbr.roughnessFactor??1;
  material.metalness=pbr.metallicFactor??1;
+ if(material.isMeshPhysicalMaterial) {
+  const coat=source.extensions?.KHR_materials_clearcoat;
+  material.clearcoat=coat?.clearcoatFactor??0;
+  material.clearcoatRoughness=coat?.clearcoatRoughnessFactor??0;
+ }
  material.side=source.doubleSided?THREE.DoubleSide:THREE.FrontSide;
  material.wireframe=options.wireframe===true;
  applyMC3TireMaterial(material,doc,source);
@@ -39,7 +44,7 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
 }
 
 export function createMaterial(doc, images, materialIndex) {
- const material=new THREE.MeshStandardMaterial();
+ const material=doc.extras?.gt4Enhancement?new THREE.MeshPhysicalMaterial():new THREE.MeshStandardMaterial();
  applyMaterial(material,doc,images,materialIndex);
  return material;
 }
