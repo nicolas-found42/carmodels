@@ -18,7 +18,7 @@ KEY = bytes(range(100, 132))
 PIN = hashlib.sha256(KEY).hexdigest()
 NAMES = (b'shared_utility blur.mesh resources vehicle vp_test_car_01 vp_test_car_01_dub body_lod_0 configs ambients resources/ui/textures/garage '
          b'sh_vp_test_car_01_dub other rims whl_stk_x city tune handling.xml names.xml common.xcc '
-         b'gh_01_vp_test_car_01_dub mr_vp_hidden_02 ped_fa_001_set amb')
+         b'gh_01_vp_test_car_01_dub mr_vp_hidden_02 ped_fa_001_set amb traffic mcambientcartypecolor.xml')
 
 
 def resource(kind, label):
@@ -60,7 +60,9 @@ def tree(extra_vehicle=None):
         'city': {'sc.xct': resource(50, b'city')}},
         'vehicle': {'shared_utility': {'blur.mesh': ('deflate', b'blur mesh')}},
         'preload': {'nested.rpf': ('deflate', rpf_fixture({'secretdir.xml': ('loose', b'secretdir unnamedpart')}))},
-        'tune': {'vehicle': {'handling.xml': ('loose', b'<handling/>')}, 'names.xml': ('deflate', NAMES)}}
+        'tune': {'vehicle': {'handling.xml': ('loose', b'<handling/>')}, 'names.xml': ('deflate', NAMES),
+                 'ambients': {'traffic': {'vp_test_car_01': {'mcambientcartypecolor.xml': ('deflate', b'<native palette/>')},
+                                           'secretdir': {'mcambientcartypecolor.xml': ('loose', b'<unresolved palette/>')}}}}}
 
 
 def fixture(path, extra_vehicle=None, archive_tree=None, with_xex=True):
@@ -137,6 +139,13 @@ class ExtractionTests(unittest.TestCase):
         iso = fixture(self.root / 'source.iso')
         original = iso.read_bytes()
         index, files = write_extraction(iso, self.root / 'cars')
+        self.assertIn('tune/ambients/traffic/<code-or-hash>/mcambientcartypecolor.xml',
+                      index['selection']['shared'])
+        palette_paths = {'shared/tune/ambients/traffic/vp_test_car_01/mcambientcartypecolor.xml',
+                         'shared/tune/ambients/traffic/0x%08x/mcambientcartypecolor.xml' % jenkins('secretdir')}
+        palette_rows = [row for row in files if row['file'] in palette_paths]
+        self.assertEqual({row['file'] for row in palette_rows}, palette_paths)
+        self.assertTrue(all(row['source']['role'] == 'shared-ambient-paint' for row in palette_rows))
         hidden = 'unresolved_%08x' % jenkins('secretdir')
         self.assertEqual([v['id'] for v in index['vehicles']],
                          sorted([hidden, 'vp_hidden_02', 'vp_test_car_01', 'vp_test_car_01_dub']))

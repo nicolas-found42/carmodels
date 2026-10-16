@@ -1,0 +1,253 @@
+{
+ "schema": 1,
+ "source": {
+  "disc_sha256": "de199f7e7f57b7cb603a129217f7482d50644fd66558450dfeb5612857b732f9",
+  "disc_bytes": 8539963392,
+  "archive": "ASSETS.DAT;1",
+  "member": "shaderlib/tire.shadert",
+  "ordinal": 6745,
+  "iso_stored_offset": 4238550016,
+  "stored_bytes": 523,
+  "stored_sha256": "3306d6c440fdb19723b482d8182be7be34d04419ef37a690ca8b7e8798030d80",
+  "unpacked_bytes": 1162,
+  "unpacked_sha256": "a5054894ed8236a356fade03730a82bde3bfc3b7fdc70e584105d4a177b0f2ad"
+ },
+ "template_policy": {
+  "platform": "PS2",
+  "alpha_test": "always",
+  "base_pass_blend": {
+   "A": "0",
+   "B": "0",
+   "C": "As",
+   "D": "Cs",
+   "FIX": 0
+  },
+  "base_pass_rgb_equation": "(0 - 0) * As + Cs = Cs",
+  "color_write": "rgba",
+  "base_color": [
+   127,
+   127,
+   127,
+   255
+  ],
+  "texture_combine": "modulate2x",
+  "microcode": "specular2_dc",
+  "active_pass_declarations": 1
+ },
+ "retained_state": {
+  "bytes_hex": "0101c30a000100090f0401c87f7f7f80ff",
+  "commands": [
+   {
+    "offset": 0,
+    "command": 1,
+    "width": 1,
+    "value": 1
+   },
+   {
+    "offset": 2,
+    "command": 3,
+    "width": 4,
+    "value": 65546
+   },
+   {
+    "offset": 7,
+    "command": 9,
+    "width": 1,
+    "value": 15
+   },
+   {
+    "offset": 9,
+    "command": 4,
+    "width": 1,
+    "value": 1
+   },
+   {
+    "offset": 11,
+    "command": 8,
+    "width": 4,
+    "value": 2155839359
+   }
+  ],
+  "writer_encoding": "byte command/value below 256, otherwise command|0xC0 and LE u32; FF terminator",
+  "command_semantics_proven_by_this_check": false
+ },
+ "native_static_proof": [
+  {
+   "name": "state-consumer",
+   "virtual_start": 2826128,
+   "virtual_end_exclusive": 2826600,
+   "bytes": 472,
+   "bytes_sha256": "59a7964c236becbe40805630aa706fb6eb37e943431e45be04eb05f4381e3c51",
+   "analysis_sha256": "691b8af1197b8b89e954fc86a50677a2e204b27c69217e9effb65580798f7a08",
+   "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+   "analysis": "ordinary Ghidra CLI, complete MIPS standard-subset function; static, not execution"
+  },
+  {
+   "name": "test-packing-scalar",
+   "virtual_start": 2806748,
+   "virtual_end_exclusive": 2806944,
+   "bytes": 196,
+   "bytes_sha256": "cb6555cbd711a35aaea5888d0ebdc1b79d855af7279095df0f898df55acde2bb",
+   "analysis_sha256": "2a96dda70e0f4f62cc32554b9de72714800659ae4f388ba5a0d525d2ea885c70",
+   "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+   "analysis": "ordinary Ghidra CLI, contiguous scalar interval only; enclosing function incomplete"
+  },
+  {
+   "name": "state-writer",
+   "virtual_start": 2819328,
+   "virtual_end_exclusive": 2819620,
+   "bytes": 292,
+   "bytes_sha256": "4351f36ae4fbd3860e75512549dcb72ee86dbcd801f4c024e314bc2050663ecd",
+   "analysis_sha256": "955dcc5db2d8706383bb67cd90fd920f0545c9e75474d266f1472b98292ebc17",
+   "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+   "analysis": "ordinary Ghidra CLI, complete MIPS standard-subset function; static, not execution"
+  },
+  {
+   "name": "renderer-preparation",
+   "virtual_start": 3926848,
+   "virtual_end_exclusive": 3928140,
+   "bytes": 1292,
+   "bytes_sha256": "44daf29f30c9da9c98487dcf54397ccab93825141e6f4dd6d8cdabe08febf564",
+   "analysis_sha256": "f9e5e9722702d7094285165b8ff3079191e3149ad6fe1af4a36d8bb86d5615f6",
+   "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+   "analysis": "ordinary Ghidra CLI, complete MIPS standard-subset function; static, not execution"
+  },
+  {
+   "name": "state-finalizer",
+   "virtual_start": 2819624,
+   "virtual_end_exclusive": 2819768,
+   "bytes": 144,
+   "bytes_sha256": "bb484affc744d1084c893436bd2e65f84f36bdc7255aef0c80bb6606f661976e",
+   "analysis_sha256": "6e3af01bf6a300c7c303c55cfeef0fee675807458ade8216a596db00272ce77d",
+   "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+   "analysis": "ordinary Ghidra CLI, complete MIPS standard-subset function; static, not execution"
+  }
+ ],
+ "native_renderer_passes": {
+  "register": 66,
+  "register_name": "ALPHA_1",
+  "scope": "Configured ALPHA registers; draw ABE and full texture-to-framebuffer alpha path are not established.",
+  "base_texture_index": 0,
+  "base": {
+   "register_value": 10,
+   "A": "0",
+   "B": "0",
+   "C": "As",
+   "D": "Cs",
+   "FIX": 0,
+   "rgb_equation_normalized_alpha": "(0 - 0) * As + Cs",
+   "integer_alpha_divisor": 128
+  },
+  "reflection_texture_index": 1,
+  "reflection": {
+   "register_value": 88,
+   "A": "Cs",
+   "B": "0",
+   "C": "Ad",
+   "D": "Cd",
+   "FIX": 0,
+   "rgb_equation_normalized_alpha": "(Cs - 0) * Ad + Cd",
+   "integer_alpha_divisor": 128
+  },
+  "selector_reference": {
+   "url": "https://raw.githubusercontent.com/PCSX2/pcsx2/master/pcsx2/GS/GSRegs.h",
+   "accessed": "2026-10-15",
+   "sections": [
+    "GS_REG_ALPHA_1",
+    "GS_ALPHA_BITS",
+    "REG64_(GIFReg, ALPHA)"
+   ],
+   "scope": "Register identity and bit selectors, not evidence that MC3 executed."
+  }
+ },
+ "claim_limits": [
+  "Static source directives establish the active PS2 template, not observed execution.",
+  "The base blend algebra is overwrite even though its C operand names source alpha.",
+  "The configured native second-pass ALPHA equation uses destination alpha; PRIM.ABE and the exact texture/VU-to-framebuffer alpha path remain unrecovered.",
+  "VU RGBAQ, TEX0 TCC/TFX, TEXA and reflection lighting are not fully decoded or emulated.",
+  "The state writer/finalizer encoding is static executable evidence; command-to-GS semantics are separate.",
+  "This receipt does not establish GLB transparency, lighting or full game-render equivalence."
+ ],
+ "negative_controls": [
+  {
+   "mutation": "alpha compare changed",
+   "rejected": true,
+   "reason": "changed alphafunc"
+  },
+  {
+   "mutation": "blend changed",
+   "rejected": true,
+   "reason": "changed ps2blend"
+  },
+  {
+   "mutation": "alpha write changed",
+   "rejected": true,
+   "reason": "changed colorwrite"
+  },
+  {
+   "mutation": "missing alpha",
+   "rejected": true,
+   "reason": "missing or duplicate alphafunc"
+  },
+  {
+   "mutation": "duplicate alpha",
+   "rejected": true,
+   "reason": "missing or duplicate alphafunc"
+  },
+  {
+   "mutation": "wrong branch",
+   "rejected": true,
+   "reason": "unsupported shader conditional: #if XBOX"
+  },
+  {
+   "mutation": "unknown alpha directive",
+   "rejected": true,
+   "reason": "unknown, reordered or changed active tire directive"
+  },
+  {
+   "mutation": "unknown state flags",
+   "rejected": true,
+   "reason": "unproven state width flags"
+  },
+  {
+   "mutation": "unknown state command",
+   "rejected": true,
+   "reason": "unknown state command"
+  },
+  {
+   "mutation": "truncated state argument",
+   "rejected": true,
+   "reason": "truncated state argument"
+  },
+  {
+   "mutation": "noncanonical wide state",
+   "rejected": true,
+   "reason": "noncanonical wide state argument"
+  },
+  {
+   "mutation": "duplicate state command",
+   "rejected": true,
+   "reason": "duplicate state command"
+  },
+  {
+   "mutation": "missing state terminator",
+   "rejected": true,
+   "reason": "missing state terminator"
+  },
+  {
+   "mutation": "trailing state bytes",
+   "rejected": true,
+   "reason": "trailing state bytes"
+  },
+  {
+   "mutation": "native renderer proof tamper",
+   "rejected": true,
+   "reason": "native encoding proof identity mismatch: renderer-preparation"
+  },
+  {
+   "mutation": "native encoding proof tamper",
+   "rejected": true,
+   "reason": "native encoding proof identity mismatch: state-writer"
+  }
+ ]
+}

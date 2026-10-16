@@ -13,6 +13,7 @@ import tempfile
 from bake_models import ROOT
 from extract_mc3_cars import check_extraction
 from mc3_archive import DaveArchive, byte_reader
+from static_inputs import mc3_disc
 
 GAME = 'midnight-club-3-remix'
 PROFILE = 'mc3-ps2-native-package-v1'
@@ -196,7 +197,7 @@ def import_packages(source=ROOT / 'dealership/public' / GAME, destination=ROOT /
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--iso', type=Path, default=ROOT / 'games' / GAME / 'game-files/Midnight Club 3 - DUB Edition Remix.iso')
+    parser.add_argument('--iso', type=Path, default=mc3_disc(required=False))
     parser.add_argument('--extraction', type=Path, default=ROOT / 'games' / GAME / 'cars')
     parser.add_argument('--source', type=Path, default=ROOT / 'dealership/public' / GAME)
     parser.add_argument('--destination', type=Path, default=ROOT / 'dealership/dealership')

@@ -14,7 +14,7 @@ MAX_BYTES = 64 * 1024 * 1024
 MAX_PARTS = 4096
 MAX_VERTICES = 1_000_000
 MODEL_VTABLES = {0x7A9420, 0x7AA728, 0x7A9620}
-MESH_VTABLES = {0x7A0F98, 0x7A22A0, 0x7A1198}
+MESH_VTABLES = {0x7A0F98, 0x7A22A0, 0x7A1198, 0x7A1E18}
 GROUP_VTABLES = {0x7A0EF0, 0x7A21F8, 0x7A10F0}
 MATERIAL_VTABLES = {0x7A1138, 0x7A2440, 0x7A1338}
 
@@ -249,7 +249,7 @@ def strip_indices(batch: dict) -> list[int]:
     return indices
 
 
-def read_mesh_object(pck: Pck, offset: int) -> dict:
+def read_mesh_object(pck: Pck, offset: int, *, batch_decoder=decode_batches) -> dict:
     if pck.u32(offset) not in MESH_VTABLES:
         raise ValueError("unknown serialized mesh profile")
     count = pck.u32(offset + 8)
@@ -267,11 +267,13 @@ def read_mesh_object(pck: Pck, offset: int) -> dict:
         if pck.decoded_vertices > MAX_VERTICES:
             raise ValueError("PCK decoded vertex budget exceeded")
         packet = pck.pointer(packet_pointer, qwc * 16)
-        batches = decode_batches(vif_planes(pck, packet, qwc * 16))
+        batches = batch_decoder(vif_planes(pck, packet, qwc * 16))
         if sum(len(b["positions"]) for b in batches) != vertices:
             raise ValueError("draw descriptor vertex count mismatch")
         draws.append({"material": pck.u16(materials + i * 2), "descriptor_offset": descriptor,
                       "packet_offset": packet, "packet_bytes": qwc * 16,
+                      "native_vif_packet": bytes(pck.data[packet:packet+qwc*16]),
+                      "native_vif_batch_offsets": [batch['packet_offset']-packet for batch in batches],
                       "vertex_count": vertices, "batches": batches})
     return {"offset": offset, "vtable": pck.u32(offset), "draws": draws,
             "source": pck.fingerprint()}

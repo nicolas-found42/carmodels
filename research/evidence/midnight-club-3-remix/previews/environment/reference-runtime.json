@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "source": {
+    "project": "PCSX2",
+    "version": "2.8.2",
+    "git_commit": "fd9d310ccbb6b8b62c976da8886a3c8fd3a10ff3",
+    "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+    "executable_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+    "source_url": "https://github.com/PCSX2/pcsx2/tree/v2.8.2"
+  },
+  "symbols": {
+    "ee_counter_delta": {
+      "symbol": "nextDeltaCounter",
+      "address": "0x10792e8",
+      "bytes": 4
+    },
+    "gif_transport": {
+      "symbol": "_ZN8Gif_Unit20TransferGSPacketDataE17GIF_TRANSFER_TYPEPhjb",
+      "address": "0x3885f0",
+      "bytes": 966,
+      "instruction_sha256": "74a15b0ef346a0de2eaa5b9a4e447157e2b67b7a50f192c65af3dc57635ef70d"
+    },
+    "ee_step": {
+      "symbol": "_ZL7intStepv",
+      "address": "0x52e230",
+      "bytes": 118,
+      "instruction_sha256": "aea2c5cf988a6e295984a41910b8a62289a1ec2834f79787cc5bf9cccd05e1bb"
+    },
+    "ee_event_callback": {
+      "symbol": "_Z12intEventTestv",
+      "address": "0x49b6f0",
+      "bytes": 50416,
+      "instruction_sha256": "484970a7d92302c23c04635469df7cd1683f975fbf15627c6ea21a9623affb33"
+    },
+    "iop_counter_delta": {
+      "symbol": "psxNextDeltaCounter",
+      "address": "0x107cd18",
+      "bytes": 4
+    },
+    "ee_hardware": {
+      "symbol": "eeHw",
+      "address": "0x188e000",
+      "bytes": 65536
+    },
+    "configuration": {
+      "symbol": "EmuConfig",
+      "address": "0x30a0668",
+      "bytes": 1704
+    },
+    "iop_provider": {
+      "symbol": "psxCpu",
+      "address": "0x30a10f0",
+      "bytes": 8
+    },
+    "ee_registers": {
+      "symbol": "_cpuRegistersPack",
+      "address": "0x30a1870",
+      "bytes": 1440
+    },
+    "read32": {
+      "symbol": "_Z12vtlb_memReadIjET_j",
+      "address": "0x5f7b40",
+      "bytes": 403,
+      "instruction_sha256": "b8f4004ab89d34b6ae55fabb5d108a067fa45133047d29abb9ff9b2efbe07d65"
+    },
+    "write32": {
+      "symbol": "_Z13vtlb_memWriteIjEvjT_",
+      "address": "0x5f81e0",
+      "bytes": 419,
+      "instruction_sha256": "f0943944a271f4680b56caa4d1d88d34391d816540c2438244bac2a1a506874f"
+    },
+    "read8": {
+      "symbol": "_Z12vtlb_memReadIhET_j",
+      "address": "0x5f7800",
+      "bytes": 403,
+      "instruction_sha256": "1b5013cfdd95472aaf2e71f7b09bd820865115a718916a890b6b3d4fbef93059"
+    },
+    "read16": {
+      "symbol": "_Z12vtlb_memReadItET_j",
+      "address": "0x5f79a0",
+      "bytes": 403,
+      "instruction_sha256": "97fa5b6f2e15b45e7ff283424572542c8e19e8dafd8370403aa3d3c6081f0bd4"
+    },
+    "read64": {
+      "symbol": "_Z12vtlb_memReadImET_j",
+      "address": "0x5f7ce0",
+      "bytes": 403,
+      "instruction_sha256": "02e49d2750e67700db2bc8c0406d30a00d77e6c368f517184768e4975bfa4e79"
+    },
+    "write8": {
+      "symbol": "_Z13vtlb_memWriteIhEvjT_",
+      "address": "0x5f7e80",
+      "bytes": 419,
+      "instruction_sha256": "0a79fcd28c13ff2aca63f88a6bead7709e280ae5b30f9c48fa3250ecbb3b424f"
+    },
+    "write16": {
+      "symbol": "_Z13vtlb_memWriteItEvjT_",
+      "address": "0x5f8030",
+      "bytes": 419,
+      "instruction_sha256": "e42edc57c19107eec3b907c3b7fe7c6971b6c441b8862e63dd049a449a258ee5"
+    },
+    "write64": {
+      "symbol": "_Z13vtlb_memWriteImEvjT_",
+      "address": "0x5f8390",
+      "bytes": 419,
+      "instruction_sha256": "148f0159c1746b458651ff964362a055bc056152d3f111dd67d3498f85801216"
+    },
+    "read128": {
+      "symbol": "_Z15vtlb_memRead128j",
+      "address": "0x5f74b0",
+      "bytes": 403,
+      "instruction_sha256": "95312f78f8da100ce5854c58847fdc6e7ba5fdaeea2f55d0d21a4d51e863fa7b"
+    },
+    "write128": {
+      "symbol": "_Z16vtlb_memWrite128jDv2_x",
+      "address": "0x5f7650",
+      "bytes": 419,
+      "instruction_sha256": "0812aec15312439ef80a97e1548b1f7256258c23161f152952aaadc223280125"
+    },
+    "provider_vu0": {
+      "symbol": "CpuVU0",
+      "address": "0x351c518",
+      "bytes": 8
+    },
+    "provider_vu1": {
+      "symbol": "CpuVU1",
+      "address": "0x351c520",
+      "bytes": 8
+    },
+    "interpreter_vu0": {
+      "symbol": "CpuIntVU0",
+      "address": "0x10681a0",
+      "bytes": 16
+    },
+    "vu_step": {
+      "symbol": "_Z7vu1ExecP6VURegs",
+      "address": "0x602820",
+      "bytes": 5380,
+      "instruction_sha256": "7353e7b3f004bd704bfc72cf74e7cd3b60b3e878d2b3d7c60817d19220d291df"
+    },
+    "interpreter_vu1": {
+      "symbol": "CpuIntVU1",
+      "address": "0x10681b0",
+      "bytes": 16
+    },
+    "vu_execute": {
+      "symbol": "_ZN9InterpVU17ExecuteEj",
+      "address": "0x603dc0",
+      "bytes": 196,
+      "instruction_sha256": "b15e666b8e0744401159923149d567cd25d61f0e8fa73268c26941a23d85e6ae"
+    },
+    "vu_registers": {
+      "symbol": "vuRegs",
+      "address": "0x351c530",
+      "bytes": 3360
+    },
+    "gif_packet_size": {
+      "symbol": "_ZN8Gif_Unit15GetGSPacketSizeE8GIF_PATHPhjjb",
+      "address": "0x605d30",
+      "bytes": 2087,
+      "instruction_sha256": "f61360504c392342f1d4af4b4614ce5f68078c6b0221d17e5e6ef90934e21079"
+    }
+  },
+  "layouts": {
+    "vu_registers_bytes": 1680,
+    "vu_mem_pointer_offset": 1208,
+    "vu_micro_pointer_offset": 1216,
+    "ee_register_pack_bytes": 1440,
+    "ee_fpr_offset": 1168,
+    "ee_pc_offset": 680,
+    "ee_fpcr_config_offset": 12,
+    "vu1_fpcr_config_offset": 24,
+    "interpreter_enable_vu1_bit_at_config8": 3,
+    "vif1_top_hardware_offset": 15584,
+    "vif1_itop_hardware_offset": 15568
+  },
+  "adaptations": {
+    "vu": "Original Execute, opcode, pipeline, XGKICK transfer scheduling and packet parser; final GIF transport only copied into length-prefixed capture. Host Mem/Micro pointers zeroed in serialized register output. Per-call JSON retains native caller/TOP/ITOP, cycle and transport chunk boundaries.",
+    "ee": "Original single-instruction interpreter, branch/delay and COP1/COP2 implementations; vtlb transport redirects to explicit32MiBRAM/16KiBscratchpad; direct async event callback inert, IOP executor inert, counter deadlinesINT_MAX; originalVU providers initialized.",
+    "gs": "Official software renderer13, zeroed version8 freeze with explicit VRAM uploads/context GIF events; unfiltered nativeRT RGB and separate nativealphaL decoded into rawRGBA; no network or host display. Readback waits for native third-frame VSync snapshot completion, including finished raw alpha output.",
+    "runtime": "Strict official AppImage and ELF SHA checks before any ABI offsets are used; isolated container scoped to source/input/output mounts."
+  },
+  "observed_controls": {
+    "copy_rgba_sha256": "ed4da06c0feb166ac9f0aca5d69ba5d317d7c7ea2607ea77bd481f32b5487249",
+    "constant_q_triangle_rgba_sha256": "24b10b8c49f435c6e26c37c696ca086bbf21d6e470fb7b649acbf3fac426df9a",
+    "q2_triangle_rgba_sha256": "24b10b8c49f435c6e26c37c696ca086bbf21d6e470fb7b649acbf3fac426df9a",
+    "perspective_triangle_rgba_sha256": "b96045a08e4b8817e22ae59b9cb4fa8b03d48ea26ae87491508c089e26b4e259",
+    "depth16s_clamp_red_pixels": 32521,
+    "runtime_fpcr_observed": "0xffc0",
+    "depth16s_rgba_sha256": "ef4e200ef7fa3e6d6f78b9b0a1721c310e55938f96b6729a053cb2c41e82918b",
+    "panorama512_upload_rgba_sha256": "261652685187f075c02785637392f1defe0d1ac38cbef3ac2c01ffc58dcebd5d"
+  },
+  "build": [
+    "docker build --platform linux/amd64 -t carmodels-mc3-gs-reference:2.8.2 tools/headless-runtime",
+    "docker build --platform linux/amd64 -t carmodels-mc3-vu-reference:2.8.2 -f tools/reference-runtime/Dockerfile ."
+  ],
+  "claim_limits": [
+    "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+    "Explicit source-derived context inputs; no original running-game frame is asserted.",
+    "EE jobs isolate pure helpers with inert IOP and future timer events.",
+    "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+    "Selected AVX2/FMA profile; other SIMD paths are not certified."
+  ],
+  "adapter_source_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+  "runtime_profile": {
+    "required_cpu_features": [
+      "avx2",
+      "fma"
+    ],
+    "gs_renderer": 13,
+    "gs_extra_threads": 0
+  }
+}

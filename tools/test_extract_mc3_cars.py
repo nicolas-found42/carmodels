@@ -17,7 +17,11 @@ def fixture(path):
     outer = archive_fixture([('vp_test_04.dat', nested), ('tune/vehicle/vp_test_04.carcfg', b'Car physics'),
                              ('resources/vehicle/shared_tex.ppf', b'Packed texture fixture'),
                              ('resources/vehicle/shared_tex.ppf', b'Another shared occurrence'),
-                             ('city/track.pck', b'Do not select city')], packed=True)
+                             ('city/track.pck', b'Do not select city'),
+                             ('texture/car_window_blank_dmg.tex', b'Original damaged glass'),
+                             ('texture/car_window_blank_dmg.tex', b'Original damaged glass'),
+                             ('texture/car_window_blank_dmg_proxy.tex', b'Original glass proxy'),
+                             ('texture/unrelated.tex', b'Not a declared dependency')], packed=True)
     other = archive_fixture([('city/tex.ppf', b'city')])
     path.write_bytes(iso_fixture([('ASSETS.DAT;1', outer), ('TEXTURE.DAT;1', other),
                                  ('SYSTEM.CNF;1', b'BOOT2 = fixture;1\r\n')]))
@@ -34,6 +38,9 @@ class ExtractionTests(unittest.TestCase):
             self.assertTrue(any(r['file'].endswith('00002/vehicle/vp_test_04/car.tex') for r in files))
             self.assertEqual(len([r for r in files if r['file'].endswith('shared_tex.ppf')]), 2)
             self.assertFalse(any(r['file'].endswith('track.pck') for r in files))
+            self.assertEqual(len([r for r in files if r['file'].endswith('/car_window_blank_dmg.tex')]), 2)
+            self.assertEqual(len([r for r in files if r['file'].endswith('/car_window_blank_dmg_proxy.tex')]), 1)
+            self.assertFalse(any(r['file'].endswith('/unrelated.tex') for r in files))
             repeated, checked = check_extraction(iso, root / 'cars')
             self.assertEqual(index, repeated); self.assertEqual(files, checked)
             self.assertEqual(iso.read_bytes(), original)

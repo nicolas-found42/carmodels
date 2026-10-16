@@ -1,10 +1,13 @@
 """GT4 GLB assembly: structure, handedness, wheel layout and display-baker compatibility."""
 from pathlib import Path
+import struct
 import unittest
 
 from bake_models import bake_car, read_glb
-from gt4_glb import LIMITS, PROFILE, build_car, wheel_layout
+from gt4_glb import LIMITS, PAINT_LIMITS, PROFILE, build_car, wheel_layout
+from gt4_model import ModelSet, car4_slots, factory_models
 from gt4_specdb import car_specs
+from model_png import decode_png
 
 ROOT = Path(__file__).resolve().parents[1]
 CARS = ROOT / 'games/gran-turismo-4/cars'
@@ -29,6 +32,65 @@ class GlbTests(unittest.TestCase):
         self.assertGreater(body['omitted_overlay_shapes'], 0)
         self.assertEqual(body['triangles'], 3857)
         self.assertEqual(len(self.doc['images']), self.record['textures'])
+
+    def test_native_factory_paints_are_switchable(self):
+        # This count comes from the native Pat0 header, independently of the exporter.
+        patch = car4_slots(self.data)['body_patch']
+        paints, _ = struct.unpack_from('<HH', self.data, patch + 0x10)
+        self.assertEqual(paints, 5)
+        variants = self.doc.get('extensions', {}).get('KHR_materials_variants', {}).get('variants', [])
+        self.assertEqual(len(variants), paints, 'native Pat0 factory paints are missing from the GLB')
+        mapped = {variant for mesh in self.doc['meshes'] for primitive in mesh['primitives']
+                  for mapping in primitive.get('extensions', {}).get('KHR_materials_variants', {}).get('mappings', [])
+                  for variant in mapping['variants']}
+        self.assertEqual(mapped, set(range(paints)))
+        self.assertEqual([variant['name'] for variant in variants],
+                         ['Sundance Gold', 'San Marino Red', 'Nighthawk Black Pearl',
+                          'Satin Silver Metallic', 'Taffeta White'])
+        self.assertEqual([variant['extras']['gt4_factory_colour']['index'] for variant in variants],
+                         list(range(paints)))
+
+    def test_unresolved_cross_car_palette_and_channels_stay_unavailable(self):
+        self.assertEqual(self.doc['extras']['gamePaint'],
+                         {'schema': 1, 'channels': [], 'colors': [], 'limits': PAINT_LIMITS})
+        # Exact native evidence: Gold and Red use the same diffuse factor but different
+        # texture palettes. Treating that factor as the colour would publish false swatches.
+        paints = factory_models(self.data, car4_slots(self.data), 'body')
+        self.assertEqual(paints[0].materials()[3]['diffuse'], (0.5, 0.5, 0.5, 1.0))
+        self.assertEqual(paints[1].materials()[3]['diffuse'], (0.5, 0.5, 0.5, 1.0))
+        gold = paints[0].texture_set(0, 0).image(23, 0)
+        red = paints[1].texture_set(0, 0).image(23, 1)
+        self.assertNotEqual(gold['rgba'], red['rgba'])
+
+    def test_variant_pixels_equal_independently_applied_native_patches(self):
+        slots = car4_slots(self.data)
+        patch, body = slots['body_patch'], slots['body']
+        paints, count = struct.unpack_from('<HH', self.data, patch + 0x10)
+        primitive = next(p for mesh in self.doc['meshes'] for p in mesh['primitives']
+                         if self.doc['materials'][p['material']]['name'].startswith('body/set0/tex23/'))
+        actual_pixels = []
+        for colour in range(paints):
+            # Decode Pat0 directly, without calling the production ColourPatch/factory_models helper.
+            native = bytearray(self.data)
+            for i in range(count):
+                offset = struct.unpack_from('<I', self.data, patch + 0x20 + 4 * (colour * count + i))[0]
+                target, length = struct.unpack_from('<II', self.data, patch + offset)
+                native[body + target:body + target + length] = self.data[patch + offset + 8:patch + offset + 8 + length]
+            expected = ModelSet(bytes(native), body).texture_set(0, 0).image(23)
+            mappings = primitive['extensions']['KHR_materials_variants']['mappings']
+            material = self.doc['materials'][next(m['material'] for m in mappings if colour in m['variants'])]
+            texture = self.doc['textures'][material['pbrMetallicRoughness']['baseColorTexture']['index']]
+            image = self.doc['images'][texture['source']]
+            view = self.doc['bufferViews'][image['bufferView']]
+            decoded = decode_png(self.binary[view['byteOffset']:view['byteOffset'] + view['byteLength']])
+            self.assertEqual(decoded, (expected['width'], expected['height'], expected['rgba']))
+            actual_pixels.append(decoded[2])
+        self.assertEqual(len(set(actual_pixels)), paints)
+
+    def test_inconsistent_factory_colour_metadata_fails(self):
+        spec = {**self.specs['acra0001'], 'factory_colours': self.specs['acra0001']['factory_colours'][:-1]}
+        with self.assertRaisesRegex(ValueError, 'SpecDB and Pat0 factory colour counts differ'):
+            build_car(self.data, 'acra0001', spec, {})
 
     def test_wheels_face_minus_z_and_mirror_into_gltf_frame(self):
         layout = {w['name']: w for w in wheel_layout(self.specs['acra0001'])}

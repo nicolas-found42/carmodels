@@ -5,26 +5,32 @@ import math
 from pathlib import Path
 import re
 import struct
+import static_inputs
 
 from mc3_pck import Pck, read_vehicle, read_mesh, read_resource_group, strip_indices
 from mc3_materials import read_material_table, CLAIM_LIMITS
+from mc3_vehicle_material import native_material
+from mc3_vehicle_inputs import native_input_table
+from mc3_paint import add_paint_variants, read_native_appearance
+from mc3_tire_alpha import tire_alpha_translation
 from mc3_textures import (bind_material_textures, encode_png, read_slot_textures,
-                          read_tex, shared_texture_rows, texture_policy)
+                          read_tex, shared_texture_rows, texture_policy, TIRE_ALPHA_NOTE,
+                          native_graph_bindings, native_shared_levels)
 from mc3_wheels import read_default_wheels, read_vehicle_class, read_wheel_sizing
 from mc3_archive import CookedDisc
-from import_mc3_catalogs import ROOT, regular
+from import_mc3_catalogs import regular
 
 PROFILE = 'mc3-ps2-static-preview-v1'
-NATIVE_DISC = ROOT/'games/midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso'
+NATIVE_DISC = static_inputs.mc3_disc(required=False)
 LIMITS = [
     'Static inspection preview of native PS2 geometry; animation and damage are not emulated.',
     'Triangle strips use the native normal-X ADC restart bit; runtime clipping and winding are not emulated.',
     'Default stock-named parts use native skeleton rest positions; runtime customization is not emulated.',
     'Native local XYZ Euler frames compose with parent rest transforms; runtime joint animation is not emulated.',
     'Native rims and tires use default source handles and static rest sizing; wheel rotation, camber and deformation are not emulated.',
-    'Normals are derived from preview faces; native normal scales are not a rendering fidelity claim.',
-    'Ground shadow quads (every draw uses the drop_shadow shader template) are omitted as effect planes, '
-    'never as geometry guesses; each omission is listed in the conversion index.',
+    'Display NORMAL is face-derived; original VIF normal, color and UV lanes are retained separately without asserting native shading.',
+    'Authored drop_shadow effect meshes are retained as dormant nativeEffects nodes outside the default scene; '
+    'runtime projection and activation are pending recovery.',
     'Textures: PCK-embedded 256x256 PSMT8 images and shared 8-bit .tex files are decoded; native shader passes, '
     'environment/specular/metal-flake layers, paint colour and runtime logo/decal textures are not emulated.',
     *CLAIM_LIMITS,
@@ -228,7 +234,8 @@ def attach_wheels(folder, index, code, vehicle, executable, materials, sources, 
             if textures is not None and not model.get('textures_bound'):
                 label = Path(model['lods']['high'][0]['source']['file']).relative_to(folder).as_posix()
                 bind_textures(None, model['materials'], textures, shared_rows or {}, folder,
-                              f"{label}#page{component['page']}", model['texture_slots'], model['texture_records'])
+                              f"{label}#page{component['page']}", model['texture_slots'], model['texture_records'],
+                              model.get('native_undecoded_slots'), model.get('native_recovered_slots'))
                 model['textures_bound'] = True
             base = len(materials)
             materials.extend(component['model']['materials'])
@@ -281,7 +288,7 @@ def face_normals(points, indices):
 PROFILE_DELTAS = {'original': 0, 'mercedes': 0x200, 'remix': 0x1308}
 
 
-def bind_textures(data, materials, textures, shared_rows, folder, label, slots=None, records=None):
+def bind_textures(data, materials, textures, shared_rows, folder, label, slots=None, records=None, undecoded=None, native_slots=None):
     """Attach decoded textures and display policy to materials read from ``data``.
 
     ``textures`` collects each accepted image once under a stable key; materials
@@ -292,6 +299,9 @@ def bind_textures(data, materials, textures, shared_rows, folder, label, slots=N
     if not materials:
         return
     delta = PROFILE_DELTAS[materials[0]['profile']]
+    if data is not None:
+        for material in materials:
+            material['native_material'] = native_material(data, material, delta)
     if slots is None:
         slots = read_slot_textures(data, delta)
     if records is None:
@@ -300,11 +310,13 @@ def bind_textures(data, materials, textures, shared_rows, folder, label, slots=N
                                          lambda pointer: pointer - base + 128)
     loaded = {}
 
-    def load(ref):
+    native_images = {**slots, **(native_slots or {})}
+
+    def load(ref, *, native=False):
         if ref['source'] == 'embedded':
             key = f"{label}:{ref['name']}"
             if key not in loaded:
-                image = slots[ref['name']]
+                image = (native_images if native else slots)[ref['name']]
                 loaded[key] = {**image, 'file': label, 'sha256': sha(image['rgba'])}
         else:
             key = f"shared:{ref['name']}"
@@ -314,11 +326,57 @@ def bind_textures(data, materials, textures, shared_rows, folder, label, slots=N
                 raw = source_path(folder, row['file']).read_bytes()
                 if len(raw) != row['bytes'] or sha(raw) != row['sha256']:
                     raise ValueError('shared texture differs from extraction index')
-                loaded[key] = {**read_tex(raw), 'name': ref['name'], 'file': row['file'],
+                native_image = native_shared_levels(raw)
+                if native_image['decode_status'] == 'decoded':
+                    from mc3_texture_binding import native_shared_texture_state
+                    native_image['constructor_state'] = native_shared_texture_state(raw)
+                if native_image.get('index_bits') == 4:
+                    first = native_image['levels'][0]
+                    inspection = {'width': first['width'], 'height': first['height'],
+                        'levels': len(native_image['levels']), 'rgba': first['rgba'], 'source': 'shared-tex-native-4bit'}
+                else:
+                    inspection = read_tex(raw)
+                loaded[key] = {**inspection, 'name': ref['name'], 'file': row['file'],
+                               'native': native_image,
                                'sha256': row['sha256'], 'occurrences': sorted(r['file'] for r in rows)}
         return key, loaded[key]
 
     for material, record in zip(materials, records):
+        if 'native_material' in material:
+            bindings = native_graph_bindings(material['native_material'], native_images, shared_rows, undecoded)
+            for binding in bindings:
+                if binding['status'] == 'resolved':
+                    native_key, native_image = load(binding, native=True)
+                    textures.setdefault(native_key, native_image)
+                    binding['texture_key'] = native_key
+                elif binding['status'] == 'retained-undecoded':
+                    native_key = f"{label}:{binding['name']}"
+                    image = undecoded[binding['name']]
+                    textures.setdefault(native_key, {**image, 'file': label,
+                        'sha256': sha(image['native'].get('source_block', image['native'].get('source_page')))})
+                    binding['texture_key'] = native_key
+                elif (binding['status'] == 'unresolved' and data is not None
+                      and binding['reference']['kind'] in ('slot', 'inline-slot')):
+                    # Unknown image layouts still keep their complete original
+                    # PCK. Its pointer graph can be decoded later without using
+                    # the lossy preview PNG as a replacement source.
+                    slot_offset = binding['reference']['slot_offset']
+                    native_key = f"{label}:native-slot-{slot_offset}"
+                    native_input = {'decode_status': 'unresolved-native-format',
+                                    'slot_offset': slot_offset, 'source_carrier': data}
+                    if binding['reference']['name'] == 'window':
+                        from mc3_vehicle_texture import native_pck4_window
+                        native_input = native_pck4_window(data, slot_offset, delta)
+                    textures.setdefault(native_key, {'name': binding['reference']['name'],
+                        'width': 8 if native_input['decode_status'] == 'decoded' else None,
+                        'height': 8 if native_input['decode_status'] == 'decoded' else None,
+                        'levels': 1 if native_input['decode_status'] == 'decoded' else None, 'file': label,
+                        'source': 'pck-native-psmt4' if native_input['decode_status'] == 'decoded' else 'pck-undecoded',
+                        'sha256': sha(data), 'native': native_input})
+                    binding.update(status='resolved' if native_input['decode_status'] == 'decoded' else 'retained-undecoded',
+                                   texture_key=native_key)
+                    binding.pop('reason', None)
+            material['native_texture_bindings'] = bindings
         material['shader_template'] = record['shader_template']
         material['runtime_bound_textures'] = record['runtime_bound']
         if record['composite']:
@@ -344,7 +402,7 @@ def bind_textures(data, materials, textures, shared_rows, folder, label, slots=N
             material['texture_unused'] = resolved[0]['name']
 
 
-def build_glb(code, parts, materials, sources, textures=None):
+def build_glb(code, parts, materials, sources, textures=None, appearance=None, skeleton=None):
     blob = bytearray()
     doc = {'asset': {'version': '2.0', 'generator': PROFILE}, 'scene': 0,
            'scenes': [{'nodes': []}], 'nodes': [], 'meshes': [], 'materials': [],
@@ -361,7 +419,7 @@ def build_glb(code, parts, materials, sources, textures=None):
         view = len(doc['bufferViews'])
         doc['bufferViews'].append({'buffer': 0, 'byteOffset': start, 'byteLength': len(blob)-start})
         item = {'bufferView': view, 'componentType': 5125 if integer else 5126,
-                'count': len(rows), 'type': 'SCALAR' if integer else {2: 'VEC2', 3: 'VEC3'}[width]}
+                'count': len(rows), 'type': 'SCALAR' if integer else {2: 'VEC2', 3: 'VEC3', 4: 'VEC4'}[width]}
         if not integer:
             item.update(min=[min(p[k] for p in rows) for k in range(width)],
                         max=[max(p[k] for p in rows) for k in range(width)])
@@ -370,7 +428,20 @@ def build_glb(code, parts, materials, sources, textures=None):
 
     textures = textures or {}
     image_index = {}
-    for m in materials:
+    input_tables = {}
+    wheel_materials = {draw['material'] for part in parts
+                       if part.get('provenance', {}).get('nativeWheelComponent') in {'rim', 'tire'}
+                       for draw in part['mesh']['draws']}
+    for material_index, m in enumerate(materials):
+        extras = m
+        if 'native_input_table' in m:
+            table = m['native_input_table']
+            input_key = f"{table['source_carrier_sha256']}:{table['collection_offset']}"
+            if input_key in input_tables and input_tables[input_key] != table:
+                raise ValueError('native material input table identity conflicts')
+            input_tables[input_key] = table
+            extras = {key: value for key, value in m.items() if key != 'native_input_table'}
+            extras['native_input_key'] = input_key
         pbr = {'baseColorFactor': m['base_color'], 'metallicFactor': m.get('metallic', 0),
                'roughnessFactor': m.get('roughness', .6)}
         key = m.get('texture_key')
@@ -391,49 +462,157 @@ def build_glb(code, parts, materials, sources, textures=None):
                 doc.setdefault('textures', []).append({'source': len(doc['images'])-1, 'sampler': 0})
                 image_index[key] = len(doc['textures'])-1
             pbr['baseColorTexture'] = {'index': image_index[key]}
-        entry = {'name': m.get('shader_template') or m['shader_category'], 'doubleSided': True,
-                 'alphaMode': m['alpha_mode'], 'pbrMetallicRoughness': pbr, 'extras': m}
+        # The wheel caller selects cull state 2; the tire, rim and builtin VU
+        # programs suppress backfaces with a signed-area/ADC test. Both caps
+        # remain in their native planes, with no depth-offset geometry repair.
+        entry = {'name': m.get('shader_template') or m['shader_category'],
+                 'doubleSided': material_index not in wheel_materials and m.get('shader_template') != 'tire',
+                 'alphaMode': m['alpha_mode'], 'pbrMetallicRoughness': pbr, 'extras': extras}
         if m['alpha_mode'] == 'MASK':
             entry['alphaCutoff'] = 0.5
         doc['materials'].append(entry)
+    if input_tables:
+        doc['extras']['nativeMaterialInputs'] = input_tables
+    native_views = {}
+
+    def retain_native(value):
+        if isinstance(value, bytes):
+            digest = sha(value)
+            if digest in native_views:
+                return native_views[digest]
+            while len(blob) % 4:
+                blob.append(0)
+            start = len(blob)
+            blob.extend(value)
+            view = len(doc['bufferViews'])
+            doc['bufferViews'].append({'buffer': 0, 'byteOffset': start, 'byteLength': len(value)})
+            result = {'bufferView': view, 'bytes': len(value), 'sha256': digest}
+            native_views[digest] = result
+            return result
+        if isinstance(value, list):
+            return [retain_native(item) for item in value]
+        if isinstance(value, dict):
+            return {key: retain_native(item) for key, item in value.items()}
+        if type(value) is int and abs(value) > 9007199254740991:
+            raise ValueError('native texture integer is not lossless in JSON; retain register words or hex')
+        return value
+
     doc['extras']['nativeTextures'] = [
         {'key': k, 'name': t['name'], 'width': t['width'], 'height': t['height'], 'source': t['source'],
-         'file': t['file'], 'sha256': t['sha256'], 'levels': t['levels']} for k, t in sorted(textures.items())]
+         'file': t['file'], 'sha256': t['sha256'], 'levels': t['levels'],
+         **({'native': retain_native(t['native'])} if 'native' in t else {})} for k, t in sorted(textures.items())]
     records = []
     for part in parts:
         mesh = part['mesh']
         primitives, triangles = [], 0
         for draw in mesh['draws']:
-            positions, indices, packet_offsets, texcoords = [], [], [], []
+            positions, indices, packet_offsets, texcoords, native_normals = [], [], [], [], []
+            native_colors, native_uvs, native_positions, native_batches = [], [], [], []
+            present = {key: [] for key in ('normals', 'uvs', 'uv_integers', 'color_integers', 'position_integers')}
+            native_uv_width = None
             if not 0 <= draw['material'] < len(materials):
                 raise ValueError('draw material outside preview table')
             textured = materials[draw['material']].get('texture_key') is not None
+            native_tire = materials[draw['material']].get('shader_template') == 'tire'
             for batch in draw['batches']:
                 points = batch['positions']
                 if any(len(p) != 3 or any(not math.isfinite(x) for x in p) for p in points):
                     raise ValueError('invalid preview position')
                 local = strip_indices(batch) if 'adc' in batch else strip_triangles(points)
                 indices.extend(i+len(positions) for i in local)
+                native_batches.append({'vertex_start': len(positions), 'vertex_count': len(points),
+                    'packet_offset': batch['packet_offset'],
+                    **({'header_words': batch['header_words']} if 'header_words' in batch else {}),
+                    **({'position_scale': batch['scale']} if 'scale' in batch else {})})
+                if 'position_integers' in batch:
+                    header = batch.get('header_words', [])
+                    if (not header or type(header[0]) is not int or not 0 <= header[0] <= 0xffffffff
+                            or struct.unpack('<f', struct.pack('<I', header[0]))[0] != batch.get('scale')):
+                        raise ValueError('native position scale word differs from source batch')
+                    native_batches[-1]['position_scale_word'] = header[0]
+                if part.get('native_effect') is not None:
+                    raw_positions = batch.get('position_integers')
+                    if (not raw_positions or len(raw_positions) != len(points) or any(len(row) != 3
+                            or any(type(x) is not int or abs(x) > 16777216 for x in row) for row in raw_positions)):
+                        raise ValueError('native effect lacks original integer position lanes')
+                    native_batches[-1]['position_integers'] = raw_positions
                 positions.extend(points)
-                if textured:
+                for key in present:
+                    present[key].append(key in batch)
+                if native_tire or 'normals' in batch:
+                    normals = batch.get('normals', [])
+                    if len(normals) != len(points) or any(
+                            len(normal) != 3 or not all(math.isfinite(x) for x in normal)
+                            for normal in normals):
+                        raise ValueError('native mesh lacks one finite normal per vertex')
+                    # Retain signed VIF8 / 128 exactly, including the ADC bit in
+                    # normal X. This is independent of normalized display normals.
+                    native_normals.extend(normals)
+                if textured or 'uvs' in batch:
                     if len(batch['uvs']) != len(points) or any(len(uv) != 2 or not all(math.isfinite(x) for x in uv) for uv in batch['uvs']):
                         raise ValueError('textured draw lacks one finite UV per vertex')
                     texcoords.extend(batch['uvs'])
+                for key, target, widths in [('color_integers', native_colors, {4}),
+                                             ('uv_integers', native_uvs, {2, 4}),
+                                             ('position_integers', native_positions, {3})]:
+                    if key not in batch:
+                        continue
+                    rows = batch[key]
+                    width = len(rows[0]) if rows else 0
+                    if (len(rows) != len(points) or width not in widths
+                            or any(len(row) != width or any(type(x) is not int or not -0x80000000 <= x <= 0x7fffffff
+                                or struct.unpack('<f', struct.pack('<f', x))[0] != x for x in row) for row in rows)):
+                        raise ValueError('native integer attribute cannot be retained exactly: ' + key)
+                    if key == 'uv_integers':
+                        if native_uv_width is not None and native_uv_width != width:
+                            raise ValueError('native UV width differs between draw batches')
+                        native_uv_width = width
+                    target.extend(rows)
                 packet_offsets.append(batch['packet_offset'])
+            if any(any(flags) and not all(flags) for flags in present.values()):
+                raise ValueError('native attribute coverage differs between draw batches')
             if not indices:
                 continue
             triangles += len(indices)//3
             attributes = {'POSITION': accessor(positions, 3),
                           'NORMAL': accessor(face_normals(positions, indices), 3)}
-            if textured:
+            if native_normals:
+                attributes['_MC3_NATIVE_NORMAL'] = accessor(native_normals, 3)
+            if native_positions:
+                # Source mesh-local VIF integers are independent of editable
+                # display POSITION and the node's authored attachment frame.
+                attributes['_MC3_NATIVE_POSITION'] = accessor(native_positions, 3)
+            if texcoords:
                 attributes['TEXCOORD_0'] = accessor(texcoords, 2)
+            if native_colors:
+                # Color W is an original VIF flag lane, not assumed opacity.
+                attributes['_MC3_NATIVE_COLOR'] = accessor(native_colors, 4)
+            if native_uvs:
+                attributes['_MC3_NATIVE_UV'] = accessor(native_uvs, native_uv_width)
             primitives.append({'mode': 4, 'material': draw['material'],
                 'attributes': attributes,
                 'indices': accessor(indices, 1, True), 'extras': {'packet_offsets': packet_offsets,
-                    'native_material_index': draw.get('native_material_index', draw['material'])}})
+                    'native_material_index': draw.get('native_material_index', draw['material']),
+                    'native_batches': native_batches}})
+            if 'native_vif_packet' in draw:
+                packet = draw['native_vif_packet']
+                offset = draw.get('ppf_packet_offset', draw['packet_offset'])
+                batch_offsets = draw.get('native_vif_batch_offsets',
+                    [batch['packet_offset']-draw['packet_offset'] for batch in draw['batches']])
+                carrier = mesh.get('source', {}).get('sha256')
+                if (not isinstance(packet, bytes) or not packet or len(packet) != draw['packet_bytes'] or len(packet) % 16
+                        or type(offset) is not int or offset < 0 or not isinstance(carrier, str) or len(carrier) != 64
+                        or len(batch_offsets) != len(draw['batches'])
+                        or any(type(value) is not int or value < 0 or value >= len(packet) for value in batch_offsets)):
+                    raise ValueError('invalid native VIF packet source binding')
+                primitives[-1]['extras']['native_vif'] = {
+                    'source_carrier_sha256': carrier, 'source_packet_offset': offset,
+                    'batch_offsets': batch_offsets, 'packet': retain_native(packet)}
         if not primitives:
             continue
-        doc['scenes'][0]['nodes'].append(len(doc['nodes']))
+        node_index = len(doc['nodes'])
+        if part.get('native_effect') is None:
+            doc['scenes'][0]['nodes'].append(node_index)
         doc['nodes'].append({'name': part['name'], 'mesh': len(doc['meshes']),
                              'translation': part.get('translation', [0., 0., 0.]),
                              'rotation': part.get('rotation', [0., 0., 0., 1.]),
@@ -441,15 +620,39 @@ def build_glb(code, parts, materials, sources, textures=None):
                              'extras': {'nativeBone': part['bone'], 'sourceNames': [part['name']],
                                         **part.get('provenance', {})}})
         doc['meshes'].append({'name': part['name'], 'primitives': primitives})
-        records.append({'role': part['name'], 'bone': part['bone'], 'triangles': triangles,
+        record = {'role': part['name'], 'bone': part['bone'], 'triangles': triangles,
                         'rest_position': part.get('translation', [0., 0., 0.]),
                         'rotation_raw': part.get('rotation_raw', [0., 0., 0.]),
                         'scale': part.get('scale', [1., 1., 1.]),
                         'native_sha256': mesh['source']['sha256'],
-                        **part.get('provenance', {})})
+                        **part.get('provenance', {})}
+        if part.get('native_effect') is not None:
+            doc['extras'].setdefault('nativeEffects', []).append({**part['native_effect'],
+                'node': node_index, 'mesh': len(doc['meshes'])-1, 'runtimePending': True, 'record': record})
+        else:
+            records.append(record)
     if not records:
         raise ValueError('no drawable native preview geometry')
     doc['extras']['records'] = records
+    if skeleton is not None:
+        # The authored joint graph is retained independently of the flattened
+        # display nodes. This does not invent skin weights or animation tracks.
+        doc['extras']['nativeSkeleton'] = skeleton
+    if all(all(key in primitive['attributes'] for key in
+               ('_MC3_NATIVE_NORMAL', '_MC3_NATIVE_COLOR', '_MC3_NATIVE_UV'))
+           and all('header_words' in batch and 'position_scale' in batch
+                   for batch in primitive['extras']['native_batches'])
+           for mesh in doc['meshes'] for primitive in mesh['primitives']):
+        doc['extras']['nativeVertexInputs'] = 'mc3-vif-vertex-inputs-v1'
+    if doc['extras'].get('nativeVertexInputs') == 'mc3-vif-vertex-inputs-v1' and all('_MC3_NATIVE_POSITION' in primitive['attributes']
+           and all('position_scale_word' in batch for batch in primitive['extras']['native_batches'])
+           for mesh in doc['meshes'] for primitive in mesh['primitives']):
+        doc['extras']['nativePositionInputs'] = 'mc3-vif-integer-position-v1'
+    if all('native_vif' in primitive['extras'] for mesh in doc['meshes'] for primitive in mesh['primitives']):
+        doc['extras']['nativeVifPackets'] = 'mc3-original-vif-packets-v1'
+    if appearance is not None:
+        add_paint_variants(doc, appearance)
+    doc['extras']['tireAlphaTranslation'] = tire_alpha_translation()
     doc['buffers'] = [{'byteLength': len(blob)}]
     payload = json.dumps(doc, separators=(',', ':'), allow_nan=False).encode()
     payload += b' ' * (-len(payload) % 4)
@@ -482,21 +685,27 @@ def preview_vehicle(folder, manifest, extraction_index=None, executable=None):
     vehicle = read_vehicle(main[0])
     main_data = main[0].read_bytes()
     materials = read_material_table(main_data, vehicle['material_collection_offset'])
+    inputs = native_input_table(main_data, vehicle['material_collection_offset'])
+    for material in materials:
+        material['native_input_table'] = inputs
     textures, shared_rows = {}, shared_texture_rows(extraction_index)
     bind_textures(main_data, materials, textures, shared_rows, folder, main[0].relative_to(folder).as_posix())
     shadow_materials = {m['index'] for m in materials if m.get('shader_template') == 'drop_shadow'}
-    effect_planes = []
+    effect_planes, dormant_parts = [], []
     parts = []
     for part in vehicle['lods']['high']:
         if part['mesh'] is None:
             continue
         if all(draw['material'] in shadow_materials for draw in part['mesh']['draws']):
-            # Ground blob-shadow quad: every draw uses the drop_shadow shader template.
+            # Keep the exact authored effect, but no static visibility is
+            # inferred before its original runtime projection is recovered.
             effect_planes.append({'part': part['name'], 'bone': part['bone'],
                                   'materials': sorted({draw['material'] for draw in part['mesh']['draws']}),
-                                  'triangles_omitted': sum(len(strip_indices(b)) // 3 for d in part['mesh']['draws']
+                                  'triangles_retained': sum(len(strip_indices(b)) // 3 for d in part['mesh']['draws']
                                                            for b in d['batches']),
-                                  'reason': 'drop_shadow shader template; ground shadow effect plane'})
+                                  'runtime_pending': True})
+            dormant_parts.append({**part, 'native_effect': {'kind': 'drop_shadow',
+                'source_materials': sorted({draw['material'] for draw in part['mesh']['draws']})}})
             continue
         parts.append(part)
     by_name = {}
@@ -531,6 +740,9 @@ def preview_vehicle(folder, manifest, extraction_index=None, executable=None):
                     shared_material_base = len(materials)
                     resource_data = resource.read_bytes()
                     shared_materials = read_material_table(resource_data, shared['material_collection_offset'])
+                    shared_inputs = native_input_table(resource_data, shared['material_collection_offset'])
+                    for material in shared_materials:
+                        material['native_input_table'] = shared_inputs
                     bind_textures(resource_data, shared_materials, textures, shared_rows, folder,
                                   resource.relative_to(folder).as_posix())
                     materials.extend(shared_materials)
@@ -545,24 +757,29 @@ def preview_vehicle(folder, manifest, extraction_index=None, executable=None):
             sources.append(mesh['source'])
             parts.append({**part, 'mesh': mesh})
     bones = vehicle['skeleton']['bones']
-    posed = []
+    posed, dormant_posed = [], []
     frames = native_rest_frames(bones)
-    for part in parts:
+    for part in [*parts, *dormant_parts]:
         if not 0 <= part['bone'] < len(bones):
             raise ValueError('preview mesh bone outside native skeleton')
         bone = bones[part['bone']]
         part['translation'] = frames[part['bone']]['translation']
         part['rotation_raw'] = bone['rotation_raw']
         part['rotation'] = frames[part['bone']]['rotation']
-        posed.append(part)
+        (dormant_posed if part.get('native_effect') is not None else posed).append(part)
     wheel_parts, wheel_evidence = attach_wheels(folder, extraction_index, code, vehicle,
         native_executable() if executable is None else executable, materials, sources, textures, shared_rows)
     posed.extend(wheel_parts)
+    posed.extend(dormant_posed)
     for source in sources:
         source['file'] = Path(source['file']).relative_to(folder).as_posix()
-    data, records = build_glb(code, posed, materials, sources, textures)
+    appearance = read_native_appearance(folder, extraction_index, code)
+    skeleton = {**vehicle['skeleton'], 'source_sha256': vehicle['source']['sha256']}
+    data, records = build_glb(code, posed, materials, sources, textures, appearance, skeleton)
     return data, {'records': records, 'native_resources': sources, 'omitted_stock_parts': omitted,
-                  'omitted_effect_planes': effect_planes,
+                  'native_effect_planes': effect_planes,
+                  'omitted_effect_planes': [],
                   'wheels': wheel_evidence,
+                  'native_appearance': appearance,
                   'omitted_pose_parts': [],
-                  'claim_limits': [*LIMITS, *([f'Missing stock part: {p}' for p in omitted])]}
+                  'claim_limits': [*LIMITS, *([f'Missing stock part: {p}' for p in omitted]), TIRE_ALPHA_NOTE]}

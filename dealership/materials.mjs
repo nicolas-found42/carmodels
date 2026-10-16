@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.js';
+import {applyMC3TireMaterial} from './mc3-tire-material.mjs';
 
 export function normaliseColourTint(value) {
  if(value==null)return null;
@@ -33,6 +34,7 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
  material.metalness=pbr.metallicFactor??1;
  material.side=source.doubleSided?THREE.DoubleSide:THREE.FrontSide;
  material.wireframe=options.wireframe===true;
+ applyMC3TireMaterial(material,doc,source);
  material.needsUpdate=true;
 }
 

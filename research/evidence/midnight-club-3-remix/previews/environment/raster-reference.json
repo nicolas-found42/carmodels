@@ -1,0 +1,81 @@
+{
+ "schema": 1,
+ "reference": {
+  "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+  "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea"
+ },
+ "capture_input_sha256": "561616f80c33dd1559361d334fcf2bfc7cd24d98af360451c77f20845e364f8d",
+ "native_execution_jobs": 15,
+ "visibility": [
+  {
+   "cull_flags": 0,
+   "source_batches": 412,
+   "differing_bytes": 0,
+   "frames": 3
+  },
+  {
+   "cull_flags": 192,
+   "source_batches": 412,
+   "differing_bytes": 0,
+   "frames": 3
+  }
+ ],
+ "visibility_positive_control_pixels": 32896,
+ "comparisons": [
+  {
+   "name": "capture",
+   "differing_bytes": 0,
+   "size": [
+    256,
+    256
+   ],
+   "frames": 3,
+   "rgba_sha256": "9fa63bae26862424b078221da7422ff994093aba857eb800d0e02dc58ec3caba"
+  },
+  {
+   "name": "panorama0",
+   "differing_bytes": 0,
+   "size": [
+    256,
+    256
+   ],
+   "frames": 3,
+   "rgba_sha256": "b24f5b974794bf913a74baaf86d15dad6cbf90384ba92e459bb502f1cc541799"
+  },
+  {
+   "name": "specular0",
+   "differing_bytes": 0,
+   "size": [
+    64,
+    64
+   ],
+   "frames": 3,
+   "rgba_sha256": "8df682b424767d6a0ecc5325b7cc90e37754d2930dd9377617158177c8553a45"
+  },
+  {
+   "name": "specular7",
+   "differing_bytes": 0,
+   "size": [
+    64,
+    64
+   ],
+   "frames": 3,
+   "rgba_sha256": "0f08522eb797d447660e2bf96ab1ea83e79238fc0f32ee987c8ed32ba971e1d5"
+  }
+ ],
+ "negative_controls": [
+  {
+   "mutation": "one reference byte changed",
+   "rejected": true,
+   "reason": "official GS reference differs in 1 RGBA bytes"
+  },
+  {
+   "mutation": "reference extent changed",
+   "rejected": true,
+   "reason": "official GS reference output extent mismatch"
+  }
+ ],
+ "claim_limits": [
+  "Pinned official PCSX2 software GS; no physical PS2 or booted-game frame claim."
+ ]
+}

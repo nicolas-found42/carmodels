@@ -37,6 +37,28 @@ class SpecTests(unittest.TestCase):
         benz = self.specs['benz0001']
         self.assertEqual((benz['front_tire']['rim_inches'], benz['rear_tire']['rim_inches']), (26, 41))
 
+    def test_factory_colours_retain_duplicate_native_row_ids(self):
+        paints = self.specs['acra0001']['factory_colours']
+        self.assertEqual([paint['name'] for paint in paints],
+                         ['Sundance Gold', 'San Marino Red', 'Nighthawk Black Pearl',
+                          'Satin Silver Metallic', 'Taffeta White'])
+        self.assertEqual([paint['index'] for paint in paints], list(range(5)))
+        self.assertEqual([paint['var_order'] for paint in paints], list(range(1, 6)))
+        self.assertEqual({paint['variation_row_id'] for paint in paints}, {271})
+        self.assertEqual([paint['colour_chips'] for paint in paints],
+                         [[0x0319496F, 0, 0, 0], [0x03180D50, 0, 0, 0], [0x03080808, 0, 0, 0],
+                          [0x03828282, 0, 0, 0], [0x01B5B7B7, 0, 0, 0]])
+        # Native two-tone/livery swatches retain every word; these are not collapsed
+        # to a guessed single paint factor or discarded as zero-alpha pixels.
+        two_tone = next(paint for paint in self.specs['toyt0001']['factory_colours']
+                        if paint['name'] == 'High Flash Two-Tone')
+        self.assertEqual(two_tone['colour_chips'],
+                         [0x01160A5F, 0x010F0F0F, 0, 0])
+        self.assertEqual(sum(len(spec['factory_colours']) for spec in self.specs.values()), 3903)
+        self.assertEqual(sum(bool(paint['name'].strip()) for spec in self.specs.values()
+                             for paint in spec['factory_colours']), 3597)
+        self.assertEqual(self.specs['peug0001']['factory_colours'][0]['name'], '')
+
     def test_huffman_rows_against_uncompressed_reading(self):
         table = Table(SPECDB, 'CAR_NAME_british')
         self.assertTrue(table.attribute & 1)

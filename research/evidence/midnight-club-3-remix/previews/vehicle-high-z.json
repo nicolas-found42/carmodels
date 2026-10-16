@@ -1,0 +1,6809 @@
+{
+  "sources": {
+    "GSRasterizer.cpp": "a83f3c54c7754b4c384472bf8d284a03ccee9fdd70b2eefaa0ad67ff317f39ac",
+    "GSSetupPrimCodeGenerator.all.cpp": "7c7a1143cab5b9dd362be602289aad8cf8e966a60ad9c9e3e93afeda62a293af",
+    "GSRendererSW.cpp": "0382633722f2cb1b042cfa2fb4919deb2cb754ecdbdd46356731e76ceec2bae3",
+    "GSDrawScanlineCodeGenerator.all.cpp": "90730bc23e6d03338aab47d13c08758e834aff153c6418f0e50b21151c20c481",
+    "GSVertexTrace.cpp": "04f2b48d0b3d5fe6a012188f820352dbcce274b4cddbe852c4c0a2cae173ec6f",
+    "GSVertexTraceFMM.cpp": "51f8ef8c4f55c8c3198f21f2c9a7ea52effece437789529d65beec6eb2b06b80"
+  },
+  "records": [
+    {
+      "case": {
+        "name": "constant-max",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "319c26a7f9c877213305a95c0e0f7ee4404b6c35da61e7417ee9b170d8bc9af8",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "28e694a988d9abf2e764a129fc82631e295d773a975000bcd52fc9f8d675c7a8"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "28e694a988d9abf2e764a129fc82631e295d773a975000bcd52fc9f8d675c7a8"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "28e694a988d9abf2e764a129fc82631e295d773a975000bcd52fc9f8d675c7a8"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "constant-max-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "145645862ac7f6a5e42d2c2b6e6c35a1831873717b780f4106e25f41ae84b562",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "fc0bdb6848160af517d66994cc4b29f484fe6db7fc596fd89016e22a8a8ef835"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "fc0bdb6848160af517d66994cc4b29f484fe6db7fc596fd89016e22a8a8ef835"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "fc0bdb6848160af517d66994cc4b29f484fe6db7fc596fd89016e22a8a8ef835"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "constant-high",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "16cc84a4bc7bb5ebf521ffd456693f04c4074455c34d9074eecb93bd23f825bc",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6e3eafafe102d39c0b1c1a198197f153f6287405a44e0388ad26ed8cf897ebea"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6e3eafafe102d39c0b1c1a198197f153f6287405a44e0388ad26ed8cf897ebea"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6e3eafafe102d39c0b1c1a198197f153f6287405a44e0388ad26ed8cf897ebea"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "constant-high-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "bfc8e5d2ddd90c49c16507404c5b0546b0cd59be9d5b698f76aa61ab6043f0c1",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4ae6cd4ba58eafd6ab93ea778751242ef9768d05420f63cc7c2c124230d527f9"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4ae6cd4ba58eafd6ab93ea778751242ef9768d05420f63cc7c2c124230d527f9"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4ae6cd4ba58eafd6ab93ea778751242ef9768d05420f63cc7c2c124230d527f9"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "constant-near",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "cba99c092a88ce7351e7817dc378f564c8659daf7d64c493041bcacac470bc21",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "d8d09b92ab80aed3aaeb7333d69ce172d32e855f703640fa0b37d8ec1174ba7a"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "d8d09b92ab80aed3aaeb7333d69ce172d32e855f703640fa0b37d8ec1174ba7a"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "d8d09b92ab80aed3aaeb7333d69ce172d32e855f703640fa0b37d8ec1174ba7a"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "constant-near-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "ce60d43e692a642d44c61a500ed5faec50136adff00e4718860aba0d3f868cbd",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9923fbea655fc70b84732abeeed15e2813b7c6002c09788f2000b3457fb62e71"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9923fbea655fc70b84732abeeed15e2813b7c6002c09788f2000b3457fb62e71"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9923fbea655fc70b84732abeeed15e2813b7c6002c09788f2000b3457fb62e71"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "wide-varying",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 0,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "7e874c7258b68331ad476bd0d141a32d120d9bc739bbf01df3c0cbd71373d129",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "b83091c4cd3784f2da6d95cc19a1abfb7371cb1525a670633eb6955fbb7ebabe"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "b83091c4cd3784f2da6d95cc19a1abfb7371cb1525a670633eb6955fbb7ebabe"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "b83091c4cd3784f2da6d95cc19a1abfb7371cb1525a670633eb6955fbb7ebabe"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "wide-varying-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 0,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "e2e0f1e4fcc9715416c9dd87513c4e13a4ce4dc2e67ad833e1a5ab3caf73bde2",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "ed32a60d388a7554e199e60cdeec63b83a114ce1b5a3fb06c767edc6fb2156da"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "ed32a60d388a7554e199e60cdeec63b83a114ce1b5a3fb06c767edc6fb2156da"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "ed32a60d388a7554e199e60cdeec63b83a114ce1b5a3fb06c767edc6fb2156da"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "near-boundary",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483655,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "656e519f407751310071ea8ec2d69e8a709220d98815fb874b4e06abb5092a6f",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "e1872c838b01b6bd7af9897bfb74aded43d4c6f262519da639820a2bb5f59595"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "e1872c838b01b6bd7af9897bfb74aded43d4c6f262519da639820a2bb5f59595"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "e1872c838b01b6bd7af9897bfb74aded43d4c6f262519da639820a2bb5f59595"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "near-boundary-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483655,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "b3ad181c06e7a9ca8477475fc402683cc882312a7805490d758837bf983c5f57",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "d49db9ffd4e890d17d5a38c2ec64ad39b4a39bbfc05787adddb7dae0534478ab"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "d49db9ffd4e890d17d5a38c2ec64ad39b4a39bbfc05787adddb7dae0534478ab"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "d49db9ffd4e890d17d5a38c2ec64ad39b4a39bbfc05787adddb7dae0534478ab"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "high-small-cross",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 4294967280,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 4294967264,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "6e5927fa6d935c6ea3946129bcfbcaad1392483cd4b98325d5ed620f00c79795",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "719364fee7bf3788445efbed52d4288e68b0fb222b0cf9651790b2f7e67c6fac"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "719364fee7bf3788445efbed52d4288e68b0fb222b0cf9651790b2f7e67c6fac"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "719364fee7bf3788445efbed52d4288e68b0fb222b0cf9651790b2f7e67c6fac"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "high-small-cross-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 4294967280,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 4294967264,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "8c803107ec204b1bfedc265e7ba4977245ccfd44db43be3289ea330e390f07b6",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "27bb56739e17fe242f6f7a6c054c3eca131d59c257894b6ac544689fc766fd04"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "27bb56739e17fe242f6f7a6c054c3eca131d59c257894b6ac544689fc766fd04"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "27bb56739e17fe242f6f7a6c054c3eca131d59c257894b6ac544689fc766fd04"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "mixed-small-cross",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "736fb153bf8967abbacff9f3255cd1497dd5f1591e09746aa1aef7382e22382b",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9832e637c9516b16f564a2720751ca0ef660ea123c71d352625a16ef7da27b70"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9832e637c9516b16f564a2720751ca0ef660ea123c71d352625a16ef7da27b70"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9832e637c9516b16f564a2720751ca0ef660ea123c71d352625a16ef7da27b70"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "mixed-small-cross-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "f2985ece981827b12c50441f040d8f9a940a4c335652dc57c6586ce3f91a6fda",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "0d7152fee9d9f0f759836cbf79ea8540008e727631a31b245b6114e65886cb74"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "0d7152fee9d9f0f759836cbf79ea8540008e727631a31b245b6114e65886cb74"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "0d7152fee9d9f0f759836cbf79ea8540008e727631a31b245b6114e65886cb74"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "low-control",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 100,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 1000,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 1500,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "eb38edc232ee3c317beafeb53b04e7e187fa1f465afbea281b744245e52deabd",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "1875d3a53188ada98d1aeaf8bc8452b701bd38d834e23f004ba133d62d663416"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "1875d3a53188ada98d1aeaf8bc8452b701bd38d834e23f004ba133d62d663416"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "1875d3a53188ada98d1aeaf8bc8452b701bd38d834e23f004ba133d62d663416"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "low-control-fractional",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 100,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 1000,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 1500,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 1
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "84befdef85a0340ee1357efd09581650d2f11f7a67abd47b013bddf8f44e89ca",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4b3eb64421d76a3bb0a3c23fd0bdd47dcb76f7ea3544c75e4be757e24d7a3578"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4b3eb64421d76a3bb0a3c23fd0bdd47dcb76f7ea3544c75e4be757e24d7a3578"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4b3eb64421d76a3bb0a3c23fd0bdd47dcb76f7ea3544c75e4be757e24d7a3578"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "wide-varying-gequal",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 0,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "032695d9eb22ee6346f269fe0c44574972c7156c637ca0364b520dadcef0bf04",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "b83091c4cd3784f2da6d95cc19a1abfb7371cb1525a670633eb6955fbb7ebabe"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "b83091c4cd3784f2da6d95cc19a1abfb7371cb1525a670633eb6955fbb7ebabe"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "b83091c4cd3784f2da6d95cc19a1abfb7371cb1525a670633eb6955fbb7ebabe"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "wide-varying-fractional-gequal",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 0,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "b1bf052598edd734b15bfff07ed05ae76894dcfb337ede3e0a4454e99a1ec6c8",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "ed32a60d388a7554e199e60cdeec63b83a114ce1b5a3fb06c767edc6fb2156da"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "ed32a60d388a7554e199e60cdeec63b83a114ce1b5a3fb06c767edc6fb2156da"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "ed32a60d388a7554e199e60cdeec63b83a114ce1b5a3fb06c767edc6fb2156da"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "near-boundary-gequal",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483655,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "13a6bffd4cafddd10b5468a63b0114eb3180b52d72e170194c6e65c19bb93c37",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4cb1c4e7e823d3ffd5a71f5307971481ae5b8caeefe30e8ef265647b0d5a9be5"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4cb1c4e7e823d3ffd5a71f5307971481ae5b8caeefe30e8ef265647b0d5a9be5"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "4cb1c4e7e823d3ffd5a71f5307971481ae5b8caeefe30e8ef265647b0d5a9be5"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "near-boundary-fractional-gequal",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483655,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "2fb61826f09046ab4940df8f7de49732a242728b8427ad4426962800e4bf7303",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "59f67743233a37f22ac84950246300fcf6d6c94be49108f3f6fb5fa2270efaf3"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "59f67743233a37f22ac84950246300fcf6d6c94be49108f3f6fb5fa2270efaf3"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "59f67743233a37f22ac84950246300fcf6d6c94be49108f3f6fb5fa2270efaf3"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "high-small-cross-gequal",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 4294967280,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 4294967264,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "d122c1276970b317ff2aa52ac5bdace76024a5addcf07b738bc259c64728b2fb",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "266fb1ba5e985461f6f667a8c28b35d6ffc46e9bfde8e4aeb879111d968c6612"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "266fb1ba5e985461f6f667a8c28b35d6ffc46e9bfde8e4aeb879111d968c6612"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "266fb1ba5e985461f6f667a8c28b35d6ffc46e9bfde8e4aeb879111d968c6612"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "high-small-cross-fractional-gequal",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 4294967280,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 4294967295,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 4294967264,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "50834785b9aea644932e098bba879d53f273d72d52997b2eb734c2b40f8e5ec8",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6325b4911c83976a68cc32f9ad22ac6247e3e43e6f3ad1a5a7b47499dd4fae11"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6325b4911c83976a68cc32f9ad22ac6247e3e43e6f3ad1a5a7b47499dd4fae11"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6325b4911c83976a68cc32f9ad22ac6247e3e43e6f3ad1a5a7b47499dd4fae11"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "mixed-small-cross-gequal",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "92d4c9b1c5cb21f16115a42368948ad9a76398c026684d356f8554c17c41acf5",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "46a6af05f5468d2ca25b5e9244c46e04516a383eab3aca3b3e18dc1264ce173f"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "46a6af05f5468d2ca25b5e9244c46e04516a383eab3aca3b3e18dc1264ce173f"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "46a6af05f5468d2ca25b5e9244c46e04516a383eab3aca3b3e18dc1264ce173f"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "mixed-small-cross-fractional-gequal",
+        "vertices": [
+          {
+            "xy": [
+              39,
+              59
+            ],
+            "z": 2147483647,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1367,
+              107
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              135,
+              1147
+            ],
+            "z": 2147483646,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "e9a6eff2c00a4c7804814717d45e30c74c1c5813cfbb49abc41a9b8b32576d8a",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "9c4a3b5609bfd21357fe6a5c23946eae0bc151de32f19aa96cf7d33686262d24"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "5016e170a9977eda5975769041c52aecbbec44afbae98d32b0a29203ffa0c480"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "5016e170a9977eda5975769041c52aecbbec44afbae98d32b0a29203ffa0c480"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "5016e170a9977eda5975769041c52aecbbec44afbae98d32b0a29203ffa0c480"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "trace-or-subset",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483650,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483648,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483650,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "9a05f1973d2d6fbecf9e4939dfec5c9323d7ba34146980ff66eda7eb6cebd35a",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "8f8d032ea797f0babf2116e8b1a5713094171836e44229d122bcbaea0ad0b1d4"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "8f8d032ea797f0babf2116e8b1a5713094171836e44229d122bcbaea0ad0b1d4"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "8f8d032ea797f0babf2116e8b1a5713094171836e44229d122bcbaea0ad0b1d4"
+        }
+      ]
+    },
+    {
+      "case": {
+        "name": "trace-and-superset",
+        "vertices": [
+          {
+            "xy": [
+              32,
+              48
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.09375,
+              0.15625,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              1360,
+              96
+            ],
+            "z": 2147483651,
+            "stq": [
+              0.90625,
+              0.21875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          },
+          {
+            "xy": [
+              128,
+              1136
+            ],
+            "z": 2147483649,
+            "stq": [
+              0.28125,
+              0.96875,
+              1.0
+            ],
+            "rgba": [
+              17,
+              39,
+              113,
+              128
+            ]
+          }
+        ],
+        "ztst": 2
+      },
+      "execution": {
+        "status": "executed",
+        "mode": "gs",
+        "runtime": {
+          "image": "carmodels-mc3-vu-reference:2.8.2",
+          "image_id": "sha256:6d1d6d895dc3c306d391068a952e1b433b2104c82441a2f5fe80c3c379c6c8a9",
+          "binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+          "appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+          "gs_simd_profile": "AVX2/FMA",
+          "cpu_extensions": [
+            "sse4_1",
+            "sse4_2",
+            "avx",
+            "avx2",
+            "fma"
+          ]
+        },
+        "dump_sha256": "4b89af61a16e094608a748f93b0f7baa91c7ad1c2448c4c2f4b33fd2c1943812",
+        "frames": [
+          {
+            "file": "00001_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00002_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00003_f00000_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00005_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00006_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00007_f00001_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          },
+          {
+            "file": "00009_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00010_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "8a39d2abd3999ab73c34db2476849cddf303ce389b35826850f9a700589b4a90"
+          },
+          {
+            "file": "00011_f00002_rt1_00000_C_32.rgba",
+            "size": [
+              86,
+              72
+            ],
+            "bytes": 24768,
+            "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+          }
+        ],
+        "claim_limits": [
+          "Official PCSX2 v2.8.2 software/interpreter reference, not physical PS2.",
+          "Explicit source-derived context inputs; no original running-game frame is asserted.",
+          "EE jobs isolate pure helpers with inert IOP and future timer events.",
+          "VU opcode/pipeline/math and GIF packet scheduling remain in the original binary.",
+          "Selected AVX2/FMA profile; other SIMD paths are not certified."
+        ],
+        "depth_frames": [
+          {
+            "file": "00001_f00000_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00005_f00001_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          },
+          {
+            "file": "00009_f00002_rz1_01000_Z_16S.z16",
+            "size": [
+              256,
+              256
+            ],
+            "kind": "depth16",
+            "bytes": 131072,
+            "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "file": "00003_f00000_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00007_f00001_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        },
+        {
+          "file": "00011_f00002_rt1_00000_C_32.rgba",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "45ed44a3ff06b7d21da28119e54e7c5526169ae203c5dc67e995a6366ad10a1d"
+        }
+      ],
+      "depth_frames": [
+        {
+          "file": "00003_f00000_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6e3eafafe102d39c0b1c1a198197f153f6287405a44e0388ad26ed8cf897ebea"
+        },
+        {
+          "file": "00007_f00001_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6e3eafafe102d39c0b1c1a198197f153f6287405a44e0388ad26ed8cf897ebea"
+        },
+        {
+          "file": "00011_f00002_rz1_01000_Z_32.z32",
+          "size": [
+            86,
+            72
+          ],
+          "bytes": 24768,
+          "sha256": "6e3eafafe102d39c0b1c1a198197f153f6287405a44e0388ad26ed8cf897ebea"
+        }
+      ]
+    }
+  ],
+  "claim_limits": [
+    "Selected original GS XYZ2 triangle contexts only; no whole vehicle or physical PS2 claim.",
+    "ALWAYS uses float32 min/max equality; GEQUAL invokes original bitwise AND/OR raw-depth equality correction.",
+    "Single-triangle draws; shared runtime accepts explicit whole-draw zEqual/zOverflow selectors for batch integration.",
+    "CorrectDepthTrace bitwise subset/superset equality behavior is retained literally, not replaced with ideal raw equality."
+  ],
+  "commit": "fd9d310ccbb6b8b62c976da8886a3c8fd3a10ff3",
+  "depth_readback_sources": {
+    "GSLocalMemory.cpp": "46da01086c93f3839c0c20787433f8cd0b7b89790d42f12414f9589c66fd4e51",
+    "GSLocalMemory.h": "8cd6ed874f53aafde5f3d294048b2b0beed87765ab099a5f8aa93899cb988a19"
+  }
+}

@@ -14,6 +14,7 @@ MAX_MATERIALS = 1024
 MAX_BYTES = 64 * 1024 * 1024
 COLLECTION_PROFILES = {0x7a1138: ('original', 0),
                        0x7a1338: ('mercedes', 0x200),
+                       0x7a1fb8: ('world-prop', 0xe80),
                        0x7a2440: ('remix', 0x1308)}
 SHADERS = {
     0x7aa7c8: 'lit_textured', 0x7a10d8: 'black_matte',

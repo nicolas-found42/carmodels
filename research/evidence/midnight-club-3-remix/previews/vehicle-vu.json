@@ -1,0 +1,671 @@
+{
+  "schema": 1,
+  "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "kernels": {
+    "carpaint_3pass_dc": {
+      "name": "carpaint_3pass_dc",
+      "address": 6309440,
+      "bytes": 9408,
+      "sha256": "8645779e666c868b5e4767d646da9433ed8c69650fdf32090510636b63985ac1",
+      "instructions": 1169,
+      "first_pc": 165,
+      "last_pc": 220,
+      "rgba_register": 24,
+      "kernel_sha256": "4acffecc65f2aedd9f07c55a6ec0eacca11ec7b5ef02cd1cc687e190c5859e27"
+    },
+    "light_texgen_dc": {
+      "name": "light_texgen_dc",
+      "address": 6351264,
+      "bytes": 8384,
+      "sha256": "43519fa155ab18e218a199ad8aa30325fff6faf8e7e32aa76233abd3f6eea7fa",
+      "instructions": 1041,
+      "first_pc": 214,
+      "last_pc": 271,
+      "rgba_register": 22,
+      "kernel_sha256": "12a96eaa721cbbe8748af77e342e9f7d9c76a07ea105e5fa3faac60bf4fe084f"
+    },
+    "texgen_fresnel_dc": {
+      "name": "texgen_fresnel_dc",
+      "address": 6291984,
+      "bytes": 8320,
+      "sha256": "03f0608dcd7bb939aa19b79a544dd7a549cfc50a23b1df91895a385182d7dcf8",
+      "instructions": 1033,
+      "first_pc": 214,
+      "last_pc": 261,
+      "rgba_register": 14,
+      "kernel_sha256": "c6c55916fa7b9aad664fa415cc6b97c72da62c17845f05b2ad1d9506842d66dd"
+    },
+    "carbon_fiber_dc": {
+      "name": "carbon_fiber_dc",
+      "address": 6300304,
+      "bytes": 9136,
+      "sha256": "44d65457762fd2f49e42f2040cb64b55cfe04622b88b9dcefae61bf34f0a85c3",
+      "instructions": 1135,
+      "first_pc": 128,
+      "last_pc": 187,
+      "rgba_register": 25,
+      "kernel_sha256": "302c7912b513039da283899406367f9b5440e3c28eee099f012a8bfecfdd6190"
+    }
+  },
+  "input_slots": {
+    "2": "one raw signed integer normal XYZ; fourth word zero",
+    "86": "one explicit float32 position XYZ",
+    "20..23": "MVP matrix columns, already produced by original prelude or caller",
+    "24..26": "three native light coefficient rows; multiply RAW normal integers",
+    "28..31": "three RGBA light contributions followed by ambient RGBA",
+    "16..18": "generated UV matrix rows",
+    "42": "material RGBA scale in native0..128units",
+    "52": "carbon UV scale and offset",
+    "53": "native generation/fresnel parameters"
+  },
+  "claim_limits": [
+    "Original contiguous native instruction-pair arithmetic probes executed in pinned official VU interpreter; not an original whole draw/frame.",
+    "Explicit synthetic context isolates lighting and generated UV math; original per-material flags, light-upload derivation, textures, multipass GS composition and dynamic inputs are separate required joins.",
+    "Full private microprogram bytes are not committed; source pins and bounded kernel digests reproduce from original executable."
+  ],
+  "synthetic_probe_context": {
+    "memory_rows": {
+      "16": [
+        1065353216,
+        0,
+        0,
+        0
+      ],
+      "17": [
+        0,
+        1065353216,
+        0,
+        0
+      ],
+      "18": [
+        0,
+        0,
+        1065353216,
+        0
+      ],
+      "19": [
+        0,
+        0,
+        0,
+        1065353216
+      ],
+      "20": [
+        1065353216,
+        0,
+        0,
+        0
+      ],
+      "21": [
+        0,
+        1065353216,
+        0,
+        0
+      ],
+      "22": [
+        0,
+        0,
+        1065353216,
+        0
+      ],
+      "23": [
+        0,
+        0,
+        0,
+        1065353216
+      ],
+      "8": [
+        1065353216,
+        1065353216,
+        1065353216,
+        0
+      ],
+      "9": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "42": [
+        1124073472,
+        1124073472,
+        1124073472,
+        1124073472
+      ],
+      "52": [
+        1073741824,
+        1048576000,
+        0,
+        0
+      ],
+      "53": [
+        1036831949,
+        0,
+        1065353216,
+        1065353216
+      ],
+      "86": [
+        1048576000,
+        3204448256,
+        1040187392,
+        0
+      ],
+      "2": [
+        64,
+        32,
+        4294967232,
+        0
+      ],
+      "24": [
+        1006632960,
+        0,
+        0,
+        0
+      ],
+      "25": [
+        0,
+        1006632960,
+        0,
+        0
+      ],
+      "26": [
+        0,
+        0,
+        1006632960,
+        0
+      ],
+      "28": [
+        1053609165,
+        1036831949,
+        1045220557,
+        0
+      ],
+      "29": [
+        1045220557,
+        1050253722,
+        1036831949,
+        0
+      ],
+      "30": [
+        1036831949,
+        1045220557,
+        1050253722,
+        0
+      ],
+      "31": [
+        1036831949,
+        1036831949,
+        1036831949,
+        1065353216
+      ]
+    },
+    "vf_rows": {
+      "1": [
+        1065353216,
+        0,
+        0,
+        0
+      ],
+      "2": [
+        0,
+        1065353216,
+        0,
+        0
+      ],
+      "3": [
+        0,
+        0,
+        1065353216,
+        0
+      ],
+      "4": [
+        0,
+        0,
+        0,
+        1065353216
+      ],
+      "5": [
+        1065353216,
+        1065353216,
+        1065353216,
+        0
+      ],
+      "6": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "7": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "8": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "9": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "10": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "11": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "12": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "13": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "14": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "15": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "16": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "17": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "18": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "19": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "20": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "21": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "22": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "23": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "24": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "25": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "26": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "27": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "28": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "29": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "30": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "31": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "numerical_probes": [
+    {
+      "name": "carpaint_3pass_dc",
+      "program": "carpaint_3pass_dc",
+      "job_sha256": "ba8f2e1ecc516229084388bd1fddc19d835ca40362e5faf57bd63ca8805cf0aa",
+      "register_words": {
+        "24": [
+          44,
+          28,
+          28,
+          128
+        ],
+        "21": [
+          1057803468,
+          1041865113,
+          1065353216,
+          0
+        ],
+        "22": [
+          0,
+          0,
+          1057384038,
+          1045220556
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {},
+      "vf_overrides": {}
+    },
+    {
+      "name": "carbon_fiber_dc",
+      "program": "carbon_fiber_dc",
+      "job_sha256": "e10d06ed3a3841328280b25919a2dddb314975fb63c2b07da5bcbf4418b26499",
+      "register_words": {
+        "25": [
+          44,
+          28,
+          28,
+          128
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {},
+      "vf_overrides": {}
+    },
+    {
+      "name": "light_texgen_dc",
+      "program": "light_texgen_dc",
+      "job_sha256": "602c95eab036b5ed420247a7546e8f4a556f4e49e84026b45dc6a2824a443879",
+      "register_words": {
+        "22": [
+          44,
+          28,
+          28,
+          128
+        ],
+        "20": [
+          1057384038,
+          1045220556,
+          1065353216,
+          0
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {},
+      "vf_overrides": {}
+    },
+    {
+      "name": "texgen_fresnel_dc",
+      "program": "texgen_fresnel_dc",
+      "job_sha256": "6a2c0b781c762c1c61636ac9a92724f626f81cb2cb62da7a12ba9ba8b445bcc4",
+      "register_words": {
+        "14": [
+          128,
+          128,
+          128,
+          128
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {},
+      "vf_overrides": {}
+    },
+    {
+      "name": "raw-normal-double",
+      "program": "light_texgen_dc",
+      "job_sha256": "0dd9eacf2a007ee96f32f978e5391e568414a9cf02d4b5e305dad7f2d8f184f0",
+      "register_words": {
+        "22": [
+          76,
+          44,
+          44,
+          128
+        ],
+        "20": [
+          1065562931,
+          1055286886,
+          1065353216,
+          0
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {
+        "2": [
+          128,
+          64,
+          4294967168,
+          0
+        ]
+      },
+      "vf_overrides": {}
+    },
+    {
+      "name": "raw-normal-adc-x",
+      "program": "light_texgen_dc",
+      "job_sha256": "585f134f01f8300cbbaefb05df1a01f74b1ffeac804d62e97bfc25536cced8f3",
+      "register_words": {
+        "22": [
+          45,
+          28,
+          28,
+          128
+        ],
+        "20": [
+          1057515110,
+          1045220556,
+          1065353216,
+          0
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {
+        "2": [
+          65,
+          32,
+          4294967232,
+          0
+        ]
+      },
+      "vf_overrides": {}
+    },
+    {
+      "name": "negative-coefficients",
+      "program": "carpaint_3pass_dc",
+      "job_sha256": "811533171560470a5e6286b1f523898b70608b7d4004637faf59a8c0895a68db",
+      "register_words": {
+        "24": [
+          12,
+          12,
+          12,
+          128
+        ],
+        "21": [
+          3202770534,
+          3199415091,
+          1065353216,
+          0
+        ],
+        "22": [
+          0,
+          0,
+          3203609395,
+          3197737369
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {
+        "2": [
+          4294967232,
+          4294967264,
+          4294967232,
+          0
+        ]
+      },
+      "vf_overrides": {}
+    },
+    {
+      "name": "light-saturation",
+      "program": "carbon_fiber_dc",
+      "job_sha256": "1f7e1501e6c8f77610a28c3ac0cd73afa65e1c65a4f891573f67fcacccec574d",
+      "register_words": {
+        "25": [
+          128,
+          128,
+          128,
+          128
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {
+        "28": [
+          1073741824,
+          1073741824,
+          1073741824,
+          0
+        ],
+        "29": [
+          1073741824,
+          1073741824,
+          1073741824,
+          0
+        ]
+      },
+      "vf_overrides": {}
+    },
+    {
+      "name": "material-scale",
+      "program": "light_texgen_dc",
+      "job_sha256": "95570c8d999c01ed7ccbb48538224a972edc4d975fb8f15a33423259b914c6b0",
+      "register_words": {
+        "22": [
+          22,
+          7,
+          3,
+          80
+        ],
+        "20": [
+          1057384038,
+          1045220556,
+          1065353216,
+          0
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {
+        "42": [
+          1115684864,
+          1107296256,
+          1098907648,
+          1117782016
+        ]
+      },
+      "vf_overrides": {}
+    },
+    {
+      "name": "fresnel-clip-w",
+      "program": "texgen_fresnel_dc",
+      "job_sha256": "b821abddc01b2cdef550ba3f4610a5a11154fb3ec4f5bcc105b01721dc377841",
+      "register_words": {
+        "14": [
+          128,
+          128,
+          128,
+          80
+        ]
+      },
+      "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a",
+      "adapter_sha256": "e5d3af8ab74fcf55d5c6962deb62ac6b66a2d14e6b7fff571e99942c0a3aebf8",
+      "memory_overrides": {
+        "20": [
+          1065353216,
+          0,
+          0,
+          1056964608
+        ],
+        "53": [
+          1036831949,
+          0,
+          1065353216,
+          1056964608
+        ]
+      },
+      "vf_overrides": {
+        "1": [
+          1065353216,
+          0,
+          0,
+          1056964608
+        ]
+      }
+    }
+  ]
+}

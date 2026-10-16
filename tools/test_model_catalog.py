@@ -9,11 +9,31 @@ import unittest
 from build_model_catalog import model_catalog
 from gt_metadata import load_database, model_metadata
 from gt_model import build_glb
+import test_import_mc3_previews as mc3_fixtures
+from import_mc3_previews import publish_source_previews
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ModelCatalogTests(unittest.TestCase):
+    def test_mc3_preview_routes_as_glb_and_retains_validated_native_download(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            _, source, entry, _, game_folder = mc3_fixtures.PreviewImportTest().source_fixture(root)
+            public = game_folder.parent
+            native = model_catalog(public)['cars'][0]
+            self.assertEqual(native['asset_kind'], 'native-package')
+            publish_source_previews(source, game_folder)
+            converted = model_catalog(public)['cars'][0]
+            self.assertEqual(converted['asset_kind'], 'glb')
+            self.assertEqual(converted['file'], f"midnight-club-3-remix/previews/{entry['sourceCode']}.glb")
+            self.assertTrue(converted['native_package']['file'].endswith('.dat'))
+            self.assertEqual(converted['id'], native['id'])
+            package = public / converted['native_package']['file']
+            package.write_bytes(b'changed original native package')
+            with self.assertRaisesRegex(ValueError, 'MC3 source|hash|differs'):
+                model_catalog(public)
+
     def test_verified_native_metadata_survives_catalog_and_rejects_detached_rows(self):
         native = ROOT / 'games/gran-turismo/cars'
         texture = (native / 'simulation/_afr7n/day/textures.tex').read_bytes()

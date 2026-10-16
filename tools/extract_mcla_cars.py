@@ -32,6 +32,7 @@ CACHE = 'xarchive_cache.rpf'
 VEHICLES = 'resources/vehicle/'
 CONFIGS = VEHICLES + 'configs/'
 AMBIENTS = 'resources/ambients/'
+AMBIENT_PAINT = 'tune/ambients/traffic/'
 UI = 'resources/ui/textures/garage/'
 SHARED = ('resources/rims/', 'resources/tires/', 'resources/brakes/', 'vehicle/', 'tune/vehicle/')
 CODE = re.compile(r'v(?:a|p|pd)_[a-z0-9_]+')
@@ -246,6 +247,11 @@ def select(named, codes_by_directory):
         if path.startswith(CONFIGS):
             code = owner(path, codes)
             choice = (code, 'config') if code else ('shared', 'shared-config')
+        elif (path.startswith(AMBIENT_PAINT) and len(directory) == 5
+              and directory[-1] == 'mcambientcartypecolor.xml'):
+            # Retain the complete native namespace, including unresolved directory
+            # hashes. Preview consumers join only an exact known car directory.
+            choice = ('shared', 'shared-ambient-paint')
         elif path.startswith(VEHICLES) and len(directory) > 3:
             choice = (codes_by_directory[directory[2]], 'vehicle-package')
         elif path.startswith(AMBIENTS) and len(directory) > 3 and directory[2] in codes_by_directory:
@@ -413,7 +419,8 @@ def derive(iso, emit):
                                        'lod-variant: levels 0-3 of a _lod_<n> name from either source']},
                  'selection': {'per_car': [VEHICLES + '<code>/', AMBIENTS + '<code>/',
                                            CONFIGS + ' (full code in name)', UI + ' (full code in name)'],
-                               'shared': list(SHARED) + [CONFIGS + ' (no code in name)'],
+                               'shared': list(SHARED) + [CONFIGS + ' (no code in name)',
+                                                         AMBIENT_PAINT + '<code-or-hash>/mcambientcartypecolor.xml'],
                                'provenance': ['XDVDFS listing', 'every RPF3 table', 'archive key location']},
                  'vehicles': vehicles, 'files': out.files.copy(), 'claim_limits': LIMITS}
         out.put('index.json', json_bytes(index))

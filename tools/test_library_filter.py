@@ -188,7 +188,9 @@ class Tests(unittest.TestCase):
         self.assertEqual(facts['midnight-club-3-remix']['preview_ready'], 94)
         self.assertTrue(facts['midnight-club-3-remix']['all_have_preview'])
         source = json.loads((root / 'dealership/public/models.json').read_text())['cars']
-        self.assertFalse(state_for('MC3 previews', source, options_for(source))['filter_facts']['midnight-club-3-remix']['all_have_preview'])
+        source_facts = state_for('MC3 previews', source, options_for(source))['filter_facts']['midnight-club-3-remix']
+        self.assertEqual(source_facts['preview_ready'], 94)
+        self.assertTrue(source_facts['all_have_preview'])
         template = mc3[0]
         for model in ({'schema': 3, 'source': {'glb': 'bad.glb'}, 'triangleCount': 10},
                       {'schema': True, 'parts': [{}], 'source': {'glb': 'bad.glb'}, 'triangleCount': 10},

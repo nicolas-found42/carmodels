@@ -1,0 +1,744 @@
+{
+  "schema": 1,
+  "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "sky_source_sha256": "35f432cb3134367bb1f12caf59fe1b2e7fac3e37c9a9433392915696f197c116",
+  "props_source_sha256": "243545f947d6de0a842d52a958d0d433cb8b405029d5c0064ccbf24140ccd425",
+  "native_reset_tables": {
+    "state": {
+      "address_or_offset": "0x615d10",
+      "bytes": 84,
+      "sha256": "6050fef3c407334be893328121a0378a7efc1e9b438053075bbf92a257065f4b",
+      "hex": "0000000000000000000000000000000007000000000000000200000001000000ffffff800f00000000000000010000000000000001000000ffffff80020000000000000001000000000000000000000000000000"
+    },
+    "texture": {
+      "address_or_offset": "0x615d68",
+      "bytes": 12,
+      "sha256": "31190090408f837aa1dc44bf75404af354a0e5d5c965f1d407a97dd627554da5",
+      "hex": "000000000100000000000000"
+    }
+  },
+  "world_palette127": {
+    "city_root_palette_field": {
+      "address_or_offset": "0xac",
+      "bytes": 4,
+      "sha256": "e37a34250358c757a5a8968e2ee6329ae22d9526ae2211147d838e1a4794d1c2",
+      "hex": "90028006"
+    },
+    "palette_file_offset": 784,
+    "entry_index": 127,
+    "entry": {
+      "address_or_offset": "0xb00",
+      "bytes": 16,
+      "sha256": "838545ed83a20048c1b3301a4d78079316d258c4f2cede37677f380bc5058474",
+      "hex": "9196163f8b8b0b3f8482023f0000803f"
+    },
+    "rgba_float": [
+      0.5882349610328674,
+      0.5450980067253113,
+      0.5098040103912354,
+      1.0
+    ],
+    "material128_ftoi0_rgba": [
+      75,
+      69,
+      65,
+      128
+    ]
+  },
+  "floor_passes": [
+    {
+      "body_offset": "0x11a08",
+      "flags_combine_bytes": {
+        "address_or_offset": "0x11a21",
+        "bytes": 2,
+        "sha256": "b413f47d13ee2fe6c845b2ee141af81de858df4ec549a58b7970bb96645bc8d2",
+        "hex": "0001"
+      }
+    },
+    {
+      "body_offset": "0x160a0",
+      "flags_combine_bytes": {
+        "address_or_offset": "0x160b9",
+        "bytes": 2,
+        "sha256": "47dc540c94ceb704a23875c11273e16bb0b8a87aed84de911f2133568115f254",
+        "hex": "0100"
+      }
+    }
+  ],
+  "sky_color": {
+    "raw_rgba": [
+      110,
+      110,
+      110,
+      255
+    ],
+    "normalization_float_word": "3b807fed",
+    "material_rgba": [
+      128,
+      128,
+      128,
+      128
+    ],
+    "ftoi0_output_rgba": [
+      55,
+      55,
+      55,
+      127
+    ]
+  },
+  "claim_limits": [
+    "Static source-bound original SD midnight clear garage input and shader/camera contract, not original execution or bit-exact GS rasterization.",
+    "Only the fixed authored CarSpotsd capture is selected; runtime moving entities, time animation and modified lighting settings are outside this snapshot.",
+    "Sibling native GS/copy and shared texture receipts establish blend, sampling and palette conversion independently; native-scene pins the geometry/shader/camera joins."
+  ],
+  "vu_programs": [
+    {
+      "name": "builtin-normal",
+      "address": "0x5ec4f0",
+      "bytes": 13488,
+      "sha256": "9d30b140652bb9400499dd7e450f17618de7ca45d52237b58add56274ec11f71",
+      "selected_pairs": [
+        {
+          "pc": "0x6",
+          "lower": "40000130",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x137",
+          "lower": "800406bd",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x13d",
+          "lower": "09010022",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x140",
+          "lower": "10050030",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x141",
+          "lower": "80012974",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x146",
+          "lower": "50050060",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1a7",
+          "lower": "10040002",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1a8",
+          "lower": "80012134",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1aa",
+          "lower": "520400ac",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1ac",
+          "lower": "10040004",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1ad",
+          "lower": "80012134",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1af",
+          "lower": "52040374",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1b1",
+          "lower": "10030001",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1b2",
+          "lower": "800118f4",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1b4",
+          "lower": "52030055",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1b6",
+          "lower": "800306bd",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1b7",
+          "lower": "3b807fed",
+          "upper": "800002ff"
+        },
+        {
+          "pc": "0x1c0",
+          "lower": "41800000",
+          "upper": "80800062"
+        },
+        {
+          "pc": "0x1c3",
+          "lower": "01ee187f",
+          "upper": "01ea1298"
+        },
+        {
+          "pc": "0x1c7",
+          "lower": "8000033c",
+          "upper": "01ee713c"
+        },
+        {
+          "pc": "0x1cb",
+          "lower": "01eb002a",
+          "upper": "01e17399"
+        },
+        {
+          "pc": "0x1cf",
+          "lower": "8000033c",
+          "upper": "01eb73aa"
+        },
+        {
+          "pc": "0x1d3",
+          "lower": "01f2187f",
+          "upper": "01ee717c"
+        },
+        {
+          "pc": "0x1dd",
+          "lower": "03e77000",
+          "upper": "01e011bf"
+        }
+      ]
+    },
+    {
+      "name": "builtin-alternate",
+      "address": "0x5e9610",
+      "bytes": 12000,
+      "sha256": "93ede46a83bb62f1995f1e555a48bd601f29963af88603d019f66b19b140462a",
+      "selected_pairs": [
+        {
+          "pc": "0x6",
+          "lower": "40000101",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x108",
+          "lower": "800406bd",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x111",
+          "lower": "10250000",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x112",
+          "lower": "800129f4",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x117",
+          "lower": "5005396f",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x119",
+          "lower": "09010022",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x11a",
+          "lower": "10440000",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x11b",
+          "lower": "80012174",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x11d",
+          "lower": "5004291d",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x11f",
+          "lower": "10040030",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x120",
+          "lower": "80012134",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x122",
+          "lower": "5004006c",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x18f",
+          "lower": "10040002",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x190",
+          "lower": "80012134",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x192",
+          "lower": "5204014f",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x194",
+          "lower": "10030004",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x195",
+          "lower": "800118f4",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x197",
+          "lower": "5203076c",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x199",
+          "lower": "10030001",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x19a",
+          "lower": "800118f4",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x19c",
+          "lower": "52030051",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x19e",
+          "lower": "800306bd",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1aa",
+          "lower": "00221802",
+          "upper": "01e939d8"
+        },
+        {
+          "pc": "0x1ab",
+          "lower": "01901832",
+          "upper": "01e94218"
+        },
+        {
+          "pc": "0x1ad",
+          "lower": "01ea002a",
+          "upper": "01cb593c"
+        },
+        {
+          "pc": "0x1ae",
+          "lower": "806813fc",
+          "upper": "01e92258"
+        },
+        {
+          "pc": "0x1af",
+          "lower": "01f04380",
+          "upper": "018d813e"
+        },
+        {
+          "pc": "0x1b3",
+          "lower": "01e40010",
+          "upper": "01ea842a"
+        },
+        {
+          "pc": "0x1b7",
+          "lower": "800637f2",
+          "upper": "01ee817c"
+        },
+        {
+          "pc": "0x1c0",
+          "lower": "03e77000",
+          "upper": "018c893e"
+        },
+        {
+          "pc": "0x1ee",
+          "lower": "01e6002a",
+          "upper": "000002ff"
+        },
+        {
+          "pc": "0x1f8",
+          "lower": "006b1832",
+          "upper": "01e939d8"
+        },
+        {
+          "pc": "0x1fc",
+          "lower": "1005003f",
+          "upper": "006b593e"
+        },
+        {
+          "pc": "0x200",
+          "lower": "010b1831",
+          "upper": "01ea317c"
+        },
+        {
+          "pc": "0x202",
+          "lower": "01ce1862",
+          "upper": "01eb21be"
+        },
+        {
+          "pc": "0x203",
+          "lower": "81ec03bc",
+          "upper": "01eb28bf"
+        },
+        {
+          "pc": "0x207",
+          "lower": "03e75003",
+          "upper": "01ce713c"
+        }
+      ]
+    }
+  ],
+  "floor_contract": {
+    "uv0": "signed packed first2 UV components /4096",
+    "uv1": "signed packed last2 UV components /4096",
+    "normal_w": "STMASK0x40404040 selects STROW W0xffffffff for every V3-8 floor normal; XITOP0x9e/0x1c5",
+    "palette": "unsigned16 0xffff + VU896 wraps10-bit to895; loaded source palette127",
+    "pass1_rgba": [
+      75,
+      69,
+      65,
+      128
+    ],
+    "pass1_rgb": "floor(source_base_rgb * [75,69,65] /128)",
+    "pass1_alpha": "source_base_alpha",
+    "pass2_rgba": [
+      128,
+      128,
+      128,
+      128
+    ],
+    "pass2_rgb": "max(0, floor((pass1_rgb - source_lightmap_rgb) * source_lightmap_alpha /128))",
+    "pass2_alpha": "pass1_alpha; RGB-only mask"
+  },
+  "intervals": {
+    "orchestrator": {
+      "start": "0x24a860",
+      "end": "0x24ac10",
+      "sha256": "4013f87ad86b160fae94b29a8d22c8f28802a75460ad57bdd5c406803ed9f6a0"
+    },
+    "stage_state_reset": {
+      "start": "0x24ac10",
+      "end": "0x24ae08",
+      "sha256": "4a95fe5fa2ee4e78c404d525f132ab0eca1fed91c28d993a78f5423ac628ed18"
+    },
+    "garage_eye_selector": {
+      "start": "0x511960",
+      "end": "0x511a7c",
+      "sha256": "9e1db0e724993daeb9bde8b87a910ad59a7f7bacf7f7b9300ab4867637fd799a"
+    },
+    "garage_fov": {
+      "start": "0x561648",
+      "end": "0x561688",
+      "sha256": "0a753f36f0d15b3568ae76fc4034ee729c44350590acde0aeaa784fb3f53f784"
+    },
+    "stage4_main_camera_copy": {
+      "start": "0x562318",
+      "end": "0x562420",
+      "sha256": "5d79d0567165c06c4c167be6d0b4ede05ed9eee12b51c87a2f31087d366338ff"
+    },
+    "capture_update": {
+      "start": "0x562530",
+      "end": "0x56272c",
+      "sha256": "9e4c0083df75b36834ca9107a7fc383408a8c3ddecc3bb0ffd4d0d6245c949b7"
+    },
+    "capture_basis": {
+      "start": "0x241128",
+      "end": "0x241304",
+      "sha256": "40912e14c0e62c4321bc612006102921cfc3e4ce48f96fd898cc42ce54b8e0cd"
+    },
+    "stage8_ortho_begin": {
+      "start": "0x562730",
+      "end": "0x562a2c",
+      "sha256": "4c4179a84d7bf5739786c7913272e0285ec1f78fe38f28f425261adeafb8f100"
+    },
+    "stage8_perspective_overlay": {
+      "start": "0x562f68",
+      "end": "0x563990",
+      "sha256": "07f4031cf4f8cae50247a44b2fb480a0b8e5421b33494b338c469a23fa083ae1"
+    },
+    "viewport": {
+      "start": "0x530f38",
+      "end": "0x5311f8",
+      "sha256": "0398056f2103d9119f42fbc61f78b56dfb03034a7359b2a9677981fdafc51e34"
+    },
+    "prop_matrix": {
+      "start": "0x397810",
+      "end": "0x397900",
+      "sha256": "b7b93e56f54be5540ccb2381dd8420b3146fc5f5e01d480c28e1d3171460a10e"
+    },
+    "sky_relocator": {
+      "start": "0x25c998",
+      "end": "0x25ca9c",
+      "sha256": "7eb4846cb2a4abb1ff621bd7f3d35a459cfd6d92a645469d3b8841eaf4ca6625"
+    },
+    "sky_draw": {
+      "start": "0x25c238",
+      "end": "0x25c7c8",
+      "sha256": "178042d8e02437913fe10144595a4040baafbad849ed3c676c936a2e8b77de56"
+    },
+    "image_sampler": {
+      "start": "0x2b8768",
+      "end": "0x2b8b04",
+      "sha256": "debc0a35a815b2ebeafe45a6aec1d5e1d2403102a97f1f494192a4ef7a27a68d"
+    },
+    "palette_upload": {
+      "start": "0x2acf98",
+      "end": "0x2ad144",
+      "sha256": "3c7b51249b805b8566b6deadc89642836f9f93c489314a0c8d3db2c218e672f2"
+    },
+    "material_passes": {
+      "start": "0x2b1f90",
+      "end": "0x2b2168",
+      "sha256": "59a7964c236becbe40805630aa706fb6eb37e943431e45be04eb05f4381e3c51"
+    },
+    "fx_project": {
+      "start": "0x255f30",
+      "end": "0x2560f8",
+      "sha256": "9b8e6a817da426fb2f5dd12eb85005908ce34c0051a35a15b2612da41f704cc0"
+    },
+    "fx_gate": {
+      "start": "0x251af8",
+      "end": "0x25234c",
+      "sha256": "9aee1b0d9341b42d1e0333a74774fdba0baeb2f0d76744acc8f1c4a11eb4bbb1"
+    },
+    "fx_overlay": {
+      "start": "0x254180",
+      "end": "0x2541f0",
+      "sha256": "b37ffc8a759ee6f6134231325f07b948dba69e051c26b0ba44bd642032e9e196"
+    },
+    "clear_draw": {
+      "start": "0x52a840",
+      "end": "0x52a8b0",
+      "sha256": "e76f0c5eeb6252172d45bc34764908df70dac5288508c1137b096f1334f30e76"
+    },
+    "clear_state": {
+      "start": "0x52f2e8",
+      "end": "0x52f368",
+      "sha256": "d89e02d6f3c1d863f0775a8d011dea392cef3f4f9df4abaec8e63f82517662d7"
+    },
+    "sky_root_relocator": {
+      "start": "0x25937c",
+      "end": "0x259450",
+      "sha256": "7dadc44946cb5e3f301c3ade0d3700c82240bbedff3d637f8297cdd359ebc8e8"
+    },
+    "world_palette_setter": {
+      "start": "0x24b364",
+      "end": "0x24b394",
+      "sha256": "9163b0dc7223dc26cc92b473d480ceb87c2a48e79dadd8fe9e276144a5a1ba3f"
+    },
+    "palette_override": {
+      "start": "0x38bf30",
+      "end": "0x38bf5c",
+      "sha256": "8f638de734bbbec218e539e70a5dce5cc93a02579cb82c4f952f52fd1317c90c"
+    },
+    "default_lighting_override": {
+      "start": "0x615d04",
+      "end": "0x615d08",
+      "sha256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+    },
+    "reset_state_table": {
+      "start": "0x615d10",
+      "end": "0x615d64",
+      "sha256": "6050fef3c407334be893328121a0378a7efc1e9b438053075bbf92a257065f4b"
+    },
+    "reset_texture_table": {
+      "start": "0x615d68",
+      "end": "0x615d74",
+      "sha256": "31190090408f837aa1dc44bf75404af354a0e5d5c965f1d407a97dd627554da5"
+    },
+    "fx_counter_increment": {
+      "start": "0x251aa8",
+      "end": "0x251ad8",
+      "sha256": "1e1818a7b56a740540a60170986d8478d051431f59ca6aff8a108dca4edf6ac7"
+    },
+    "main_view_vectors": {
+      "start": "0x1a1574",
+      "end": "0x1a15e0",
+      "sha256": "5ae0b64d17a615eec48c72c0f6ea1c7b8e8ea5a112080c99a3de85ed68f27f17"
+    },
+    "main_view_record_call": {
+      "start": "0x1a18b4",
+      "end": "0x1a18dc",
+      "sha256": "7bb53cb99dfa535d37c0ed51dffe7b12260d14d0b6b28bb2bfb1f63fdc8f12e3"
+    },
+    "main_view_record_setter": {
+      "start": "0x39e7c8",
+      "end": "0x39e818",
+      "sha256": "a926d8ee2b0b9d5468bf04cf43219fc01bee3b81249602ff2b4f69f7b823ec37"
+    },
+    "main_view_record_copy": {
+      "start": "0x39d610",
+      "end": "0x39d690",
+      "sha256": "b64a0d6a44dbb99c992d9abed563faa18e9d2f5ddb85c05b3edac9e1daa20065"
+    },
+    "main_view_record_getter": {
+      "start": "0x39d770",
+      "end": "0x39d784",
+      "sha256": "00e39a7cd6bb3c9d477616cdc62405f0b106084129d01786fd97c0ee95235cb8"
+    },
+    "city_view_record_store": {
+      "start": "0x257ac8",
+      "end": "0x257af4",
+      "sha256": "6319cc5b99a8f5b22836dfb63eafc36a55c5791842c3ea2f3a8ca65819166174"
+    },
+    "garage_view_record_join": {
+      "start": "0x511a88",
+      "end": "0x511aa0",
+      "sha256": "24cc090b85b26fe45a6c45c2ef84cf33a6e17c8401b34e055540b335d3df7284"
+    },
+    "panorama_axis_read": {
+      "start": "0x5636e0",
+      "end": "0x5636f8",
+      "sha256": "986908ea11ff95169bac6d761156baf2b4426d8b92ad25112a1ff984ef53d506"
+    },
+    "active_camera_pose": {
+      "start": "0x515790",
+      "end": "0x5157b0",
+      "sha256": "3b2aa5a1f6eff8324270283da8b520749405a2f34a7447cf8fd82b6259e6d578"
+    },
+    "garage_heading_delta": {
+      "start": "0x325b88",
+      "end": "0x325c08",
+      "sha256": "699ef2970819958a392cd7fca2fac3eda13a22c1af280016294cfe358be8214c"
+    },
+    "garage_heading_absolute": {
+      "start": "0x325d50",
+      "end": "0x325d80",
+      "sha256": "af7f3a636fffb50f9fec2740f2995a7b01ec5368567661017913ec1f9f628d1a"
+    },
+    "garage_rotate_y": {
+      "start": "0x244f70",
+      "end": "0x244fdc",
+      "sha256": "ded8a307e4e7fdc9db1d9592be8a04952df49b21d0fb33b4231a5978437e8f3b"
+    },
+    "native_sine_radians": {
+      "start": "0x41c900",
+      "end": "0x41ca34",
+      "sha256": "fb18354dc6d0d8f62168be2ad04469c830e14308f8cc4b29c83137de0e17d5d5"
+    },
+    "native_cosine_radians": {
+      "start": "0x41c7e0",
+      "end": "0x41c900",
+      "sha256": "a9a8640f88708f68459ead859c85f4fdce068f9d6ef534bd2575c45cf54145d9"
+    },
+    "garage_object_constructor": {
+      "start": "0x324e18",
+      "end": "0x324f64",
+      "sha256": "04a82797691c3281a0bc496c1dbfaa4185296dd3e118a5bf6415b1f2d737441c"
+    },
+    "garage_tune_loader": {
+      "start": "0x338c98",
+      "end": "0x338e88",
+      "sha256": "dfb3c52aa2a3469c4cf7f939919eb94e36c0f49bf712377b422b77a9f9f6ab9a"
+    }
+  },
+  "selected_words": {
+    "0x5626cc": "0x46000007",
+    "0x5626dc": "0x46000847",
+    "0x5626e0": "0x46001087",
+    "0x5626f0": "0x46000007",
+    "0x5626fc": "0x46000847",
+    "0x56270c": "0x46000007",
+    "0x25609c": "0x24060080",
+    "0x251b94": "0x32620040",
+    "0x251ba8": "0x32620080",
+    "0x251ac8": "0xae0302cc",
+    "0x2541dc": "0xae0002cc",
+    "0x24d504": "0xae4002cc",
+    "0x244f88": "0xc107240",
+    "0x244f94": "0xc1071f8",
+    "0x244fa4": "0x461510c2",
+    "0x244fac": "0x46000902",
+    "0x244fb4": "0x46150842",
+    "0x244fb8": "0x46001082",
+    "0x244fc0": "0x460418c0",
+    "0x244fc4": "0x46011081",
+    "0x325d70": "0xc4400904",
+    "0x325d78": "0xe4600004"
+  },
+  "camera_contract": {
+    "capture_size": [
+      256,
+      256
+    ],
+    "garage_fov_degrees": 100,
+    "near": 0.25,
+    "far": 1000,
+    "eye_offset_from_selected_car": [
+      0,
+      1,
+      0
+    ],
+    "fixed_authored_target": "original CarSpotsd",
+    "right": [
+      1,
+      0,
+      0
+    ],
+    "up": [
+      0,
+      0,
+      -1
+    ],
+    "backward": [
+      0,
+      1,
+      0
+    ],
+    "viewport_scale_y": -128,
+    "viewport_shift_y": 128,
+    "row0_world_axis": "-Z",
+    "basis_join": "241128 vertical branch gives raw -X/+Z;5626cc..56270c negates both R/U before final projection."
+  },
+  "fx_contract": {
+    "glow_projection_call_mask": 128,
+    "environment_queue_required_bit": 64,
+    "static_capture_environment_fx_count": 0,
+    "limit": "The five authored garage glows use main-view mask128, so they do not increment environment queue2cc; this static scene instantiates no vehicle/headlight/particle actors."
+  },
+  "source_shared_tune_sha256": "37b3ba93b942ed3e88c8e8881a989eb1e22f3290540cc493f6f97f162c999f0c",
+  "main_view_axis_contract": {
+    "source": "first vector of native active-camera compact pose",
+    "semantic": "right",
+    "panorama_yaw": "atan2(right_x,right_z)",
+    "viewer_axis": "camera.matrixWorld elements0,2 after explicit native-frame composition",
+    "viewer_input_relation": "Compose recovered-local camera right with native garage Ry(CarAnglesd). NativeXYZ is preserved."
+  },
+  "heading_contract": {
+    "source_tune_field": "CarAnglesd",
+    "angle_units": "radians",
+    "axis": "positive Y",
+    "rotation_x": "x*cos(angle)+z*sin(angle)",
+    "rotation_z": "z*cos(angle)-x*sin(angle)",
+    "absolute_euler_component": "Y",
+    "viewer_to_native_garage_frame": "Ry(CarAnglesd); preserve nativeXYZ, no axis flip",
+    "limit": "Orientation and units recovered; portable sine/cosine is not claimed bit-exact to the native polynomial.",
+    "source_field_join": "338c98 parses CarAngle%s into garage tune+0x3c+cityIndex*4; constructor 324e18..324f64 passes owner+0x8c8 into 324060; heading consumer loads owner+0x904."
+  }
+}

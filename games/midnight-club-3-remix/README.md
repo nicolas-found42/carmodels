@@ -4,7 +4,8 @@ Everything about this game in this repository:
 
 | What | Where |
 | --- | --- |
-| Source tree (this folder) | `cars/`, `game-files/` (local inputs, ignored), `recovered-models/` |
+| Source tree (this folder) | `cars/`, `recovered-models/` |
+| Original input | `games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso` and its `.7z` archive |
 | Tools | `tools/extract_mc3_cars.py`, `tools/export_mc3_models.py`, `tools/import_mc3_{catalogs,previews}.py`, `tools/mc3_*.py` and their tests |
 | Research notes | [`research/midnight-club-3-remix-catalogs.md`](../../research/midnight-club-3-remix-catalogs.md), [`research/midnight-club-3-remix-extraction.md`](../../research/midnight-club-3-remix-extraction.md), [`research/midnight-club-3-remix-formats.md`](../../research/midnight-club-3-remix-formats.md), [`research/midnight-club-3-remix-preview-readiness.md`](../../research/midnight-club-3-remix-preview-readiness.md), [`research/midnight-club-3-remix-preview-research.md`](../../research/midnight-club-3-remix-preview-research.md), [`research/midnight-club-3-remix-previews.md`](../../research/midnight-club-3-remix-previews.md), [`research/midnight-club-3-remix-textures.md`](../../research/midnight-club-3-remix-textures.md) |
 | Evidence | `research/evidence/midnight-club-3-remix/` |
@@ -13,7 +14,7 @@ Everything about this game in this repository:
 | Checks | `tools/check.sh --game midnight-club-3-remix` (the `*mc3*` checks; `mc3_roundtrip` runs by default); add `--full` for corpus re-derivation |
 
 Recovered from the supplied NTSC PS2 disc, boot serial `SLUS_213.55`.
-Original input remains under `game-files/`; its SHA-256 is
+The original input is stored under `games/source-data/PS2/midnight-club-3-remix/`; its SHA-256 is
 `de199f7e7f57b7cb603a129217f7482d50644fd66558450dfeb5612857b732f9`.
 
 `cars/` contains **94 source vehicle carriers**, **4,323 unpacked nested members**,

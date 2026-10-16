@@ -19,16 +19,16 @@ DEFAULT_JOBS = min(4, os.cpu_count() or 1)
 # and bulk/private-input re-derivation requires --full or an explicit --only.
 SHOWCASE = {
     'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
-    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
+    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
     'verify_recovered_asset_index', 'test_export_materials', 'test_bake_models', 'test_model_png', 'test_model_catalog',
     'test_build_showcase', 'test_build_dealership', 'dealership_freshness', 'test_library_filter', 'test_serve_library',
     'dealership_roundtrip', 'redline_roundtrip', 'mc3_roundtrip', 'test_run_checks', 'test_review_payload',
-    'test_check_advice',
+    'test_check_advice', 'test_mc3_tire_alpha', 'test_mc3_tire_vu', 'test_mc3_vehicle_vu', 'test_mc3_vehicle_math_reference', 'test_mc3_vehicle_lighting', 'test_mc3_vehicle_texture', 'test_mc3_vehicle_material', 'test_mc3_vehicle_inputs', 'test_mc3_vehicle_animation', 'test_mc3_vehicle_bindings', 'test_mc3_vehicle_deformation', 'test_mc3_vehicle_fragment', 'test_mc3_vehicle_raster', 'test_mc3_vehicle_programs', 'test_mc3_vehicle_gif', 'test_mc3_vehicle_state', 'test_mc3_vif_reference', 'test_mc3_vehicle_sampler', 'test_mc3_vehicle_sprite', 'test_mc3_vehicle_paint', 'test_mc3_panorama_angle', 'test_mc3_vehicle_nearest', 'test_mc3_vehicle_vram', 'test_mc3_vehicle_depth32', 'test_mc3_vehicle_uniforms', 'test_mc3_vehicle_skeleton', 'test_mc3_ee_cop2', 'test_mc3_ee_mr32', 'test_mc3_ee_full_add', 'test_mc3_ee_mmi', 'test_mc3_vehicle_dispatch', 'test_mc3_vehicle_mip', 'test_mc3_vehicle_paint_factory', 'test_mc3_vehicle_mip_transport', 'test_mc3_ee_mac', 'test_mc3_ee_division', 'test_mc3_vehicle_authored_draw', 'test_mc3_vehicle_high_z', 'test_mc3_vehicle_variable_mip', 'test_mc3_vehicle_initialization', 'test_mc3_vehicle_target', 'test_mc3_vehicle_high_z_transport', 'test_mc3_vehicle_depth_trace', 'test_mc3_vehicle_variable_mip_transport', 'test_mc3_texture_binding', 'test_mc3_vehicle_transfer_reference', 'test_mc3_tire_material', 'test_mc3_vehicle_math', 'test_mc3_vehicle_resources', 'test_mc3_vu_interpreter', 'test_mc3_vehicle_bindings_js', 'test_mc3_vehicle_deformation_js', 'test_mc3_vehicle_fragment_js', 'test_mc3_vehicle_raster_js', 'test_mc3_vehicle_programs_js', 'test_mc3_vehicle_gif_js', 'test_mc3_vehicle_state_js', 'test_mc3_vif_decoder', 'test_mc3_vehicle_pipeline', 'test_mc3_vehicle_sampler_js', 'test_mc3_vehicle_sprite_js', 'test_mc3_ee', 'test_mc3_ee_division_js', 'test_mc3_vehicle_transfer_reference_js', 'test_mc3_vehicle_nearest_js', 'test_mc3_vehicle_vram_js', 'test_mc3_vehicle_depth32_js', 'test_mc3_vehicle_vram_pipeline', 'test_mc3_vehicle_mip_js', 'test_mc3_vehicle_paint_factory_js', 'test_mc3_vehicle_mip_pipeline', 'test_mc3_vehicle_paint_factory_pipeline', 'test_mc3_vehicle_high_z_js', 'test_mc3_vehicle_variable_mip_js', 'test_mc3_vehicle_initialization_js', 'test_mc3_vehicle_target_js', 'test_mc3_vehicle_high_z_pipeline', 'test_mc3_vehicle_depth_trace_js', 'test_mc3_vehicle_variable_mip_pipeline', 'test_mc3_specular_native', 'test_mc3_environment_gs', 'test_mc3_specular', 'test_mc3_environment', 'test_mc3_gs_raster', 'test_mc3_environment_sky', 'test_mc3_environment_native', 'test_mc3_environment_pack', 'test_mc3_environment_raster', 'test_mc3_reference_runtime', 'test_verify_mc3_raster_reference', 'test_mc3_garage', 'test_game_paint', 'test_build_game_paints', 'game_paints_freshness',
 }
 
 # Keep whole-corpus and captured/private-input checks out of routine tooling runs.
 FULL_ONLY = {
-    'gt_models', 'gt_extraction',
+    'gt_models', 'gt_extraction', 'mc3_tire_alpha_native', 'mc3_raster_reference_native',
     'gt4_catalog', 'gt4_extraction', 'mcla_extraction', 'mcla_resources', 'mcla_decoding',
     'mcla_names', 'mcla_catalog', 'line_coverage',
     'verify_config_data_sound', 'verify_sound_bank_index', 'verify_vu_dispatch_map', 'test_vu_dispatch_map',
@@ -41,7 +41,7 @@ GAMES = {
     'gran-turismo': ('test_gt_', 'test_import_gt_', 'gt_'),
     'gran-turismo-4': ('test_gt4_', 'test_extract_gt4_', 'test_import_gt4_', 'gt4_'),
     'redline': ('test_redline_', 'test_extract_redline_', 'test_export_redline_', 'test_import_redline_'),
-    'midnight-club-3-remix': ('test_mc3_', 'test_extract_mc3_', 'test_import_mc3_', 'test_export_mc3_'),
+    'midnight-club-3-remix': ('test_mc3_', 'test_extract_mc3_', 'test_import_mc3_', 'test_export_mc3_', 'mc3_'),
     'midnight-club-los-angeles': ('test_mcla_', 'test_extract_mcla_', 'test_import_mcla_',
                                 'test_verify_mcla_', 'mcla_', 'test_aes_decrypt', 'test_xdvdfs',
                                 'test_xex2', 'line_coverage', 'test_line_coverage'),
@@ -57,7 +57,7 @@ GAMES = {
 # catalog tests use the default single worker. Re-audit these when their fixtures change.
 PARALLEL_SAFE = {
     'ruff', 'test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading',
-    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
+    'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui',
     'test_export_materials', 'test_build_showcase', 'test_bake_models', 'test_model_catalog', 'test_model_png',
     'test_review_payload', 'test_check_advice', 'test_static_inputs', 'test_recovery_inputs',
     'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_model', 'test_import_gt_dealership',
@@ -71,27 +71,36 @@ PARALLEL_SAFE = {
     'test_mcla_rpf', 'test_extract_mcla_cars', 'test_mcla_lzx', 'test_mcla_resource', 'test_mcla_model',
     'test_mcla_texture', 'test_mcla_tuning', 'test_mcla_names', 'test_mcla_preview', 'test_mcla_preview_geometry',
     'test_import_mcla_catalog', 'test_import_mcla_dealership', 'test_mcla_preview_experiments', 'test_line_coverage',
+    'test_mc3_tire_alpha', 'test_mc3_tire_vu', 'test_mc3_vehicle_vu', 'test_mc3_vehicle_math_reference', 'test_mc3_vehicle_lighting', 'test_mc3_vehicle_texture', 'test_mc3_vehicle_material', 'test_mc3_vehicle_inputs', 'test_mc3_vehicle_animation', 'test_mc3_vehicle_bindings', 'test_mc3_vehicle_deformation', 'test_mc3_vehicle_fragment', 'test_mc3_vehicle_raster', 'test_mc3_vehicle_programs', 'test_mc3_vehicle_gif', 'test_mc3_vehicle_state', 'test_mc3_vif_reference', 'test_mc3_vehicle_sampler', 'test_mc3_vehicle_sprite', 'test_mc3_vehicle_paint', 'test_mc3_panorama_angle', 'test_mc3_vehicle_nearest', 'test_mc3_vehicle_vram', 'test_mc3_vehicle_depth32', 'test_mc3_vehicle_uniforms', 'test_mc3_vehicle_skeleton', 'test_mc3_ee_cop2', 'test_mc3_ee_mr32', 'test_mc3_ee_full_add', 'test_mc3_ee_mmi', 'test_mc3_vehicle_dispatch', 'test_mc3_vehicle_mip', 'test_mc3_vehicle_paint_factory', 'test_mc3_vehicle_mip_transport', 'test_mc3_ee_mac', 'test_mc3_ee_division', 'test_mc3_vehicle_authored_draw', 'test_mc3_vehicle_high_z', 'test_mc3_vehicle_variable_mip', 'test_mc3_vehicle_initialization', 'test_mc3_vehicle_target', 'test_mc3_vehicle_high_z_transport', 'test_mc3_vehicle_depth_trace', 'test_mc3_vehicle_variable_mip_transport', 'test_mc3_texture_binding', 'test_mc3_vehicle_transfer_reference', 'test_mc3_tire_material', 'test_mc3_vehicle_math', 'test_mc3_vehicle_resources', 'test_mc3_vu_interpreter', 'test_mc3_vehicle_bindings_js', 'test_mc3_vehicle_deformation_js', 'test_mc3_vehicle_fragment_js', 'test_mc3_vehicle_raster_js', 'test_mc3_vehicle_programs_js', 'test_mc3_vehicle_gif_js', 'test_mc3_vehicle_state_js', 'test_mc3_vif_decoder', 'test_mc3_vehicle_pipeline', 'test_mc3_vehicle_sampler_js', 'test_mc3_vehicle_sprite_js', 'test_mc3_ee', 'test_mc3_ee_division_js', 'test_mc3_vehicle_transfer_reference_js', 'test_mc3_vehicle_nearest_js', 'test_mc3_vehicle_vram_js', 'test_mc3_vehicle_depth32_js', 'test_mc3_vehicle_vram_pipeline', 'test_mc3_vehicle_mip_js', 'test_mc3_vehicle_paint_factory_js', 'test_mc3_vehicle_mip_pipeline', 'test_mc3_vehicle_paint_factory_pipeline', 'test_mc3_vehicle_high_z_js', 'test_mc3_vehicle_variable_mip_js', 'test_mc3_vehicle_initialization_js', 'test_mc3_vehicle_target_js', 'test_mc3_vehicle_high_z_pipeline', 'test_mc3_vehicle_depth_trace_js', 'test_mc3_vehicle_variable_mip_pipeline', 'test_mc3_specular_native', 'test_mc3_environment_gs', 'test_mc3_specular', 'test_mc3_environment', 'test_mc3_gs_raster', 'test_mc3_environment_sky', 'test_mc3_environment_native', 'test_mc3_environment_pack', 'test_mc3_environment_raster', 'test_mc3_reference_runtime', 'test_verify_mc3_raster_reference', 'test_mc3_garage', 'test_game_paint', 'test_build_game_paints', 'test_mc3_paint', 'test_mcla_paint', 'game_paints_freshness',
 }
 
 
 def registry():
     checks = [{'name': 'ruff', 'command': ['ruff', 'check', 'tools'], 'requires': 'ruff'}]
-    checks += [{'name': n, 'command': ['node', f'tools/{n}.mjs'], 'requires': 'node'} for n in
-               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_mc3_preview_ui', 'test_mcla_preview_ui']]
+    checks += [{'name': n, 'command': ['node', f'tools/{n.removesuffix("_js")}.mjs'], 'requires': 'node'} for n in
+               ['test_viewer_scenes', 'test_viewer_materials', 'test_model_load', 'test_viewer_loading', 'test_dealership', 'test_editable_glb', 'test_native_catalog_ui', 'test_factory_colours', 'test_mc3_preview_ui', 'test_mcla_preview_ui', 'test_mc3_tire_material', 'test_mc3_vehicle_math', 'test_mc3_vehicle_resources', 'test_mc3_vu_interpreter', 'test_mc3_vehicle_bindings_js', 'test_mc3_vehicle_deformation_js', 'test_mc3_vehicle_fragment_js', 'test_mc3_vehicle_raster_js', 'test_mc3_vehicle_programs_js', 'test_mc3_vehicle_gif_js', 'test_mc3_vehicle_state_js', 'test_mc3_vif_decoder', 'test_mc3_vehicle_pipeline', 'test_mc3_vehicle_sampler_js', 'test_mc3_vehicle_sprite_js', 'test_mc3_ee', 'test_mc3_ee_division_js', 'test_mc3_vehicle_transfer_reference_js', 'test_mc3_vehicle_nearest_js', 'test_mc3_vehicle_vram_js', 'test_mc3_vehicle_depth32_js', 'test_mc3_vehicle_vram_pipeline', 'test_mc3_vehicle_mip_js', 'test_mc3_vehicle_paint_factory_js', 'test_mc3_vehicle_mip_pipeline', 'test_mc3_vehicle_paint_factory_pipeline', 'test_mc3_vehicle_high_z_js', 'test_mc3_vehicle_variable_mip_js', 'test_mc3_vehicle_initialization_js', 'test_mc3_vehicle_target_js', 'test_mc3_vehicle_high_z_pipeline', 'test_mc3_vehicle_depth_trace_js', 'test_mc3_vehicle_variable_mip_pipeline', 'test_mc3_specular', 'test_mc3_environment', 'test_mc3_gs_raster', 'test_game_paint']]
     names = ['verify_recovered_asset_index', 'test_export_materials', 'test_build_showcase', 'test_bake_models',
              'test_build_dealership', 'test_model_catalog', 'test_model_png', 'test_run_checks', 'test_review_payload',
              'test_check_advice', 'test_static_inputs', 'test_recovery_inputs', 'test_gt_archive', 'test_gt_asset_judgments', 'test_gt_wheels', 'test_gt_metadata', 'test_gt_native_data', 'test_gt_model', 'test_import_gt_dealership',
              'test_library_filter', 'test_serve_library', 'test_redline_archive', 'test_extract_redline_cars', 'test_mc3_archive', 'test_extract_mc3_cars', 'test_import_mc3_catalogs',
-             'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
+             'test_mc3_tire_alpha', 'test_mc3_tire_vu', 'test_mc3_vehicle_vu', 'test_mc3_vehicle_math_reference', 'test_mc3_vehicle_lighting', 'test_mc3_vehicle_texture', 'test_mc3_vehicle_material', 'test_mc3_vehicle_inputs', 'test_mc3_vehicle_animation', 'test_mc3_vehicle_bindings', 'test_mc3_vehicle_deformation', 'test_mc3_vehicle_fragment', 'test_mc3_vehicle_raster', 'test_mc3_vehicle_programs', 'test_mc3_vehicle_gif', 'test_mc3_vehicle_state', 'test_mc3_vif_reference', 'test_mc3_vehicle_sampler', 'test_mc3_vehicle_sprite', 'test_mc3_vehicle_paint', 'test_mc3_panorama_angle', 'test_mc3_vehicle_nearest', 'test_mc3_vehicle_vram', 'test_mc3_vehicle_depth32', 'test_mc3_vehicle_uniforms', 'test_mc3_vehicle_skeleton', 'test_mc3_ee_cop2', 'test_mc3_ee_mr32', 'test_mc3_ee_full_add', 'test_mc3_ee_mmi', 'test_mc3_vehicle_dispatch', 'test_mc3_vehicle_mip', 'test_mc3_vehicle_paint_factory', 'test_mc3_vehicle_mip_transport', 'test_mc3_ee_mac', 'test_mc3_ee_division', 'test_mc3_vehicle_authored_draw', 'test_mc3_vehicle_high_z', 'test_mc3_vehicle_variable_mip', 'test_mc3_vehicle_initialization', 'test_mc3_vehicle_target', 'test_mc3_vehicle_high_z_transport', 'test_mc3_vehicle_depth_trace', 'test_mc3_vehicle_variable_mip_transport', 'test_mc3_texture_binding', 'test_mc3_vehicle_transfer_reference', 'test_mc3_specular_native', 'test_mc3_environment_gs', 'test_mc3_environment_sky', 'test_mc3_environment_native', 'test_mc3_environment_pack', 'test_mc3_environment_raster', 'test_mc3_reference_runtime', 'test_verify_mc3_raster_reference', 'test_mc3_garage', 'test_mc3_pck', 'test_mc3_wheels', 'test_mc3_materials', 'test_mc3_textures', 'test_mc3_model', 'test_export_mc3_models', 'test_mc3_preview', 'test_import_mc3_previews', 'test_mc3_preview_experiments',
              'test_redline_mesh', 'test_redline_texture', 'test_redline_model', 'test_export_redline_models', 'test_import_redline_dealership',
              'test_gt4_volume', 'test_extract_gt4_cars', 'test_gt4_model', 'test_gt4_specdb', 'test_gt4_glb',
              'test_import_gt4_catalog', 'test_import_gt4_dealership',
              'test_aes_decrypt', 'test_xdvdfs', 'test_xex2', 'test_mcla_rpf', 'test_extract_mcla_cars',
              'test_mcla_lzx', 'test_mcla_resource', 'test_mcla_model', 'test_mcla_texture', 'test_mcla_tuning',
              'test_verify_mcla_resources', 'test_verify_mcla_decoding', 'test_mcla_names', 'test_mcla_preview',
-             'test_mcla_preview_geometry',
+             'test_mcla_preview_geometry', 'test_mc3_paint', 'test_mcla_paint', 'test_build_game_paints',
              'test_import_mcla_catalog', 'test_import_mcla_dealership', 'test_mcla_preview_experiments', 'test_line_coverage']
     checks += [{'name': n, 'command': ['python3', f'tools/{n}.py']} for n in names]
+    # Full source-disc rederivation is a serial barrier; the offline test above is read-only.
+    checks.append({'name': 'mc3_tire_alpha_native',
+                   'command': ['python3', 'tools/verify_mc3_tire_alpha.py', '--disc'],
+                   'availability': ['python3', 'tools/verify_mc3_tire_alpha.py', '--available']})
+    checks.append({'name': 'mc3_raster_reference_native',
+                   'command': ['python3', 'tools/verify_mc3_raster_reference.py'],
+                   'availability': ['python3', 'tools/verify_mc3_raster_reference.py', '--available']})
+    checks.append({'name': 'game_paints_freshness', 'command': ['python3', 'tools/build_game_paints.py', '--check']})
     checks.append({'name': 'dealership_freshness', 'command': ['python3', 'tools/build_dealership.py', '--check']})
     checks.append({'name':'gt_models', 'command':['python3', 'tools/export_gt_models.py', '--check']})
     checks.append({'name':'gt_extraction', 'command':['python3', 'tools/extract_gt_cars.py', '--check'],

@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "source_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "intervals": {
+    "palette_reader": {
+      "start": "0x524878",
+      "end": "0x524924",
+      "sha256": "c79953b966d47cd7bf33da766c1d29785af09b14bf72966f057de82f698c7c54"
+    },
+    "format_dispatch": {
+      "start": "0x524a74",
+      "end": "0x524aa8",
+      "sha256": "630351931ab1437f66557a178143cdb2b66fa2ce74d42872eb3692d3d2b46122"
+    },
+    "format14": {
+      "start": "0x525168",
+      "end": "0x5252e0",
+      "sha256": "df0b4cac0efc97f5fab47725af53b1bfaf69b5fa445ec5a6238b5c831afba64c"
+    },
+    "format16": {
+      "start": "0x525580",
+      "end": "0x525858",
+      "sha256": "7733a2f029923db5b31dbadf9ca115d80a282bfb019dc85275095e75fe4f4c9d"
+    },
+    "format_table": {
+      "start": "0x66fdb4",
+      "end": "0x66fdc0",
+      "sha256": "86ecc922e8906892caa9b0866c89e256c737f0b1bd93bc5bf3ceb69df0d68d04"
+    },
+    "image_defaults": {
+      "start": "0x61c28c",
+      "end": "0x61c298",
+      "sha256": "4446bac0ad66021ad90bf1a10f9c93b5f7fef6e9ddf3ee93b5204a1135031305"
+    },
+    "texture_constructor": {
+      "start": "0x2b7498",
+      "end": "0x2b7c54",
+      "sha256": "41286b93efabd7d7e58926b90fa155b9a9c47e45c95953290283bd81871a000d"
+    }
+  },
+  "selected_words": {
+    "0x5248bc": "0xa2020002",
+    "0x5248c8": "0xa2020001",
+    "0x5248d4": "0xa2020000",
+    "0x5248e0": "0x9283c294",
+    "0x5248ec": "0x431018",
+    "0x5248f0": "0x53001a",
+    "0x5248f4": "0x1012",
+    "0x5248f8": "0xa2020003",
+    "0x525290": "0x24060100",
+    "0x525298": "0xc14921e",
+    "0x5252bc": "0xc0e64ea",
+    "0x525738": "0xafa2041c",
+    "0x525748": "0xc14921e",
+    "0x5257b4": "0x3043000f",
+    "0x5257b8": "0xa2030000",
+    "0x5257bc": "0x21102",
+    "0x5257c4": "0xa2020000",
+    "0x5257ec": "0x24060006",
+    "0x525804": "0x24060010",
+    "0x52580c": "0xc14921e",
+    "0x525834": "0xc0e64ea"
+  },
+  "initial_data": {
+    "0x61c28c": "0101",
+    "0x61c294": "80",
+    "0x66fdb4": "68515200",
+    "0x66fdbc": "80555200"
+  },
+  "derived_contract": {
+    "file_palette_order": "BGRA",
+    "native_alpha_max": 128,
+    "alpha_formula": "floor(source_alpha*128/255)",
+    "format14_palette_entries": 256,
+    "format16_palette_entries": 16,
+    "format16_nibble_order": "low then high"
+  },
+  "observations": [
+    "524878 reads B,G,R,A source bytes into native R,G,B,A destination and computes A*byte61c294/255. R5900 MULT5248ec explicitly encodes rd=v0 (standard MIPS decompiler omits that destination).",
+    "Default61c28c/d retain indexed formats;61c294 initializes native alpha maximum128. Format14 table target525168 uses256-entry palette;format16 target525580 uses16-entry palette.",
+    "Format16 indexed4 branch5257ec keeps packed bytes; alternate indexed8 branch5257b4..c4 explicitly writes low then high nibble.",
+    "2b7498 format6 copies16 native RGBA palette words verbatim before upload; 8bitCSM1 upload swizzle is a permutation, not a logical color change."
+  ],
+  "claim_limits": [
+    "Static decoding for original boot/default image-loader settings, not a runtime texture capture.",
+    "This decoder reads logical texels; GS rasterization and image sampling belong to the separate native renderer."
+  ]
+}

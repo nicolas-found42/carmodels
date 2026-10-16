@@ -1,6 +1,6 @@
 """Static stock LOD-0 MCLA previews, with source identity and explicit assembly readings.
 
-No runtime config is executed. Part offsets, neutral paint and normalized wheel sizing
+No runtime config is executed. Part offsets, static paint and normalized wheel sizing
 are readings, documented in research/midnight-club-los-angeles-previews.md.
 """
 import hashlib
@@ -13,18 +13,19 @@ from bake_models import IDENTITY, compose, node_transform
 
 import mcla_lzx
 import mcla_model
+import mcla_paint
 from mcla_preview_geometry import cleanup_preview_geometry
 import mcla_texture
 from gt4_glb import Builder, _face_normals, _normalize
 from mcla_rpf import jenkins
 from mc3_textures import encode_png
 
-PROFILE = 'mcla-xbox360-static-stock-v2'
+PROFILE = 'mcla-xbox360-static-stock-v3'
 LIMITS = [
     'Static stock-slot LOD 0 assembly; XCC configurations, damage, lamps, animation and game shader execution are not reproduced.',
     'Native submodel bone bindings and cached orientation bases are retained; attachment aliases and static part selection remain assembly readings. Occluders and deforming convertible tops are omitted.',
     'Native Y-up coordinates, facing -Z with +X right; no game-to-viewer rotation is applied.',
-    'Diffuse textures use the half-resolution XTL pack where present, otherwise the source XTP. Neutral paint and simplified opaque materials do not reproduce runtime colour, reflection, glass or blending.',
+    'Diffuse textures use the half-resolution XTL pack where present, otherwise the source XTP. Exact ambient XML palette vectors are selectable on AmbientCarPaint materials using static linear PBR factors, with row zero as the preview default. Runtime paint selection, paint type, reflection, glass and blending are not reproduced; player paint remains neutral without a proven palette join.',
     'Shared rims join by exact stock name/hash, not runtime configuration. Tire radius equals source axle height; rim radius uses the source tire bead/outer-radius ratio, brake radius is 0.55, and width 0.65 of tire radius. These are preview approximations, not decoded tire specifications.',
     'Ambient models keep their embedded wheels. Shared tire textures and unidentified stock brake packs are not substituted; tire material is neutral rubber.',
 ]
@@ -462,14 +463,27 @@ def build_car(extraction, vehicle, index=None):
                                           'width': height * (0.35 if bike else 0.65),
                                           'method': 'axle-height-and-native-tire-bead'},
                                'vertices': vc, 'triangles': tc})
+    paint = None
+    palette_path = 'shared/tune/ambients/traffic/' + vehicle + '/mcambientcartypecolor.xml'
+    if vehicle.startswith('va_') and palette_path in sources.rows:
+        try:
+            paint = mcla_paint.decode(sources.read(palette_path))
+        except mcla_paint.PaintError as error:
+            raise PreviewError(str(error)) from None
+        paint = dict(paint, source=palette_path, variants=mcla_paint.apply(builder, paint),
+                     interpretation='native-ambient-rgb-as-linear-pbr', preview_default_row=0)
     record = {'vehicle': vehicle, 'profile': PROFILE, 'variant': 'stock', 'lod': 0,
               'vertices': total_vertices, 'triangles': total_triangles, 'parts': parts, 'wheels': wheels,
               'omitted': sorted(omitted), 'texture_pack': pack_path,
               'sources': [sources.used[p] for p in sorted(sources.used)], 'claim_limits': LIMITS}
+    if paint is not None:
+        record['ambient_paint'] = paint
     if repairs:
         record['preview_geometry_repairs'] = repairs
         record['claim_limits'] = LIMITS + [
             'The S7 preview applies an explicit source-pinned divider geometry cleanup recorded separately from native placement; native resource and ZIP bytes remain unchanged.']
+    record['gamePaint'] = mcla_paint.game_paint(
+        builder.doc, paint, sources.used[palette_path] if paint is not None else None)
     builder.doc['extras'] = dict(record, car=vehicle, source_profile=PROFILE)
     glb = builder.finish()
     record = dict(record, glb_bytes=len(glb), glb_sha256=sha(glb))

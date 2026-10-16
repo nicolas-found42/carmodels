@@ -1,9 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {isNativePackage, dealershipDownload, loadCar, validateCars} from '../dealership/dealership.mjs';
-import {createColourControls} from '../dealership/colour-controls.mjs';
-import * as THREE from '../dealership/vendor/three.module.js';
-import {applyMaterial} from '../dealership/materials.mjs';
+import {prepareMC3Environment,disposeMC3Environment} from '../dealership/mc3-environment.mjs';
 
 const native={code:'MC3_VP_TEST_04',name:'vp_test_04',sourceCode:'vp_test_04',game:'midnight-club-3-remix',
   gameLabel:'Midnight Club 3 Remix',sourceVariant:'native',displayMode:'native-package',bodyStyle:'unknown',
@@ -70,7 +68,7 @@ const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerEle
 const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
   'loadCar','applyFilters','fmt','colourControls',
-  `let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
+  `const paintDownload={clear(){}};let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
   $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
   ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls);
 await select(native);
@@ -82,6 +80,26 @@ assert.match($('paint-caveat').textContent,/not been converted/);
 assert.equal($('auto-rotate').disabled,true);
 assert.equal(colourControls.enabled,false,'native packages disable custom colours');
 await select(native);assert.equal(removed,1);assert.equal(modelLoads,0);
+// A paint-metadata/setup failure after geometry loads must not leave a live car,
+// enabled controls, variant choices, or a stale download behind.
+{
+  const preview={...native,displayMode:'textured-glb',model:{schema:2,source:{glb:'test.glb'}}};
+  const renderer={},environment=JSON.parse(fs.readFileSync(new URL('../dealership/public/midnight-club-3-remix/environment/native-garage.json',import.meta.url)));
+  const model={userData:{colourVariants:[],paintDoc:{}}};let active=false,freed=0,cleared=0;
+  const paintControls={enabled:false,setEnabled(v){this.enabled=v;},bind(){throw Error('Invalid recovered paint metadata');}};
+  const run=new Function('$','document','gameLabel','gameId','isNativePackage','dealershipDownload','scene','disposeCar',
+    'loadCar','applyFilters','fmt','colourControls','paintDownload','paletteReady','gamePalette','paletteError','renderer','prepareMC3Environment',
+    `let selectionId=0,selectionController=null,current=null,carMesh=null;${page.slice(selectStart,selectEnd)}return select;`)(
+    $,{querySelectorAll:()=>[],createElement:element},()=>preview.gameLabel,c=>c.game,isNativePackage,dealershipDownload,
+    {add(){active=true;},remove(){active=false;}},()=>freed++,async()=>model,()=>{},String,paintControls,
+    {clear(){cleared++;}},Promise.resolve(),[],'',renderer,
+    active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:true,json:async()=>environment})}));
+  await run(preview);
+  assert.equal(active,false);assert.equal(freed,1);assert.equal(paintControls.enabled,false);assert(cleared>=2);
+  assert.equal($('download-model').href,undefined);assert.equal($('colour-control').hidden,true);
+  assert.match($('loading').textContent,/Invalid recovered paint metadata/);
+  disposeMC3Environment(renderer);
+}
 const helpersStart=page.indexOf('function showColourVariants('),helpersEnd=page.indexOf('/* ---------- inspection controls',helpersStart);
 const {showColourVariants,showNativeSpecifications}=new Function('$','document',
   `${page.slice(helpersStart,helpersEnd)}return {showColourVariants,showNativeSpecifications};`)($,{createElement:element});
@@ -98,57 +116,15 @@ assert.equal($('k-colours').textContent,'Not available','edited model without em
 showColourVariants({userData:{colourVariants:[{index:0,name:'Only native set'}]}});
 assert.equal($('colour-control').hidden,false);assert.equal($('colour-variant').disabled,false,'one variant can still differ from the GLB default');
 let switched=null;
+colourControls.setPreset=index=>switched=index;
 const handlerStart=page.indexOf("$('colour-variant').addEventListener('change'"),handlerEnd=page.indexOf('const motion',handlerStart);
-new Function('$','carMesh','colourControls',page.slice(handlerStart,handlerEnd))($,{userData:{setColourVariant:index=>switched=index}},colourControls);
+new Function('$','colourControls',page.slice(handlerStart,handlerEnd))($,colourControls);
 $('colour-variant').value='1';$('colour-variant').listeners.change();assert.equal(switched,1);
-$('colour-variant').value='';$('colour-variant').listeners.change();assert.equal(switched,null,'the original/default option restores the base materials');
-assert.equal(colourControls.clears,2,'factory choices remove a custom preview tint');
-
-const colourNodes=new Map();const colourNode=id=>{if(!colourNodes.has(id))colourNodes.set(id,element());return colourNodes.get(id);};
-const tints=[];let resets=0;
-const custom=createColourControls({root:{querySelector:colourNode},onTint:value=>tints.push(value),onReset:()=>resets++});
-const picker=colourNode('#custom-colour'),hex=colourNode('#custom-colour-hex'),reset=colourNode('#reset-colour');
-assert(picker.disabled && hex.disabled && reset.disabled);
-hex.value='#ff0000';hex.listeners.input();assert.equal(tints.length,0,'disabled controls cannot change a model');
-custom.setEnabled(true);assert.equal(picker.disabled,false);assert.equal(hex.value,'#ffffff');
-picker.value='#FA8072';picker.listeners.input();assert.equal(custom.tint,'#fa8072');assert.equal(hex.value,'#fa8072');
-picker.value='#FF8800';picker.listeners.change();assert.equal(custom.tint,'#ff8800','native pickers can commit through change as well as live input');
-hex.value='#0000ff';hex.listeners.input();assert.equal(picker.value,'#0000ff');assert.equal(tints.at(-1),'#0000ff');
-const validCount=tints.length;hex.value='#ff';hex.listeners.input();
-assert.equal(hex.attributes['aria-invalid'],'true');assert.equal(custom.tint,'#0000ff');assert.equal(tints.length,validCount);
-assert.match(colourNode('#custom-colour-status').textContent,/last valid colour/);
-hex.value='#00FF00';hex.listeners.input();assert.equal(custom.tint,'#00ff00');assert.equal(hex.attributes['aria-invalid'],undefined);
-reset.listeners.click();assert.equal(custom.tint,null);assert.equal(tints.at(-1),null);assert.equal(resets,1);assert.equal(picker.value,'#ffffff');
-picker.value='#aa0000';picker.listeners.input();custom.clear();assert.equal(custom.tint,null);assert.equal(tints.at(-1),null);
-picker.value='#ff0000';picker.listeners.input();custom.setEnabled(false);
-assert.equal(custom.tint,null);assert.equal(hex.value,'#ffffff');assert(picker.disabled && hex.disabled && reset.disabled);
-custom.setEnabled(true);assert.equal(custom.tint,null,'new selections never inherit the previous car preview');
-
-// Run the source page's actual material and factory-selection callbacks with real
-// materials. Tint changes must coexist with texture/wire/filter inspector state.
-const sourceNodes=new Map(),sourceNode=id=>{if(!sourceNodes.has(id))sourceNodes.set(id,element());return sourceNodes.get(id);};
-let updateSource;
-const sourceColours=createColourControls({root:{querySelector:sourceNode},onTint:()=>updateSource(),onReset:()=>{sourceNode('#variant').value='';updateSource();}});
-const sourceTextures=[new THREE.Texture(),new THREE.Texture()];
-const sourceMaterial=new THREE.MeshStandardMaterial();sourceMaterial.vertexColors=true;
-const sourceDoc={materials:[{pbrMetallicRoughness:{baseColorFactor:[1,1,1,1],baseColorTexture:{index:0}}},
-  {pbrMetallicRoughness:{baseColorFactor:[.5,1,1,1],baseColorTexture:{index:1}}}],textures:[{source:0},{source:1}]};
-const sourceState={doc:sourceDoc,textures:sourceTextures,meshes:[{material:sourceMaterial,userData:{baseMaterial:0,variantMappings:[{material:1,variants:[1]}]}}]};
-sourceNode('#variant').value='1';for(const id of ['textures','wire','sharp'])sourceNode('#'+id).checked=true;
-const materialStart=sourcePage.indexOf('function updateMaterials()'),materialEnd=sourcePage.indexOf('// Keep the fitted',materialStart);
-updateSource=new Function('loaded','document','applyMaterial','colourControls',sourcePage.slice(materialStart,materialEnd)+'return updateMaterials;')(
-  sourceState,{querySelector:sourceNode},applyMaterial,sourceColours);
-sourceColours.setEnabled(true);sourceNode('#custom-colour-hex').value='#ff0000';sourceNode('#custom-colour-hex').listeners.input();
-assert.deepEqual(sourceMaterial.color.toArray(),[.5,0,0]);assert.equal(sourceMaterial.map,sourceTextures[1]);
-assert.equal(sourceMaterial.wireframe,true);assert.equal(sourceMaterial.map.magFilter,THREE.NearestFilter);assert.equal(sourceMaterial.vertexColors,true);
-sourceNode('#textures').checked=false;updateSource();assert.equal(sourceMaterial.map,null);assert.deepEqual(sourceMaterial.color.toArray(),[.5,0,0]);
-sourceNode('#textures').checked=true;
-const factoryStart=sourcePage.indexOf("document.querySelector('#variant').addEventListener('change'"),factoryEnd=sourcePage.indexOf('const parameters=',factoryStart);
-new Function('document','colourControls',sourcePage.slice(factoryStart,factoryEnd))({querySelector:sourceNode},sourceColours);
-sourceNode('#variant').listeners.change();assert.equal(sourceColours.tint,null);assert.deepEqual(sourceMaterial.color.toArray(),[.5,1,1]);
-sourceNode('#custom-colour-hex').value='#0000ff';sourceNode('#custom-colour-hex').listeners.input();sourceNode('#reset-colour').listeners.click();
-assert.equal(sourceNode('#variant').value,'');assert.deepEqual(sourceMaterial.color.toArray(),[1,1,1]);assert.equal(sourceMaterial.map,sourceTextures[0]);
-sourceMaterial.dispose();sourceTextures.forEach(texture=>texture.dispose());
+$('colour-variant').value='';$('colour-variant').listeners.change();assert.equal(switched,null);
+for(const html of [page,sourcePage]) {
+  assert(!html.includes('id="custom-colour"'),'arbitrary colour picker removed');
+  assert(html.includes('id="game-paint-controls"'),'native paint controls present');
+}
 showNativeSpecifications({nativeMetadata:{identity:{status:'verified'},specifications:{drive:'FR',engine_type:'DOHC',
   length_mm:4310,power_rpm:6500,torque_kgm:28.5,suspension_front:'Double wishbone',displacement_cc:1998}}});
 assert.equal($('native-specs').hidden,false);
@@ -161,4 +137,4 @@ assert.equal(specRows().Displacement,'654 cc × 2');
 showNativeSpecifications({nativeMetadata:{identity:{status:'unresolved'},specifications:{drive:'FR',mass_kg:1200}}});
 assert.equal($('native-specs').hidden,true);assert.equal($('native-specs').children.length,0,'unresolved racing entries do not display stock specifications');
 showNativeSpecifications(native);assert.equal($('native-specs').hidden,true);
-console.log('PASS native catalog UI: native package downloads and preview state; factory/custom picker and hex/reset controls, actual source material callbacks, GLB-backed colour selection, missing-variant edits, verified specifications, rotary display and unresolved-identity controls');
+console.log('PASS native catalog UI: native package downloads and preview state; native-only paint controls, GLB-backed colour selection, missing-variant edits, verified specifications, rotary display and unresolved-identity controls');

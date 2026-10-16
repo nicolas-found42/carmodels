@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
+import {execFileSync} from 'node:child_process';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias} from '../dealership/dealership.mjs';
 
@@ -13,7 +14,26 @@ assert.equal(dealershipDownload(cars[0]).href,`./dealership/models/${cars[0].cod
 assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
 assert.match(sourcePage,/<h1>Source model library<\/h1>/);
 assert.equal(validateCars(cars).length, cars.length);
-const compactCars=cars.filter(c=>c.model.schema===4);
+const fordCars=cars.filter(c=>(c.game??'ford-racing-2')==='ford-racing-2');
+assert.equal(fordCars.length,35);
+assert(fordCars.every(c=>c.displayMode==='textured-glb' && c.model.schema===2),
+  'Ford dealership cars must retain their working GLB textures and factory variants');
+// Keep exercising the supported compact renderer against real working geometry,
+// independently of which display mode the dealership catalog chooses.
+const compactCars=JSON.parse(execFileSync('python3',['-c',`
+import json,sys
+from pathlib import Path
+sys.path.insert(0,'tools')
+from bake_models import bake_car
+cars=json.loads(Path('dealership/public/dealership/cars.json').read_text())
+result=[]
+for car in cars:
+    if car.get('game','ford-racing-2')!='ford-racing-2': continue
+    model=bake_car(car['code'],(Path('dealership')/car['model']['source']['glb']).read_bytes(),source_mode=False)
+    model['source']=car['model']['source']
+    result.append({**car,'model':model})
+print(json.dumps(result))
+`],{cwd:new URL('../',import.meta.url),maxBuffer:32*1024*1024,encoding:'utf8'}));
 assert.equal(compactCars.length,35);
 // Project-owned showcase geometry has one index encoding: unsigned 32-bit.
 const largeCar=structuredClone(compactCars[0]),vertexCount=65538;
@@ -216,12 +236,12 @@ for (const car of compactCars) {
   assert.equal(counts.size, geometries.size + materials.size);
   assert([...counts.values()].every(n => n === 1), 'shared resources disposed exactly once');
 }
-const seed = {...cars[0], speed:0, weight:0, agility:0, accel:0, paint:{rgb:[128,64,32]}};
+const seed = {...compactCars[0], speed:0, weight:0, agility:0, accel:0, paint:{rgb:[128,64,32]}};
 const zero = makeCar(seed), half = makeCar({...seed, speed:0.5});
 assert.deepEqual(zero.children[0].geometry.attributes.position.array,half.children[0].geometry.attributes.position.array,'handling ratings must not stretch geometry');
 assert.equal(zero.children[0].material.color.getHexString(), '804020', 'display RGB sample must round trip through sRGB');
 disposeCar(zero); disposeCar(half);
-const bodyOnly = structuredClone(cars[0]);
+const bodyOnly = structuredClone(compactCars[0]);
 bodyOnly.model.parts = bodyOnly.model.parts.filter(p=>p.kind!=='wheel');
 bodyOnly.model.wheelHubs = [];
 bodyOnly.model.triangleCount = bodyOnly.model.parts.reduce((sum,p)=>sum+Buffer.from(p.indices,'base64').length/12,0);
@@ -259,7 +279,7 @@ for (const mutate of [
   c=>{const b=Buffer.from(c.model.parts[0].vertices,'base64');b.writeFloatLE(0,12);b.writeFloatLE(0,16);b.writeFloatLE(0,20);c.model.parts[0].vertices=b.toString('base64');},
   c=>{const b=Buffer.from(c.model.parts[0].indices,'base64');b.writeUInt32LE(0xffffffff,0);c.model.parts[0].indices=b.toString('base64');},
 ]) {
-  const corrupted=structuredClone(cars[0]);mutate(corrupted);
+  const corrupted=structuredClone(compactCars[0]);mutate(corrupted);
   assert.throws(()=>validateCars([corrupted]),/model/);
 }
 assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,cars.length);

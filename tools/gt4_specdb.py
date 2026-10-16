@@ -132,7 +132,29 @@ def car_specs(folder, locale='british'):
     cars = Table(folder, 'GENERIC_CAR').by_label()
     names = Table(folder, 'CAR_NAME_' + locale).by_label()
     variations = Table(folder, 'CAR_VARIATION_' + locale).by_label()
-    variation_rows = Table(folder, 'VARIATION' + locale).by_id()
+    variation_table = Table(folder, 'VARIATION' + locale)
+    variation_rows = variation_table.by_id()
+    colours = {}
+    # VARIATION repeats its native row ID for the paints of one car. by_id() is
+    # appropriate for the dimensions join above, but would discard other paints.
+    for i in range(variation_table.count):
+        row_id, row = variation_table.row(i)
+        model_id, order, patch_id, name_id = struct.unpack_from('<4I', row)
+        if max(model_id, patch_id, name_id) >= len(text) or not 1 <= order <= 64:
+            raise ValueError('invalid SpecDB factory colour')
+        model, patch_file, name = text[model_id], text[patch_id], text[name_id]
+        if patch_file != model:
+            raise ValueError('SpecDB factory colour identity differs')
+        colours.setdefault(model, []).append({'index': order - 1, 'name': name,
+                                              'variation_row_id': row_id, 'var_order': order,
+                                              # Preserve all four native menu swatch words. Their
+                                              # high bits are not treated as alpha/finish flags, and
+                                              # the words are not substituted for texture palettes.
+                                              'colour_chips': list(struct.unpack_from('<4I', row, 36))})
+    for model, paints in colours.items():
+        paints.sort(key=lambda paint: paint['index'])
+        if [paint['index'] for paint in paints] != list(range(len(paints))):
+            raise ValueError('SpecDB factory colour orders differ: ' + model)
     parts = Table(folder, 'DEFAULT_PARTS').by_id()
     tables = {name: Table(folder, name) for name in ('CHASSIS', 'FRONTTIRE', 'REARTIRE', 'TIRESIZE', 'SUSPENSION')}
     rows = {name: table.by_id() for name, table in tables.items()}
@@ -167,5 +189,6 @@ def car_specs(folder, locale='british'):
                       'tire_pos_related_mm': [chassis[11], chassis[12]],  # Equal CarInfo TirePosRelated; not tire diameters.
                       'model_bounds_mm': [round(v, 1) for v in struct.unpack_from('<4f', variation, 16)],
                       'ride_height_mm': [suspension[2], suspension[5]],
-                      'front_tire': tire('FRONTTIRE'), 'rear_tire': tire('REARTIRE')}
+                      'front_tire': tire('FRONTTIRE'), 'rear_tire': tire('REARTIRE'),
+                      'factory_colours': colours[model]}
     return out

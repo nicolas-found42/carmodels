@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "intervals": {
+    "garage_light_bind": {
+      "start": 3125256,
+      "end": 3125712,
+      "sha256": "e28c27d00a72e36480b7ebde8c9fe5ff5cb96d311779ce211e7d4d71728cf884"
+    },
+    "garage_light_constructor_defaults": {
+      "start": 3297816,
+      "end": 3297884,
+      "sha256": "167d977926f825cf5f1b4d2bcba1397d2feae2fc3dffa23b7a67ce57244be3f0"
+    },
+    "garage_setting_loader": {
+      "start": 3378328,
+      "end": 3378824,
+      "sha256": "dfb3c52aa2a3469c4cf7f939919eb94e36c0f49bf712377b422b77a9f9f6ab9a"
+    },
+    "garage_light_origin": {
+      "start": 3377576,
+      "end": 3377704,
+      "sha256": "a06a03b408ff935320730c8c428aa9cbcfd5fe6e44e2b6210d781349e604aee1"
+    },
+    "point_light_defaults": {
+      "start": 2779696,
+      "end": 2779856,
+      "sha256": "34176bb94ef366bd392ee854653d958a9a045ec88fb0a09488eee0e78ccba5d4"
+    },
+    "point_light_normalize": {
+      "start": 2779856,
+      "end": 2779984,
+      "sha256": "7d90f42e58b52fe9ab92e40b8fb26176ee3e69e5497d2378f7a28a825f4cd036"
+    },
+    "light_direction_upload": {
+      "start": 2808952,
+      "end": 2810232,
+      "sha256": "1d445c4434649c1959177b5c9b6d265711ce71bae7a96fe29a10d414fddcda26"
+    },
+    "light_color_upload": {
+      "start": 2810696,
+      "end": 2811208,
+      "sha256": "f954779337cfb04d3bc8871f8756c1c6f30a5dc1c7c86a04e00159a4a2548a18"
+    }
+  },
+  "setting_fields": {
+    "Ambient Color": {
+      "source_string": 6625241,
+      "offset": 140
+    },
+    "Light Intensity": {
+      "source_string": 6625255,
+      "offset": 144
+    },
+    "Light Color": {
+      "source_string": 6625271,
+      "offset": 148
+    }
+  },
+  "source_settings_sha256": "37b3ba93b942ed3e88c8e8881a989eb1e22f3290540cc493f6f97f162c999f0c",
+  "default_second_point_words": [
+    0,
+    1073741824,
+    1058642330
+  ],
+  "default_second_color_words": [
+    1056964608,
+    1056964608,
+    1056964608
+  ],
+  "reference_context": {
+    "car_position_words": [
+      0,
+      0,
+      0
+    ],
+    "selected_offset_words": [
+      0,
+      0,
+      0
+    ]
+  },
+  "reference_light_words": [
+    2147483648,
+    3212836864,
+    2147483648,
+    2147483648,
+    3212129307,
+    3197312835,
+    3205745978,
+    3205745978,
+    3205745978,
+    0,
+    1073741824,
+    0,
+    0,
+    1073741824,
+    1058642330,
+    1065353216,
+    1065353216,
+    1065353216,
+    1065353216,
+    1065353216,
+    0,
+    1051607895,
+    1051607895,
+    1051607895,
+    1048576000,
+    1048576000,
+    1048576000,
+    0,
+    0,
+    0,
+    1032134060,
+    1032134060,
+    1032134060,
+    0
+  ],
+  "reference_job_sha256": "ba2f5a0309082cf0c087e9bd6c87c69411f97e501ac0bcc79c2bb390c2e0d9c7",
+  "claim_limits": [
+    "Original garage light binding executed with explicit parked-car origin and zero selected-frame offset.",
+    "Original authored ambient/color values and native constructor point/color inputs; no host normalization substitutes for native SQRT/DIV.",
+    "This fixture proves the explicit source context, not a captured running-game actor, alternate garage pose or gameplay light selection."
+  ],
+  "source_settings_ascii": "type: a\r\ngarageShared {\r\n  OverviewSpot -4.405394\t1.487188\t4.008463 \r\n  OverviewLookatSpot -0.034025\t1.141386\t0.110342 \r\n  CarSpotsd 379.563843\t0.000000\t-96.317802 \r\n  CarAnglesd 3.099997 \r\n  CarSpotatlanta 318.587402\t0.049989\t145.357864 \r\n  CarAngleatlanta 1.234237 \r\n  CarSpotdetroit -159.605972\t0.049986\t-88.535332 \r\n  CarAngledetroit 3.171375 \r\n  CarSpottokyo -106.105965\t0.049986\t73.734943 \r\n  CarAngletokyo 2.453000 \r\n  AmbientColor 0.129996 \r\n  LightIntensity 998.874084 \r\n  LightColor 0.680715 \r\n  CameraTransitionTime 0.300000 \r\n  CameraFOV 40.000000 \r\n}\r\n"
+}
