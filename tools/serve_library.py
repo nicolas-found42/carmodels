@@ -65,21 +65,29 @@ class LibraryHandler(SimpleHTTPRequestHandler):
         if not self.api_lock.acquire(blocking=False):
             self.reply(429, {'status': 'error', 'message': 'A filter request is already running.'})
             return
+        status = 200
         try:
             path = 'public/models.json' if catalog == 'source' else 'public/dealership/cars.json'
             data = json.loads((Path(self.directory) / path).read_text())
             cars = data['cars'] if catalog == 'source' else data
             receipt = self.judgment(query, cars, catalog=catalog)
             # Do not expose raw provider envelopes in the UI; local experiments retain those separately.
-            self.reply(200, {key: receipt.get(key) for key in ('status', 'filters', 'message', 'decided_by', 'reason',
-                                                               'signals', 'usage', 'latency_seconds')})
+            response = {key: receipt.get(key) for key in ('status', 'filters', 'message', 'decided_by', 'reason',
+                                                         'signals', 'usage', 'latency_seconds')}
+            # Validate before leaving the error boundary; reply serializes before
+            # sending headers too, so malformed receipts still produce one 503.
+            json.dumps(response, allow_nan=False)
             # The outcome, never the query text, goes to the server log.
             self.log_message('library filter: %s by %s%s', receipt.get('status'), receipt.get('decided_by') or 'nothing',
                              f" ({receipt['reason']})" if receipt.get('reason') else '')
         except Exception:
-            self.reply(503, {'status': 'error', 'message': 'The model catalog is unavailable.'})
+            status = 503
+            response = {'status': 'error', 'message': 'The model catalog is unavailable.'}
         finally:
             self.api_lock.release()
+        # The filter work is complete before a client can receive its response
+        # and send the next request. Slow response writes must not hold the slot.
+        self.reply(status, response)
 
     def do_GET(self):
         if urlparse(self.path).path == '/':
