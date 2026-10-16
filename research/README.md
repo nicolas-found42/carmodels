@@ -6,6 +6,7 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `gran-turismo-4-model-fidelity.md` | Automatic modern dealership remaster with unchanged source reference, native-normal/seam-aware geometry, evidence-based real-car corrections, conservative missing-reference refinement and failed-part fallback |
 | `gran-turismo-model-data.md` | Native SPEC and colour-ID joins, all palette variants, retained face/shadow/LOD/wheel inputs, catalog upgrades and unresolved identities |
 | `check-performance.md` | Freshness and MC3 preview/wheel-page/PNG profiling, equivalent optimizations, optional TypeSafe advice, labeled wording/holdout experiments and calibration limits |
 | `dealership-teardown-2026-10-12.md` | Novice-user dealership teardown, search/filter/layout/request recovery improvements, coverage ledger, original reproductions and final verification |
