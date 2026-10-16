@@ -2,6 +2,7 @@
 from pathlib import Path
 from contextlib import contextmanager
 import copy
+import hashlib
 import struct
 import tempfile
 import unittest
@@ -39,7 +40,8 @@ class WheelTests(unittest.TestCase):
         def handle(library, collection, index, archive):
             page = pages[0] if archive == 5 else pages[1 if collection == 208 else 2]
             return {'page': page, 'archive': archive, 'config_index': index}
-        def decode(data, page, source):
+        def decode(data, page, source, *, archive_index):
+            self.assertEqual(archive_index, 5 if source.endswith("rim.ppf") else 3)
             return {'source': source, 'input_sha256': mc3_wheels._fingerprint(Path(source), data)['sha256'],
                     'materials': [{'base_color': [1, 1, 1, 1], 'claim_limits': ['original']}],
                     'lods': {'high': [{'draws': [{'batches': [{'positions': [(1, 2, 3)],
@@ -173,6 +175,42 @@ class WheelTests(unittest.TestCase):
         for component in result['components']:
             self.assertTrue(component['model']['lods']['high'])
             self.assertTrue(component['model']['materials'])
+            original = Path(component['model']['lods']['high'][0]['source']['file']).read_bytes()
+            root_offset = component['model']['model_file_offset']
+            pointer = struct.unpack_from('<I', original, root_offset + 8)[0]
+            for material in component['model']['materials']:
+                graph = material['native_material']
+                self.assertEqual(graph['root']['source_offset'], material['ppf_file_offset'])
+                self.assertEqual(graph['source_carrier_sha256'], component['model']['lods']['high'][0]['source']['sha256'])
+                self.assertEqual(graph['root']['serialized_vtable'], material['vtable'])
+                inputs = material['native_input_table']
+                self.assertEqual(inputs['source_carrier_sha256'], graph['source_carrier_sha256'])
+                self.assertEqual(inputs['collection_offset'], pointer - component['model']['serialized_base'] + root_offset)
+
+    def test_unknown_wheel_image_layout_retains_original_selected_page(self):
+        root = Path(__file__).resolve().parents[1] / 'games/midnight-club-3-remix/cars'
+        if not (root / 'shared').exists():
+            self.skipTest('recovered shared source inputs unavailable')
+        result = read_default_wheels(root, 'vp_g500_03')
+        model = result['components'][0]['model']
+        retained = model['native_undecoded_slots']['whl_rm_g500_03_h']['native']
+        source = Path(model['lods']['high'][0]['source']['file']).read_bytes()
+        start = retained['page_file_offset']
+        self.assertEqual(retained['decode_status'], 'unresolved-native-format')
+        self.assertEqual(retained['source_page'], source[start:start+len(retained['source_page'])])
+        self.assertEqual(retained['source_carrier_sha256'], hashlib.sha256(source).hexdigest())
+        self.assertNotIn('levels', retained)
+        recovered = model['native_recovered_slots']['whl_rm_g500_03_h']
+        native = recovered['native']
+        self.assertEqual(native['decode_status'], 'decoded')
+        self.assertEqual(len(native['source_slot']), 160)
+        self.assertEqual(native['source_slot'], source[native['source_slot_offset']:native['source_slot_offset']+160])
+        self.assertEqual(native['source_page'], retained['source_page'])
+        self.assertEqual((recovered['width'], recovered['height']), (64, 64))
+        unbound = read_page_model(source, ppf_page(source, result['components'][0]['page']), model['lods']['high'][0]['source']['file'])
+        self.assertEqual(unbound['texture_slots'], model['texture_slots'])
+        self.assertEqual(unbound['texture_records'], model['texture_records'])
+        self.assertEqual(unbound['lods'], model['lods'])
 
     def test_source_model_corruption_controls(self):
         root = Path(__file__).resolve().parents[1] / 'games/midnight-club-3-remix/cars'
@@ -224,7 +262,8 @@ class WheelTests(unittest.TestCase):
 
     def test_native_sizing_car_bike_and_failure_controls(self):
         root = Path(__file__).resolve().parents[1]
-        disc = root / 'games/midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso'
+        from mc3_model import NATIVE_DISC
+        disc = NATIVE_DISC
         if not disc.is_file():
             self.skipTest('supplied game disc source input unavailable')
         from mc3_model import native_executable

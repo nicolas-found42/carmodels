@@ -2,9 +2,9 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "decoded_bytes": 483784,
@@ -444,5 +444,10 @@
     }
   ],
   "sha256": "0f98c1c75391adb064eceae901065bc38dcea9985fc62b3a0bc4a6ed9ce25f22",
-  "size": 135301
+  "size": 135301,
+  "system": {
+    "bytes": 14768,
+    "file": "_metadata/SYSTEM.DAT",
+    "sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+  }
 }

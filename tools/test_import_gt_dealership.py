@@ -12,9 +12,133 @@ from unittest.mock import patch
 from bake_models import ROOT, read_glb
 from build_dealership import build, check
 from import_gt_dealership import import_cars, imported_entry
+from gt_metadata import load_database, model_metadata
 
 
 class GTImportTests(unittest.TestCase):
+    def metadata_fixture(self, base, code='_afr7n'):
+        source, dest, row = self.fixture(base)
+        old = source / row['file']
+        row.update(code='simulation/' + code, file='simulation/' + code + '.glb')
+        old.rename(source / row['file'])
+        (source / 'index.json').write_text(json.dumps({'cars': [row]}))
+        return source, dest, row
+
+    def enrich_source(self, source, row, code='_afr7n'):
+        database = load_database(ROOT / 'games/gran-turismo/cars/_metadata')
+        metadata = model_metadata(database, code, [49, 53, 54, 98, 115])
+        data = self.change_source(source, row)
+        doc, binary = read_glb(data)
+        doc['extras']['nativeMetadata'] = metadata
+        encoded = json.dumps(doc).encode()
+        encoded += b' ' * (-len(encoded) % 4)
+        data = (struct.pack('<4sII', b'glTF', 2, 28 + len(encoded) + len(binary)) +
+                struct.pack('<I4s', len(encoded), b'JSON') + encoded +
+                struct.pack('<I4s', len(binary), b'BIN\0') + binary)
+        (source / row['file']).write_bytes(data)
+        row.update(native_metadata=metadata, sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+        (source / 'index.json').write_text(json.dumps({'cars': [row]}))
+        return data, metadata
+
+    def test_verified_metadata_enrichment_preserves_owner_fields_and_edited_geometry(self):
+        for edited in (False, True):
+            with self.subTest(edited=edited), tempfile.TemporaryDirectory() as temporary:
+                source, dest, row = self.metadata_fixture(Path(temporary))
+                import_cars(source, dest)
+                catalog = json.loads((dest / 'catalog.json').read_text())
+                catalog[1]['name'] = 'Owner name'
+                catalog[1]['kg'] = 1400
+                catalog[1]['claimLimits'].append('Owner note')
+                (dest / 'catalog.json').write_text(json.dumps(catalog))
+                working = dest / 'models/GT_SIMULATION__AFR7N.glb'
+                if edited:
+                    working.write_bytes(working.read_bytes() + b'owner geometry')
+                before = working.read_bytes()
+                data, metadata = self.enrich_source(source, row)
+                self.assertEqual(import_cars(source, dest, True), 1)
+                current = json.loads((dest / 'catalog.json').read_text())[1]
+                self.assertEqual((current['name'], current['kg']), ('Owner name', 1400))
+                self.assertEqual(current['specifications']['mass_kg'], 1250)
+                self.assertEqual(current['bhp'], 202)
+                self.assertIsNone(current['year'])
+                self.assertEqual(current['nativeMetadata'], metadata)
+                self.assertEqual(current['colourVariants'], metadata['colour_variants'])
+                self.assertIn('Owner note', current['claimLimits'])
+                self.assertEqual(working.read_bytes(), before if edited else data)
+                origin = json.loads((dest / 'origins.json').read_text())['cars'][0]
+                self.assertEqual(origin['latestMetadata']['name'], 'RX-7 FC GT-X')
+                after = {p: p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+                self.assertEqual(import_cars(source, dest, True), 0)
+                self.assertEqual(after, {p: p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+
+    def test_generated_names_specs_and_unresolved_racing_metadata(self):
+        for code, expected in [('_afr7n', 'RX-7 FC GT-X'), ('_afr7r', '_afr7r')]:
+            with self.subTest(code=code), tempfile.TemporaryDirectory() as temporary:
+                source, dest, row = self.metadata_fixture(Path(temporary), code)
+                import_cars(source, dest)
+                self.enrich_source(source, row, code)
+                self.assertEqual(import_cars(source, dest, True), 1)
+                current = json.loads((dest / 'catalog.json').read_text())[1]
+                self.assertEqual(current['name'], expected)
+                if code.endswith('r'):
+                    self.assertIsNone(current['specifications'])
+                    self.assertIsNone(current['kg'])
+                    self.assertIsNone(current['bhp'])
+                else:
+                    self.assertEqual(current['kg'], 1250)
+
+    def test_detached_or_changed_metadata_rejected_before_writes(self):
+        for mutation in ('code', 'embedded', 'name', 'racing'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                source, dest, row = self.metadata_fixture(Path(temporary))
+                self.enrich_source(source, row)
+                if mutation == 'code':
+                    row.update(code='simulation/_hcvon', file='simulation/_hcvon.glb')
+                elif mutation == 'embedded':
+                    row['native_metadata']['colour_variants'].pop()
+                    row['native_metadata']['provenance']['colour_name_matches'].pop()
+                elif mutation == 'name':
+                    row['native_metadata']['identity']['name'] = 'Invented name'
+                else:
+                    row['native_metadata']['identity']['status'] = 'unresolved'
+                (source / 'index.json').write_text(json.dumps({'cars': [row]}))
+                before = {p: p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+                with self.assertRaisesRegex(ValueError, 'metadata'):
+                    import_cars(source, dest, True)
+                self.assertEqual(before, {p: p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+
+    def test_consolidation_metadata_history_keeps_source_defaults_separate_from_owner_edits(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, dest, canonical = self.metadata_fixture(Path(temporary))
+            data = (source / canonical['file']).read_bytes()
+            editions = []
+            (source / 'simulation/_afr7n').mkdir()
+            for edition in ('day', 'night'):
+                row = {**canonical, 'code': canonical['code'] + '/' + edition,
+                       'file': 'simulation/_afr7n/' + edition + '.glb'}
+                (source / row['file']).write_bytes(data)
+                editions.append(row)
+            (source / 'index.json').write_text(json.dumps({'cars': editions}))
+            import_cars(source, dest)
+            catalog = json.loads((dest / 'catalog.json').read_text())
+            catalog[1].update(name='Owner label', kg=1400)
+            (dest / 'catalog.json').write_text(json.dumps(catalog))
+            canonical.update(canonical_source_id=editions[0]['code'], aliases=[r['code'] for r in editions])
+            self.enrich_source(source, canonical)
+            self.assertEqual(import_cars(source, dest, True, True), 1)
+            entry = json.loads((dest / 'catalog.json').read_text())[1]
+            self.assertEqual((entry['name'], entry['kg']), ('Owner label', 1400))
+            origin = json.loads((dest / 'origins.json').read_text())['cars'][0]
+            self.assertEqual((origin['latestMetadata']['name'], origin['latestMetadata']['kg']),
+                             ('RX-7 FC GT-X', 1250))
+            before = {p: p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+            self.assertEqual(import_cars(source, dest, True), 0)
+            self.assertEqual(before, {p: p.read_bytes() for p in dest.rglob('*') if p.is_file()})
+            self.change_source(source, canonical, generator='Second source fixture version')
+            self.assertEqual(import_cars(source, dest, True), 1)
+            refreshed = json.loads((dest / 'catalog.json').read_text())[1]
+            self.assertEqual((refreshed['name'], refreshed['kg']), ('Owner label', 1400))
+
     def legacy_fixture(self, base):
         source, dest, day = self.fixture(base)
         night = {**day, 'code':'simulation/_test/night', 'file':'simulation/_test/night.glb'}
@@ -97,10 +221,10 @@ class GTImportTests(unittest.TestCase):
             self.assertEqual(import_cars(source, dest, True, True), 1)
             self.assertEqual((dest/'models/GT_SIMULATION__TEST.glb').read_bytes(), edited)
             self.assertEqual(import_cars(source, dest, True, True), 0)
-    def change_source(self, source, row):
+    def change_source(self, source, row, generator='Updated source fixture'):
         path = source / row['file']
         doc, binary = read_glb(path.read_bytes())
-        doc['asset']['generator'] = 'Updated source fixture'
+        doc['asset']['generator'] = generator
         encoded = json.dumps(doc).encode()
         encoded += b' ' * (-len(encoded) % 4)
         data = (struct.pack('<4sII', b'glTF', 2, 28 + len(encoded) + len(binary)) +

@@ -2,7 +2,7 @@
 
 `tools/mcla_preview.py` builds a GLB from the independently decoded extraction, without changing
 native resources. `build_car(extraction, vehicle, index=None)` returns bytes and an assembly record.
-The profile is `mcla-xbox360-static-stock-v2`. Every consumed file is checked against the extraction
+The profile is `mcla-xbox360-static-stock-v3`. Every consumed file is checked against the extraction
 index's size and SHA-256 before decoding; the GLB records source archive entries, hashes, chosen parts,
 attachment names, native model/bone indices, composed affine node matrices, omissions, and claim limits.
 
@@ -44,9 +44,30 @@ The RGB of parameter 0x1468B111 is read as diffuse colour when finite and in ran
 can be NaN padding and is not used. Default colour is neutral grey. Source normals and first UVs
 are retained except for the explicitly recorded S7 divider reconstruction below; absent normals are calculated. Materials are opaque, with source texture alpha forced
 to 255, because source alpha can encode shader effects. Vertex colour, glass blending, reflection,
-normal maps, damage, lamps and runtime paint are not reproduced. Tires use neutral rubber rather
+normal maps, damage, lamps and player runtime paint are not reproduced. Tires use neutral rubber rather
 than a guessed shared texture ownership join. Identical source meshes are instanced at wheel/exhaust
 placements, preserving triangle counts while reducing storage.
+
+The native cache also carries `tune/ambients/traffic/<code>/mcambientcartypecolor.xml`.
+The extraction now retains all 42 tables in the shared native namespace, including two unresolved
+traffic directory hashes. Forty tables join a recovered ambient model by exact car code; no
+ambient-to-player substitution is inferred. `va_rstr_shipping711_1_07` has no exact palette join.
+`tools/mcla_paint.py` retains every ordered `vColors` RGB row, including repeated entries, `fScale`
+and `iPaintType`. The supplied tables have 20 rows each and scale 1; other scales are rejected
+until their interpretation is established. Distinct native RGB vectors become `KHR_materials_variants`
+choices named by their first source row (for example, `Ambient paint 00`). Repeated native row indices
+remain attached to each choice. These are game-authored ambient choices, without invented retail
+factory names or a claim that their occurrence frequency is reproduced.
+
+Only materials with the exact native shader name `AmbientCarPaint` receive these choices. Other
+shader, texture, geometry and trim bindings are retained. The vectors are interpreted as linear PBR
+base factors; source row zero is the declared static preview default. Palette RGB values, all original
+rows and paint type remain in GLB extras with the palette's extraction SHA-256 provenance. This
+establishes transfer and switchability of the native vectors, rather than execution of the original
+paint shader, its paint-type response, random choice, or proof of a retail factory paint catalog.
+Player/DLC `CarPaintCustomizable` and XCC paint/vinyl semantics remain open and are not filled by
+arbitrary tint lists. Native ZIP bytes remain unchanged because these tables share the existing
+shared-tuning namespace outside individual car packages.
 
 The source showcase fits its camera near plane to `extent / 100` and keeps the far plane at `extent × 100`. The previous near plane at `extent / 10000` wasted depth precision: controlled 24-bit Metal captures of the unchanged CL65 GLB showed large jagged glass/trim seams, which disappeared at divisors 100 and 20 in both views. Camera positions, geometry and materials were unchanged. The dealership already uses near 0.1 / far 200 and showed a clean CL65 seam. The smaller near plane increase preserves close inspection while bounding the fitted depth range at 10,000:1. Native BlackOpaqueGlass shader artifacts contain depth/prepass names, but their numeric state and runtime execution remain unestablished; no guessed shader depth bias or material deletion was introduced.
 
@@ -115,7 +136,7 @@ claims require a Jev gate with the actual final diff and executed logs.
 
 Open evidence gaps: XCC configuration semantics and runtime stock selection; wheel/tire size fields,
 brand texture selection and full brake ownership; runtime animation and skinning transforms; gameplay verification
-of every attachment alias; faithful glass/paint/reflection shaders. Native asset bytes and extraction
+of every attachment alias; player XCC factory paint/vinyl bindings and faithful glass/paint/reflection shaders. Native asset bytes and extraction
 records remain available independently of these preview approximations.
 
 ## Native assembly correction and browser regression

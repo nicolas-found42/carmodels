@@ -1,0 +1,16 @@
+#game-paint-controls{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;max-width:100%}
+#game-paint-controls select,#game-paint-controls input,#game-paint-controls button{font:inherit;background:#182333;color:#eef2f8;border:1px solid #53667c;border-radius:4px;padding:7px;max-width:100%;box-sizing:border-box}
+#game-paint-controls input{min-width:150px;flex:1}
+#game-paint-controls button{cursor:pointer}
+#game-paint-controls button:focus-visible,#game-paint-controls select:focus-visible,#game-paint-controls input:focus-visible{outline:2px solid #79baff;outline-offset:2px}
+#game-paint-controls button[aria-pressed=true]{border-color:#79baff;background:#263e5d}
+#game-paint-controls :disabled{opacity:.5;cursor:default}
+#game-paint-controls .paint-swatches{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap;max-height:220px;overflow:auto;padding:3px}
+#game-paint-controls .paint-choice{display:flex;align-items:center;gap:6px;flex-wrap:wrap;text-align:left}
+#game-paint-controls .paint-choice small{display:block;flex-basis:100%;max-width:180px;overflow-wrap:anywhere;font-size:10px;color:#b8c6d6}
+#game-paint-controls .paint-chip{display:inline-block;flex-shrink:0;width:22px;height:22px;border:1px solid #8d9cb0;border-radius:3px}
+#game-paint-controls .paint-chip-unavailable{background:repeating-linear-gradient(45deg,#273344 0 4px,#738197 4px 8px)}
+#game-paint-controls p{flex-basis:100%;margin:0;font-size:12px;color:#b8c6d6;line-height:1.4}
+#game-paint-controls details{flex-basis:100%;font-size:12px;color:#b8c6d6}
+#game-paint-controls summary{cursor:pointer}
+#view-controls #game-paint-controls .paint-swatches{max-height:125px}

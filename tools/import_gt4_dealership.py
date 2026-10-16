@@ -5,6 +5,7 @@ Existing catalog entries and models are preserved, including later edits. Names,
 and masses come from the decoded spec database; ratings, power and body style stay unknown.
 """
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -33,6 +34,7 @@ def entry_for(row, spec):
                 year=spec['year'] if 1900 <= spec['year'] <= 2100 else None, topSpeed=None, bhp=None,
                 kg=spec['mass_kg'] if 0 < spec['mass_kg'] < 10000 else None, agility=None, accel=None,
                 speed=None, weight=None, liveries=[], paint=None, sound=None,
+                colourVariants=copy.deepcopy(spec['factory_colours']),
                 claimLimits=['Name, model year and mass are decoded spec-database values; ratings, power and body style are not decoded.',
                              'Independent editable copy; native source files remain separate.', *LIMITS])
 
@@ -89,6 +91,8 @@ def import_cars(source=ROOT / 'dealership/public' / GAME, destination=ROOT / 'de
             payloads.append((target, data, working))
             origin.setdefault('sourceUpgrades', []).append({'fromSha256': previous['sha256'], 'toSha256': row['sha256']})
             origin['latestSource'] = record
+            # Older imports did not carry factory-paint metadata. Retain any owner-authored value.
+            old.setdefault('colourVariants', entry['colourVariants'])
             upgraded += 1
             continue
         if code in origin_entries or target.exists() or target.is_symlink():

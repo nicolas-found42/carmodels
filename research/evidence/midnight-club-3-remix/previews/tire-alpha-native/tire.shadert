@@ -1,0 +1,71 @@
+inputs
+0 TEXTURE color
+1 TEXTURE lightMap
+endinputs
+
+#if PS2
+
+;
+; IMPORTANT NOTE: this shader shouldnt have vertices 'damaged'!
+;			so either download a 0 scaled table or add some sort of branch in prologue to unpack positions with deformation.
+;
+; only thing that changes between passes is alphablend.
+
+ps2microcode specular2_dc
+lighting dir
+texture %0
+texture %1
+texcombine modulate2x
+
+ps2blend 0 0 As Cs 0
+
+texgen reflect
+scales constant 0.5
+scalet constant 0.5
+slides constant 0.5
+slidet constant 0.5
+
+texsrc 0
+
+colorwrite rgba
+alphafunc always
+basecolor 127 127 127 255
+
+
+;
+; Old version for reference.
+;
+
+;lighting dir
+;texture %0
+;texcombine modulate2x
+;ps2blend 0 0 As Cs 0
+;texgen passthru
+;basecolor 255 255 255 255 ;e3 hack because the tire texture is too bright
+;colorwrite rgba
+;alphafunc always
+
+;nextpass
+;texture %1
+;lighting none
+;texcombine modulate
+;ps2blend Cs 0 Ad Cd 0
+;texgen reflect
+;scales constant 0.5
+;scalet constant 0.5
+;slides constant 0.5
+;slidet constant 0.5
+;colorwrite rgba
+;alphafunc always
+;basecolor 255 255 255 0
+
+#else
+
+
+texture %0
+texsrc 0
+
+
+
+#endif
+

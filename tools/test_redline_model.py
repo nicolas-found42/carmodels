@@ -26,6 +26,60 @@ def source_fixture(root):
 
 
 class AssemblyTests(unittest.TestCase):
+    def test_native_color_texture_presets_preserve_wheel_selectors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            index, car = source_fixture(root)
+            config = (root / 'test.car').read_bytes() + b'numColors 3\r# 0\rcolors {1,0,0}\r# 1\rcolors {0,1,0}\r# 2\rcolors {0,0,1}\r'
+            (root / 'test.car').write_bytes(config)
+            car.update(bytes=len(config), sha256=sha(config))
+            green = encode_png(1, 1, b'\x00\xff\x00\xff')
+            (root / 'paint#1.pct').write_bytes(green)
+            index['packages'][0]['members'].append({'name': 'paint#1.pct', 'file': 'paint#1.pct',
+                                                    'bytes': len(green), 'sha256': sha(green)})
+            data, _, warnings, _ = build_glb(root, index, car, 'base/test')
+            doc, blob = read_glb(data)
+            self.assertFalse(warnings)
+            variants = doc['extensions']['KHR_materials_variants']['variants']
+            self.assertEqual([v['extras']['nativeColorIndex'] for v in variants], [0, 1])
+            self.assertEqual(variants[1]['extras']['nativeConfigColor'], [0, 1, 0])
+            body = doc['meshes'][0]['primitives'][0]
+            mappings = body['extensions']['KHR_materials_variants']['mappings']
+            self.assertEqual(mappings[0], {'material': body['material'], 'variants': [0]})
+            alternate = doc['materials'][mappings[1]['material']]
+            self.assertEqual(alternate['extras']['nativeTextureResource'], 'paint#1.pct')
+            image = doc['images'][doc['textures'][alternate['pbrMetallicRoughness']['baseColorTexture']['index']]['source']]
+            view = doc['bufferViews'][image['bufferView']]
+            self.assertEqual(bytes(blob[view['byteOffset']:view['byteOffset'] + view['byteLength']]), green)
+            self.assertEqual(alternate['pbrMetallicRoughness']['baseColorFactor'], [1, 1, 1, 1])
+            for mesh in doc['meshes'][1:]:
+                self.assertNotIn('extensions', mesh['primitives'][0])
+            paint = doc['extras']['gamePaint']
+            self.assertEqual((paint['channels'], paint['colors']), ([], []))
+            self.assertTrue(any('indices: 2' in limit for limit in paint['limits']))
+            malformed = config.replace(b'colors {0,1,0}', b'colors {8,0}')
+            (root / 'test.car').write_bytes(malformed)
+            car.update(bytes=len(malformed), sha256=sha(malformed))
+            changed, _, _, _ = build_glb(root, index, car, 'base/test')
+            changed_doc, _ = read_glb(changed)
+            self.assertNotIn('nativeConfigColor', changed_doc['extensions']['KHR_materials_variants']['variants'][1]['extras'])
+            self.assertTrue(any('swatches missing or malformed' in limit for limit in changed_doc['extras']['gamePaint']['limits']))
+            (root / 'paint#1.pct').write_bytes(b'corrupt alternative')
+            with self.assertRaisesRegex(ValueError, 'extraction pin'):
+                build_glb(root, index, car, 'base/test')
+
+    def test_native_color_array_controls(self):
+        fields, arrays = parse_config(b'numColors 2\r# 0\rcolors {0.1,0.2,0.3}\r# 1\rcolors {1,0,0}\r')
+        self.assertEqual(fields['numColors'], 2)
+        self.assertEqual(arrays['colors'], {0: [0.1, 0.2, 0.3], 1: [1, 0, 0]})
+        # Malformed original menu swatches must not prevent texture recovery.
+        _, arrays = parse_config(b'numColors 2\r# 0\rcolors {8,0}\r# 0\rcolors {-1,-1,-1}\r')
+        self.assertEqual(arrays['colors'], {0: [-1, -1, -1]})
+        for data, error in [(b'numColors 2.5', 'color count'), (b'numColors 257', 'color count'),
+                            (b'numColors -1', 'color count')]:
+            with self.subTest(data=data), self.assertRaisesRegex(ValueError, error):
+                parse_config(data)
+
     def test_zero_normals_and_zero_area_controls(self):
         group = {'positions': [(0, 0, 0), (1, 0, 0), (0, 1, 0)],
                  'normals': [(0, 0, 0), (0, 0, 2), (0, 0, 0)], 'uvs': [(0, 0), (1, 0), (0, 1)]}

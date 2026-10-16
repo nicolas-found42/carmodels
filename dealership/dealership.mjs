@@ -1,11 +1,34 @@
 import * as THREE from './vendor/three.module.js';
 import {loadEditableGLB} from './editable-glb.mjs';
+import {normaliseColourTint} from './materials.mjs';
 
 export const gameId = c => c.game || 'ford-racing-2';
 export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
 export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';
+// Shared identity connects the editable edition to its recovered source row.
+export const sourceCarId = c => c.id || `${gameId(c)}/${c.sourceCode || c.code}`;
+const pendingCarURLs=new WeakMap();
+export function rememberCar(car, browser=globalThis) {
+  const queued=pendingCarURLs.has(browser);
+  pendingCarURLs.set(browser,car);
+  if(queued)return;
+  // Keep the latest selection in this turn; browser history must never block rendering.
+  queueMicrotask(()=>{
+    const selected=pendingCarURLs.get(browser);pendingCarURLs.delete(browser);
+    try {
+      const url=new URL(browser.location.href);
+      url.searchParams.set('game',gameId(selected));url.searchParams.set('car',sourceCarId(selected));
+      const variant=url.searchParams.get('variant');
+      if(variant&&variant!==(selected.source_variant??selected.sourceVariant)&&!matchesVariant(selected,variant))url.searchParams.delete('variant');
+      if(url.href!==browser.location.href)browser.history.replaceState(browser.history.state,'',url.href);
+    } catch {
+      // History can reject updates in inactive documents or after its rate limit.
+      // Selection and model loading still proceed; a later selection can retry.
+    }
+  });
+}
 export function resolveCarAlias(cars, requested, key='id') {
-  return cars.find(car=>car[key]===requested) || cars.find(car=>
+  return cars.find(car=>car[key]===requested) || (key==='code'&&cars.find(car=>sourceCarId(car)===requested)) || cars.find(car=>
     (key==='id'?car.aliases:car.sourceAliases)?.includes(requested));
 }
 export function dealershipDownload(c) {
@@ -29,7 +52,7 @@ export function createCarSearch(query) {
 }
 export async function loadCar(c, options={}) {
   if(isNativePackage(c))throw Error('3D preview unavailable for this native package.');
-  return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);
+  return c.model.schema===2 || gameId(c)==='ford-racing-2' ? loadEditableGLB(c,options) : makeCar(c);
 }
 
 // Compact offline mesh: little-endian XYZ + normal XYZ float32, then a tone byte.
@@ -93,6 +116,13 @@ export function makeCar(c) {
   };
   g.userData.wheels = [];
   g.userData.source = c.model.source;
+  g.userData.colourTint=null;
+  g.userData.setColourTint=(value=null)=>{
+    const tint=normaliseColourTint(value);
+    materials.body.color.copy(bodyColor);
+    if(tint!==null)materials.body.color.multiply(new THREE.Color(tint));
+    g.userData.colourTint=tint;
+  };
   for (const part of parts) {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position',new THREE.BufferAttribute(part.positions,3));

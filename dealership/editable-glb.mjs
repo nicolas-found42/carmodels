@@ -1,6 +1,9 @@
 import * as THREE from './vendor/three.module.js';
 import {fetchModel, readGLB} from './model-load.mjs';
-import {createMaterial} from './materials.mjs';
+import {createMaterial, applyMaterial, normaliseColourTint} from './materials.mjs';
+import {applyPaintMaterial} from './game-paint.mjs';
+import {requiresNativeTireNormal} from './mc3-tire-material.mjs';
+import {loadNativeVehicleResources,bindNativeVehicleResources} from './mc3-vehicle-resources.mjs';
 
 // Decode only embedded, static triangle GLBs. Bounds and accessor extents are
 // checked before allocating meshes; texture failures dispose all prior resources.
@@ -9,6 +12,10 @@ export function parseEditableGLB(buffer) {
   if (doc.animations?.length || doc.skins?.length || doc.extensionsRequired?.length ||
       doc.buffers?.length !== 1 || doc.buffers[0].uri || !Array.isArray(doc.nodes) ||
       !doc.scenes?.[doc.scene ?? 0] || doc.nodes.length > 10000) throw Error('Unsupported editable static GLB.');
+  const variantExtension=doc.extensions?.KHR_materials_variants;
+  const colourVariants=variantExtension?.variants??[];
+  if(variantExtension!==undefined && (!variantExtension || !Array.isArray(doc.extensionsUsed) || !doc.extensionsUsed.includes('KHR_materials_variants') ||
+     !Array.isArray(colourVariants) || !colourVariants.length || colourVariants.some(v=>!v || typeof v.name!=='string' || !v.name.trim()))) throw Error('Invalid GLB colour variants.');
   function view(index) {
     const v=doc.bufferViews?.[index];
     if(!v || v.buffer!==0 || !Number.isInteger(v.byteLength) || v.byteLength<=0 ||
@@ -33,21 +40,70 @@ export function parseEditableGLB(buffer) {
     if(image.uri || image.mimeType!=='image/png')throw Error('Editable textures must be embedded PNG.');
     const v=view(image.bufferView);return new Uint8Array(bin,v.byteOffset??0,v.byteLength);
   });
+  function material(index, uv, nativeNormals) {
+    const definition=doc.materials?.[index];
+    if(!Number.isInteger(index) || index<0 || !definition)throw Error('Missing GLB material.');
+    if(requiresNativeTireNormal(doc,definition) && !nativeNormals)throw Error('MC3 native reflection needs the original normal attribute.');
+    const texture=definition.pbrMetallicRoughness?.baseColorTexture;
+    if(texture && (!uv || !Number.isInteger(texture.index) || texture.index<0 ||
+       !Number.isInteger(doc.textures?.[texture.index]?.source) || doc.textures[texture.index].source<0 ||
+       !images[doc.textures[texture.index].source]))throw Error('Invalid GLB texture mapping.');
+  }
   const meshes=(doc.meshes??[]).map(mesh=>mesh.primitives.map(p=>{
-    if((p.mode??4)!==4 || p.extensions)throw Error('Editable mesh must use static triangles.');
+    if((p.mode??4)!==4 || p.extensions && Object.keys(p.extensions).some(key=>key!=='KHR_materials_variants'))throw Error('Editable mesh must use static triangles.');
     const positions=values(p.attributes?.POSITION,3), normals=values(p.attributes?.NORMAL,3), indices=values(p.indices,1,true);
     const uv=p.attributes.TEXCOORD_0===undefined?null:values(p.attributes.TEXCOORD_0,2);
+    const mc3NativeNormals=p.attributes._MC3_NATIVE_NORMAL===undefined?null:values(p.attributes._MC3_NATIVE_NORMAL,3);
+    const mc3NativePositions=p.attributes._MC3_NATIVE_POSITION===undefined?null:values(p.attributes._MC3_NATIVE_POSITION,3);
+    const mc3NativeColors=p.attributes._MC3_NATIVE_COLOR===undefined?null:values(p.attributes._MC3_NATIVE_COLOR,4);
+    const mc3NativeUvWidth=doc.accessors?.[p.attributes._MC3_NATIVE_UV]?.type==='VEC4'?4:2;
+    const mc3NativeUvs=p.attributes._MC3_NATIVE_UV===undefined?null:values(p.attributes._MC3_NATIVE_UV,mc3NativeUvWidth);
     const colorWidth=doc.accessors?.[p.attributes.COLOR_0]?.type==='VEC4'?4:3;
     const colors=p.attributes.COLOR_0===undefined?null:values(p.attributes.COLOR_0,colorWidth);
     if(normals.length!==positions.length || uv && uv.length!==positions.length/3*2 || indices.length%3 ||
        indices.some(i=>i>=positions.length/3))throw Error('GLB mesh attribute/index mismatch.');
     if(colors && (colors.length!==positions.length/3*colorWidth || colors.some(v=>v<0 || v>1)))throw Error('Invalid GLB vertex colours.');
+    if(mc3NativeNormals && mc3NativeNormals.length!==positions.length)throw Error('MC3 native normal count mismatch.');
+    for(const [attribute,width] of [[mc3NativeColors,4],[mc3NativeUvs,mc3NativeUvWidth],[mc3NativePositions,3]])if(attribute &&
+      (attribute.length!==positions.length/3*width || attribute.some(v=>!Number.isInteger(v) || v< -0x80000000 || v>0x7fffffff)))throw Error('MC3 native integer attribute mismatch.');
+    const mc3NativeBatches=p.extras?.native_batches;
+    if(doc.extras?.nativePositionInputs==='mc3-vif-integer-position-v1') {
+      if(!mc3NativePositions || doc.extras?.nativeVertexInputs!=='mc3-vif-vertex-inputs-v1')throw Error('MC3 native position inputs are incomplete.');
+      const scaleBits=new DataView(new ArrayBuffer(4));
+      if(!Array.isArray(mc3NativeBatches) || mc3NativeBatches.some(batch=>{
+        if(!Number.isInteger(batch.position_scale_word) || batch.position_scale_word<0 || batch.position_scale_word>0xffffffff ||
+           batch.position_scale_word!==batch.header_words?.[0])return true;
+        scaleBits.setUint32(0,batch.position_scale_word,true);
+        return scaleBits.getFloat32(0,true)!==batch.position_scale;
+      }))throw Error('Invalid MC3 native position scale word.');
+    }
+    if(doc.extras?.nativeVertexInputs==='mc3-vif-vertex-inputs-v1') {
+      if(!mc3NativeNormals || !mc3NativeColors || !mc3NativeUvs || !Array.isArray(mc3NativeBatches) || !mc3NativeBatches.length)throw Error('MC3 native vertex inputs are incomplete.');
+      let end=0;
+      for(const batch of mc3NativeBatches) {
+        if(batch.vertex_start!==end || !Number.isInteger(batch.vertex_count) || batch.vertex_count<=0 ||
+           !Number.isInteger(batch.packet_offset) || batch.packet_offset<0 || !(batch.position_scale>0) || !Number.isFinite(batch.position_scale) ||
+           !Array.isArray(batch.header_words) || ![2,8].includes(batch.header_words.length) ||
+           batch.header_words.some(v=>!Number.isInteger(v) || v<0 || v>0xffffffff))throw Error('Invalid MC3 native batch context.');
+        end+=batch.vertex_count;
+      }
+      if(end!==positions.length/3)throw Error('MC3 native batch coverage mismatch.');
+    }
     for(let i=0;i<normals.length;i+=3)if(Math.hypot(...normals.subarray(i,i+3))<1e-8)throw Error('GLB normal is zero.');
-    const material=doc.materials?.[p.material];
-    if(!material)throw Error('Missing GLB material.');
-    const texture=material.pbrMetallicRoughness?.baseColorTexture;
-    if(texture && (!uv || !doc.textures?.[texture.index] || !images[doc.textures[texture.index].source]))throw Error('Invalid GLB texture mapping.');
-    return {positions,normals,indices,uv,colors,colorWidth,material:p.material};
+    material(p.material,uv,mc3NativeNormals);
+    const extension=p.extensions?.KHR_materials_variants, variantMaterials=new Map();
+    if(extension!==undefined) {
+      if(!extension || !variantExtension || !Array.isArray(extension.mappings) || !extension.mappings.length)throw Error('Invalid GLB colour mappings.');
+      for(const mapping of extension.mappings) {
+        if(!mapping || !Array.isArray(mapping.variants) || !mapping.variants.length)throw Error('Invalid GLB colour mappings.');
+        material(mapping.material,uv,mc3NativeNormals);
+        for(const index of mapping.variants) {
+          if(!Number.isInteger(index) || index<0 || index>=colourVariants.length || variantMaterials.has(index))throw Error('Invalid or duplicate GLB colour variant index.');
+          variantMaterials.set(index,mapping.material);
+        }
+      }
+    }
+    return {positions,normals,indices,uv,mc3NativeNormals,mc3NativePositions,mc3NativeColors,mc3NativeUvs,mc3NativeUvWidth,mc3NativeBatches,colors,colorWidth,material:p.material,variantMaterials,source:p};
   }));
   const seen=new Set(), active=new Set();
   function walk(index) {
@@ -63,7 +119,7 @@ export function parseEditableGLB(buffer) {
   }
   for(const node of doc.scenes[doc.scene??0].nodes??[])walk(node);
   if(!seen.size || ![...seen].some(i=>doc.nodes[i].mesh!==undefined))throw Error('Editable scene has no geometry.');
-  return {doc,images,meshes};
+  return {doc,images,meshes,colourVariants};
 }
 
 async function loadTexture(bytes, signal) {
@@ -88,27 +144,64 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
   const buffer=await fetchImpl('./'+car.model.source.glb,signal);
   const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer)),v=>v.toString(16).padStart(2,'0')).join('');
   if(hash!==car.model.source.sha256)throw Error('Editable model changed; rebuild the dealership data.');
-  const {doc,images,meshes}=parseEditableGLB(buffer), textures=[], group=new THREE.Group();
+  const {doc,images,meshes,colourVariants}=parseEditableGLB(buffer), textures=[], group=new THREE.Group(), variantMeshes=[];
+  if(doc.extras?.source_profile==='mc3-ps2-static-preview-v1'&&doc.extras.nativeVertexInputs==='mc3-vif-vertex-inputs-v1')bindNativeVehicleResources(group,await loadNativeVehicleResources(buffer));
+  const ford=car.game==='ford-racing-2';
   group.userData.textures=textures;group.userData.wheels=[];group.userData.source=car.model.source;
+  group.userData.colourVariants=colourVariants.map((variant,index)=>({index,name:variant.name}));
+  group.userData.colourVariant=null;
+  group.userData.colourTint=null;
+  group.userData.paintBuffer=buffer;
+  group.userData.paintDoc=doc;
+  group.userData.mc3NativeSkeleton=doc.extras?.nativeSkeleton??null;
+  group.userData.paintSession=null;
+  function updateColours() {
+    const index=group.userData.colourVariant;
+    for(const {mesh,primitive} of variantMeshes) {
+      if(group.userData.paintSession)applyPaintMaterial(applyMaterial,mesh.material,doc,textures,primitive.source,group.userData.paintSession);
+      else applyMaterial(mesh.material,doc,textures,
+        index===null?primitive.material:primitive.variantMaterials.get(index)??primitive.material,
+        {colourTint:group.userData.colourTint});
+    }
+  }
+  group.userData.setPaintSession=session=>{group.userData.paintSession=session;group.userData.colourVariant=session.state.preset;updateColours();};
+  group.userData.setColourVariant=(index=null)=>{
+    if(index!==null && (!Number.isInteger(index) || index<0 || index>=colourVariants.length))throw Error('Invalid colour variant selection.');
+    group.userData.colourVariant=index;
+    updateColours();
+  };
+  group.userData.setColourTint=(value=null)=>{group.userData.colourTint=normaliseColourTint(value);updateColours();};
   try {
     for(const image of images)textures.push(await textureImpl(image,signal));
     if(signal?.aborted)throw Error('Model selection cancelled.');
     function node(index) {
       const source=doc.nodes[index], g=new THREE.Group();
+      g.name=source.name??'';
+      if(source.extras?.nativeBone!==undefined)g.userData.mc3NativeBone=source.extras.nativeBone;
+      if(ford && source.extras?.sourceNames?.includes('HELMET'))return null;
       if(source.matrix){g.matrix.fromArray(source.matrix);g.matrixAutoUpdate=false;}
       else {g.position.fromArray(source.translation??[0,0,0]);g.quaternion.fromArray(source.rotation??[0,0,0,1]);g.scale.fromArray(source.scale??[1,1,1]);}
       for(const p of source.mesh===undefined?[]:meshes[source.mesh]) {
+        if(ford && doc.materials[p.material].name==='UNDER_SHADOW')continue;
         const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(p.positions,3));geometry.setAttribute('normal',new THREE.BufferAttribute(p.normals,3));
         if(p.uv)geometry.setAttribute('uv',new THREE.BufferAttribute(p.uv,2));geometry.setIndex(new THREE.BufferAttribute(p.indices,1));
+        if(p.mc3NativeNormals)geometry.setAttribute('mc3NativeNormal',new THREE.BufferAttribute(p.mc3NativeNormals,3));
+        if(p.mc3NativePositions)geometry.setAttribute('mc3NativePosition',new THREE.BufferAttribute(p.mc3NativePositions,3));
+        if(p.mc3NativeColors)geometry.setAttribute('mc3NativeColor',new THREE.BufferAttribute(p.mc3NativeColors,4));
+        if(p.mc3NativeUvs)geometry.setAttribute('mc3NativeUv',new THREE.BufferAttribute(p.mc3NativeUvs,p.mc3NativeUvWidth));
+        if(p.mc3NativeBatches)geometry.userData.mc3NativeBatches=p.mc3NativeBatches;
         if(p.colors)geometry.setAttribute('color',new THREE.BufferAttribute(p.colors,p.colorWidth));
         const material=createMaterial(doc,textures,p.material), definition=doc.materials[p.material];
         material.vertexColors=!!p.colors;
         material.alphaTest=definition.alphaMode==='MASK'?(definition.alphaCutoff??0.5):0;
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;g.add(mesh);
+        variantMeshes.push({mesh,primitive:p});
       }
-      for(const child of source.children??[])g.add(node(child));return g;
+      for(const child of source.children??[]){const next=node(child);if(next)g.add(next);}return g;
     }
-    for(const root of doc.scenes[doc.scene??0].nodes)group.add(node(root));
+    for(const root of doc.scenes[doc.scene??0].nodes){const next=node(root);if(next)group.add(next);}
+    // Match the compact Ford baker's source-to-showcase frame (x,y,z) -> (z,y,-x).
+    if(ford)group.rotation.y=Math.PI/2;
     const bounds=new THREE.Box3().setFromObject(group);
     if(bounds.isEmpty())throw Error('Editable scene has no visible geometry.');
     group.position.set(-(bounds.min.x+bounds.max.x)/2,-bounds.min.y,-(bounds.min.z+bounds.max.z)/2);

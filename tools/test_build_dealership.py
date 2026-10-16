@@ -140,6 +140,7 @@ class DealershipBuildTests(unittest.TestCase):
             shutil.copyfile(ROOT / f'dealership/public/ford-racing-2/{code}.glb', model)
             (work / 'catalog.json').write_text(json.dumps([entry]))
             before = build(work, output)[0]
+            before_bounds = bake_car(code, model.read_bytes(), source_mode=False)['bounds']
             check(work, output)
             output_hash = sha(output)
             doc, binary = read_glb(model.read_bytes())
@@ -159,8 +160,12 @@ class DealershipBuildTests(unittest.TestCase):
                 after = build(work, output)[0]
                 compiled_hash = sha(output)
                 repeat = build(work, output)[0]
-            length = lambda car: car['model']['bounds'][3] - car['model']['bounds'][0]
-            self.assertAlmostEqual(length(after), length(before) * 1.2, places=5)
+            # Textured previews load geometry from the working GLB; their compiled
+            # rows retain its hash rather than duplicate its bounds and vertices.
+            after_bounds = bake_car(code, model.read_bytes(), source_mode=False)['bounds']
+            length = lambda bounds: bounds[3] - bounds[0]
+            self.assertAlmostEqual(length(after_bounds), length(before_bounds) * 1.2, places=5)
+            self.assertNotEqual(after['model']['source']['sha256'], before['model']['source']['sha256'])
             self.assertEqual(after['name'], 'Custom Gran Torino')
             self.assertEqual(after, repeat)
             self.assertEqual(sha(output), compiled_hash)

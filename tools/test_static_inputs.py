@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -47,6 +48,28 @@ def test_lookup():
 
 class Boom(ValueError):
     pass
+
+
+def test_mc3_disc():
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        config = root/'input-paths.json'
+        source = root/'configured.iso'
+        source.write_bytes(b'disc')
+        config.write_text(json.dumps({'CARMODELS_MC3_DISC': str(source)}))
+        with patch.dict(os.environ, {'CARMODELS_INPUT_CONFIG': str(config)}, clear=True):
+            assert static_inputs.mc3_disc() == source
+            with patch.dict(os.environ, {'CARMODELS_MC3_DISC': str(root/'override.iso')}):
+                assert static_inputs.mc3_disc(required=False) == root/'override.iso'
+                with contextlib.redirect_stderr(io.StringIO()) as err:
+                    try:
+                        static_inputs.mc3_disc()
+                    except SystemExit as error:
+                        assert error.code == 2 and 'CARMODELS_MC3_DISC' in err.getvalue()
+                    else:
+                        raise AssertionError('missing required MC3 input accepted')
+        with patch.dict(os.environ, {'CARMODELS_INPUT_CONFIG': str(root/'absent.json')}, clear=True):
+            assert static_inputs.mc3_disc(required=False) == static_inputs.ROOT/'games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso'
 
 
 def test_common():
@@ -95,5 +118,6 @@ def test_common():
 
 if __name__ == '__main__':
     test_lookup()
+    test_mc3_disc()
     test_common()
     print('PASS test_static_inputs')

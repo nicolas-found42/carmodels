@@ -27,15 +27,296 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_mgaln",
   "id": "simulation/_mgaln/day",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 49,
+        "index": 0,
+        "label": "SOFIA WHITE",
+        "name": "SOFIA WHITE"
+      },
+      {
+        "colour_id": 51,
+        "index": 1,
+        "label": "HAMILTON SILVER/THURSTON GRAY 2TONE",
+        "name": "HAMILTON SILVER/THURSTON GRAY 2TONE"
+      },
+      {
+        "colour_id": 52,
+        "index": 2,
+        "label": "HAMILTON SILVER",
+        "name": "HAMILTON SILVER"
+      },
+      {
+        "colour_id": 53,
+        "index": 3,
+        "label": "PYRENEES BLACK/THURSTON GRAY 2TONE",
+        "name": "PYRENEES BLACK/THURSTON GRAY 2TONE"
+      },
+      {
+        "colour_id": 54,
+        "index": 4,
+        "label": "PYRENEES BLACK",
+        "name": "PYRENEES BLACK"
+      },
+      {
+        "colour_id": 98,
+        "index": 5,
+        "label": "PALMA RED",
+        "name": "PALMA RED"
+      },
+      {
+        "colour_id": 100,
+        "index": 6,
+        "label": "PALMA RED/THURSTON GRAY 2TONE",
+        "name": "PALMA RED/THURSTON GRAY 2TONE"
+      },
+      {
+        "colour_id": 101,
+        "index": 7,
+        "label": "ROANNE RED",
+        "name": "ROANNE RED"
+      },
+      {
+        "colour_id": 109,
+        "index": 8,
+        "label": "FINESSE GREEN",
+        "name": "FINESSE GREEN"
+      },
+      {
+        "colour_id": 119,
+        "index": 9,
+        "label": "TRIGGER MAUVE",
+        "name": "TRIGGER MAUVE"
+      }
+    ],
+    "identity": {
+      "name": "GALANT VR-4",
+      "spec_index": 76,
+      "status": "verified"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 49,
+          "matching_slots": [
+            {
+              "colour_id": 49,
+              "name": "SOFIA WHITE",
+              "slot": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 51,
+          "matching_slots": [
+            {
+              "colour_id": 51,
+              "name": "HAMILTON SILVER/THURSTON GRAY 2TONE",
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "lookup_colour_id": 52,
+          "matching_slots": [
+            {
+              "colour_id": 52,
+              "name": "HAMILTON SILVER",
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "lookup_colour_id": 53,
+          "matching_slots": [
+            {
+              "colour_id": 53,
+              "name": "PYRENEES BLACK/THURSTON GRAY 2TONE",
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "lookup_colour_id": 54,
+          "matching_slots": [
+            {
+              "colour_id": 54,
+              "name": "PYRENEES BLACK",
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "lookup_colour_id": 98,
+          "matching_slots": [
+            {
+              "colour_id": 98,
+              "name": "PALMA RED",
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "lookup_colour_id": 100,
+          "matching_slots": [
+            {
+              "colour_id": 100,
+              "name": "PALMA RED/THURSTON GRAY 2TONE",
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "lookup_colour_id": 101,
+          "matching_slots": [
+            {
+              "colour_id": 101,
+              "name": "ROANNE RED",
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "lookup_colour_id": 109,
+          "matching_slots": [
+            {
+              "colour_id": 109,
+              "name": "FINESSE GREEN",
+              "slot": 8
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "lookup_colour_id": 119,
+          "matching_slots": [
+            {
+              "colour_id": 119,
+              "name": "TRIGGER MAUVE",
+              "slot": 9
+            }
+          ]
+        }
+      ],
+      "colour_source_slots": [
+        {
+          "colour_id": 49,
+          "name": "SOFIA WHITE",
+          "slot": 0
+        },
+        {
+          "colour_id": 52,
+          "name": "HAMILTON SILVER",
+          "slot": 1
+        },
+        {
+          "colour_id": 51,
+          "name": "HAMILTON SILVER/THURSTON GRAY 2TONE",
+          "slot": 2
+        },
+        {
+          "colour_id": 54,
+          "name": "PYRENEES BLACK",
+          "slot": 3
+        },
+        {
+          "colour_id": 53,
+          "name": "PYRENEES BLACK/THURSTON GRAY 2TONE",
+          "slot": 4
+        },
+        {
+          "colour_id": 98,
+          "name": "PALMA RED",
+          "slot": 5
+        },
+        {
+          "colour_id": 100,
+          "name": "PALMA RED/THURSTON GRAY 2TONE",
+          "slot": 6
+        },
+        {
+          "colour_id": 101,
+          "name": "ROANNE RED",
+          "slot": 7
+        },
+        {
+          "colour_id": 109,
+          "name": "FINESSE GREEN",
+          "slot": 8
+        },
+        {
+          "colour_id": 119,
+          "name": "TRIGGER MAUVE",
+          "slot": 9
+        }
+      ],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "mgaln",
+      "native_directory_index": 144,
+      "native_grade_name": "VR-4",
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "native_model_name": "GALANT",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": {
+      "aspiration": "Turbo",
+      "displacement_cc": 2498,
+      "displacement_display_kind": "cc",
+      "displacement_raw": 2498,
+      "displacement_rotary_chamber_cc": null,
+      "displacement_rotary_factor": null,
+      "drive": "4WD",
+      "engine_configuration": "V6",
+      "engine_type": "DOHC",
+      "front_tread_mm": 1510,
+      "height_mm": 1420,
+      "length_mm": 4680,
+      "mass_kg": 1480,
+      "power_conversion": "floor(raw * 1000 / 1014); native display label HP",
+      "power_hp_game": 276,
+      "power_raw": 280,
+      "power_rpm": 5500,
+      "rear_tread_mm": 1505,
+      "specification_scope": "native-base",
+      "suspension_front": "Multilink",
+      "suspension_rear": "Multilink",
+      "torque_kgm": 37.0,
+      "torque_raw": 3700,
+      "torque_rpm": 4000,
+      "wheelbase_mm": 2635,
+      "width_mm": 1740
+    }
+  },
   "pair_index": 144,
   "variant": "day"
 }

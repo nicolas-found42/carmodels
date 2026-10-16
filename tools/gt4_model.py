@@ -144,6 +144,76 @@ class ModelSet:
         return TextureSet(self.data, self.at(offset, 0x30), self.end)
 
 
+class ColourPatch:
+    """Pat0 byte replacements, relative to a target MDLS and to this patch's start.
+
+    The native header has no size; the containing CAR4 slot supplies its upper bound.
+    Only native material/Tex1 regions are admitted, so a paint cannot alter geometry.
+    Layout: Nenkai's GT4_Pat0_ColorPatch.bt (see the preview research note).
+    """
+    def __init__(self, data, base, limit, model):
+        r = Reader(data)
+
+        def at(offset, size):
+            if offset < 0 or size < 0 or base + offset + size > limit:
+                raise ValueError('Pat0 offset outside colour patch')
+            r.need(base + offset, size)
+            return base + offset
+
+        if data[at(0, 0x20):base + 4] != b'Pat0':
+            raise ValueError('missing Pat0 colour patch')
+        self.paint_count, count = r.unpack('<HH', base + 0x10)
+        if not 0 < self.paint_count <= 64 or count > 4096:
+            raise ValueError('Pat0 counts exceed limits')
+        table_end = 0x20 + 4 * self.paint_count * count
+        at(0x20, table_end - 0x20)
+        regions = [(model.materials_at, model.materials_at + 0x50 * model.material_count)]
+        for colour in range(model.colour_count):
+            table = r.u32(model.at(model.textures_at + 4 * colour, 4))
+            for lod in range(model.lod_count):
+                offset = r.u32(model.at(table + 4 * lod, 4))
+                texture = model.texture_set(colour, lod)
+                size = r.u32(model.at(offset + 12, 4))
+                if texture.textures:
+                    model.at(offset, size)
+                    regions.append((offset, offset + size))
+        self.paints = []
+        for colour in range(self.paint_count):
+            patches = []
+            for i in range(count):
+                offset = r.u32(base + 0x20 + 4 * (colour * count + i))
+                if offset < table_end:
+                    raise ValueError('Pat0 patch overlaps offset table')
+                target, size = r.unpack('<II', at(offset, 8))
+                model.at(target, size)
+                if not any(low <= target and target + size <= high for low, high in regions):
+                    raise ValueError('Pat0 target outside material/texture regions')
+                start = at(offset + 8, size)
+                patches.append((target, data[start:start + size]))
+            self.paints.append(patches)
+        self.model = model
+
+    def apply(self, colour):
+        if not 0 <= colour < self.paint_count:
+            raise ValueError('paint index outside Pat0')
+        # A new, independent MDLS buffer for every selection; no cumulative patches or source writes.
+        data = bytearray(self.model.data[self.model.base:self.model.end])
+        for target, payload in self.paints[colour]:
+            data[target:target + len(payload)] = payload
+        return ModelSet(bytes(data), 0)
+
+
+def factory_models(data, slots, part):
+    """One immutable MDLS per native Pat0 paint, or the stored model when no patch exists."""
+    model = ModelSet(data, slots[part])
+    if part + '_patch' not in slots:
+        return [model]
+    base = slots[part + '_patch']
+    limit = min([offset for offset in slots.values() if offset > base] + [len(data)])
+    patch = ColourPatch(data, base, limit, model)
+    return [patch.apply(colour) for colour in range(patch.paint_count)]
+
+
 def vif_commands(data, pos, qwords):
     """VIFcode stream of one shape packet; returns UNPACK payloads (addr, format, rows)."""
     end = pos + 16 * qwords
@@ -505,16 +575,22 @@ class TextureSet:
         if data[base:base + 4] != TEX1:
             raise ValueError('missing Tex1 texture set')
         size = r.u32(base + 12)
-        self.data, self._memory, self.textures, self.transfers = data, None, [], []
+        self.data, self._memory, self.textures, self.transfers, self.clut_patches = data, None, [], [], []
         if size == 0:  # Placeholder set for an unused texture LOD.
             return
         if size < 0x30 or base + size > limit:
             raise ValueError('Tex1 outside model set')
-        _, _, count, transfers, tex_at, transfer_at, _ = r.unpack('<hHHHIII', base + 0x10)
+        _, _, count, transfers, tex_at, transfer_at, patch_at = r.unpack('<hHHHIII', base + 0x10)
         if count > 512 or transfers > 64:
             raise ValueError('Tex1 counts exceed limits')
+
+        def at(offset, length):
+            if offset < 0 or length < 0 or offset + length > size:
+                raise ValueError('Tex1 offset outside texture set')
+            return base + offset
+
         for i in range(count):
-            tex0, _, _, _, clamp = r.unpack('<5Q', base + tex_at + 0x28 * i)
+            tex0, _, _, _, clamp = r.unpack('<5Q', at(tex_at + 0x28 * i, 0x28))
             self.textures.append({
                 'tbp': _bits(tex0, 0, 14), 'tbw': _bits(tex0, 14, 6), 'psm': _bits(tex0, 20, 6),
                 'tw': _bits(tex0, 26, 4), 'th': _bits(tex0, 30, 4), 'tcc': _bits(tex0, 34, 1),
@@ -522,11 +598,31 @@ class TextureSet:
                 'wms': _bits(clamp, 0, 2), 'wmt': _bits(clamp, 2, 2),
                 'maxu': _bits(clamp, 14, 10), 'maxv': _bits(clamp, 34, 10)})
         for i in range(transfers):
-            offset, bp, bw, fmt, w, h = r.unpack('<IHBBHH', base + transfer_at + 12 * i)
+            offset, bp, bw, fmt, w, h = r.unpack('<IHBBHH', at(transfer_at + 12 * i, 12))
             if fmt != PSMCT32 or w > 1024 or h > 2048:
                 raise ValueError('unsupported Tex1 transfer')
-            r.need(base + offset, 4 * w * h)
-            self.transfers.append((bp, bw, w, h, base + offset))
+            self.transfers.append((bp, bw, w, h, at(offset, 4 * w * h)))
+        if patch_at:
+            patches = r.u32(at(patch_at, 4))
+            if not 0 < patches <= 64:
+                raise ValueError('Tex1 CLUT patch count exceeds limits')
+            at(patch_at + 4, 4 * patches)
+            for colour in range(patches):
+                offset = r.u32(base + patch_at + 4 + 4 * colour)
+                count = r.u32(at(offset, 4))
+                if count > len(self.textures):
+                    raise ValueError('Tex1 CLUT patch texture count exceeds limits')
+                at(offset + 4, 4 * count)
+                entries = {}
+                for i in range(count):
+                    bits = r.u32(base + offset + 4 + 4 * i)
+                    index = bits >> 23
+                    if index >= len(self.textures) or index in entries:
+                        raise ValueError('Tex1 CLUT patch texture index invalid')
+                    if (bits >> 19) & 15 != PSMCT32:
+                        raise ValueError('unsupported CLUT patch format')
+                    entries[index] = {'csa': bits & 31, 'cbp': (bits >> 5) & 16383}
+                self.clut_patches.append(entries)
 
     def memory(self):
         if self._memory is None:
@@ -536,11 +632,15 @@ class TextureSet:
             self._memory = gs
         return self._memory
 
-    def image(self, index):
+    def image(self, index, colour=0):
         """RGBA8 image at the full 2^TW x 2^TH size; GS alpha 0..0x80 is rescaled to 0..255."""
         if not 0 <= index < len(self.textures):
             raise ValueError('texture index outside Tex1')
         t = self.textures[index]
+        if self.clut_patches:
+            if not 0 <= colour < len(self.clut_patches):
+                raise ValueError('colour index outside Tex1 CLUT patches')
+            t = {**t, **self.clut_patches[colour].get(index, {})}
         width, height = 1 << t['tw'], 1 << t['th']
         if width > 1024 or height > 1024:
             raise ValueError('texture dimensions exceed limit')

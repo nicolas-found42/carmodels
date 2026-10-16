@@ -21,7 +21,7 @@ COMMAND = ['sh', '-c', 'set -a; . "$HOME/.config/jgrep/env"; exec npx -y @jkudis
 
 
 def _server():
-    env = dict(os.environ, JEV_MCP_MODEL='typesafe/jev-1.13', JEV_PROVIDER='openrouter')
+    env = dict(os.environ, JEV_MCP_MODEL='typesafe/jev-1.14', JEV_PROVIDER='openrouter')
     return subprocess.Popen(COMMAND, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, env=env)
 
 

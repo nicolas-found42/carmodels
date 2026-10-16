@@ -13,7 +13,7 @@ import os
 import time
 from pathlib import Path
 
-MODEL = 'typesafe/jev-1.13'
+MODEL = 'typesafe/jev-1.14'
 BASE_URL = 'https://openrouter.ai/api'
 DEFAULT_THRESHOLDS = {'top': .85, 'margin': .50, 'support': .85, 'quality': 1.5}
 CLASSES = {

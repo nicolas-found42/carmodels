@@ -128,10 +128,13 @@ only directly.
 
 | Command | What it covers | Inputs |
 | --- | --- | --- |
+| `node tools/test_mc3_gs_raster.mjs`, `python3 tools/test_mc3_environment_raster.py`, `python3 tools/test_mc3_reference_runtime.py`, `python3 tools/test_verify_mc3_raster_reference.py` | Native GIF/VIF bounds, exact FMA and selected software-GS precision, source binding, deterministic execution adapters and independently measured capture goldens | Committed fixtures; Node.js + Python |
+| `python3 tools/verify_mc3_raster_reference.py` (`mc3_raster_reference_native`, full MC3 tier) | Reexecutes original EE/VU helpers and all selected source batches; independent GS hidden-geometry controls and byte-exact 256/64 RGBA comparisons across three replays | Original MC3 disc, Node.js, optional pinned AVX2/FMA Docker reference; explicit skip if unavailable |
 | `python3 tools/verify_recovered_asset_index.py` | Derives the expected index from producer receipts, re-hashes 2579 artifacts across 35 cars, and requires corrupt manifests, cross-car record swaps and changed declarations each to be rejected | Committed corpus |
 | `python3 tools/test_model_catalog.py` | Multi-game IDs, encoded paths, duplicate IDs, traversal and corrupt export controls | Python + committed indexes |
 | `python3 tools/test_export_materials.py` | Source texture/selector ownership across 35 GLBs, with an in-range wrong-material mutation | Committed corpus |
 | `python3 tools/build_dealership.py --check` | Read-only equality of compiled dealership data against current editable GLBs/catalog; stale geometry, metadata and missing output fail | Committed dealership inputs |
+| `python3 tools/build_game_paints.py --check`, `python3 tools/test_build_game_paints.py`, `node tools/test_game_paint.mjs` | Current source/working GLB palette pins; same-game and native-identity boundaries; independent paint bindings, persistence and selected-colour GLB export preserving binary data and native variants | Committed GLBs and palettes; Python + Node |
 | `tools/check.sh --only dealership_roundtrip` | Real Gran Torino import, 20% geometry edit, export, rebuild and source preservation | Pinned Blender 4.5.14 |
 | `python3 tools/test_model_png.py`, `python3 tools/test_run_checks.py`, `python3 tools/test_review_payload.py` | PNG filters/RGB conversion and corrupt textures; failure aggregation/logs/runtime controls; raw review scope, budgets and escalation controls | Python |
 | `node tools/test_dealership.mjs`, `python3 tools/test_build_dealership.py`, `python3 tools/test_build_showcase.py`, `python3 tools/test_bake_models.py` | Independent editable dealership GLBs/catalog and rebuild preservation; 35 source-bake triangle/normal/transform/hub checks; bounded GPU resources, malformed meshes and load timeouts; source icon/GLB pins with corruption controls | Node.js + Python + committed reference corpus; no npm install |
@@ -139,6 +142,7 @@ only directly.
 | `tools/test_gt4_*.py`, `test_extract_gt4_cars.py`, `test_import_gt4_catalog.py`, `test_import_gt4_dealership.py` | RoFS, VIF, Tex1, SpecDB, GLB and import tamper controls with pinned real-data values | Python + committed GT4 fixture car, spec database and previews |
 | `tools/test_gt_*.py`, `test_import_gt_dealership.py` | GT1 archive, wheel/body/CTEX, repaired normal/winding and canonical migration controls; all 728 native pairs and 342 public families | Python + local GT1 extraction and committed canonical exports |
 | `python3 tools/export_gt_models.py --check` (`gt_models`) | Re-derives all canonical GT1 exports, aliases and file inventory; selected with `--game gran-turismo --full` | Local GT1 extraction |
+| `python3 tools/test_gt_metadata.py`, `python3 tools/test_gt_native_data.py` | Exact SPEC/colour joins, unresolved identities, native source/face/shadow/LOD/wheel preservation, all material variants and corrupt-input controls | Committed native GT1 metadata and compact lookup receipts |
 | `python3 tools/extract_gt_cars.py --check` (`gt_extraction`) | Re-derives all retained GT1 native assets from the local disc; skips when the disc is absent | Local GT1 CD image |
 | `python3 tools/import_gt4_catalog.py --check` (`gt4_catalog`) | Re-derives all 730 GT4 previews and native ZIPs from the local extraction; skipped when only the committed fixture is present, failed when the extraction is partial | Local GT4 extraction and native ZIPs |
 | `python3 tools/extract_gt4_cars.py --check` (`gt4_extraction`) | Re-derives all 6,591 GT4 extraction files from the disc; skipped when the ISO is absent | Local GT4 ISO |
@@ -191,6 +195,15 @@ record `render_fidelity_complete: false` deliberately — geometry, textures, li
 are covered by other verifiers, and full game-render equivalence is still open.
 
 ## Receipts
+
+GT1 metadata upgrades use `python3 tools/extract_gt_cars.py --refresh-metadata`,
+then `python3 tools/export_gt_models.py`, `python3 tools/build_model_catalog.py`,
+`python3 tools/import_gt_dealership.py --upgrade-unedited` and
+`python3 tools/build_dealership.py`. The extraction refresh rederives every native
+asset before replacing derived manifests; changed native bytes or unexpected files
+abort the refresh. It retains `SYSTEM.DAT` alongside CARINF. The disc can be supplied
+under `games/source-data/PS1/gran-turismo/` or the historical `game-files/` path.
+Run `tools/check.sh --game gran-turismo --full` after this derivation changes.
 
 Verifiers write their JSON receipt under `research/evidence/<area>/`. Those receipts are committed:
 re-running a verifier should reproduce its receipt and leave the tree otherwise unchanged. A run that

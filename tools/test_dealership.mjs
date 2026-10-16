@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
+import {execFileSync} from 'node:child_process';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias} from '../dealership/dealership.mjs';
+import {makeCar, disposeCar, decodeModel, validateCars, fetchCars, gameId, matchesVariant, dealershipDownload, createCarSearch, resolveCarAlias, sourceCarId, rememberCar} from '../dealership/dealership.mjs';
 
 const cars = JSON.parse(fs.readFileSync(new URL('../dealership/public/dealership/cars.json', import.meta.url)));
 const dealershipPage = fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
@@ -13,7 +14,26 @@ assert.equal(dealershipDownload(cars[0]).href,`./dealership/models/${cars[0].cod
 assert.match(sourcePage,/public\/models.json/,'source showcase retains its own corpus');
 assert.match(sourcePage,/<h1>Source model library<\/h1>/);
 assert.equal(validateCars(cars).length, cars.length);
-const compactCars=cars.filter(c=>c.model.schema===4);
+const fordCars=cars.filter(c=>(c.game??'ford-racing-2')==='ford-racing-2');
+assert.equal(fordCars.length,35);
+assert(fordCars.every(c=>c.displayMode==='textured-glb' && c.model.schema===2),
+  'Ford dealership cars must retain their working GLB textures and factory variants');
+// Keep exercising the supported compact renderer against real working geometry,
+// independently of which display mode the dealership catalog chooses.
+const compactCars=JSON.parse(execFileSync('python3',['-c',`
+import json,sys
+from pathlib import Path
+sys.path.insert(0,'tools')
+from bake_models import bake_car
+cars=json.loads(Path('dealership/public/dealership/cars.json').read_text())
+result=[]
+for car in cars:
+    if car.get('game','ford-racing-2')!='ford-racing-2': continue
+    model=bake_car(car['code'],(Path('dealership')/car['model']['source']['glb']).read_bytes(),source_mode=False)
+    model['source']=car['model']['source']
+    result.append({**car,'model':model})
+print(json.dumps(result))
+`],{cwd:new URL('../',import.meta.url),maxBuffer:32*1024*1024,encoding:'utf8'}));
 assert.equal(compactCars.length,35);
 // Project-owned showcase geometry has one index encoding: unsigned 32-bit.
 const largeCar=structuredClone(compactCars[0]),vertexCount=65538;
@@ -31,6 +51,15 @@ const largeMesh=makeCar(largeCar);
 assert(largeMesh.children[0].geometry.index.array instanceof Uint32Array);
 assert.equal(largeMesh.children[0].geometry.index.array.at(-1),65537);
 disposeCar(largeMesh);
+const tintCar=makeCar(compactCars[0]),tintBody=tintCar.children.find(n=>n.name==='body');
+const stored=tintBody.material.color.clone(),storedSource=JSON.stringify(compactCars[0]);
+const otherMaterials=tintCar.children.filter(n=>n.name!=='body').map(n=>[n.material,n.material.color.clone()]);
+tintCar.userData.setColourTint('#ff0000');assert.deepEqual(tintBody.material.color.toArray(),[stored.r,0,0]);
+tintCar.userData.setColourTint('#0000ff');assert.deepEqual(tintBody.material.color.toArray(),[0,0,stored.b]);
+for(const [material,colour] of otherMaterials)assert(material.color.equals(colour),'known compact wheel/detail materials keep their colour');
+assert.throws(()=>tintCar.userData.setColourTint('red'),/Invalid custom colour/);
+assert.equal(tintCar.userData.colourTint,'#0000ff');tintCar.userData.setColourTint();assert(tintBody.material.color.equals(stored));
+assert.equal(JSON.stringify(compactCars[0]),storedSource);disposeCar(tintCar);
 assert.throws(()=>decodeModel({...largeCar,model:{...largeCar.model,schema:1}}),/invalid dealership model/,'stale16-bit schema must be rejected');
 for(const width of [2,4]) {
   const bad=structuredClone(largeCar);
@@ -45,7 +74,11 @@ assert(gtCars.every(c=>c.sourceVariant==='canonical'&&!/_(DAY|NIGHT)$/.test(c.co
 assert(!dealershipPage.includes('<option value="night">')&&!dealershipPage.includes('<option value="day">'));
 for(const c of gtCars){for(const alias of c.sourceAliases)assert.equal(resolveCarAlias(cars,alias,'code'),c);}
 assert.equal(resolveCarAlias(cars,'missing','code'),undefined);
-for(const c of gtCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');}
+for(const c of gtCars){
+  const specs=c.nativeMetadata?.identity?.status==='verified'?c.nativeMetadata.specifications:null;
+  assert.equal(c.model.schema,2);assert.equal(c.bhp,specs?.power_hp_game??null);assert.equal(c.kg,specs?.mass_kg??null);
+  assert.equal(c.speed,null);assert.equal(gameId(c),'gran-turismo');
+}
 assert.equal(gameId(compactCars[0]),'ford-racing-2');
 const redlineCars=cars.filter(c=>c.game==='redline');
 for(const c of redlineCars){assert.equal(c.model.schema,2);assert.equal(c.bhp,null);assert.equal(c.speed,null);assert.equal(gameId(c),'redline');}
@@ -203,12 +236,12 @@ for (const car of compactCars) {
   assert.equal(counts.size, geometries.size + materials.size);
   assert([...counts.values()].every(n => n === 1), 'shared resources disposed exactly once');
 }
-const seed = {...cars[0], speed:0, weight:0, agility:0, accel:0, paint:{rgb:[128,64,32]}};
+const seed = {...compactCars[0], speed:0, weight:0, agility:0, accel:0, paint:{rgb:[128,64,32]}};
 const zero = makeCar(seed), half = makeCar({...seed, speed:0.5});
 assert.deepEqual(zero.children[0].geometry.attributes.position.array,half.children[0].geometry.attributes.position.array,'handling ratings must not stretch geometry');
 assert.equal(zero.children[0].material.color.getHexString(), '804020', 'display RGB sample must round trip through sRGB');
 disposeCar(zero); disposeCar(half);
-const bodyOnly = structuredClone(cars[0]);
+const bodyOnly = structuredClone(compactCars[0]);
 bodyOnly.model.parts = bodyOnly.model.parts.filter(p=>p.kind!=='wheel');
 bodyOnly.model.wheelHubs = [];
 bodyOnly.model.triangleCount = bodyOnly.model.parts.reduce((sum,p)=>sum+Buffer.from(p.indices,'base64').length/12,0);
@@ -246,7 +279,7 @@ for (const mutate of [
   c=>{const b=Buffer.from(c.model.parts[0].vertices,'base64');b.writeFloatLE(0,12);b.writeFloatLE(0,16);b.writeFloatLE(0,20);c.model.parts[0].vertices=b.toString('base64');},
   c=>{const b=Buffer.from(c.model.parts[0].indices,'base64');b.writeUInt32LE(0xffffffff,0);c.model.parts[0].indices=b.toString('base64');},
 ]) {
-  const corrupted=structuredClone(cars[0]);mutate(corrupted);
+  const corrupted=structuredClone(compactCars[0]);mutate(corrupted);
   assert.throws(()=>validateCars([corrupted]),/model/);
 }
 assert.equal((await fetchCars('test', {fetchImpl:async()=>({ok:true,json:async()=>cars})})).length,cars.length);
@@ -270,4 +303,66 @@ try {
   server.closeAllConnections();
   await new Promise(resolve => server.close(resolve));
 }
-console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);
+console.log(`PASS test_dealership: ${cars.length} searchable IDs, name/year order and punctuation, precision controls, dependent variant/chip recovery, semantic cancellation/stale responses/35-second timeout/invalid pairs, compact body tint/reset with wheel/detail preservation, 35 dealership meshes, floor contact, <=3 meshes, unique disposal, rating-independent geometry, sRGB, malformed model/corpus controls and real HTTP body timeout`);
+
+// Both viewers share source identities even when editable codes are namespaced.
+const sourceCatalog=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url),'utf8')).cars;
+for(const car of cars){
+  const source=sourceCatalog.find(entry=>entry.id===sourceCarId(car));
+  assert(source,car.code);
+  assert.equal(resolveCarAlias(cars,source.id,'code'),car);
+  assert.equal(resolveCarAlias(sourceCatalog,sourceCarId(car)),source);
+  const query=new URLSearchParams({game:gameId(car),car:sourceCarId(car)});
+  assert.equal(resolveCarAlias(cars,new URLSearchParams(String(query)).get('car'),'code'),car);
+}
+assert.equal(resolveCarAlias(cars,'unknown/source','code'),undefined);
+console.log('PASS viewer navigation identities: every editable car resolves to its source and back');
+
+// Replace the current entry rather than growing history for every car click.
+{
+  const browser={location:{href:'http://localhost:8080/dealership.html?game=gran-turismo&car=old&variant=canonical&debug=1#viewer'},history:{state:{scroll:42},replaceState(state,title,href){this.saved={state,title,href};}}};
+  const target=cars.find(car=>car.code==='MUSTANG_68B');
+  rememberCar(target,browser);await Promise.resolve();
+  const saved=new URL(browser.history.saved.href);
+  assert.equal(saved.searchParams.get('car'),sourceCarId(target));assert.equal(saved.searchParams.get('game'),'ford-racing-2');
+  assert.equal(saved.searchParams.has('variant'),false);assert.equal(saved.searchParams.get('debug'),'1');assert.equal(saved.hash,'#viewer');
+  assert.equal(browser.history.saved.state,browser.history.state);
+  assert.equal(resolveCarAlias(cars,saved.searchParams.get('car'),'code'),target);
+  assert.equal(resolveCarAlias(sourceCatalog,saved.searchParams.get('car')).code,'MUSTANG_68B');
+}
+console.log('PASS selected identity replaces current URL and survives startup resolution');
+
+// History writes are best effort and coalesced: browser quotas cannot abort selection.
+{
+  const writes=[];
+  const browser={location:{href:'http://localhost:8080/recovered.html?variant=canonical'},history:{state:null,replaceState(_state,_title,href){writes.push(href);}}};
+  const source=sourceCatalog.find(c=>c.game==='gran-turismo');
+  rememberCar(source,browser);
+  assert.equal(writes.length,0,'selection must defer history writes');
+  await Promise.resolve();
+  assert.equal(new URL(writes.at(-1)).searchParams.get('variant'),'canonical','valid source variant survives reload');
+  writes.length=0;
+  const first=cars.find(c=>c.code==='MUSTANG_68'),last=cars.find(c=>c.code==='MUSTANG_68B');
+  rememberCar(first,browser);rememberCar(last,browser);await Promise.resolve();
+  assert.equal(writes.length,1,'rapid selections coalesce to one URL update');
+  assert.equal(new URL(writes[0]).searchParams.get('car'),sourceCarId(last));
+  assert.equal(new URL(writes[0]).searchParams.has('variant'),false,'incompatible variant is cleared');
+  browser.history.replaceState=()=>{throw new DOMException('History quota exceeded','SecurityError');};
+  assert.doesNotThrow(()=>rememberCar(last,browser));await Promise.resolve();
+}
+
+// Exercise the actual startup selection for a game-only URL before history is written.
+{
+  const start=dealershipPage.indexOf('    const parameters = new URLSearchParams(location.search);');
+  const end=dealershipPage.indexOf('    applyFilters();',start);
+  const bootSelection=new Function('CARS','$','location','resolveCarAlias','gameId','updateFilterAvailability','select',
+    `return (async()=>{${dealershipPage.slice(start,end)}})();`);
+  for(const game of ['redline','gran-turismo','midnight-club-3-remix','all']){
+    const filter={value:'all',options:['all','redline','gran-turismo','midnight-club-3-remix'].map(value=>({value}))};
+    let selected;
+    await bootSelection(cars,()=>filter,{search:'?game='+game},resolveCarAlias,gameId,()=>{},async car=>{selected=car;});
+    assert.equal(filter.value,game);assert(selected);
+    assert(game==='all'||gameId(selected)===game,'game-only startup must select within requested game');
+  }
+}
+console.log('PASS startup game restrictions, coalesced history, valid variants and history quota recovery');

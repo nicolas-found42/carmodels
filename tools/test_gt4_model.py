@@ -4,8 +4,8 @@ from pathlib import Path
 import struct
 import unittest
 
-from gt4_model import (GSMemory, ModelSet, PSMT8, car4_slots, car_info, collision_bounds,
-                       packet_geometry, vif_commands, walk_model)
+from gt4_model import (ColourPatch, GSMemory, ModelSet, PSMT8, TextureSet, car4_slots, car_info,
+                       collision_bounds, factory_models, packet_geometry, vif_commands, walk_model)
 
 ROOT = Path(__file__).resolve().parents[1]
 MENU = ROOT / 'games/gran-turismo-4/cars/acra0001/car/menu/acra0001'
@@ -61,8 +61,63 @@ class RealModelTests(unittest.TestCase):
         self.assertEqual((image['width'], image['height'], digest(image['rgba'])[:16]), (64, 32, 'f150583f6b01e518'))
         self.assertEqual(self.body.texture_set(0, 1).textures, [])  # Size-0 placeholder set.
 
+    def test_native_pat0_has_five_independent_paints(self):
+        paints = factory_models(self.data, self.slots, 'body')
+        self.assertEqual(len(paints), 5)
+        hashes = [digest(paint.texture_set(0, 0).image(23)['rgba']) for paint in paints]
+        self.assertEqual(len(set(hashes)), 5)
+        self.assertEqual(digest(self.data), MENU_SHA)
+        # Patches leave both geometry and its original source bytes unchanged.
+        expected = self.body.shape(9)
+        self.assertTrue(all(paint.shape(9) == expected for paint in paints))
+
 
 class ControlTests(unittest.TestCase):
+    def test_pat0_bounds_and_geometry_controls(self):
+        data = MENU.read_bytes()
+        slots = car4_slots(data)
+        base, end = slots['body_patch'], slots['wheel']
+        model = ModelSet(data, slots['body'])
+        patch = ColourPatch(data, base, end, model)
+        with self.assertRaisesRegex(ValueError, 'paint index outside Pat0'):
+            patch.apply(patch.paint_count)
+        cases = [('magic', 0, b'XXXX', 'missing Pat0'),
+                 ('paint count', 0x10, struct.pack('<H', 65), 'counts exceed limits'),
+                 ('patch table', 0x20, struct.pack('<I', 0x20), 'overlaps offset table'),
+                 ('source bounds', 0x20, struct.pack('<I', end - base), 'offset outside colour patch')]
+        first = struct.unpack_from('<I', data, base + 0x20)[0]
+        cases += [('target bounds', first, struct.pack('<I', model.size), 'offset outside model set'),
+                  ('geometry target', first, struct.pack('<I', model.models_at), 'outside material/texture regions'),
+                  ('payload bounds', first + 4, struct.pack('<I', len(data)), 'offset outside model set')]
+        for name, offset, replacement, reason in cases:
+            with self.subTest(name=name):
+                corrupt = bytearray(data)
+                corrupt[base + offset:base + offset + len(replacement)] = replacement
+                with self.assertRaisesRegex(ValueError, reason):
+                    ColourPatch(bytes(corrupt), base, end, model)
+
+    def test_tex1_clut_patch_controls(self):
+        data = MENU.read_bytes()
+        model = ModelSet(data, car4_slots(data)['body'])
+        table = model.r.u32(model.at(model.textures_at, 4))
+        base = model.at(model.r.u32(model.at(table + 4 * 5, 4)), 0x30)
+        textures = TextureSet(data, base, model.end)
+        self.assertEqual(len(textures.clut_patches), 5)
+        self.assertEqual(textures.image(0, 4), textures.image(0, 0))
+        with self.assertRaisesRegex(ValueError, 'colour index outside Tex1 CLUT patches'):
+            textures.image(0, 5)
+        patch = struct.unpack_from('<I', data, base + 0x20)[0]
+        entry = struct.unpack_from('<I', data, base + patch + 4)[0]
+        for offset, value, reason in [(patch, 65, 'CLUT patch count exceeds limits'),
+                                      (patch + 4, len(data), 'offset outside texture set'),
+                                      (entry + 4, 511 << 23, 'texture index invalid'),
+                                      (entry + 4, 1 << 19, 'unsupported CLUT patch format')]:
+            with self.subTest(reason=reason):
+                corrupt = bytearray(data)
+                struct.pack_into('<I', corrupt, base + offset, value)
+                with self.assertRaisesRegex(ValueError, reason):
+                    TextureSet(bytes(corrupt), base, model.end)
+
     def test_vif_and_strip_controls(self):
         positions = struct.pack('<HBB', 0x8000, 4, 0x69) + struct.pack('<12h', *range(12))
         strips = struct.pack('<HBB', 0xC040, 2, 0x72) + bytes([1, 6, 0, 0])

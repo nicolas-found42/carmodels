@@ -56,7 +56,7 @@ def put_dictionary(b, textures, vft=0):
     return at
 
 
-def build_pack():
+def build_pack(shader_name='BumpSpec'):
     b = Builder()
     root = b.alloc(0x50)
     zone, zone_d3d = put_texture(b, 'car_zone', 8, 8, 'dxt1', {(0, 0): dxt1(RED, BLUE, [0] * 16),
@@ -79,7 +79,7 @@ def build_pack():
     b.put(shader + 0x18, 'H', 4)
     b.put(shader + 0x1C, 'I', b.pointer(types))
     b.put(shader + 0x24, 'I', b.pointer(names))
-    b.put(shader + 0x30, 'I', b.pointer(b.text('BumpSpec')))
+    b.put(shader + 0x30, 'I', b.pointer(b.text(shader_name)))
     b.put(shader + 0x38, 'I', b.pointer(b.text('T:/mc4/materials/paint.mtlgeo')))
     b.put(values, '4I', b.pointer(trim), b.pointer(vector), b.pointer(array), 0)
     b.put(types, '4B', 0, 1, 2, 0)

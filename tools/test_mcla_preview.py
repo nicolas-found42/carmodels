@@ -27,7 +27,8 @@ def wrapped(data, kind):
     return resource(encoder.body(), len(data), kind)
 
 
-def fixture(root, code='vp_test_car_00', bike=False, brakes=True, hashed=False, rim_root=(0., 0., 0.), rim_face=False):
+def fixture(root, code='vp_test_car_00', bike=False, brakes=True, hashed=False, rim_root=(0., 0., 0.), rim_face=False,
+            ambient_paint=False):
     points = [(-0.25, -0.5, -0.5), (0.25, 0.5, -0.5), (0., 0., 0.5)]
     body_bones = [('vroot', -1, (0., 0., 0.), (0., 0., 0.)),
                   ('hd', 0, (0., 1., -1.), (0., 0., 0.)),
@@ -52,7 +53,14 @@ def fixture(root, code='vp_test_car_00', bike=False, brakes=True, hashed=False, 
         struct.pack_into('>H', data, shaders_pointer, 0)
         files[path] = wrapped(data, 63)
 
-    pack_data, _, _, _ = build_pack()
+    pack_data, _, _, pack_at = build_pack('AmbientCarPaint' if ambient_paint else 'BumpSpec')
+    if ambient_paint:
+        # Native AmbientCarPaint receives its colour at runtime, without a
+        # baked DiffuseSampler/DiffuseColor. Preserve that actual source pattern.
+        values = struct.unpack_from('>I', pack_data, pack_at['shader'] + 0x10)[0] & 0xfffffff
+        names = struct.unpack_from('>I', pack_data, pack_at['shader'] + 0x24)[0] & 0xfffffff
+        struct.pack_into('>I', pack_data, values, 0)
+        struct.pack_into('>I', pack_data, names + 4, 0x9F69064A)
     pack_bytes = wrapped(pack_data, 83)
     prefix = code + '/resources/vehicle/' + code
     model(prefix + '/body_lod_0.xrsc', body_bones)
@@ -99,6 +107,54 @@ def add_part(root, index, name):
 
 
 class Assembly(unittest.TestCase):
+    def test_native_ambient_palette_becomes_switchable_paint_on_actual_export(self):
+        from test_mcla_paint import XML
+        with tempfile.TemporaryDirectory() as tmp:
+            root, code = Path(tmp), 'va_test_car_00'
+            index = fixture(root, code, ambient_paint=True)
+            palette_path = 'shared/tune/ambients/traffic/' + code + '/mcambientcartypecolor.xml'
+            (root / palette_path).parent.mkdir(parents=True)
+            (root / palette_path).write_bytes(XML)
+            index['files'].append({'file': palette_path, 'bytes': len(XML), 'sha256': preview.sha(XML)})
+            data, record = preview.build_car(root, code, index)
+            doc, _ = read_glb(data)
+            variants = doc.get('extensions', {}).get('KHR_materials_variants', {}).get('variants', [])
+            self.assertEqual(len(variants), 2, 'native ambient paint choices are missing')
+            self.assertEqual(variants[0]['extras']['nativePaletteRows'], [0, 2])
+            self.assertEqual(variants[1]['extras']['nativeRGB'], [.2, 0, 0])
+            self.assertEqual(record['ambient_paint']['variants'], 2)
+            self.assertEqual(record['ambient_paint']['source'], palette_path)
+            self.assertIn(palette_path, [row['file'] for row in record['sources']])
+            self.assertEqual(doc['extras']['gamePaint'], record['gamePaint'])
+            self.assertEqual(record['gamePaint']['channels'][0]['id'], 'body')
+            self.assertEqual([row['rgb'] for row in record['gamePaint']['colors']], [[1, 1, 1], [.2, 0, 0]])
+            self.assertIn(palette_path, record['gamePaint']['colors'][0]['source'])
+            for mesh in doc['meshes']:
+                for primitive in mesh['primitives']:
+                    mapping = primitive['extensions']['KHR_materials_variants']['mappings']
+                    self.assertEqual([row['variants'] for row in mapping], [[0], [1]])
+                    red = doc['materials'][mapping[1]['material']]['pbrMetallicRoughness']['baseColorFactor']
+                    self.assertEqual(red, [.2, 0, 0, 1])
+            (root / palette_path).write_bytes(XML.replace(b'0.2', b'0.3'))
+            with self.assertRaisesRegex(preview.PreviewError, 'source hash/size differs'):
+                preview.build_car(root, code, index)
+
+    def test_ambient_palette_does_not_alias_a_player_namespace(self):
+        from test_mcla_paint import XML
+        with tempfile.TemporaryDirectory() as tmp:
+            root, code = Path(tmp), 'vp_test_car_00'
+            index = fixture(root, code, ambient_paint=True)
+            path = 'shared/tune/ambients/traffic/va_test_car_00/mcambientcartypecolor.xml'
+            (root / path).parent.mkdir(parents=True)
+            (root / path).write_bytes(XML)
+            index['files'].append({'file': path, 'bytes': len(XML), 'sha256': preview.sha(XML)})
+            data, record = preview.build_car(root, code, index)
+            self.assertNotIn('KHR_materials_variants', read_glb(data)[0].get('extensions', {}))
+            self.assertNotIn('ambient_paint', record)
+            self.assertEqual(record['gamePaint']['colors'], [])
+            self.assertTrue(record['gamePaint']['channels'])
+            self.assertNotIn(path, [row['file'] for row in record['sources']])
+
     def test_preview_cleanup_uses_verified_source_and_emits_repaired_geometry_and_receipt(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

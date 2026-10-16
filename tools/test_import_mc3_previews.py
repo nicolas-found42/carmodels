@@ -11,6 +11,7 @@ from bake_models import ROOT, read_glb
 from import_mc3_previews import import_previews
 from import_mc3_catalogs import LIMITS as NATIVE_LIMITS
 from mc3_model import build_glb, PROFILE, sha
+import import_mc3_previews
 
 
 class PreviewImportTest(unittest.TestCase):
@@ -122,6 +123,66 @@ class PreviewImportTest(unittest.TestCase):
             with patch.object(Path, 'replace', failing_replace), self.assertRaisesRegex(OSError, 'injected'):
                 import_previews(source, dealer, refresh_unedited=True)
             self.assertEqual({p: p.read_bytes() for p in paths}, before)
+
+    def source_fixture(self, root):
+        dealer, source, entry, row = self.fixture(root)
+        public = root/'public'/'midnight-club-3-remix'
+        (public/'native').mkdir(parents=True)
+        native = json.loads((ROOT/'dealership/public/midnight-club-3-remix/index.json').read_text())['cars']
+        native = copy.deepcopy(next(r for r in native if r['code'] == entry['sourceCode']))
+        # The committed corpus may already expose a converted preview.
+        if native.get('asset_kind') == 'glb':
+            package = native['native_package']
+            native = dict(code=native['code'], file=package['file'], bytes=package['bytes'],
+                          sha256=package['sha256'], records=[], display_name=native['code'],
+                          source_profile=package['profile'], source_variant='native',
+                          asset_kind='native-package', native_members=package['members'],
+                          claim_limits=NATIVE_LIMITS)
+        (public/native['file']).write_bytes((dealer/entry['nativePackage']['file']).read_bytes())
+        (public/'index.json').write_text(json.dumps({'cars': [native]}))
+        return dealer, source, entry, row, public
+
+    def test_source_preview_selectable_with_independent_native_download(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            _, source, entry, row, public = self.source_fixture(Path(tmp).resolve())
+            native = (public/f"native/{entry['sourceCode']}.dat").read_bytes()
+            self.assertEqual(import_mc3_previews.publish_source_previews(source, public), 1)
+            result = json.loads((public/'index.json').read_text())['cars'][0]
+            self.assertEqual(result['asset_kind'], 'glb')
+            self.assertEqual(result['file'], f"previews/{entry['sourceCode']}.glb")
+            self.assertEqual(result['source_profile'], PROFILE)
+            self.assertEqual(result['native_package']['file'], f"native/{entry['sourceCode']}.dat")
+            data = import_mc3_previews.source_preview(result, public)
+            self.assertEqual(data, (source/row['file']).read_bytes())
+            self.assertEqual((public/result['native_package']['file']).read_bytes(), native)
+            self.assertNotEqual((public/result['file']).stat().st_ino, (source/row['file']).stat().st_ino)
+            self.assertEqual(import_mc3_previews.publish_source_previews(source, public), 0)
+
+    def test_source_refresh_rejects_corruption_and_preserves_native_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            _, source, _, row, public = self.source_fixture(Path(tmp).resolve())
+            import_mc3_previews.publish_source_previews(source, public)
+            before = {p: p.read_bytes() for p in public.rglob('*') if p.is_file()}
+            self.changed_source(source, row)
+            with self.assertRaisesRegex(ValueError, 'refresh'):
+                import_mc3_previews.publish_source_previews(source, public)
+            self.assertEqual({p: p.read_bytes() for p in public.rglob('*') if p.is_file()}, before)
+            self.assertEqual(import_mc3_previews.publish_source_previews(source, public, refresh=True), 1)
+            result = json.loads((public/'index.json').read_text())['cars'][0]
+            for mutation, reason in [('profile', 'identity/profile'), ('native_path', 'identity/profile'),
+                                     ('records', 'records differ'), ('hash', 'hash/size')]:
+                changed = copy.deepcopy(result)
+                if mutation == 'profile': changed['source_profile'] = 'invented'
+                elif mutation == 'native_path': changed['native_package']['file'] = '../outside.dat'
+                elif mutation == 'records': changed['records'] = []
+                else: changed['sha256'] = '0'*64
+                with self.subTest(mutation=mutation), self.assertRaisesRegex(ValueError, reason):
+                    import_mc3_previews.source_preview(changed, public)
+            (public/result['file']).write_bytes(b'edited source preview')
+            damaged = {p: p.read_bytes() for p in public.rglob('*') if p.is_file()}
+            with self.assertRaisesRegex(ValueError, 'hash/size'):
+                import_mc3_previews.publish_source_previews(source, public, refresh=True)
+            self.assertEqual({p: p.read_bytes() for p in public.rglob('*') if p.is_file()}, damaged)
 
 
 if __name__ == '__main__':

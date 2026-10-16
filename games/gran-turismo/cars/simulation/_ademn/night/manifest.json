@@ -27,15 +27,428 @@
   "claim_limits": [
     "Native GT-CAR and GT-CTEX payloads only; no geometry, palette, PNG or GLB conversion.",
     "All archive variants retained; pair counts are not counts of distinct drivable cars.",
-    "Simulation codes/day-night labels come from a pinned external USA retail map, not embedded filenames.",
+    "Simulation archive ordinals/day-night labels use a pinned external USA map, corroborated by the native SYSTEM directory.",
     "Arcade names remain unknown; byte-identical simulation matches are recorded without discarding variants.",
-    "Shared CARINF sections are preserved; per-car specification and equipment relationships are not decoded.",
+    "Exact native SPEC and colour-ID joins are decoded where supported; unresolved identities and racing equipment statistics remain unassigned.",
     "No game execution, rendered fidelity or dealership integration is established."
   ],
   "code": "_ademn",
   "id": "simulation/_ademn/night",
   "mode": "simulation",
   "name_authority": "external-usa-retail-map",
+  "native_metadata": {
+    "colour_variants": [
+      {
+        "colour_id": 49,
+        "index": 0,
+        "label": "CHASTE WHITE",
+        "name": "CHASTE WHITE"
+      },
+      {
+        "colour_id": 50,
+        "index": 1,
+        "label": "CHASTE WHITE/BLACK BUMPER",
+        "name": "CHASTE WHITE/BLACK BUMPER"
+      },
+      {
+        "colour_id": 52,
+        "index": 2,
+        "label": "SILVER STONE METALLIC",
+        "name": "SILVER STONE METALLIC"
+      },
+      {
+        "colour_id": 53,
+        "index": 3,
+        "label": "SILVER STONE METALLIC/BLACK BUMPER",
+        "name": "SILVER STONE METALLIC/BLACK BUMPER"
+      },
+      {
+        "colour_id": 98,
+        "index": 4,
+        "label": "CLASSIC RED",
+        "name": "CLASSIC RED"
+      },
+      {
+        "colour_id": 99,
+        "index": 5,
+        "label": "CLASSIC RED/BLACK BUMPER",
+        "name": "CLASSIC RED/BLACK BUMPER"
+      },
+      {
+        "colour_id": 100,
+        "index": 6,
+        "label": "PASSION ROSE MICA",
+        "name": "PASSION ROSE MICA"
+      },
+      {
+        "colour_id": 101,
+        "index": 7,
+        "label": "PASSION ROSE MICA/BLACK BUMPER",
+        "name": "PASSION ROSE MICA/BLACK BUMPER"
+      },
+      {
+        "colour_id": 107,
+        "index": 8,
+        "label": "SPARKLE GREEN METALLIC",
+        "name": "SPARKLE GREEN METALLIC"
+      },
+      {
+        "colour_id": 108,
+        "index": 9,
+        "label": "SPARKLE GREEN METALLIC/BLACK BUMPER",
+        "name": "SPARKLE GREEN METALLIC/BLACK BUMPER"
+      },
+      {
+        "colour_id": 109,
+        "index": 10,
+        "label": "EXCELLENT GREEN MICA",
+        "name": "EXCELLENT GREEN MICA"
+      },
+      {
+        "colour_id": 110,
+        "index": 11,
+        "label": "EXCELLENT GREEN MICA/BLACK BUMPER",
+        "name": "EXCELLENT GREEN MICA/BLACK BUMPER"
+      },
+      {
+        "colour_id": 113,
+        "index": 12,
+        "label": "AQUARIUS BLUE MICA",
+        "name": "AQUARIUS BLUE MICA"
+      },
+      {
+        "colour_id": 114,
+        "index": 13,
+        "label": "AQUARIUS BLUE MICA/BLACK BUMPER",
+        "name": "AQUARIUS BLUE MICA/BLACK BUMPER"
+      },
+      {
+        "colour_id": 115,
+        "index": 14,
+        "label": "INDIGO BLUE METALLIC",
+        "name": "INDIGO BLUE METALLIC"
+      },
+      {
+        "colour_id": 116,
+        "index": 15,
+        "label": "INDIGO BLUE METALIC/BLACK BUMPER",
+        "name": "INDIGO BLUE METALIC/BLACK BUMPER"
+      }
+    ],
+    "identity": {
+      "name": "DEMIO GL-X",
+      "spec_index": 133,
+      "status": "verified"
+    },
+    "provenance": {
+      "carinf_colour_sha256": "55c96636f6d403231ededb8626085101d5ec3eef63ad9bb3010c8ac406c273d9",
+      "carinf_spec_sha256": "80a8e585b52faf712ab295b831507d97ce2c155c890256c446525460703fceac",
+      "claim_limits": [
+        "Native base specifications only; installed tuning and racing-family relationships are not inferred.",
+        "Year and manufacturer are unresolved; native model/grade spelling is preserved.",
+        "Metadata dimensions describe game specifications, not independently measured exported geometry.",
+        "Named colours follow native identifier matching; duplicate and missing identifiers are preserved."
+      ],
+      "colour_consumer": "GTMENU 80032198; identifier OR 0x20; first matching slot",
+      "colour_name_matches": [
+        {
+          "index": 0,
+          "lookup_colour_id": 49,
+          "matching_slots": [
+            {
+              "colour_id": 49,
+              "name": "CHASTE WHITE",
+              "slot": 0
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "lookup_colour_id": 50,
+          "matching_slots": [
+            {
+              "colour_id": 50,
+              "name": "CHASTE WHITE/BLACK BUMPER",
+              "slot": 1
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "lookup_colour_id": 52,
+          "matching_slots": [
+            {
+              "colour_id": 52,
+              "name": "SILVER STONE METALLIC",
+              "slot": 2
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "lookup_colour_id": 53,
+          "matching_slots": [
+            {
+              "colour_id": 53,
+              "name": "SILVER STONE METALLIC/BLACK BUMPER",
+              "slot": 3
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "lookup_colour_id": 98,
+          "matching_slots": [
+            {
+              "colour_id": 98,
+              "name": "CLASSIC RED",
+              "slot": 4
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "lookup_colour_id": 99,
+          "matching_slots": [
+            {
+              "colour_id": 99,
+              "name": "CLASSIC RED/BLACK BUMPER",
+              "slot": 5
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "lookup_colour_id": 100,
+          "matching_slots": [
+            {
+              "colour_id": 100,
+              "name": "PASSION ROSE MICA",
+              "slot": 6
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "lookup_colour_id": 101,
+          "matching_slots": [
+            {
+              "colour_id": 101,
+              "name": "PASSION ROSE MICA/BLACK BUMPER",
+              "slot": 7
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "lookup_colour_id": 107,
+          "matching_slots": [
+            {
+              "colour_id": 107,
+              "name": "SPARKLE GREEN METALLIC",
+              "slot": 8
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "lookup_colour_id": 108,
+          "matching_slots": [
+            {
+              "colour_id": 108,
+              "name": "SPARKLE GREEN METALLIC/BLACK BUMPER",
+              "slot": 9
+            }
+          ]
+        },
+        {
+          "index": 10,
+          "lookup_colour_id": 109,
+          "matching_slots": [
+            {
+              "colour_id": 109,
+              "name": "EXCELLENT GREEN MICA",
+              "slot": 10
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "lookup_colour_id": 110,
+          "matching_slots": [
+            {
+              "colour_id": 110,
+              "name": "EXCELLENT GREEN MICA/BLACK BUMPER",
+              "slot": 11
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "lookup_colour_id": 113,
+          "matching_slots": [
+            {
+              "colour_id": 113,
+              "name": "AQUARIUS BLUE MICA",
+              "slot": 12
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "lookup_colour_id": 114,
+          "matching_slots": [
+            {
+              "colour_id": 114,
+              "name": "AQUARIUS BLUE MICA/BLACK BUMPER",
+              "slot": 13
+            }
+          ]
+        },
+        {
+          "index": 14,
+          "lookup_colour_id": 115,
+          "matching_slots": [
+            {
+              "colour_id": 115,
+              "name": "INDIGO BLUE METALLIC",
+              "slot": 14
+            }
+          ]
+        },
+        {
+          "index": 15,
+          "lookup_colour_id": 116,
+          "matching_slots": [
+            {
+              "colour_id": 116,
+              "name": "INDIGO BLUE METALIC/BLACK BUMPER",
+              "slot": 15
+            }
+          ]
+        }
+      ],
+      "colour_source_slots": [
+        {
+          "colour_id": 49,
+          "name": "CHASTE WHITE",
+          "slot": 0
+        },
+        {
+          "colour_id": 50,
+          "name": "CHASTE WHITE/BLACK BUMPER",
+          "slot": 1
+        },
+        {
+          "colour_id": 52,
+          "name": "SILVER STONE METALLIC",
+          "slot": 2
+        },
+        {
+          "colour_id": 53,
+          "name": "SILVER STONE METALLIC/BLACK BUMPER",
+          "slot": 3
+        },
+        {
+          "colour_id": 98,
+          "name": "CLASSIC RED",
+          "slot": 4
+        },
+        {
+          "colour_id": 99,
+          "name": "CLASSIC RED/BLACK BUMPER",
+          "slot": 5
+        },
+        {
+          "colour_id": 100,
+          "name": "PASSION ROSE MICA",
+          "slot": 6
+        },
+        {
+          "colour_id": 101,
+          "name": "PASSION ROSE MICA/BLACK BUMPER",
+          "slot": 7
+        },
+        {
+          "colour_id": 107,
+          "name": "SPARKLE GREEN METALLIC",
+          "slot": 8
+        },
+        {
+          "colour_id": 108,
+          "name": "SPARKLE GREEN METALLIC/BLACK BUMPER",
+          "slot": 9
+        },
+        {
+          "colour_id": 109,
+          "name": "EXCELLENT GREEN MICA",
+          "slot": 10
+        },
+        {
+          "colour_id": 110,
+          "name": "EXCELLENT GREEN MICA/BLACK BUMPER",
+          "slot": 11
+        },
+        {
+          "colour_id": 113,
+          "name": "AQUARIUS BLUE MICA",
+          "slot": 12
+        },
+        {
+          "colour_id": 114,
+          "name": "AQUARIUS BLUE MICA/BLACK BUMPER",
+          "slot": 13
+        },
+        {
+          "colour_id": 115,
+          "name": "INDIGO BLUE METALLIC",
+          "slot": 14
+        },
+        {
+          "colour_id": 116,
+          "name": "INDIGO BLUE METALIC/BLACK BUMPER",
+          "slot": 15
+        }
+      ],
+      "identity_join": "Exact five-character native code; one archive prefix underscore may be removed.",
+      "native_code": "ademn",
+      "native_directory_index": 11,
+      "native_grade_name": "GL-X",
+      "native_lookup_sha256": "1e31cb469d843293ed80f4cbeef097550536dffd8188a12359009f0ddde7b397",
+      "native_model_name": "DEMIO",
+      "schema": 1,
+      "spec_consumer": "GTMENU 8001f450/8001eb08",
+      "system_sha256": "1af60e0df9d44ff890c2a82979f4b689228cc6128b45053685873b6c2c97223b"
+    },
+    "specifications": {
+      "aspiration": "Normal",
+      "displacement_cc": 1498,
+      "displacement_display_kind": "cc",
+      "displacement_raw": 1498,
+      "displacement_rotary_chamber_cc": null,
+      "displacement_rotary_factor": null,
+      "drive": "FF",
+      "engine_configuration": "L4",
+      "engine_type": "SOHC",
+      "front_tread_mm": 1420,
+      "height_mm": 1535,
+      "length_mm": 3800,
+      "mass_kg": 960,
+      "power_conversion": "floor(raw * 1000 / 1014); native display label HP",
+      "power_hp_game": 98,
+      "power_raw": 100,
+      "power_rpm": 6000,
+      "rear_tread_mm": 1400,
+      "specification_scope": "native-base",
+      "suspension_front": "Strut",
+      "suspension_rear": "Trailing Twist Beam",
+      "torque_kgm": 13.0,
+      "torque_raw": 1300,
+      "torque_rpm": 4500,
+      "wheelbase_mm": 2390,
+      "width_mm": 1670
+    }
+  },
   "pair_index": 355,
   "variant": "night"
 }

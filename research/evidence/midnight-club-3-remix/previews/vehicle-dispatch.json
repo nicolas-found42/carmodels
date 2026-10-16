@@ -1,0 +1,1353 @@
+{
+  "schema": 1,
+  "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "intervals": [
+    {
+      "start": 2778184,
+      "end": 2778296,
+      "sha256": "e876f32de11d11fefea5dc1c676fa2f8ec667b0835909d48828f4592a2898803"
+    },
+    {
+      "start": 2784784,
+      "end": 2785544,
+      "sha256": "80f9e9b5c53f40965afb95fb5e1ca65be397fc203d4cabf7894d0b89d45210dc"
+    },
+    {
+      "start": 2781320,
+      "end": 2781360,
+      "sha256": "606b6bdf585f1cb7669fa050bf8f302c19b6384c2d7fca883fca64d76ebe4974"
+    },
+    {
+      "start": 2781552,
+      "end": 2781664,
+      "sha256": "46689dccb55ed4bdd52d028731a6b3dea18f7b80e54f793202c5e731e1b430f6"
+    },
+    {
+      "start": 2791704,
+      "end": 2792072,
+      "sha256": "d6e5017242dec0c3f0f1d5722a7e5257830c30e40449f8a16efbb907452da435"
+    },
+    {
+      "start": 2808648,
+      "end": 2808952,
+      "sha256": "6befcd14cbd74bdeee5b7b8211ca02b0bccd6b7690d2c85dc4e9393767773829"
+    },
+    {
+      "start": 6450272,
+      "end": 6450336,
+      "sha256": "f164d6114053d80ff8dc67f5323d6ee333e7a5150d6d972fa23a9dadf98c7dbf"
+    },
+    {
+      "start": 6450440,
+      "end": 6450472,
+      "sha256": "8d837d360163880a8cf0b3b9a4d5dc5f433de04c2a9e5f65ec8435c38ad26e33"
+    },
+    {
+      "start": 2224748,
+      "end": 2224872,
+      "sha256": "c138294e57def2dc419f3cdc3787ec4bb44af074ff2ec3eb897faa42394c5d22"
+    },
+    {
+      "start": 2227328,
+      "end": 2227820,
+      "sha256": "08d485ca4164cbeb8fa7391f786d2dcee0ca7c5524218c67079efafae5858333"
+    },
+    {
+      "start": 2831680,
+      "end": 2831872,
+      "sha256": "59cfbe354d5ddd202517211e536d8818214864d787669a0d239263364ca1430b"
+    }
+  ],
+  "context": "Explicit selected LOD, bucket, mask and frame palette; exact source embedded meshes/material flags/default parameter words.",
+  "observer": {
+    "instrumentation": true,
+    "record_words": [
+      "material_pointer",
+      "mesh_pointer",
+      "parameter_pointer",
+      "draw_index",
+      "lod",
+      "SPAD_frame_word_0",
+      "SPAD_frame_word_1",
+      "SPAD_frame_word_2",
+      "SPAD_frame_word_3",
+      "SPAD_frame_word_4",
+      "SPAD_frame_word_5",
+      "SPAD_frame_word_6",
+      "SPAD_frame_word_7",
+      "SPAD_frame_word_8",
+      "SPAD_frame_word_9",
+      "SPAD_frame_word_10",
+      "SPAD_frame_word_11"
+    ],
+    "stride_bytes": 80,
+    "code_sha256": "ed4f993087130d64e95e21179f33695a578ff8f7be5c6f4233100780ab8a5730"
+  },
+  "claim_limits": [
+    "Self-authored material callback records original model dispatch and frame selection; it does not bind authored materials or emit their VIF.",
+    "Source external null meshes remain null. No stock/customization visibility is inferred.",
+    "The actor mask constructor starts with28 bits then later customization state changes it; this receipt does not treat that initial mask as final source stock state.",
+    "Original unskinned model path only; skinned rider path remains outside this helper."
+  ],
+  "cases": [
+    {
+      "name": "vp_350z_04-0",
+      "source": "vp_350z_04",
+      "lod": 0,
+      "bucket": 0,
+      "mask_words": null,
+      "job_sha256": "5516dec1385098fd2d3455435b86ceb86ea4338bac67fed0d890bf066b1b336d",
+      "expected": {
+        "ram_sha256": "cfa7ea6f01842dfeec9b35c46a17f0b14b2cdf04baaf535cffd48734c9cba197",
+        "dma_sha256": "6b5c79b6f076669fedd651d986a51e632cff257cb85ef802c7447e89829fc348",
+        "dma_bytes": 560,
+        "record_count": 22,
+        "records_sha256": "374a98ad647fed63cc2256718b9f6eee6da166c7f2b74ebdc467317d530b4e7a"
+      }
+    },
+    {
+      "name": "vp_350z_04-1",
+      "source": "vp_350z_04",
+      "lod": 1,
+      "bucket": 1,
+      "mask_words": [
+        1431655765,
+        1431655765,
+        1431655765,
+        1431655765,
+        1431655765,
+        1431655765,
+        1431655765,
+        1431655765
+      ],
+      "job_sha256": "7faec75243f8b6ac5d7802aa2c37b229ab3c101b8514da5375641a1b08ec4bc4",
+      "expected": {
+        "ram_sha256": "7e24bccf916b6a0547ccc36ae2e218fd995248b80afd96b6fadcee960df3c887",
+        "dma_sha256": "b26370aeaab1fd35a9ad60ba207a2184275c7be49150323c5f00e841843baddf",
+        "dma_bytes": 160,
+        "record_count": 8,
+        "records_sha256": "996905119d2f3b8846dab33e74e96dea1bcd8bd8dcf271025615aec9bca36ab4"
+      }
+    },
+    {
+      "name": "vp_350z_04-2",
+      "source": "vp_350z_04",
+      "lod": 2,
+      "bucket": 0,
+      "mask_words": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "job_sha256": "60a36c8ae4ff7c02790fafce180b8af7b6b76703e91698da28681d54d05352b2",
+      "expected": {
+        "ram_sha256": "92049750422d0fc3860eeaf427cc5e549e6b0c8d8b6b692ba2b6b18b43a3caa4",
+        "dma_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dma_bytes": 0,
+        "record_count": 0,
+        "records_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "vp_350z_04-3",
+      "source": "vp_350z_04",
+      "lod": 0,
+      "bucket": 4,
+      "mask_words": [
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295
+      ],
+      "job_sha256": "ad6420c8d79fc7de8d6369886d0a79f9266d7a7cb4f4060cb3f6bee742f9baae",
+      "expected": {
+        "ram_sha256": "5f3aed108f1316a511c186927bd1252fdde0532ca8035d7f417d69e6d9446906",
+        "dma_sha256": "6b5c79b6f076669fedd651d986a51e632cff257cb85ef802c7447e89829fc348",
+        "dma_bytes": 560,
+        "record_count": 3,
+        "records_sha256": "5ec6940874b0f6f6c88be4a8bcb862f3252fc67edcb8d2e8f92d006d7faebe24"
+      }
+    },
+    {
+      "name": "vp_d_fx45_05-0",
+      "source": "vp_d_fx45_05",
+      "lod": 0,
+      "bucket": 0,
+      "mask_words": null,
+      "job_sha256": "d866c5ecad143e15dfe49a9a2ae3753c71349adc45182f198ff1f8e1fd778cca",
+      "expected": {
+        "ram_sha256": "d55115b3c4dad218fee6cb8ac26cc461f9b3b515efb9a450b559cd664b0269ed",
+        "dma_sha256": "7391216ffc4d106ee760b86b904667568e4e301cb0f4d705e6e90ce8a4dd1966",
+        "dma_bytes": 560,
+        "record_count": 22,
+        "records_sha256": "4a34651162a70f6a7a3a2076eced64be2732c2580b8fffabf4c229804444297e"
+      }
+    },
+    {
+      "name": "vp_d_fx45_05-1",
+      "source": "vp_d_fx45_05",
+      "lod": 1,
+      "bucket": 1,
+      "mask_words": [
+        1431655765,
+        1431655765,
+        1431655765,
+        1431655765
+      ],
+      "job_sha256": "00badac57995bcf63972cb769f49c31f1d9f00b6cfd6a3596af2fd3d9e875e94",
+      "expected": {
+        "ram_sha256": "f8c1e7703ce5f64f31511554881ae709cd76d32ee0f1127407145a3ff40e39df",
+        "dma_sha256": "bb5843c6c386925b4208cebfb29f9d574975f83319b8c8e228415d49c320e076",
+        "dma_bytes": 80,
+        "record_count": 6,
+        "records_sha256": "f848e2bb2761f8b34e2fe9f5063bc6cfefb52980b795978640d7494c7842bd53"
+      }
+    },
+    {
+      "name": "vp_d_fx45_05-2",
+      "source": "vp_d_fx45_05",
+      "lod": 2,
+      "bucket": 0,
+      "mask_words": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "job_sha256": "5355a34a8210015ecc68c33e8ce3d5c0707a7394540aa117df8f6991d47de8ae",
+      "expected": {
+        "ram_sha256": "547226b8ff98051f5efb6275239ef86b533ed783552be881f689c4a9d1521cf1",
+        "dma_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dma_bytes": 0,
+        "record_count": 0,
+        "records_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "vp_d_fx45_05-3",
+      "source": "vp_d_fx45_05",
+      "lod": 0,
+      "bucket": 4,
+      "mask_words": [
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295
+      ],
+      "job_sha256": "d76dc1dba2570ae30e2fbf4ef11a15b8fd0bf061c1b72d7467742ba5ff8e3fb2",
+      "expected": {
+        "ram_sha256": "23b98e327a08c343fd95155fa9a1cb5586035cbf454775a6eaf6fa388c37d7fa",
+        "dma_sha256": "7391216ffc4d106ee760b86b904667568e4e301cb0f4d705e6e90ce8a4dd1966",
+        "dma_bytes": 560,
+        "record_count": 4,
+        "records_sha256": "649273ba87c2c3278cff0aa76226cb74461917795c5b13a3d9d40ed22ce6e8eb"
+      }
+    },
+    {
+      "name": "vp_ducati_999r_04-0",
+      "source": "vp_ducati_999r_04",
+      "lod": 0,
+      "bucket": 0,
+      "mask_words": null,
+      "job_sha256": "bbc80ca12bb9fee5827f96acb04b13e20a05b0eb95502da2616e666026428004",
+      "expected": {
+        "ram_sha256": "bdaccf67cf2cf76c49ae1816eb62e0d351b94d1dd1453809fa037cdf6c6c4912",
+        "dma_sha256": "ca3adb1a0282f34aaad7178bf14048cd15e68236c68bf55182a6cd514ba63110",
+        "dma_bytes": 640,
+        "record_count": 21,
+        "records_sha256": "272e185a4b38290792144c69804e0c3a0b9a9369d351ee42396b39dc6c30c1f8"
+      }
+    },
+    {
+      "name": "vp_ducati_999r_04-1",
+      "source": "vp_ducati_999r_04",
+      "lod": 1,
+      "bucket": 1,
+      "mask_words": [
+        1431655765
+      ],
+      "job_sha256": "9a86517fcdf8db3f1bbc3590caa966ffe389dd9f200debab59a6bb83f6d95e87",
+      "expected": {
+        "ram_sha256": "1998ef23389a7f93186d243e3d579131f6355b627451e19001abe1fbb6c0508d",
+        "dma_sha256": "6be25a4f9c0b2250f82aa00a7d79514a49acd79a8b996b25a24aec97e16f7d17",
+        "dma_bytes": 320,
+        "record_count": 7,
+        "records_sha256": "e80e661340d62dbf6ea1bc7f9fb5cacd8598b575261712b883a48ee6aa5fc4f6"
+      }
+    },
+    {
+      "name": "vp_ducati_999r_04-2",
+      "source": "vp_ducati_999r_04",
+      "lod": 2,
+      "bucket": 0,
+      "mask_words": [
+        0
+      ],
+      "job_sha256": "da7a2a130aa16e74fdc87b0c8daee5518442b8ca7e5a56f7701b9c35a922193d",
+      "expected": {
+        "ram_sha256": "79c943696adbd7fb8ddd8f6a50abda92e92fda16ea6e35b3f5e01f45ec399f69",
+        "dma_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dma_bytes": 0,
+        "record_count": 0,
+        "records_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "name": "vp_ducati_999r_04-3",
+      "source": "vp_ducati_999r_04",
+      "lod": 0,
+      "bucket": 4,
+      "mask_words": [
+        4294967295
+      ],
+      "job_sha256": "05dc72780f012400f9e8a38ccd9ac3278e86530d75fba119232aa33ee2797a7e",
+      "expected": {
+        "ram_sha256": "5bb86320b2d306de280536f6a88c25310017f8192d30fcfd7586a43e8545ceea",
+        "dma_sha256": "ca3adb1a0282f34aaad7178bf14048cd15e68236c68bf55182a6cd514ba63110",
+        "dma_bytes": 640,
+        "record_count": 1,
+        "records_sha256": "f556af0cbfd2e5b881909c3135ed7a5ebfd481b4127c95d25c3791761c473293"
+      }
+    }
+  ],
+  "sources": {
+    "vp_350z_04": {
+      "source_sha256": "7666859dd8bba326c8c75e9879b1bc4ee2b12dafc4d9d3a50f21a34be02fd346",
+      "source_bytes": 319840,
+      "joint_count": 250,
+      "binding": {
+        "source_sha256": "7666859dd8bba326c8c75e9879b1bc4ee2b12dafc4d9d3a50f21a34be02fd346",
+        "source_bytes": 319840,
+        "model_offset": 15216,
+        "source_mesh_joins": [
+          {
+            "lod": "high",
+            "mesh_offset": 111232,
+            "bone": 2,
+            "materials": [
+              0
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 112448,
+            "bone": 3,
+            "materials": [
+              0
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 113664,
+            "bone": 4,
+            "materials": [
+              0,
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 115520,
+            "bone": 5,
+            "materials": [
+              0,
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 117344,
+            "bone": 15,
+            "materials": [
+              2
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 117680,
+            "bone": 16,
+            "materials": [
+              3,
+              4,
+              5,
+              5,
+              5,
+              6,
+              7,
+              8,
+              9,
+              1,
+              10
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 127232,
+            "bone": 16,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 136176,
+            "bone": 0,
+            "materials": [
+              17,
+              5,
+              6,
+              5,
+              7,
+              5,
+              1,
+              5,
+              9,
+              20,
+              46,
+              5,
+              19,
+              8,
+              5
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 183600,
+            "bone": 0,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 192048,
+            "bone": 0,
+            "materials": [
+              4,
+              3
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 194176,
+            "bone": 0,
+            "materials": [
+              23,
+              20,
+              47,
+              18,
+              46,
+              48,
+              19
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 205632,
+            "bone": 16,
+            "materials": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              4,
+              3,
+              1
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 211392,
+            "bone": 0,
+            "materials": [
+              1,
+              17,
+              5,
+              5,
+              5,
+              7,
+              20,
+              5,
+              9,
+              46,
+              5,
+              19,
+              8,
+              5
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 235712,
+            "bone": 0,
+            "materials": [
+              4,
+              3
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 237840,
+            "bone": 0,
+            "materials": [
+              23,
+              20,
+              47,
+              18,
+              46,
+              48,
+              19
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 249168,
+            "bone": 0,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "low",
+            "mesh_offset": 251776,
+            "bone": 0,
+            "materials": [
+              26,
+              48,
+              1,
+              5,
+              5,
+              5,
+              7,
+              5,
+              5,
+              5,
+              5,
+              5
+            ]
+          }
+        ],
+        "source_material_offsets": [
+          22848,
+          22976,
+          23088,
+          23280,
+          23872,
+          24672,
+          25216,
+          26320,
+          26896,
+          94352,
+          94752,
+          95184,
+          95632,
+          95984,
+          96384,
+          97344,
+          97376,
+          97504,
+          97968,
+          98400,
+          98528,
+          98976,
+          99360,
+          99472,
+          99936,
+          100352,
+          100480,
+          100928,
+          101056,
+          102640,
+          103040,
+          103440,
+          103568,
+          103952,
+          104080,
+          104480,
+          104880,
+          105280,
+          105744,
+          106112,
+          106512,
+          106912,
+          107296,
+          107680,
+          107792,
+          108176,
+          108576,
+          108960,
+          109328
+        ],
+        "source_material_flags": [
+          170,
+          1,
+          15,
+          146,
+          773,
+          4,
+          526,
+          653,
+          146,
+          292,
+          10,
+          33,
+          425,
+          16,
+          34,
+          0,
+          170,
+          424,
+          8,
+          170,
+          160,
+          12,
+          170,
+          526,
+          11,
+          194,
+          9,
+          170,
+          35,
+          9,
+          9,
+          170,
+          11,
+          170,
+          9,
+          8,
+          9,
+          526,
+          11,
+          9,
+          9,
+          11,
+          16,
+          170,
+          11,
+          8,
+          16,
+          16,
+          12
+        ],
+        "parameter_words": [
+          1065353216,
+          0,
+          0,
+          1065353216,
+          0,
+          1065353216,
+          1065353216,
+          1065353216,
+          1065353216,
+          0,
+          1065353216,
+          1065353216,
+          1065353216,
+          1061997773,
+          0,
+          1045220557,
+          1063675494,
+          1065185444,
+          0,
+          0,
+          1048576000,
+          1049750405,
+          1048576000,
+          1056964608,
+          1045220557,
+          1045220557,
+          1063675494,
+          1065185444,
+          0,
+          0,
+          0,
+          0,
+          1065353216,
+          1065353216,
+          1065353216,
+          1065353216,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "vp_d_fx45_05": {
+      "source_sha256": "7a6356d5bdf01e147b3fd0eeb81ae10ecc6873bc8cc089cfbc4a113ded426722",
+      "source_bytes": 345872,
+      "joint_count": 111,
+      "binding": {
+        "source_sha256": "7a6356d5bdf01e147b3fd0eeb81ae10ecc6873bc8cc089cfbc4a113ded426722",
+        "source_bytes": 345872,
+        "model_offset": 15232,
+        "source_mesh_joins": [
+          {
+            "lod": "high",
+            "mesh_offset": 119616,
+            "bone": 2,
+            "materials": [
+              0
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 119952,
+            "bone": 13,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 121344,
+            "bone": 14,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 122736,
+            "bone": 15,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 124560,
+            "bone": 16,
+            "materials": [
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 126528,
+            "bone": 17,
+            "materials": [
+              3,
+              4
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 127248,
+            "bone": 17,
+            "materials": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              2,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 146192,
+            "bone": 17,
+            "materials": [
+              13
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 151824,
+            "bone": 0,
+            "materials": [
+              3,
+              4
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 153952,
+            "bone": 0,
+            "materials": [
+              9,
+              18,
+              9,
+              9,
+              2,
+              13,
+              12,
+              21,
+              9,
+              6,
+              10,
+              5,
+              5,
+              22,
+              19,
+              9
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 218144,
+            "bone": 0,
+            "materials": [
+              13
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 228176,
+            "bone": 0,
+            "materials": [
+              13
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 228528,
+            "bone": 0,
+            "materials": [
+              14
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 230784,
+            "bone": 0,
+            "materials": [
+              14,
+              23,
+              24,
+              6,
+              2
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 237616,
+            "bone": 17,
+            "materials": [
+              6,
+              7,
+              9,
+              10,
+              2,
+              11,
+              12,
+              13,
+              14,
+              5,
+              8,
+              15
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 248768,
+            "bone": 17,
+            "materials": [
+              3,
+              4
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 249488,
+            "bone": 0,
+            "materials": [
+              14
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 251392,
+            "bone": 0,
+            "materials": [
+              9,
+              9,
+              9,
+              2,
+              12,
+              18,
+              13,
+              9,
+              6,
+              10,
+              5,
+              5,
+              22,
+              19,
+              9
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 283936,
+            "bone": 0,
+            "materials": [
+              3,
+              4
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 286064,
+            "bone": 0,
+            "materials": [
+              14,
+              23,
+              24,
+              6,
+              2
+            ]
+          },
+          {
+            "lod": "low",
+            "mesh_offset": 290864,
+            "bone": 0,
+            "materials": [
+              23,
+              19,
+              13,
+              9,
+              16,
+              9,
+              12,
+              9,
+              9,
+              9,
+              9,
+              9
+            ]
+          }
+        ],
+        "source_material_offsets": [
+          18480,
+          18640,
+          18768,
+          108496,
+          109248,
+          109808,
+          109936,
+          110320,
+          110752,
+          111216,
+          111760,
+          112144,
+          112592,
+          113264,
+          113376,
+          114400,
+          114528,
+          115488,
+          115840,
+          116304,
+          116688,
+          117168,
+          117616,
+          118048,
+          118480
+        ],
+        "source_material_flags": [
+          15,
+          170,
+          160,
+          773,
+          146,
+          170,
+          16,
+          11,
+          146,
+          4,
+          16,
+          10,
+          653,
+          1,
+          526,
+          194,
+          34,
+          425,
+          424,
+          12,
+          146,
+          526,
+          8,
+          9,
+          146
+        ],
+        "parameter_words": [
+          1065353216,
+          0,
+          0,
+          1065353216,
+          0,
+          0,
+          1065353216,
+          1065353216,
+          1065353216,
+          1061997773,
+          1065353216,
+          1065353216,
+          1065353216,
+          1065353216,
+          0,
+          0,
+          0,
+          1045220557,
+          1063675494,
+          1065185444,
+          0,
+          1048576000,
+          1049750405,
+          1048576000,
+          1056964608,
+          1045220557,
+          1045220557,
+          1063675494,
+          1065185444,
+          0,
+          0,
+          0,
+          0,
+          1065353216,
+          1065353216,
+          1065353216,
+          1065353216,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "vp_ducati_999r_04": {
+      "source_sha256": "1146257e8bba5bab388637df69b42212d5cd8622d72aa98690e80143e27dfc9a",
+      "source_bytes": 394512,
+      "joint_count": 24,
+      "binding": {
+        "source_sha256": "1146257e8bba5bab388637df69b42212d5cd8622d72aa98690e80143e27dfc9a",
+        "source_bytes": 394512,
+        "model_offset": 15264,
+        "source_mesh_joins": [
+          {
+            "lod": "high",
+            "mesh_offset": 90288,
+            "bone": 2,
+            "materials": [
+              0,
+              1
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 92576,
+            "bone": 2,
+            "materials": [
+              2
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 93008,
+            "bone": 4,
+            "materials": [
+              2
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 93424,
+            "bone": 5,
+            "materials": [
+              3
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 93792,
+            "bone": 6,
+            "materials": [
+              4
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 96928,
+            "bone": 6,
+            "materials": [
+              4
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 98528,
+            "bone": 7,
+            "materials": [
+              5
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 98848,
+            "bone": 8,
+            "materials": [
+              6,
+              4,
+              7,
+              8
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 104976,
+            "bone": 9,
+            "materials": [
+              4,
+              9,
+              7
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 106576,
+            "bone": 9,
+            "materials": [
+              7,
+              4,
+              6
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 108624,
+            "bone": 0,
+            "materials": [
+              4,
+              10,
+              6,
+              9,
+              11,
+              2,
+              12,
+              11,
+              11,
+              13,
+              14,
+              8,
+              11,
+              11,
+              15
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 171024,
+            "bone": 0,
+            "materials": [
+              4,
+              9,
+              7
+            ]
+          },
+          {
+            "lod": "high",
+            "mesh_offset": 173904,
+            "bone": 0,
+            "materials": [
+              16
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 174336,
+            "bone": 2,
+            "materials": [
+              1,
+              0
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 175696,
+            "bone": 6,
+            "materials": [
+              4
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 177344,
+            "bone": 6,
+            "materials": [
+              4
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 178464,
+            "bone": 8,
+            "materials": [
+              6,
+              4,
+              8
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 181872,
+            "bone": 9,
+            "materials": [
+              6,
+              7,
+              4
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 183232,
+            "bone": 9,
+            "materials": [
+              7,
+              4,
+              6
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 184464,
+            "bone": 0,
+            "materials": [
+              4,
+              10,
+              6,
+              9,
+              11,
+              12,
+              11,
+              11,
+              2,
+              14,
+              8,
+              11,
+              11,
+              13,
+              15
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 218416,
+            "bone": 0,
+            "materials": [
+              4,
+              7
+            ]
+          },
+          {
+            "lod": "middle",
+            "mesh_offset": 219904,
+            "bone": 0,
+            "materials": [
+              16
+            ]
+          },
+          {
+            "lod": "low",
+            "mesh_offset": 220160,
+            "bone": 0,
+            "materials": [
+              14,
+              2,
+              11
+            ]
+          }
+        ],
+        "source_material_offsets": [
+          16560,
+          17008,
+          84112,
+          84224,
+          84688,
+          85152,
+          85312,
+          85824,
+          86208,
+          86624,
+          86768,
+          87344,
+          87904,
+          88576,
+          89040,
+          89440,
+          89904
+        ],
+        "source_material_flags": [
+          33,
+          556,
+          1,
+          448,
+          160,
+          15,
+          16,
+          16,
+          292,
+          170,
+          17,
+          4,
+          653,
+          8,
+          12,
+          9,
+          194
+        ],
+        "parameter_words": [
+          0,
+          1065353216,
+          0,
+          0,
+          1065353216,
+          0,
+          0,
+          1065353216,
+          1065353216,
+          1065353216,
+          1065353216,
+          0,
+          1065353216,
+          0,
+          1065353216,
+          0,
+          1045220557,
+          1063675494,
+          1065185444,
+          1048576000,
+          1049750405,
+          1048576000,
+          1056964608,
+          1045220557,
+          1045220557,
+          1063675494,
+          1065185444,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  }
+}

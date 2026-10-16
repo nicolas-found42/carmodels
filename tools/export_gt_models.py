@@ -7,6 +7,7 @@ import re
 import tempfile
 
 from gt_model import LIMITS, build_glb, sha
+from gt_metadata import load_database, model_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT/'games/gran-turismo/cars'
@@ -111,6 +112,7 @@ def export(source=SOURCE, output=OUTPUT, check=False):
     index = json.loads(index_data)
     if index.get('game') != 'gran-turismo' or not index.get('cars'):
         raise ValueError('GT native index game/coverage missing')
+    database = load_database(source / '_metadata') if index.get('schema', 1) >= 2 else None
     entries, native_files = [], {}
     # Stage every byte before replacing an export; invalid source leaves existing outputs intact.
     with tempfile.TemporaryDirectory(prefix='gt-models-',dir=output.parent if output.parent.is_dir() else None) as temporary:
@@ -132,13 +134,21 @@ def export(source=SOURCE, output=OUTPUT, check=False):
         for car, aliases in pairs:
             identity = 'simulation/' + car['code']
             files = native_files[car['id']]
-            glb, records = build_glb(files['.car'],files['.tex'],identity)
+            metadata = None
+            if database is not None:
+                colour_count = int.from_bytes(files['.tex'][14:16], 'little')
+                metadata = model_metadata(database, car['code'], list(files['.tex'][16:16 + colour_count]))
+                if metadata != car.get('native_metadata'):
+                    raise ValueError('GT native decoded metadata differs from pinned source: ' + car['id'])
+            glb, records = build_glb(files['.car'],files['.tex'],identity, metadata=metadata)
             name = identity+'.glb'
             target = safe_file(stage,name)
             target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes(glb)
             entries.append({'code':identity,'file':name,'sha256':sha(glb),'bytes':len(glb),'records':records,
-                            'display_name':car['code'], 'aliases':aliases,
+                            'display_name':(metadata['identity']['name'] if metadata and metadata['identity']['status'] == 'verified'
+                                            else car['code']), 'aliases':aliases,
+                            'native_metadata': metadata,
                             'canonical_source_id':car['id'],
                             'source_profile':'gran-turismo-native-candidate',
                             'source_variant':'canonical',

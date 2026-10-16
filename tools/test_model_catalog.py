@@ -7,9 +7,68 @@ import tempfile
 import unittest
 
 from build_model_catalog import model_catalog
+from gt_metadata import load_database, model_metadata
+from gt_model import build_glb
+import test_import_mc3_previews as mc3_fixtures
+from import_mc3_previews import publish_source_previews
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class ModelCatalogTests(unittest.TestCase):
+    def test_mc3_preview_routes_as_glb_and_retains_validated_native_download(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            _, source, entry, _, game_folder = mc3_fixtures.PreviewImportTest().source_fixture(root)
+            public = game_folder.parent
+            native = model_catalog(public)['cars'][0]
+            self.assertEqual(native['asset_kind'], 'native-package')
+            publish_source_previews(source, game_folder)
+            converted = model_catalog(public)['cars'][0]
+            self.assertEqual(converted['asset_kind'], 'glb')
+            self.assertEqual(converted['file'], f"midnight-club-3-remix/previews/{entry['sourceCode']}.glb")
+            self.assertTrue(converted['native_package']['file'].endswith('.dat'))
+            self.assertEqual(converted['id'], native['id'])
+            package = public / converted['native_package']['file']
+            package.write_bytes(b'changed original native package')
+            with self.assertRaisesRegex(ValueError, 'MC3 source|hash|differs'):
+                model_catalog(public)
+
+    def test_verified_native_metadata_survives_catalog_and_rejects_detached_rows(self):
+        native = ROOT / 'games/gran-turismo/cars'
+        texture = (native / 'simulation/_afr7n/day/textures.tex').read_bytes()
+        metadata = model_metadata(load_database(native / '_metadata'), '_afr7n',
+                                  list(texture[16:16 + int.from_bytes(texture[14:16], 'little')]))
+        payload, records = build_glb((native / 'simulation/_afr7n/day/model.car').read_bytes(),
+                                     texture, 'simulation/_afr7n', metadata)
+        with tempfile.TemporaryDirectory() as directory:
+            public = Path(directory)
+            folder = public / 'gran-turismo'
+            folder.mkdir()
+            (folder / 'car.glb').write_bytes(payload)
+            row = {'code': 'simulation/_afr7n', 'file': 'car.glb', 'bytes': len(payload),
+                   'sha256': hashlib.sha256(payload).hexdigest(), 'records': records,
+                   'display_name': metadata['identity']['name'], 'native_metadata': metadata}
+            index = folder / 'index.json'
+            index.write_text(json.dumps({'cars': [row]}))
+            result = model_catalog(public)['cars'][0]
+            self.assertEqual(result['native_metadata'], metadata)
+            self.assertEqual(result['display_name'], 'RX-7 FC GT-X')
+            row['display_name'] = 'Invented retail name'
+            index.write_text(json.dumps({'cars': [row]}))
+            with self.assertRaisesRegex(ValueError, 'display name differs'):
+                model_catalog(public)
+            row['display_name'] = metadata['identity']['name']
+            row['code'] = 'simulation/_afr7r'
+            index.write_text(json.dumps({'cars': [row]}))
+            with self.assertRaisesRegex(ValueError, 'detached'):
+                model_catalog(public)
+            row['code'] = 'simulation/_afr7n'
+            row['native_metadata']['specifications']['mass_kg'] = 1400
+            index.write_text(json.dumps({'cars': [row]}))
+            with self.assertRaisesRegex(ValueError, 'differs from model'):
+                model_catalog(public)
+
     def test_aliases_are_namespaced_and_collisions_or_traversal_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             public = Path(tmp)
@@ -105,4 +164,4 @@ class ModelCatalogTests(unittest.TestCase):
 
 
 if __name__=='__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
