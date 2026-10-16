@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise the actual local HTTP endpoint without provider requests."""
 import functools
+from concurrent.futures import ThreadPoolExecutor
 from http.server import ThreadingHTTPServer
 import json
 from pathlib import Path
@@ -15,6 +16,77 @@ from serve_library import STARTUP, LibraryHandler
 
 
 class Tests(unittest.TestCase):
+    def test_completed_response_releases_filter_slot_before_next_request(self):
+        for failure in (None, 'exception', 'nonfinite'):
+            with self.subTest(failure=failure):
+                self.check_completed_response(failure)
+
+    def check_completed_response(self, failure):
+        judgment_started, finish_judgment = threading.Event(), threading.Event()
+        response_sent, finish_response = threading.Event(), threading.Event()
+
+        class Handler(LibraryHandler):
+            @staticmethod
+            def judgment(query, cars, catalog='source'):
+                if query == 'first':
+                    judgment_started.set()
+                    if not finish_judgment.wait(5):
+                        raise RuntimeError('test judgment barrier timed out')
+                    if failure == 'exception':
+                        raise RuntimeError('test provider failure')
+                    if failure == 'nonfinite':
+                        return {'status': 'ok', 'filters': {'value': float('nan')}}
+                return {'status': 'ok', 'message': query, 'filters': {}}
+
+            def reply(self, status, payload):
+                super().reply(status, payload)
+                if status in (200, 503) and not response_sent.is_set():
+                    # Client can read the complete body while the handler is
+                    # still returning from its response write.
+                    response_sent.set()
+                    if not finish_response.wait(5):
+                        raise RuntimeError('test response barrier timed out')
+
+            def log_message(self, *args):
+                pass
+
+        with tempfile.TemporaryDirectory() as folder, ThreadPoolExecutor(max_workers=1) as pool:
+            (Path(folder)/'public').mkdir()
+            (Path(folder)/'public/models.json').write_text(json.dumps({'cars': []}))
+            server = ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Handler, directory=folder))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+
+            def ask(query):
+                try:
+                    response = urlopen(Request(f'http://127.0.0.1:{server.server_port}/api/library-filter',
+                                               data=json.dumps({'query': query}).encode(),
+                                               headers={'Content-Type': 'application/json'}), timeout=3)
+                except HTTPError as error:
+                    if error.code != 503:
+                        raise
+                    response = error
+                with response:
+                    return json.load(response)
+
+            try:
+                first = pool.submit(ask, 'first')
+                self.assertTrue(judgment_started.wait(3))
+                with self.assertRaises(HTTPError) as caught:
+                    ask('busy')
+                self.assertEqual(caught.exception.code, 429)
+                caught.exception.close()
+                finish_judgment.set()
+                self.assertEqual(first.result(timeout=3)['status'], 'error' if failure else 'ok')
+                self.assertTrue(response_sent.wait(3))
+                self.assertEqual(ask('second')['message'], 'second')
+            finally:
+                finish_judgment.set()
+                finish_response.set()
+                server.shutdown()
+                server.server_close()
+                thread.join()
+
     def test_http_controls(self):
         calls = []
         class Handler(LibraryHandler):
