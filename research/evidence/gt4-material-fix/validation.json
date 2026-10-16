@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "kind": "GT4 in-memory material corrections",
+  "checks": {
+    "command": "tools/check.sh --game gran-turismo-4; tools/check.sh --only test_gt4_materials,gt4_materials_corpus",
+    "results": {
+      "pass": 128,
+      "skip": 3
+    },
+    "pending": [],
+    "skips": [
+      "dealership_roundtrip",
+      "redline_roundtrip",
+      "mc3_roundtrip"
+    ],
+    "manifests": [
+      {
+        "path": ".scratch/gt4-material-final-checks/results.json",
+        "sha256": "dec5e6996bc92ee256d50b0a36f1346078c4fd6a3f90bf39f0ac91690c1e5c4f"
+      },
+      {
+        "path": ".scratch/gt4-material-checks-reimport/results.json",
+        "sha256": "bf6b8387198fcdb79394740b5e85b3353a4c042823e11fe4e007d4645a4e2dcb"
+      }
+    ]
+  },
+  "corpus": {
+    "cars": 730,
+    "correctedCars": 644,
+    "alreadyCorrectedCars": 0,
+    "cutoutMaterials": 43097,
+    "glassMaterials": 444,
+    "frameMaterials": 287,
+    "claim_limits": [
+      "All default working files processed; source and working pins verified unchanged. Fresh corrections preserve geometry, texture bytes, variant mappings and non-material JSON.",
+      "Already-corrected reimports are verified unchanged with zero new corrections; historical repairs are not re-derived without the pre-repair checkpoint. Unknown profiles are preserved.",
+      "Cutout counts are material corrections, not an all-car visual review. Alpha-zero texels remain cutouts.",
+      "Canonical green-marker glass is a neutral translucent preview fallback, not native shader reconstruction."
+    ]
+  },
+  "khronos": {
+    "version": "2.0.0-dev.3.10",
+    "scope": "Five enhanced and material-corrected GLBs, not the whole corpus",
+    "rows": [
+      {
+        "car": "ACRA0003",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "car": "ACRA0004",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "car": "HOND0073",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "car": "BMW_0010",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "car": "CHEV0004",
+        "errors": 0,
+        "warnings": 0
+      }
+    ]
+  },
+  "files": {
+    "dealership/gt4-materials.mjs": "39f903e9f22e5244d12766c3ec62b8a2c3f4410e9f7a5d9e28c202d8ed8b4b55",
+    "dealership/editable-glb.mjs": "76de5764d821acec54e7639d7eca5e3abf9a0fc6456a1a544b3162bf5744af87",
+    "dealership/recovered.html": "176c2b0c0f28e1c490764b815fa3ea7468acbb8638742a01dd79e84c27087ae0",
+    "tools/audit_gt4_materials.mjs": "71334914ac513d693bcf61d5aa41fc30d0292ba1fc54190c2cb93e2760bc6e97",
+    "tools/test_gt4_materials.mjs": "2be436d7b8de83b645f1196d6046505c3280f630ee5ad67f561223184d87ce2b",
+    "dealership/public/dealership/cars.json": "11bb7a7cf3345a1fdf35b02c0f3ee44eca720411205f9fc97655796bdd44be55",
+    "dealership/public/gran-turismo-4/index.json": "ac0feaed914c0940ac501787bc01c5369d483351f2fbc20914c58131422f10a8"
+  },
+  "screenshots": {
+    "m3-bumper-after.png": {
+      "sha256": "eb18675874477cd3b25135c3bec50514a55f7d0c9ec61790730dcd95d8fb34b9",
+      "width": 1280,
+      "height": 800
+    },
+    "m3-bumper-before.png": {
+      "sha256": "7b8c6da2192bc066880f2f4ac53c6f44915d4f7ce8fed8e549a032cc021dfb4d",
+      "width": 1280,
+      "height": 800
+    },
+    "nsx-bumper-after.png": {
+      "sha256": "650ca970fad47d3028886717a6f9c6617b252f2d516e5b91d9221bf0be4461e8",
+      "width": 1280,
+      "height": 800
+    },
+    "nsx-bumper-before.png": {
+      "sha256": "a623dc20461a75c19c02534f24c4d795553c63d772cee9690517e500e04e5ffc",
+      "width": 1280,
+      "height": 800
+    },
+    "nsx-windows-after.png": {
+      "sha256": "3f47942e5df03f81b8f8ffd572756356f0483dbbada70ae712f89f89da69cf81",
+      "width": 1280,
+      "height": 800
+    },
+    "nsx-windows-before.png": {
+      "sha256": "485802550cd313cdd2a41671011bdbc79a7df17b92882f95c6084d807c05a308",
+      "width": 1280,
+      "height": 800
+    },
+    "source-nsx-after.png": {
+      "sha256": "5a04172f49eb8e34598534eeba289b8ceb9fff46d8cd6dc09be5e63f25fe3c8c",
+      "width": 1280,
+      "height": 1050
+    }
+  },
+  "limits": [
+    "Representative fixed-camera comparisons only; no all-car visual review.",
+    "Neutral green-marker glass is a preview fallback, not recovered native PS2 shading.",
+    "Stored source and working GLBs are unchanged. Already-corrected reimports are preserved, not historically re-proven."
+  ]
+}

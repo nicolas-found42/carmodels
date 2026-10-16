@@ -18,6 +18,33 @@ Open `/dealership.html` for this edition, and `/recovered.html` for the source-m
 showcase. The dealership's download link serves the working GLB copy. The source-model
 showcase's download link serves the separately stored recovered original.
 
+### GT4 material corrections
+
+Both viewers derive material corrections in memory for recognized `gt4-ps2-static-car-v2`
+exports. The same corrected document drives factory presets and selected-paint GLB downloads;
+original source and dealership files, geometry, PNG bytes and variant mappings are unchanged.
+The geometry/studio toggle does not disable these corrections.
+
+Finish-bearing native body surfaces use a one-byte alpha cutoff so partially opaque paint
+texels are retained, with native finish alpha replaced by opaque material alpha. All materials of the same factory-variant surface follow that rule,
+including black presets with zero native specular input. Alpha-zero cutouts remain open;
+window-frame passes without a native finish and authored cutoff/factor values are preserved.
+
+Recognizable green-marker BLEND passes use neutral translucent glass (opacity factor 0.35,
+roughness 0.16). Recognition requires the native exporter identity/default material and at
+least a quarter of the original PNG pixels carrying the canonical bright green marker with
+nonzero alpha. Black window-frame masks keep their existing cutoff and alpha; their black RGB is made explicit to eliminate green transparent-padding fringes under filtering. Ordinary coloured transparent textures and authored finishes are preserved.
+This is an explicit preview fallback: native GT4 glass/reflection shading remains unresolved.
+The GLB records the source hash, material targets and limits under `gt4MaterialRepair`.
+
+`node tools/test_gt4_materials.mjs` checks the real NSX bumper/glass, original alpha-zero masks,
+factory switching/download, reimport, artist edits, format boundaries and mutation controls.
+`tools/check.sh --only gt4_materials_corpus` audits every GT4 working model and verifies both
+source/working catalog pins, binary/image preservation and material-only document changes.
+The corpus audit is opt-in; its counts are not a visual review of every car. Already-corrected
+reimports are checked for unchanged bytes and reported separately with zero new corrections.
+Their historical repairs cannot be independently re-derived without the pre-repair checkpoint.
+
 ### Enhanced Gran Turismo 4 edition
 
 GT4 dealership models are automatically enhanced on load. **Enhanced GT4 edition**

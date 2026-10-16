@@ -99,7 +99,7 @@ const material=createMaterial(enhanced.doc,[],index);assert(material.isMeshPhysi
 applyMaterial(material,{materials:[{pbrMetallicRoughness:{}}]},[],0);assert.equal(material.clearcoat,0,'material changes clear prior finish');
 material.dispose();
 const car={game:'gran-turismo-4',model:{source:{glb:'dealership/models/GT4_ACRA0001.glb',sha256:sha}}};
-const load=options=>loadEditableGLB(car,{fetchImpl:async()=>buffer,textureImpl:async()=>new THREE.Texture(),...options});
+const load=options=>loadEditableGLB(car,{correctMaterials:false,fetchImpl:async()=>buffer,textureImpl:async()=>new THREE.Texture(),...options});
 const group=await load();assert(group.userData.gt4Enhancement);assert.equal(group.userData.paintBuffer.byteLength,result.buffer.byteLength);
 assert(group.userData.paintDoc.extras.gt4Enhancement);group.userData.setColourVariant(1);disposeCar(group);
 const baseline=await load({enhance:false});assert.equal(baseline.userData.gt4Enhancement,null);assert.equal(baseline.userData.paintBuffer,buffer);disposeCar(baseline);
