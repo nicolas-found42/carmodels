@@ -103,3 +103,25 @@ are absent; the catalog build then validates each committed preview against its 
 - Wheel placement beyond the readings above; cars with unusual layouts (three-wheelers,
   karts, concept cars) were not inspected individually.
 - Race (LOD) models, interiors beyond what the showroom model contains, and the 880 shared wheels.
+
+## Material correction follow-up (2026-10-16)
+
+The original static MASK interpretation cuts holes through painted bodywork: the NSX '91
+bumper has existing triangles sampling alpha 31/255 against the exported cutoff 63/255.
+The NSX Coupe '97, Honda NSX '90 and BMW M3 '04 show related defects. A controlled cutoff
+override closes the seams without moving vertices. This invalidates the earlier assumption
+that retaining the default native alpha-test threshold alone gives a usable static preview.
+Native PS2 pass ordering/blend behavior is still unverified.
+
+The viewers now derive the material corrections documented in
+[the dealership guide](../dealership/dealership/README.md#gt4-material-corrections), retaining
+recovered files and geometry. Finish-bearing body surfaces keep nonzero paint alpha while
+preserving alpha-zero cutouts; unrelated masks and authored material changes are retained.
+Canonical green-marker BLEND window passes receive neutral translucent glass; black frame masks retain alpha while neutral RGB removes green transparent-padding filter fringes. Glass is explicitly a
+preview fallback rather than recovered native glass shading. The source hash and correction
+indices travel in the derived GLB and selected-paint downloads. Unit tests and an opt-in
+730-car material audit check the bounded interpretation and preservation properties; they
+do not establish original-game shader fidelity or a full visual review of the collection.
+
+[Before/after screenshots and validation receipt](evidence/gt4-material-fix/validation.json)
+record representative comparisons; the corpus counts remain executable material checks.

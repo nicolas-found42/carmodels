@@ -631,7 +631,7 @@ async function select(c) {
   current = c;
   $('gt4-enhance-control').hidden=gameId(c)!=='gran-turismo-4';
   $('gt4-enhance-status').hidden=gameId(c)!=='gran-turismo-4';
-  $('gt4-enhance-status').textContent=gameId(c)==='gran-turismo-4'?'Original working model · scene lighting':'';
+  $('gt4-enhance-status').textContent=gameId(c)==='gran-turismo-4'?'Recovered geometry · corrected materials':'';
   gt4Studio.setEnabled(scene,gameId(c)==='gran-turismo-4'&&$('gt4-enhance').checked);
   floor.material.envMapIntensity=gameId(c)==='gran-turismo-4'&&$('gt4-enhance').checked ? .15 : 1;
   rememberCar(c);
@@ -699,6 +699,8 @@ async function select(c) {
       $('model-limits').textContent=[...enhancement.claimLimits,...(c.claimLimits||c.model.claimLimits||[])].join(' ');
       $('download-model').textContent='Download enhanced dealership model (.glb)';
     }
+    const materialRepair=carMesh.userData.gt4MaterialRepair;
+    if(materialRepair){$('model-limits').textContent+=' '+materialRepair.claimLimits.join(' ');if(materialRepair.glass.length)$('gt4-enhance-status').textContent+=' · neutral glass fallback';}
     colourControls.bind({model:carMesh.userData.paintDoc,game:gameId(c),carId:c.code,colors:gamePalette,error:paletteError});
     setView('reset');$('loading').hidden=true;
   } catch(error){

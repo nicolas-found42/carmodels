@@ -39,7 +39,7 @@ for(const car of cars) {
   const textures=[];
   // This test compares the stored working geometry. The enhancement/download
   // route has its own variant-preservation integration and full-catalog audit.
-  const model=await loadCar(car,{enhance:false,fetchImpl:async()=>buffer,textureImpl:async image=>{
+  const model=await loadCar(car,{enhance:false,correctMaterials:false,fetchImpl:async()=>buffer,textureImpl:async image=>{
     const texture=game==='midnight-club-3-remix'?mc3Texture(image):new THREE.Texture();textures.push(texture);return texture;
   }});
   try {
