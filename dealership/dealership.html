@@ -189,7 +189,7 @@
     <header>
       <h1>CAR LIBRARY — <span>DEALERSHIP</span></h1>
       <div class="sub">Cars and recovered assets · multiple games</div>
-      <a class="jump" href="recovered.html">Source models →</a>
+      <a id="source-link" class="jump" href="recovered.html">Source models →</a>
     </header>
     <input aria-label="Search cars by name, year or code" id="search" placeholder="Name, year or code · e.g. mustang 1968" autocomplete="off">
     <label style="padding:0 16px 8px;font-size:12px">Game <select id="game-filter" aria-label="Filter by game"><option value="all">All games</option></select></label>
@@ -337,7 +337,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias } from './dealership.mjs';
+import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias, sourceCarId, rememberCar } from './dealership.mjs';
 import {createColourControls} from './colour-controls.mjs';
 import {fetchGamePalette} from './game-paint.mjs';
 import {createPaintDownload} from './paint-export.mjs';
@@ -400,7 +400,8 @@ async function loadCorpus() {
     const requestedGame = preferred ? gameId(preferred) : parameters.get('game');
     if ([...$('game-filter').options].some(option => option.value === requestedGame)) $('game-filter').value = requestedGame;
     updateFilterAvailability();
-    await select(preferred || CARS.find(c => c.code === 'GRAN_TORINO') || CARS[0]);
+    const scope = CARS.filter(c => $('game-filter').value === 'all' || gameId(c) === $('game-filter').value);
+    await select(preferred || scope.find(c => c.code === 'GRAN_TORINO') || scope[0] || CARS[0]);
     applyFilters();
     boot.loaded = true;
     boot.failed = false;
@@ -622,6 +623,8 @@ async function select(c) {
   colourControls.setEnabled(false);
   paintDownload.clear();
   current = c;
+  rememberCar(c);
+  $('source-link').href='recovered.html?'+new URLSearchParams({game:gameId(c),car:sourceCarId(c)});
   document.querySelectorAll('.car-row').forEach(r => { r.classList.toggle('sel',r._code===c.code); r.setAttribute('aria-pressed',String(r._code===c.code)); });
   const sel = [...document.querySelectorAll('.car-row')].find(r => r._code === c.code);
   if (sel) sel.scrollIntoView({ block: 'nearest', inline: 'nearest' });

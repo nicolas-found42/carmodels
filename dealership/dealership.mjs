@@ -5,8 +5,30 @@ import {normaliseColourTint} from './materials.mjs';
 export const gameId = c => c.game || 'ford-racing-2';
 export const gameLabel = c => c.gameLabel || (gameId(c)==='ford-racing-2'?'Ford Racing 2':gameId(c));
 export const isNativePackage = c => c.asset_kind==='native-package' || c.displayMode==='native-package';
+// Shared identity connects the editable edition to its recovered source row.
+export const sourceCarId = c => c.id || `${gameId(c)}/${c.sourceCode || c.code}`;
+const pendingCarURLs=new WeakMap();
+export function rememberCar(car, browser=globalThis) {
+  const queued=pendingCarURLs.has(browser);
+  pendingCarURLs.set(browser,car);
+  if(queued)return;
+  // Keep the latest selection in this turn; browser history must never block rendering.
+  queueMicrotask(()=>{
+    const selected=pendingCarURLs.get(browser);pendingCarURLs.delete(browser);
+    try {
+      const url=new URL(browser.location.href);
+      url.searchParams.set('game',gameId(selected));url.searchParams.set('car',sourceCarId(selected));
+      const variant=url.searchParams.get('variant');
+      if(variant&&variant!==(selected.source_variant??selected.sourceVariant)&&!matchesVariant(selected,variant))url.searchParams.delete('variant');
+      if(url.href!==browser.location.href)browser.history.replaceState(browser.history.state,'',url.href);
+    } catch {
+      // History can reject updates in inactive documents or after its rate limit.
+      // Selection and model loading still proceed; a later selection can retry.
+    }
+  });
+}
 export function resolveCarAlias(cars, requested, key='id') {
-  return cars.find(car=>car[key]===requested) || cars.find(car=>
+  return cars.find(car=>car[key]===requested) || (key==='code'&&cars.find(car=>sourceCarId(car)===requested)) || cars.find(car=>
     (key==='id'?car.aliases:car.sourceAliases)?.includes(requested));
 }
 export function dealershipDownload(c) {

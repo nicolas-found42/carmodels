@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {isNativePackage, dealershipDownload, loadCar, validateCars} from '../dealership/dealership.mjs';
+import {isNativePackage, dealershipDownload, loadCar, validateCars, gameId, sourceCarId, createCarSearch} from '../dealership/dealership.mjs';
 import {prepareMC3Environment,disposeMC3Environment} from '../dealership/mc3-environment.mjs';
 
 const native={code:'MC3_VP_TEST_04',name:'vp_test_04',sourceCode:'vp_test_04',game:'midnight-club-3-remix',
@@ -30,31 +30,31 @@ const elements=new Map();const node=id=>{if(!elements.has(id))elements.set(id,el
 const entry={id:'midnight-club-3-remix/vp_test_04',code:'vp_test_04',game:'midnight-club-3-remix',
   asset_kind:'native-package',file:'midnight-club-3-remix/native/vp_test_04.dat',native_members:3};
 node('#car').value=entry.id;node('#retry').hidden=false;
-let fetches=0,disposals=0;
+let fetches=0,disposals=0;const rememberedSources=[];
 const runSource=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
-  'readGLB','dispose','setLoading','updateDescription',
+  'readGLB','dispose','setLoading','updateDescription','rememberCar',
   `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
   {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[entry]},isNativePackage,
   async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
-  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{});
-await runSource();
+  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},car=>rememberedSources.push(car));
+await runSource();assert.deepEqual(rememberedSources,[entry]);
 assert.equal(fetches,0);assert.equal(disposals,1);assert(node('#record').disabled);assert(node('#retry').hidden);
 assert.equal(node('#download').href,'public/midnight-club-3-remix/native/vp_test_04.dat');
 assert.match(node('#download').textContent,/native package/);assert.match(node('#status').textContent,/3D preview unavailable/);
 assert.equal(node('#error').textContent,'');
-assert.equal(node('#download').download,'vp_test_04.dat');assert.match(node('#download').textContent,/\(\.dat\)/);
+assert.equal(node('#download').download,'vp_test_04.dat');assert.equal(new URLSearchParams(node('#dealership-link').href.split('?')[1]).get('car'),entry.id);assert.equal(new URLSearchParams(node('#dealership-link').href.split('?')[1]).get('game'),entry.game);assert.match(node('#download').textContent,/\(\.dat\)/);
 
 // GT4 packages are ZIPs: the label and saved name follow the published file, not a fixed extension.
 const gt4={id:'gran-turismo-4/test0001',code:'test0001',game:'gran-turismo-4',asset_kind:'native-package',
   file:'gran-turismo-4/native/test0001.zip',native_members:5};
 node('#car').value=gt4.id;
 const runGt4=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
-  'readGLB','dispose','setLoading','updateDescription',
+  'readGLB','dispose','setLoading','updateDescription','rememberCar',
   `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
   {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[gt4]},isNativePackage,
   async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
-  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{});
-await runGt4();
+  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},car=>rememberedSources.push(car));
+await runGt4();assert.deepEqual(rememberedSources,[entry,gt4]);
 assert.equal(fetches,0);assert.equal(node('#download').href,'public/gran-turismo-4/native/test0001.zip');
 assert.equal(node('#download').download,'test0001.zip');assert.match(node('#download').textContent,/native package \(\.zip\)/);
 assert.match(node('#status').textContent,/5 native files · 3D preview unavailable/);
@@ -62,18 +62,19 @@ assert.match(node('#status').textContent,/5 native files · 3D preview unavailab
 const page=fs.readFileSync(new URL('../dealership/dealership.html',import.meta.url),'utf8');
 const selectStart=page.indexOf('async function select(c) {'),selectEnd=page.indexOf('/* ---------- inspection controls',selectStart);
 assert(selectStart>0 && selectEnd>selectStart);
-let modelLoads=0,removed=0,disposed=0,filters=0;
+let modelLoads=0,removed=0,disposed=0,filters=0;const rememberedDealership=[];
 const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerElements.set(id,element());return dealerElements.get(id);};
 // Start enabled, as after a loaded 3D preview, so native selection must disable the controls.
 const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
-  'loadCar','applyFilters','fmt','colourControls',
+  'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId','rememberCar',
   `const paintDownload={clear(){}};let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
   $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
-  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls);
-await select(native);
+  ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls,gameId,sourceCarId,car=>rememberedDealership.push(car));
+await select(native);assert.deepEqual(rememberedDealership,[native]);
 assert.equal(modelLoads,0);assert.equal(removed,1);assert.equal(disposed,1);assert.equal(filters,1);
-assert.equal($('download-model').href,dealershipDownload(native).href);
+assert.equal($('download-model').href,dealershipDownload(native).href);assert.equal(new URLSearchParams($('source-link').href.split('?')[1]).get('car'),sourceCarId(native));
+assert.equal(new URLSearchParams($('source-link').href.split('?')[1]).get('game'),gameId(native));
 assert.match($('loading').textContent,/3D preview unavailable/);assert.equal($('loading').hidden,false);
 assert.equal($('v-sp').textContent,'Not decoded');assert.equal($('k-liv').textContent,'Not decoded');
 assert.match($('paint-caveat').textContent,/not been converted/);
@@ -88,12 +89,12 @@ await select(native);assert.equal(removed,1);assert.equal(modelLoads,0);
   const model={userData:{colourVariants:[],paintDoc:{}}};let active=false,freed=0,cleared=0;
   const paintControls={enabled:false,setEnabled(v){this.enabled=v;},bind(){throw Error('Invalid recovered paint metadata');}};
   const run=new Function('$','document','gameLabel','gameId','isNativePackage','dealershipDownload','scene','disposeCar',
-    'loadCar','applyFilters','fmt','colourControls','paintDownload','paletteReady','gamePalette','paletteError','renderer','prepareMC3Environment',
+    'loadCar','applyFilters','fmt','colourControls','paintDownload','paletteReady','gamePalette','paletteError','renderer','prepareMC3Environment','sourceCarId','rememberCar',
     `let selectionId=0,selectionController=null,current=null,carMesh=null;${page.slice(selectStart,selectEnd)}return select;`)(
     $,{querySelectorAll:()=>[],createElement:element},()=>preview.gameLabel,c=>c.game,isNativePackage,dealershipDownload,
     {add(){active=true;},remove(){active=false;}},()=>freed++,async()=>model,()=>{},String,paintControls,
     {clear(){cleared++;}},Promise.resolve(),[],'',renderer,
-    active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:true,json:async()=>environment})}));
+    active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:true,json:async()=>environment})}),sourceCarId,()=>{});
   await run(preview);
   assert.equal(active,false);assert.equal(freed,1);assert.equal(paintControls.enabled,false);assert(cleared>=2);
   assert.equal($('download-model').href,undefined);assert.equal($('colour-control').hidden,true);
@@ -138,3 +139,36 @@ showNativeSpecifications({nativeMetadata:{identity:{status:'unresolved'},specifi
 assert.equal($('native-specs').hidden,true);assert.equal($('native-specs').children.length,0,'unresolved racing entries do not display stock specifications');
 showNativeSpecifications(native);assert.equal($('native-specs').hidden,true);
 console.log('PASS native catalog UI: native package downloads and preview state; native-only paint controls, GLB-backed colour selection, missing-variant edits, verified specifications, rotary display and unresolved-identity controls');
+
+// Execute source filtering with a real catalog: incompatible variants recover,
+// while valid restrictions and explicit empty searches keep their meaning.
+{
+  const catalog=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url),'utf8'));
+  const nodes=new Map(),get=id=>{if(!nodes.has(id))nodes.set(id,element());return nodes.get(id);};
+  const game=get('#game'),variant=get('#source-variant'),car=get('#car'),search=get('#search');
+  game.value='gran-turismo';variant.value='canonical';
+  variant.options=['','canonical','showroom','native','stock','base','addon'].map(value=>({value,textContent:value}));
+  let loads=0,aborts=0,disposals=0;
+  const filterStart=sourcePage.indexOf('function updateFilterAvailability()');
+  const filterEnd=sourcePage.indexOf("document.querySelector('#interpret').addEventListener",filterStart);
+  const filter=new Function('index','document','gameSelect','sourceVariant','carSelect','recordSelect','search','filterStatus','gameNames','dispose','setLoading','loadCar','onAbort','createCarSearch',
+    `const status=document.querySelector('#status');let filterRevision=0,requestId=0,pendingRequest={abort(){onAbort();}};${sourcePage.slice(filterStart,filterEnd)}return filterCars;`)(
+    catalog,{querySelector:get,createElement:element},game,variant,car,get('#record'),search,get('#filter-status'),{},
+    ()=>disposals++,()=>{},()=>loads++,()=>aborts++,createCarSearch);
+  filter();assert.equal(variant.value,'canonical');assert.equal(car.options.length,342);
+  game.value='redline';filter();assert.equal(variant.value,'');assert(car.options.length>0);
+  assert.match(get('#filter-status').textContent,/Cleared unavailable variant: canonical/);
+  assert(variant.options.find(o=>o.value==='canonical').disabled);
+  variant.value='base';game.value='all';filter();assert.equal(variant.value,'base','available restriction survives');
+  get('#native-download').href='old.zip';get('#native-download-wrap').hidden=false;get('#error').textContent='Old failure';
+  get('#record').options=[{value:'old'}];get('#variant').options=[{value:'old'}];
+  search.value='no-such-car-xyz';filter();assert.equal(car.options.length,0);assert(car.disabled);
+  assert.equal(get('#record').options.length,0);assert.equal(get('#variant').options.length,0);
+  assert(get('#native-download-wrap').hidden);assert.equal(get('#native-download').href,undefined);
+  assert.equal(get('#error').textContent,'');assert.match(get('#source-description').textContent,/No car selected/);
+  assert(aborts>0&&disposals>0);
+  search.focus=()=>{search.focused=true;};get('#clear-filters').listeners.click();
+  assert.equal(search.value,'');assert.equal(game.value,'all');assert.equal(variant.value,'');
+  assert.equal(car.options.length,catalog.cars.length);assert.equal(car.disabled,false);assert(search.focused);assert(loads>0);
+}
+console.log('PASS source filter recovery: incompatible variants, preserved valid filters, stale empty-state cleanup and clear action');
