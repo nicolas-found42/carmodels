@@ -81,6 +81,15 @@ def executable():
     return require('executable')
 
 
+def mc3_disc(required=True):
+    """MC3 source disc, with an optional explicit input-config/environment override."""
+    path = Path(configured('CARMODELS_MC3_DISC') or
+                ROOT/'games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso').expanduser()
+    if required and not path.is_file():
+        missing('MC3 disc unavailable; set CARMODELS_MC3_DISC or restore games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso')
+    return path
+
+
 def pins():
     refresh = json.loads(REFRESH.read_text())
     residency = json.loads(RESIDENCY.read_text())

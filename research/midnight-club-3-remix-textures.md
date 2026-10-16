@@ -1,5 +1,11 @@
 # Midnight Club 3 Remix: textures, alpha and artifact surfaces
 
+Subsequent correction: the generic alpha-cutout heuristic below made MC3 tire
+surfaces invisible. The exact native `tire` template now uses an explicitly
+opaque inspection translation while its native alpha semantics remain unresolved.
+See [tire visibility and native alpha limits](midnight-club-3-remix-tire-alpha.md).
+The historical counts and receipts below describe the earlier conversion.
+
 Four user screenshots (two byte-identical) showed gray MC3 dealership previews with large flat or irregular light surfaces. This note records the diagnosis, the decoded texture formats, the material-to-texture binding, the display policy and the controls. It extends [the static preview note](midnight-club-3-remix-previews.md), which stated that texture images were undecoded. Retained receipts are under [`evidence/midnight-club-3-remix/previews/textures-fix/`](evidence/midnight-club-3-remix/previews/textures-fix/).
 
 ## What the screenshots showed

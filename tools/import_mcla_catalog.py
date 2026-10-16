@@ -20,15 +20,15 @@ GAME = 'midnight-club-los-angeles'
 NATIVE_PROFILE = 'mcla-xbox360-native-car-v1'
 VARIANT = 'stock'
 LIMITS = [
-    'Static LOD 0 stock-index assembly with half-resolution diffuse textures and neutral paint; '
+    'Static LOD 0 stock-index assembly with half-resolution diffuse textures and source ambient paint choices; '
     'slot attachment, wheel placement and material interpretation are readings, not runtime observations. Shared wheel radius and width use geometric approximations because runtime tire-size configuration is undecoded.',
-    'Runtime customization, animation, damage, paint, reflections and original shader passes are not reproduced.',
+    'Ambient paint choices use exact native XML RGB rows on AmbientCarPaint as linear PBR factors; row zero is a preview default. Paint type, random selection, player paint, runtime customization, animation, damage, reflections and original shader passes are not reproduced.',
     'Names use exact English UI-string key joins when available; other entries retain source codes. '
     'Retail year, manufacturer and performance are not inferred from codes.',
-    'Native ZIPs hold this car manifest and its extracted files, excluding separately shared rims, tires and brakes.',
+    'Native ZIPs hold this car manifest and its extracted files, excluding separately shared rims, tires, brakes and ambient paint tables; consumed shared palette sources are pinned in the GLB.',
     'Ambient and player namespace entries remain distinct; this is not a verified playable roster.',
 ]
-PREVIOUS_PROFILE = 'mcla-xbox360-static-stock-v1'
+PREVIOUS_PROFILE = 'mcla-xbox360-static-stock-v2'
 PREVIOUS_LIMITS = [
     'Static LOD 0 stock-index assembly with half-resolution diffuse textures and neutral paint; '
     'slot attachment, wheel placement and material interpretation are readings, not runtime observations. Shared wheel radius and width use geometric approximations because runtime tire-size configuration is undecoded.',
@@ -268,8 +268,8 @@ def refresh_catalog(output, index, outputs, identities):
     profiles = {row.get('source_profile') for row in rows}
     if profiles == {PROFILE}:
         profile, limits = PROFILE, LIMITS
-    elif profiles == {PREVIOUS_PROFILE}:
-        profile, limits = PREVIOUS_PROFILE, PREVIOUS_LIMITS
+    elif profiles in ({PREVIOUS_PROFILE}, {'mcla-xbox360-static-stock-v1'}):
+        profile, limits = next(iter(profiles)), PREVIOUS_LIMITS
     else:
         raise ValueError('Unsupported MCLA refresh profile')
     if current.get('claim_limits') != limits:

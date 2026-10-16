@@ -8,7 +8,8 @@ import tempfile
 import unittest
 
 from bake_models import ROOT, read_glb
-from import_gt4_dealership import import_cars
+from gt4_specdb import car_specs
+from import_gt4_dealership import SPECDB, entry_for, import_cars
 
 PUBLIC = ROOT / 'dealership/public/gran-turismo-4'
 CODES = ('acra0001', 'chev0001')
@@ -48,6 +49,14 @@ def snapshot(folder):
 
 
 class DealershipImportTests(unittest.TestCase):
+    def test_factory_colour_metadata_uses_native_order_and_names(self):
+        row = next(r for r in json.loads((PUBLIC / 'index.json').read_text())['cars'] if r['code'] == 'acra0001')
+        colours = entry_for(row, car_specs(SPECDB)['acra0001'])['colourVariants']
+        self.assertEqual([colour['index'] for colour in colours], list(range(5)))
+        self.assertEqual([colour['name'] for colour in colours],
+                         ['Sundance Gold', 'San Marino Red', 'Nighthawk Black Pearl',
+                          'Satin Silver Metallic', 'Taffeta White'])
+
     def test_import_entries_and_preserving_repeat(self):
         with tempfile.TemporaryDirectory() as temp:
             source, dest, rows = fixture(Path(temp).resolve())

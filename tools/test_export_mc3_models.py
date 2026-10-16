@@ -4,14 +4,124 @@ import json
 import os
 from pathlib import Path
 import shutil
+import struct
 import tempfile
 import unittest
 
 from bake_models import ROOT, read_glb
-from export_mc3_models import export
-from mc3_model import NATIVE_DISC
+from export_mc3_models import export, refresh_tire_materials
+from mc3_model import NATIVE_DISC, sha
 
 needs_disc = unittest.skipUnless(NATIVE_DISC.is_file(), 'supplied game disc source input unavailable')
+
+
+class TireMaterialRefreshTests(unittest.TestCase):
+    def fixture(self, base):
+        canonical = ROOT/'games/midnight-club-3-remix/recovered-models'
+        index = json.loads((canonical/'index.json').read_text())
+        row = copy.deepcopy(next(r for r in index['cars'] if r['code'] == 'vp_350z_04'))
+        reference = base/'reference'
+        reference.mkdir()
+        data = (canonical/row['file']).read_bytes()
+        (reference/row['file']).write_bytes(data)
+        (reference/'index.json').write_text(json.dumps({**index, 'cars': [row]}))
+        return reference, row, data
+
+    def rewrite(self, reference, row, doc, binary):
+        payload = json.dumps(doc, separators=(',', ':')).encode()
+        payload += b' ' * (-len(payload) % 4)
+        data = (struct.pack('<4sII', b'glTF', 2, 28+len(payload)+len(binary))
+                + struct.pack('<I4s', len(payload), b'JSON')+payload
+                + struct.pack('<I4s', len(binary), b'BIN\0')+binary)
+        (reference/row['file']).write_bytes(data)
+        index = json.loads((reference/'index.json').read_text())
+        index['cars'][0].update(bytes=len(data), sha256=sha(data))
+        (reference/'index.json').write_text(json.dumps(index))
+
+    def test_pinned_refresh_preserves_everything_except_tire_policy(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            reference, row, data = self.fixture(base)
+            doc, binary = read_glb(data)
+            self.assertIn('gamePaint', doc['extras'], 'fixture must include the current published paint edition')
+            doc['extras'].pop('tireAlphaTranslation', None)
+            for material in doc['materials']:
+                if material.get('extras', {}).get('shader_template') == 'tire':
+                    material['alphaMode'], material['alphaCutoff'] = 'MASK', 0.5
+                    material['extras']['alpha_mode'] = 'MASK'
+            # A valid edited node proves the metadata refresh retains geometry edits.
+            doc['nodes'][0]['translation'] = [1, 2, 3]
+            self.rewrite(reference, row, doc, binary)
+            before = {p.name: p.read_bytes() for p in reference.iterdir()}
+            self.assertEqual(refresh_tire_materials(reference, base/'output'), 1)
+            updated, updated_binary = read_glb((base/'output'/row['file']).read_bytes())
+            self.assertEqual(updated_binary, binary)
+            self.assertEqual(updated['extras']['tireAlphaTranslation']['policy'], 'native-ps2-tire-reflection-v2')
+            self.assertEqual(updated['extras']['tireAlphaTranslation']['alpha_test'], 'always')
+            refreshed = json.loads((base/'output'/'index.json').read_text())['cars'][0]
+            self.assertFalse(any('native tire.shadert alpha semantics remain unresolved' in v
+                                 for v in refreshed['claim_limits']))
+            extras = copy.deepcopy(updated['extras'])
+            extras.pop('tireAlphaTranslation')
+            self.assertEqual(extras, doc['extras'], 'all native appearance and source metadata survive')
+            for key in ('nodes', 'meshes', 'accessors', 'bufferViews', 'buffers', 'images', 'textures', 'samplers', 'extensions'):
+                self.assertEqual(updated.get(key), doc.get(key), key)
+            for old, new in zip(doc['materials'], updated['materials'], strict=True):
+                if old.get('extras', {}).get('shader_template') == 'tire':
+                    self.assertEqual(new['alphaMode'], 'OPAQUE')
+                    self.assertFalse(new['doubleSided'])
+                    self.assertNotIn('alphaCutoff', new)
+                    self.assertEqual(new['pbrMetallicRoughness'], old['pbrMetallicRoughness'])
+                    self.assertIn('alpha test is ALWAYS', new['extras']['texture_policy_note'])
+                else:
+                    self.assertEqual(old, new)
+            self.assertEqual(before, {p.name: p.read_bytes() for p in reference.iterdir()})
+            with self.assertRaisesRegex(ValueError, 'must not exist'):
+                refresh_tire_materials(reference, base/'output')
+            with self.assertRaisesRegex(ValueError, 'separate'):
+                refresh_tire_materials(reference, reference/'nested')
+
+    def test_bad_pins_and_forged_tire_ownership_never_publish(self):
+        for mutation in ('pin', 'identity', 'ownership'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temp:
+                base = Path(temp).resolve()
+                reference, row, data = self.fixture(base)
+                doc, binary = read_glb(data)
+                if mutation == 'pin':
+                    (reference/row['file']).write_bytes(data+b'changed')
+                    reason = 'hash/size'
+                else:
+                    if mutation == 'identity':
+                        doc['extras']['car'] = 'vp_wrong'
+                        reason = 'identity/records'
+                    else:
+                        tire = next(m for m in doc['materials'] if m.get('extras', {}).get('shader_template') == 'tire')
+                        tire['extras']['shader_template'] = 'lit_textured'
+                        reason = 'ownership'
+                    self.rewrite(reference, row, doc, binary)
+                with self.assertRaisesRegex(ValueError, reason):
+                    refresh_tire_materials(reference, base/'output')
+                self.assertFalse((base/'output').exists())
+
+    def test_missing_native_normals_or_shared_body_material_never_publish(self):
+        for mutation in ('normals', 'sharing'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temp:
+                base = Path(temp).resolve()
+                reference, row, data = self.fixture(base)
+                doc, binary = read_glb(data)
+                if mutation == 'normals':
+                    tire = next(n for n in doc['nodes'] if n.get('extras', {}).get('nativeWheelComponent') == 'tire')
+                    doc['meshes'][tire['mesh']]['primitives'][0]['attributes'].pop('_MC3_NATIVE_NORMAL')
+                    reason = 'normals missing'
+                else:
+                    rim = next(n for n in doc['nodes'] if n.get('extras', {}).get('nativeWheelComponent') == 'rim')
+                    body = next(n for n in doc['nodes'] if 'mesh' in n and 'nativeWheelComponent' not in n.get('extras', {}))
+                    doc['meshes'][body['mesh']]['primitives'][0]['material'] = doc['meshes'][rim['mesh']]['primitives'][0]['material']
+                    reason = 'wheel/body material sharing'
+                self.rewrite(reference, row, doc, binary)
+                with self.assertRaisesRegex(ValueError, reason):
+                    refresh_tire_materials(reference, base/'output')
+                self.assertFalse((base/'output').exists())
 
 
 class ExportBoundaryTests(unittest.TestCase):
@@ -150,4 +260,4 @@ class ExportBoundaryTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

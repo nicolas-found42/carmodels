@@ -56,11 +56,22 @@ class Tests(unittest.TestCase):
             export(extraction, output, identities)
 
     def refreshed(self, extraction, output, identities):
-        with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'), patch.object(catalog, 'build_car', preview):
+        with patch.object(catalog, 'build_car', preview):
             return catalog.export_catalog(extraction, output, identities, refresh=True)
 
     def snapshot(self, output):
         return {p.relative_to(output).as_posix(): p.read_bytes() for p in output.rglob('*') if p.is_file()}
+
+    def test_refresh_accepts_pinned_v1_before_the_v2_geometry_upgrade(self):
+        with tempfile.TemporaryDirectory() as temp:
+            extraction, output, identities = fixture(Path(temp).resolve())
+            with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v1'), patch.object(catalog, 'LIMITS', catalog.PREVIOUS_LIMITS):
+                export(extraction, output, identities)
+            native = output / 'native' / (CODE + '.zip')
+            original = native.read_bytes()
+            self.assertEqual(self.refreshed(extraction, output, identities), 1)
+            self.assertEqual(native.read_bytes(), original)
+            self.assertEqual(json.loads((output / 'index.json').read_text())['cars'][0]['source_profile'], catalog.PROFILE)
 
     def test_refresh_migrates_old_profile_and_preserves_exact_zip_encoding(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -83,7 +94,7 @@ class Tests(unittest.TestCase):
             self.assertEqual(self.snapshot(output), old)
             self.assertEqual(self.refreshed(extraction, output, identities), 1)
             updated = json.loads((output / 'index.json').read_text())['cars'][0]
-            self.assertEqual(updated['source_profile'], 'mcla-xbox360-static-stock-v2')
+            self.assertEqual(updated['source_profile'], 'mcla-xbox360-static-stock-v3')
             self.assertEqual(read_glb((output / updated['file']).read_bytes())[0]['extras']['source_profile'], updated['source_profile'])
             self.assertEqual(native.read_bytes(), old[row['native_package']['file']])
             self.assertNotEqual((output / row['file']).read_bytes(), old[row['file']])
@@ -177,8 +188,7 @@ class Tests(unittest.TestCase):
             (dealer / 'catalog.json').write_text(json.dumps(metadata))
             old = self.snapshot(dealer)
             self.refreshed(extraction, output, identities)
-            with patch.object(catalog, 'PROFILE', 'mcla-xbox360-static-stock-v2'):
-                self.assertEqual(import_cars(output, dealer, upgrade_unedited=True), 0)
+            self.assertEqual(import_cars(output, dealer, upgrade_unedited=True), 0)
             self.assertEqual(self.snapshot(dealer), old)
 
     def test_refresh_rolls_back_directory_on_failed_install_or_final_verification(self):

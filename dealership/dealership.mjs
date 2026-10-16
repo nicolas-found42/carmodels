@@ -52,7 +52,7 @@ export function createCarSearch(query) {
 }
 export async function loadCar(c, options={}) {
   if(isNativePackage(c))throw Error('3D preview unavailable for this native package.');
-  return c.model.schema===2 ? loadEditableGLB(c,options) : makeCar(c);
+  return c.model.schema===2 || gameId(c)==='ford-racing-2' ? loadEditableGLB(c,options) : makeCar(c);
 }
 
 // Compact offline mesh: little-endian XYZ + normal XYZ float32, then a tone byte.

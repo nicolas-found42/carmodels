@@ -10,12 +10,15 @@ import json
 from pathlib import Path
 import re
 import tempfile
+import static_inputs
 
 from mc3_archive import CookedDisc, DaveArchive, byte_reader, file_digest, safe_name
 
 ROOT = Path(__file__).resolve().parents[1]
 PREFIXES = ('vehicle/', 'resources/vehicle/', 'tune/vehicle/', 'tune/phys/',
             'tune/traffic/', 'tune/rider/', 'physicslib/')
+ADDITIONAL = ('vehiclesexported.txt', 'texture/car_window_blank_dmg.tex',
+              'texture/car_window_blank_dmg_proxy.tex')
 LIMITS = [
     'Native archive extraction only; PCK geometry and PPF texture decoding, GLB conversion and rendering remain unverified.',
     'Vehicle IDs are source package/path codes, not a verified real-world name catalog or playable roster.',
@@ -38,7 +41,7 @@ def selected(record):
     return (not record['directory'] and
             (record['name'].startswith(PREFIXES)
              or re.fullmatch(r'vp_[a-z0-9_]+\.dat', record['name']) is not None
-             or record['name'] == 'vehiclesexported.txt'))
+             or record['name'] in ADDITIONAL))
 
 
 def occurrence_path(record):
@@ -124,7 +127,7 @@ def derive(iso, emit):
                             'volume': disc.volume},
                  'iso_inventory': disc.entries, 'archives': archives,
                  'selection': {'prefixes': list(PREFIXES), 'root_carriers': 'vp_[a-z0-9_]+.dat',
-                               'additional': ['vehiclesexported.txt']},
+                               'additional': list(ADDITIONAL)},
                  'vehicles': sorted(families.values(), key=lambda c: c['id']),
                  'files': files.copy(), 'claim_limits': LIMITS}
         put('index.json', json_bytes(index))
@@ -224,7 +227,7 @@ def assess_inventory(items):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--iso', type=Path, default=ROOT / 'games/midnight-club-3-remix/game-files/Midnight Club 3 - DUB Edition Remix.iso')
+    parser.add_argument('--iso', type=Path, default=static_inputs.mc3_disc(required=False))
     parser.add_argument('--output', type=Path, default=ROOT / 'games/midnight-club-3-remix/cars')
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--assess-output', type=Path, help='Opt in to screened live inventory judgments; save outside cars.')

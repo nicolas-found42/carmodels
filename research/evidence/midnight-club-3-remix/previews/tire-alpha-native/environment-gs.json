@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "scope": "Native MC3 material blend namespace and fixed garage alpha prefill, not a complete environment renderer",
+  "source_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "intervals": {
+    "blend_dispatch": {
+      "start": "002ad228",
+      "end": "002ad430",
+      "sha256": "481ba72956ef168ddb351b811bc8dcaab341d8a0cdf43cf53f9acbdba83951c6"
+    },
+    "frame_mask": {
+      "start": "002ad608",
+      "end": "002ad714",
+      "sha256": "46d9d4493b86c5a2f40b914f7f79f1b06f432f7dacb8041f2d99272f32860717"
+    },
+    "garage_defaults": {
+      "start": "00561648",
+      "end": "00561680",
+      "sha256": "c21d8a21907d4c54eccca2cdeb9ad41cbf21dd83802894a242fcf0ff0658a90a"
+    },
+    "fullscreen_alpha": {
+      "start": "005630ac",
+      "end": "0056326c",
+      "sha256": "7191e6f7b966555644806c0fc6ec9d43a626a3ee9b043e9ba7c657d63c6baa40"
+    },
+    "sky_rgba": {
+      "start": "005634c8",
+      "end": "00563554",
+      "sha256": "c1e5f895c590eea47164664ae1874f4919b078280db0950d54de558de9f51ea1"
+    },
+    "static_rgb": {
+      "start": "00563600",
+      "end": "00563668",
+      "sha256": "11c143780b96268c9591c917996e8971dc7af2b42a28af82b414694a663a5360"
+    },
+    "sprite_color": {
+      "start": "002ae7b8",
+      "end": "002ae858",
+      "sha256": "945ee8313cbe3629ce43b034fbf7c94a9c4da954f8d682b161a267879dea06ab"
+    },
+    "primitive_flush": {
+      "start": "002ad1b0",
+      "end": "002ad228",
+      "sha256": "60178d95a772f98013a1435c0751d6df73abdce235d1c26f6abc234ae4e65e2a"
+    },
+    "capture_init": {
+      "start": "00561480",
+      "end": "005614dc",
+      "sha256": "a1b61e6edb138dd2bf7216a35112874a480fd8f80dfcf82a5eeb0ff471bca630"
+    },
+    "depth_function_table": {
+      "start": "00615e28",
+      "end": "00615e30",
+      "sha256": "7560ee569b2f9d7f28a5748dac2028f376961b7055b6ca4e317c1c01927a0725"
+    }
+  },
+  "material_alpha_registers": [
+    "0x44",
+    "0x8000000068",
+    "0x8000000062",
+    "0x81",
+    "0x58",
+    "0x80000000a8",
+    "0x54"
+  ],
+  "garage": {
+    "scalar_bits": "3ebf7cee",
+    "native_prefill_alpha": 48,
+    "prefill_write_mask": 8,
+    "sky_write_mask": 15,
+    "static_write_mask": 7,
+    "static_material_blend": 1,
+    "prefill_destination_alpha_msb": 0,
+    "prefill_destination_alpha_test": "state88=1 selects DATE=1,DATM=0 via615e28[1]=0x4000; flooralpha3..26 passes; alpha128 does not"
+  },
+  "selected_words": {
+    "00561658": "3c013ebf",
+    "0056165c": "34217cee",
+    "00561674": "e64100b8",
+    "005630b0": "24040008",
+    "005630c0": "ac440024",
+    "005630f0": "ac60000c",
+    "00563154": "ac440018",
+    "00563188": "ac440010",
+    "005631f0": "ac440028",
+    "00563210": "c66000b8",
+    "00563244": "46000064",
+    "00563254": "24420001",
+    "00563258": "00021043",
+    "00563264": "0c0ab9b0",
+    "005634cc": "2404000f",
+    "005634dc": "ac440024",
+    "00563604": "24040001",
+    "00563614": "ac44000c",
+    "00563638": "24040007",
+    "00563648": "ac440024"
+  }
+}

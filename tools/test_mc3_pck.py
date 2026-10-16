@@ -161,6 +161,9 @@ class PacketTests(unittest.TestCase):
         draw = read_mesh_object(pck, 128)["draws"][0]
         batch = draw["batches"][0]
         self.assertEqual(draw["packet_offset"], 224)
+        self.assertEqual(draw['native_vif_packet'], pck.data[224:224+draw['packet_bytes']])
+        self.assertEqual(draw['native_vif_packet'], packet())
+        self.assertEqual(draw['native_vif_batch_offsets'], [0])
         self.assertEqual(draw["vertex_count"], 4)
         self.assertEqual(batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)])
         self.assertEqual(batch["uvs"], [(0, 1)] * 4)

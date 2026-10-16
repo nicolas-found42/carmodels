@@ -5,13 +5,13 @@ import {parseEditableGLB,loadEditableGLB} from '../dealership/editable-glb.mjs';
 import {disposeCar} from '../dealership/dealership.mjs';
 
 function fixture(mutate=()=>{}) {
-  const binary=Buffer.alloc(112);
+  const binary=Buffer.alloc(244);
   [0,0,0,2,0,0,0,2,1].forEach((v,i)=>binary.writeFloatLE(v,i*4));
   [0,0,1,0,0,1,0,0,1].forEach((v,i)=>binary.writeFloatLE(v,36+i*4));
   [0,0,1,0,0,1].forEach((v,i)=>binary.writeFloatLE(v,72+i*4));
   [0,1,2].forEach((v,i)=>binary.writeUInt16LE(v,96+i*2));
   const doc={asset:{version:'2.0'},scene:0,scenes:[{nodes:[0]}],nodes:[{mesh:0}],
-    buffers:[{byteLength:112}],bufferViews:[{buffer:0,byteOffset:0,byteLength:36},{buffer:0,byteOffset:36,byteLength:36},{buffer:0,byteOffset:72,byteLength:24},{buffer:0,byteOffset:96,byteLength:6},{buffer:0,byteOffset:104,byteLength:8}],
+    buffers:[{byteLength:binary.length}],bufferViews:[{buffer:0,byteOffset:0,byteLength:36},{buffer:0,byteOffset:36,byteLength:36},{buffer:0,byteOffset:72,byteLength:24},{buffer:0,byteOffset:96,byteLength:6},{buffer:0,byteOffset:104,byteLength:8}],
     accessors:[{bufferView:0,componentType:5126,count:3,type:'VEC3'},{bufferView:1,componentType:5126,count:3,type:'VEC3'},{bufferView:2,componentType:5126,count:3,type:'VEC2'},{bufferView:3,componentType:5123,count:3,type:'SCALAR'}],
     meshes:[{primitives:[{attributes:{POSITION:0,NORMAL:1,TEXCOORD_0:2},indices:3,material:0}]}],
     materials:[{doubleSided:true,alphaMode:'MASK',alphaCutoff:0.25,pbrMetallicRoughness:{baseColorTexture:{index:0},metallicFactor:0}}],
@@ -24,6 +24,56 @@ function fixture(mutate=()=>{}) {
   return out.buffer.slice(out.byteOffset,out.byteOffset+out.byteLength);
 }
 const data=fixture();
+const nativeNormals=fixture(d=>{d.meshes[0].primitives[0].attributes._MC3_NATIVE_NORMAL=1;});
+function addNativeInputs(d,b) {
+  d.extras={nativeVertexInputs:'mc3-vif-vertex-inputs-v1'};
+  d.extras.nativeSkeleton={source_sha256:'b'.repeat(64),bones:[{parent:null,child:1},{parent:0,child:null}]};
+  d.nodes[0].name='native-wheel';d.nodes[0].extras={nativeBone:1};
+  const p=d.meshes[0].primitives[0];p.attributes._MC3_NATIVE_NORMAL=1;
+  for(const [name,offset,rows] of [['_MC3_NATIVE_COLOR',112,[255,128,0,-1]],['_MC3_NATIVE_UV',160,[-4096,8192,23,-24]]]) {
+    for(let i=0;i<12;i++)b.writeFloatLE(rows[i%4],offset+i*4);
+    const view=d.bufferViews.push({buffer:0,byteOffset:offset,byteLength:48})-1;
+    p.attributes[name]=d.accessors.push({bufferView:view,componentType:5126,count:3,type:'VEC4'})-1;
+  }
+  p.extras={native_batches:[{vertex_start:0,vertex_count:3,packet_offset:128,position_scale:1/1024,header_words:[0,3]}]};
+}
+const nativeInputs=fixture(addNativeInputs), nativeParsed=parseEditableGLB(nativeInputs).meshes[0][0];
+function addNativePositions(d,b) {
+  addNativeInputs(d,b);
+  d.extras.nativePositionInputs='mc3-vif-integer-position-v1';
+  const p=d.meshes[0].primitives[0];
+  for(let i=0;i<9;i++)b.writeFloatLE([127,-3,4,2048,17,-15,-4096,31,7][i],208+i*4);
+  const view=d.bufferViews.push({buffer:0,byteOffset:208,byteLength:36})-1;
+  p.attributes._MC3_NATIVE_POSITION=d.accessors.push({bufferView:view,componentType:5126,count:3,type:'VEC3'})-1;
+  Object.assign(p.extras.native_batches[0],{position_scale_word:0x39800000,position_scale:1/4096,header_words:[0x39800000,3]});
+}
+const nativePositions=fixture(addNativePositions);
+assert.deepEqual([...parseEditableGLB(nativePositions).meshes[0][0].mc3NativePositions],[127,-3,4,2048,17,-15,-4096,31,7]);
+for(const [mutate,reason] of [
+  [d=>delete d.meshes[0].primitives[0].attributes._MC3_NATIVE_POSITION,/position inputs are incomplete/],
+  [(_d,b)=>b.writeFloatLE(.5,208),/integer attribute mismatch/],
+  [(_d,b)=>b.writeFloatLE(0x80000000,208),/integer attribute mismatch/],
+  [d=>d.meshes[0].primitives[0].extras.native_batches[0].position_scale_word=0,/position scale word/],
+  [d=>d.meshes[0].primitives[0].extras.native_batches[0].position_scale=1/8192,/position scale word/]
+])assert.throws(()=>parseEditableGLB(fixture((d,b)=>{addNativePositions(d,b);mutate(d,b);})),reason);
+assert.deepEqual([...nativeParsed.mc3NativeColors],[255,128,0,-1,255,128,0,-1,255,128,0,-1]);
+assert.deepEqual([...nativeParsed.mc3NativeUvs],[-4096,8192,23,-24,-4096,8192,23,-24,-4096,8192,23,-24]);
+for(const [mutate,reason] of [
+  [d=>delete d.meshes[0].primitives[0].attributes._MC3_NATIVE_COLOR,/incomplete/],
+  [d=>d.accessors[4].count=2,/integer attribute mismatch/],
+  [(_d,b)=>b.writeFloatLE(.5,112),/integer attribute mismatch/],
+  [d=>d.meshes[0].primitives[0].extras.native_batches[0].vertex_start=1,/batch context/],
+  [d=>d.meshes[0].primitives[0].extras.native_batches[0].header_words=[0],/batch context/],
+  [d=>d.meshes[0].primitives[0].extras.native_batches[0].vertex_count=2,/batch coverage/]
+])assert.throws(()=>parseEditableGLB(fixture((d,b)=>{addNativeInputs(d,b);mutate(d,b);})),reason);
+assert.deepEqual([...parseEditableGLB(nativeNormals).meshes[0][0].mc3NativeNormals],[0,0,1,0,0,1,0,0,1]);
+assert.throws(()=>parseEditableGLB(fixture(d=>{d.accessors.push({...d.accessors[1],count:2});d.meshes[0].primitives[0].attributes._MC3_NATIVE_NORMAL=4;})),/MC3 native normal count mismatch/);
+function requireNativeReflection(d) {
+  d.extras={source_profile:'mc3-ps2-static-preview-v1',tireAlphaTranslation:{policy:'native-ps2-tire-reflection-v2'}};
+  d.materials[0].extras={shader_template:'tire'};
+}
+assert.throws(()=>parseEditableGLB(fixture(requireNativeReflection)),/MC3 native reflection needs the original normal attribute/);
+assert.doesNotThrow(()=>parseEditableGLB(fixture(d=>{requireNativeReflection(d);d.meshes[0].primitives[0].attributes._MC3_NATIVE_NORMAL=1;})));
 assert.equal(parseEditableGLB(data).meshes[0][0].indices.length,3);
 assert(parseEditableGLB(data).meshes[0][0].indices instanceof Uint32Array,'imported16-bit GLB indices normalize to32-bit');
 const colored=fixture(d=>{d.accessors.push({...d.accessors[1]});d.meshes[0].primitives[0].attributes.COLOR_0=4;});
@@ -65,6 +115,27 @@ const group=await loadEditableGLB(car,{fetchImpl:async()=>data,textureImpl:async
 const bounds=new THREE.Box3().setFromObject(group);assert.equal(bounds.min.y,0);assert.equal(bounds.min.x+bounds.max.x,0);
 const mesh=group.children[0].children[0];assert(mesh.geometry.index.array instanceof Uint32Array);assert.equal(mesh.material.map,texture);assert.equal(mesh.material.alphaTest,0.25);assert.equal(mesh.material.transparent,false);
 disposeCar(group);assert.equal(textureDisposals,1);
+const nativeHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',nativeNormals)),v=>v.toString(16).padStart(2,'0')).join('');
+const nativeGroup=await loadEditableGLB({model:{source:{...car.model.source,sha256:nativeHash}}},{fetchImpl:async()=>nativeNormals,textureImpl:async()=>new THREE.Texture()});
+assert.deepEqual([...nativeGroup.children[0].children[0].geometry.attributes.mc3NativeNormal.array],[0,0,1,0,0,1,0,0,1]);
+disposeCar(nativeGroup);
+const nativeInputHash=Buffer.from(await crypto.subtle.digest('SHA-256',nativeInputs)).toString('hex');
+const nativeInputGroup=await loadEditableGLB({model:{source:{...car.model.source,sha256:nativeInputHash}}},{fetchImpl:async()=>nativeInputs,textureImpl:async()=>new THREE.Texture()});
+const nativeInputMesh=nativeInputGroup.children[0].children[0];
+assert.deepEqual(nativeInputGroup.userData.mc3NativeSkeleton,parseEditableGLB(nativeInputs).doc.extras.nativeSkeleton);
+assert.equal(nativeInputGroup.children[0].userData.mc3NativeBone,1);
+assert.equal(nativeInputGroup.children[0].name,'native-wheel');
+assert.equal(nativeInputMesh.geometry.attributes.mc3NativeUv.itemSize,4);
+assert.deepEqual([...nativeInputMesh.geometry.attributes.mc3NativeColor.array],[...nativeParsed.mc3NativeColors]);
+assert.deepEqual(nativeInputMesh.geometry.userData.mc3NativeBatches,nativeParsed.mc3NativeBatches);
+assert.equal(nativeInputMesh.material.vertexColors,false,'raw VIF color/flag lanes are not normalized display COLOR_0');
+disposeCar(nativeInputGroup);
+const nativePositionHash=Buffer.from(await crypto.subtle.digest('SHA-256',nativePositions)).toString('hex');
+const nativePositionGroup=await loadEditableGLB({model:{source:{...car.model.source,sha256:nativePositionHash}}},{fetchImpl:async()=>nativePositions,textureImpl:async()=>new THREE.Texture()});
+const nativePositionMesh=nativePositionGroup.children[0].children[0];
+assert.deepEqual([...nativePositionMesh.geometry.attributes.mc3NativePosition.array],[127,-3,4,2048,17,-15,-4096,31,7]);
+assert.deepEqual([...nativePositionMesh.geometry.attributes.position.array],[0,0,0,2,0,0,0,2,1],'native source integer lanes never replace editable display rest');
+disposeCar(nativePositionGroup);
 const colorHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',colored)),v=>v.toString(16).padStart(2,'0')).join('');
 const colorGroup=await loadEditableGLB({model:{source:{...car.model.source,sha256:colorHash}}},{fetchImpl:async()=>colored,textureImpl:async()=>new THREE.Texture()});
 assert.equal(colorGroup.children[0].children[0].material.vertexColors,true);

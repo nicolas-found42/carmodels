@@ -24,6 +24,13 @@ The nested paths preserve existing export identities; they describe data layout,
 
 ## Configure other locations
 
+MC3 uses `games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso`.
+Set `CARMODELS_MC3_DISC` in the environment or input-path config to override it.
+`tools/check.sh --game midnight-club-3-remix --full` rederives the tire shader and
+pinned executable intervals from this disc and validates the retained packed-state
+fixture. The retained small
+shader fixture and regression tests run without the private disc.
+
 `tools/static_inputs.py` reads `.scratch/input-paths.json`. Set `CARMODELS_INPUT_CONFIG` to select another JSON file. The keys are `CARMODELS_BUNDLE`, `CARMODELS_OVERLAY_DIR`, `CARMODELS_TYPED_EXPORT` and `CARMODELS_EXECUTABLE`. Environment variables override the JSON values. The three per-input values support the VU verifiers; the bundle root supports older recovery tools. CLI `--source` or `--input-bundle` options override the default data root for the tools that expose them.
 
 Run `python3 tools/static_inputs.py` to check pins, then `tools/check.sh`. A full run includes the VU checks. With no configuration, these skip by name; the asset-index and parser checks still run. The new parser regression uses committed reference models and needs no private inputs.

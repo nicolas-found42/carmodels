@@ -85,6 +85,14 @@ properties retain source part/wheel names used by the display baker. Keep altern
 state collections out of the export. This route is tested for the Gran Torino with a real
 import, geometry edit, image re-encoding, export and rebuild; other cars/exporters need checking.
 
+Before importing MC3 GLBs in Blender 4.5.14, run `tools/blender_gltf_compat.py` in
+Blender's scripting workspace. Its pinned importer mixes unordered custom-attribute
+names with ordered value arrays. The script repairs that ordering for the current
+session, checks the importer source hash, and leaves installed files and GLBs intact.
+The MC3 roundtrip check uses this repair and verifies exact native attribute values
+before importing, editing and exporting three real cars. Unmodified Blender 4.5.14
+can reject these models or associate custom attributes incorrectly.
+
 `python3 tools/build_dealership.py --check` verifies display freshness without writing any
 files. It also runs in the normal check suite, so an unrecompiled model or catalog edit fails.
 `tools/check.sh --only test_build_dealership,dealership_freshness,dealership_roundtrip` runs
@@ -160,6 +168,24 @@ from satisfying a preview request; uncertainty or provider failures preserve the
 current filters. See [the preview investigation](../../research/midnight-club-3-remix-previews.md)
 for native-format evidence, experiments and verification limits.
 
+MC3 tires use the recovered ALWAYS base coverage, native VU alpha and projected-
+normal lookup coordinates, and destination-alpha-weighted additive RGB arithmetic.
+Both showcases use the shared material adapter and a source-derived San Diego
+midnight garage capture, native panorama overlay and 256-to-64 specular copy.
+The synthetic highlight lookup and floating capture approximation are removed.
+Original EE/VU execution supplies the fixed garage draw packets; the shared
+rasterizer and final reflection texture match pinned PCSX2 v2.8.2 AVX2/FMA
+software-GS replay byte for byte. Physical PS2 output, alternate environments
+and full runtime frame context remain outside this selected contract. See the
+[precision investigation](../../research/midnight-club-3-remix-raster-precision.md).
+Native rim/tire back-face culling removes the
+opposed coplanar-cap stripes without moving or deleting geometry. Original PNGs,
+existing geometry and paint variants remain intact; `_MC3_NATIVE_NORMAL` retains
+additional source data for lookup generation. Regenerate with
+`python3 tools/export_mc3_models.py --output <new-directory>`, publish with the
+preserving importers, then rebuild both catalogs and `game-paints.json`. See the
+[tire investigation](../../research/midnight-club-3-remix-tire-alpha.md).
+
 Showcase triangle indices use one unsigned 32-bit representation. The compact display schema is
 4; the encoder emits schema 4 and the browser rejects the former 16-bit schema 1, so rebuild showcase data with
 `python3 tools/build_dealership.py` after updating. Textured GLBs use 32-bit index arrays in the
@@ -182,18 +208,37 @@ MCLA profile v2 retains native submodel bone bindings, restores joint orientatio
 
 The S7 preview also carries a source-pinned divider-profile reconstruction in its GLB `preview_geometry_repairs`. Native model/attachment frames stay unchanged; only ten divider components of one skirt primitive are thinned, with before/after measurements recorded. The original native geometry remains in its ZIP. This documented preview cleanup is separate from recovered game deformation or shader behavior.
 
-## Preview colours
+## Native game colours
 
-Both showcases offer recovered factory colour variants where the loaded GLB
-contains them, plus a custom colour picker and a `#RRGGBB` field for any 3D preview.
-A factory selection clears the custom tint; **Reset colour** restores the stored
-default materials. Changing cars clears the custom tint. Colour controls disable
-while loading, after failures, and for native packages without a 3D preview.
+Both showcases use recovered native presets and a searchable game-colour library.
+The arbitrary colour picker and hex field have been removed. Original presets can
+change coordinated native materials and textures. Independently recovered paint
+channels can use any verified colour value from that car's game, applied over the
+selected preset. Textures, decals, trim and other channels keep their bindings.
+Finish controls appear only when a source-backed translation is available.
 
-Custom colours multiply the opaque materials in linear RGB after converting the
-picker's sRGB colour. They retain texture detail and vertex shading, but can also
-tint trim or wheels when native paint regions are unavailable. Transparent glass
-keeps its stored colour. Compact dealership models have a separate body material,
-so their known wheel/detail materials are excluded. This is a preview adjustment;
-it does not establish native paint semantics or modify catalogs, GLBs, downloads
-or saved settings.
+Game palettes are compiled with `python3 tools/build_game_paints.py` after source
+or editable GLB upgrades and catalog builds. The compiler reads the source and
+working GLBs, retains each colour's native identity, and pins their carriers.
+The default checks reject a stale palette. It never derives paint masks from
+material names, menu-icon pixels or differences between native variants.
+
+Current scalar body-paint channels cover direct opaque untextured MC3 carpaint
+materials and MCLA AmbientCarPaint materials. Native RGB vectors use the documented
+static PBR interpretation; original colour space, shader response and finish formulas
+remain unresolved. GT1, Ford, GT4 and Redline retain their recovered material/texture
+presets. Cross-car palette correspondence, player-MCLA channels, composite MC3 panels
+and additional paint/finish channels stay unavailable until recovered. The controls
+state each loaded model's limits; edited GLBs determine which choices are available.
+
+Selections are remembered per car in each showcase on this browser. Reset restores
+the loaded GLB's original materials and clears its saved selection. Storage failure
+does not prevent painting. Loading, failure and native-package-only states disable
+the controls. Changes never write to the working GLB or catalog.
+
+The GLB download opens with the selected preset, channel colours and finishes as its
+default materials. It retains original material variants, all scenes, edited geometry,
+embedded texture bytes and source metadata. Source-viewer inspection toggles and
+geometry-scene choices are not baked into the download. Native package downloads
+remain the original game data. Rendering uses viewer lighting rather than the original
+game's shaders.

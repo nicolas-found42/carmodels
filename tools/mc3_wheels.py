@@ -16,8 +16,10 @@ import stat
 import struct
 
 from mc3_materials import read_material_table
+from mc3_vehicle_material import native_material
+from mc3_vehicle_inputs import native_input_table
 from mc3_pck import MAX_PARTS, Pck, read_mesh_object
-from mc3_textures import bind_material_textures, read_page_slots
+from mc3_textures import bind_material_textures, native_graph_bindings, read_page_slots
 
 MAX_PPF_BYTES = 64 * 1024 * 1024
 MODEL_CLASS = 0x7AA728
@@ -138,7 +140,7 @@ def ppf_page(data: bytes, index: int) -> dict:
     return {"index": index, "packed_page": word, "offset": offset, "bytes": size}
 
 
-def read_page_model(data: bytes, page: dict, source: str = "memory") -> dict:
+def read_page_model(data: bytes, page: dict, source: str = "memory", *, archive_index: int | None = None) -> dict:
     """Adapt the native 32-byte embedded header to existing bounded PCK reads.
 
     The view's 128-byte header is an in-memory parser adapter. Every payload
@@ -164,6 +166,10 @@ def read_page_model(data: bytes, page: dict, source: str = "memory") -> dict:
                "model_file_offset": root, "adapter_sha256": pck.sha256}
     material_offset = pck.pointer(pck.u32(136), 16)
     materials = read_material_table(adapter, material_offset)
+    inputs = native_input_table(bytes(data), material_offset - 128 + root,
+                                to_offset=lambda value: value - base + root)
+    for material in materials:
+        material['native_input_table'] = inputs
     lods = {}
     for name, field in (("high", 16), ("middle", 20), ("low", 24)):
         pointer = pck.u32(128 + field)
@@ -188,14 +194,52 @@ def read_page_model(data: bytes, page: dict, source: str = "memory") -> dict:
         lods[name] = meshes
     for material in materials:
         material["ppf_file_offset"] = root + material["file_offset"] - 128
+        # Keep offsets and carrier identity in original PPF coordinates. The
+        # synthetic PCK above is only a decoder adapter, never source evidence.
+        original = {**material, 'file_offset': material['ppf_file_offset']}
+        material['native_material'] = native_material(bytes(data), original, 0x1308,
+            to_offset=lambda value: value - base + root)
     page_view = data[start:end]
-    slots, skipped = read_page_slots(page_view, root - start, base)
+    undecoded = {}
+    slots, skipped = read_page_slots(page_view, root - start, base, undecoded=undecoded)
+    for material in materials:
+        for binding in native_graph_bindings(material['native_material'], slots, {}, undecoded):
+            ref = binding['reference']
+            if binding['status'] == 'unresolved' and ref['kind'] in ('slot', 'inline-slot'):
+                if not start <= ref['slot_offset'] < end:
+                    raise ValueError('native wheel texture slot outside selected page')
+                undecoded.setdefault(ref['name'], {'name': ref['name'], 'width': None,
+                    'height': None, 'levels': None, 'source': 'pf05-page-undecoded',
+                    'native': {'decode_status': 'unresolved-native-format',
+                        'offset_basis': 'pf05-file', 'slot_offset': ref['slot_offset'],
+                        'source_page': page_view, 'source_carrier_sha256': carrier['sha256']}})
+    for slot in [*slots.values(), *undecoded.values()]:
+        if 'native' in slot:
+            slot['native']['page_file_offset'] = start
     ppf_materials = [{**m, "file_offset": m["ppf_file_offset"]} for m in materials]
     texture_records = bind_material_textures(data, ppf_materials, slots, {}, 0x1308,
                                               lambda pointer: pointer - base + root)
+    recovered = {}
+    if archive_index is not None:
+        from mc3_texture_binding import decode_pf05_texture
+        for name, image in undecoded.items():
+            original = image['native']
+            offset = original['slot_offset']
+            if original['offset_basis'] == 'pf05-page':
+                offset += start
+            native_image = decode_pf05_texture(bytes(data), offset, archive_index=archive_index)
+            first = native_image['levels'][0]
+            # Preserve the old display slots and policy. These are independent,
+            # lossless source inputs for the native graph, never preview replacements.
+            inspection = bytes(v if i % 4 != 3 else min(255, v*2)
+                               for i, v in enumerate(first['rgba']))
+            recovered[name] = {**image, 'width': first['width'], 'height': first['height'],
+                'levels': len(native_image['levels']), 'rgba': inspection,
+                'native': {**original, **native_image}}
     return {"model_file_offset": root, "embedded_header_offset": root - 32,
             "serialized_base": base, "payload_bytes": size, "lods": lods,
             "materials": materials, "texture_slots": slots, "skipped_texture_slots": skipped,
+            "native_undecoded_slots": undecoded, "native_recovered_slots": recovered,
             "texture_records": texture_records, "page_offset": start,
             "adapter_offset_rule": "ppf_offset = model_file_offset + adapter_offset - 128",
             "claim_limits": ["Native unscaled component geometry; placement and rotation are not applied.",
@@ -244,7 +288,7 @@ def read_default_wheels(root: Path | str, vehicle_id: str, *, bike: bool = False
         selection["page_record"] = page
         key = (selection["component"], selection["page"])
         if key not in decoded:
-            decoded[key] = read_page_model(data, page, str(path))
+            decoded[key] = read_page_model(data, page, str(path), archive_index=selection["archive"])
             selection["model"] = decoded[key]
         else:
             selection["model"] = copy.deepcopy(decoded[key])

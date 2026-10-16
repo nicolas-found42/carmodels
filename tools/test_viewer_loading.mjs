@@ -4,6 +4,10 @@ import vm from 'node:vm';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {createMaterial} from '../dealership/materials.mjs';
+import {parseEditableGLB} from '../dealership/editable-glb.mjs';
+import {loadNativeVehicleResources,bindNativeVehicleResources} from '../dealership/mc3-vehicle-resources.mjs';
+import {requiresNativeTireNormal} from '../dealership/mc3-tire-material.mjs';
+import {prepareMC3Environment,disposeMC3Environment} from '../dealership/mc3-environment.mjs';
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
 import {isNativePackage,resolveCarAlias,createCarSearch} from '../dealership/dealership.mjs';
 
@@ -20,28 +24,36 @@ const stage={setAttribute(name,value){this[name]=value;}};
 const status={textContent:''};
 const scene=new THREE.Scene();
 const urls=new Set();
-let mode='success',pending=[],disposals=0;const requests=[],remembered=[];
+let mode='success',pending=[],disposals=0,genericOverride=null;const requests=[],remembered=[];
+const nativeEnvironment={native_gs:{schema:1,context:{xy_offset:[32768,32768],scissor:[0,0,256,256],depth_format:'PSMZ16S'},passes:[]},car_heading:0,camera:{eye:[0,0,0],right:[1,0,0],up:[0,1,0],backward:[0,0,1],fov:100,near:.25,far:1000},
+ draws:[],sky:{draws:[],images:{}},images:{panorama:{width:1,height:1,rgba_base64:'AAAAAA=='}}};
+const renderer={};let environmentFailure=false;
 const context={THREE:{...THREE,TextureLoader:class {
  async loadAsync(){const t=new THREE.Texture();t.addEventListener('dispose',()=>disposals++);return t;}
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
- colourControls:{enabled:false,setEnabled(value){this.enabled=value;}},
+ colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){}},
+ paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,createMaterial,geometryOptions,defaultGeometryValue,isNativePackage,rememberCar(car){remembered.push(car);},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+ readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,
+ prepareMC3Environment:active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:!environmentFailure,status:404,json:async()=>nativeEnvironment})}),
+ rememberCar(car){remembered.push(car);},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
  async fetchModel(url,signal){
   requests.push(url);
   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');
   if(mode==='pending')await new Promise((resolve,reject)=>{
    pending.push(resolve);signal.addEventListener('abort',()=>reject(new DOMException('Abort','AbortError')),{once:true});
   });
-  const raw=url.includes('generic')?genericGLB:fs.readFileSync(new URL(url.split('/').at(-1),corpus));
+  const raw=url.includes('generic')?(genericOverride??genericGLB):fs.readFileSync(new URL(url.split('/').at(-1),corpus));
   return raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength);
  },
 };
 vm.createContext(context);vm.runInContext(callback,context);
 elements.car.value='ford-racing-2/GRAN_TORINO';await context.loadCar();
-assert.equal(context.selected.code,'GRAN_TORINO');assert.equal(remembered.at(-1),context.selected);
+assert(context.selected,elements.error.textContent);
+assert.equal(context.selected.code,'GRAN_TORINO');
+assert.equal(remembered.at(-1),context.selected);
 assert.match(elements.download.href,/GRAN_TORINO/);
 assert.equal(elements.record.disabled,false);
 assert.equal(context.colourControls.enabled,true);
@@ -77,6 +89,18 @@ assert.equal(context.selected.id,'another game/GRAN_TORINO');
 assert.equal(requests.at(-1),'public/another%20game/GRAN_TORINO.glb');
 assert.equal(elements.download.href,'public/another%20game/GRAN_TORINO.glb');
 context.dispose();assert.equal(urls.size,0);assert.equal(scene.children.length,0);
+// Metadata or export setup can fail after texture allocation. All old/partial
+// resources and any generated paint download must still be released.
+{
+ let cleared=0;
+ context.paintDownload.clear=()=>cleared++;
+ context.colourControls.bind=()=>{throw Error('Invalid recovered paint metadata');};
+ elements.car.value='ford-racing-2/COBRA';await context.loadCar();
+ assert.equal(context.loaded,null);assert.equal(context.colourControls.enabled,false);
+ assert.equal(elements.download.href,undefined);assert.equal(scene.children.length,0);assert.equal(urls.size,0);
+ assert(cleared>=2);assert.match(elements.error.textContent,/Invalid recovered paint metadata/);
+ context.colourControls.bind=()=>{};
+}
 // A regular glTF scene has no Ford Racing record extras. Load its default scene,
 // 16-bit indices, absent images/normals, and complete node transforms.
 const geometry=Buffer.alloc(80);
@@ -90,10 +114,14 @@ const documentGLB={asset:{version:'2.0'},scene:0,scenes:[{name:'Gran Turismo LOD
  materials:[{pbrMetallicRoughness:{baseColorFactor:[1,0,0,1]}}],buffers:[{byteLength:geometry.length}],
  bufferViews:[{buffer:0,byteOffset:0,byteLength:36},{buffer:0,byteOffset:36,byteLength:6},{buffer:0,byteOffset:44,byteLength:36}],
  accessors:[{bufferView:0,componentType:5126,count:3,type:'VEC3'},{bufferView:1,componentType:5123,count:3,type:'SCALAR'},{bufferView:2,componentType:5126,count:3,type:'VEC3'}]};
+function makeGenericGLB(documentGLB) {
 let json=Buffer.from(JSON.stringify(documentGLB));json=Buffer.concat([json,Buffer.alloc((4-json.length%4)%4,32)]);
 const genericGLB=Buffer.alloc(28+json.length+geometry.length);genericGLB.writeUInt32LE(0x46546c67,0);genericGLB.writeUInt32LE(2,4);genericGLB.writeUInt32LE(genericGLB.length,8);
 genericGLB.writeUInt32LE(json.length,12);genericGLB.writeUInt32LE(0x4e4f534a,16);json.copy(genericGLB,20);
 genericGLB.writeUInt32LE(geometry.length,20+json.length);genericGLB.writeUInt32LE(0x004e4942,24+json.length);geometry.copy(genericGLB,28+json.length);
+return genericGLB;
+}
+const genericGLB=makeGenericGLB(documentGLB);
 index.cars.push({id:'gran-turismo/simulation/synthetic/night',game:'gran-turismo',code:'simulation/_0logn/night',file:'gran-turismo/generic.glb',records:[]});
 elements.car.value='gran-turismo/simulation/synthetic/night';await context.loadCar();
 assert.equal(context.selected.game,'gran-turismo');assert.equal(elements.record.value,'scene0');
@@ -103,6 +131,23 @@ assert.deepEqual(Array.from(mesh.geometry.attributes.color.array),[1,0,0,0,1,0,0
 context.loaded.groups[0].visible=true;const bounds=new THREE.Box3().setFromObject(context.loaded.groups[0]);
 assert.deepEqual(bounds.min.toArray(),[2,6,0]);assert.deepEqual(bounds.max.toArray(),[4,8,0]);
 assert.equal(elements.download.href,'public/gran-turismo/generic.glb');
+// A v2 native tire cannot silently substitute the display normal for its VU input.
+const nativeReflection=structuredClone(documentGLB);
+nativeReflection.meshes[0].primitives[0].attributes.NORMAL=2;
+nativeReflection.extras={source_profile:'mc3-ps2-static-preview-v1',tireAlphaTranslation:{policy:'native-ps2-tire-reflection-v2'}};
+nativeReflection.materials[0].extras={shader_template:'tire'};
+index.cars.push({id:'midnight-club-3-remix/normal-fixture',game:'midnight-club-3-remix',code:'vp_normal_fixture',file:'midnight-club-3-remix/generic.glb',records:[]});
+genericOverride=makeGenericGLB(nativeReflection);elements.car.value='midnight-club-3-remix/normal-fixture';environmentFailure=true;await context.loadCar();
+assert.match(elements.error.textContent,/Original MC3 garage environment could not be loaded/);assert.equal(context.loaded,null);
+environmentFailure=false;await context.loadCar();
+assert.equal(context.loaded,null);assert.equal(elements.download.href,undefined);
+assert.match(elements.error.textContent,/MC3 native reflection needs the original normal attribute/);
+assert.equal(scene.children.length,0);assert.equal(urls.size,0);
+nativeReflection.meshes[0].primitives[0].attributes._MC3_NATIVE_NORMAL=2;
+genericOverride=makeGenericGLB(nativeReflection);await context.loadCar();
+assert(context.selected,elements.error.textContent);
+assert.deepEqual(Array.from(context.loaded.meshes[0].geometry.attributes.mc3NativeNormal.array),[1,0,0,0,1,0,0,0,1]);
+genericOverride=null;context.dispose();disposeMC3Environment(renderer);
 index.cars.push({id:'midnight-club-3-remix/native-fixture',game:'midnight-club-3-remix',code:'vp_fixture',
   asset_kind:'native-package',file:'midnight-club-3-remix/native/vp_fixture.dat',native_members:3,records:[]});
 const beforeNativeRequests=requests.length;
@@ -214,4 +259,15 @@ for(const alias of filterContext.index.cars.at(-1).aliases){
  filterContext.location.search='?game=gran-turismo&car='+encodeURIComponent(alias);sourceVariant.value='';
  vm.runInContext('{'+startup+'}',filterContext);assert.equal(carSelect.value,'gran-turismo/simulation/canonical');
 }
-console.log('PASS test_viewer_loading: actual callback, success, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup');
+// MC3 previews retain original DAT downloads, whereas GT4/MCLA use ZIPs.
+for(const extension of ['.dat','.zip']) {
+ const entry={id:'midnight-club-3-remix/vp_test',game:'midnight-club-3-remix',code:'vp_test',
+  file:'midnight-club-3-remix/generic.glb',records:[],
+  native_package:{file:'midnight-club-3-remix/native/vp_test'+extension}};
+ index.cars.push(entry);elements.car.value=entry.id;await context.loadCar();
+ assert.equal(elements['native-download'].href,'public/'+entry.native_package.file);
+ assert.equal(elements['native-download'].download,'vp_test-native'+extension);
+ assert.equal(elements['native-download'].textContent,'Native files ('+extension+')');
+ index.cars.pop();context.dispose();
+}
+console.log('PASS test_viewer_loading: actual callback, success, native tire normal guard/binding, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup');

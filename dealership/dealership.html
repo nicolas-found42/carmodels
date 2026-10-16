@@ -149,13 +149,6 @@
   #view-controls button, #clear-filters, #loading button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); border-radius: 4px; padding: 7px 10px; cursor: pointer; }
   #download-model { font-size: 12px; color: var(--accent-2); padding: 7px 0; }
   #colour-variant { max-width: 230px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 4px; padding: 6px; font: inherit; }
-  #custom-colour-controls { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  #custom-colour-controls label { display: inline-flex; align-items: center; gap: 6px; }
-  #custom-colour { width: 42px; height: 34px; padding: 2px; background: var(--panel-2); border: 1px solid var(--line); cursor: pointer; }
-  #custom-colour-hex { width: 90px; padding: 7px; font: 12px ui-monospace, monospace; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 4px; }
-  #custom-colour-hex[aria-invalid="true"] { border-color: #ff9c8f; }
-  #custom-colour-status, #colour-help { font-size: 12px; color: var(--muted); }
-  #colour-help { flex-basis: 100%; line-height: 1.4; }
   #native-specs { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 7px; }
   #native-specs .kv { align-items: baseline; gap: 12px; }
   #native-specs b { text-align: right; font-size: 12px; }
@@ -234,14 +227,8 @@
         <button type="button" data-view="side">Side</button>
         <button type="button" data-view="front">Front</button>
         <button type="button" data-view="top">Top</button>
-        <label id="colour-control" hidden>Factory colour <select id="colour-variant" aria-label="Factory colour"></select></label>
-        <div id="custom-colour-controls">
-          <label>Custom colour <input id="custom-colour" type="color" value="#ffffff" aria-label="Custom preview colour" aria-describedby="colour-help" disabled></label>
-          <input id="custom-colour-hex" value="#ffffff" maxlength="7" aria-label="Custom colour hex code" aria-describedby="colour-help custom-colour-status" spellcheck="false" disabled>
-          <button id="reset-colour" type="button" disabled>Reset colour</button>
-          <span id="custom-colour-status" role="status" aria-live="polite"></span>
-          <p id="colour-help">Custom tints are previews and may also colour trim or wheels. Downloads keep the model's stored colours.</p>
-        </div>
+        <label id="colour-control" hidden>Native preset <select id="colour-variant" aria-label="Native preset"></select></label>
+        <div id="game-paint-controls" aria-label="Game paint choices"></div>
         <a id="download-model" download>Download dealership model (.glb)</a>
       </div>
       <div id="panel">
@@ -265,7 +252,7 @@
         </div>
       </div>
       <div id="legend">drag to rotate · scroll to zoom · right-drag to pan</div>
-      <p id="model-limits" style="grid-column:1;padding:0 16px 10px;color:var(--muted);font-size:12px;line-height:1.4"></p>
+      <details style="grid-column:1;padding:0 16px 10px;color:var(--muted);font-size:12px;line-height:1.4"><summary>Model conversion limits</summary><p id="model-limits"></p></details>
 
   </main>
 
@@ -343,6 +330,7 @@
 })();
 </script>
 
+<link rel="stylesheet" href="./paint-controls.css">
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.js" } }
 </script>
@@ -351,6 +339,11 @@ import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias, sourceCarId, rememberCar } from './dealership.mjs';
 import {createColourControls} from './colour-controls.mjs';
+import {fetchGamePalette} from './game-paint.mjs';
+import {createPaintDownload} from './paint-export.mjs';
+import {prepareMC3Environment,disposeMC3Environment} from './mc3-environment.mjs';
+let gamePalette=[],paletteError='';
+const paletteReady=fetchGamePalette().then(colors=>{gamePalette=colors;}).catch(error=>{paletteError=error.message;});
 
 const $ = id => document.getElementById(id);
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
@@ -358,8 +351,11 @@ const fmt = n => n == null ? '—' : Number(n).toLocaleString('en-US');
 let CARS = [];
 let current = null;
 let carMesh = null;
-const colourControls=createColourControls({onTint:tint=>carMesh?.userData.setColourTint(tint),onReset:()=>{
-  carMesh?.userData.setColourVariant?.(null);$('colour-variant').value='';
+const paintDownload=createPaintDownload($('download-model'));
+const colourControls=createColourControls({presetSelect:$('colour-variant'),onChange:session=>{
+  if(!carMesh?.userData.setPaintSession)return;
+  carMesh.userData.setPaintSession(session);
+  paintDownload.update(carMesh.userData.paintBuffer,session,current.code+'-dealership.glb');
 }});
 let selectionId = 0, selectionController = null, semanticId = 0, semanticController = null;
 const groups = new Set();
@@ -625,6 +621,7 @@ resize();
 async function select(c) {
   const id=++selectionId;selectionController?.abort();selectionController=new AbortController();
   colourControls.setEnabled(false);
+  paintDownload.clear();
   current = c;
   rememberCar(c);
   $('source-link').href='recovered.html?'+new URLSearchParams({game:gameId(c),car:sourceCarId(c)});
@@ -661,7 +658,7 @@ async function select(c) {
   const sample = c.paint ? c.paint.rgb : [90, 90, 90];
   $('paint-swatch').style.background = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
   $('paint-rgb').textContent = c.paint ? `#${sample.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}` : 'No sample';
-  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.game==='gran-turismo'?'Embedded native colour sets are available from the colour selector when retained in this model. Factory names appear only for verified colour-ID matches. Game shading remains unverified.':c.game==='midnight-club-los-angeles'?'Decoded diffuse textures on a static stock-index assembly; neutral paint, runtime customization and native shader passes remain unverified.':c.game==='gran-turismo-4'?'Decoded native textures with the default colour set are shown. Other paint colours (Pat0 colour patches), reflections and game shading are not reproduced.':c.game==='midnight-club-3-remix'?'Decoded source textures are shown on lights, trim, badges and wheels; body paint stays a neutral inspection surface with recovered glass tint. Paint colours, paint names and native shader passes have not been decoded.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
+  $('paint-caveat').textContent = isNativePackage(c)?'Native textures have not been converted for display.':c.game==='gran-turismo'?'Embedded native colour sets are available from the colour selector when retained in this model. Factory names appear only for verified colour-ID matches. Game shading remains unverified.':c.game==='midnight-club-los-angeles'?'Static stock-index assembly with recovered ambient paint choices where retained. Player paint channels, finishes and native shader passes remain unresolved.':c.game==='gran-turismo-4'?'Recovered factory presets apply native material and texture-palette patches when retained in this model. Cross-car paint channels, reflections and game shading remain unresolved.':c.game==='midnight-club-3-remix'?'Recovered customization RGB values are available for proven direct paint shaders. Composite panels, active factory defaults, additional channels and native finishes remain unresolved.':c.paint ? 'Approximate colour sampled from decoded menu-icon pixels; it does not identify the car’s real paint.' : c.model.schema===2?'Embedded source textures are shown. Retail paint names and additional colour sets have not been decoded into the catalog.':'No usable icon colour sample. The illustration uses neutral grey.';
   $('livery-codes').replaceChildren(...(c.liveries || []).map(l => {
     const el = document.createElement('span');
     el.className = 'livery-code';
@@ -678,11 +675,18 @@ async function select(c) {
   }
   $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';$('loading').textContent='Loading '+c.name+'…';
   try {
+    if(gameId(c)==='midnight-club-3-remix')await prepareMC3Environment(renderer);
+    if(id!==selectionId)return;
     const model=await loadCar(c,{signal:selectionController.signal});
+    await paletteReady;
     if(id!==selectionId){disposeCar(model);return;}
-    carMesh=model;scene.add(carMesh);showColourVariants(carMesh);colourControls.setEnabled(true);setView('reset');$('loading').hidden=true;
+    carMesh=model;scene.add(carMesh);showColourVariants(carMesh);colourControls.setEnabled(true);
+    colourControls.bind({model:carMesh.userData.paintDoc,game:gameId(c),carId:c.code,colors:gamePalette,error:paletteError});
+    setView('reset');$('loading').hidden=true;
   } catch(error){
     if(id!==selectionId)return;
+    if(carMesh){scene.remove(carMesh);disposeCar(carMesh);carMesh=null;}
+    paintDownload.clear();colourControls.setEnabled(false);showColourVariants();$('download-model').removeAttribute('href');
     $('loading').classList.add('error');$('loading').textContent='This model could not be loaded: '+error.message;
     const retry=document.createElement('button');retry.textContent='Retry model';retry.onclick=()=>select(c);$('loading').append(retry);
   }
@@ -725,8 +729,7 @@ function showNativeSpecifications(car) {
 /* ---------- inspection controls ---------- */
 $('colour-variant').addEventListener('change',()=>{
   const value=$('colour-variant').value;
-  if(carMesh?.userData.setColourVariant)carMesh.userData.setColourVariant(value===''?null:Number(value));
-  colourControls.clear();
+  colourControls.setPreset(value===''?null:Number(value));
 });
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 $('auto-rotate').checked = !motion.matches;
@@ -772,6 +775,7 @@ renderer.domElement.setAttribute('aria-label', 'Dealership car model. Use the vi
 
 /* ---------- animation ---------- */
 const clock = new THREE.Clock();
+window.addEventListener('pagehide',event=>{if(!event.persisted)disposeMC3Environment(renderer);});
 function tick() {
   requestAnimationFrame(tick);
   const dt = Math.min(clock.getDelta(), 0.1);

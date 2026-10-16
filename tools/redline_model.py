@@ -88,7 +88,7 @@ def parse_config(data):
         raise ValueError('Invalid native configuration size')
     fields, arrays, index = {}, {}, 0
     keys = {'model', 'interiorModel', 'carName', 'numWheels', 'numAddOns',
-            'customBrakeModel', 'numColors'}
+            'customBrakeModel', 'numColors', 'colors'}
     for line_number, line in enumerate(data.decode('mac_roman').splitlines(), 1):
         line = line.strip()
         directive = re.fullmatch(r'#\s*(\d+)', line)
@@ -110,7 +110,7 @@ def parse_config(data):
             value = quoted[1]
         elif vector:
             value = [float(v.strip()) for v in vector[1].split(',')]
-            if len(value) != 3 or not all(math.isfinite(v) for v in value):
+            if (key != 'colors' and len(value) != 3) or not all(math.isfinite(v) for v in value):
                 raise ValueError(f'Invalid configuration vector at line {line_number}')
         elif number:
             value = float(number[0])
@@ -118,7 +118,7 @@ def parse_config(data):
                 raise ValueError('Nonfinite native configuration value')
         else:
             raise ValueError(f'Invalid graphics configuration value at line {line_number}')
-        if '.' in key:
+        if '.' in key or key == 'colors':
             arrays.setdefault(key, {})[index] = value
         else:
             fields[key] = value
@@ -130,6 +130,10 @@ def parse_config(data):
     if int(addons) != addons or not 0 <= addons <= 256:
         raise ValueError('Native addon count exceeds bounds')
     fields['numAddOns'] = int(addons)
+    colors = fields.get('numColors', 0)
+    if int(colors) != colors or not 0 <= colors <= 256:
+        raise ValueError('Native color count exceeds bounds')
+    fields['numColors'] = int(colors)
     return fields, arrays
 
 
@@ -202,7 +206,7 @@ def build_glb(root, index, car, code):
         doc['accessors'].append(row)
         return len(doc['accessors']) - 1
 
-    image_cache, texture_cache = {}, {}
+    image_cache, texture_cache, paint_primitives = {}, {}, []
 
     def material(native, selector=0):
         flags, name = native['flags'], native['texture']
@@ -210,7 +214,8 @@ def build_glb(root, index, car, code):
         row = {'name': name, 'doubleSided': bool(flags & 1),
                'extensions': {'KHR_materials_unlit': {}},
                'pbrMetallicRoughness': {'baseColorFactor': factor, 'metallicFactor': 0, 'roughnessFactor': 1},
-               'extras': {'nativeFlags': flags, 'nativeValues': native['values']}}
+               'extras': {'nativeFlags': flags, 'nativeValues': native['values'],
+                          'nativeTexture': name, 'nativeTextureSelector': selector}}
         if flags & 16:
             row.update(alphaMode='MASK', alphaCutoff=0.5)
         elif flags & 2:
@@ -226,6 +231,7 @@ def build_glb(root, index, car, code):
                     except MissingResource:
                         pass
                 data, resolved_name = resources.read(name, texture=True)
+                row['extras']['nativeTextureResource'] = resolved_name
             except MissingResource as exc:
                 warnings.append({'kind': 'texture', 'resource': name, 'reason': str(exc)})
                 data = None
@@ -285,6 +291,8 @@ def build_glb(root, index, car, code):
                                              'TEXCOORD_0': accessor(uv, 2)},
                                'indices': accessor(converted['indices'], 1, integer=True),
                                'mode': 4, 'material': material(model['materials'][group['material']], selector)})
+            if role == 'BODY' or role == 'INTERIOR' or role.startswith('ADDON_'):
+                paint_primitives.append((primitives[-1], model['materials'][group['material']]))
         if derived or omitted:
             warnings.append({'kind': 'normal-derivation', 'resource': name,
                              'reason': f'{derived} zero native corner normals derived from faces; {omitted} unusable zero-area triangles omitted'})
@@ -352,6 +360,56 @@ def build_glb(root, index, car, code):
             mesh(arrays['addOns.model'][i], 'ADDON_' + str(i), optional=True)
     if not doc['meshes']:
         raise NoDrawableGeometry(fields.get('carName') or car['id'], list(resources.used.values()), warnings)
+    # The native resource-selector recipe already used by wheels also retains
+    # car texture alternatives. Apply only existing owning/base resources, never
+    # a swatch RGB multiplier: the arrays describe menu choices, not a paint mask.
+    variants, unavailable, invalid_swatches = [], [], []
+    for selector in range(fields['numColors']):
+        replacements = []
+        for primitive, native in paint_primitives:
+            name = native['texture']
+            if selector == 0:
+                replacements.append((primitive, primitive['material']))
+            elif '.' in name:
+                prefix, suffix = name.split('.', 1)
+                candidate = prefix + '#' + format(selector, 'x') + '.' + suffix
+                try:
+                    resources.read(candidate, texture=True)
+                except MissingResource:
+                    continue
+                material_index = material(native, selector)
+                if 'baseColorTexture' in doc['materials'][material_index]['pbrMetallicRoughness']:
+                    replacements.append((primitive, material_index))
+        if selector and not replacements:
+            unavailable.append(selector)
+            continue
+        variant_index = len(variants)
+        extras = {'nativeColorIndex': selector, 'nativeConfig': car['file']}
+        swatch = arrays.get('colors', {}).get(selector)
+        # Shipped configs include a repeated index, a two-component vector,
+        # values above one and a negative sentinel. Keep their original bytes
+        # pinned, but do not invent a display swatch for those cases.
+        if isinstance(swatch, list) and len(swatch) == 3 and all(0 <= v <= 1 for v in swatch):
+            extras['nativeConfigColor'] = swatch
+        else:
+            invalid_swatches.append(selector)
+        variants.append({'name': f'Native color {selector}', 'extras': extras})
+        for primitive, material_index in replacements:
+            mappings = primitive.setdefault('extensions', {}).setdefault('KHR_materials_variants', {'mappings': []})['mappings']
+            mappings.append({'material': material_index, 'variants': [variant_index]})
+    if variants:
+        doc['extensionsUsed'].append('KHR_materials_variants')
+        doc['extensions'] = {'KHR_materials_variants': {'variants': variants}}
+    paint_limits = [
+        'Native color presets select retained numbered texture resources; viewer lighting and native paint/reflection composition differ.',
+        'Cross-car RGB transfer and separate paint channels are unavailable: native per-pixel paint ownership is unresolved.',
+        'Configuration RGB values are native menu swatches, not uniform material colors.',
+    ]
+    if unavailable:
+        paint_limits.append('Native color texture resources unavailable for configuration indices: ' + ', '.join(map(str, unavailable)) + '.')
+    if invalid_swatches:
+        paint_limits.append('Native menu swatches missing or malformed for configuration indices: ' + ', '.join(map(str, invalid_swatches)) + '.')
+    doc['extras']['gamePaint'] = {'schema': 1, 'channels': [], 'colors': [], 'limits': paint_limits}
     car_limits = LIMITS + [f"{w['kind']}: {w['resource']} — {w['reason']}" for w in warnings]
     doc['extras'].update(warnings=warnings, claim_limits=car_limits, nativeConfig={'file': car['file'], 'sha256': sha(config_data)},
                          nativeResources=list(resources.used.values()))

@@ -5,6 +5,7 @@ corpus checks decode every selected source texture and require the decoder
 choices (block swizzle, palette order) to beat their alternatives.
 """
 import json
+import hashlib
 import struct
 import unittest
 from unittest.mock import patch
@@ -20,6 +21,7 @@ from mc3_wheels import read_default_wheels, scanned_once
 from mc3_textures import (SLOT_CLASS, TextureError, bind_material_textures, indexed_to_rgba,
                           material_bindings, palette_csm1, read_page_slots, read_slot_textures,
                           read_tex, shared_texture_rows, smoothness, texture_policy)
+from mc3_textures import native_graph_bindings, native_shared_levels
 from ps2_container import _block_order8, unswizzle8
 
 CARS = ROOT / 'games/midnight-club-3-remix/cars'
@@ -77,6 +79,30 @@ def slot_fixture(delta=0, levels=1, name=b'vp_test', width=0x100):
 
 
 class PaletteAndImageTests(unittest.TestCase):
+    def test_native_palette_alpha_and_all_mips_survive_display_saturation(self):
+        source, _ = slot_fixture(levels=4)
+        image = read_slot_textures(source)['vp_test']
+        palette = image['native']['source_palette']
+        # Source alpha above128 must never be reconstructed from saturated PNG A255.
+        changed = source.replace(palette, palette_bytes(255))
+        image = read_slot_textures(changed)['vp_test']
+        self.assertEqual([m['width'] for m in image['native']['levels']], [256, 128, 64, 32])
+        self.assertTrue(all(m['rgba'][3] == 255 for m in image['native']['levels']))
+        self.assertEqual(image['native']['source_palette'], palette_bytes(255))
+        self.assertEqual(image['rgba'][3], 255)
+
+    def test_native_graph_keeps_nested_and_runtime_references_distinct(self):
+        refs = [{'kind': 'hash', 'name': name, 'source_offset': i} for i, name in
+                enumerate(['local', 'shared', '__envmap__', 'missing', 'none'])]
+        graph = {'root': {'children': [{'passes': [{'textures': refs[:2]}]},
+                                     {'window_texture_variants': refs[2:]}]}}
+        found = native_graph_bindings(graph, {'LOCAL': {}, '__envmap__': {}}, {'shared': []})
+        self.assertEqual([row['status'] for row in found],
+                         ['resolved', 'resolved', 'runtime-unresolved', 'unresolved', 'native-sentinel'])
+        self.assertEqual(found[0]['graph_path'], ['root', 'children', 0, 'passes', 0, 'textures', 0])
+        self.assertEqual(found[0]['name'], 'LOCAL')
+        self.assertEqual([row['reference'] for row in found], refs)
+
     def setUp(self):
         cached = getattr(mc3_textures, '_cached_png', None)
         if cached is not None:
@@ -212,6 +238,35 @@ class SharedTexTests(unittest.TestCase):
         self.assertEqual(texture['rgba'][4:8], bytes((7, 0, 0, 7)))
         self.assertEqual(len(texture['rgba']), 32 * 16 * 4)
 
+    def test_native_shared_mips_use_original_bgra_and_alpha_range(self):
+        source = self.tex(32, 16, 2)
+        native = native_shared_levels(source)
+        self.assertEqual(native['palette_order'], 'BGRA')
+        self.assertEqual([(m['width'], m['height']) for m in native['levels']], [(32, 16), (16, 8)])
+        for mip in native['levels']:
+            self.assertEqual(mip['rgba'][4:8], bytes((0, 0, 7, 7*128//255)))
+            self.assertEqual(mip['source_indices'], source[mip['source_offset']:mip['source_offset']+mip['width']*mip['height']])
+        changed = bytearray(source);struct.pack_into('<H', changed, 4, 1)
+        same = native_shared_levels(bytes(changed))
+        self.assertEqual(same['levels'], native['levels'])
+        self.assertEqual((same['index_bits'], same['tcc']), (8, 1))
+        struct.pack_into('<H', changed, 4, 99)
+        unresolved = native_shared_levels(bytes(changed))
+        self.assertEqual(unresolved['decode_status'], 'unresolved-native-format')
+        self.assertEqual(unresolved['source_carrier'], bytes(changed))
+        self.assertNotIn('levels', unresolved)
+
+    def test_native_packed_four_bit_shared_mips_keep_nibble_order(self):
+        palette = b''.join(bytes((i, 31-i, 63-i, 255)) for i in range(16))
+        for kind in (15, 16):
+            source = struct.pack('<7H', 16, 16, kind, 2, 1, 0, 0) + palette + bytes([0x21])*128 + bytes([0x43])*32
+            native = native_shared_levels(source)
+            self.assertEqual((native['index_bits'], native['native_image_format'], native['tcc']), (4, 6, 1))
+            self.assertEqual(native['levels'][0]['rgba'][:8], bytes((62, 30, 1, 128, 61, 29, 2, 128)))
+            self.assertEqual(native['levels'][1]['rgba'][:8], bytes((60, 28, 3, 128, 59, 27, 4, 128)))
+            with self.assertRaisesRegex(TextureError, 'mip extent differs'):
+                native_shared_levels(source[:-1])
+
     def test_size_dimension_and_level_corruptions(self):
         good = self.tex(16, 16, 1)
         for changed, reason in ((good + b'\0', 'declared size'), (good[:-1], 'declared size'),
@@ -232,6 +287,11 @@ class SharedTexTests(unittest.TestCase):
             shared_texture_rows(rows)
         rows = {'files': [{'file': 'shared/assets/1/vehicle/va_bus/texture/a_tex.tex', 'sha256': 'a' * 64}]}
         self.assertEqual(shared_texture_rows(rows), {})
+        rows = {'files': [{'file': f'shared/assets/{i}/texture/{name}.tex', 'sha256': 'a'*64}
+                          for i, name in enumerate(['car_window_blank_dmg', 'car_window_blank_dmg',
+                                                    'car_window_blank_dmg_proxy', 'unrelated'])]}
+        self.assertEqual(set(shared_texture_rows(rows)), {'car_window_blank_dmg', 'car_window_blank_dmg_proxy'})
+        self.assertEqual(len(shared_texture_rows(rows)['car_window_blank_dmg']), 2)
 
 
 KNOWN_TEMPLATES = {
@@ -420,6 +480,18 @@ class PolicyTests(unittest.TestCase):
         self.assertTrue(all(row[3] for row in (solid, cutout, no_alpha)))
         self.assertEqual(texture_policy(self.material(), self.record('lit_textured'), None), (None, None, None, False))
 
+    def test_native_tire_template_keeps_rubber_visible_with_low_alpha(self):
+        for alpha in (0, 2, 78, 128, 255):
+            with self.subTest(alpha=alpha):
+                mode, color, note, use = texture_policy(self.material('unmapped'), self.record('tire'), self.image(alpha))
+                self.assertEqual((mode, color, use), ('OPAQUE', [1, 1, 1, 1], True))
+                self.assertIn('alpha test is ALWAYS', note)
+                self.assertIn('original San Diego midnight garage', note)
+        # A tire-looking name or texture is not a shader identity, and true
+        # cutout templates keep their masks.
+        for template in ('tire_decal', 'sprocket', 'masked_chrome'):
+            self.assertEqual(texture_policy(self.material(), self.record(template), self.image(0))[0], 'MASK')
+
 
 class GlbTransportTests(unittest.TestCase):
     @staticmethod
@@ -450,6 +522,27 @@ class GlbTransportTests(unittest.TestCase):
         self.assertEqual(bytes(blob[view['byteOffset']:view['byteOffset'] + 8]), b'\x89PNG\r\n\x1a\n')
         self.assertEqual(doc['extras']['nativeTextures'][0]['sha256'], 'b' * 64)
 
+    def test_lossless_native_buffers_do_not_replace_display_images(self):
+        native = bytes((1, 2, 3, 255, 5, 6, 7, 129))
+        textures = {**self.texture, 'second-pass': {**self.texture['k'], 'name': 'second',
+            'native': {'levels': [{'width': 2, 'height': 1, 'rgba': native}],
+                       'source_palette': bytes((1, 2, 3, 255))}}}
+        material = self.material(native_texture_bindings=[{'graph_path': ['root', 'passes', 1, 'textures', 0],
+                                                          'texture_key': 'second-pass', 'status': 'resolved'}])
+        doc, binary = read_glb(build_glb('vp_test', self.parts([(0, 0), (1, 0), (0, 1)]), [material], [], textures)[0])
+        self.assertEqual(len(doc['images']), 1)
+        self.assertEqual(doc['materials'][0]['pbrMetallicRoughness']['baseColorTexture'], {'index': 0})
+        row = next(t for t in doc['extras']['nativeTextures'] if t['key'] == 'second-pass')
+        retained = row['native']['levels'][0]['rgba']
+        view = doc['bufferViews'][retained['bufferView']]
+        actual = binary[view['byteOffset']:view['byteOffset']+view['byteLength']]
+        self.assertEqual(actual, native)
+        self.assertEqual(retained['sha256'], hashlib.sha256(native).hexdigest())
+        self.assertEqual(doc['materials'][0]['extras']['native_texture_bindings'], material['native_texture_bindings'])
+        textures['second-pass']['native']['bad_register'] = 1 << 63
+        with self.assertRaisesRegex(ValueError, 'not lossless in JSON'):
+            build_glb('vp_test', self.parts([(0, 0), (1, 0), (0, 1)]), [material], [], textures)
+
     def test_missing_texture_and_malformed_uv_controls(self):
         with self.assertRaisesRegex(ValueError, 'texture key missing'):
             build_glb('vp_test', self.parts([(0, 0), (1, 0), (0, 1)]), [self.material()], [], {})
@@ -474,6 +567,7 @@ class PageSlotTests(unittest.TestCase):
         struct.pack_into('<I', page, slot, SLOT_CLASS + 0x1308)
         struct.pack_into('<I', page, slot + 0x4C, 0)
         struct.pack_into('<I', page, slot + 0x78, base + 0x100)
+        struct.pack_into('<3Q', page, slot + 0x88, 0xFFFFFFC000000120, 0x2002020599305000, 0x5000)
         page[root + 0x100:root + 0x100 + len(name) + 1] = name + b'\0'
         return bytes(page), root, base, linear
 
@@ -485,11 +579,21 @@ class PageSlotTests(unittest.TestCase):
                 self.assertEqual(skipped, [])
                 self.assertEqual(slots['whl_rm_test_h']['rgba'],
                                  indexed_to_rgba(linear, palette_csm1(palette_bytes()), 2))
+                self.assertEqual(slots['whl_rm_test_h']['native']['source_slot'], page[root+0x40:root+0xe0])
+                self.assertEqual(struct.unpack_from('<3Q', slots['whl_rm_test_h']['native']['source_slot'], 0x88),
+                                 (0xFFFFFFC000000120, 0x2002020599305000, 0x5000))
         page, root, base, _ = self.page(64)
         changed = bytearray(page)
         struct.pack_into('<I', changed, 12, 0x180)
         slots, skipped = read_page_slots(bytes(changed), root, base)
         self.assertEqual((slots, skipped), ({}, [{'name': 'whl_rm_test_h', 'block_bytes': 0x180}]))
+        retained = {}
+        self.assertEqual(read_page_slots(bytes(changed), root, base, undecoded=retained), (slots, skipped))
+        native = retained['whl_rm_test_h']['native']
+        self.assertEqual(native['source_block'], bytes(changed[:0x180]))
+        self.assertEqual(native['source_slot'], bytes(changed[root+0x40:root+0xe0]))
+        self.assertEqual(native['decode_status'], 'unresolved-native-format')
+        self.assertNotIn('levels', native)
 
     def test_header_and_name_pointer_corruptions_are_ignored(self):
         page, root, base, _ = self.page(64, header=(1, 0, 0))
@@ -635,7 +739,10 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(by_template['drop_shadow'].get('texture_key'), None)
         self.assertIn('main:vp_corvettez06_03', textures)
         self.assertIn('shared:suspension_00', textures)
-        self.assertNotIn('shared:vp_shadow', textures)
+        self.assertIn('shared:vp_shadow', textures)
+        shadow = by_template['drop_shadow']['native_texture_bindings']
+        self.assertEqual(shadow[0]['texture_key'], 'shared:vp_shadow')
+        self.assertTrue(textures['shared:vp_shadow']['native']['levels'])
         self.assertEqual(by_template['player_taillight']['texture_name'], 'vp_corvettez06_03')
 
 

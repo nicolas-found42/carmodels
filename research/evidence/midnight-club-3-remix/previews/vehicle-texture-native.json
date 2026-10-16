@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "intervals": {
+    "palette_reader": {
+      "start": 5392504,
+      "end": 5392676,
+      "sha256": "c79953b966d47cd7bf33da766c1d29785af09b14bf72966f057de82f698c7c54"
+    },
+    "format_dispatch": {
+      "start": 5393012,
+      "end": 5393064,
+      "sha256": "630351931ab1437f66557a178143cdb2b66fa2ce74d42872eb3692d3d2b46122"
+    },
+    "format1": {
+      "start": 5393064,
+      "end": 5393408,
+      "sha256": "ebf7ef6ba9e3cc2b7ca685f57f5b3a43de5e99919443c35622a4946d7a4922a7"
+    },
+    "format14": {
+      "start": 5394792,
+      "end": 5395168,
+      "sha256": "df0b4cac0efc97f5fab47725af53b1bfaf69b5fa445ec5a6238b5c831afba64c"
+    },
+    "format15": {
+      "start": 5395168,
+      "end": 5395840,
+      "sha256": "df656133fa385e69980534da984e59c2815477eb827c6b6e07de176c8ed4a3d7"
+    },
+    "format16": {
+      "start": 5395840,
+      "end": 5396568,
+      "sha256": "7733a2f029923db5b31dbadf9ca115d80a282bfb019dc85275095e75fe4f4c9d"
+    },
+    "format_table": {
+      "start": 6749568,
+      "end": 6749632,
+      "sha256": "4345eab5acbc7b8205ae1e0b2df4cf91ea3271d68194c1c8982e0c7e8c81a1e6"
+    },
+    "native_texture_constructor": {
+      "start": 2847896,
+      "end": 2849876,
+      "sha256": "41286b93efabd7d7e58926b90fa155b9a9c47e45c95953290283bd81871a000d"
+    },
+    "buffered_read": {
+      "start": 3773352,
+      "end": 3773748,
+      "sha256": "0b5e5128e60bac4682937aa38fc4bf15c95c08a12e7afd38d9f7413b60b50ff9"
+    },
+    "buffered_byte_read": {
+      "start": 3774040,
+      "end": 3774088,
+      "sha256": "b4cd2185a9009ccfcfc7a3935bb5937eca25abe5d1cf96c38aecd7857ac2808f"
+    }
+  },
+  "selected_words": {
+    "0x5248bc": 2718040066,
+    "0x5248c8": 2718040065,
+    "0x5248d4": 2718040064,
+    "0x5248e0": 2458108564,
+    "0x5248ec": 4395032,
+    "0x5248f0": 5439514,
+    "0x5248f8": 2718040067,
+    "0x524b98": 604372997,
+    "0x524bb0": 604373248,
+    "0x524bb8": 202674718,
+    "0x525514": 604372998,
+    "0x52552c": 604373008,
+    "0x525534": 202674718,
+    "0x52554c": 2384789516,
+    "0x52555c": 202269930,
+    "0x2b7aa0": 872775680,
+    "0x2b7aa4": 339192,
+    "0x2b7ac0": 4526117
+  },
+  "contract": {
+    "shared_formats": {
+      "1": {
+        "palette_entries": 256,
+        "index_bits": 8,
+        "native_image_format": 5,
+        "psm": 19
+      },
+      "14": {
+        "palette_entries": 256,
+        "index_bits": 8,
+        "native_image_format": 5,
+        "psm": 19
+      },
+      "15": {
+        "palette_entries": 16,
+        "index_bits": 4,
+        "native_image_format": 6,
+        "psm": 20
+      },
+      "16": {
+        "palette_entries": 16,
+        "index_bits": 4,
+        "native_image_format": 6,
+        "psm": 20
+      }
+    },
+    "palette_order": "BGRA",
+    "native_alpha_formula": "floor(A*128/255)",
+    "loader_defaults": {
+      "indexed8": 1,
+      "indexed4": 1,
+      "alpha_max": 128
+    },
+    "tex0_tcc": 1,
+    "tex0_cpsm": 0,
+    "packed4_nibble_order": "low then high",
+    "inline_window": {
+      "width": 8,
+      "height": 8,
+      "mips": 1,
+      "psm": 20,
+      "cpsm": 0,
+      "palette_entries": 16,
+      "palette_order": "RGBA",
+      "alpha_conversion": "original palette byte",
+      "palette_qword_offset": 2
+    }
+  },
+  "claim_limits": [
+    "Original boot/default indexed image-loader settings; alternate indexed-disable modes are not decoded.",
+    "Inline window is one measured serialized8x8PSMT4/CLUT32 upload profile, not a general PPF decoder.",
+    "Native bytes and shader texture inputs; no complete original running-game frame claim."
+  ],
+  "observed_reference": {
+    "schema": 1,
+    "results": [
+      {
+        "name": "rgba-alpha-ramp",
+        "status": "executed",
+        "colors": 256,
+        "input_sha256": "f8635270428e14f85f0626ea8f2acf0440b37e404fbba74ed3dbae5f6ee7e963",
+        "output_sha256": "0c2bb19191853cfdcf3f808cf87e1b61853e390a328295e0affc652e70c2fd08",
+        "different_bytes": 0,
+        "original_source_helper": "0x524878",
+        "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a"
+      },
+      {
+        "name": "source-0",
+        "status": "executed",
+        "colors": 256,
+        "input_sha256": "5108596167e7321a4841592078197139e8d6f1f4ebeca6df25418b9a8c76291d",
+        "output_sha256": "d8bf4e3ab3d9e515d416019b475633baf2c9fc9a44066db6d26012f38afe6ca0",
+        "different_bytes": 0,
+        "original_source_helper": "0x524878",
+        "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a"
+      },
+      {
+        "name": "source-1",
+        "status": "executed",
+        "colors": 256,
+        "input_sha256": "5316362e866a4a0410564c999dcdb6f377bbe0154ec2e1806c8df9db15faf8b9",
+        "output_sha256": "7f5900719ed9ad887ed073a9c7cc666e58edf0ead68174fc1ab1dde4aeb9e52b",
+        "different_bytes": 0,
+        "original_source_helper": "0x524878",
+        "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a"
+      },
+      {
+        "name": "source-2",
+        "status": "executed",
+        "colors": 16,
+        "input_sha256": "f65b2fe691c18a9790ba829c400c6b0d52000131d503ddcd4be92401ec9b92ca",
+        "output_sha256": "a29653f473e56d10c266a1bf2fcdb81139b4eb45302c1cf7f472f059c756a16e",
+        "different_bytes": 0,
+        "original_source_helper": "0x524878",
+        "runtime_binary_sha256": "9b935133f224d29981200272492797eee4cb16fece3357119bf90c33cd62e48a"
+      }
+    ],
+    "claim_limits": [
+      "Original524878andnativebufferedFileReadhelpers executed by pinnedofficialEEinterpreter with explicitbuffer state; no gameboot/physicalPS2claim."
+    ]
+  }
+}

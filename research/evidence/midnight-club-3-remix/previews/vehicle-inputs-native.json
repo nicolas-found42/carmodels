@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "source_executable_sha256": "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d",
+  "intervals": {
+    "lookup": {
+      "start": 2830904,
+      "end": 2831072,
+      "sha256": "b0bbf0929ca6db17b89530c487ce92daf57e2489277e55605edb17783567f8e2"
+    },
+    "register_default": {
+      "start": 2831072,
+      "end": 2831308,
+      "sha256": "98bc875558a862ca959357d4f02f93974ad99233e649810aaa68c80da0f7167b"
+    },
+    "paint_input_bind": {
+      "start": 3893420,
+      "end": 3893500,
+      "sha256": "7c62d61d64b95e7ece1344f60ca754f629cb1460c462f4dc752ad35bd2424c08"
+    },
+    "texture_input_owner": {
+      "start": 3890336,
+      "end": 3890808,
+      "sha256": "885ed1fefea87f57d49d6343875228c77d499750a1683256403f40472005779e"
+    },
+    "decal_setter": {
+      "start": 3890808,
+      "end": 3890904,
+      "sha256": "10ab0d672354c3339d83b346fc9ca3b0d9bbff644741f582bab6efdc49d7c670"
+    },
+    "logo_setter": {
+      "start": 3890904,
+      "end": 3891000,
+      "sha256": "689e9f2d13d2f5bd4f3e868f5ef9f7f3e7e0eaac210ae1b990ba339d46c8a80b"
+    },
+    "plate_setter": {
+      "start": 3891000,
+      "end": 3891096,
+      "sha256": "d7059ab050b7a92824026ea80ca34a19c78fb8423ba347a50dbcf0d1d4b75c42"
+    },
+    "metalflake_target": {
+      "start": 2937136,
+      "end": 2937324,
+      "sha256": "07398a8292bb25a37fb1351443c788df5c84f1e79e25e78e593840db783555f3"
+    },
+    "environment_target": {
+      "start": 5641536,
+      "end": 5642024,
+      "sha256": "5c8fe96d055a40bb6f6f3bfa621b9ef6ff7dd928a216e200d89df55fbfa2d6b3"
+    }
+  },
+  "parameter_list": {
+    "collection_head_offset": 12,
+    "node_bytes": 12,
+    "next_offset": 0,
+    "name_offset": 4,
+    "value_offset": 8,
+    "index": "zero-based linked list traversal order",
+    "missing_index": -1,
+    "default_registration": "append only if name absent; preserve existing value"
+  },
+  "texture_bindings": {
+    "__metalflake__": {
+      "global_pointer": 6382112,
+      "width": 256,
+      "height": 256,
+      "creator": 2937136
+    },
+    "__decal__": {
+      "manager_field": 16,
+      "setter": 3890808
+    },
+    "__logo__": {
+      "manager_field": 8,
+      "setter": 3890904
+    },
+    "__licenseplate__": {
+      "manager_field": 12,
+      "setter": 3891000
+    },
+    "__rider_skin_specular__": {
+      "manager_field": 28
+    },
+    "__envmap__": {
+      "capture_field": 40,
+      "creator": 5641536,
+      "width": 256,
+      "height": 256
+    }
+  },
+  "claim_limits": [
+    "Native serialized input defaults and texture ownership, not execution of their actor/gameplay writers.",
+    "Every material binder may reinterpret raw input words as float or integer; no global type is invented.",
+    "Generated texture pixel algorithms and per-frame content are outside this contract.",
+    "No fallback diffuse images or guessed parameter indices are supplied."
+  ]
+}

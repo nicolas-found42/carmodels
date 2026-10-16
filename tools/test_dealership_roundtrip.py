@@ -55,8 +55,9 @@ def run():
         output = Path(temp) / 'compiled/cars.json'
         export(model)
         baseline = build(work, output)[0]['model']
+        baseline_geometry = bake_car(entry['code'], model.read_bytes(), source_mode=False)
         assert baseline['triangleCount'] == original['triangleCount'], 'Import/export lost source triangles'
-        assert len(baseline['wheelHubs']) == len(original['wheelHubs']), 'Import/export lost wheel metadata'
+        assert len(baseline_geometry['wheelHubs']) == len(original['wheelHubs']), 'Import/export lost wheel metadata'
         # Blender is Z-up: its world Y is the car's longitudinal axis.
         for obj in meshes:
             world, inverse = obj.matrix_world.copy(), obj.matrix_world.inverted()
@@ -68,8 +69,9 @@ def run():
         export(model)
         edited_hash = hashlib.sha256(model.read_bytes()).hexdigest()
         edited = build(work, output)[0]['model']
+        edited_geometry = bake_car(entry['code'], model.read_bytes(), source_mode=False)
         length = lambda model: model['bounds'][3] - model['bounds'][0]
-        assert abs(length(edited) / length(baseline) - 1.2) < 1e-5, 'Exported geometry edit did not reach display'
+        assert abs(length(edited_geometry) / length(baseline_geometry) - 1.2) < 1e-5, 'Exported geometry edit did not reach display'
         assert edited['triangleCount'] == baseline['triangleCount'], 'Roundtrip lost triangles'
         assert edited['source']['sha256'] == edited_hash, 'Display provenance differs from exported GLB'
         compiled = output.read_bytes()
