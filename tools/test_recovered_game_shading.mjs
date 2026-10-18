@@ -154,6 +154,34 @@ function testUnassignedPartsAreUnchanged(table) {
  console.log('PASS game shading unassigned: cars and parts outside the join are untouched and say so');
 }
 
+async function testUnderCarShadowIsExcluded(table) {
+ const offsets = [...assignedOffsets(table, 'ford-racing-2', 'COBRA')];
+ const camera = new THREE.PerspectiveCamera(40, 1, .01, 100);
+ camera.position.set(2, 3, 4);
+ camera.updateMatrixWorld(true);
+ // Issue #23 marks the recovered under-car shadow as an overlay group (and its quad) whose material is
+ // an alpha coverage decal, not a shaded paint surface: it must never take the pass-4 lookup.
+ const decal = fixtureMesh(offsets[0]);
+ decal.userData.shadow = true;
+ const overlay = new THREE.Group();
+ overlay.userData.shadow = true;
+ const nested = fixtureMesh(offsets[0]);
+ overlay.add(nested);
+ const painted = fixtureMesh(offsets[1]);
+ const paintedBaseline = painted.material.onBeforeCompile;
+ const state = createPass4State({assignments: table, texture: new THREE.Texture()});
+ state.attach([decal, nested, painted], 'ford-racing-2', 'COBRA');
+ assert.equal(state.assigned, 1, 'the under-car shadow decal took the pass-4 lookup');
+ const note = state.setEnabled(true, camera);
+ assert.match(note, /1 of 3 source primitives carry an established pass-4 assignment/);
+ assert.equal(decal.geometry.getAttribute('pass4Env'), undefined, 'the shadow quad geometry was given the environment attribute');
+ assert.equal(decal.material.onBeforeCompile, new THREE.MeshStandardMaterial().onBeforeCompile, 'the shadow quad material changed');
+ assert.equal(nested.geometry.getAttribute('pass4Env'), undefined, 'a quad inside the shadow overlay group was shaded');
+ assert.ok(painted.geometry.getAttribute('pass4Env'), 'the painted part was not shaded');
+ assert.notEqual(painted.material.onBeforeCompile, paintedBaseline);
+ console.log('PASS game shading under-car shadow: the coverage decal stays on the baseline path');
+}
+
 async function testStalledOptionalAssets() {
  const page = bytes('../dealership/recovered.html').toString('utf8');
  const start = page.indexOf('function bounded(');
@@ -347,6 +375,7 @@ testPageControl();
 testBaselineIsUntouched(table);
 testUnassignedPartsAreUnchanged(table);
 await testStalledOptionalAssets();
+testUnderCarShadowIsExcluded(table);
 testViewFrameAndMeshRange(table);
 testDecodedArithmetic();
 testShippedJoin(table);
