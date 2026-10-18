@@ -128,8 +128,8 @@ const materialStart=sourcePage.indexOf('function updateMaterials()'),materialEnd
 const toggles=Object.fromEntries(['textures','wire','sharp','flip'].map(id=>['#'+id,{checked:true}]));
 const sourceMaterial=new THREE.MeshStandardMaterial();
 const sourceState={doc,textures:[texture],meshes:[{material:sourceMaterial,userData:{paintPrimitive:primitives[2]}}]};
-const update=new Function('loaded','document','applyMaterial','applyPaintMaterial','colourControls',sourcePage.slice(materialStart,materialEnd)+'return updateMaterials;')(
- sourceState,{querySelector:id=>toggles[id]},applyMaterial,applyPaintMaterial,{session});
+const update=new Function('loaded','document','applyMaterial','applyPaintMaterial','colourControls','presentation',sourcePage.slice(materialStart,materialEnd)+'return updateMaterials;')(
+ sourceState,{querySelector:id=>toggles[id]},applyMaterial,applyPaintMaterial,{session},{finish(material){return material;}});
 update();assert.equal(sourceMaterial.map,texture);assert.equal(sourceMaterial.wireframe,true);assert.equal(texture.magFilter,THREE.NearestFilter);
 toggles['#textures'].checked=false;update();assert.equal(sourceMaterial.map,null);
 sourceMaterial.dispose();meshMaterial.dispose();texture.dispose();
