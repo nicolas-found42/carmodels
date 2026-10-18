@@ -28,6 +28,13 @@ check the result. Two corpora:
   `tools/validation-runtime/` (gitignored; re-download and check it against the pinned sha256).
 - **PINE + PCSX2** — only for live capture, under `tools/headless-runtime/` (container).
 
+A check whose runtime is missing is a `fail` when `CI` is set and a `skip` otherwise
+(`tools/run_checks.py`, `_run_check`). If your shell exports `CI=true` — some agent harnesses and
+local CI shims do — a local run reports missing Node or Blender as **failures**, not skips. Read
+`results.json` before treating those three roundtrip rows as a regression, and prefer
+`env -u CI tools/check.sh …` for a local run. The check is absent-runtime, not a defect in the
+changed code.
+
 ## Static inputs
 
 Some verifiers read inputs derived from the game executable. They are never committed; the
