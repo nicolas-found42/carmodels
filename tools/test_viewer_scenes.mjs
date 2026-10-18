@@ -62,6 +62,8 @@ const context={loaded:{groups:[emptyGroup]},recordSelect:{value:'scene5'},select
  updateMaterials(){throw Error('empty scene reached material update');}};
 const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
 const showRecord=html.match(/function showRecord\(\).*\n/)[0];
+const underCarShadowNote=html.match(/function underCarShadowNote\(shadow,value,game\).*\n/)[0];
+const shadowNote=vm.runInNewContext(underCarShadowNote+';underCarShadowNote;',{});
 vm.runInNewContext(showRecord+';showRecord();',context);
 assert.match(status.textContent,/no drawable geometry/);
 assert(camera.position.equals(initial));
@@ -74,7 +76,33 @@ glassGroup.add(glass);
 const visibleContext={...context,loaded:{groups:[glassGroup]},recordSelect:{value:'scene6'},
  selected:{code:'GRAN_TORINO',records:[]},controls:{target:new THREE.Vector3(),update(){}},updateMaterials(){}};
 const shownMeshes=html.match(/function shownMeshes\(root\).*\n/)[0];
-vm.runInNewContext(shownMeshes+showRecord+';showRecord();',visibleContext);
+vm.runInNewContext(underCarShadowNote+shownMeshes+showRecord+';showRecord();',visibleContext);
 assert.match(status.textContent,/glass\/Header-colour parts \(1 here\)/);
 assert.match(status.textContent,/candidate, not proven shading/);
-console.log(`PASS test_viewer_scenes: ${cars} cars, ${materialBindings} material bindings, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard and visible header-colour honesty label`);
+assert.doesNotMatch(status.textContent,/under-car shadow/);
+const framed=visibleContext.camera.position.clone();
+// The rebuilt under-car shadow joins the selected source tree without reframing the camera or
+// replacing the existing labels. It sits first here so a missing overlay guard would be visible.
+const shadowOverlay=new THREE.Group();
+shadowOverlay.userData={shadow:true,record:'under-car shadow',overlay:'scene6'};
+shadowOverlay.add(new THREE.Mesh(new THREE.BoxGeometry(.2,.2,.2),new THREE.MeshStandardMaterial()));
+const shadowContext={...visibleContext,loaded:{groups:[shadowOverlay,glassGroup],shadow:{material:'UNDER_SHADOW',record:41,triangles:8,referencedByDefaultScene:false,view:'scene6'}}};
+vm.runInNewContext(underCarShadowNote+shownMeshes+showRecord+';showRecord();',shadowContext);
+assert.equal(shadowOverlay.visible,true);
+assert(shadowContext.camera.position.equals(framed),'the shadow overlay must not frame the camera');
+assert.match(status.textContent,/under-car shadow record 41 \(UNDER_SHADOW, 8 triangles\): the source default scene does not reference it \(it sits in the record-layout scene\), so this view rebuilds that original record; its blend state is not captured, so the texture-alpha blend is a candidate \(the record's stored colour is white\)/);
+assert.match(status.textContent,/glass\/Header-colour parts \(1 here\)/);
+// A Ford Racing 2 car without the record, and a view other than the default one, say so.
+// The label names the view the user is in: the default view, the shadow's own record, or any other one.
+assert.match(shadowNote(null,'scene6','ford-racing-2'),/no under-car shadow record in this car/);
+assert.equal(shadowNote(null,'scene6','redline'),'');
+const outside={material:'UNDER_SHADOW',record:41,triangles:8,referencedByDefaultScene:false,view:'scene6'};
+assert.match(shadowNote(outside,'scene6','ford-racing-2'),/the source default scene does not reference it \(it sits in the record-layout scene\), so this view rebuilds that original record/);
+assert.match(shadowNote(outside,'41','ford-racing-2'),/this view is the record itself, so the quad is drawn here/);
+assert.doesNotMatch(shadowNote(outside,'41','ford-racing-2'),/not in this view/,'the shadow\'s own record is this view, not an absent one');
+assert.match(shadowNote(outside,'scene7','ford-racing-2'),/it is not in this view; only the record-layout scene references it/);
+const inside={material:'UNDER_SHADOW',record:41,triangles:8,referencedByDefaultScene:true,view:'scene6'};
+assert.match(shadowNote(inside,'scene6','ford-racing-2'),/the source default scene draws it here/);
+assert.match(shadowNote(inside,'41','ford-racing-2'),/this view is the record itself, so the quad is drawn here \(the source default scene also draws it\)/);
+assert.match(shadowNote(inside,'scene7','ford-racing-2'),/it is not in this view; the source default scene draws it/);
+console.log(`PASS test_viewer_scenes: ${cars} cars, ${materialBindings} material bindings, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard, visible header-colour honesty label and under-car shadow candidate label`);

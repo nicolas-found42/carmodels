@@ -74,6 +74,12 @@ function stubRenderer() {return {toneMapping:THREE.NoToneMapping,toneMappingExpo
   assert.equal(isTexturedOpaque({pbrMetallicRoughness:{baseColorTexture:{index:0}},alphaMode:'BLEND'}),false,'windows keep their recovered appearance');
   assert.equal(isTexturedOpaque({pbrMetallicRoughness:{}}),false);
   assert.equal(isTexturedOpaque(undefined),false,'a missing definition cannot crash the paint update');
+  // The recovered under-car shadow is visible in the default view (issue #23) and is a coverage
+  // decal, so Enhanced must leave it to its candidate alpha blend instead of glossing it.
+  const shadow={name:'UNDER_SHADOW',doubleSided:true,pbrMetallicRoughness:{baseColorTexture:{index:5},metallicFactor:0,roughnessFactor:1}};
+  assert.equal(isTexturedOpaque(shadow),false,'the under-car shadow keeps its candidate alpha blend, not a clearcoat');
+  assert.equal(isTexturedOpaque({...shadow,name:'GT90_UNDER_SHADOW'}),false);
+  assert.equal(isTexturedOpaque({...shadow,name:'BODY_PANEL'}),true,'an ordinary textured surface is unaffected by the exclusion');
 }
 {
   const presentation=createPresentation(stubRenderer(),{environment:null,environmentIntensity:1},{studio:stubStudio()});
@@ -140,10 +146,17 @@ for(const [index,source] of doc.materials.entries()) {
     assert.equal(enhanced.roughness,before.roughness);
     assert.equal(enhanced.metalness,before.metalness);
   }
+  if(source.name==='UNDER_SHADOW') {
+    assert.equal(isTexturedOpaque(source),false,'the under-car shadow is never glossed');
+    assert.deepEqual([enhanced.roughness,enhanced.metalness,enhanced.clearcoat],[before.roughness,before.metalness,0],
+      'Enhanced leaves the under-car shadow to its candidate alpha blend');
+    assert.equal(enhanced.transparent,true,'and that blend still sets transparency');
+    assert.equal(enhanced.depthWrite,false,'without writing depth over the wheels');
+  }
   assert.throws(()=>createMaterial(doc,images,index,{presentation:'glossy'}),/Unknown presentation/);
   before.dispose();original.dispose();enhanced.dispose();
 }
-assert.deepEqual(texturedOpaque,[0,1,2,3,4,5],'the six textured Gran Torino surfaces are the ones enhanced glosses');
+assert.deepEqual(texturedOpaque,[0,1,2,3,4],'the five textured body/wheel surfaces are the ones enhanced glosses; the under-car shadow is excluded');
 const fordGT=readGLB(fixture(glb('FORD_GT'))).doc;
 assert(fordGT.materials.filter(isTexturedOpaque).length>0,'Ford GT also has textured opaque surfaces to gloss');
 
