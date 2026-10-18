@@ -198,12 +198,17 @@ export function createPass4State(assets = {}) {
   setPass4Geometry(mesh.geometry, state.enabled);
   setPass4Material(mesh.material, state.enabled, assets.texture ?? null);
  }
+ // Rewrite every assigned mesh and report the factor range across all of them, so the label cannot
+ // show only the last mesh's values.
  function refresh() {
-  if (!state.enabled || !state.eye) return;
+  if (!state.enabled || !state.eye) return false;
+  let low = Infinity, high = -Infinity;
   for (const mesh of state.assigned) {
    const range = writePass4Environment(mesh.geometry, state.eye, state.rows);
-   if (range) state.range = range;
+   if (range) { low = Math.min(low, range.low); high = Math.max(high, range.high); }
   }
+  if (low <= high) state.range = {low, high};
+  return true;
  }
  function status() {
   if (!state.enabled) return '';
@@ -233,20 +238,24 @@ export function createPass4State(assets = {}) {
   setEnabled(on, camera) {
    state.enabled = on === true;
    for (const mesh of state.assigned) applyMesh(mesh);
-   if (state.enabled && camera) { state.eye = camera.position.toArray(); state.rows = pass4Matrix(camera.matrixWorld); }
+   if (state.enabled && camera) { camera.updateMatrixWorld(true); state.eye = camera.position.toArray(); state.rows = pass4Matrix(camera.matrixWorld); }
    refresh();
    if (!state.enabled) state.range = null;
    return status();
   },
   // Per frame while on: the eye and the view-derived matrix follow the inspector camera, and the
   // lookup is recomputed only when the view actually moved.
-  follow(camera) {
-   if (!state.enabled || !camera) return;
+ follow(camera) {
+   if (!state.enabled || !camera) return false;
+   // OrbitControls.update() runs lookAt() before this call, which leaves matrixWorld stale, so the
+   // world matrix is updated here: eye and rotation then describe the frame being rendered.
+   camera.updateMatrixWorld(true);
    const eye = camera.position.toArray(), rows = pass4Matrix(camera.matrixWorld);
-   if (state.eye && state.rows && eye.every((value, k) => value === state.eye[k]) && rows.every((value, k) => value === state.rows[k])) return;
+   if (state.eye && state.rows && eye.every((value, k) => value === state.eye[k]) && rows.every((value, k) => value === state.rows[k])) return false;
    state.eye = eye;
    state.rows = rows;
    refresh();
+   return true;
   },
   status,
  };

@@ -11,7 +11,8 @@ import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {PASS4_CAVEAT, PASS4_LABEL, assignedOffsets, createPass4State, parsePass4Assignments,
-        pass4Factor, pass4Matrix, pass4Vertex, setPass4Geometry, setPass4Material} from '../dealership/game-shading.mjs';
+        loadPass4Assignments, pass4Factor, pass4Matrix, pass4Vertex, setPass4Geometry, setPass4Material,
+        writePass4Environment} from '../dealership/game-shading.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -43,7 +44,11 @@ function checkPageMarkup(text) {
  assert.match(text, /<p id="game-shading-note" hidden><\/p>/, 'the honesty label is missing or visible while off');
  assert.match(text, /from '\.\/game-shading\.mjs'/, 'the page does not import the shading module');
  assert.match(text, /gameShading\.setEnabled\(document\.querySelector\('#game-shading'\)\.checked,camera\)/, 'the toggle is not wired into the material update');
- assert.match(text, /gameShading\.follow\(camera\)/, 'the animation loop does not follow the camera');
+ assert.match(text, /if\(gameShading\.follow\(camera\)\)updateGameShadingNote\(\);/, 'the honesty label is not refreshed when the lookup moves');
+ assert.ok(!/await pass4Ready/.test(text), 'a model load waits for the optional shading assets');
+ assert.match(text, /bounded\(loadPass4Assets\(\),PASS4_ASSET_TIMEOUT,/, 'the optional asset load is not bounded');
+ assert.match(text, /catch\(error=>\{pass4Error=error\.message;updateMaterials\(\);\}\)/, 'a failed optional asset load is not reported');
+ assert.match(text, /assets are still loading; every part keeps the baseline shading/, 'the pending-asset state is not reported');
  return text;
 }
 
@@ -52,8 +57,11 @@ function testPageControl() {
  checkPageMarkup(page);
  const tampers = [['an always-visible label', ' id="game-shading-note" hidden', ' id="game-shading-note"'],
                   ['a checked control', 'id="game-shading"', 'id="game-shading" checked'],
-                  ['no camera follow', 'gameShading.follow(camera);', ''],
-                  ['no toggle wiring', "gameShading.setEnabled(document.querySelector('#game-shading').checked,camera);", '']];
+                  ['no camera follow', 'if(gameShading.follow(camera))updateGameShadingNote();', ''],
+                  ['no toggle wiring', "gameShading.setEnabled(document.querySelector('#game-shading').checked,camera);", ''],
+                  ['a blocking asset await', 'async function loadCar(){', 'async function loadCar(){\n await pass4Ready;'],
+                  ['an unbounded asset wait', 'bounded(loadPass4Assets(),PASS4_ASSET_TIMEOUT,', 'loadPass4Assets(),'],
+                  ['an unreported asset failure', 'catch(error=>{pass4Error=error.message;updateMaterials();})', 'catch(()=>{})']];
  for (const [label, from, to] of tampers) {
   assert.ok(page.includes(from), `the page no longer contains ${from}`);
   assert.throws(() => checkPageMarkup(page.replace(from, to)), `the markup check accepts ${label}`);
@@ -144,6 +152,77 @@ function testUnassignedPartsAreUnchanged(table) {
  empty.attach([mesh], 'ford-racing-2', 'COBRA');
  assert.equal(empty.assigned, 0, 'a missing table assigned Headers');
  console.log('PASS game shading unassigned: cars and parts outside the join are untouched and say so');
+}
+
+async function testStalledOptionalAssets() {
+ const page = bytes('../dealership/recovered.html').toString('utf8');
+ const start = page.indexOf('function bounded(');
+ assert.ok(start > 0, 'the page has no bounded-wait helper');
+ const bounded = new Function(page.slice(start, page.indexOf('\n', start)) + 'return bounded;')();
+ const stalled = new Promise(() => {});
+ const outcome = await Promise.race([bounded(stalled, 30, 'the optional pass-4 shading assets did not load in 15 seconds')
+  .then(() => 'resolved', error => 'rejected: ' + error.message), new Promise(resolve => setTimeout(() => resolve('still pending'), 500))]);
+ assert.equal(outcome, 'rejected: the optional pass-4 shading assets did not load in 15 seconds', 'a stalled request is not bounded');
+ // The baseline preview is an independent promise: the bounded optional load cannot hold it up.
+ let previewed = false;
+ bounded(stalled, 50, 'stalled').catch(() => {});
+ await Promise.resolve().then(() => { previewed = true; });
+ assert.equal(previewed, true, 'a stalled optional asset request blocks the preview');
+ // The table fetch itself is left unbounded, which is why the page wraps it; a stalled fetch stays pending.
+ const realFetch = globalThis.fetch;
+ globalThis.fetch = () => new Promise(() => {});
+ try {
+  const state = await Promise.race([loadPass4Assignments('stalled.json').then(() => 'settled', error => 'threw: ' + error.message),
+                                    new Promise(resolve => setTimeout(() => resolve('pending'), 50))]);
+  assert.equal(state, 'pending', 'the fetch stub did not stay pending');
+ } finally { globalThis.fetch = realFetch; }
+ console.log('PASS game shading optional assets: a stalled request is bounded, reported and never blocks a preview');
+}
+
+function testViewFrameAndMeshRange(table) {
+ const offsets = [...assignedOffsets(table, 'ford-racing-2', 'COBRA')];
+ const mesh = (offset, normalY) => {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0.5, 0.9, 1.2, 0.7, 0.9, 1.5, 0.6, 1.1, 1.3]), 3));
+  geometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array([0, normalY, 0, 0, normalY, 0, 0, normalY, 0]), 3));
+  const piece = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial());
+  piece.userData.paintPrimitive = {extras: {headerOffset: offset}};
+  return piece;
+ };
+ const up = mesh(offsets[0], 1), down = mesh(offsets[1], -1);
+ const camera = new THREE.PerspectiveCamera(40, 1, .01, 100);
+ camera.position.set(2, 3, 4);
+ camera.updateMatrixWorld(true);
+ const state = createPass4State({assignments: table, texture: new THREE.Texture()});
+ state.attach([up, down], 'ford-racing-2', 'COBRA');
+ state.setEnabled(true, camera);
+ const factorRange = piece => {
+  const values = piece.geometry.getAttribute('pass4Env').array;
+  const factors = [];
+  for (let index = 2; index < values.length; index += 3) factors.push(values[index]);
+  return [Math.min(...factors), Math.max(...factors)];
+ };
+ const [lowUp, highUp] = factorRange(up), [lowDown, highDown] = factorRange(down);
+ assert.notDeepEqual([lowUp, highUp], [lowDown, highDown], 'the fixture meshes do not differ');
+ const low = Math.min(lowUp, lowDown), high = Math.max(highUp, highDown);
+ assert.match(state.status(), new RegExp(`Colour factor ${low.toFixed(2)}–${high.toFixed(2)} at this view\\.`),
+              'the reported range is not the range across the assigned meshes');
+ assert.equal(state.follow(camera), false, 'an unchanged view rewrote the lookup');
+ assert.equal(state.follow(camera), false, 'the label would be rewritten on an unchanged frame');
+ // A moved camera must be read in the frame being rendered, not the previous rotation.
+ camera.position.set(-6, 2, 3);
+ camera.rotation.set(0.3, 0.7, 0.1);
+ assert.equal(state.follow(camera), true, 'a moved view did not rewrite the lookup');
+ const after = Float32Array.from(up.geometry.getAttribute('pass4Env').array);
+ const reference = new THREE.BufferGeometry();
+ reference.setAttribute('position', up.geometry.getAttribute('position').clone());
+ reference.setAttribute('normal', up.geometry.getAttribute('normal').clone());
+ setPass4Geometry(reference, true);
+ camera.updateMatrixWorld(true);
+ writePass4Environment(reference, camera.position.toArray(), pass4Matrix(camera.matrixWorld));
+ assert.deepEqual(Array.from(after), Array.from(reference.getAttribute('pass4Env').array),
+                  'the lookup used a stale camera rotation');
+ console.log('PASS game shading view frame: eye and rotation come from the frame being rendered, and the range spans every assigned mesh');
 }
 
 function testDecodedArithmetic() {
@@ -267,6 +346,8 @@ assert.throws(() => parsePass4Assignments({schema: table.schema, cars: [{code: '
 testPageControl();
 testBaselineIsUntouched(table);
 testUnassignedPartsAreUnchanged(table);
+await testStalledOptionalAssets();
+testViewFrameAndMeshRange(table);
 testDecodedArithmetic();
 testShippedJoin(table);
 testExecutorComparison();

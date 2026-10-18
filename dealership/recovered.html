@@ -43,8 +43,12 @@ const paletteReady=fetchGamePalette().then(colors=>{gamePalette=colors;}).catch(
 // Candidate pass-4 shading: the derived Header table and the retained preview load once; the
 // control stays off, and a load failure leaves every part on the baseline path.
 const pass4={assignments:null,texture:null}, gameShading=createPass4State(pass4);let pass4Error='';
-const pass4Ready=loadPass4Assets().then(assets=>Object.assign(pass4,assets)).catch(error=>{pass4Error=error.message;});
-function updateGameShadingNote(){const on=gameShading.enabled,note=document.querySelector('#game-shading-note');note.hidden=!on;note.textContent=!on?'':pass4Error?`${PASS4_LABEL} is unavailable: ${pass4Error}. Every part keeps the baseline shading.`:gameShading.status();}
+// The assets are optional: the preview never waits for them, and a stalled request is bounded so the
+// control can report them unavailable instead of leaving a car on "Loading".
+const PASS4_ASSET_TIMEOUT=15000;
+function bounded(promise,ms,message){let timer;return Promise.race([promise,new Promise((resolve,reject)=>{timer=setTimeout(()=>reject(Error(message)),ms);})]).finally(()=>clearTimeout(timer));}
+const pass4Ready=bounded(loadPass4Assets(),PASS4_ASSET_TIMEOUT,'the optional pass-4 shading assets did not load in 15 seconds').then(assets=>{Object.assign(pass4,assets);updateMaterials();}).catch(error=>{pass4Error=error.message;updateMaterials();});
+function updateGameShadingNote(){const on=gameShading.enabled,note=document.querySelector('#game-shading-note');note.hidden=!on;note.textContent=!on?'':pass4Error?`${PASS4_LABEL} is unavailable: ${pass4Error}. Every part keeps the baseline shading.`:!pass4.assignments?`${PASS4_LABEL} on: the optional shading assets are still loading; every part keeps the baseline shading until they arrive.`:gameShading.status();}
 const stage=document.querySelector('#stage'), carSelect=document.querySelector('#car'), recordSelect=document.querySelector('#record'), status=document.querySelector('#status');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));stage.append(renderer.domElement);
 const scene=new THREE.Scene();scene.background=new THREE.Color('#151a22');
@@ -96,7 +100,6 @@ async function loadCar(){
  const decoded=await Promise.allSettled((doc.images||[]).map(async image=>{const v=doc.bufferViews[image.bufferView],url=URL.createObjectURL(new Blob([new Uint8Array(bin,v.byteOffset||0,v.byteLength)],{type:'image/png'}));state.urls.push(url);const texture=await loader.loadAsync(url);texture.colorSpace=THREE.SRGBColorSpace;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.flipY=false;return texture;}));
  state.textures=decoded.filter(r=>r.status==='fulfilled').map(r=>r.value);
  await paletteReady;
- await pass4Ready;
  if(id!==requestId){disposeState(state);return;}
  if(decoded.some(r=>r.status==='rejected'))throw Error('Embedded texture could not be decoded');
  loaded=state;selected=entry;
@@ -180,5 +183,5 @@ carSelect.addEventListener('change',loadCar);document.querySelector('#retry').ad
 document.querySelector('#variant').addEventListener('change',()=>{const value=document.querySelector('#variant').value;colourControls.setPreset(value===''?null:Number(value));});
 const parameters=new URLSearchParams(location.search);if([...gameSelect.options].some(o=>o.value===parameters.get('game')))gameSelect.value=parameters.get('game');if([...sourceVariant.options].some(o=>o.value===parameters.get('variant')))sourceVariant.value=parameters.get('variant');
 filterCars(true,resolveCarAlias(index.cars,parameters.get('car'))?.id||parameters.get('car')||'');
-new ResizeObserver(()=>{renderer.setSize(stage.clientWidth,stage.clientHeight);camera.aspect=stage.clientWidth/stage.clientHeight;camera.updateProjectionMatrix();}).observe(stage);renderer.setAnimationLoop(()=>{controls.update();gameShading.follow(camera);renderer.render(scene,camera);});window.__recBoot.ok();
+new ResizeObserver(()=>{renderer.setSize(stage.clientWidth,stage.clientHeight);camera.aspect=stage.clientWidth/stage.clientHeight;camera.updateProjectionMatrix();}).observe(stage);renderer.setAnimationLoop(()=>{controls.update();if(gameShading.follow(camera))updateGameShadingNote();renderer.render(scene,camera);});window.__recBoot.ok();
 </script></html>

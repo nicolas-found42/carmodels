@@ -23,7 +23,11 @@ The receipt has no per-vertex eye or matrix, so the inspector substitutes them (
   is the model's own coordinate, and the model node transform is ignored.
 - **Matrix**: the camera's world basis (view-derived), so the lookup is a view-space paraboloid and moves as the
   camera orbits. The game's `TOP[12]`-`TOP[14]` come from its own view state.
-- **Position plane w lane**: 1, because the exported geometry has no such lane.
+- **Position plane w lane**: `w = 1/|position - eye|`, because the exported geometry has no such lane and the
+  capture comparison reads the pass-4 factor within [0, 1] on all 2,189 aligned vertices — a cosine, so the
+  handler's V is unit length there. The reading also puts the reflection where a grazing surface is
+  (factor → 1) and removes it face-on (factor → 0.05), instead of the negative factors a literal `w = 1`
+  produced. It is a reading of the arithmetic, not a decoded input.
 - **Compositing**: the decoded pass writes `RGB = paint · factor` and samples the environment texture through the
   GS texture function; the draw's `ALPHA_1` blend equation is not in the receipt, so the term is added over the
   baseline pass-2 colour.
