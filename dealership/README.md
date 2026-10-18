@@ -15,6 +15,8 @@ Open the dealership at <http://localhost:8080/dealership.html>, or the source-mo
 
 The source inspector reads the shared `public/models.json` catalog, built from hash-verified per-game indexes by `tools/build_model_catalog.py`. Model IDs combine game and car code.
 
+**Presentation** offers `Original` (the default, which renders exactly as before) and `Enhanced`: environment reflections, neutral tone mapping and a glossy clearcoat on textured parts, built from the same in-repo asset-free studio environment the dealership uses — no HDRI, no vendored example helper and no network request. Enhanced is a deliberate departure from the game's look, carries a visible label saying so, and never changes the downloaded model. See [the presentation research](../research/enhanced-presentation-2026-10-18.md).
+
 The dealership has its own editing inputs:
 
 - `dealership/dealership/models/<CAR>.glb`: independent regular GLB files for each converted car. Edit geometry here.

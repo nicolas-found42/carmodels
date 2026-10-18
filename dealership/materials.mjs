@@ -43,8 +43,13 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
  material.needsUpdate=true;
 }
 
-export function createMaterial(doc, images, materialIndex) {
- const material=doc.extras?.gt4Enhancement?new THREE.MeshPhysicalMaterial():new THREE.MeshStandardMaterial();
+// `presentation: 'enhanced'` asks for the clearcoat-capable physical material the
+// Recovered inspector's enhanced look needs; anything else, including the default,
+// builds exactly the standard material it always did.
+export function createMaterial(doc, images, materialIndex, options={}) {
+ const {presentation}=options;
+ if(presentation!==undefined && presentation!=='original' && presentation!=='enhanced')throw Error('Unknown presentation. Use original or enhanced.');
+ const material=doc.extras?.gt4Enhancement||presentation==='enhanced'?new THREE.MeshPhysicalMaterial():new THREE.MeshStandardMaterial();
  applyMaterial(material,doc,images,materialIndex);
  return material;
 }
