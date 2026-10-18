@@ -79,7 +79,9 @@ function loadedByTheInspector(code,file,bytes,records) {
   carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,
   index:{cars:[{id:'ford-racing-2/'+code,game:'ford-racing-2',code,file:'ford-racing-2/'+file,display_name:code,records}]},
   colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){},session:null},
-  paintDownload:{clear(){}},presentation:{mode:'original',enhanced:false,label:'',setMode(){},finish(material){return material;}},
+  // showRecord() and dispose() offer the framing box to the presentation, which stands the car on the
+  // ground surface and its contact shadow in Enhanced mode; this slice only needs the call to exist.
+  paintDownload:{clear(){}},presentation:{mode:'original',enhanced:false,label:'',follow(){},setMode(){},finish(material){return material;}},
   gamePalette:[],paletteError:'',paletteReady:Promise.resolve(),loaded:null,selected:null,requestId:0,pendingRequest:null,
   AbortController,Blob,URLSearchParams,
   URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
@@ -161,8 +163,9 @@ for(const file of fs.readdirSync(corpus).filter(name=>name.endsWith('.glb')).sor
  assert.equal(enhanced.opacity,1,`${code}: enhanced keeps the blend factor at the alpha channel alone`);
  assert.equal(enhanced.alphaTest,0,`${code}: enhanced keeps the graded coverage`);
  assert.equal(enhanced.map,textures[image],`${code}: enhanced keeps the shadow texture`);
+ // A real Scene: the presentation adds its ground surface and contact shadow to it in Enhanced mode.
  const presentation=createPresentation({toneMapping:THREE.NoToneMapping,toneMappingExposure:1},
-  {environment:null,environmentIntensity:1},{studio:{setEnabled(){},dispose(){}}});
+  new THREE.Scene(),{studio:{setEnabled(){},dispose(){}}});
  const unglossed=[enhanced.roughness,enhanced.metalness,enhanced.clearcoat],standardRoughness=material.roughness;
  presentation.setMode('enhanced');
  presentation.finish(enhanced,source);
