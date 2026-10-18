@@ -18,9 +18,11 @@ export const CONTACT_SHADOW = Object.freeze({
   planeDrop: .0005, // the shadow plane a hair below that point, same fraction: that point is the
   // lower of the framing box's floor and the recovered under-car shadow quad's own floor (issue #23,
   // the quad is flat at one height), which the page measures and passes to follow(). The plane is
-  // therefore under the quad in every view rather than over it: on the shipped corpus it stands 2.0
-  // to 3.7 mm below the quad (this drop at the plane's own side), and the quad draws over the shadow
-  // instead of fighting it for depth
+  // therefore under the quad in every view rather than over it. The drop below the chosen floor is
+  // exactly this fraction of the plane's side; the gap below the quad is that drop plus however far
+  // the box's floor sits under the quad, and measures 2.1 to 15.4 mm across the shipped 35 cars and
+  // both views (tools/test_under_car_shadow.mjs) - so the quad draws over the shadow instead of
+  // fighting it for depth
   cameraDrop: .01, // the depth camera sits this far below the ground, same fraction
   minimumFootprint: .1, // a degenerate record still gets a usable plane
 });
