@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GT1 upgrades — source correspondence</title><link rel="icon" href="data:,">
+<style>
+body{margin:0;background:#151a22;color:#eef2f8;font:16px system-ui}main{max-width:1150px;margin:auto;padding:28px}h1{font-size:30px}h2{font-size:21px}p{line-height:1.55;color:#c6d1df}a{color:#b6daff}section{border:1px solid #43546a;border-radius:8px;padding:18px;margin:20px 0}input,select{font:inherit;color:inherit;background:#202c3e;border:1px solid #71859e;border-radius:4px;padding:9px;max-width:100%;box-sizing:border-box}select{width:100%;margin-top:10px}label{display:block}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:10px 8px;border-bottom:1px solid #394659;text-align:left;vertical-align:top}small{color:#adbed3}#candidates{overflow-x:auto}a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a8d8ff;outline-offset:3px}.links{display:flex;gap:18px;flex-wrap:wrap}
+</style>
+<main>
+<h1>GT1 → GT4: source correspondence</h1>
+<p>Find higher-detail references while keeping each car’s identity. Candidate names help locate evidence; they do not approve geometry, equipment or paint transfers.</p>
+<section>
+<h2>RX-7 Type R ’91 · first counterpart study</h2>
+<p>This separate edition uses the actual GT4 showroom geometry and artwork unchanged. Its displayed model, grade and year match GT1’s Type R ’91. Regional equipment equivalence is unresolved. It is a GT4-sourced study, with no parts approved for transfer into the recovered GT1 model.</p>
+<p class="links"><a href="gt1-gt4-compare.html?pilot=rx7-type-r-91">Inspect original vs counterpart study</a><a href="public/gt4-guided/rx7-type-r-91-counterpart.glb" download>Download study GLB</a><a href="public/gt4-guided/receipt.json">Source receipt</a></p>
+<p><small>The earlier Type-RB trial is a different trim. This study does not establish a Type-RB replacement. GT4’s static preview also retains its documented wheel-placement and rendering limitations.</small></p>
+</section>
+<section>
+<h2>Every GT1 family</h2>
+<p id="summary" role="status">Loading source ledger…</p>
+<label>Search name or native code <input id="search" type="search" placeholder="RX-7, NSX, _afo7n…" disabled></label>
+<label>GT1 family <select id="car" disabled></select></label>
+<p id="target"></p><p id="state"></p>
+<div id="candidates"></div>
+</section>
+<p class="links"><a href="gt1-gt4-compare.html">Measured comparison sample</a><a href="gt1-enhanced.html?v=133120">Earlier subdivision trials</a><a href="public/gt4-guided/ledger.json" download>Download complete ledger</a></p>
+<p><small>Original source models remain separate. Candidate discovery uses exact normalized word overlap, excluding generic terms; it can miss differently named counterparts and suggest incompatible trims. Unresolved native identities receive no automatic candidates. Empty approved-region lists mean no compatible transfer regions have been established.</small></p>
+</main>
+<script type="module">
+const $=id=>document.getElementById(id);let entries=[];
+const states={'unresolved-identity':'Native identity unresolved · no automatic donor search','candidates-unreviewed':'Candidates need identity and part review','no-lexical-candidate':'No candidate found by the lexical rule · not proof of absence'};
+function show(){const e=entries.find(e=>e.target.code===$('car').value);$('candidates').replaceChildren();
+ if(!e){$('target').textContent='No matching GT1 families.';$('state').textContent='';return;}
+ $('target').replaceChildren();const a=document.createElement('a');a.textContent=`${e.target.name} · original GT1 GLB`;a.href=e.target.file;a.download='';$('target').append(a);
+ $('state').textContent=`${states[e.status]} · ${e.candidateCount} suggestions · 0 approved regions`;
+ if(!e.candidates.length)return;const table=document.createElement('table'),head=document.createElement('tr');for(const t of ['GT4 candidate','Shared words','Review status']){const th=document.createElement('th');th.textContent=t;head.append(th);}const thead=document.createElement('thead');thead.append(head);table.append(thead);const body=document.createElement('tbody');
+ for(const c of e.candidates){const tr=document.createElement('tr'),name=document.createElement('td'),words=document.createElement('td'),state=document.createElement('td'),link=document.createElement('a');link.href=c.file;link.download='';link.textContent=c.name;name.append(link,document.createElement('br'));const small=document.createElement('small');small.textContent=`${c.code} · ${c.specLabel??'No spec label'}`;name.append(small);words.textContent=c.sharedTokens.join(', ');state.textContent='Unreviewed · no approved regions';tr.append(name,words,state);body.append(tr);}table.append(body);$('candidates').append(table);
+}
+function filter(){const query=$('search').value.trim().toLowerCase(),previous=$('car').value;const matches=entries.filter(e=>`${e.target.name} ${e.target.code}`.toLowerCase().includes(query));$('car').replaceChildren(...matches.map(e=>new Option(`${e.target.name} · ${e.target.code}`,e.target.code)));if(matches.some(e=>e.target.code===previous))$('car').value=previous;$('car').disabled=!matches.length;show();}
+try{const response=await fetch('public/gt4-guided/ledger.json');if(!response.ok)throw Error('Ledger unavailable');const data=await response.json();entries=data.entries;const unresolved=data.counts['unresolved-identity']??0;$('summary').textContent=`${entries.length} GT1 families accounted for · ${unresolved} unresolved native identities · 0 approved geometry transfers`;$('search').disabled=false;$('search').addEventListener('input',filter);$('car').addEventListener('change',show);filter();}catch(e){$('summary').textContent=`Could not load ledger: ${e.message}`;}
+</script>
+</html>
