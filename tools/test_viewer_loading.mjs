@@ -37,7 +37,7 @@ const context={THREE:{...THREE,TextureLoader:class {
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){}},
- paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),pass4Ready:Promise.resolve(),
+ paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
  readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,
