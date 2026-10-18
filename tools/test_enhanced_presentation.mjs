@@ -255,13 +255,13 @@ close(torinoBox.min.y,0,'the recovered Gran Torino stands on y=0');
   // The placement is derived from the visible geometry's box, which is the page's only input:
   // the selected car and the geometry choice both arrive as a fresh box.
   const extent=torinoBox.getSize(new THREE.Vector3()),centre=torinoBox.getCenter(new THREE.Vector3());
-  const side=planeSide(torinoBox),height=Math.max(extent.y,Math.max(extent.x,extent.z,CONTACT_SHADOW.minimumFootprint)*.05);
+  const side=planeSide(torinoBox),height=Math.max(torinoBox.max.y-torinoBox.min.y,Math.max(extent.x,extent.z,CONTACT_SHADOW.minimumFootprint)*.05);
   close(group.position.x,centre.x,'the ground is centred on the car');
   close(group.position.z,centre.z);
   close(group.position.y,torinoBox.min.y,"the ground sits at the car's lowest point");
   close(shadow.plane.scale.x,side,'the shadow plane spans the footprint plus its margin');
   close(shadow.plane.scale.z,side);
-  close(shadow.plane.position.y,-side*CONTACT_SHADOW.planeDrop,'and sits a hair under the contact plane, so the recovered under-car shadow quad draws over it');
+  close(shadow.plane.position.y,-side*CONTACT_SHADOW.planeDrop,'and sits a hair under the floor the placement chose, so the recovered under-car shadow quad stands above it');
   close(shadow.ground.scale.x,side*CONTACT_SHADOW.groundSpan,'the ground extends well past the shadow');
   close(shadow.ground.position.y,-side*CONTACT_SHADOW.groundDrop,'and sits a hair below the contact plane');
   close(shadow.camera.left,-side/2,'the depth camera covers exactly the shadow plane');
@@ -367,6 +367,44 @@ close(torinoBox.min.y,0,'the recovered Gran Torino stands on y=0');
   assert.equal(shadow.enabled,false);
 }
 
+// 7b. The plane's floor is the lower of the framing box's and the recovered under-car shadow quad's
+// (issue #72). The quad is the one surface the framing box deliberately leaves out -- showRecord fits
+// the camera to the car alone -- so it arrives as follow()'s second argument.
+{
+  const renderer=stubRenderer(),scene=new THREE.Scene(),shadow=createContactShadow(renderer);
+  const presentation=createPresentation(renderer,scene,{studio:stubStudio(),shadow});
+  const box=new THREE.Box3(new THREE.Vector3(-1,0,-2),new THREE.Vector3(1,1,2)),side=planeSide(box);
+  const footprint=Math.max(2,2,CONTACT_SHADOW.minimumFootprint);
+  presentation.follow(box,0);
+  presentation.setMode('enhanced');
+  const group=scene.children.find(object=>object.name==='contact-shadow');
+  const planeWorld=()=>new THREE.Box3().setFromObject(shadow.plane).min.y;
+  close(group.position.y,0,'a quad at the box floor leaves the placement where it was');
+  close(planeWorld(),-side*CONTACT_SHADOW.planeDrop,'and the plane is under that quad');
+  presentation.follow(box,.25);
+  close(group.position.y,0,"a quad above the box's floor cannot lift the plane");
+  assert(planeWorld()<.25,'the plane stays under the higher quad too');
+  presentation.follow(box,-.003);
+  close(group.position.y,-.003,'a quad below the box floor carries the plane down to it');
+  close(planeWorld(),-.003-side*CONTACT_SHADOW.planeDrop);
+  assert(planeWorld()<-.003,'so the plane is under the quad rather than the quad under the plane');
+  close(shadow.camera.far,side*CONTACT_SHADOW.cameraDrop+Math.max(box.max.y+.003,footprint*.05)*1.05,
+   'the depth camera reaches the car from that lowered floor');
+  // An unusable second input is not a floor: the box's own floor stands (control for the new input).
+  for(const value of [undefined,null,NaN,Infinity,'-0.003']) {
+   presentation.follow(box,value);
+   close(group.position.y,0,`an unusable quad floor (${String(value)}) leaves the box's floor`);
+   close(planeWorld(),-side*CONTACT_SHADOW.planeDrop);
+  }
+  presentation.follow(null,-.003);
+  assert.equal(group.visible,false,'nor does an empty box become visible with a floor');
+  // The floor survives a mode round trip, because setEnabled() places from what follow() kept.
+  presentation.follow(box,-.003);
+  presentation.setMode('original');presentation.setMode('enhanced');
+  close(group.position.y,-.003,'returning to Enhanced keeps the floor it was given');
+  presentation.dispose();
+}
+
 // 8. The presentation adds no request of any kind and reuses the in-repo studio environment.
 const moduleSource=fs.readFileSync(new URL('../dealership/enhanced-presentation.mjs',import.meta.url),'utf8');
 const studioSource=fs.readFileSync(new URL('../dealership/gt4-studio.mjs',import.meta.url),'utf8');
@@ -389,10 +427,11 @@ assert.match(pageSource,/<p id="presentation-label" role="note" hidden><\/p>/,'t
 assert.match(pageSource,/document\.querySelector\('#presentation-label'\)\.hidden=!presentation\.enhanced/,'the label is tied to the enhanced mode');
 assert.match(pageSource,/createMaterial\(doc,state\.textures,p\.material,\{presentation:presentation\.mode\}\)/,'loaded meshes follow the selected presentation');
 assert.match(pageSource,/presentation\.finish\(m\.material,definition\)/,'the finish is applied after every paint update');
-assert.match(pageSource,/presentation\.follow\(box\.isEmpty\(\)\?null:box\)/,'the ground and the shadow follow the car and the geometry choice');
+assert.match(pageSource,/presentation\.follow\(box\.isEmpty\(\)\?null:box,underCarShadowFloor\(\)\)/,'the ground and the shadow follow the car, the geometry choice and the drawn under-car shadow quad');
+assert.match(pageSource,/function underCarShadowFloor\(\)\{[^\n]*mesh\.userData\.underCarShadow[^\n]*expandByObject\(mesh\)/,'the page measures the floor of the quad the selected view draws');
 assert.match(pageSource,/presentation\.follow\(null\)/,'and they are cleared when the preview is disposed');
 assert.match(pageSource,/presentation\.prepare\(\);renderer\.render\(scene,camera\)/,'the shadow pass runs before the page\'s own render, beside the other per-frame hooks');
 assert.match(pageSource,/title="Original renders the recovered materials[^"]*soft contact shadow under the car/,'the control says what Enhanced adds');
 assert.match(pageSource,/download\.href=encodeURI\('public\/'\+entry\.file\)/,'the download still serves the unmodified source file');
 assert.doesNotMatch(pageSource,/presentation[^\n]{0,80}buffer[^\n]{0,40}=[^\n]{0,40}(gloss|enhanc|finish)/i,'the presentation never rewrites the download buffer');
-console.log('PASS test_enhanced_presentation: original default and exact restore, enhanced environment and neutral mapping, label, mode and material-type controls, clearcoat only on textured opaque coverage, real Gran Torino and Ford GT materials, ground and contact shadow built, placed and drawn in enhanced only and following car, geometry, empty tree and dispose, blur tap structure and texture-pixel reach of the generated offsets, depth material released on dispose, asset-free in-repo studio and shadow reused, unchanged download path');
+console.log('PASS test_enhanced_presentation: original default and exact restore, enhanced environment and neutral mapping, label, mode and material-type controls, clearcoat only on textured opaque coverage, real Gran Torino and Ford GT materials, ground and contact shadow built, placed and drawn in enhanced only and following car, geometry, empty tree and dispose, the shadow plane\'s floor taken from the lower of the framing box and the drawn under-car shadow quad, blur tap structure and texture-pixel reach of the generated offsets, depth material released on dispose, asset-free in-repo studio and shadow reused, unchanged download path');
