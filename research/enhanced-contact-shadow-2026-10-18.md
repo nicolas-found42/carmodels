@@ -56,7 +56,7 @@ plane.
 | `margin` | 0.15 | The shadow plane extends a little past the car's footprint so the blur is not clipped at the plane's own edge. |
 | `groundSpan` | 24 × the shadow plane | A large enough floor that its far edge is out of frame at the viewer's fitted camera, so the ground reads as a floor and not as a plate. |
 | Ground colour | `#1e2735`, lit by the page's existing lights | A floor only a little lighter than the `#151a22` backdrop; it is a prop, not recovered data. |
-| `groundDrop` / `cameraDrop` | 0.002 / 0.01 of the plane's side | The ground sits a hair under the car's lowest point (so the tyres touch the contact plane, not the floor), and the depth camera sits a hair under the ground where the ground plane is clipped by the near plane. |
+| `groundDrop` / `cameraDrop` | 0.002 / 0.01 of the plane's side | The ground sits a hair under the car's lowest point, so the tyres touch the contact plane rather than the floor and the two coplanar surfaces never fight over depth. The depth camera sits a hair under the ground, looking up: the ground and the shadow are the only things between them, and the pass hides the whole group so neither reaches the field. |
 | `minimumFootprint` | 0.1 | A degenerate record still gets a usable plane instead of a zero-scale one. |
 
 ## What the implementation guarantees
