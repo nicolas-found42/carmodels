@@ -288,7 +288,9 @@ export function setShadingMaterial(material, on, {pass4 = false, pass5 = false, 
     .replace('#include <begin_vertex>', `#include <begin_vertex>\n vPass5Specular = ${SPECULAR_ATTRIBUTE};`);
    fragmentShader = `uniform vec4 pass5Light;\nvarying float vPass5Specular;\n${fragmentShader}`
     .replace('#include <opaque_fragment>',
-             '#include <opaque_fragment>\n gl_FragColor.rgb += vPass5Specular * (floor(min(pass5Light.rgb * diffuseColor.rgb * 255.0, vec3(128.0))) / 255.0);');
+             // The decoded RGB is the draw's colour constant, so it takes the material's paint alone:
+             // diffuseColor already carries the base texture, which would make the constant per-texel.
+             '#include <opaque_fragment>\n gl_FragColor.rgb += vPass5Specular * (floor(min(pass5Light.rgb * diffuse * 255.0, vec3(128.0))) / 255.0);');
   }
   shader.vertexShader = vertexShader;
   shader.fragmentShader = fragmentShader;

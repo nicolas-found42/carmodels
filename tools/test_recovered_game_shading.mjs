@@ -159,8 +159,12 @@ function testBaselineIsUntouched(table) {
  assert.match(shader.fragmentShader, /gl_FragColor\.rgb \+= texture2D\(pass4Texture, vPass4Environment\.xy\)\.rgb \* diffuseColor\.rgb \* vPass4Environment\.z;/,
               'the environment term is not the decoded colour factor times the sampled texel');
  assert.match(shader.fragmentShader, /uniform vec4 pass5Light;/);
- assert.match(shader.fragmentShader, /gl_FragColor\.rgb \+= vPass5Specular \* \(floor\(min\(pass5Light\.rgb \* diffuseColor\.rgb \* 255\.0, vec3\(128\.0\)\)\) \/ 255\.0\);/,
+ // The colour constant is the paint alone: diffuseColor carries the base texture, so the constant
+ // must not follow each texel (and must not follow the Textures switch).
+ assert.match(shader.fragmentShader, /gl_FragColor\.rgb \+= vPass5Specular \* \(floor\(min\(pass5Light\.rgb \* diffuse \* 255\.0, vec3\(128\.0\)\)\) \/ 255\.0\);/,
               'the specular term is not the decoded intensity times the per-draw colour constant');
+ assert.doesNotMatch(shader.fragmentShader, /pass5Light\.rgb \* diffuseColor\.rgb/,
+                     'the per-draw colour constant is read through the base texture');
  assert.equal(shader.uniforms.pass4Texture.value, texture);
  assert.deepEqual(shader.uniforms.pass5Light.value.toArray(), PASS5_LIGHT, 'the light uniform is not the recorded stand-in');
 
@@ -339,12 +343,16 @@ function testViewFrameAndMeshRange(table) {
               'the reported specular range is not the range across the assigned meshes');
  assert.equal(state.follow(camera), false, 'an unchanged view rewrote the lookup');
  assert.equal(state.follow(camera), false, 'the label would be rewritten on an unchanged frame');
+ // The pre-move lookup, snapshotted: range() reads the live attribute, so comparing after the move
+ // against a live read would compare the new values with themselves.
+ const beforeSpec = specular(up), beforeEnv = factor(up);
  // A moved camera must be read in the frame being rendered, not the previous rotation.
  camera.position.set(-6, 2, 3);
  camera.rotation.set(0.3, 0.7, 0.1);
  assert.equal(state.follow(camera), true, 'a moved view did not rewrite the lookup');
  const after = {env: Float32Array.from(up.geometry.getAttribute('pass4Env').array), spec: Float32Array.from(up.geometry.getAttribute('pass5Spec').array)};
- assert.notDeepEqual(Array.from(after.spec), specular(up), 'the specular did not change with the moved view');
+ assert.notDeepEqual(Array.from(after.spec), beforeSpec, 'the specular did not change with the moved view');
+ assert.notDeepEqual(Array.from(after.env), beforeEnv, 'the lookup did not change with the moved view');
  const reference = new THREE.BufferGeometry();
  reference.setAttribute('position', up.geometry.getAttribute('position').clone());
  reference.setAttribute('normal', up.geometry.getAttribute('normal').clone());
