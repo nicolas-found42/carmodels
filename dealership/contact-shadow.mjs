@@ -15,9 +15,14 @@ export const CONTACT_SHADOW = Object.freeze({
   groundSpan: 24, // the ground's side as a multiple of the shadow plane's
   groundColour: 0x1e2735, // a floor a little lighter than the #151a22 backdrop
   groundDrop: .002, // ground below the car's lowest point, as a fraction of the plane's side
-  planeDrop: .0005, // the shadow plane a hair below that point, same fraction: the recovered
-  // under-car shadow quad lies exactly on the car's floor (issue #23), so the plane sits under it
-  // and the quad draws over the shadow instead of fighting it for depth
+  planeDrop: .0005, // the shadow plane a hair below that point, same fraction: that point is the
+  // lower of the framing box's floor and the recovered under-car shadow quad's own floor (issue #23,
+  // the quad is flat at one height), which the page measures and passes to follow(). The plane is
+  // therefore under the quad in every view rather than over it. The drop below the chosen floor is
+  // exactly this fraction of the plane's side; the gap below the quad is that drop plus however far
+  // the box's floor sits under the quad, and measures 2.1 to 15.4 mm across the shipped 35 cars and
+  // both views (tools/test_under_car_shadow.mjs) - so the quad draws over the shadow instead of
+  // fighting it for depth
   cameraDrop: .01, // the depth camera sits this far below the ground, same fraction
   minimumFootprint: .1, // a degenerate record still gets a usable plane
 });
@@ -53,7 +58,7 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
   if (!Number.isInteger(resolution) || resolution < 2) throw Error('The contact shadow resolution must be an integer of at least 2.');
   let scene = null, geometry = null, group = null, ground = null, plane = null, blurPlane = null, camera = null;
   let depthMaterial = null, depthTarget = null, blurTarget = null, horizontal = null, vertical = null;
-  let box = null, enabled = false, dirty = false, renders = 0;
+  let box = null, shadowFloor = null, enabled = false, dirty = false, renders = 0;
   const size = new THREE.Vector3(), centre = new THREE.Vector3(), darkness = {value: CONTACT_SHADOW.darkness};
 
   // Built on first use, so Original mode holds nothing at all.
@@ -91,8 +96,11 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
     group.add(ground, plane, blurPlane);
   }
 
-  // The car's bounding box is the only input: the selected car and the geometry choice both arrive
-  // as a fresh box. An empty or absent box means there is nothing to stand on.
+  // The car's bounding box is the only required input: the selected car and the geometry choice both
+  // arrive as a fresh box, and an empty or absent box means there is nothing to stand on. The second
+  // input is the floor of the recovered under-car shadow quad the selected view draws, when the
+  // caller knows it (the page leaves that quad out of the framing box on purpose): the plane stands
+  // under the lower of the two, so it is never above the quad.
   function place() {
     if (!group)return;
     const empty = !box || box.isEmpty();
@@ -102,8 +110,9 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
     box.getCenter(centre);
     const footprint = Math.max(size.x, size.z, CONTACT_SHADOW.minimumFootprint);
     const side = footprint * (1 + CONTACT_SHADOW.margin);
-    const floor = box.min.y;
-    const height = Math.max(size.y, footprint * .05);
+    const floor = shadowFloor === null ? box.min.y : Math.min(box.min.y, shadowFloor);
+    // the depth camera reaches the top of the framed box from that floor, not the box's own span
+    const height = Math.max(box.max.y - floor, footprint * .05);
     group.position.set(centre.x, floor, centre.z);
     plane.scale.set(side, 1, side);
     blurPlane.scale.set(side, 1, side);
@@ -175,8 +184,9 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
       if (group.parent !== scene)scene.add(group);
       place();
     },
-    follow(next) {
+    follow(next, quadFloor = null) {
       box = next ?? null;
+      shadowFloor = Number.isFinite(quadFloor) ? quadFloor : null;
       place();
     },
     update,
@@ -192,6 +202,7 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
       scene = geometry = group = ground = plane = blurPlane = camera = null;
       depthMaterial = depthTarget = blurTarget = horizontal = vertical = null;
       box = null;
+      shadowFloor = null;
       enabled = dirty = false;
     },
   };

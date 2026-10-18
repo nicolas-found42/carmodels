@@ -79,8 +79,10 @@ export function createPresentation(renderer, scene, {studio=createGT4Studio(rend
     return material;
   }
   // The selected car and the geometry choice both arrive as a fresh bounding box: the ground and
-  // the contact shadow are placed from it, and drawn by prepare() on the frame after.
-  function follow(box) {shadow.follow(box);}
+  // the contact shadow are placed from it, and drawn by prepare() on the frame after. The second
+  // argument is the floor of the recovered under-car shadow quad the selected view draws, which the
+  // framing box deliberately leaves out; the shadow plane stands under the lower of the two.
+  function follow(box, quadFloor) {shadow.follow(box, quadFloor);}
   // The per-frame hook, called before the page's own render. It does nothing while Original is
   // selected, and nothing after a placement has been drawn once, so a still frame costs nothing.
   function prepare() {return shadow.update(scene);}

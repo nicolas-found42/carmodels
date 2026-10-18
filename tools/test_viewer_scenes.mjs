@@ -65,8 +65,11 @@ const context={loaded:{groups:[emptyGroup]},recordSelect:{value:'scene5'},select
 const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
 const showRecord=html.match(/function showRecord\(\).*\n/)[0];
 const underCarShadowNote=html.match(/function underCarShadowNote\(shadow,value,game\).*\n/)[0];
+// The floor of the drawn under-car shadow quad, which showRecord() hands to the placement (issue #72).
+const underCarShadowFloor=html.match(/function underCarShadowFloor\(\).*\n/)[0];
 const shadowNote=vm.runInNewContext(underCarShadowNote+';underCarShadowNote;',{});
-vm.runInNewContext(showRecord+';showRecord();',context);
+// The empty-scene slice needs the quad-floor helper too; only shownMeshes and it are in scope.
+vm.runInNewContext(underCarShadowFloor+showRecord+';showRecord();',{...context,shownMeshes:()=>[]});
 assert.match(status.textContent,/no drawable geometry/);
 assert(camera.position.equals(initial));
 // The presentation's ground and contact shadow follow the same box; an empty tree clears them.
@@ -80,7 +83,7 @@ glassGroup.add(glass);
 const visibleContext={...context,loaded:{groups:[glassGroup]},recordSelect:{value:'scene6'},
  selected:{code:'GRAN_TORINO',records:[]},controls:{target:new THREE.Vector3(),update(){}},updateMaterials(){}};
 const shownMeshes=html.match(/function shownMeshes\(root\).*\n/)[0];
-vm.runInNewContext(underCarShadowNote+shownMeshes+showRecord+';showRecord();',visibleContext);
+vm.runInNewContext(underCarShadowNote+shownMeshes+underCarShadowFloor+showRecord+';showRecord();',visibleContext);
 assert.match(status.textContent,/glass\/Header-colour parts \(1 here\)/);
 assert.match(status.textContent,/candidate, not proven shading/);
 assert.doesNotMatch(status.textContent,/under-car shadow/);
@@ -96,7 +99,7 @@ const shadowOverlay=new THREE.Group();
 shadowOverlay.userData={shadow:true,record:'under-car shadow',overlay:'scene6'};
 shadowOverlay.add(new THREE.Mesh(new THREE.BoxGeometry(.2,.2,.2),new THREE.MeshStandardMaterial()));
 const shadowContext={...visibleContext,loaded:{groups:[shadowOverlay,glassGroup],shadow:{material:'UNDER_SHADOW',record:41,triangles:8,referencedByDefaultScene:false,view:'scene6'}}};
-vm.runInNewContext(underCarShadowNote+shownMeshes+showRecord+';showRecord();',shadowContext);
+vm.runInNewContext(underCarShadowNote+shownMeshes+underCarShadowFloor+showRecord+';showRecord();',shadowContext);
 assert.equal(shadowOverlay.visible,true);
 assert(shadowContext.camera.position.equals(framed),'the shadow overlay must not frame the camera');
 assert.match(status.textContent,/under-car shadow record 41 \(UNDER_SHADOW, 8 triangles\): the source default scene does not reference it \(it sits in the record-layout scene\), so this view rebuilds that original record; its blend state is not captured, so the texture-alpha blend is a candidate \(the record's stored colour is white\)/);

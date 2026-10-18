@@ -8,6 +8,7 @@ import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {applyMaterial,createMaterial,isRecoveredUnderShadow} from '../dealership/materials.mjs';
 import {createPresentation} from '../dealership/enhanced-presentation.mjs';
+import {createContactShadow,CONTACT_SHADOW} from '../dealership/contact-shadow.mjs';
 import {parseEditableGLB} from '../dealership/editable-glb.mjs';
 import {geometryOptions,defaultGeometryValue,sceneLabel} from '../dealership/scene-options.mjs';
 import {requiresNativeTireNormal} from '../dealership/mc3-tire-material.mjs';
@@ -73,15 +74,22 @@ function loadedByTheInspector(code,file,bytes,records) {
  const elements=Object.fromEntries(ids.map(id=>[id,{value:'',disabled:false,hidden:false,options:[],textContent:'',
   removeAttribute(name){delete this[name];},replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},addEventListener(){}}]));
  const scene=new THREE.Scene(),urls=new Set(),status={textContent:''};
+ // The page's own placement path, with the real presentation and contact shadow: showRecord()'s call is
+ // the only input the placement gets, and the shadow's follow() records it verbatim. update() is never
+ // called here, so no WebGL is needed.
+ const renderer={toneMapping:THREE.NoToneMapping,toneMappingExposure:1};
+ const shadow=createContactShadow(renderer),followed=[],placed=shadow.follow.bind(shadow);
+ shadow.follow=(box,quadFloor)=>{followed.push({box,quadFloor});return placed(box,quadFloor);};
+ const presentation=createPresentation(renderer,scene,{studio:{setEnabled(){},dispose(){}},shadow});
  const context={
   THREE:{...THREE,TextureLoader:class {async loadAsync(){const texture=new THREE.Texture();texture.dispose=()=>{};return texture;}}},
   document:{querySelector(selector){return elements[selector.slice(1)]??null;},createElement(){return {};}},
   carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,
   index:{cars:[{id:'ford-racing-2/'+code,game:'ford-racing-2',code,file:'ford-racing-2/'+file,display_name:code,records}]},
   colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){},session:null},
-  // showRecord() and dispose() offer the framing box to the presentation, which stands the car on the
-  // ground surface and its contact shadow in Enhanced mode; this slice only needs the call to exist.
-  paintDownload:{clear(){}},presentation:{mode:'original',enhanced:false,label:'',follow(){},setMode(){},finish(material){return material;}},
+  // showRecord() and dispose() offer the framing box and the drawn under-car shadow quad's floor to the
+  // presentation, which stands the car on the ground with a contact shadow in Enhanced mode.
+  paintDownload:{clear(){}},presentation,
   gamePalette:[],paletteError:'',paletteReady:Promise.resolve(),loaded:null,selected:null,requestId:0,pendingRequest:null,
   AbortController,Blob,URLSearchParams,
   URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
@@ -100,7 +108,7 @@ function loadedByTheInspector(code,file,bytes,records) {
  const showRecord=html.match(/function showRecord\(\).*\n/)[0],shownMeshes=html.match(/function shownMeshes\(root\).*\n/)[0];
  // updateMaterials lives past the slice boundary and needs a paint session; the page's showRecord calls it.
  vm.runInContext(helpers+callback+'function updateMaterials(){}\n'+showRecord+shownMeshes,context);
- return {context,scene,elements,urls,
+ return {context,scene,elements,urls,status,shadow,presentation,followed,
   async load() {
    context.carSelect.value='ford-racing-2/'+code;
    await context.loadCar();
@@ -112,7 +120,49 @@ function loadedByTheInspector(code,file,bytes,records) {
   }};
 }
 
-let cars=0,records=0,rebuilt=0,otherMaterials=0,glassMaterials=0;
+// The placement guarantee of issue #72, read from the loaded scene rather than from a table: the
+// contact-shadow plane stands under the lower of the framed box's floor and the floor of the
+// under-car shadow quad the selected view draws, so it is never above that quad.
+function drawnQuadFloor(groups) {
+ const meshes=[],floor=new THREE.Box3();
+ for(const group of groups)if(group.visible)
+  group.traverse(object=>{if(object.isMesh&&object.userData.underCarShadow===true)meshes.push(object);});
+ for(const mesh of meshes)floor.union(new THREE.Box3().setFromObject(mesh));
+ return {meshes,floor};
+}
+const planeSide=box=>{const size=box.getSize(new THREE.Vector3());return Math.max(size.x,size.z,CONTACT_SHADOW.minimumFootprint)*(1+CONTACT_SHADOW.margin);};
+// The plane's world height after the page's own placement call has been applied: setMode('enhanced')
+// builds the ground and the plane on the frame after the call, exactly as the page does it.
+function planeHeight(presentation,shadow) {
+ presentation.setMode('enhanced');
+ return new THREE.Box3().setFromObject(shadow.plane).min.y;
+}
+// Control: the pre-#72 placement, which never sees the quad's floor. It is what the issue measured.
+function planeHeightWithoutQuadFloor(box) {
+ const control=createContactShadow({toneMapping:THREE.NoToneMapping,toneMappingExposure:1}),scene=new THREE.Scene();
+ control.follow(box);
+ control.setEnabled(scene,true);
+ const height=new THREE.Box3().setFromObject(control.plane).min.y;
+ control.dispose();
+ return height;
+}
+const tight=(actual,expected,message)=>assert(Math.abs(actual-expected)<1e-12,`${message}: ${actual} vs ${expected}`);
+const millimetres=value=>(value*1000).toFixed(3);
+// The floor the shipped GLB writes for the shadow record: its own POSITION accessor bounds, carried by
+// the layout node's transform (the overlay's matrix) or read as authored (the record group's identity).
+function glbQuadFloor(node,accessor,transform) {
+ const box=new THREE.Box3(new THREE.Vector3().fromArray(accessor.min),new THREE.Vector3().fromArray(accessor.max));
+ if(transform) {
+  const matrix=new THREE.Matrix4();
+  if(node.matrix)matrix.fromArray(node.matrix);
+  else matrix.compose(new THREE.Vector3().fromArray(node.translation||[0,0,0]),
+   new THREE.Quaternion().fromArray(node.rotation||[0,0,0,1]),new THREE.Vector3().fromArray(node.scale||[1,1,1]));
+  box.applyMatrix4(matrix);
+ }
+ return box.min.y;
+}
+
+let cars=0,records=0,rebuilt=0,otherMaterials=0,glassMaterials=0,views=0,quadsDrawn=0,aboveWithoutQuadFloor=[],belowQuad=[];
 for(const file of fs.readdirSync(corpus).filter(name=>name.endsWith('.glb')).sort()) {
  const code=file.replace(/\.glb$/,''),parsed=parse(file),{doc,buffer,bytes}=parsed,textures=doc.images.map(()=>new THREE.Texture());
  const shadows=doc.materials.map((material,index)=>index).filter(index=>isRecoveredUnderShadow(doc.materials[index]));
@@ -212,6 +262,38 @@ for(const file of fs.readdirSync(corpus).filter(name=>name.endsWith('.glb')).sor
   `${code}: the overlay shows with the default view`);
  assert.equal(viewer.show(String(record)).groups.find(group=>group.userData.shadow===true).visible,false,
   `${code}: the overlay is not part of another record's view`);
+ // Issue #72: every shipped car, both views. The plane must stand below the under-car shadow quad
+ // the selected view draws -- the relationship contact-shadow.mjs's planeDrop comment states -- and
+ // the quad's floor must be the one the shipped GLB writes, not a table of numbers.
+ for(const [which,chosen] of [['the default view',view],['the record view',String(record)]]) {
+  const state=viewer.show(chosen),{meshes,floor}=drawnQuadFloor(state.groups);
+  assert.equal(meshes.length,1,`${code}: ${which} draws its under-car shadow quad exactly once`);
+  const framed=state.groups.find(group=>group.visible&&group.userData.shadow!==true);
+  const box=new THREE.Box3().setFromObject(framed),side=planeSide(box),frame=viewer.followed.at(-1);
+  tight(floor.min.y,glbQuadFloor(selection.node,doc.accessors[primitive.attributes.POSITION],which==='the default view'),
+   `${code}: ${which} draws the quad at the floor the GLB writes for its record`);
+  assert.equal(frame.box.min.y,box.min.y,`${code}: ${which} frames the visible tree`);
+  assert.equal(frame.quadFloor,floor.min.y,`${code}: ${which} hands the placement the floor of the quad it draws`);
+  const plane=planeHeight(viewer.presentation,viewer.shadow);
+  tight(plane,Math.min(box.min.y,floor.min.y)-side*CONTACT_SHADOW.planeDrop,
+   `${code}: ${which} places the plane one drop under the lower of the two floors`);
+  assert(plane<floor.min.y,`${code}: ${which} leaves the contact plane at ${plane}, not under the drawn quad at ${floor.min.y}`);
+  assert(floor.min.y-plane>=side*CONTACT_SHADOW.planeDrop-1e-12,
+   `${code}: ${which} keeps the plane at least ${millimetres(side*CONTACT_SHADOW.planeDrop)} mm under the quad`);
+  belowQuad.push(floor.min.y-plane);
+  if(which==='the default view') {
+   const without=planeHeightWithoutQuadFloor(box);
+   if(without>floor.min.y)aboveWithoutQuadFloor.push({code,millimetres:(without-floor.min.y)*1000});
+  }
+  if(code==='GRAN_TORINO'&&which==='the default view') {
+   const size=box.getSize(new THREE.Vector3());
+   assert(viewer.status.textContent.includes(`size ${size.toArray().map(value=>value.toFixed(2)).join(' × ')} (game units)`),
+    `${code}: the page prints the box this check reasons about`);
+   assert.equal(size.toArray().map(value=>value.toFixed(2)).join(' × '),'2.01 × 1.43 × 5.44',
+    `${code}: the derived tree box is the page's own measured 2.01 × 1.43 × 5.44`);
+  }
+  views++;quadsDrawn+=meshes.length;
+ }
  rebuilt++;
  // Every other material keeps its authored glTF state: textured body and glass/Header parts unchanged.
  for(let index=0;index<doc.materials.length;index++) {
@@ -235,6 +317,15 @@ for(const file of fs.readdirSync(corpus).filter(name=>name.endsWith('.glb')).sor
 assert.equal(cars,35);
 assert.equal(records,35);
 assert.equal(rebuilt,35);
+// The control that makes the added input load-bearing: the pre-#72 placement, which never sees the
+// quad's floor, puts the plane above the quad in exactly the two default views the issue names, by the
+// margins it measured. Every other car and view is unchanged by the second argument.
+assert.deepEqual(aboveWithoutQuadFloor.map(row=>row.code),['F150','F350'],
+ 'without the quad\'s floor the plane sits above the quad in exactly F150 and F350');
+assert(Math.abs(aboveWithoutQuadFloor[0].millimetres-1.699)<.001,
+ `F150: the plane would stand ${aboveWithoutQuadFloor[0].millimetres.toFixed(3)} mm above the quad`);
+assert(Math.abs(aboveWithoutQuadFloor[1].millimetres-1.331)<.001,
+ `F350: the plane would stand ${aboveWithoutQuadFloor[1].millimetres.toFixed(3)} mm above the quad`);
 // A material outside the recovered name shape is never treated as the shadow, whatever its texture is.
 const sample=parse('GRAN_TORINO.glb').doc;
 const renamed={...sample,materials:sample.materials.map(material=>isRecoveredUnderShadow(material)?{...material,name:'BODY_PANEL'}:material)};
@@ -245,4 +336,6 @@ assert.equal(isRecoveredUnderShadow({name:'GT90_UNDER_SHADOW'}),true);
 assert.equal(isRecoveredUnderShadow({name:'SHADOWLESS_BODY'}),false);
 console.log(`PASS test_under_car_shadow: ${cars} cars, ${records} shadow records outside the exported default scene, `
  +`${rebuilt} rebuilt at load, ${otherMaterials} other textured/detail materials and ${glassMaterials} Header-colour parts unchanged, `
- +'candidate alpha blend kept in both presentation modes');
+ +`candidate alpha blend kept in both presentation modes, ${views} views (${quadsDrawn} drawn quads) with the `
+ +`contact plane ${(Math.min(...belowQuad)*1000).toFixed(3)}-${(Math.max(...belowQuad)*1000).toFixed(3)} mm under the drawn quad `
+ +`(the pre-#72 placement was ${aboveWithoutQuadFloor.map(row=>row.code+' +'+row.millimetres.toFixed(3)+' mm').join(' and ')} above it)`);

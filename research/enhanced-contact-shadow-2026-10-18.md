@@ -56,7 +56,7 @@ plane.
 | `margin` | 0.15 | The shadow plane extends a little past the car's footprint so the blur is not clipped at the plane's own edge. |
 | `groundSpan` | 24 × the shadow plane | A large enough floor that its far edge is out of frame at the viewer's fitted camera, so the ground reads as a floor and not as a plate. |
 | Ground colour | `#1e2735`, lit by the page's existing lights | A floor only a little lighter than the `#151a22` backdrop; it is a prop, not recovered data. |
-| `planeDrop` | 0.0005 of the plane's side | The shadow plane sits a hair *under* the car's lowest point, above the ground. The recovered under-car shadow quad lies exactly on that point (issue #23), so the quad draws over the shadow: it keeps its candidate blend and a coplanar overlay would fight it for depth. |
+| `planeDrop` | 0.0005 of the plane's side | The shadow plane sits a hair *under* the floor the placement chose, and above the ground. That floor is the lower of the framed box's and the drawn recovered under-car shadow quad's own (issue #72): the quad is flat at one height in the export, and the framing box deliberately leaves it out, so the page measures the quad it draws and passes its floor to `follow()`. The plane therefore stands under the quad in every view — 2.1–15.4 mm under it over the 35 cars × both views — and the quad keeps its candidate blend and draws over the shadow. |
 | `groundDrop` / `cameraDrop` | 0.002 / 0.01 of the plane's side | The ground sits a hair under the car's lowest point, so the tyres touch the contact plane rather than the floor and the two coplanar surfaces never fight over depth. The depth camera sits a hair under the ground, looking up: the ground and the shadow are the only things between them, and the pass hides the whole group so neither reaches the field. |
 | `minimumFootprint` | 0.1 | A degenerate record still gets a usable plane instead of a zero-scale one. |
 
@@ -68,11 +68,19 @@ plane.
 - **Original renders the pre-change frame.** Measured below: the read-back buffer is byte-identical
   to the same page served from the commit this branch is based on, for both cars and both geometry
   records.
-- **Enhanced follows the car.** `follow(box)` is the only input; the page passes the visible
-  geometry record's bounding box from `showRecord()`, the same box the camera is fitted to. The
-  ground is centred on the box and sits at its lowest point; the shadow plane spans the footprint
-  plus its margin; the depth camera covers exactly that plane. An empty box (an empty source tree) or
-  a cleared viewer hides both.
+- **Enhanced follows the car.** `follow(box, quadFloor)` are the only inputs; the page passes the visible
+  geometry record's bounding box from `showRecord()`, the same box the camera is fitted to, and the floor
+  of the recovered under-car shadow quad that view draws. The ground is centred on the box and sits at the
+  lower of those two floors; the shadow plane spans the footprint plus its margin; the depth camera covers
+  exactly that plane. An empty box (an empty source tree) or a cleared viewer hides both.
+- **The plane is never above the recovered under-car shadow quad** (issue #72). That quad is the one
+  surface the framing box deliberately leaves out — it is not part of the camera fit — so `showRecord()`
+  measures the floor of the quad the selected view actually draws and passes it to `follow()`, whose
+  lower floor the placement uses. The quad is flat at a single height in every shipped car, so the plane
+  ends up one `planeDrop` below it at least; the check derives this per car and per view from the shipped
+  GLBs. Before it, the plane sat *above* the quad in the F150 and F350 default views (measured +1.699 mm
+  and +1.331 mm), because those two trees' floors (both +0.00502) are higher than the plane's own drop
+  (side × 0.0005 ≈ 3.3–3.7 mm on those cars).
 - **Enhanced draws once per placement.** `prepare()` is the page's per-frame hook and returns
   immediately unless the placement changed; the test asserts that the frame sequence is one depth
   pass plus two two-pass blurs, that the plane samples the target the last pass writes, and that a
