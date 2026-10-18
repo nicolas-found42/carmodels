@@ -105,6 +105,16 @@ Round trip at screenshot level: Original before any mode change and Original aft
 Enhanced → Original had the same PNG bytes (SHA-256 `4c13e207020e2aa7…`), consistent with the
 buffer-level result above.
 
+The captures are session output, kept out of the tree by the `research/evidence` allowlist rule
+("browser screenshots" belong to `.scratch/research/<session>/`); they live in
+`.scratch/research/enhanced-presentation-2026-10-18/` next to this checkout:
+`GRAN_TORINO-original.png` (`4c13e207020e2aa7…`), `GRAN_TORINO-enhanced.png` (`3f2fc41db23ec13a…`),
+`GRAN_TORINO-baseline.png` (`590fd280689058fc…`, the pre-change page), `FORD_GT-original.png`
+(`626a22c35174d95d…`), `FORD_GT-enhanced.png` (`e923e833ee0e9d0a…`), plus `header-original.png` and
+`header-enhanced.png` for the label. Enhanced shows the studio's broad softbox gradient breaking
+across the roof and shoulder line with a bright highlight on the bonnet, where Original is flat
+colour; the tyres and the white rims pick up the same sheen (the recorded gap).
+
 Real-environment check (temporary probe page, not committed): with the actual studio (no stub),
 Enhanced sets `renderer.toneMapping = 7 (NeutralToneMapping)`, `toneMappingExposure = 1`,
 `scene.environment` = a render-target `Texture` with `CubeUVReflectionMapping` and image size
@@ -133,5 +143,5 @@ the reused studio and the material path contain no `fetch`, `XMLHttpRequest` or 
   software rasteriser. Other cars, records, cameras and GPUs were not sampled.
 - Originating breakpoints or per-pixel match against the game's own render is not attempted here;
   the claim is only "Original is unchanged; Enhanced is a labelled departure".
-- Screenshots are not committed: `research/evidence/` is allowlist-only and no verifier writes or
-  reads images for this change.
+- Screenshots are not committed; `research/evidence/` is allowlist-only and no verifier reads images for
+  this change. The captures of this run are in `.scratch/research/enhanced-presentation-2026-10-18/`.
