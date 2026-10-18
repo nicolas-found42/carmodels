@@ -107,8 +107,12 @@ derived view, its bake and catalogue agree on the omission, and this ticket's ta
   the honesty label. When the exported default scene does not reference the record, the inspector rebuilds
   that one original primitive as an overlay of the default view (`userData.overlay`), taking part in the same
   visibility switch as the group it belongs to but never used for camera framing. The status line records the
-  record number, the material, the triangle count, whether the source default scene draws it, the reason when
-  it does not, and that the drawn blend is a candidate because the blend state is not captured.
+  record number, the material, the triangle count, and — for whichever view is selected — whether the source
+  default scene draws it, that this is the shadow's own record when it is, or the reason it is not in view,
+  followed by the candidate-blend honesty label. The label is therefore accurate in all three cases: the
+  default view (rebuilt here because the source default scene does not reference the record), the shadow's own
+  assembly part (drawn here, as the record itself), and any other scene or record (not in this view, with the
+  layout scene named as the only reference).
 - `dealership/enhanced-presentation.mjs`: `isTexturedOpaque` no longer claims the under-car shadow, so the
   optional Enhanced presentation (issue #22) does not gloss the quad. **The shadow quad is not affected by
   Enhanced mode.** Enhanced deliberately departs from the recovered look by adding a clearcoat to *textured
@@ -169,6 +173,25 @@ all-white-alpha gradient, the UVs sample more than one alpha value (so the patch
 and `applyMaterial` yields `transparent`, `depthWrite === false`, `NormalBlending`, `opacity === 1`,
 `alphaTest === 0` with the shadow texture still bound — while every other material keeps its authored
 transparency, depth write, cutout, blend mode, stored colour, stored alpha and texture binding.
+
+"Rebuilt" is not inferred from the selector: for each car the test runs the page's own loader slice (the same
+slice `tools/test_viewer_loading.mjs` exercises) and requires the overlay `loadCar` actually built — present in
+the state the loader returned and in the drawn scene, marked `userData.shadow`, attached to the default view
+value the loader selected, holding exactly one mesh whose position, index and UV counts are the record's own,
+with the same alpha-blended candidate material state and the shadow texture — and it then drives the shipped
+`showRecord` to require the overlay visible with that view and hidden for another record. Only when all of
+that holds does the run count the car. Controls that must fail, and were observed failing:
+`if(false&&shadow&&!shadowReferenced)` on the overlay block → `AssertionError: 49_COUPE: the loader must add
+the rebuilt under-car shadow overlay` (exit 1); removing only `state.groups.push(overlay)` → the same assertion
+(exit 1). Restoring the block prints `PASS` (exit 0) again.
+
+The three label cases are covered too: `tools/test_viewer_scenes.mjs` asserts the default view's rebuild
+wording, the shadow's own record ("this view is the record itself, so the quad is drawn here", and explicitly
+*not* "not in this view"), and another view ("only the record-layout scene references it"), for both the
+referenced and unreferenced export case. The live page agrees: GRAN_TORINO's default view labels the quad
+"the source default scene does not reference it …, so this view rebuilds that original record", and selecting
+Geometry → `Assembly part 41` labels it "this view is the record itself, so the quad is drawn here" (headless
+CDP `Runtime.evaluate` on the shipped page).
 
 ### 3. Render before/after (headless Chrome, SwiftShader; local, not part of `tools/check.sh`)
 

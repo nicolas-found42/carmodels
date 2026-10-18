@@ -8,6 +8,10 @@ import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {applyMaterial,createMaterial,isRecoveredUnderShadow} from '../dealership/materials.mjs';
 import {createPresentation} from '../dealership/enhanced-presentation.mjs';
+import {parseEditableGLB} from '../dealership/editable-glb.mjs';
+import {geometryOptions,defaultGeometryValue,sceneLabel} from '../dealership/scene-options.mjs';
+import {requiresNativeTireNormal} from '../dealership/mc3-tire-material.mjs';
+import {isNativePackage} from '../dealership/dealership.mjs';
 
 // The recovered under-car shadow is authored opaque: a 64x64 white texture with graded alpha on a record
 // no exported tree references. This test pins the authored facts, the candidate blend the viewer applies
@@ -60,9 +64,55 @@ const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
 const selectors=vm.runInNewContext(html.match(/function underCarShadowPrimitive\(doc\).*\n/)[0]+
  html.match(/function sourceSceneRecords\(doc,scene\).*\n/)[0]+';({underCarShadowPrimitive,sourceSceneRecords});',{isRecoveredUnderShadow});
 
+// The rebuild count must be evidence, not a restatement of the assertions above: this runs the page's own
+// loader slice (the same slice tools/test_viewer_loading.mjs exercises) for one car and hands back the state
+// it built, so every overlay claim below is about the group loadCar actually created.
+function loadedByTheInspector(code,file,bytes,records) {
+ const ids=['car','record','variant','presentation','presentation-label','textures','sharp','wire','flip','download',
+  'native-download','native-download-wrap','retry','error','dealership-link'];
+ const elements=Object.fromEntries(ids.map(id=>[id,{value:'',disabled:false,hidden:false,options:[],textContent:'',
+  removeAttribute(name){delete this[name];},replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},addEventListener(){}}]));
+ const scene=new THREE.Scene(),urls=new Set(),status={textContent:''};
+ const context={
+  THREE:{...THREE,TextureLoader:class {async loadAsync(){const texture=new THREE.Texture();texture.dispose=()=>{};return texture;}}},
+  document:{querySelector(selector){return elements[selector.slice(1)]??null;},createElement(){return {};}},
+  carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,
+  index:{cars:[{id:'ford-racing-2/'+code,game:'ford-racing-2',code,file:'ford-racing-2/'+file,display_name:code,records}]},
+  colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){},session:null},
+  paintDownload:{clear(){}},presentation:{mode:'original',enhanced:false,label:'',setMode(){},finish(material){return material;}},
+  gamePalette:[],paletteError:'',paletteReady:Promise.resolve(),loaded:null,selected:null,requestId:0,pendingRequest:null,
+  AbortController,Blob,URLSearchParams,
+  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
+  readGLB,parseEditableGLB,loadNativeVehicleResources:async()=>null,bindNativeVehicleResources(){},
+  createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,
+  correctGT4Materials:async()=>{throw Error('not a GT4 car');},renderer:{},prepareMC3Environment:async()=>{},
+  rememberCar(){},updateDescription(){},fetch:async()=>({ok:true,json:async()=>[]}),
+  async fetchModel(){return bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);},
+  async prepareMC3Environment(){},
+ };
+ context.camera=new THREE.PerspectiveCamera();
+ context.controls={target:new THREE.Vector3(),update(){}};
+ vm.createContext(context);
+ const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('function updateMaterials('));
+ const helpers=html.slice(html.indexOf('function underCarShadowPrimitive('),html.indexOf('function updateDescription('));
+ const showRecord=html.match(/function showRecord\(\).*\n/)[0],shownMeshes=html.match(/function shownMeshes\(root\).*\n/)[0];
+ // updateMaterials lives past the slice boundary and needs a paint session; the page's showRecord calls it.
+ vm.runInContext(helpers+callback+'function updateMaterials(){}\n'+showRecord+shownMeshes,context);
+ return {context,scene,elements,urls,
+  async load() {
+   context.carSelect.value='ford-racing-2/'+code;
+   await context.loadCar();
+  },
+  show(view) {
+   context.recordSelect.value=view;
+   vm.runInContext('showRecord();',context);
+   return context.loaded;
+  }};
+}
+
 let cars=0,records=0,rebuilt=0,otherMaterials=0,glassMaterials=0;
 for(const file of fs.readdirSync(corpus).filter(name=>name.endsWith('.glb')).sort()) {
- const code=file.replace(/\.glb$/,''),parsed=parse(file),{doc,buffer}=parsed,textures=doc.images.map(()=>new THREE.Texture());
+ const code=file.replace(/\.glb$/,''),parsed=parse(file),{doc,buffer,bytes}=parsed,textures=doc.images.map(()=>new THREE.Texture());
  const shadows=doc.materials.map((material,index)=>index).filter(index=>isRecoveredUnderShadow(doc.materials[index]));
  assert.equal(shadows.length,1,`${code}: exactly one under-car shadow material`);
  const shadow=shadows[0],source=doc.materials[shadow],pbr=source.pbrMetallicRoughness??{};
@@ -129,6 +179,36 @@ for(const file of fs.readdirSync(corpus).filter(name=>name.endsWith('.glb')).sor
   `${code}: the record layout carries the shadow record`);
  assert.equal(selectors.sourceSceneRecords(doc,doc.scenes[doc.scene]).has(record),false,
   `${code}: the exported default scene does not reference the shadow record`);
+ // Rebuilt means the shipped loader produced the overlay, with this car's own geometry and blend.
+ const viewer=loadedByTheInspector(code,file,bytes,[{record,node:selection.node.index??0,triangles:doc.accessors[primitive.indices].count/3}]);
+ await viewer.load();
+ assert(viewer.context.selected,`${code}: the sandbox car loaded (${viewer.elements.error.textContent})`);
+ const view='scene'+doc.scene;
+ assert.equal(viewer.context.recordSelect.value,view,`${code}: the default view the loader selected`);
+ const overlay=viewer.context.loaded.groups.find(group=>group.userData.shadow===true);
+ assert(overlay,`${code}: the loader must add the rebuilt under-car shadow overlay`);
+ assert.equal(viewer.scene.children.includes(overlay),true,`${code}: the overlay is part of the drawn scene`);
+ assert.equal(overlay.userData.record,'under-car shadow');
+ assert.equal(overlay.userData.overlay,view,`${code}: the overlay belongs to the selected default view`);
+ assert.equal(overlay.visible,true,`${code}: the loader's own showRecord leaves the overlay visible in the default view`);
+ assert.equal(overlay.children.length,1,`${code}: exactly the one original record is rebuilt`);
+ const rebuilt_mesh=overlay.children[0];
+ assert.equal(rebuilt_mesh.geometry.getAttribute('position').count,doc.accessors[primitive.attributes.POSITION].count,
+  `${code}: the overlay carries the record's own vertices`);
+ assert.equal(rebuilt_mesh.geometry.getIndex().count,doc.accessors[primitive.indices].count,
+  `${code}: the overlay carries the record's own triangles`);
+ assert.equal(rebuilt_mesh.geometry.getAttribute('uv').count,doc.accessors[primitive.attributes.TEXCOORD_0].count,
+  `${code}: the overlay carries the UVs the alpha blend samples`);
+ assert.equal(rebuilt_mesh.material.transparent,true,`${code}: the overlay draws as a candidate blend`);
+ assert.equal(rebuilt_mesh.material.depthWrite,false,`${code}: the overlay writes no depth`);
+ assert.equal(rebuilt_mesh.material.blending,THREE.NormalBlending);
+ assert.equal(rebuilt_mesh.material.opacity,1);
+ assert.equal(rebuilt_mesh.material.alphaTest,0);
+ assert.equal(rebuilt_mesh.material.map,viewer.context.loaded.textures[image],`${code}: the overlay keeps the shadow texture`);
+ assert.equal(viewer.show(view).groups.find(group=>group.userData.shadow===true).visible,true,
+  `${code}: the overlay shows with the default view`);
+ assert.equal(viewer.show(String(record)).groups.find(group=>group.userData.shadow===true).visible,false,
+  `${code}: the overlay is not part of another record's view`);
  rebuilt++;
  // Every other material keeps its authored glTF state: textured body and glass/Header parts unchanged.
  for(let index=0;index<doc.materials.length;index++) {
