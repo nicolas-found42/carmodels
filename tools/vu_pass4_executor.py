@@ -28,8 +28,10 @@ import verify_vu_pass_handlers as vph  # noqa: E402
 
 RESIDENCY = ROOT / 'research/evidence/packet-continuation/vu-overlay-residency.json'
 DISPATCH = ROOT / 'research/evidence/vu-dispatch/dispatch-map.json'
+HANDLERS = ROOT / 'research/evidence/vu-dispatch/handlers-pass4-pass5.json'
 PASS_WORD = 4
 VERTICES = 4  # the handler's loop is unrolled four times
+SHIFTED_BASES = ('P', 'B1')  # per-vertex pointers that advance by three qwords per vertex
 LANES = 'xyzw'
 
 
@@ -104,27 +106,54 @@ def collect(vectors):
     words, entry = load_program()
     structure = vph.find_structure(words, entry)
     reads = set(vph.run_handler(words, structure).reads)
-    vph.need(len(reads) >= 8, 'the symbolic run reported too few input qwords')
-    return {'entry': entry, 'input_qwords': sorted(str(key) for key in reads),
+    names, keys = receipt_inputs()
+    vph.need(keys <= reads, 'the handler does not read the receipt inputs: %r' % sorted(map(str, keys - reads)))
+    return {'entry': entry, 'receipt_input_qwords': sorted(str(key) for key in keys),
+            'extra_qwords': sorted(str(key) for key in reads - keys),
             'vertices': [run(vector, words, structure, reads) for vector in vectors]}
+
+
+def receipt_inputs():
+    """The pass-4 input qwords the committed handler receipt names, expanded to all four vertices.
+
+    The receipt lists one vertex's leaves (P[0], P[1], B1[1], B1[3], DM[7], TOP[1], TOP[12]-TOP[14]);
+    the handler is unrolled four times with P and B1 advancing three qwords per vertex.
+    """
+    receipt = json.loads(HANDLERS.read_text())
+    names = receipt['handlers'][str(PASS_WORD)]['inputs']
+    keys = set()
+    for name in names:
+        base, rest = name.split('[', 1)
+        index, _ = rest.split('].', 1)
+        key = (None if base == 'DM' else base, int(index))
+        keys.add(key)
+        for vertex in range(1, VERTICES):
+            if key[0] in SHIFTED_BASES:
+                keys.add((key[0], key[1] + 3 * vertex))
+    return names, keys
 
 
 def self_test():
     """The input mapping needs no microcode, so it is checked wherever the overlays are absent."""
-    vector = {'position': [1.5, -2.25, 0.75, 1.0], 'normal': [0.0, 1.0, 0.0], 'eye': [-3.0, 4.0, -5.0],
-              'rows': list(range(1, 10)), 'q': 0.5, 'colour': [128.0, 64.0, 32.0]}
-    reads = [('P', 0), ('P', 1), ('P', 3), ('P', 4), ('B1', 1), ('B1', 3), ('TOP', 1), ('TOP', 12), ('TOP', 13), ('TOP', 14)]
-    memory = memory_for(reads, vector)
-    vph.need(sorted(memory) == sorted(reads), 'the mapping dropped or invented an input qword')
+    names, keys = receipt_inputs()
+    vph.need(len(names) == 28 and len(keys) == 21, 'the receipt names %d leaves in %d qwords' % (len(names), len(keys)))
+    vector = {'position': [1.5, -2.25, 0.75, 1.5], 'normal': [0.5, -1.25, 2.5], 'eye': [-3.0, 4.0, -5.0],
+              'rows': [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], 'q': 0.5, 'colour': [128.0, 64.0, 32.0]}
+    memory = memory_for(keys, vector)
+    vph.need(set(memory) == set(keys), 'the mapping dropped or invented an input qword')
     vph.need(all(len(lanes) == 4 for lanes in memory.values()), 'an input qword is not four lanes')
-    vph.need(memory[('P', 0)] == [vx.f32(v) for v in (1.5, -2.25, 0.75, 1.0)], 'the position plane mapping differs')
-    vph.need(memory[('P', 3)] == [vx.f32(v) for v in (1.5, -2.25, 0.75, 1.0)], 'vertex 1 does not repeat the position plane')
-    vph.need(memory[('P', 1)][:3] == [0.0, 1.0, 0.0], 'the normal plane mapping differs')
-    vph.need(memory[('B1', 1)][2] == 0.5 and memory[('B1', 1)][3] == 1.0, 'the preceding STQ mapping differs')
-    vph.need(memory[('TOP', 1)][:3] == [128.0, 64.0, 32.0], 'the colour mapping differs')
-    vph.need(memory[('TOP', 13)][:3] == [4.0, 5.0, 6.0], 'the matrix row mapping differs')
-    vph.need(lane_value('DM', 7, 'y', vector) == 4.0, 'the eye mapping differs')
-    print('PASS vu_pass4_executor self-test: %d input qwords mapped' % len(reads))
+    vph.need(memory[('P', 0)] == [vx.f32(v) for v in vector['position']], 'the position plane mapping differs')
+    vph.need(memory[('P', 3)] == memory[('P', 0)] and memory[('P', 6)] == memory[('P', 0)], 'a later vertex does not repeat the position plane')
+    vph.need(memory[('P', 1)][:3] == [vx.f32(v) for v in vector['normal']], 'the normal plane mapping differs')
+    vph.need(memory[('B1', 1)][2] == vx.f32(0.5) and memory[('B1', 1)][3] == 1.0, 'the preceding STQ mapping differs')
+    vph.need(memory[(None, 7)][:3] == [vx.f32(v) for v in vector['eye']], 'the eye mapping differs')
+    vph.need(memory[('TOP', 1)][:3] == [vx.f32(v) for v in vector['colour']], 'the colour mapping differs')
+    vph.need(memory[('TOP', 13)][:3] == [vx.f32(v) for v in vector['rows'][3:6]], 'the matrix row mapping differs')
+    # Every named input must carry a value; only the copied-through XYZF qwords are deliberately zero.
+    blank = {key for key, lanes in memory.items() if not any(lanes)}
+    vph.need(blank == {('B1', 3 + 3 * vertex) for vertex in range(VERTICES)},
+              'an input qword maps to no value: %r' % sorted(map(str, blank)))
+    print('PASS vu_pass4_executor self-test: %d receipt qwords mapped over %d vertices' % (len(keys), VERTICES))
     return 0
 
 
