@@ -121,6 +121,12 @@ Enhanced sets `renderer.toneMapping = 7 (NeutralToneMapping)`, `toneMappingExpos
 1536×2048 (the PMREM atlas of the studio's 512 environment), `scene.environmentIntensity = 0.8`;
 Original restores NoToneMapping, exposure 1, `environment = null`, intensity 1.
 
+Cross-game smoke (same harness, one car each): `gran-turismo-4/ac__0014` (physical materials through the
+material repair), `midnight-club-3-remix/vp_350z_04` (native tire/reflection path) and
+`gran-turismo/simulation/_a-a7r` each rendered a different Enhanced buffer and then returned to their
+exact Original buffer on Enhanced → Original, with no page error. The mode does not disturb the other
+games' material paths.
+
 Download: the `#download` link is a `blob:` URL produced by the existing paint export. Its SHA-256 is
 **identical in both modes** — `997c27260dc1c9c400e0152817203b35f687ab23095a5c3354a1ac309d615863`,
 1,224,868 bytes for GRAN_TORINO (source file `d01fc358428c244c…`, 1,225,208 bytes) — and its glTF
@@ -140,7 +146,9 @@ the reused studio and the material path contain no `fetch`, `XMLHttpRequest` or 
 - The gloss is uniform over textured opaque coverage, so tyres are glossier than the original; part
   naming (paint/trim/tyre separation) is out of scope.
 - The measurements cover the two Ford Racing 2 cars above at one geometry record, one camera and one
-  software rasteriser. Other cars, records, cameras and GPUs were not sampled.
+  software rasteriser; the cross-game smoke checked only that the round trip restores Original exactly,
+  one car per game, and no visual statistics were taken for those. Other cars, records, cameras and GPUs
+  were not sampled.
 - Originating breakpoints or per-pixel match against the game's own render is not attempted here;
   the claim is only "Original is unchanged; Enhanced is a labelled departure".
 - Screenshots are not committed; `research/evidence/` is allowlist-only and no verifier reads images for
