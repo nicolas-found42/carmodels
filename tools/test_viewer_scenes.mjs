@@ -57,8 +57,10 @@ emptyGroup.userData={record:'scene5',label:'Candidate tree 4 — all states'};
 const status={textContent:''};
 const camera=new THREE.PerspectiveCamera();
 const initial=camera.position.clone();
+const followCalls=[];
+const presentation={follow(box){followCalls.push(box);}};
 const context={loaded:{groups:[emptyGroup]},recordSelect:{value:'scene5'},selected:{code:'GRAN_TORINO'},
- status,THREE,camera,sceneLabel,controls:{update(){throw Error('empty scene reached camera controls');}},
+ status,THREE,camera,presentation,sceneLabel,controls:{update(){throw Error('empty scene reached camera controls');}},
  updateMaterials(){throw Error('empty scene reached material update');}};
 const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
 const showRecord=html.match(/function showRecord\(\).*\n/)[0];
@@ -67,6 +69,8 @@ const shadowNote=vm.runInNewContext(underCarShadowNote+';underCarShadowNote;',{}
 vm.runInNewContext(showRecord+';showRecord();',context);
 assert.match(status.textContent,/no drawable geometry/);
 assert(camera.position.equals(initial));
+// The presentation's ground and contact shadow follow the same box; an empty tree clears them.
+assert.deepEqual(followCalls,[null],'an empty selection leaves nothing to stand on');
 // Exercise the actual status callback with a visible Header-colour part.
 const glassGroup=new THREE.Group();
 glassGroup.userData={record:'scene6',label:'Tree 0 — Low-speed wheels, lights off'};
@@ -80,6 +84,11 @@ vm.runInNewContext(underCarShadowNote+shownMeshes+showRecord+';showRecord();',vi
 assert.match(status.textContent,/glass\/Header-colour parts \(1 here\)/);
 assert.match(status.textContent,/candidate, not proven shading/);
 assert.doesNotMatch(status.textContent,/under-car shadow/);
+assert.equal(followCalls.length,2,'the visible selection is offered to the presentation');
+assert.equal(followCalls[1].isBox3,true);
+const followed=followCalls[1].getSize(new THREE.Vector3());
+assert(Math.abs(followed.x-1)<1e-9&&Math.abs(followed.y-1)<1e-9&&Math.abs(followed.z-1)<1e-9,
+ 'the ground and the shadow are placed from the visible geometry, not from a fixed size');
 const framed=visibleContext.camera.position.clone();
 // The rebuilt under-car shadow joins the selected source tree without reframing the camera or
 // replacing the existing labels. It sits first here so a missing overlay guard would be visible.
@@ -105,4 +114,4 @@ const inside={material:'UNDER_SHADOW',record:41,triangles:8,referencedByDefaultS
 assert.match(shadowNote(inside,'scene6','ford-racing-2'),/the source default scene draws it here/);
 assert.match(shadowNote(inside,'41','ford-racing-2'),/this view is the record itself, so the quad is drawn here \(the source default scene also draws it\)/);
 assert.match(shadowNote(inside,'scene7','ford-racing-2'),/it is not in this view; the source default scene draws it/);
-console.log(`PASS test_viewer_scenes: ${cars} cars, ${materialBindings} material bindings, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard, visible header-colour honesty label and under-car shadow candidate label`);
+console.log(`PASS test_viewer_scenes: ${cars} cars, ${materialBindings} material bindings, ${emptyChoices} disabled empty tree-4 choices, child geometry, default fallback, empty-selection camera guard, visible header-colour honesty label, under-car shadow candidate label and the presentation's follow box`);

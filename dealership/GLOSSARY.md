@@ -40,6 +40,14 @@ _Avoid_: Livery, skin
 A stored wheel and light state, such as low-speed or moving-wheel, derived from the original visibility routines.
 _Avoid_: Animation, pose
 
+**Ground surface**:
+The flat floor Enhanced mode draws under the car, so the contact shadow has something to land on. A presentation prop, never recovered geometry.
+_Avoid_: Floor mesh, plane, terrain
+
+**Contact shadow**:
+The soft darkening under the car in Enhanced mode, blurred from the car's own depth. A flat, non-physical fake: it follows the car and the geometry choice and cannot self-shadow.
+_Avoid_: Drop shadow, blob shadow, shadow map, ambient occlusion
+
 **Honesty label**:
 The on-screen note that marks an item as a candidate or a procedural reconstruction.
 _Avoid_: Disclaimer, warning

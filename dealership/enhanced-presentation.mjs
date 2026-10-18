@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import {createGT4Studio} from './gt4-studio.mjs';
 import {isRecoveredUnderShadow} from './materials.mjs';
+import {createContactShadow} from './contact-shadow.mjs';
 
 // Enhanced is a deliberate departure from the recovered game look, so its values are
 // published as `enhanced`, never as a recovery claim. The numbers are a judgement call;
@@ -13,8 +14,8 @@ export const ENHANCED_PRESENTATION = Object.freeze({
   clearcoat: 1,
   clearcoatRoughness: .06, // soft reflections rather than a mirror
   label: 'Enhanced presentation — not the original game\'s look: asset-free environment ' +
-    'reflections, a glossy clearcoat on textured parts and neutral tone mapping. The recovered ' +
-    'materials and the download are unchanged.',
+    'reflections, a glossy clearcoat on textured parts, neutral tone mapping, a ground surface and ' +
+    'a soft contact shadow under the car. The recovered materials and the download are unchanged.',
 });
 
 const MODES = new Set(['original', 'enhanced']);
@@ -40,7 +41,7 @@ export function isTexturedOpaque(source) {
 // Original is the default and leaves the renderer and the scene exactly as they were at
 // construction. Enhanced reuses the existing asset-free studio environment
 // (dealership/gt4-studio.mjs): no vendored helper, no HDRI and no network request.
-export function createPresentation(renderer, scene, {studio=createGT4Studio(renderer)}={}) {
+export function createPresentation(renderer, scene, {studio=createGT4Studio(renderer), shadow=createContactShadow(renderer)}={}) {
   const original = {
     toneMapping: renderer.toneMapping,
     toneMappingExposure: renderer.toneMappingExposure,
@@ -56,6 +57,7 @@ export function createPresentation(renderer, scene, {studio=createGT4Studio(rend
     mode = next;
     const enhanced = mode === 'enhanced';
     studio.setEnabled(scene, enhanced);
+    shadow.setEnabled(scene, enhanced);
     // The studio's ACES default is replaced by the neutral mapper so recovered liveries
     // keep their base hue (research/visual-fidelity-modern-pipeline-options.md §2).
     renderer.toneMapping = enhanced ? THREE.NeutralToneMapping : original.toneMapping;
@@ -76,11 +78,17 @@ export function createPresentation(renderer, scene, {studio=createGT4Studio(rend
     material.clearcoatRoughness = ENHANCED_PRESENTATION.clearcoatRoughness;
     return material;
   }
+  // The selected car and the geometry choice both arrive as a fresh bounding box: the ground and
+  // the contact shadow are placed from it, and drawn by prepare() on the frame after.
+  function follow(box) {shadow.follow(box);}
+  // The per-frame hook, called before the page's own render. It does nothing while Original is
+  // selected, and nothing after a placement has been drawn once, so a still frame costs nothing.
+  function prepare() {return shadow.update(scene);}
   return {
-    setMode, finish,
+    setMode, finish, follow, prepare,
     get mode() {return mode;},
     get enhanced() {return mode === 'enhanced';},
     get label() {return mode === 'enhanced' ? ENHANCED_PRESENTATION.label : '';},
-    dispose() {studio.dispose();},
+    dispose() {shadow.dispose();studio.dispose();},
   };
 }
