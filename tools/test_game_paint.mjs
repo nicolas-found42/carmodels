@@ -125,11 +125,12 @@ controls.bind({model:doc,game:'game',carId:'another',colors:[{...blue,game:'game
 controls.bind({model:doc,game:'game',carId:'car',colors:[{...blue,game:'game'}]});reset.listeners.click();assert.deepEqual(controls.session.state.channels,{});assert.equal(saved.size,0);
 const sourcePage=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 const materialStart=sourcePage.indexOf('function updateMaterials()'),materialEnd=sourcePage.indexOf('// Keep the fitted',materialStart);
-const toggles=Object.fromEntries(['textures','wire','sharp','flip'].map(id=>['#'+id,{checked:true}]));
+const toggles=Object.fromEntries(['textures','wire','sharp','flip','game-shading'].map(id=>['#'+id,{checked:id!=='game-shading'}]));
+const gameShading={attach(){},setEnabled(){return '';},enabled:false,status:()=>''};
 const sourceMaterial=new THREE.MeshStandardMaterial();
 const sourceState={doc,textures:[texture],meshes:[{material:sourceMaterial,userData:{paintPrimitive:primitives[2]}}]};
-const update=new Function('loaded','document','applyMaterial','applyPaintMaterial','colourControls','presentation',sourcePage.slice(materialStart,materialEnd)+'return updateMaterials;')(
- sourceState,{querySelector:id=>toggles[id]},applyMaterial,applyPaintMaterial,{session},{finish(material){return material;}});
+const update=new Function('loaded','selected','camera','document','applyMaterial','applyPaintMaterial','colourControls','gameShading','updateGameShadingNote','presentation',sourcePage.slice(materialStart,materialEnd)+'return updateMaterials;')(
+ sourceState,{game:'game',code:'car'},new THREE.PerspectiveCamera(),{querySelector:id=>toggles[id]},applyMaterial,applyPaintMaterial,{session},gameShading,()=>{},{finish(material){return material;}});
 update();assert.equal(sourceMaterial.map,texture);assert.equal(sourceMaterial.wireframe,true);assert.equal(texture.magFilter,THREE.NearestFilter);
 toggles['#textures'].checked=false;update();assert.equal(sourceMaterial.map,null);
 sourceMaterial.dispose();meshMaterial.dispose();texture.dispose();

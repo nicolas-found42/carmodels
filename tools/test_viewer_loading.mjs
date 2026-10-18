@@ -19,7 +19,7 @@ const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('f
 // The under-car shadow helpers the callback slice calls live further down the page. Run them with it so
 // the slice exercises the shipped code instead of a stub; isRecoveredUnderShadow is the page's own import.
 const shadowHelpers=html.slice(html.indexOf('function underCarShadowPrimitive('),html.indexOf('function updateDescription('));
-const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','presentation','download','native-download','native-download-wrap','retry','error','dealership-link'].map(id=>[id,{
+const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','game-shading','game-shading-note','presentation','download','native-download','native-download-wrap','retry','error','dealership-link'].map(id=>[id,{
  value:'',disabled:false,hidden:false,options:[],textContent:'',
  removeAttribute(name){delete this[name];},
  replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},
@@ -37,7 +37,7 @@ const context={THREE:{...THREE,TextureLoader:class {
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
  carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){}},
- paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
+ paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),pass4Ready:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
  readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,

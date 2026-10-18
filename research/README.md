@@ -41,6 +41,7 @@ single list of what is not yet established; update it when a note closes or open
 | `packet-continuation.md` | The draw path: VIF/VU1/GIF/GS packets, the retained display list, the VU1 dispatch map |
 | `pass-source-join.md` | 100 aligned optional-pass draws joined to source Headers; conditional flags, global pass-4 view render target and retained GS image export |
 | `vu-handler-dump.md` | Static pass-4/5 decode, 100-draw capture comparison, retained matrix inputs and rounding limits |
+| `game-shading-inspector.md` | The Recovered inspector's candidate pass-4 control: the derived Header table, its recorded stand-ins (camera as eye, view-derived matrix), the executor comparison and its tolerance, and what stays open |
 | `visualization-libraries.md` | Viewer tooling research with primary-source citations |
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
@@ -74,7 +75,7 @@ single list of what is not yet established; update it when a note closes or open
 - Execution trace of CPU, DMA, VIF and VU1 for the dumped frame.
 - ADC-producing pass-1/2 branch and flag-set clip stage; static-kick packet origins.
 - Pass-4 texture identity and the 100 aligned Header joins are established in `pass-source-join.md` (issue #21). The exported PNG is the retained GS target image; its equality to the dump’s post-render sampled pixels remains open. No replay or broader car-state coverage is claimed.
-- Full pass-4 UV/view-normal factor, pass-5 S, and bit-exact arithmetic (279 measured one-ULP T differences); see `vu-handler-dump.md`.
+- Full pass-4 UV/view-normal factor, pass-5 S, and bit-exact arithmetic (279 measured one-ULP T differences); see `vu-handler-dump.md`. The inspector can now display the decoded pass-4 form as a labelled candidate over the 37 joined COBRA Headers, with recorded stand-ins for the eye, matrix, w lane, blend law and sampled texture; game-state inputs, captured-frame equivalence, pass-5 S and coverage beyond those Headers remain open ([the inspector note](game-shading-inspector.md)).
 - Glass part naming, and whether header 261 is drawn in other states.
 - The untextured-Header colour mapping now drawn in the inspector and GLBs is a candidate
   (issue #18): the captured draw's RGB lanes are black, so the RGB-lane reading of coloured
