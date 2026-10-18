@@ -68,7 +68,7 @@ const selectors=vm.runInNewContext(html.match(/function underCarShadowPrimitive\
 // loader slice (the same slice tools/test_viewer_loading.mjs exercises) for one car and hands back the state
 // it built, so every overlay claim below is about the group loadCar actually created.
 function loadedByTheInspector(code,file,bytes,records) {
- const ids=['car','record','variant','presentation','presentation-label','textures','sharp','wire','flip','download',
+ const ids=['car','record','variant','presentation','presentation-label','textures','sharp','wire','flip','game-shading','game-shading-note','download',
   'native-download','native-download-wrap','retry','error','dealership-link'];
  const elements=Object.fromEntries(ids.map(id=>[id,{value:'',disabled:false,hidden:false,options:[],textContent:'',
   removeAttribute(name){delete this[name];},replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},addEventListener(){}}]));
