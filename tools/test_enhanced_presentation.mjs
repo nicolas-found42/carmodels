@@ -261,6 +261,7 @@ close(torinoBox.min.y,0,'the recovered Gran Torino stands on y=0');
   close(group.position.y,torinoBox.min.y,"the ground sits at the car's lowest point");
   close(shadow.plane.scale.x,side,'the shadow plane spans the footprint plus its margin');
   close(shadow.plane.scale.z,side);
+  close(shadow.plane.position.y,-side*CONTACT_SHADOW.planeDrop,'and sits a hair under the contact plane, so the recovered under-car shadow quad draws over it');
   close(shadow.ground.scale.x,side*CONTACT_SHADOW.groundSpan,'the ground extends well past the shadow');
   close(shadow.ground.position.y,-side*CONTACT_SHADOW.groundDrop,'and sits a hair below the contact plane');
   close(shadow.camera.left,-side/2,'the depth camera covers exactly the shadow plane');
@@ -289,8 +290,24 @@ close(torinoBox.min.y,0,'the recovered Gran Torino stands on y=0');
   assert.match(depthShader.fragmentShader,/gl_FragColor = vec4\( vec3\( 0\.0 \), \( 1\.0 - fragCoordZ \) \* darkness \);/,'black where a surface meets the floor, feathered with its height');
   // the blur: nine weighted samples per axis, a narrower second pass, ping-ponged into the plane's texture
   const blurs=passes.slice(1);
+  // dispose() must release the depth material as well as the rest of the field
+  const depthMaterial=passes[0].override;
+  let depthDisposed=false;const depthDispose=depthMaterial.dispose.bind(depthMaterial);
+  depthMaterial.dispose=()=>{depthDisposed=true;depthDispose();};
   assert.deepEqual(blurs.map(pass=>pass.material.name),['HorizontalBlurShader','VerticalBlurShader','HorizontalBlurShader','VerticalBlurShader']);
-  for(const pass of blurs)assert.equal((pass.shader.match(/sum \+= texture2D/g)||[]).length,9,'nine samples per pass');
+  // The generated offsets, not the shader text: each tap moves along one axis by a whole multiple of
+  // the step h, and the outermost tap lands the configured blur radius away in texture pixels.
+  const texels=(pass,factors,offset)=>Math.max(...factors.map(factor=>Math.abs(factor)))*pass.uniforms.h*offset;
+  const reach=[];
+  for(const pass of blurs) {
+    assert.equal((pass.shader.match(/sum \+= texture2D/g)||[]).length,9,'nine samples per pass');
+    const taps=[...pass.shader.matchAll(/vUv \+ vec2\( (-?[\d.]+), (-?[\d.]+) \) \* (-?[\d.]+) \* h/g)].map(match=>match.slice(1).map(Number));
+    assert.equal(taps.length,9,'every tap is one axis-aligned step of h from the texel: a second h in the offset would collapse the blur');
+    assert.deepEqual(taps.map(([, , factor])=>factor).sort((a,b)=>a-b),[-4,-3,-2,-1,0,1,2,3,4]);
+    for(const [x,y] of taps)assert.equal(Math.abs(x)+Math.abs(y),1,'a tap moves along one axis only');
+    reach.push(texels(pass,taps.map(([, , factor])=>factor),CONTACT_SHADOW.resolution));
+  }
+  assert.deepEqual(reach,[40,40,16,16],'the outermost tap lands 40 texture pixels from the texel for the full-width pair and 16 for the narrower second pair, at the shipped 1024² and blur '+CONTACT_SHADOW.blur);
   assert.deepEqual(blurs.map(pass=>pass.uniforms.h),[CONTACT_SHADOW.blur/256,CONTACT_SHADOW.blur/256,CONTACT_SHADOW.blur*.4/256,CONTACT_SHADOW.blur*.4/256]);
   assert.equal(blurs[0].uniforms.tDiffuse,passes[0].target.texture,'the horizontal pass blurs the depth field');
   assert.equal(blurs[3].uniforms.tDiffuse,blurs[2].target.texture);
@@ -346,6 +363,7 @@ close(torinoBox.min.y,0,'the recovered Gran Torino stands on y=0');
   assert.equal(group.parent,null);
   assert.equal(shadow.ground,null,'dispose releases the ground');
   assert.equal(shadow.plane,null);
+  assert.equal(depthDisposed,true,'dispose releases the depth material too, so three.js keeps no program reference to it');
   assert.equal(shadow.enabled,false);
 }
 
@@ -373,8 +391,8 @@ assert.match(pageSource,/createMaterial\(doc,state\.textures,p\.material,\{prese
 assert.match(pageSource,/presentation\.finish\(m\.material,definition\)/,'the finish is applied after every paint update');
 assert.match(pageSource,/presentation\.follow\(box\.isEmpty\(\)\?null:box\)/,'the ground and the shadow follow the car and the geometry choice');
 assert.match(pageSource,/presentation\.follow\(null\)/,'and they are cleared when the preview is disposed');
-assert.match(pageSource,/controls\.update\(\);presentation\.prepare\(\);renderer\.render\(scene,camera\)/,'the shadow pass runs before the page\'s own render');
+assert.match(pageSource,/presentation\.prepare\(\);renderer\.render\(scene,camera\)/,'the shadow pass runs before the page\'s own render, beside the other per-frame hooks');
 assert.match(pageSource,/title="Original renders the recovered materials[^"]*soft contact shadow under the car/,'the control says what Enhanced adds');
 assert.match(pageSource,/download\.href=encodeURI\('public\/'\+entry\.file\)/,'the download still serves the unmodified source file');
 assert.doesNotMatch(pageSource,/presentation[^\n]{0,80}buffer[^\n]{0,40}=[^\n]{0,40}(gloss|enhanc|finish)/i,'the presentation never rewrites the download buffer');
-console.log('PASS test_enhanced_presentation: original default and exact restore, enhanced environment and neutral mapping, label, mode and material-type controls, clearcoat only on textured opaque coverage, real Gran Torino and Ford GT materials, ground and contact shadow built, placed and drawn in enhanced only and following car, geometry, empty tree and dispose, asset-free in-repo studio and shadow reused, unchanged download path');
+console.log('PASS test_enhanced_presentation: original default and exact restore, enhanced environment and neutral mapping, label, mode and material-type controls, clearcoat only on textured opaque coverage, real Gran Torino and Ford GT materials, ground and contact shadow built, placed and drawn in enhanced only and following car, geometry, empty tree and dispose, blur tap structure and texture-pixel reach of the generated offsets, depth material released on dispose, asset-free in-repo studio and shadow reused, unchanged download path');

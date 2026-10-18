@@ -15,6 +15,9 @@ export const CONTACT_SHADOW = Object.freeze({
   groundSpan: 24, // the ground's side as a multiple of the shadow plane's
   groundColour: 0x1e2735, // a floor a little lighter than the #151a22 backdrop
   groundDrop: .002, // ground below the car's lowest point, as a fraction of the plane's side
+  planeDrop: .0005, // the shadow plane a hair below that point, same fraction: the recovered
+  // under-car shadow quad lies exactly on the car's floor (issue #23), so the plane sits under it
+  // and the quad draws over the shadow instead of fighting it for depth
   cameraDrop: .01, // the depth camera sits this far below the ground, same fraction
   minimumFootprint: .1, // a degenerate record still gets a usable plane
 });
@@ -67,8 +70,8 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
     plane.renderOrder = 1; // painted over the ground it darkens
     blurPlane = new THREE.Mesh(geometry); // the full-frustum target of the blur passes
     blurPlane.visible = false;
-    horizontal = new THREE.ShaderMaterial({...blurShader('vec2( h, 0.0 )', 'HorizontalBlurShader'), depthTest: false, depthWrite: false, side: THREE.DoubleSide});
-    vertical = new THREE.ShaderMaterial({...blurShader('vec2( 0.0, h )', 'VerticalBlurShader'), depthTest: false, depthWrite: false, side: THREE.DoubleSide});
+    horizontal = new THREE.ShaderMaterial({...blurShader('vec2( 1.0, 0.0 )', 'HorizontalBlurShader'), depthTest: false, depthWrite: false, side: THREE.DoubleSide});
+    vertical = new THREE.ShaderMaterial({...blurShader('vec2( 0.0, 1.0 )', 'VerticalBlurShader'), depthTest: false, depthWrite: false, side: THREE.DoubleSide});
     // Like MeshDepthMaterial, but black where a surface is close to the floor instead of grey.
     depthMaterial = new THREE.MeshDepthMaterial({depthPacking: THREE.BasicDepthPacking, side: THREE.DoubleSide});
     depthMaterial.onBeforeCompile = shader => {
@@ -104,6 +107,8 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
     group.position.set(centre.x, floor, centre.z);
     plane.scale.set(side, 1, side);
     blurPlane.scale.set(side, 1, side);
+    plane.position.set(0, -side * CONTACT_SHADOW.planeDrop, 0);
+    blurPlane.position.copy(plane.position); // the blur passes draw where the plane samples
     ground.scale.set(side * CONTACT_SHADOW.groundSpan, 1, side * CONTACT_SHADOW.groundSpan);
     ground.position.set(0, -side * CONTACT_SHADOW.groundDrop, 0);
     camera.position.set(0, -side * CONTACT_SHADOW.cameraDrop, 0);
@@ -178,6 +183,7 @@ export function createContactShadow(renderer, {resolution = CONTACT_SHADOW.resol
     dispose() {
       if (scene && group && group.parent === scene)scene.remove(group);
       for (const object of [ground, plane])object?.material.dispose();
+      depthMaterial?.dispose();
       horizontal?.dispose();
       vertical?.dispose();
       geometry?.dispose();
