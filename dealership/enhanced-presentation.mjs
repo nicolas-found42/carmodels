@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {createGT4Studio} from './gt4-studio.mjs';
+import {isRecoveredUnderShadow} from './materials.mjs';
 
 // Enhanced is a deliberate departure from the recovered game look, so its values are
 // published as `enhanced`, never as a recovery claim. The numbers are a judgement call;
@@ -26,9 +27,14 @@ export function presentationMode(value) {
 // Only textured, opaque coverage takes the clearcoat. Untextured header-coloured parts
 // keep their recovered appearance, and blended windows stay unglossed; tyres are
 // textured, so they are glossier than the original until parts can be told apart
-// (issue #22 records that gap).
+// (issue #22 records that gap). The recovered under-car shadow is excluded as well: its
+// texture is an alpha coverage decal rather than an opaque surface, so a clearcoat would
+// replace its candidate alpha blend with a reflective sheet. Its blend therefore reads the
+// same in both presentation modes; only the scene's environment and tone mapping change
+// (research/under-car-shadow.md).
 export function isTexturedOpaque(source) {
-  return source?.pbrMetallicRoughness?.baseColorTexture?.index !== undefined && source.alphaMode !== 'BLEND';
+  return source?.pbrMetallicRoughness?.baseColorTexture?.index !== undefined && source.alphaMode !== 'BLEND' &&
+    !isRecoveredUnderShadow(source);
 }
 
 // Original is the default and leaves the renderer and the scene exactly as they were at

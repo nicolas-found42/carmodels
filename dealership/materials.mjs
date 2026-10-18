@@ -7,6 +7,29 @@ export function normaliseColourTint(value) {
  return value.toLowerCase();
 }
 
+// The recovered cars name their under-car shadow material UNDER_SHADOW, EX_UNDER_SHADOW2 or
+// GT90_UNDER_SHADOW; only Ford Racing 2 carries a material with this shape. The name is the selector,
+// never the texture index: the same texture index means different textures on other cars.
+export function isRecoveredUnderShadow(source) {
+ return typeof source?.name==='string' && /(^|_)UNDER_SHADOW/i.test(source.name);
+}
+
+// The recovered under-car shadow is authored OPAQUE: its texture is white with graded alpha (the
+// exporter embeds the display-alpha PNG, min(255, 2a), over a stored 0..127 alpha) and its glTF
+// material records no blend state, so the quad would draw as a hard square in the material's own
+// colour. The repo's captured draws contain no draw for this quad, so the original blend function is
+// not captured. The candidate drawn here is the smallest reading of the ticket's own criterion: the
+// texture's alpha is the blend factor at the recovered alpha/128 scale (the scale the glass path
+// already uses) and the quad keeps its stored colour. Candidate, not a trace: the stored colour is
+// white in every car, so this blend lightens rather than darkens the studio background, and the game's
+// darker ground-contact appearance is not reproduced.
+export function applyRecoveredUnderShadow(material, source) {
+ if(!isRecoveredUnderShadow(source))return false;
+ material.transparent=true;
+ material.depthWrite=false;
+ return true;
+}
+
 // Material, texture and image indices are separate glTF namespaces.
 export function applyMaterial(material, doc, images, materialIndex, options={}) {
  const tint=normaliseColourTint(options.colourTint);
@@ -30,6 +53,7 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
  material.transparent=source.alphaMode==='BLEND';
  material.alphaTest=source.alphaMode==='MASK'?(source.alphaCutoff??.5):0;
  material.depthWrite=!material.transparent;
+ applyRecoveredUnderShadow(material,source);
  material.roughness=pbr.roughnessFactor??1;
  material.metalness=pbr.metallicFactor??1;
  if(material.isMeshPhysicalMaterial) {

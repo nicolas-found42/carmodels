@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
-import {createMaterial} from '../dealership/materials.mjs';
+import {createMaterial,isRecoveredUnderShadow} from '../dealership/materials.mjs';
 import {createPresentation} from '../dealership/enhanced-presentation.mjs';
 import {parseEditableGLB} from '../dealership/editable-glb.mjs';
 import {loadNativeVehicleResources,bindNativeVehicleResources} from '../dealership/mc3-vehicle-resources.mjs';
@@ -16,6 +16,9 @@ const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
 const html=fs.readFileSync(new URL('../dealership/recovered.html',import.meta.url),'utf8');
 const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('function updateMaterials('));
+// The under-car shadow helpers the callback slice calls live further down the page. Run them with it so
+// the slice exercises the shipped code instead of a stub; isRecoveredUnderShadow is the page's own import.
+const shadowHelpers=html.slice(html.indexOf('function underCarShadowPrimitive('),html.indexOf('function updateDescription('));
 const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','presentation','download','native-download','native-download-wrap','retry','error','dealership-link'].map(id=>[id,{
  value:'',disabled:false,hidden:false,options:[],textContent:'',
  removeAttribute(name){delete this[name];},
@@ -37,7 +40,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,
+ readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,
  // The page's presentation starts in Original; the studio is stubbed so no WebGL is needed here.
  presentation:createPresentation(renderer,scene,{studio:{setEnabled(){},dispose(){}}}),
  prepareMC3Environment:active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:!environmentFailure,status:404,json:async()=>nativeEnvironment})}),
@@ -52,7 +55,7 @@ const context={THREE:{...THREE,TextureLoader:class {
   return raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength);
  },
 };
-vm.createContext(context);vm.runInContext(callback,context);
+vm.createContext(context);vm.runInContext(shadowHelpers+callback,context);
 elements.car.value='ford-racing-2/GRAN_TORINO';await context.loadCar();
 assert(context.selected,elements.error.textContent);
 assert.equal(context.selected.code,'GRAN_TORINO');
