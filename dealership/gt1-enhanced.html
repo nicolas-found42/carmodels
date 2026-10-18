@@ -48,9 +48,12 @@ try {
  document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>view(button.dataset.view)));
  const paint=document.querySelector('#paint');
  groups[0].userData.colourVariants.forEach(({name,index})=>paint.add(new Option(name,String(index))));
- paint.disabled=false;paint.addEventListener('change',()=>{groups.forEach(group=>group.userData.setColourVariant(Number(paint.value)));draw();});
- const wire=document.querySelector('#wire');wire.disabled=false;
- wire.addEventListener('change',()=>{groups.forEach(group=>group.traverse(child=>{if(child.isMesh){child.material.wireframe=wire.checked;child.material.needsUpdate=true;}}));draw();});
+ const wire=document.querySelector('#wire');
+ // setColourVariant applies a fresh material, which clears material.wireframe, so paint
+ // changes and the checkbox share one application step rather than only redrawing.
+ function applyWireframe(){groups.forEach(group=>group.traverse(child=>{if(child.isMesh){child.material.wireframe=wire.checked;child.material.needsUpdate=true;}}));draw();}
+ paint.disabled=false;paint.addEventListener('change',()=>{groups.forEach(group=>group.userData.setColourVariant(Number(paint.value)));applyWireframe();});
+ wire.disabled=false;wire.addEventListener('change',applyWireframe);
  const reference=document.querySelector('#reference');reference.disabled=false;
  reference.addEventListener('change',()=>{document.querySelector('#reference-label').textContent=reference.selectedOptions[0].textContent;draw();});
  function draw(){
