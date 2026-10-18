@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GT1 RX-7 — refinement trial</title>
+<link rel="icon" href="data:,">
+<style>
+body{margin:0;background:#151a22;color:#eef2f8;font:15px system-ui}header{padding:20px 24px}h1{font-size:23px;margin:0 0 8px}p{max-width:1000px;line-height:1.5;color:#bdcbdc}a{color:#b6daff}label,button,a{margin-right:12px}select,button{font:inherit;background:#202c3e;color:inherit;border:1px solid #647894;padding:7px;border-radius:4px}button[aria-pressed=true]{background:#375b80;border-color:#b6daff}#stage{position:relative;height:64vh;min-height:320px}canvas{display:block;width:100%;height:100%;touch-action:none}.labels{position:absolute;inset:12px 0 auto;display:flex;pointer-events:none}.labels span{width:50%;text-align:center;text-shadow:0 1px 4px #000}#stage:after{content:'';position:absolute;left:50%;top:0;bottom:0;border-left:1px solid #647894;pointer-events:none}#status{padding:0 24px}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #a8d8ff;outline-offset:3px}@media(max-width:600px){header{padding:14px}h1{font-size:20px}label,button{display:inline-block;margin-bottom:8px}.labels{font-size:12px}}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+<header>
+<h1>Gran Turismo · RX-7 FD Type-RB</h1>
+<p>Another eightfold refinement: 16,640 → 133,120 triangles. Compare with any earlier version. Both sides share camera, lighting and native paint. Drag to orbit; scroll to zoom.</p>
+<label>Left reference <select id="reference" disabled aria-label="Left reference"><option value="2">Previous enhancement · 16,640 triangles</option><option value="1">Earlier enhancement · 2,080 triangles</option><option value="0">Recovered original · 520 triangles</option></select></label>
+<label>Native paint <select id="paint" disabled aria-label="Native paint"></select></label>
+<label><input id="wire" type="checkbox" disabled> Wireframe</label>
+<button type="button" data-view="three">Three-quarter</button><button type="button" data-view="side">Side</button><button type="button" data-view="end">End</button><button type="button" data-view="above">Above</button>
+<p><a href="public/gran-turismo/simulation/_afb7n.glb" download>Original GLB</a><a href="public/gran-turismo-enhanced/rx7-fd-type-rb-enhanced.glb" download>2,080-triangle GLB</a><a href="public/gran-turismo-enhanced/rx7-fd-type-rb-enhanced-8x.glb" download>16,640-triangle GLB</a><a href="public/gran-turismo-enhanced/rx7-fd-type-rb-enhanced-133120.glb" download>Download 133,120-triangle GLB</a><a href="recovered.html">Source library</a></p>
+<p>Conservative artistic smoothing: original vertices, textures and four paint variants retained. Intermediate curves may change; this adds no recovered detail. Other GT1 cars are unchanged.</p>
+</header>
+<div id="stage"><div class="labels"><span id="reference-label">Previous enhancement · 16,640 triangles</span><span>8× further · 133,120 triangles</span></div></div>
+<p id="status" role="status">Loading comparison…</p>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from './vendor/OrbitControls.js';
+import {loadEditableGLB} from './editable-glb.mjs';
+const status=document.querySelector('#status'),stage=document.querySelector('#stage');
+try {
+ const responses=await Promise.all(['receipt.json','receipt-8x.json','receipt-133120.json'].map(name=>fetch(`./public/gran-turismo-enhanced/${name}`)));
+ if(responses.some(response=>!response.ok))throw Error('Comparison receipt could not load.');
+ const [earlier,previous,receipt]=await Promise.all(responses.map(response=>response.json()));
+ const sources=[['public/gran-turismo/simulation/_afb7n.glb',earlier.sourceSha256],['public/gran-turismo-enhanced/rx7-fd-type-rb-enhanced.glb',earlier.enhancedSha256],['public/gran-turismo-enhanced/rx7-fd-type-rb-enhanced-8x.glb',previous.enhancedSha256],['public/gran-turismo-enhanced/rx7-fd-type-rb-enhanced-133120.glb',receipt.enhancedSha256]];
+ const groups=await Promise.all(sources.map(([glb,sha256])=>loadEditableGLB({game:'gran-turismo',model:{source:{glb,sha256}}})));
+ const renderer=new THREE.WebGLRenderer({antialias:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setScissorTest(true);stage.prepend(renderer.domElement);
+ const scenes=groups.map(group=>{
+  const scene=new THREE.Scene();scene.background=new THREE.Color('#151a22');scene.add(group);
+  scene.add(new THREE.HemisphereLight(0xe9f2ff,0x555263,2));
+  const light=new THREE.DirectionalLight(0xffffff,2.4);light.position.set(3,5,4);scene.add(light);
+  return scene;
+ });
+ const bounds=new THREE.Box3().setFromObject(groups[0]),centre=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
+ const radius=size.length()/2,camera=new THREE.PerspectiveCamera(38,1,.01,100);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.target.copy(centre);controls.minDistance=radius*.65;controls.maxDistance=radius*8;controls.enablePan=false;
+ const directions={three:[1.4,.7,1.8],side:[1,0,0],end:[0,0,1],above:[0,1,.001]};
+ function view(name){camera.position.copy(centre).add(new THREE.Vector3(...directions[name]).normalize().multiplyScalar(radius*2.7));document.querySelectorAll('[data-view]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===name)));controls.update();}
+ view('three');
+ document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>view(button.dataset.view)));
+ const paint=document.querySelector('#paint');
+ groups[0].userData.colourVariants.forEach(({name,index})=>paint.add(new Option(name,String(index))));
+ paint.disabled=false;paint.addEventListener('change',()=>{groups.forEach(group=>group.userData.setColourVariant(Number(paint.value)));draw();});
+ const wire=document.querySelector('#wire');wire.disabled=false;
+ wire.addEventListener('change',()=>{groups.forEach(group=>group.traverse(child=>{if(child.isMesh){child.material.wireframe=wire.checked;child.material.needsUpdate=true;}}));draw();});
+ const reference=document.querySelector('#reference');reference.disabled=false;
+ reference.addEventListener('change',()=>{document.querySelector('#reference-label').textContent=reference.selectedOptions[0].textContent;draw();});
+ function draw(){
+  const width=stage.clientWidth,height=stage.clientHeight,half=Math.floor(width/2);
+  renderer.setSize(width,height,false);camera.aspect=half/height;camera.updateProjectionMatrix();
+  for(let i=0;i<2;i++){const x=i*half,w=i===0?half:width-half;renderer.setViewport(x,0,w,height);renderer.setScissor(x,0,w,height);renderer.render(scenes[i===0?Number(reference.value):3],camera);}
+ }
+ controls.addEventListener('change',draw);window.addEventListener('resize',draw);draw();
+ status.textContent=`Ready · ${receipt.originalTriangles.toLocaleString()} → ${receipt.enhancedTriangles.toLocaleString()} triangles (8× further; 256× the recovered original) · maximum body offset from its recovered reference ${(receipt.meshes[0].maxReferenceDisplacementMetres*1000).toFixed(1)} mm. Earlier versions remain intact.`;
+} catch(error){status.textContent=`Comparison failed: ${error.message}`;}
+</script>
+</html>

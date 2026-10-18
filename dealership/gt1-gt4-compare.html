@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GT1 and GT4 — counterpart comparison</title><link rel="icon" href="data:,">
+<style>
+body{margin:0;background:#151a22;color:#eef2f8;font:15px system-ui}header{padding:20px 24px}h1{font-size:24px;margin:0 0 8px}p{max-width:1050px;line-height:1.45;color:#bdcbdc}select,button{font:inherit;background:#202c3e;color:inherit;border:1px solid #647894;padding:7px;border-radius:4px;max-width:100%}label,button{display:inline-block;margin:4px 12px 4px 0}a{color:#b6daff;margin-right:16px}button[aria-pressed=true]{background:#375b80}#stage{position:relative;height:58vh;min-height:340px}canvas{display:block;width:100%;height:100%;touch-action:none}#labels{position:absolute;inset:12px 0 auto;display:flex;pointer-events:none;text-shadow:0 1px 4px #000}#labels span{width:50%;text-align:center;padding:0 12px;box-sizing:border-box}#stage:after{content:'';position:absolute;left:50%;top:0;bottom:0;border-left:1px solid #647894;pointer-events:none}table{border-collapse:collapse;margin:16px 24px;max-width:calc(100% - 48px)}td,th{padding:8px 16px;border-bottom:1px solid #394659;text-align:left}#status{margin:12px 24px}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #a8d8ff;outline-offset:3px}@media(max-width:650px){header{padding:14px}table{font-size:13px;margin:12px;max-width:calc(100% - 24px)}td,th{padding:7px}#labels{font-size:12px}}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+<header>
+<h1>Gran Turismo 1 ↔ Gran Turismo 4</h1>
+<p>Compare recovered GT1 models with GT4 showroom counterparts. Drag to orbit; scroll to zoom. The same camera and lighting apply to both sides, at their exported scale.</p>
+<label>Car <select id="pair" disabled aria-label="Car pair"></select></label>
+<label>GT1 edition <select id="edition" disabled aria-label="GT1 edition"></select></label>
+<p id="match"></p>
+<label>GT1 paint <select id="paint1" disabled aria-label="GT1 paint"></select></label>
+<label>GT4 paint <select id="paint4" disabled aria-label="GT4 paint"></select></label>
+<label><input type="checkbox" id="wire"> Wireframe</label>
+<button data-view="three" type="button">Three-quarter</button><button data-view="side" type="button">Side</button><button data-view="end" type="button">End</button><button data-view="above" type="button">Above</button>
+<p><a id="download1" download hidden>Download GT1 GLB</a><a id="download4" download hidden>Download GT4 GLB</a><a href="gt1-enhanced.html?v=133120">GT1 refinement trials</a><a href="gt1-upgrades.html">GT4-guided studies and source ledger</a></p>
+<p>Both models are centred and grounded, with no size normalization. A shared native paint name is selected when available; colours can still differ between games. Paint controls remain independent. These static exports use viewer lighting; original game shading and reflections are not reproduced.</p>
+</header>
+<div id="stage"><div id="labels"><span id="label1">GT1</span><span id="label4">GT4</span></div></div>
+<p id="status" role="status">Loading comparison data…</p>
+<table aria-label="Measured default-scene comparison"><thead><tr><th>Measured export</th><th>GT1</th><th>GT4</th></tr></thead><tbody id="metrics"></tbody></table>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from './vendor/OrbitControls.js';
+import {loadEditableGLB} from './editable-glb.mjs';
+const $=id=>document.getElementById(id),status=$('status'),stage=$('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setScissorTest(true);stage.prepend(renderer.domElement);
+const scenes=[0,1].map(()=>{const s=new THREE.Scene();s.background=new THREE.Color('#151a22');s.add(new THREE.HemisphereLight(0xe9f2ff,0x555263,2));const light=new THREE.DirectionalLight(0xffffff,2.4);light.position.set(3,5,4);s.add(light);return s;});
+const camera=new THREE.PerspectiveCamera(38,1,.01,100),controls=new OrbitControls(camera,renderer.domElement);
+controls.enablePan=false;camera.position.set(5,3,6);let radius=3,groups=[null,null],serial=0,request=null,data;
+const directions={three:[1.4,.7,1.8],side:[1,0,0],end:[0,0,1],above:[0,1,.001]};
+function draw(){const w=stage.clientWidth,h=stage.clientHeight,half=Math.floor(w/2);renderer.setSize(w,h,false);camera.aspect=half/h;camera.updateProjectionMatrix();for(let i=0;i<2;i++){const x=i*half,width=i===0?half:w-half;renderer.setViewport(x,0,width,h);renderer.setScissor(x,0,width,h);renderer.render(scenes[i],camera);}}
+function view(name){camera.position.copy(controls.target).add(new THREE.Vector3(...directions[name]).normalize().multiplyScalar(radius*2.7));document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===name)));controls.update();draw();}
+function dispose(group){if(!group)return;group.traverse(n=>{n.geometry?.dispose();for(const m of [n.material??[]].flat())m.dispose();});group.userData.textures?.forEach(t=>t.dispose());}
+function wire(){groups.forEach(g=>g?.traverse(n=>{if(n.isMesh){n.material.wireframe=$('wire').checked;n.material.needsUpdate=true;}}));draw();}
+function metrics(left,right){$('metrics').replaceChildren();const row=(title,a,b)=>{const tr=document.createElement('tr');for(const value of [title,a,b]){const td=document.createElement('td');td.textContent=value;tr.append(td);}$('metrics').append(tr);};
+ const count=n=>n.toLocaleString();row('Whole car triangles',count(left.triangles),count(right.triangles));row('Body triangles',count(left.bodyTriangles),count(right.bodyTriangles));row('Wheels / tires',count(left.wheelTriangles),count(right.wheelTriangles));row('Native paint presets',left.paintVariants,right.paintVariants);
+ const bounds=s=>[s.boundsMetres.length,s.boundsMetres.width,s.boundsMetres.height].map(n=>n.toFixed(3)).join(' × ')+' m';row('Visible mesh L × W × H',bounds(left),bounds(right));
+ const sizes=s=>[...new Set(s.defaultTextureImages.map(t=>`${t.width}×${t.height}`))].join(', ');row('Default texture sheet sizes',sizes(left),sizes(right));
+}
+async function load(){const token=++serial;request?.abort();request=new AbortController();const pair=data.pairs[Number($('pair').value)],left=pair.left[Number($('edition').value)],right=pair.right;
+ groups.forEach((g,i)=>{if(g){scenes[i].remove(g);dispose(g);}});groups=[null,null];draw();status.textContent='Loading both models…';$('match').textContent=pair.match;
+ for(const id of ['paint1','paint4']){$(id).disabled=true;$(id).replaceChildren();}for(const id of ['download1','download4'])$(id).hidden=true;
+ const results=await Promise.allSettled([left,right].map(s=>loadEditableGLB({game:s.game,model:{source:{glb:s.file,sha256:s.sha256}}},{signal:request.signal,enhance:false,correctMaterials:false})));
+ const loaded=results.map(r=>r.status==='fulfilled'?r.value:null);
+ if(token!==serial){loaded.forEach(dispose);return;}
+ if(results.some(r=>r.status==='rejected')){loaded.forEach(dispose);status.textContent=`Comparison failed: ${results.find(r=>r.status==='rejected').reason.message}`;return;}
+ groups=loaded;groups.forEach((g,i)=>{scenes[i].add(g);const select=$(i===0?'paint1':'paint4');for(const v of g.userData.colourVariants)select.add(new Option(v.name,String(v.index)));select.disabled=!select.options.length;});
+ const paintName=n=>n.replace(/\s*\[.*$/,'').trim().toUpperCase();
+ const shared=groups[0].userData.colourVariants.find(a=>groups[1].userData.colourVariants.some(b=>paintName(a.name)===paintName(b.name)));
+ if(shared){const other=groups[1].userData.colourVariants.find(b=>paintName(shared.name)===paintName(b.name));[shared,other].forEach((v,i)=>{groups[i].userData.setColourVariant(v.index);$(i===0?'paint1':'paint4').value=String(v.index);});}
+ const sizes=groups.map(g=>new THREE.Box3().setFromObject(g).getSize(new THREE.Vector3()));radius=Math.max(...sizes.map(s=>s.length()/2));controls.target.set(0,Math.max(...sizes.map(s=>s.y))/2,0);controls.minDistance=radius*.65;controls.maxDistance=radius*8;
+ $('label1').textContent=`GT1 · ${left.name}`;$('label4').textContent=`${right.editionLabel??'GT4'} · ${right.name}`;
+ $('download4').textContent=right.editionLabel?'Download counterpart study GLB':'Download GT4 GLB';
+ [left,right].forEach((s,i)=>{const a=$(i===0?'download1':'download4');a.href=s.file;a.hidden=false;});metrics(left,right);wire();view('three');status.textContent=`Ready · GT1 ${left.triangles.toLocaleString()} triangles · GT4 ${right.triangles.toLocaleString()} triangles. Same camera and exported metre scale.`;
+}
+function choosePair(){const pair=data.pairs[Number($('pair').value)];$('edition').replaceChildren();pair.left.forEach((s,i)=>$('edition').add(new Option(s.name,String(i))));$('edition').value=String(pair.left.length-1);$('edition').disabled=pair.left.length===1;load().catch(e=>{status.textContent=`Comparison failed: ${e.message}`;});}
+controls.addEventListener('change',draw);window.addEventListener('resize',draw);$('wire').addEventListener('change',wire);document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));
+for(const [id,i] of [['paint1',0],['paint4',1]])$(id).addEventListener('change',()=>{groups[i]?.userData.setColourVariant(Number($(id).value));wire();});
+try{const pilot=new URLSearchParams(location.search).get('pilot')==='rx7-type-r-91';const response=await fetch(pilot?'./public/gt4-guided/comparison.json':'./public/comparisons/gt1-gt4.json');if(!response.ok)throw Error('Comparison measurements unavailable.');data=await response.json();data.pairs.forEach((p,i)=>$('pair').add(new Option(p.title,String(i))));$('pair').disabled=false;$('pair').addEventListener('change',choosePair);$('edition').addEventListener('change',()=>load().catch(e=>{status.textContent=e.message;}));choosePair();}catch(e){status.textContent=`Comparison failed: ${e.message}`;}
+</script>
+</html>

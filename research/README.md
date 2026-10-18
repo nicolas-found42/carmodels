@@ -7,6 +7,9 @@ single list of what is not yet established; update it when a note closes or open
 | Note | Holds |
 | --- | --- |
 | `gran-turismo-4-model-fidelity.md` | Automatic modern dealership remaster with unchanged source reference, native-normal/seam-aware geometry, evidence-based real-car corrections, conservative missing-reference refinement and failed-part fallback |
+| `gran-turismo-gt4-guided-upgrades-2026-10-16.md` | Evidence-backed GT4 geometry/artwork transfer, identity and part compatibility, RX-7 trim boundaries, proposed pipeline and unresolved coverage |
+| `gran-turismo-1-vs-4-comparison-2026-10-16.md` | Six displayed-name counterpart pairs, measured default-scene body/wheel counts and textures, interactive comparison, and the refined RX-7's different-trim caveat |
+| `gran-turismo-preserving-model-improvements-2026-10-16.md` | Preservation boundaries and the separate RX-7 GLB refinement trial; bounded curvature, original artwork and scenes retained, visual acceptance still open |
 | `gran-turismo-model-data.md` | Native SPEC and colour-ID joins, all palette variants, retained face/shadow/LOD/wheel inputs, catalog upgrades and unresolved identities |
 | `check-performance.md` | Freshness and MC3 preview/wheel-page/PNG profiling, equivalent optimizations, optional TypeSafe advice, labeled wording/holdout experiments and calibration limits |
 | `dealership-teardown-2026-10-12.md` | Novice-user dealership teardown, search/filter/layout/request recovery improvements, coverage ledger, original reproductions and final verification |
@@ -40,6 +43,9 @@ single list of what is not yet established; update it when a note closes or open
 | `community-github-stackoverflow.md`, `community-reddit-youtube.md` | Community leads for PS2 model and texture recovery; leads, not evidence |
 
 ## Open items
+
+- GT1 enhanced-model trial: the separate RX-7 comparison is implemented; visual acceptance, refinement tuning and broader coverage remain open. See [the preservation research](gran-turismo-preserving-model-improvements-2026-10-16.md).
+- GT4-guided GT1 upgrades: the full-family lexical candidate ledger and separately attributed RX-7 Type R '91 counterpart study are implemented. Identity/region/equipment verification, compatible-region approval and hybrid geometry/artwork transfer remain open. See [the upgrade workflow](gran-turismo-gt4-guided-upgrades-2026-10-16.md).
 
 - Check performance: natural-profile advisor accuracy and false-withholding calibration, chunk-utilization measurements, cross-vehicle MC3 page reuse and deeper packet/normal profiling with source-lifetime and bounded-memory controls remain open; bounded PNG output reuse is measured in [the performance note](check-performance.md).
 
