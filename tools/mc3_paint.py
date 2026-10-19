@@ -22,8 +22,9 @@ LIMITS = [
     'preset-to-RGB conversion and current factory default are not established.',
     'Native RGB channels are carried unscaled; game colour space, finish, '
     'gradients, metal flake and runtime vinyl/decal compositing are not emulated.',
-    'Only direct carpaint and carpaint_novinyl materials receive paint variants; '
-    'composite wrapper shader selection remains unresolved.',
+    'Direct carpaint materials and materials sharing the runtime paint slot '
+    '(__metalflake__) receive paint variants; composite wrapper shader selection '
+    'and native per-material colour execution remain unresolved.',
     'Wheel, caliper, window, neon and separate secondary-paint channel bindings are '
     'not recovered. Native finish names are retained without invented PBR finish controls.',
 ]
@@ -149,7 +150,7 @@ def add_paint_variants(doc, appearance):
         raise ValueError('native paint variants already applied')
     materials = doc['materials']
     used = {primitive['material'] for mesh in doc['meshes'] for primitive in mesh['primitives']}
-    eligible, composites = [], []
+    primary, composites = [], []
     for index, material in enumerate(materials):
         native = material.get('extras', {})
         category = native.get('shader_category')
@@ -160,6 +161,22 @@ def add_paint_variants(doc, appearance):
                 and native.get('shader_template') == category
                 and material.get('alphaMode', 'OPAQUE') == 'OPAQUE'
                 and 'baseColorTexture' not in material['pbrMetallicRoughness']):
+            primary.append(index)
+    paint_slots = {slot for index in primary
+                   for slot in materials[index].get('extras', {}).get('runtime_bound_textures', [])
+                   if slot == '__metalflake__'}
+    eligible = []
+    for index, material in enumerate(materials):
+        if index in primary:
+            eligible.append(index)
+            continue
+        if not paint_slots or index not in used:
+            continue
+        native = material.get('extras', {})
+        if (native.get('shader_category') != 'composite_material_wrapper'
+                and material.get('alphaMode', 'OPAQUE') == 'OPAQUE'
+                and 'baseColorTexture' not in material['pbrMetallicRoughness']
+                and any(slot in paint_slots for slot in native.get('runtime_bound_textures', []))):
             eligible.append(index)
     appearance = copy.deepcopy(appearance)
     appearance.update(paint_materials=eligible, unresolved_composite_materials=composites)

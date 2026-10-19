@@ -196,7 +196,7 @@ class NativePaintTests(unittest.TestCase):
         self.assertEqual(sum(len(row['choices']) for row in rows), 40)
         self.assertEqual(sum(bool(row['choices']) for row in rows), 39)
 
-    def test_native_corvette_customization_is_selectable_without_repainting_trim(self):
+    def test_native_corvette_customization_paints_body_and_trim_without_affecting_other_surfaces(self):
         root = ROOT/'games/midnight-club-3-remix/cars'
         index = json.loads((root/'index.json').read_text())
         row = next(v for v in index['vehicles'] if v['id'] == 'vp_corvettez06_03')
@@ -214,18 +214,67 @@ class NativePaintTests(unittest.TestCase):
             for primitive in mesh['primitives']:
                 source = doc['materials'][primitive['material']]
                 mappings = primitive.get('extensions', {}).get('KHR_materials_variants', {}).get('mappings', [])
-                if source['extras']['shader_category'] != 'carpaint':
+                if source['extras']['shader_category'] not in ('carpaint', 'aa_trim'):
                     self.assertEqual(mappings, [], source['name'])
                 for mapping in mappings:
                     mapped.add(primitive['material'])
                     replacement = doc['materials'][mapping['material']]
                     self.assertEqual(replacement['pbrMetallicRoughness']['baseColorFactor'],
                                      [0.299999, 0.0, 0.0, 1.0])
-        self.assertEqual(len(mapped), 1)
+        self.assertEqual(len(mapped), 2)
         self.assertFalse(doc['extras']['nativeAppearance']['factory_default_established'])
         self.assertEqual(doc['extras']['gamePaint']['channels'][0]['materials'], sorted(mapped))
         self.assertEqual(doc['extras']['gamePaint']['colors'][0]['rgb'], [0.299999, 0.0, 0.0])
 
+    def test_runtime_paint_slot_followers_join_channel_and_receive_variants(self):
+        materials = [
+            # 0: primary carpaint with __metalflake__
+            {'shader_category': 'carpaint', 'shader_template': 'carpaint', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'OPAQUE', 'runtime_bound_textures': ['__metalflake__', '__decal__']},
+            # 1: follower aa_trim with __metalflake__, opaque, untextured, used
+            {'shader_category': 'aa_trim', 'shader_template': 'aa_trim', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'OPAQUE', 'runtime_bound_textures': ['__metalflake__']},
+            # 2: non-paint slot material (car_window)
+            {'shader_category': 'car_window', 'shader_template': 'car_window', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'OPAQUE', 'runtime_bound_textures': ['__envmap__']},
+            # 3: composite wrapper
+            {'shader_category': 'composite_material_wrapper', 'shader_template': 'carpaint',
+             'composite_templates': ['carpaint'], 'base_color': [.65, .65, .65, 1], 'alpha_mode': 'OPAQUE',
+             'runtime_bound_textures': ['__metalflake__']},
+            # 4: unused aa_trim
+            {'shader_category': 'aa_trim', 'shader_template': 'aa_trim', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'OPAQUE', 'runtime_bound_textures': ['__metalflake__']},
+            # 5: blended material with __metalflake__
+            {'shader_category': 'car_decal', 'shader_template': 'car_decal', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'BLEND', 'runtime_bound_textures': ['__metalflake__']},
+            # 6: used opaque follower with __metalflake__, made textured below
+            {'shader_category': 'aa_trim', 'shader_template': 'aa_trim', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'OPAQUE', 'runtime_bound_textures': ['__metalflake__']},
+        ]
+        draws = [{'material': i, 'batches': [{'positions': [(0, 0, 0), (1, 0, 0), (0, 1, 0)], 'packet_offset': 128}]}
+                 for i in (0, 1, 2, 3, 5, 6)]  # Note: 4 is unused
+        parts = [{'name': 'body', 'bone': 0, 'mesh': {'source': {'sha256': 'a'*64}, 'draws': draws}}]
+        data, _ = build_glb('vp_test', parts, materials, [])
+        doc, _ = read_glb(data)
+        doc['materials'][6]['pbrMetallicRoughness']['baseColorTexture'] = {'index': 0}
+        appearance = {
+            'choices': [{'name': 'default', 'rgb': [.1, .2, .3],
+                         'source': {'sources': [{'file': 'shared/assets/0/tune/vehicle/customdata/vp_test/default.mccarcustom',
+                                                 'sha256': 'b'*64}], 'name': 'default'}}],
+            'configs': [], 'customizations': []
+        }
+        add_paint_variants(doc, appearance)
+        self.assertEqual(doc['extras']['gamePaint']['channels'][0]['materials'], [0, 1])
+        primitives = doc['meshes'][0]['primitives']
+        # Primitives using material 0 and 1 have variant mappings
+        self.assertIn('KHR_materials_variants', primitives[0].get('extensions', {}))
+        self.assertIn('KHR_materials_variants', primitives[1].get('extensions', {}))
+        # Other primitives do not have variant mappings, including the textured
+        # follower (material 6): a diffuse image keeps its own surface.
+        for p in primitives[2:]:
+            self.assertNotIn('KHR_materials_variants', p.get('extensions', {}))
+        self.assertNotIn(6, doc['extras']['gamePaint']['channels'][0]['materials'],
+                         'textured follower must not join the channel')
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
