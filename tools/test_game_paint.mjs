@@ -91,6 +91,26 @@ reopened.setChannel('body',colourId(red));assert(reopened.material(result.doc.me
  assert.deepEqual(paint.presets[0].rgb,[.2,0,0],'recovered native preset vectors provide real swatches');
  assert.equal(paint.colors.length,1,'preset swatches do not manufacture transferable palette entries');
 }
+{
+ const multi=structuredClone(doc);
+ multi.materials.push({name:'trim',pbrMetallicRoughness:{baseColorFactor:[.65,.65,.65,1]}});
+ const trimMatIndex=multi.materials.length-1;
+ multi.meshes[0].primitives.push({material:trimMatIndex,attributes:{POSITION:0}});
+ multi.extras.gamePaint.channels[0].materials.push(trimMatIndex);
+ const session=createPaintSession(multi,{game:'game',colors:[{...blue,game:'game'}]});
+ session.setChannel('body',colourId(red));
+ const prims=multi.meshes[0].primitives;
+ assert.deepEqual(session.material(prims[0]).definition.pbrMetallicRoughness.baseColorFactor,[...red.rgb,1],'body panel recoloured');
+ assert.deepEqual(session.material(prims[prims.length-1]).definition.pbrMetallicRoughness.baseColorFactor,[...red.rgb,1],'trim seam recoloured with body');
+ assert.equal(session.material(prims[1]).channelId,'rims','rim channel remains independent');
+ const exported=readGLB(exportPaintGLB(glb(multi),session)).doc;
+ const exportedPrims=exported.meshes[0].primitives;
+ assert.deepEqual(exported.materials[exportedPrims[0].material].pbrMetallicRoughness.baseColorFactor,[...red.rgb,1]);
+ assert.deepEqual(exported.materials[exportedPrims[exportedPrims.length-1].material].pbrMetallicRoughness.baseColorFactor,[...red.rgb,1]);
+ assert(exported.extras.gamePaint.channels[0].materials.includes(0));
+ assert(exported.extras.gamePaint.channels[0].materials.includes(trimMatIndex));
+ assert(!exported.extras.gamePaint.channels[0].materials.some(index=>exported.extras.gamePaint.channels[1].materials.includes(index)),'channel bindings remain disjoint');
+}
 const state=session.state;session.reset();session.restore(state);assert.deepEqual(session.state,state);
 session.restore({...state,presetName:'a different preset',channels:{body:{color:'fabricated RGB'}}});
 assert.equal(session.state.preset,null);assert.deepEqual(session.state.channels,{});
