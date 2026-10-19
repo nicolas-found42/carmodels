@@ -247,12 +247,16 @@ class NativePaintTests(unittest.TestCase):
             # 5: blended material with __metalflake__
             {'shader_category': 'car_decal', 'shader_template': 'car_decal', 'base_color': [.65, .65, .65, 1],
              'alpha_mode': 'BLEND', 'runtime_bound_textures': ['__metalflake__']},
+            # 6: used opaque follower with __metalflake__, made textured below
+            {'shader_category': 'aa_trim', 'shader_template': 'aa_trim', 'base_color': [.65, .65, .65, 1],
+             'alpha_mode': 'OPAQUE', 'runtime_bound_textures': ['__metalflake__']},
         ]
         draws = [{'material': i, 'batches': [{'positions': [(0, 0, 0), (1, 0, 0), (0, 1, 0)], 'packet_offset': 128}]}
-                 for i in (0, 1, 2, 3, 5)]  # Note: 4 is unused
+                 for i in (0, 1, 2, 3, 5, 6)]  # Note: 4 is unused
         parts = [{'name': 'body', 'bone': 0, 'mesh': {'source': {'sha256': 'a'*64}, 'draws': draws}}]
         data, _ = build_glb('vp_test', parts, materials, [])
         doc, _ = read_glb(data)
+        doc['materials'][6]['pbrMetallicRoughness']['baseColorTexture'] = {'index': 0}
         appearance = {
             'choices': [{'name': 'default', 'rgb': [.1, .2, .3],
                          'source': {'sources': [{'file': 'shared/assets/0/tune/vehicle/customdata/vp_test/default.mccarcustom',
@@ -265,9 +269,12 @@ class NativePaintTests(unittest.TestCase):
         # Primitives using material 0 and 1 have variant mappings
         self.assertIn('KHR_materials_variants', primitives[0].get('extensions', {}))
         self.assertIn('KHR_materials_variants', primitives[1].get('extensions', {}))
-        # Other primitives do not have variant mappings
+        # Other primitives do not have variant mappings, including the textured
+        # follower (material 6): a diffuse image keeps its own surface.
         for p in primitives[2:]:
             self.assertNotIn('KHR_materials_variants', p.get('extensions', {}))
+        self.assertNotIn(6, doc['extras']['gamePaint']['channels'][0]['materials'],
+                         'textured follower must not join the channel')
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
