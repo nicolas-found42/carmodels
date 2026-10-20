@@ -17,6 +17,7 @@ liveries/GLB are closed by T1. Render fidelity stays out.
 Receipt: research/evidence/vehicle-completeness/t2-config-data-sound-validation.json
 Exit 0 + "VERIFY OK" only when every equality holds and all negative controls reject.
 """
+
 import hashlib
 import json
 import re
@@ -29,10 +30,23 @@ import build_reference as B  # parsing primitives + constants (NOT re-derived)
 
 CORPUS = ROOT / "games/ford-racing-2"
 SRC = B.SRC
-OUT = ROOT / "research/evidence/vehicle-completeness/t2-config-data-sound-validation.json"
+OUT = (
+    ROOT / "research/evidence/vehicle-completeness/t2-config-data-sound-validation.json"
+)
 
-CONFIG_NAMES = ["cardata", "body", "engine", "setup", "sound", "gearbox",
-                "brake", "tyres_front", "tyres_back", "control", "overlay"]
+CONFIG_NAMES = [
+    "cardata",
+    "body",
+    "engine",
+    "setup",
+    "sound",
+    "gearbox",
+    "brake",
+    "tyres_front",
+    "tyres_back",
+    "control",
+    "overlay",
+]
 SHARED_CONFIG_NAMES = [Path(r).name for r in B.SHARED_CONFIG]
 BASE_BANK_RX = rb"(?m)^:TYPE[ \t]+(CAR_SND_CAR\d+)[ \t]*\r?$([\s\S]{0,400}?):SOUNDBANK_TYPE[ \t]+(CAR\d+_SOUND_FILE)"
 
@@ -107,16 +121,26 @@ def check(root: Path, overrides=None, hide=None):
             key = B.field(cardata_block, B.BLOCK_SOURCES[name][2])
             if key is None or key not in spans:
                 raise ValueError(f"{code}: {name} type {key!r} unresolved")
-            expected[name] = B.clean_block(parsed[name][1][spans[key][0]:spans[key][1]])
-        for side, field_name in (("tyres_front", "CAR_FRONT_TYRE_TYPE"),
-                                 ("tyres_back", "CAR_BACK_TYRE_TYPE")):
+            expected[name] = B.clean_block(
+                parsed[name][1][spans[key][0] : spans[key][1]]
+            )
+        for side, field_name in (
+            ("tyres_front", "CAR_FRONT_TYRE_TYPE"),
+            ("tyres_back", "CAR_BACK_TYRE_TYPE"),
+        ):
             key = B.field(cardata_block, field_name)
             if key is None or key not in tyre_spans:
                 raise ValueError(f"{code}: {side} type {key!r} unresolved")
-            expected[side] = B.clean_block(tyre_data[tyre_spans[key][0]:tyre_spans[key][1]])
+            expected[side] = B.clean_block(
+                tyre_data[tyre_spans[key][0] : tyre_spans[key][1]]
+            )
 
         # (1) config x11 txt set equality on disk
-        actual_names = {p.name for p in (cdir / "config").iterdir()} if (cdir / "config").is_dir() else set()
+        actual_names = (
+            {p.name for p in (cdir / "config").iterdir()}
+            if (cdir / "config").is_dir()
+            else set()
+        )
         want_names = {f"{n}.txt" for n in CONFIG_NAMES}
         if actual_names != want_names:
             raise ValueError(f"{code}: config file set mismatch {sorted(actual_names)}")
@@ -133,9 +157,13 @@ def check(root: Path, overrides=None, hide=None):
 
         # (3) exactly one data DAT, named by OWN_GAMEPLAY
         data_dir = cdir / "data"
-        data_files = sorted(p.name for p in data_dir.iterdir()) if data_dir.is_dir() else []
+        data_files = (
+            sorted(p.name for p in data_dir.iterdir()) if data_dir.is_dir() else []
+        )
         if data_files != [B.OWN_GAMEPLAY[code]]:
-            raise ValueError(f"{code}: data DAT set {data_files} != [{B.OWN_GAMEPLAY[code]}]")
+            raise ValueError(
+                f"{code}: data DAT set {data_files} != [{B.OWN_GAMEPLAY[code]}]"
+            )
         data_files_checked += 1
 
         # (4) sound inheritance chain resolves to an existing shared bank
@@ -158,9 +186,11 @@ def check(root: Path, overrides=None, hide=None):
         if doc.get("car_code") != code:
             raise ValueError(f"{code}: manifest car_code mismatch")
         recorded = {f["dst"] for f in doc["files"]}
-        on_disk = {p.relative_to(corpus).as_posix()
-                   for p in cdir.rglob("*")
-                   if p.is_file() and p.name not in ("manifest.json", "manifest.md")}
+        on_disk = {
+            p.relative_to(corpus).as_posix()
+            for p in cdir.rglob("*")
+            if p.is_file() and p.name not in ("manifest.json", "manifest.md")
+        }
         if recorded != on_disk:
             raise ValueError(f"{code}: manifest file set != disk file set")
         for f in doc["files"]:
@@ -223,27 +253,38 @@ def main() -> int:
     rejects("cross_car_config_swap", {str(c0): a1, str(c1): a0}, "!= S-derived block")
 
     # NC3 missing shared sound bank referenced by a resolved chain
-    base_snd = json.loads((CORPUS / f"cars/{cars[0]}/manifest.json").read_text())["sound"]["shared_bank_hint"]
+    base_snd = json.loads((CORPUS / f"cars/{cars[0]}/manifest.json").read_text())[
+        "sound"
+    ]["shared_bank_hint"]
     bank0 = base_snd.split(".msb")[0]
-    rejects("missing_shared_banks",
-            None,
-            "shared bank",
-            hide={CORPUS / "_shared/sounds" / f"{bank0}.msb;1",
-                  CORPUS / "_shared/sounds" / f"{bank0}.msh;1"})
+    rejects(
+        "missing_shared_banks",
+        None,
+        "shared bank",
+        hide={
+            CORPUS / "_shared/sounds" / f"{bank0}.msb;1",
+            CORPUS / "_shared/sounds" / f"{bank0}.msh;1",
+        },
+    )
 
     # NC4 manifest sha tamper (recorded hash no longer matches disk)
     m0 = CORPUS / f"cars/{cars[0]}/manifest.json"
     doc = json.loads(m0.read_bytes())
     doc["files"][0]["sha256"] = "0" * 64
-    rejects("manifest_sha_tamper", {str(m0): (json.dumps(doc, indent=1) + "\n").encode()},
-            "manifest hash/size mismatch")
+    rejects(
+        "manifest_sha_tamper",
+        {str(m0): (json.dumps(doc, indent=1) + "\n").encode()},
+        "manifest hash/size mismatch",
+    )
 
     # NC5 manifest tamper via hash override is covered above; broken-chain NC3 covers bank lookup.
     result["controls"] = [k for k in result if k.startswith("control_")]
     result["controls_all_rejected"] = all(result[k] for k in result["controls"])
     result["render_fidelity_complete"] = False
-    result["scope"] = ("35 cars x config (11 files) + data DAT + sound chain; "
-                       "geometry/textures/liveries/GLB out (T1), render fidelity out")
+    result["scope"] = (
+        "35 cars x config (11 files) + data DAT + sound chain; "
+        "geometry/textures/liveries/GLB out (T1), render fidelity out"
+    )
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

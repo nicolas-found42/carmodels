@@ -28,9 +28,10 @@ def fixture(dual=False, normals=True, uvs=True, trailer=b""):
             words.append(4 - i if uvs else 0xFFFFFFFF)
         words.append(0xFFFFFFFF)
     data += struct.pack(">" + "I" * len(words), *words)
-    for name in ([b"paint.pct", b"layer.tif"] if dual else [b"paint.pct"]):
-        data += name.ljust(32, b"\0") + struct.pack(">2I10f", 17, 32,
-            0, 0, 0, 0, .5, .5, .5, 1, 1, 1)
+    for name in [b"paint.pct", b"layer.tif"] if dual else [b"paint.pct"]:
+        data += name.ljust(32, b"\0") + struct.pack(
+            ">2I10f", 17, 32, 0, 0, 0, 0, 0.5, 0.5, 0.5, 1, 1, 1
+        )
     return data + trailer
 
 
@@ -47,13 +48,18 @@ class MeshTests(unittest.TestCase):
             "AAAABgAAAAMAAAAE/////wAAAAEAAAAFAAAABAAAAAP/////AAAAAwAAAAUAAAAB"
             "/////wAAAAYAAAAGAAAABP////9maW5pc2hsaW5lc3RyaXBlMS50aWYAAAAAAAAA"
             "AAAAAAAAASwAAAAiAAAAAAAAAAAAAAAAAAAAAD8AAAA/AAAAPwAAAD+AAAA/gAAA"
-            "P4AAAAAAAA==")
+            "P4AAAAAAAA=="
+        )
         self.assertEqual(len(raw), 391)
         m = decode_model(raw)
-        self.assertEqual(m["counts"], {"positions": 6, "normals": 6, "uvs": 4,
-            "triangles": 2, "materials": 1})
-        self.assertEqual(m["triangles"][0]["corners"],
-                         [(2, 0, 0, None), (3, 1, 1, None), (5, 2, 3, None)])
+        self.assertEqual(
+            m["counts"],
+            {"positions": 6, "normals": 6, "uvs": 4, "triangles": 2, "materials": 1},
+        )
+        self.assertEqual(
+            m["triangles"][0]["corners"],
+            [(2, 0, 0, None), (3, 1, 1, None), (5, 2, 3, None)],
+        )
         self.assertEqual(m["materials"][0]["source_offset"], 308)
         self.assertEqual(m["materials"][0]["texture"], "finishlinestripe1.tif")
         self.assertEqual(m["materials"][0]["flags"], 34)
@@ -63,10 +69,20 @@ class MeshTests(unittest.TestCase):
     def test_records_offsets_and_expansion(self):
         raw = fixture(trailer=b"opaque")
         m = decode_model(raw)
-        self.assertEqual(m["source_offsets"], {"positions": 28, "normals": 64,
-            "uvs": 100, "triangles": 124, "materials": 176})
-        self.assertEqual(m["triangles"][0]["corners"],
-                         [(0, 0, 0, None), (1, 1, 1, None), (2, 2, 2, None)])
+        self.assertEqual(
+            m["source_offsets"],
+            {
+                "positions": 28,
+                "normals": 64,
+                "uvs": 100,
+                "triangles": 124,
+                "materials": 176,
+            },
+        )
+        self.assertEqual(
+            m["triangles"][0]["corners"],
+            [(0, 0, 0, None), (1, 1, 1, None), (2, 2, 2, None)],
+        )
         self.assertEqual(m["materials"][0]["texture"], "paint.pct")
         self.assertEqual(m["opaque_trailer"]["bytes"], 6)
         self.assertEqual(m["bounds"], [[0, 0, 0], [1, 1, 0]])
@@ -89,19 +105,23 @@ class MeshTests(unittest.TestCase):
         self.assertEqual(p["uvs"], [(0, 0)] * 3)
         degenerate = bytearray(fixture(normals=False))
         degenerate[28:64] = bytes(36)
-        self.assertEqual(expanded_primitives(decode_model(bytes(degenerate)))[0]["normals"],
-                         [(0, 0, 0)] * 3)
+        self.assertEqual(
+            expanded_primitives(decode_model(bytes(degenerate)))[0]["normals"],
+            [(0, 0, 0)] * 3,
+        )
 
     def test_counts_truncation_flags_and_numeric_controls(self):
         raw = fixture()
-        mutations = [(0, ">I", 500_001, "record count"),
-                     (0, ">I", 300, "truncated"),
-                     (20, ">I", 4, "unsupported model flags"),
-                     (24, ">f", -1, "radius"),
-                     (28, ">f", math.inf, "positions"),
-                     (64, ">f", math.nan, "normals"),
-                     (100, ">f", math.inf, "UVs"),
-                     (216, ">f", math.inf, "material values")]
+        mutations = [
+            (0, ">I", 500_001, "record count"),
+            (0, ">I", 300, "truncated"),
+            (20, ">I", 4, "unsupported model flags"),
+            (24, ">f", -1, "radius"),
+            (28, ">f", math.inf, "positions"),
+            (64, ">f", math.nan, "normals"),
+            (100, ">f", math.inf, "UVs"),
+            (216, ">f", math.inf, "material values"),
+        ]
         for offset, fmt, value, error in mutations:
             with self.subTest(error=error):
                 bad = bytearray(raw)
@@ -118,9 +138,13 @@ class MeshTests(unittest.TestCase):
 
     def test_index_channel_and_name_controls(self):
         raw = fixture()
-        for offset, value, error in [(124, 2, "material index"),
-                    (128, 0, "corner 0"), (132, 4, "corner 1"),
-                    (136, 4, "corner 2"), (148, 0xFFFFFFFF, "mixed missing")]:
+        for offset, value, error in [
+            (124, 2, "material index"),
+            (128, 0, "corner 0"),
+            (132, 4, "corner 1"),
+            (136, 4, "corner 2"),
+            (148, 0xFFFFFFFF, "mixed missing"),
+        ]:
             bad = bytearray(raw)
             struct.pack_into(">I", bad, offset, value)
             with self.assertRaisesRegex(ValueError, error):
@@ -132,7 +156,9 @@ class MeshTests(unittest.TestCase):
                 decode_model(bytes(bad))
         bad = bytearray(raw)
         bad[176:208] = b"caf\x8e.pct".ljust(32, b"\0")
-        self.assertEqual(decode_model(bytes(bad))["materials"][0]["texture"], "café.pct")
+        self.assertEqual(
+            decode_model(bytes(bad))["materials"][0]["texture"], "café.pct"
+        )
 
     def test_native_material_zero_omitted_high_bit_preserved(self):
         raw = bytearray(fixture())

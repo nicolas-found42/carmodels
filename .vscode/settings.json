@@ -1,0 +1,58 @@
+{
+  // Shared VS Code settings. Format-on-save is ON for every language with a
+  // configured default formatter below: Python via Ruff, JS via Prettier,
+  // Markdown, JSON/JSONC, TOML. The full `ruff format tools` baseline is
+  // committed, so formatting a Python file on save is a no-op diff-wise.
+  "editor.formatOnSave": true,
+  "python.defaultInterpreterPath": "python3",
+  "python.languageServer": "Pylance",
+  // Type checking reads pyrightconfig.json (include: tools/, Python 3.12);
+  // nothing to duplicate here.
+  "[python]": {
+    // Ruff is both formatter and linter (charliermarsh.ruff), matching the
+    // `ruff check tools` (rules F, E9) and `ruff format --check tools` CI rows.
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    // Mirrors `ruff check tools`: safe auto-fixes only (e.g. unused imports).
+    // Import sorting is NOT enabled (ruff.toml selects F and E9 only).
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit"
+    },
+    // Ruff's default line length, visual hint only (E501 not enforced).
+    "editor.rulers": [88]
+  },
+  // The dealership viewer and tools are plain .mjs (Node 22, no bundler):
+  // single quotes, 2-space indent, semicolons, trailing commas.
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  // .github/workflows/ci.yml is schema-validated by github.vscode-github-actions
+  // with no settings required.
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  // Vendored third-party code (gltf-validator) and local scratch stay out of
+  // search and file watching; ruff.toml already excludes validation-runtime.
+  "search.exclude": {
+    "tools/validation-runtime": true,
+    ".scratch": true
+  },
+  "files.watcherExclude": {
+    "**/tools/validation-runtime/**": true,
+    "**/.scratch/**": true
+  }
+}

@@ -11,6 +11,7 @@ variables name them, there is no default path, and a missing input ends the tool
     python3 tools/static_inputs.py              # report each input and check it against its pin
     python3 tools/static_inputs.py --available  # exit 0 when all three are set, 1 otherwise (used by tools/check.sh)
 """
+
 import hashlib
 import json
 import os
@@ -18,20 +19,26 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REFRESH = ROOT / 'research/evidence/continuation/source-refresh/refresh-identity.json'
-RESIDENCY = ROOT / 'research/evidence/packet-continuation/vu-overlay-residency.json'
-VARIABLES = {'overlays': 'CARMODELS_OVERLAY_DIR', 'typed_export': 'CARMODELS_TYPED_EXPORT', 'executable': 'CARMODELS_EXECUTABLE'}
-CONFIG = ROOT / '.scratch/input-paths.json'
+REFRESH = ROOT / "research/evidence/continuation/source-refresh/refresh-identity.json"
+RESIDENCY = ROOT / "research/evidence/packet-continuation/vu-overlay-residency.json"
+VARIABLES = {
+    "overlays": "CARMODELS_OVERLAY_DIR",
+    "typed_export": "CARMODELS_TYPED_EXPORT",
+    "executable": "CARMODELS_EXECUTABLE",
+}
+CONFIG = ROOT / ".scratch/input-paths.json"
 
 
 def configuration():
     """Read explicitly provisioned local paths; environment variables take precedence."""
-    path = Path(os.environ.get('CARMODELS_INPUT_CONFIG', str(CONFIG))).expanduser()
+    path = Path(os.environ.get("CARMODELS_INPUT_CONFIG", str(CONFIG))).expanduser()
     if not path.is_file():
         return {}
     values = json.loads(path.read_text())
-    if not isinstance(values, dict) or any(not isinstance(v, str) for v in values.values()):
-        missing('input-paths.json must map variable names to paths')
+    if not isinstance(values, dict) or any(
+        not isinstance(v, str) for v in values.values()
+    ):
+        missing("input-paths.json must map variable names to paths")
     return values
 
 
@@ -41,7 +48,7 @@ def configured(variable):
 
 def bundle_path():
     """Legacy data layout in a private local bundle, with no source checkout dependency."""
-    return Path(configured('CARMODELS_BUNDLE') or ROOT / '.scratch/inputs').expanduser()
+    return Path(configured("CARMODELS_BUNDLE") or ROOT / ".scratch/inputs").expanduser()
 
 
 def sha256(data):
@@ -49,7 +56,10 @@ def sha256(data):
 
 
 def missing(message):
-    print('static input missing: %s (see CONTRIBUTING.md, Static inputs)' % message, file=sys.stderr)
+    print(
+        "static input missing: %s (see CONTRIBUTING.md, Static inputs)" % message,
+        file=sys.stderr,
+    )
     sys.exit(2)
 
 
@@ -62,39 +72,49 @@ def require(kind):
     variable = VARIABLES[kind]
     value = configured(variable)
     if not value:
-        missing('%s is not set' % variable)
+        missing("%s is not set" % variable)
     path = Path(value).expanduser()
     if not path.exists():
-        missing('%s=%s does not exist' % (variable, value))
+        missing("%s=%s does not exist" % (variable, value))
     return path
 
 
 def overlay_dir():
-    return require('overlays')
+    return require("overlays")
 
 
 def typed_export():
-    return require('typed_export')
+    return require("typed_export")
 
 
 def executable():
-    return require('executable')
+    return require("executable")
 
 
 def mc3_disc(required=True):
     """MC3 source disc, with an optional explicit input-config/environment override."""
-    path = Path(configured('CARMODELS_MC3_DISC') or
-                ROOT/'games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso').expanduser()
+    path = Path(
+        configured("CARMODELS_MC3_DISC")
+        or ROOT
+        / "games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso"
+    ).expanduser()
     if required and not path.is_file():
-        missing('MC3 disc unavailable; set CARMODELS_MC3_DISC or restore games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso')
+        missing(
+            "MC3 disc unavailable; set CARMODELS_MC3_DISC or restore games/source-data/PS2/midnight-club-3-remix/midnight-club-3-remix.iso"
+        )
     return path
 
 
 def pins():
     refresh = json.loads(REFRESH.read_text())
     residency = json.loads(RESIDENCY.read_text())
-    return {'inventory_sha256': refresh['inventory_sha256'], 'executable_sha256': refresh['executable_sha256'],
-            'overlays': {n: residency['snapshots'][0]['overlays'][n]['sha256'] for n in range(7)}}
+    return {
+        "inventory_sha256": refresh["inventory_sha256"],
+        "executable_sha256": refresh["executable_sha256"],
+        "overlays": {
+            n: residency["snapshots"][0]["overlays"][n]["sha256"] for n in range(7)
+        },
+    }
 
 
 def report():
@@ -104,25 +124,35 @@ def report():
     for kind, variable in VARIABLES.items():
         value = configured(variable)
         if not value or not Path(value).expanduser().exists():
-            rows.append((kind, variable, 'MISSING' if not value else 'NOT FOUND: ' + value))
+            rows.append(
+                (kind, variable, "MISSING" if not value else "NOT FOUND: " + value)
+            )
             problems += 1
             continue
         path = Path(value).expanduser()
-        if kind == 'executable':
-            ok = sha256(path.read_bytes()) == expected['executable_sha256']
-        elif kind == 'typed_export':
-            ok = sha256((path / 'inventory.json').read_bytes()) == expected['inventory_sha256']
+        if kind == "executable":
+            ok = sha256(path.read_bytes()) == expected["executable_sha256"]
+        elif kind == "typed_export":
+            ok = (
+                sha256((path / "inventory.json").read_bytes())
+                == expected["inventory_sha256"]
+            )
         else:
-            ok = all((path / ('overlay-%d.bin' % n)).is_file() and sha256((path / ('overlay-%d.bin' % n)).read_bytes()) == h
-                     for n, h in expected['overlays'].items()) and all((path / ('overlay-%d.s' % n)).is_file() for n in range(7))
-        rows.append((kind, variable, 'ok (matches its pin)' if ok else 'DIFFERS FROM ITS PIN'))
+            ok = all(
+                (path / ("overlay-%d.bin" % n)).is_file()
+                and sha256((path / ("overlay-%d.bin" % n)).read_bytes()) == h
+                for n, h in expected["overlays"].items()
+            ) and all((path / ("overlay-%d.s" % n)).is_file() for n in range(7))
+        rows.append(
+            (kind, variable, "ok (matches its pin)" if ok else "DIFFERS FROM ITS PIN")
+        )
         problems += not ok
     for kind, variable, state in rows:
-        print('%-12s %-24s %s' % (kind, variable, state))
+        print("%-12s %-24s %s" % (kind, variable, state))
     return problems
 
 
-if __name__ == '__main__':
-    if '--available' in sys.argv[1:]:
+if __name__ == "__main__":
+    if "--available" in sys.argv[1:]:
         sys.exit(0 if available() else 1)
     sys.exit(1 if report() else 0)

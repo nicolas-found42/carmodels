@@ -3,6 +3,7 @@
 Serialized spans are kept separate from expanded memory records. Names refer to
 loader offsets/strides; their game meaning remains unresolved.
 """
+
 from __future__ import annotations
 
 import struct
@@ -44,7 +45,13 @@ class Reader:
         end = self.pos
         if aligned:
             self.take(ps2_container.align16(end) - end, what + " alignment")
-        return {"offset": at, "count": count, "stride": stride, "size": size, "end": end}
+        return {
+            "offset": at,
+            "count": count,
+            "stride": stride,
+            "size": size,
+            "end": end,
+        }
 
 
 def header(reader: Reader) -> dict:
@@ -56,8 +63,14 @@ def header(reader: Reader) -> dict:
     size += 4 if third == 0xFFFF or flags & 6 else 0
     size += 4 * sum(bool(flags & bit) for bit in (8, 0x10, 0x40, 0x80))
     reader.take(size, "geometry header optional slots")
-    return {"offset": at, "size": reader.pos - at, "flags": flags,
-            "count": count, "third": third, "fourth": fourth}
+    return {
+        "offset": at,
+        "size": reader.pos - at,
+        "flags": flags,
+        "count": count,
+        "third": third,
+        "fourth": fourth,
+    }
 
 
 def geometry(data: bytes, parsed: dict) -> tuple[Reader, dict]:
@@ -69,7 +82,10 @@ def geometry(data: bytes, parsed: dict) -> tuple[Reader, dict]:
     total = 0
     for i in range(count):
         at = table["offset"] + i * 0x34
-        pair = struct.unpack_from("<H", data, at + 0x1C)[0], struct.unpack_from("<H", data, at + 0x28)[0]
+        pair = (
+            struct.unpack_from("<H", data, at + 0x1C)[0],
+            struct.unpack_from("<H", data, at + 0x28)[0],
+        )
         total += sum(pair)
         groups.append(pair)
     if total > MAX_RECORDS:
@@ -85,14 +101,25 @@ def geometry(data: bytes, parsed: dict) -> tuple[Reader, dict]:
             planes["twenty_byte"] = r.span(n, 20, "twenty-byte geometry plane", True)
         planes["four_byte"] = r.span(n, 4, "four-byte geometry plane", True)
         if h["third"] != 0xFFFF:
-            planes["third_four_byte"] = r.span(n, 4, "third four-byte geometry plane", True)
+            planes["third_four_byte"] = r.span(
+                n, 4, "third four-byte geometry plane", True
+            )
         for bit in (0x40, 0x80):
             if flags & bit:
-                planes[f"flag_{bit:02x}"] = r.span(n, 4, f"flag {bit:#x} geometry plane", True)
+                planes[f"flag_{bit:02x}"] = r.span(
+                    n, 4, f"flag {bit:#x} geometry plane", True
+                )
         h["planes"] = planes
-    return r, {"section_start": start, "table": table, "group_header_counts": groups,
-               "header_count": total, "header_end": header_end, "payload_start": payload_start,
-               "section_end": r.pos, "headers": headers}
+    return r, {
+        "section_start": start,
+        "table": table,
+        "group_header_counts": groups,
+        "header_count": total,
+        "header_end": header_end,
+        "payload_start": payload_start,
+        "section_end": r.pos,
+        "headers": headers,
+    }
 
 
 def parse(data: bytes, later_profile: str = "loader68") -> dict:
@@ -107,10 +134,14 @@ def parse(data: bytes, later_profile: str = "loader68") -> dict:
         r.take(68, "later-section global header")
         raw_header_words = list(struct.unpack_from("<17I", data, global_at))
         if raw_header_words[0] != 17:
-            raise Incomplete("later-section header is outside the measured 17-word profile",
-                             {"geometry_end": geo["section_end"],
-                              "observed_first_word": raw_header_words[0],
-                              "profile": later_profile})
+            raise Incomplete(
+                "later-section header is outside the measured 17-word profile",
+                {
+                    "geometry_end": geo["section_end"],
+                    "observed_first_word": raw_header_words[0],
+                    "profile": later_profile,
+                },
+            )
         counts = raw_header_words.copy()
     else:
         r.take(60, "measured legacy 15-word global header")
@@ -154,23 +185,35 @@ def parse(data: bytes, later_profile: str = "loader68") -> dict:
     for i in range(counts[1]):
         at = r.pos
         if [r.word("record sentinel") for _ in range(4)] != [0xFFFFFFFF] * 4:
-            raise Invalid(f"record {i} sentinel is not four 0xffffffff words at {at:#x}")
+            raise Invalid(
+                f"record {i} sentinel is not four 0xffffffff words at {at:#x}"
+            )
         index = r.word("record index")
         if index >= counts[1]:
             raise Invalid(f"record index {index} outside {counts[1]} expanded records")
         flags = r.word("record six-bit count") & 0x3F
-        entry = {"offset": at, "index": index, "expanded_70": r.span(flags, 80, "0x70 memory entries")}
+        entry = {
+            "offset": at,
+            "index": index,
+            "expanded_70": r.span(flags, 80, "0x70 memory entries"),
+        }
         entry["entries_1c"] = r.span(r.count("0x1c entries"), 28, "0x1c entries")
         entry["vectors_c"] = r.span(r.count("0xc vectors"), 12, "0xc vectors")
-        entry["references_8"] = r.span(r.count("references_8", 0xFF), 8, "8-byte references")
+        entry["references_8"] = r.span(
+            r.count("references_8", 0xFF), 8, "8-byte references"
+        )
         signed = r.count("signed-halfword entries", 0xFFFF)
         if signed >= 0x8000:
-            raise Invalid("negative signed-halfword entry count outside measured profile")
+            raise Invalid(
+                "negative signed-halfword entry count outside measured profile"
+            )
         entry["expanded_24"] = r.span(signed, 32, "0x24 memory entries")
         options = r.word("record options")
         entry["options"] = options
         if options & 4:
-            entry["optional_1c"] = r.span(r.count("optional_1c"), 28, "optional 0x1c entries")
+            entry["optional_1c"] = r.span(
+                r.count("optional_1c"), 28, "optional 0x1c entries"
+            )
         if options & 2:
             entry["optional_halfword"] = r.word("optional halfword slot") & 0xFFFF
             entry["nodes_80"] = nodes("node_80", r.count("node_80 roots", 0xFF))
@@ -178,7 +221,9 @@ def parse(data: bytes, later_profile: str = "loader68") -> dict:
         entry["node_2c_capacity"] = r.count("node_2c allocation count")
         entry["pair_capacity"] = r.count("pair allocation count")
         pairs_before = node_counts["pairs"]
-        entry["references_4"] = r.span(r.count("reference list", 0xFF), 4, "reference list")
+        entry["references_4"] = r.span(
+            r.count("reference list", 0xFF), 4, "reference list"
+        )
         entry["halfwords"] = [r.word("halfword slot") & 0xFFFF for _ in range(3)]
         entry["pairs"] = r.span(r.count("record pairs", 0xFF), 8, "record pairs")
         node_counts["pairs"] += entry["pairs"]["count"]
@@ -197,9 +242,16 @@ def parse(data: bytes, later_profile: str = "loader68") -> dict:
 
     observed = [0] * 17
     for entry in records:
-        for index, key in ((2, "references_8"), (3, "expanded_24"), (4, "expanded_70"),
-                           (6, "entries_1c"), (8, "vectors_c"), (12, "references_4"),
-                           (13, "floats"), (16, "optional_1c")):
+        for index, key in (
+            (2, "references_8"),
+            (3, "expanded_24"),
+            (4, "expanded_70"),
+            (6, "entries_1c"),
+            (8, "vectors_c"),
+            (12, "references_4"),
+            (13, "floats"),
+            (16, "optional_1c"),
+        ):
             observed[index] += entry.get(key, {}).get("count", 0)
         observed[5] += bool(entry["entries_1c"]["count"])
         observed[7] += bool(entry["vectors_c"]["count"])
@@ -209,7 +261,9 @@ def parse(data: bytes, later_profile: str = "loader68") -> dict:
     observed[14] = node_counts["node_80"]
     for index in range(2, 17):
         if index != 15 and counts[index] != observed[index]:
-            raise Invalid(f"global allocation word {index} is {counts[index]}, observed {observed[index]}")
+            raise Invalid(
+                f"global allocation word {index} is {counts[index]}, observed {observed[index]}"
+            )
 
     tail_start = r.pos
     tail = {}
@@ -223,42 +277,86 @@ def parse(data: bytes, later_profile: str = "loader68") -> dict:
         if any(n > MAX_RECORDS for n in group_counts):
             raise Invalid("packed table group count exceeds the processing bound")
         if sum(group_counts) > packed:
-            raise Invalid("packed table group ranges exceed the packed entry allocation")
+            raise Invalid(
+                "packed table group ranges exceed the packed entry allocation"
+            )
         tail["packed"] = r.span(packed, 4, "packed u16,u8,u8 table")
         tail["six_floats"] = r.span(floats, 24, "six-float table")
         # stack_21c is used only to relocate already-loaded nodes; no input is read there.
     rows, row_values = r.count("row table count"), r.count("row allocation count")
     tail["row_allocation_count"] = row_values
-    tail["rows"] = [r.span(r.count("row value count"), 24, "six-float row") for _ in range(rows)]
+    tail["rows"] = [
+        r.span(r.count("row value count"), 24, "six-float row") for _ in range(rows)
+    ]
     if sum(row["count"] for row in tail["rows"]) != row_values:
         raise Invalid("row payload count differs from its allocation count")
-    final, vectors, byte_capacity = r.count("final record count"), r.count("final vector count"), r.count("final byte count")
+    final, vectors, byte_capacity = (
+        r.count("final record count"),
+        r.count("final vector count"),
+        r.count("final byte count"),
+    )
     tail["final_allocation_counts"] = [final, vectors, byte_capacity]
     tail["records"] = []
     for _ in range(final):
         at = r.pos
-        raw, n, size = r.word("final raw word"), r.count("final vectors"), r.count("final bytes")
-        item = {"offset": at, "raw_word": raw, "byte_span": r.span(size, 1, "final bytes")}
+        raw, n, size = (
+            r.word("final raw word"),
+            r.count("final vectors"),
+            r.count("final bytes"),
+        )
+        item = {
+            "offset": at,
+            "raw_word": raw,
+            "byte_span": r.span(size, 1, "final bytes"),
+        }
         item["fixed"] = r.span(1, 60, "final 15-word serialized body")
-        item["vectors"] = r.span(n, 144, "final 36-float vectors") if n else r.span(1, 28, "final seven-float body")
+        item["vectors"] = (
+            r.span(n, 144, "final 36-float vectors")
+            if n
+            else r.span(1, 28, "final seven-float body")
+        )
         item["end"] = r.pos
         tail["records"].append(item)
-    observed_vectors = sum(item["vectors"]["count"] for item in tail["records"] if item["vectors"]["stride"] == 144)
+    observed_vectors = sum(
+        item["vectors"]["count"]
+        for item in tail["records"]
+        if item["vectors"]["stride"] == 144
+    )
     observed_bytes = sum(item["byte_span"]["count"] for item in tail["records"])
     if observed_vectors != vectors or observed_bytes != byte_capacity:
-        raise Invalid("final vector/byte payload counts differ from their allocation counts")
+        raise Invalid(
+            "final vector/byte payload counts differ from their allocation counts"
+        )
     logical_end = r.pos
     padding = ps2_container.align16(logical_end) - logical_end
     at = r.take(padding, "final 16-byte alignment")
-    if any(data[at:r.pos]):
+    if any(data[at : r.pos]):
         raise Invalid("final alignment padding is not zero")
     if r.pos != len(data):
         raise Invalid(f"section chain ends at {r.pos:#x}, file ends at {len(data):#x}")
-    return {"tree": textures["tree"], "textures": textures["textures"], "geometry": geo,
-            "later": {"section_start": global_at, "profile": later_profile,
-                      "global_header": {"offset": global_at,
-                                        "size": 68 if later_profile == "loader68" else 60,
-                                        "raw_words": raw_header_words},
-                      "global_words": counts, "records": records, "node_counts": node_counts},
-            "tail": {"section_start": tail_start, **tail, "logical_end": logical_end, "padding": padding},
-            "end": r.pos, "bytes": len(data), "exact_eof": True}
+    return {
+        "tree": textures["tree"],
+        "textures": textures["textures"],
+        "geometry": geo,
+        "later": {
+            "section_start": global_at,
+            "profile": later_profile,
+            "global_header": {
+                "offset": global_at,
+                "size": 68 if later_profile == "loader68" else 60,
+                "raw_words": raw_header_words,
+            },
+            "global_words": counts,
+            "records": records,
+            "node_counts": node_counts,
+        },
+        "tail": {
+            "section_start": tail_start,
+            **tail,
+            "logical_end": logical_end,
+            "padding": padding,
+        },
+        "end": r.pos,
+        "bytes": len(data),
+        "exact_eof": True,
+    }

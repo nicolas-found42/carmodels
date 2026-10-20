@@ -1,4 +1,5 @@
 """Real corpus and synthetic VIF controls for MC3 PS2 geometry."""
+
 from pathlib import Path
 import random
 import struct
@@ -6,22 +7,43 @@ import tempfile
 import unittest
 import mc3_pck
 
-from mc3_pck import MAX_VERTICES, Pck, decode_batches, read_bones, read_mesh_object, read_resource_group, read_vehicle, strip_indices, vif_planes
+from mc3_pck import (
+    MAX_VERTICES,
+    Pck,
+    decode_batches,
+    read_bones,
+    read_mesh_object,
+    read_resource_group,
+    read_vehicle,
+    strip_indices,
+    vif_planes,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 0x6800000
 
 
 def command(cmd, count, address, payload=b""):
-    return struct.pack("<I", cmd << 24 | count << 16 | address) + payload + b"\0" * (-len(payload) % 4)
+    return (
+        struct.pack("<I", cmd << 24 | count << 16 | address)
+        + payload
+        + b"\0" * (-len(payload) % 4)
+    )
 
 
 def packet(count=4):
     header = struct.pack("<4f4I", 1 / 8192, 0, 0, 1, count, 0, 0, count)
     positions = [(0, 0, 0), (8192, 0, 0), (0, 8192, 0), (8192, 8192, 0)][:count]
     data = command(0x6C, 2, 0x98, header)
-    data += command(0x69, count, 0xEE, struct.pack("<" + "h" * count * 3, *(x for v in positions for x in v)))
-    data += command(0x65, count, 0xC4, struct.pack("<" + "h" * count * 2, *([0, 4096] * count)))
+    data += command(
+        0x69,
+        count,
+        0xEE,
+        struct.pack("<" + "h" * count * 3, *(x for v in positions for x in v)),
+    )
+    data += command(
+        0x65, count, 0xC4, struct.pack("<" + "h" * count * 2, *([0, 4096] * count))
+    )
     data += command(0x6E, count, 0x4118, bytes([128, 129, 130, 12] * count))
     data += command(0x6A, count, 0x9A, bytes([0, 0, 127] * count))
     return data + b"\0" * (-len(data) % 16)
@@ -43,38 +65,58 @@ def fixture():
 
 
 class PacketTests(unittest.TestCase):
-    def test_root_marker_search_matches_word_scan_at_alignment_and_tail_boundaries(self):
+    def test_root_marker_search_matches_word_scan_at_alignment_and_tail_boundaries(
+        self,
+    ):
         randomizer = random.Random(71355)
         for length in range(128, 260):
             for marker in mc3_pck.MODEL_VTABLES:
                 data = bytearray(randomizer.randbytes(length))
                 stop = length - 28
-                for offset in (0, 124, 127, 128, 133, (stop - 1) // 4 * 4,
-                               (stop + 3) // 4 * 4, length - 4):
+                for offset in (
+                    0,
+                    124,
+                    127,
+                    128,
+                    133,
+                    (stop - 1) // 4 * 4,
+                    (stop + 3) // 4 * 4,
+                    length - 4,
+                ):
                     if 0 <= offset <= length - 4:
-                        struct.pack_into('<I', data, offset, marker)
-                expected = [offset for offset in range(128, stop, 4)
-                            if struct.unpack_from('<I', data, offset)[0] in mc3_pck.MODEL_VTABLES]
+                        struct.pack_into("<I", data, offset, marker)
+                expected = [
+                    offset
+                    for offset in range(128, stop, 4)
+                    if struct.unpack_from("<I", data, offset)[0]
+                    in mc3_pck.MODEL_VTABLES
+                ]
                 with self.subTest(length=length, marker=marker):
                     self.assertEqual(mc3_pck._model_candidates(bytes(data)), expected)
         # Mixed profiles retain source order, including repeated markers; none may be skipped.
         data = bytearray(260)
-        for offset, marker in zip((128, 144, 200, 228), (0x7AA728, 0x7A9620, 0x7A9420, 0x7AA728)):
-            struct.pack_into('<I', data, offset, marker)
+        for offset, marker in zip(
+            (128, 144, 200, 228), (0x7AA728, 0x7A9620, 0x7A9420, 0x7AA728)
+        ):
+            struct.pack_into("<I", data, offset, marker)
         self.assertEqual(mc3_pck._model_candidates(bytes(data)), [128, 144, 200, 228])
 
     def test_duplicate_valid_model_roots_still_reject(self):
-        path = next((ROOT / 'games/midnight-club-3-remix/cars/vp_350z_04').rglob('vp_350z_04.pck'))
+        path = next(
+            (ROOT / "games/midnight-club-3-remix/cars/vp_350z_04").rglob(
+                "vp_350z_04.pck"
+            )
+        )
         vehicle = read_vehicle(path)
         data = bytearray(path.read_bytes())
-        model = vehicle['model_offset']
+        model = vehicle["model_offset"]
         data.extend(bytes(-len(data) % 4))
-        data.extend(data[model:model + 108])
-        struct.pack_into('<I', data, 12, len(data) - 128)
+        data.extend(data[model : model + 108])
+        struct.pack_into("<I", data, 12, len(data) - 128)
         with tempfile.TemporaryDirectory() as temp:
-            duplicate = Path(temp) / 'duplicate.pck'
+            duplicate = Path(temp) / "duplicate.pck"
             duplicate.write_bytes(data)
-            with self.assertRaisesRegex(ValueError, 'model root missing or ambiguous'):
+            with self.assertRaisesRegex(ValueError, "model root missing or ambiguous"):
                 read_vehicle(duplicate)
 
     def test_destination_skip_cycles_do_not_become_contiguous_geometry(self):
@@ -94,13 +136,23 @@ class PacketTests(unittest.TestCase):
                     decode_batches(planes)
         # A state command without a following UNPACK does not affect geometry.
         trailing_state = stream + command(1, 0, 0x0102)
-        batch = decode_batches(vif_planes(Pck(carrier(trailing_state)), 128, len(trailing_state)))[0]
-        self.assertEqual(batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)])
+        batch = decode_batches(
+            vif_planes(Pck(carrier(trailing_state)), 128, len(trailing_state))
+        )[0]
+        self.assertEqual(
+            batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)]
+        )
 
     def test_shared_group_recovers_exact_missing_body(self):
         code = "vp_belair_57"
-        main = read_vehicle(next((ROOT / "games/midnight-club-3-remix/cars" / code).rglob(code + ".pck")))
-        path = next((ROOT / "games/midnight-club-3-remix/cars/shared").rglob(code + "_g.pck"))
+        main = read_vehicle(
+            next(
+                (ROOT / "games/midnight-club-3-remix/cars" / code).rglob(code + ".pck")
+            )
+        )
+        path = next(
+            (ROOT / "games/midnight-club-3-remix/cars/shared").rglob(code + "_g.pck")
+        )
         group = read_resource_group(path)
         name = "vroot_body_chptp_stk_rkstrsd_bel57_chptp_stk_rkstrsd_bel57_LOD_hlod_group_shell_h.mesh"
         missing = next(part for part in main["lods"]["high"] if part["name"] == name)
@@ -108,7 +160,14 @@ class PacketTests(unittest.TestCase):
         resolved = group["parts"][name]
         self.assertEqual(resolved["bone"], missing["bone"])
         self.assertEqual(len(group["materials"]), len(main["materials"]))
-        self.assertGreater(sum(len(batch["positions"]) for draw in resolved["mesh"]["draws"] for batch in draw["batches"]), 1000)
+        self.assertGreater(
+            sum(
+                len(batch["positions"])
+                for draw in resolved["mesh"]["draws"]
+                for batch in draw["batches"]
+            ),
+            1000,
+        )
         self.assertNotIn(name.lower(), group["parts"])
         self.assertNotIn("shell_h.mesh", group["parts"])
 
@@ -116,7 +175,9 @@ class PacketTests(unittest.TestCase):
         # PPF wheel packets upload scale/count through S32 instead of V4_32.
         stream = command(0x60, 2, 0x98, struct.pack("<fI", 1 / 8192, 4)) + packet()[36:]
         batch = decode_batches(vif_planes(Pck(carrier(stream)), 128, len(stream)))[0]
-        self.assertEqual(batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)])
+        self.assertEqual(
+            batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)]
+        )
         self.assertEqual(len(batch["header_words"]), 2)
         altered = bytearray(stream)
         struct.pack_into("<I", altered, 0, 0x60010098)
@@ -125,14 +186,20 @@ class PacketTests(unittest.TestCase):
             decode_batches(planes)
 
     def test_native_rest_tree_and_corruption_controls(self):
-        path = next((ROOT / "games/midnight-club-3-remix/cars/vp_350z_04").rglob("vp_350z_04.pck"))
+        path = next(
+            (ROOT / "games/midnight-club-3-remix/cars/vp_350z_04").rglob(
+                "vp_350z_04.pck"
+            )
+        )
         vehicle = read_vehicle(path)
         skeleton = vehicle["skeleton"]
         bones = skeleton["bones"]
         self.assertEqual(len(bones), 250)
         self.assertEqual(bones[16]["name"], "trunkbone")
         self.assertEqual(bones[16]["parent"], 0)
-        for actual, expected in zip(bones[16]["global_position"], (0, 1.240475, .767380)):
+        for actual, expected in zip(
+            bones[16]["global_position"], (0, 1.240475, 0.767380)
+        ):
             self.assertAlmostEqual(actual, expected, places=6)
         self.assertEqual(bones[40]["name"], "hood")
         self.assertEqual(bones[40]["rotation_raw"], (0, 0, 0))
@@ -161,18 +228,25 @@ class PacketTests(unittest.TestCase):
         draw = read_mesh_object(pck, 128)["draws"][0]
         batch = draw["batches"][0]
         self.assertEqual(draw["packet_offset"], 224)
-        self.assertEqual(draw['native_vif_packet'], pck.data[224:224+draw['packet_bytes']])
-        self.assertEqual(draw['native_vif_packet'], packet())
-        self.assertEqual(draw['native_vif_batch_offsets'], [0])
+        self.assertEqual(
+            draw["native_vif_packet"], pck.data[224 : 224 + draw["packet_bytes"]]
+        )
+        self.assertEqual(draw["native_vif_packet"], packet())
+        self.assertEqual(draw["native_vif_batch_offsets"], [0])
         self.assertEqual(draw["vertex_count"], 4)
-        self.assertEqual(batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)])
+        self.assertEqual(
+            batch["positions"], [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)]
+        )
         self.assertEqual(batch["uvs"], [(0, 1)] * 4)
         self.assertEqual(batch["normals"], [(0, 0, 127 / 128)] * 4)
         self.assertEqual(batch["flags"], [12] * 4)
         self.assertEqual(batch["color_integers"], [(128, 129, 130, 12)] * 4)
 
     def test_strip_adc_and_degenerate_controls(self):
-        batch = {"positions": [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)], "adc": [1, 1, 0, 0]}
+        batch = {
+            "positions": [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)],
+            "adc": [1, 1, 0, 0],
+        }
         self.assertEqual(strip_indices(batch), [0, 1, 2, 2, 1, 3])
         batch["adc"][2] = 1
         self.assertEqual(strip_indices(batch), [2, 1, 3])
@@ -186,9 +260,14 @@ class PacketTests(unittest.TestCase):
         # STROW seeds a signed absolute vector, STMOD2 accumulates each delta.
         stream = command(0x30, 0, 0, struct.pack("<4i", 100, -100, 20, 0))
         stream += command(5, 0, 2)
-        stream += command(0x6A, 3, 0xEE, struct.pack("<9b", 0, 0, 0, 1, -2, 3, -1, 2, -3))
+        stream += command(
+            0x6A, 3, 0xEE, struct.pack("<9b", 0, 0, 0, 1, -2, 3, -1, 2, -3)
+        )
         data = Pck(carrier(stream))
-        self.assertEqual(vif_planes(data, 128, len(stream))[0]["values"], [(100, -100, 20), (101, -102, 23), (100, -100, 20)])
+        self.assertEqual(
+            vif_planes(data, 128, len(stream))[0]["values"],
+            [(100, -100, 20), (101, -102, 23), (100, -100, 20)],
+        )
         # The native wheel packets fill many vertices from one masked value.
         stream = command(0x20, 0, 0, struct.pack("<I", 0x55555555))
         stream += command(0x30, 0, 0, struct.pack("<4I", 127, 127, 127, 0))
@@ -212,7 +291,10 @@ class PacketTests(unittest.TestCase):
         for offset, code, value, reason in controls:
             altered = bytearray(source)
             struct.pack_into("<" + code, altered, offset, value)
-            with self.subTest(reason=reason), self.assertRaisesRegex(ValueError, reason):
+            with (
+                self.subTest(reason=reason),
+                self.assertRaisesRegex(ValueError, reason),
+            ):
                 read_mesh_object(Pck(bytes(altered)), 128)
         planes = vif_planes(Pck(source), 224, len(source) - 224)
         planes.append(dict(planes[-1]))
@@ -240,12 +322,17 @@ class PacketTests(unittest.TestCase):
             model = read_vehicle(paths[0])
             profiles.add(model["model_vtable"])
             self.assertEqual(set(model["lods"]), {"high", "middle", "low"})
-            self.assertTrue(any(part["mesh"] for part in model["lods"]["high"]), folder.name)
+            self.assertTrue(
+                any(part["mesh"] for part in model["lods"]["high"]), folder.name
+            )
             for part in model["lods"]["high"]:
                 if part["mesh"]:
                     for draw in part["mesh"]["draws"]:
                         self.assertLess(draw["material"], len(model["materials"]))
-                        self.assertEqual(draw["vertex_count"], sum(len(b["positions"]) for b in draw["batches"]))
+                        self.assertEqual(
+                            draw["vertex_count"],
+                            sum(len(b["positions"]) for b in draw["batches"]),
+                        )
         self.assertEqual(profiles, {0x7A9420, 0x7AA728, 0x7A9620})
 
 

@@ -3,6 +3,7 @@
 Static packet geometry and source rest joints, with native flags retained.
 This module does not choose customization parts or assert game shading.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -64,8 +65,12 @@ class Pck:
             raise ValueError("PCK name is not ASCII") from error
 
     def fingerprint(self) -> dict:
-        return {"file": self.source, "sha256": self.sha256,
-                "bytes": len(self.data), "serialized_base": self.base}
+        return {
+            "file": self.source,
+            "sha256": self.sha256,
+            "bytes": len(self.data),
+            "serialized_base": self.base,
+        }
 
 
 def vif_planes(pck: Pck, start: int, size: int) -> list[dict]:
@@ -100,13 +105,21 @@ def vif_planes(pck: Pck, start: int, size: int) -> list[dict]:
             if cursor + 4 + length > end:
                 raise ValueError("VIF unpack exceeds draw packet")
             unsigned = bool(imm & 0x4000)
-            code = {32: "I", 16: "H" if unsigned else "h", 8: "B" if unsigned else "b"}[bits]
-            raw = struct.unpack_from("<" + code * consumed * components, data, cursor + 4)
+            code = {32: "I", 16: "H" if unsigned else "h", 8: "B" if unsigned else "b"}[
+                bits
+            ]
+            raw = struct.unpack_from(
+                "<" + code * consumed * components, data, cursor + 4
+            )
             values = []
             input_index = 0
             for i in range(count):
                 has_input = wl <= cl or i % wl < cl
-                vector = list(raw[input_index:input_index + components]) if has_input else row[:components]
+                vector = (
+                    list(raw[input_index : input_index + components])
+                    if has_input
+                    else row[:components]
+                )
                 if has_input:
                     input_index += components
                     if mode:
@@ -122,13 +135,26 @@ def vif_planes(pck: Pck, start: int, size: int) -> list[dict]:
                         elif selected == 2:
                             vector[j] = col[i % 4]
                         elif selected == 3:
-                            raise ValueError("unsupported VIF protected destination mask")
+                            raise ValueError(
+                                "unsupported VIF protected destination mask"
+                            )
                 values.append(tuple(vector))
-            planes.append({"offset": cursor, "payload_offset": cursor + 4,
-                           "command": cmd, "address": imm & 1023,
-                           "count": count, "components": components, "bits": bits,
-                           "unsigned": unsigned, "mode": mode, "cl": cl, "wl": wl,
-                           "values": values})
+            planes.append(
+                {
+                    "offset": cursor,
+                    "payload_offset": cursor + 4,
+                    "command": cmd,
+                    "address": imm & 1023,
+                    "count": count,
+                    "components": components,
+                    "bits": bits,
+                    "unsigned": unsigned,
+                    "mode": mode,
+                    "cl": cl,
+                    "wl": wl,
+                    "values": values,
+                }
+            )
         elif cmd == 1:
             cl, wl = (imm & 255) or 256, (imm >> 8) or 256
         elif cmd == 5:
@@ -163,7 +189,9 @@ def decode_batches(planes: list[dict]) -> list[dict]:
     if any(plane["cl"] > plane["wl"] for plane in planes):
         raise ValueError("unsupported VIF destination skip cycle")
     batches = []
-    headers = [i for i, p in enumerate(planes) if p["components"] in {1, 4} and p["bits"] == 32]
+    headers = [
+        i for i, p in enumerate(planes) if p["components"] in {1, 4} and p["bits"] == 32
+    ]
     if not headers or headers[0] != 0:
         raise ValueError("draw lacks leading VIF batch header")
     for index, first in enumerate(headers):
@@ -173,23 +201,36 @@ def decode_batches(planes: list[dict]) -> list[dict]:
         words = [v for vector in header["values"] for v in vector]
         scale = struct.unpack("<f", struct.pack("<I", words[0]))[0]
         count = words[1] if header["components"] == 1 else words[4]
-        if scale not in {1 / 4096, 1 / 8192, 1 / 16384, 1 / 32768} or not 1 <= count <= 256:
+        if (
+            scale not in {1 / 4096, 1 / 8192, 1 / 16384, 1 / 32768}
+            or not 1 <= count <= 256
+        ):
             raise ValueError("unknown position scale or batch vertex count")
         if header["components"] == 4:
             floats = struct.unpack("<4f", struct.pack("<4I", *words[:4]))
             if words[7] != count or not all(math.isfinite(x) for x in floats):
                 raise ValueError("VIF batch header count or float mismatch")
         last = headers[index + 1] if index + 1 < len(headers) else len(planes)
-        arrays = {"positions": [None] * count, "uvs": [None] * count,
-                  "colors": [None] * count, "normals": [None] * count}
-        targets = {"positions": (header["address"] + 0x56, {3}, {8, 16}),
-                   "uvs": (header["address"] + 0x2C, {2, 4}, {8, 16, 32}),
-                   "colors": (header["address"] + 0x80, {4}, {8}),
-                   "normals": (header["address"] + 2, {3}, {8})}
-        for plane in planes[first + 1:last]:
-            matches = [name for name, (address, components, bits) in targets.items()
-                       if plane["components"] in components and plane["bits"] in bits
-                       and address <= plane["address"] < address + count]
+        arrays = {
+            "positions": [None] * count,
+            "uvs": [None] * count,
+            "colors": [None] * count,
+            "normals": [None] * count,
+        }
+        targets = {
+            "positions": (header["address"] + 0x56, {3}, {8, 16}),
+            "uvs": (header["address"] + 0x2C, {2, 4}, {8, 16, 32}),
+            "colors": (header["address"] + 0x80, {4}, {8}),
+            "normals": (header["address"] + 2, {3}, {8}),
+        }
+        for plane in planes[first + 1 : last]:
+            matches = [
+                name
+                for name, (address, components, bits) in targets.items()
+                if plane["components"] in components
+                and plane["bits"] in bits
+                and address <= plane["address"] < address + count
+            ]
             if len(matches) != 1:
                 raise ValueError("unknown or ambiguous VIF attribute destination")
             name = matches[0]
@@ -199,7 +240,11 @@ def decode_batches(planes: list[dict]) -> list[dict]:
             for i, value in enumerate(plane["values"]):
                 if arrays[name][slot + i] is not None:
                     raise ValueError("overlapping VIF attribute writes")
-                arrays[name][slot + i] = tuple(x - 0x100000000 if x >= 0x80000000 else x for x in value) if plane["bits"] == 32 else value
+                arrays[name][slot + i] = (
+                    tuple(x - 0x100000000 if x >= 0x80000000 else x for x in value)
+                    if plane["bits"] == 32
+                    else value
+                )
         if any(value is None for value in arrays["positions"]):
             raise ValueError("missing VIF position values")
         for name in ["uvs", "colors", "normals"]:
@@ -208,19 +253,24 @@ def decode_batches(planes: list[dict]) -> list[dict]:
         positions = [tuple(x * scale for x in value) for value in arrays["positions"]]
         if not all(math.isfinite(x) for point in positions for x in point):
             raise ValueError("non-finite position")
-        batches.append({"packet_offset": header["offset"], "scale": scale,
-                        "header_words": words, "positions": positions,
-                        "position_integers": arrays["positions"],
-                        "uvs": [tuple(x / 4096 for x in v[:2]) for v in arrays["uvs"]],
-                        "uv_integers": arrays["uvs"],
-                        "normals": [tuple(x / 128 for x in v) for v in arrays["normals"]],
-                        "adc": [v[0] & 1 for v in arrays["normals"]],
-                        "normal_integers": arrays["normals"],
-                        "colors": [tuple(x / 255 for x in v[:3]) for v in arrays["colors"]],
-                        "color_integers": arrays["colors"],
-                        "flags": [v[3] for v in arrays["colors"]]})
+        batches.append(
+            {
+                "packet_offset": header["offset"],
+                "scale": scale,
+                "header_words": words,
+                "positions": positions,
+                "position_integers": arrays["positions"],
+                "uvs": [tuple(x / 4096 for x in v[:2]) for v in arrays["uvs"]],
+                "uv_integers": arrays["uvs"],
+                "normals": [tuple(x / 128 for x in v) for v in arrays["normals"]],
+                "adc": [v[0] & 1 for v in arrays["normals"]],
+                "normal_integers": arrays["normals"],
+                "colors": [tuple(x / 255 for x in v[:3]) for v in arrays["colors"]],
+                "color_integers": arrays["colors"],
+                "flags": [v[3] for v in arrays["colors"]],
+            }
+        )
     return batches
-
 
 
 def strip_indices(batch: dict) -> list[int]:
@@ -231,7 +281,10 @@ def strip_indices(batch: dict) -> list[int]:
     Degenerate triangles are omitted by an exact cross-product calculation.
     """
     positions, adc = batch["positions"], batch["adc"]
-    if any(len(point) != 3 or not all(math.isfinite(value) for value in point) for point in positions):
+    if any(
+        len(point) != 3 or not all(math.isfinite(value) for value in point)
+        for point in positions
+    ):
         raise ValueError("strip positions must be finite XYZ vectors")
     if len(positions) != len(adc) or any(value not in {0, 1} for value in adc):
         raise ValueError("strip position and ADC count mismatch")
@@ -243,7 +296,11 @@ def strip_indices(batch: dict) -> list[int]:
         p, q, r = positions[a], positions[b], positions[c]
         u = [q[j] - p[j] for j in range(3)]
         v = [r[j] - p[j] for j in range(3)]
-        cross = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]
+        cross = [
+            u[1] * v[2] - u[2] * v[1],
+            u[2] * v[0] - u[0] * v[2],
+            u[0] * v[1] - u[1] * v[0],
+        ]
         if any(value != 0 for value in cross):
             indices.extend((a, b, c))
     return indices
@@ -270,13 +327,26 @@ def read_mesh_object(pck: Pck, offset: int, *, batch_decoder=decode_batches) -> 
         batches = batch_decoder(vif_planes(pck, packet, qwc * 16))
         if sum(len(b["positions"]) for b in batches) != vertices:
             raise ValueError("draw descriptor vertex count mismatch")
-        draws.append({"material": pck.u16(materials + i * 2), "descriptor_offset": descriptor,
-                      "packet_offset": packet, "packet_bytes": qwc * 16,
-                      "native_vif_packet": bytes(pck.data[packet:packet+qwc*16]),
-                      "native_vif_batch_offsets": [batch['packet_offset']-packet for batch in batches],
-                      "vertex_count": vertices, "batches": batches})
-    return {"offset": offset, "vtable": pck.u32(offset), "draws": draws,
-            "source": pck.fingerprint()}
+        draws.append(
+            {
+                "material": pck.u16(materials + i * 2),
+                "descriptor_offset": descriptor,
+                "packet_offset": packet,
+                "packet_bytes": qwc * 16,
+                "native_vif_packet": bytes(pck.data[packet : packet + qwc * 16]),
+                "native_vif_batch_offsets": [
+                    batch["packet_offset"] - packet for batch in batches
+                ],
+                "vertex_count": vertices,
+                "batches": batches,
+            }
+        )
+    return {
+        "offset": offset,
+        "vtable": pck.u32(offset),
+        "draws": draws,
+        "source": pck.fingerprint(),
+    }
 
 
 def read_mesh(path: Path | str) -> dict:
@@ -297,8 +367,14 @@ def read_group(pck: Pck, offset: int) -> list[dict]:
     for i in range(count):
         mesh, name, bone = [pck.u32(array + i * 4) for array in arrays]
         mesh_offset = pck.pointer(mesh) if mesh else None
-        parts.append({"name": pck.text(name), "bone": bone, "mesh_offset": mesh_offset,
-                      "mesh": read_mesh_object(pck, mesh_offset) if mesh else None})
+        parts.append(
+            {
+                "name": pck.text(name),
+                "bone": bone,
+                "mesh_offset": mesh_offset,
+                "mesh": read_mesh_object(pck, mesh_offset) if mesh else None,
+            }
+        )
     return parts
 
 
@@ -330,16 +406,30 @@ def read_bones(pck: Pck, offset: int) -> dict:
         position = struct.unpack_from("<3f", pck.data, joint)
         local = struct.unpack_from("<3f", pck.data, joint + 32)
         rotation = struct.unpack_from("<3f", pck.data, joint + 44)
-        if not all(math.isfinite(value) for vector in (position, local, rotation) for value in vector):
+        if not all(
+            math.isfinite(value)
+            for vector in (position, local, rotation)
+            for value in vector
+        ):
             raise ValueError("nonfinite bone frame")
         parent_pointer = pck.u32(joint + 28)
-        bones.append({"index": index, "offset": joint, "name": pck.text(pck.u32(joint + 12)),
-                      "parent": joint_index(parent_pointer),
-                      "parent_offset": pck.pointer(parent_pointer, 68) if parent_pointer else None,
-                      "sibling": joint_index(pck.u32(joint + 20)),
-                      "child": joint_index(pck.u32(joint + 24)),
-                      "global_position": position, "local_position": local, "rotation_raw": rotation,
-                      "flags_raw": pck.u32(joint + 60)})
+        bones.append(
+            {
+                "index": index,
+                "offset": joint,
+                "name": pck.text(pck.u32(joint + 12)),
+                "parent": joint_index(parent_pointer),
+                "parent_offset": pck.pointer(parent_pointer, 68)
+                if parent_pointer
+                else None,
+                "sibling": joint_index(pck.u32(joint + 20)),
+                "child": joint_index(pck.u32(joint + 24)),
+                "global_position": position,
+                "local_position": local,
+                "rotation_raw": rotation,
+                "flags_raw": pck.u32(joint + 60),
+            }
+        )
     if bones[0]["parent"] is not None or bones[0]["sibling"] is not None:
         raise ValueError("invalid bone root")
     visited = set()
@@ -350,8 +440,18 @@ def read_bones(pck: Pck, offset: int) -> dict:
             raise ValueError("bone ancestry cycle or mismatch")
         visited.add(index)
         bone = bones[index]
-        parent_position = bones[parent]["global_position"] if parent is not None else (0, 0, 0)
-        if any(abs(bone["local_position"][axis] + parent_position[axis] - bone["global_position"][axis]) > 1e-5 for axis in range(3)):
+        parent_position = (
+            bones[parent]["global_position"] if parent is not None else (0, 0, 0)
+        )
+        if any(
+            abs(
+                bone["local_position"][axis]
+                + parent_position[axis]
+                - bone["global_position"][axis]
+            )
+            > 1e-5
+            for axis in range(3)
+        ):
             raise ValueError("bone rest translation mismatch")
         if bone["sibling"] is not None:
             pending.append((bone["sibling"], parent))
@@ -359,8 +459,12 @@ def read_bones(pck: Pck, offset: int) -> dict:
             pending.append((bone["child"], index))
     if len(visited) != count:
         raise ValueError("unreachable bone records")
-    return {"offset": offset, "joint_array_offset": start,
-            "header_words_raw": list(struct.unpack_from("<4H", pck.data, offset)), "bones": bones}
+    return {
+        "offset": offset,
+        "joint_array_offset": start,
+        "header_words_raw": list(struct.unpack_from("<4H", pck.data, offset)),
+        "bones": bones,
+    }
 
 
 def _model_candidates(data: bytes) -> list[int]:
@@ -368,7 +472,7 @@ def _model_candidates(data: bytes) -> list[int]:
     offsets = []
     stop = len(data) - 28
     for marker in MODEL_VTABLES:
-        pattern = struct.pack('<I', marker)
+        pattern = struct.pack("<I", marker)
         cursor = 128
         while (offset := data.find(pattern, cursor, stop + 3)) >= 0:
             if offset % 4 == 0:
@@ -386,8 +490,12 @@ def read_vehicle(path: Path | str) -> dict:
     for candidate in candidates:
         try:
             collection = pck.pointer(pck.u32(candidate + 8), 20)
-            groups = [pck.pointer(pck.u32(candidate + field), 20) for field in (16, 20, 24)]
-            if pck.u32(collection) in MATERIAL_VTABLES and all(pck.u16(g) == 2 and pck.u32(g + 4) in GROUP_VTABLES for g in groups):
+            groups = [
+                pck.pointer(pck.u32(candidate + field), 20) for field in (16, 20, 24)
+            ]
+            if pck.u32(collection) in MATERIAL_VTABLES and all(
+                pck.u16(g) == 2 and pck.u32(g + 4) in GROUP_VTABLES for g in groups
+            ):
                 valid.append(candidate)
         except ValueError:
             continue
@@ -402,24 +510,38 @@ def read_vehicle(path: Path | str) -> dict:
     if not 1 <= count <= MAX_PARTS or count != pck.u16(material_collection + 10):
         raise ValueError("material collection count mismatch")
     array = pck.pointer(pck.u32(material_collection + 4), count * 4)
-    materials = [{"index": i, "offset": pck.pointer(pck.u32(array + i * 4))}
-                 for i in range(count)]
-    lods = {name: read_group(pck, pck.pointer(pck.u32(root + field), 20))
-            for name, field in (("high", 16), ("middle", 20), ("low", 24))}
+    materials = [
+        {"index": i, "offset": pck.pointer(pck.u32(array + i * 4))}
+        for i in range(count)
+    ]
+    lods = {
+        name: read_group(pck, pck.pointer(pck.u32(root + field), 20))
+        for name, field in (("high", 16), ("middle", 20), ("low", 24))
+    }
     skeleton = read_bones(pck, pck.pointer(pck.u32(root + 104), 12))
     for parts in lods.values():
         for part in parts:
             if part["bone"] >= len(skeleton["bones"]):
                 raise ValueError("mesh bone index outside vehicle skeleton")
-            if part["mesh"] and any(draw["material"] >= count for draw in part["mesh"]["draws"]):
+            if part["mesh"] and any(
+                draw["material"] >= count for draw in part["mesh"]["draws"]
+            ):
                 raise ValueError("mesh material index outside vehicle table")
-    return {"source": pck.fingerprint(), "profile": "mc3-ps2-serialized-vif-v1",
-            "model_offset": root, "model_vtable": pck.u32(root),
-            "material_collection_offset": material_collection,
-            "materials": materials, "lods": lods, "skeleton": skeleton,
-            "claim_limits": ["Rotation interpretation and customization selection require separate evidence.",
-                             "Native per-vertex flags remain uninterpreted.",
-                             "Colour scale candidates require rendered validation; UV scale 1/4096 and orientation were checked against rendered livery lettering."]}
+    return {
+        "source": pck.fingerprint(),
+        "profile": "mc3-ps2-serialized-vif-v1",
+        "model_offset": root,
+        "model_vtable": pck.u32(root),
+        "material_collection_offset": material_collection,
+        "materials": materials,
+        "lods": lods,
+        "skeleton": skeleton,
+        "claim_limits": [
+            "Rotation interpretation and customization selection require separate evidence.",
+            "Native per-vertex flags remain uninterpreted.",
+            "Colour scale candidates require rendered validation; UV scale 1/4096 and orientation were checked against rendered livery lettering.",
+        ],
+    }
 
 
 def read_resource_group(path: Path | str) -> dict:
@@ -436,7 +558,13 @@ def read_resource_group(path: Path | str) -> dict:
         if part["mesh"] is None:
             raise ValueError("unresolved shared resource mesh")
         named[part["name"]] = part
-    return {"source": vehicle["source"], "model_offset": vehicle["model_offset"],
-            "material_collection_offset": vehicle["material_collection_offset"],
-            "materials": vehicle["materials"], "skeleton": vehicle["skeleton"],
-            "parts": named, "profile": vehicle["profile"], "claim_limits": vehicle["claim_limits"]}
+    return {
+        "source": vehicle["source"],
+        "model_offset": vehicle["model_offset"],
+        "material_collection_offset": vehicle["material_collection_offset"],
+        "materials": vehicle["materials"],
+        "skeleton": vehicle["skeleton"],
+        "parts": named,
+        "profile": vehicle["profile"],
+        "claim_limits": vehicle["claim_limits"],
+    }

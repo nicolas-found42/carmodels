@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Positive, negative and boundary checks for the car mip recovery artifacts."""
+
 from __future__ import annotations
 
 import json
@@ -16,8 +17,12 @@ EVIDENCE = ROOT / "research/evidence/mip-continuation"
 
 
 def run_validator(output_dir: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run([sys.executable, str(VALIDATOR), "--output-dir", str(output_dir)],
-                          text=True, capture_output=True, check=False)
+    return subprocess.run(
+        [sys.executable, str(VALIDATOR), "--output-dir", str(output_dir)],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
 
 
 def prepare(target: Path) -> None:
@@ -34,7 +39,10 @@ def main() -> None:
         if result.returncode != 0:
             raise AssertionError(f"positive corpus failed: {result.stderr}")
         positive = json.loads((good / "validation.json").read_text())
-        if positive["checked_extra_mip_levels"] != 94 or positive["independently_decoded_pngs"] != 94:
+        if (
+            positive["checked_extra_mip_levels"] != 94
+            or positive["independently_decoded_pngs"] != 94
+        ):
             raise AssertionError("positive corpus counts differ")
         cases.append({"case": "unaltered complete corpus", "result": "accepted"})
 
@@ -56,8 +64,8 @@ def main() -> None:
         png = bytearray(first_png.read_bytes())
         cursor = 8
         while cursor < len(png):
-            size = int.from_bytes(png[cursor:cursor + 4], "big")
-            kind = bytes(png[cursor + 4:cursor + 8])
+            size = int.from_bytes(png[cursor : cursor + 4], "big")
+            kind = bytes(png[cursor + 4 : cursor + 8])
             if kind == b"IDAT":
                 png[cursor + 8 + size // 2] ^= 0x01
                 break
@@ -80,11 +88,17 @@ def main() -> None:
             raise AssertionError("negative source boundary was not rejected")
         cases.append({"case": "negative source-file offset", "result": "rejected"})
 
-        result_doc = {"schema_version": 1, "status": "pass", "cases": cases,
-                      "test_tool_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-                      "scope": "The unaltered corpus passes; three copied-artifact mutations are rejected by the validator.",
-                      "note": "Negative controls ran in temporary copies and did not modify the exported evidence."}
-        (EVIDENCE / "negative-controls.json").write_text(json.dumps(result_doc, indent=2) + "\n")
+        result_doc = {
+            "schema_version": 1,
+            "status": "pass",
+            "cases": cases,
+            "test_tool_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "scope": "The unaltered corpus passes; three copied-artifact mutations are rejected by the validator.",
+            "note": "Negative controls ran in temporary copies and did not modify the exported evidence.",
+        }
+        (EVIDENCE / "negative-controls.json").write_text(
+            json.dumps(result_doc, indent=2) + "\n"
+        )
         print(json.dumps(result_doc, indent=2))
 
 

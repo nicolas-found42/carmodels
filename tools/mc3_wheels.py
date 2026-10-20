@@ -4,6 +4,7 @@ The shared decal library stores archive/page handles. Config indices select
 those handles, not similarly named PPF pages. Geometry stays in native units;
 wheel sizing, game deformation and joint rotation are separate renderer work.
 """
+
 from __future__ import annotations
 
 from contextlib import contextmanager
@@ -27,8 +28,11 @@ HANDLE_CLASS = 0x7AA718
 
 
 def _fingerprint(path: Path, data: bytes) -> dict:
-    return {"file": str(path), "bytes": len(data),
-            "sha256": hashlib.sha256(data).hexdigest()}
+    return {
+        "file": str(path),
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+    }
 
 
 _SCANS: dict | None = None
@@ -92,8 +96,11 @@ def read_default_config(root: Path | str, vehicle_id: str) -> dict:
     text = data.decode("ascii")
     fields = {}
     keys = ["RimMdlIdx", "TireMdlIdx", "BikeTireMdlIdx"]
-    keys += [f"{name}{axle}" for name in ("RimSize", "TireWidth", "TireProfile")
-             for axle in range(2)]
+    keys += [
+        f"{name}{axle}"
+        for name in ("RimSize", "TireWidth", "TireProfile")
+        for axle in range(2)
+    ]
     for key in keys:
         values = re.findall(r"^\s*" + key + r"\s+(-?\d+)\s*$", text, re.MULTILINE)
         if len(values) != 1:
@@ -110,7 +117,9 @@ def _collection(library: Pck, offset: int) -> list[int]:
     return [library.pointer(library.u32(array + i * 4), 16) for i in range(count)]
 
 
-def select_handle(library: Pck, collection_offset: int, index: int, archive: int) -> dict:
+def select_handle(
+    library: Pck, collection_offset: int, index: int, archive: int
+) -> dict:
     rows = _collection(library, collection_offset)
     if not 0 <= index < len(rows):
         raise ValueError("wheel config index outside library collection")
@@ -120,8 +129,13 @@ def select_handle(library: Pck, collection_offset: int, index: int, archive: int
     packed = library.u32(row + 12)
     if packed >> 23 != archive:
         raise ValueError("wheel handle selects unexpected native archive")
-    return {"library_row_offset": row, "config_index": index,
-            "packed_handle": packed, "archive": archive, "page": packed & 0x7FFFFF}
+    return {
+        "library_row_offset": row,
+        "config_index": index,
+        "packed_handle": packed,
+        "archive": archive,
+        "page": packed & 0x7FFFFF,
+    }
 
 
 def ppf_page(data: bytes, index: int) -> dict:
@@ -140,7 +154,9 @@ def ppf_page(data: bytes, index: int) -> dict:
     return {"index": index, "packed_page": word, "offset": offset, "bytes": size}
 
 
-def read_page_model(data: bytes, page: dict, source: str = "memory", *, archive_index: int | None = None) -> dict:
+def read_page_model(
+    data: bytes, page: dict, source: str = "memory", *, archive_index: int | None = None
+) -> dict:
     """Adapt the native 32-byte embedded header to existing bounded PCK reads.
 
     The view's 128-byte header is an in-memory parser adapter. Every payload
@@ -159,17 +175,27 @@ def read_page_model(data: bytes, page: dict, source: str = "memory", *, archive_
     if len(candidates) != 1:
         raise ValueError("wheel model body missing or ambiguous")
     root, base, size = candidates[0]
-    adapter = struct.pack("<4I", base, 0, 1, size) + bytes(112) + data[root:root + size]
+    adapter = (
+        struct.pack("<4I", base, 0, 1, size) + bytes(112) + data[root : root + size]
+    )
     pck = Pck(adapter, source)
-    carrier = {"file": source, "bytes": len(data),
-               "sha256": hashlib.sha256(data).hexdigest(), "carrier_type": "pf05",
-               "model_file_offset": root, "adapter_sha256": pck.sha256}
+    carrier = {
+        "file": source,
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "carrier_type": "pf05",
+        "model_file_offset": root,
+        "adapter_sha256": pck.sha256,
+    }
     material_offset = pck.pointer(pck.u32(136), 16)
     materials = read_material_table(adapter, material_offset)
-    inputs = native_input_table(bytes(data), material_offset - 128 + root,
-                                to_offset=lambda value: value - base + root)
+    inputs = native_input_table(
+        bytes(data),
+        material_offset - 128 + root,
+        to_offset=lambda value: value - base + root,
+    )
     for material in materials:
-        material['native_input_table'] = inputs
+        material["native_input_table"] = inputs
     lods = {}
     for name, field in (("high", 16), ("middle", 20), ("low", 24)):
         pointer = pck.u32(128 + field)
@@ -178,75 +204,127 @@ def read_page_model(data: bytes, page: dict, source: str = "memory", *, archive_
             continue
         group = pck.pointer(pointer, 12)
         count = pck.u16(group + 2)
-        if pck.u16(group) != 0 or pck.u32(group + 4) != 0x7A2228 or not 1 <= count <= MAX_PARTS:
+        if (
+            pck.u16(group) != 0
+            or pck.u32(group + 4) != 0x7A2228
+            or not 1 <= count <= MAX_PARTS
+        ):
             raise ValueError("unknown native wheel mesh collection")
         array = pck.pointer(pck.u32(group + 8), count * 4)
-        meshes = [read_mesh_object(pck, pck.pointer(pck.u32(array + i * 4), 24))
-                  for i in range(count)]
+        meshes = [
+            read_mesh_object(pck, pck.pointer(pck.u32(array + i * 4), 24))
+            for i in range(count)
+        ]
         for mesh in meshes:
             mesh["source"] = carrier.copy()
             mesh["ppf_file_offset"] = root + mesh["offset"] - 128
             for draw in mesh["draws"]:
                 draw["ppf_descriptor_offset"] = root + draw["descriptor_offset"] - 128
                 draw["ppf_packet_offset"] = root + draw["packet_offset"] - 128
-        if any(draw["material"] >= len(materials) for mesh in meshes for draw in mesh["draws"]):
+        if any(
+            draw["material"] >= len(materials)
+            for mesh in meshes
+            for draw in mesh["draws"]
+        ):
             raise ValueError("wheel material index outside native table")
         lods[name] = meshes
     for material in materials:
         material["ppf_file_offset"] = root + material["file_offset"] - 128
         # Keep offsets and carrier identity in original PPF coordinates. The
         # synthetic PCK above is only a decoder adapter, never source evidence.
-        original = {**material, 'file_offset': material['ppf_file_offset']}
-        material['native_material'] = native_material(bytes(data), original, 0x1308,
-            to_offset=lambda value: value - base + root)
+        original = {**material, "file_offset": material["ppf_file_offset"]}
+        material["native_material"] = native_material(
+            bytes(data), original, 0x1308, to_offset=lambda value: value - base + root
+        )
     page_view = data[start:end]
     undecoded = {}
     slots, skipped = read_page_slots(page_view, root - start, base, undecoded=undecoded)
     for material in materials:
-        for binding in native_graph_bindings(material['native_material'], slots, {}, undecoded):
-            ref = binding['reference']
-            if binding['status'] == 'unresolved' and ref['kind'] in ('slot', 'inline-slot'):
-                if not start <= ref['slot_offset'] < end:
-                    raise ValueError('native wheel texture slot outside selected page')
-                undecoded.setdefault(ref['name'], {'name': ref['name'], 'width': None,
-                    'height': None, 'levels': None, 'source': 'pf05-page-undecoded',
-                    'native': {'decode_status': 'unresolved-native-format',
-                        'offset_basis': 'pf05-file', 'slot_offset': ref['slot_offset'],
-                        'source_page': page_view, 'source_carrier_sha256': carrier['sha256']}})
+        for binding in native_graph_bindings(
+            material["native_material"], slots, {}, undecoded
+        ):
+            ref = binding["reference"]
+            if binding["status"] == "unresolved" and ref["kind"] in (
+                "slot",
+                "inline-slot",
+            ):
+                if not start <= ref["slot_offset"] < end:
+                    raise ValueError("native wheel texture slot outside selected page")
+                undecoded.setdefault(
+                    ref["name"],
+                    {
+                        "name": ref["name"],
+                        "width": None,
+                        "height": None,
+                        "levels": None,
+                        "source": "pf05-page-undecoded",
+                        "native": {
+                            "decode_status": "unresolved-native-format",
+                            "offset_basis": "pf05-file",
+                            "slot_offset": ref["slot_offset"],
+                            "source_page": page_view,
+                            "source_carrier_sha256": carrier["sha256"],
+                        },
+                    },
+                )
     for slot in [*slots.values(), *undecoded.values()]:
-        if 'native' in slot:
-            slot['native']['page_file_offset'] = start
+        if "native" in slot:
+            slot["native"]["page_file_offset"] = start
     ppf_materials = [{**m, "file_offset": m["ppf_file_offset"]} for m in materials]
-    texture_records = bind_material_textures(data, ppf_materials, slots, {}, 0x1308,
-                                              lambda pointer: pointer - base + root)
+    texture_records = bind_material_textures(
+        data, ppf_materials, slots, {}, 0x1308, lambda pointer: pointer - base + root
+    )
     recovered = {}
     if archive_index is not None:
         from mc3_texture_binding import decode_pf05_texture
+
         for name, image in undecoded.items():
-            original = image['native']
-            offset = original['slot_offset']
-            if original['offset_basis'] == 'pf05-page':
+            original = image["native"]
+            offset = original["slot_offset"]
+            if original["offset_basis"] == "pf05-page":
                 offset += start
-            native_image = decode_pf05_texture(bytes(data), offset, archive_index=archive_index)
-            first = native_image['levels'][0]
+            native_image = decode_pf05_texture(
+                bytes(data), offset, archive_index=archive_index
+            )
+            first = native_image["levels"][0]
             # Preserve the old display slots and policy. These are independent,
             # lossless source inputs for the native graph, never preview replacements.
-            inspection = bytes(v if i % 4 != 3 else min(255, v*2)
-                               for i, v in enumerate(first['rgba']))
-            recovered[name] = {**image, 'width': first['width'], 'height': first['height'],
-                'levels': len(native_image['levels']), 'rgba': inspection,
-                'native': {**original, **native_image}}
-    return {"model_file_offset": root, "embedded_header_offset": root - 32,
-            "serialized_base": base, "payload_bytes": size, "lods": lods,
-            "materials": materials, "texture_slots": slots, "skipped_texture_slots": skipped,
-            "native_undecoded_slots": undecoded, "native_recovered_slots": recovered,
-            "texture_records": texture_records, "page_offset": start,
-            "adapter_offset_rule": "ppf_offset = model_file_offset + adapter_offset - 128",
-            "claim_limits": ["Native unscaled component geometry; placement and rotation are not applied.",
-                             "Game textures, tire deformation and runtime shading are not emulated."]}
+            inspection = bytes(
+                v if i % 4 != 3 else min(255, v * 2)
+                for i, v in enumerate(first["rgba"])
+            )
+            recovered[name] = {
+                **image,
+                "width": first["width"],
+                "height": first["height"],
+                "levels": len(native_image["levels"]),
+                "rgba": inspection,
+                "native": {**original, **native_image},
+            }
+    return {
+        "model_file_offset": root,
+        "embedded_header_offset": root - 32,
+        "serialized_base": base,
+        "payload_bytes": size,
+        "lods": lods,
+        "materials": materials,
+        "texture_slots": slots,
+        "skipped_texture_slots": skipped,
+        "native_undecoded_slots": undecoded,
+        "native_recovered_slots": recovered,
+        "texture_records": texture_records,
+        "page_offset": start,
+        "adapter_offset_rule": "ppf_offset = model_file_offset + adapter_offset - 128",
+        "claim_limits": [
+            "Native unscaled component geometry; placement and rotation are not applied.",
+            "Game textures, tire deformation and runtime shading are not emulated.",
+        ],
+    }
 
 
-def read_default_wheels(root: Path | str, vehicle_id: str, *, bike: bool = False) -> dict:
+def read_default_wheels(
+    root: Path | str, vehicle_id: str, *, bike: bool = False
+) -> dict:
     """Select native handles by explicit vehicle class and default config."""
     root = Path(root)
     config = read_default_config(root, vehicle_id)
@@ -255,8 +333,9 @@ def read_default_wheels(root: Path | str, vehicle_id: str, *, bike: bool = False
     library = Pck(lib_data, str(lib_path))
     if library.kind != 0x25:
         raise ValueError("unknown native shared wheel library")
-    rim = select_handle(library, library.pointer(library.u32(128 + 0x28), 8),
-                        fields["RimMdlIdx"], 5)
+    rim = select_handle(
+        library, library.pointer(library.u32(128 + 0x28), 8), fields["RimMdlIdx"], 5
+    )
     selections = [{"component": "rim", "axle": None, **rim}]
     for axle in range(2):
         if bike:
@@ -270,9 +349,17 @@ def read_default_wheels(root: Path | str, vehicle_id: str, *, bike: bool = False
             profiles = library.pointer(library.u32(128 + 0x2C), count * 4)
             collection = library.pointer(library.u32(profiles + profile * 4), 8)
             index = fields["TireMdlIdx"]
-        selections.append({"component": "tire", "axle": axle,
-                           **select_handle(library, collection, index, 3)})
-    sources = {"library": _fingerprint(lib_path, lib_data), "library_copies": lib_copies}
+        selections.append(
+            {
+                "component": "tire",
+                "axle": axle,
+                **select_handle(library, collection, index, 3),
+            }
+        )
+    sources = {
+        "library": _fingerprint(lib_path, lib_data),
+        "library_copies": lib_copies,
+    }
     archives = {}
     for name in ("rim", "tire"):
         path, data, copies = _source(root, name + ".ppf")
@@ -288,87 +375,125 @@ def read_default_wheels(root: Path | str, vehicle_id: str, *, bike: bool = False
         selection["page_record"] = page
         key = (selection["component"], selection["page"])
         if key not in decoded:
-            decoded[key] = read_page_model(data, page, str(path), archive_index=selection["archive"])
+            decoded[key] = read_page_model(
+                data, page, str(path), archive_index=selection["archive"]
+            )
             selection["model"] = decoded[key]
         else:
             selection["model"] = copy.deepcopy(decoded[key])
-    return {"config": config, "sources": sources, "bike": bike, "components": selections}
+    return {
+        "config": config,
+        "sources": sources,
+        "bike": bike,
+        "components": selections,
+    }
 
 
-EXECUTABLE_SHA256 = '1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d'
+EXECUTABLE_SHA256 = "1b237ade5cafaf8ddd9fd049f40d81eb46f38f2600a8f1c7273d4f836973fe9d"
 
 
 def _elf_address(data: bytes, address: int, size: int) -> int:
-    if data[:7] != b'\x7fELF\x01\x01\x01' or len(data) < 52:
-        raise ValueError('unknown native wheel sizing ELF profile')
-    table = struct.unpack_from('<I', data, 28)[0]
-    stride, count = struct.unpack_from('<2H', data, 42)
+    if data[:7] != b"\x7fELF\x01\x01\x01" or len(data) < 52:
+        raise ValueError("unknown native wheel sizing ELF profile")
+    table = struct.unpack_from("<I", data, 28)[0]
+    stride, count = struct.unpack_from("<2H", data, 42)
     if stride != 32 or not 1 <= count <= 64 or table + stride * count > len(data):
-        raise ValueError('invalid native wheel sizing ELF segments')
+        raise ValueError("invalid native wheel sizing ELF segments")
     matches = []
     for i in range(count):
-        kind, offset, virtual, _, file_size = struct.unpack_from('<5I', data, table + i * stride)
+        kind, offset, virtual, _, file_size = struct.unpack_from(
+            "<5I", data, table + i * stride
+        )
         if kind == 1 and virtual <= address and address + size <= virtual + file_size:
             candidate = offset + address - virtual
             if candidate + size <= len(data):
                 matches.append(candidate)
     if len(matches) != 1:
-        raise ValueError('wheel sizing address missing or ambiguous in ELF')
+        raise ValueError("wheel sizing address missing or ambiguous in ELF")
     return matches[0]
 
 
 def read_native_sizing_tables(executable: bytes | Path | str) -> dict:
     """Read the exact supplied SLUS_213.55 profile, with executable provenance."""
-    data = executable if isinstance(executable, bytes) else Path(executable).read_bytes()
+    data = (
+        executable if isinstance(executable, bytes) else Path(executable).read_bytes()
+    )
     digest = hashlib.sha256(data).hexdigest()
     if digest != EXECUTABLE_SHA256:
-        raise ValueError('unsupported wheel sizing executable fingerprint')
+        raise ValueError("unsupported wheel sizing executable fingerprint")
     tables = {}
-    for name, address, count in (('width', 0x619A18, 9), ('profile', 0x669840, 8),
-                                  ('rim', 0x669A10, 17)):
+    for name, address, count in (
+        ("width", 0x619A18, 9),
+        ("profile", 0x669840, 8),
+        ("rim", 0x669A10, 17),
+    ):
         offset = _elf_address(data, address, count * 4)
-        raw = data[offset:offset + count * 4]
-        tables[name] = {'address': address, 'elf_offset': offset,
-                        'sha256': hashlib.sha256(raw).hexdigest(),
-                        'values': list(struct.unpack('<' + 'f' * count, raw))}
-    return {'source': {'sha256': digest, 'bytes': len(data), 'profile': 'SLUS_213.55'},
-            'tables': tables,
-            'native_functions': ['004afb00', '004afab0', '004af9c8', '002f85d0',
-                                 '003042c8', '002f6c48', '002c55f0']}
+        raw = data[offset : offset + count * 4]
+        tables[name] = {
+            "address": address,
+            "elf_offset": offset,
+            "sha256": hashlib.sha256(raw).hexdigest(),
+            "values": list(struct.unpack("<" + "f" * count, raw)),
+        }
+    return {
+        "source": {"sha256": digest, "bytes": len(data), "profile": "SLUS_213.55"},
+        "tables": tables,
+        "native_functions": [
+            "004afb00",
+            "004afab0",
+            "004af9c8",
+            "002f85d0",
+            "003042c8",
+            "002f6c48",
+            "002c55f0",
+        ],
+    }
 
 
 def read_vehicle_class(root: Path | str, vehicle_id: str) -> dict:
     """Read the exact Vehicle/Class record, including nested performance blocks."""
-    if not re.fullmatch(r'vp_[A-Za-z0-9_]+', vehicle_id):
-        raise ValueError('invalid vehicle source ID')
-    path, data, copies = _source(Path(root), 'vehicle.lst')
-    text = re.sub(r';[^\r\n]*', '', data.decode('ascii'))
+    if not re.fullmatch(r"vp_[A-Za-z0-9_]+", vehicle_id):
+        raise ValueError("invalid vehicle source ID")
+    path, data, copies = _source(Path(root), "vehicle.lst")
+    text = re.sub(r";[^\r\n]*", "", data.decode("ascii"))
     classes = []
-    for match in re.finditer(r'\bVehicle\s*\{', text):
+    for match in re.finditer(r"\bVehicle\s*\{", text):
         start, depth, end = match.end(), 1, match.end()
         while depth and end < len(text):
-            depth += (text[end] == '{') - (text[end] == '}')
+            depth += (text[end] == "{") - (text[end] == "}")
             end += 1
         if depth:
-            raise ValueError('unbalanced native vehicle class record')
-        record = text[start:end - 1]
-        names = re.findall(r'^\s*Name\s+(\S+)\s*$', record, re.MULTILINE)
+            raise ValueError("unbalanced native vehicle class record")
+        record = text[start : end - 1]
+        names = re.findall(r"^\s*Name\s+(\S+)\s*$", record, re.MULTILINE)
         if names != [vehicle_id]:
             continue
-        values = re.findall(r'^\s*Class\s+(\S+)\s*$', record, re.MULTILINE)
+        values = re.findall(r"^\s*Class\s+(\S+)\s*$", record, re.MULTILINE)
         if len(values) != 1:
-            raise ValueError('missing or ambiguous native vehicle class')
+            raise ValueError("missing or ambiguous native vehicle class")
         classes.append(values[0])
     if len(classes) != 1:
-        raise ValueError('missing or ambiguous native vehicle class record')
-    return {'class': classes[0],
-            'source': _fingerprint(path, data), 'copies': copies,
-            'native_class_value': {'CHOPPER': 5, 'SPORTBIKE': 6, 'COPBIKE': 10}.get(classes[0])}
+        raise ValueError("missing or ambiguous native vehicle class record")
+    return {
+        "class": classes[0],
+        "source": _fingerprint(path, data),
+        "copies": copies,
+        "native_class_value": {"CHOPPER": 5, "SPORTBIKE": 6, "COPBIKE": 10}.get(
+            classes[0]
+        ),
+    }
 
 
-def read_wheel_sizing(executable: bytes | Path | str, config_fields: dict, *,
-                      axle: int, bike: bool = False, vehicle_class: str | None = None,
-                      wheel_max_x: float | None = None, wheel_rest_y: float | None = None) -> dict:
+def read_wheel_sizing(
+    executable: bytes | Path | str,
+    config_fields: dict,
+    *,
+    axle: int,
+    bike: bool = False,
+    vehicle_class: str | None = None,
+    wheel_max_x: float | None = None,
+    wheel_rest_y: float | None = None,
+) -> dict:
     """Compose source-bound static basis scaling; animation and placement are separate.
 
     Car wheel joints use (2*width, ratio, ratio); the renderer multiplies
@@ -376,39 +501,73 @@ def read_wheel_sizing(executable: bytes | Path | str, config_fields: dict, *,
     rest Y; rim Y/Z additionally receives the class-specific native factor.
     """
     if type(axle) is not int or axle not in (0, 1):
-        raise ValueError('invalid native wheel axle')
+        raise ValueError("invalid native wheel axle")
     native = read_native_sizing_tables(executable)
     fields = config_fields
     if bike:
-        if vehicle_class not in ('CHOPPER', 'SPORTBIKE', 'COPBIKE'):
-            raise ValueError('unknown native bike class for wheel sizing')
-        if wheel_max_x is None or wheel_rest_y is None or not all(
-                math.isfinite(v) and 0 < v <= 2 for v in (wheel_max_x, wheel_rest_y)):
-            raise ValueError('missing or invalid native bike wheel joint dimensions')
+        if vehicle_class not in ("CHOPPER", "SPORTBIKE", "COPBIKE"):
+            raise ValueError("unknown native bike class for wheel sizing")
+        if (
+            wheel_max_x is None
+            or wheel_rest_y is None
+            or not all(
+                math.isfinite(v) and 0 < v <= 2 for v in (wheel_max_x, wheel_rest_y)
+            )
+        ):
+            raise ValueError("missing or invalid native bike wheel joint dimensions")
         # FUN_002c55f0 stores these exact float32 defaults; render consumes them.
-        width_factor = struct.unpack('<f', struct.pack('<I', 0x3F63D70A))[0]
-        rim_factor = struct.unpack('<f', struct.pack('<I',
-                                  0x3F59999A if vehicle_class == 'CHOPPER' else 0x3F333333))[0]
+        width_factor = struct.unpack("<f", struct.pack("<I", 0x3F63D70A))[0]
+        rim_factor = struct.unpack(
+            "<f",
+            struct.pack("<I", 0x3F59999A if vehicle_class == "CHOPPER" else 0x3F333333),
+        )[0]
         width = width_factor * 4 * wheel_max_x
         diameter = 2 * wheel_rest_y
-        rim, tire = [width, diameter * rim_factor, diameter * rim_factor], [width, diameter, diameter]
-        inputs = {'class': vehicle_class, 'wheel_constraint_transmax_x': wheel_max_x,
-                  'wheel_rest_global_y': wheel_rest_y, 'native_width_factor': width_factor,
-                  'native_rim_factor': rim_factor}
+        rim, tire = (
+            [width, diameter * rim_factor, diameter * rim_factor],
+            [width, diameter, diameter],
+        )
+        inputs = {
+            "class": vehicle_class,
+            "wheel_constraint_transmax_x": wheel_max_x,
+            "wheel_rest_global_y": wheel_rest_y,
+            "native_width_factor": width_factor,
+            "native_rim_factor": rim_factor,
+        }
     else:
-        indices = [fields.get(f'{name}{axle}') for name in ('TireWidth', 'TireProfile', 'RimSize')]
+        indices = [
+            fields.get(f"{name}{axle}")
+            for name in ("TireWidth", "TireProfile", "RimSize")
+        ]
         if any(type(index) is not int for index in indices):
-            raise ValueError('missing native car wheel sizing indices')
+            raise ValueError("missing native car wheel sizing indices")
         width_index, profile_index, rim_size = indices
-        if not 0 <= width_index < 9 or not 0 <= profile_index < 8 or not 12 <= rim_size < 29:
-            raise ValueError('native car wheel sizing index outside table')
-        width = native['tables']['width']['values'][width_index] * 2
-        profile = native['tables']['profile']['values'][profile_index]
-        diameter = native['tables']['rim']['values'][rim_size - 12]
+        if (
+            not 0 <= width_index < 9
+            or not 0 <= profile_index < 8
+            or not 12 <= rim_size < 29
+        ):
+            raise ValueError("native car wheel sizing index outside table")
+        width = native["tables"]["width"]["values"][width_index] * 2
+        profile = native["tables"]["profile"]["values"][profile_index]
+        diameter = native["tables"]["rim"]["values"][rim_size - 12]
         ratio = diameter / profile
         rim, tire = [width, diameter, diameter], [width, ratio, ratio]
-        inputs = {'width_index': width_index, 'profile_index': profile_index,
-                  'rim_size': rim_size, 'profile_diameter': profile, 'rim_profile_ratio': ratio}
-    return {'rim_scale': rim, 'tire_scale': tire, 'axle': axle, 'bike': bike,
-            'inputs': inputs, 'native': native,
-            'claim_limits': ['Static rest pose sizing derived from native renderer; runtime wheel rotation, camber, tire deformation and physics are not emulated.']}
+        inputs = {
+            "width_index": width_index,
+            "profile_index": profile_index,
+            "rim_size": rim_size,
+            "profile_diameter": profile,
+            "rim_profile_ratio": ratio,
+        }
+    return {
+        "rim_scale": rim,
+        "tire_scale": tire,
+        "axle": axle,
+        "bike": bike,
+        "inputs": inputs,
+        "native": native,
+        "claim_limits": [
+            "Static rest pose sizing derived from native renderer; runtime wheel rotation, camber, tire deformation and physics are not emulated."
+        ],
+    }

@@ -7,6 +7,7 @@ binary32 payloads, and rounds only arithmetic results toward zero. Caller test i
 converted once to binary32 to model QMTC2 payload transfer. Flags, latency, COP2
 interlocks, FMAC scheduling, and the E-bit control transition are not modeled.
 """
+
 from __future__ import annotations
 
 import json
@@ -105,7 +106,7 @@ def run(angle: float, initial_yzw=(0.0, 0.0, 0.0), rounding=vu_round0):
 
     # Pairs 82-86: magic-constant ceil/fraction fold. Each lower LOI changes I
     # only after its pair's upper operation.
-    acc = [op_mul(v, I) for v in vf16]                         # mulai
+    acc = [op_mul(v, I) for v in vf16]  # mulai
     I = load_i("magic_12582912")
     acc = [op_sub(a, op_mul(vf17[j], I)) for j, a in enumerate(acc)]  # msubai
     acc = [op_add(a, op_mul(vf17[j], I)) for j, a in enumerate(acc)]  # maddai
@@ -119,19 +120,19 @@ def run(angle: float, initial_yzw=(0.0, 0.0, 0.0), rounding=vu_round0):
     t = tuple(vf16)
 
     # Pairs 89-101: odd degree minimax-like sine polynomial in t.
-    vf17 = [op_mul(v, v) for v in vf16]                         # t^2
+    vf17 = [op_mul(v, v) for v in vf16]  # t^2
     I = load_i("coefficient_minus_76_5749588")
-    vf21 = [op_mul(v, I) for v in vf16]                        # -76.57 t
+    vf21 = [op_mul(v, I) for v in vf16]  # -76.57 t
     I = load_i("coefficient_minus_41_3416748")
-    vf19 = [op_mul(v, I) for v in vf16]                        # -41.34 t
+    vf19 = [op_mul(v, I) for v in vf16]  # -41.34 t
     I = load_i("coefficient_81_6022263")
-    vf20 = [op_mul(v, I) for v in vf16]                        # 81.60 t
-    vf18 = [op_mul(v, v) for v in vf17]                         # t^4
-    vf21 = [op_mul(a, b) for a, b in zip(vf21, vf17)]          # -76.57 t^3
-    acc = [op_mul(a, b) for a, b in zip(vf19, vf17)]           # -41.34 t^3
+    vf20 = [op_mul(v, I) for v in vf16]  # 81.60 t
+    vf18 = [op_mul(v, v) for v in vf17]  # t^4
+    vf21 = [op_mul(a, b) for a, b in zip(vf21, vf17)]  # -76.57 t^3
+    acc = [op_mul(a, b) for a, b in zip(vf19, vf17)]  # -41.34 t^3
     I = load_i("coefficient_39_710659")
-    vf19 = [op_mul(v, I) for v in vf16]                        # 39.71 t
-    vf17 = [op_mul(v, v) for v in vf18]                         # t^8
+    vf19 = [op_mul(v, I) for v in vf16]  # 39.71 t
+    vf17 = [op_mul(v, v) for v in vf18]  # t^8
     acc = [op_add(a, op_mul(b, c)) for a, b, c in zip(acc, vf21, vf18)]
     acc = [op_add(a, op_mul(b, c)) for a, b, c in zip(acc, vf20, vf18)]
     I = load_i("coefficient_6_28318501")
@@ -149,26 +150,42 @@ def run_nearest(angle: float):
 def evaluate_suite():
     eps = 1.0e-3
     inputs = [
-        -100.0, -10.0, -2.0 * math.pi, -math.pi, -math.pi / 2,
-        -eps, 0.0, eps, math.pi / 6, math.pi / 4, math.pi / 2,
-        math.pi, 3.0 * math.pi / 2, 2.0 * math.pi,
-        3.0 * math.pi / 2 - eps, 3.0 * math.pi / 2 + eps,
-        100.0, 1000.0, 1.0e6,
+        -100.0,
+        -10.0,
+        -2.0 * math.pi,
+        -math.pi,
+        -math.pi / 2,
+        -eps,
+        0.0,
+        eps,
+        math.pi / 6,
+        math.pi / 4,
+        math.pi / 2,
+        math.pi,
+        3.0 * math.pi / 2,
+        2.0 * math.pi,
+        3.0 * math.pi / 2 - eps,
+        3.0 * math.pi / 2 + eps,
+        100.0,
+        1000.0,
+        1.0e6,
     ]
     rows = []
     for a in inputs:
         (sx, cy, sz, one), t = run(a)
-        rows.append({
-            "angle": a,
-            "vx": sx,
-            "vy": cy,
-            "vz": sz,
-            "vw": one,
-            "sin_abs_error": abs(sx - math.sin(a)),
-            "cos_abs_error": abs(cy - math.cos(a)),
-            "folded_t_x": t[0],
-            "folded_t_y": t[1],
-        })
+        rows.append(
+            {
+                "angle": a,
+                "vx": sx,
+                "vy": cy,
+                "vz": sz,
+                "vw": one,
+                "sin_abs_error": abs(sx - math.sin(a)),
+                "cos_abs_error": abs(cy - math.cos(a)),
+                "folded_t_x": t[0],
+                "folded_t_y": t[1],
+            }
+        )
 
     # Sweep the main representative domain and a wider stress range.
     sweep = {}
@@ -187,8 +204,13 @@ def evaluate_suite():
                 max_s = (es, a)
             if ec > max_c[0]:
                 max_c = (ec, a)
-        sweep[name] = {"samples": count, "max_sin_error": max_s[0], "at_sin": max_s[1],
-                       "max_cos_error": max_c[0], "at_cos": max_c[1]}
+        sweep[name] = {
+            "samples": count,
+            "max_sin_error": max_s[0],
+            "at_sin": max_s[1],
+            "max_cos_error": max_c[0],
+            "at_cos": max_c[1],
+        }
 
     # Negative control 1: ordinary round-to-nearest is wrong near the fold edge.
     a = 1.5 * math.pi + 1.0e-3
@@ -207,16 +229,26 @@ def evaluate_suite():
 
     # Range-reduction invariant on a deterministic randomized signed domain.
     rng = random.Random(0x268)
-    random_range = {"seed": "0x268", "samples": 10000, "min_t": 1.0, "max_t": -1.0,
-                    "max_sin_error": 0.0, "max_cos_error": 0.0}
+    random_range = {
+        "seed": "0x268",
+        "samples": 10000,
+        "min_t": 1.0,
+        "max_t": -1.0,
+        "max_sin_error": 0.0,
+        "max_cos_error": 0.0,
+    }
     for _ in range(random_range["samples"]):
         a = rng.uniform(-100.0, 100.0)
         (sx, cy, _, _), t = run(a)
         assert all(-0.250001 <= x <= 0.250001 for x in t[:2])
         random_range["min_t"] = min(random_range["min_t"], *t[:2])
         random_range["max_t"] = max(random_range["max_t"], *t[:2])
-        random_range["max_sin_error"] = max(random_range["max_sin_error"], abs(sx - math.sin(a)))
-        random_range["max_cos_error"] = max(random_range["max_cos_error"], abs(cy - math.cos(a)))
+        random_range["max_sin_error"] = max(
+            random_range["max_sin_error"], abs(sx - math.sin(a))
+        )
+        random_range["max_cos_error"] = max(
+            random_range["max_cos_error"], abs(cy - math.cos(a))
+        )
 
     # Explicit values on and immediately around quarter-turn fold boundaries.
     boundary_rows = []
@@ -225,9 +257,16 @@ def evaluate_suite():
         for delta in (-1.0e-4, 0.0, 1.0e-4):
             a = center + delta
             (sx, cy, _, _), t = run(a)
-            boundary_rows.append({"angle": a, "delta": delta, "tx": t[0], "ty": t[1],
-                                  "sin_error": abs(sx - math.sin(a)),
-                                  "cos_error": abs(cy - math.cos(a))})
+            boundary_rows.append(
+                {
+                    "angle": a,
+                    "delta": delta,
+                    "tx": t[0],
+                    "ty": t[1],
+                    "sin_error": abs(sx - math.sin(a)),
+                    "cos_error": abs(cy - math.cos(a)),
+                }
+            )
             assert all(-0.250001 <= x <= 0.250001 for x in t[:2])
             assert abs(sx - math.sin(a)) < 6.0e-6
             assert abs(cy - math.cos(a)) < 6.0e-6
@@ -245,10 +284,14 @@ def evaluate_suite():
     assert sweep["signed_small"]["max_cos_error"] < 5.0e-6
     assert nearest_control["nearest_sin_error"] > 0.1
     assert nearest_control["vu_round0_sin_error"] < 5.0e-6
-    return {"sample_rows": rows, "sweeps": sweep,
-            "random_range": random_range, "quarter_turn_boundaries": boundary_rows,
-            "rounding_negative_control": nearest_control,
-            "other_lane_negative_control_equal": lane0 == lane_random}
+    return {
+        "sample_rows": rows,
+        "sweeps": sweep,
+        "random_range": random_range,
+        "quarter_turn_boundaries": boundary_rows,
+        "rounding_negative_control": nearest_control,
+        "other_lane_negative_control_equal": lane0 == lane_random,
+    }
 
 
 def main():

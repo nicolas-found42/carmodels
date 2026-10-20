@@ -2,12 +2,16 @@
 """Three-way triangulation across slot102/103/104 EE images.
 Highlights (0-based): 102->0, 103->4, 104->3. 1-based: 1,5,4.
 Finds word offsets matching those tuples exactly. Read-only."""
+
 import array
 
 B = "/Users/Nicolas/Documents/github/hermes/projects/carmodels/research/evidence/continuation/runtime/linux/"
 imgs = []
-for f in ["slot102-car1-ford49-eeMemory.bin", "slot103-car5-tbirdconv-eeMemory.bin",
-           "slot104-car4-fortyninec-eeMemory.bin"]:
+for f in [
+    "slot102-car1-ford49-eeMemory.bin",
+    "slot103-car5-tbirdconv-eeMemory.bin",
+    "slot104-car4-fortyninec-eeMemory.bin",
+]:
     d = open(B + f, "rb").read()
     assert len(d) == 32 * 1024 * 1024, f
     imgs.append(array.array("I", d))
