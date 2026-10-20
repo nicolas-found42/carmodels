@@ -1,0 +1,36 @@
+[project]
+name = "carmodels"
+version = "0.1.0"
+description = "Recovered car models and the extraction, conversion, and verification tooling that produces them"
+readme = "README.md"
+requires-python = ">=3.12"
+
+# Runtime floor: every check in `tools/check.sh` runs on stdlib only.
+# The groups below cover explicitly optional, guarded uses; see each comment.
+dependencies = []
+
+[dependency-groups]
+# Pillow: image IO for redline textures and thumbnail recovery.
+# Guard pattern: try `from PIL import Image`, skipTest when absent
+# (tools/test_redline_texture.py); tools/redline_texture.py falls back.
+pillow = ["pillow"]
+# numpy: numeric helpers in probe/mark tools
+# (probe_mark_exhaustive.py needs Python 3.14 + the zstd CLI).
+probes = ["numpy"]
+# typesafe-sdk: explicit live profiling advice only
+# (`python3 tools/check_advice.py --live`, needs OPENROUTER_API_KEY).
+# Normal checks never call the model.
+advice = ["typesafe-sdk"]
+# ruff: CI parity lint (`pip install ruff` in .github/workflows/ci.yml).
+lint = ["ruff"]
+
+[tool.uv]
+# NOTE -- deliberately absent from every group:
+# - olefile: vendored at tools/validation-runtime/olefile, imported via sys.path
+#   (tools/recover_shipped_thumbnails.py). Do not add it.
+# - bpy / io_scene_gltf2: provided by Blender 4.5.14 at roundtrip runtime only.
+#   Never add them; there is no PyPI bpy for this setup.
+# - zstd: external CLI binary, not a Python package
+#   (trace_car_packets.py, gsdump.py, independent_packet_color_check.py).
+# - vinetto: one-off evidence script (research/evidence/continuation/source-refresh/),
+#   not a tool dependency.
