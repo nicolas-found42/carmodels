@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Independent source-scene/triangle checks and corruption controls for all 35 bakes."""
+
 import base64
 import copy
 import hashlib
@@ -15,206 +16,291 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def source_scene(code):
-    data = (ROOT / f'dealership/public/ford-racing-2/{code}.glb').read_bytes()
-    size = struct.unpack_from('<I', data, 12)[0]
-    doc = json.loads(data[20:20 + size])
-    binary = data[28 + size:]
+    data = (ROOT / f"dealership/public/ford-racing-2/{code}.glb").read_bytes()
+    size = struct.unpack_from("<I", data, 12)[0]
+    doc = json.loads(data[20 : 20 + size])
+    binary = data[28 + size :]
 
     def array(index, width, fmt):
-        a = doc['accessors'][index]
-        v = doc['bufferViews'][a['bufferView']]
-        start = v.get('byteOffset', 0) + a.get('byteOffset', 0)
-        stride = v.get('byteStride', width * 4)
-        return [struct.unpack_from('<' + fmt * width, binary, start + i * stride) for i in range(a['count'])]
+        a = doc["accessors"][index]
+        v = doc["bufferViews"][a["bufferView"]]
+        start = v.get("byteOffset", 0) + a.get("byteOffset", 0)
+        stride = v.get("byteStride", width * 4)
+        return [
+            struct.unpack_from("<" + fmt * width, binary, start + i * stride)
+            for i in range(a["count"])
+        ]
 
-    triangles = {'body': [], 'wheel': [], 'detail': []}
-    normals = {'body': [], 'wheel': [], 'detail': []}
+    triangles = {"body": [], "wheel": [], "detail": []}
+    normals = {"body": [], "wheel": [], "detail": []}
     hubs, nodes = [], []
 
     def visit(index, parent=(0, 0, 0), wheel=False):
-        node = doc['nodes'][index]
-        names = node.get('extras', {}).get('sourceNames', [])
-        if 'HELMET' in names:
+        node = doc["nodes"][index]
+        names = node.get("extras", {}).get("sourceNames", [])
+        if "HELMET" in names:
             return
-        location = tuple(a + b for a, b in zip(parent, node.get('translation', (0, 0, 0))))
-        wheel = wheel or any(n.startswith(('WHEEL_', 'HUB_')) for n in names)
-        if any(n.startswith('HUB_') for n in names):
+        location = tuple(
+            a + b for a, b in zip(parent, node.get("translation", (0, 0, 0)))
+        )
+        wheel = wheel or any(n.startswith(("WHEEL_", "HUB_")) for n in names)
+        if any(n.startswith("HUB_") for n in names):
             hubs.append((location[2], location[1], -location[0]))
-        if 'mesh' in node:
+        if "mesh" in node:
             nodes.append(index)
-            for primitive in doc['meshes'][node['mesh']]['primitives']:
-                material = doc['materials'][primitive['material']]
-                if material['name'] == 'UNDER_SHADOW':
+            for primitive in doc["meshes"][node["mesh"]]["primitives"]:
+                material = doc["materials"][primitive["material"]]
+                if material["name"] == "UNDER_SHADOW":
                     continue
-                kind = 'wheel' if wheel else 'body' if 'baseColorTexture' in material.get('pbrMetallicRoughness', {}) else 'detail'
-                xyz = array(primitive['attributes']['POSITION'], 3, 'f')
-                normal = array(primitive['attributes']['NORMAL'], 3, 'f')
-                indices = array(primitive['indices'], 1, 'I')
+                kind = (
+                    "wheel"
+                    if wheel
+                    else "body"
+                    if "baseColorTexture" in material.get("pbrMetallicRoughness", {})
+                    else "detail"
+                )
+                xyz = array(primitive["attributes"]["POSITION"], 3, "f")
+                normal = array(primitive["attributes"]["NORMAL"], 3, "f")
+                indices = array(primitive["indices"], 1, "I")
                 for (i,) in indices:
                     x, y, z = (v + t for v, t in zip(xyz[i], location))
                     triangles[kind].append((z, y, -x))
                     nx, ny, nz = normal[i]
                     normals[kind].append((nz, ny, -nx))
-        for child in node.get('children', []):
+        for child in node.get("children", []):
             visit(child, location, wheel)
 
-    scene = doc['scenes'][doc['scene']]
-    assert scene['extras']['visibilityPreset'] == 'low_speed'
-    for index in scene['nodes']:
+    scene = doc["scenes"][doc["scene"]]
+    assert scene["extras"]["visibilityPreset"] == "low_speed"
+    for index in scene["nodes"]:
         visit(index)
     points = [v for rows in triangles.values() for v in rows]
     low = [min(v[i] for v in points) for i in range(3)]
     high = [max(v[i] for v in points) for i in range(3)]
     origin = [(low[0] + high[0]) / 2, low[1], (low[2] + high[2]) / 2]
-    return {'triangles': triangles, 'normals': normals, 'hubs': hubs, 'origin': origin,
-            'dimensions': [b - a for a, b in zip(low, high)], 'nodes': nodes, 'sha': hashlib.sha256(data).hexdigest()}, doc, binary
+    return (
+        {
+            "triangles": triangles,
+            "normals": normals,
+            "hubs": hubs,
+            "origin": origin,
+            "dimensions": [b - a for a, b in zip(low, high)],
+            "nodes": nodes,
+            "sha": hashlib.sha256(data).hexdigest(),
+        },
+        doc,
+        binary,
+    )
 
 
 def check_bake(code, model):
     expected, _, _ = source_scene(code)
-    if model['source']['sha256'] != expected['sha']:
-        raise AssertionError('source pin differs')
-    if [n['node'] for n in model['source']['nodes']] != expected['nodes']:
-        raise AssertionError('visible source nodes differ')
-    if len(model['wheelHubs']) != 4:
-        raise AssertionError('source wheel hub count differs')
-    for actual, source in zip(model['wheelHubs'], expected['hubs']):
-        if any(abs(a - (v - o)) > 1e-6 for a, v, o in zip(actual['position'], source, expected['origin'])):
-            raise AssertionError('source wheel placement differs')
+    if model["source"]["sha256"] != expected["sha"]:
+        raise AssertionError("source pin differs")
+    if [n["node"] for n in model["source"]["nodes"]] != expected["nodes"]:
+        raise AssertionError("visible source nodes differ")
+    if len(model["wheelHubs"]) != 4:
+        raise AssertionError("source wheel hub count differs")
+    for actual, source in zip(model["wheelHubs"], expected["hubs"]):
+        if any(
+            abs(a - (v - o)) > 1e-6
+            for a, v, o in zip(actual["position"], source, expected["origin"])
+        ):
+            raise AssertionError("source wheel placement differs")
     triangle_count = 0
-    for part in model['parts']:
-        vertices = list(struct.iter_unpack('<6fB', base64.b64decode(part['vertices'], validate=True)))
-        indices = [v[0] for v in struct.iter_unpack('<I', base64.b64decode(part['indices'], validate=True))]
+    for part in model["parts"]:
+        vertices = list(
+            struct.iter_unpack(
+                "<6fB", base64.b64decode(part["vertices"], validate=True)
+            )
+        )
+        indices = [
+            v[0]
+            for v in struct.iter_unpack(
+                "<I", base64.b64decode(part["indices"], validate=True)
+            )
+        ]
         triangle_count += len(indices) // 3
-        rows = expected['triangles'][part['kind']]
+        rows = expected["triangles"][part["kind"]]
         if len(rows) != len(indices):
-            raise AssertionError('source triangle count differs')
+            raise AssertionError("source triangle count differs")
         for j, i in enumerate(indices):
             actual = vertices[i]
-            if any(abs(a - (v - o)) > 1e-6 for a, v, o in zip(actual[:3], rows[j], expected['origin'])):
-                raise AssertionError('source triangle coordinates differ')
-            if any(abs(a - n) > 1e-6 for a, n in zip(actual[3:6], expected['normals'][part['kind']][j])):
-                raise AssertionError('source triangle normals differ')
-    if triangle_count != model['triangleCount']:
-        raise AssertionError('declared triangle count differs')
-    dimensions = [b - a for a, b in zip(model['bounds'][:3], model['bounds'][3:])]
-    if any(abs(a - b) > 1e-6 for a, b in zip(dimensions, expected['dimensions'])):
-        raise AssertionError('source bounds differ')
+            if any(
+                abs(a - (v - o)) > 1e-6
+                for a, v, o in zip(actual[:3], rows[j], expected["origin"])
+            ):
+                raise AssertionError("source triangle coordinates differ")
+            if any(
+                abs(a - n) > 1e-6
+                for a, n in zip(actual[3:6], expected["normals"][part["kind"]][j])
+            ):
+                raise AssertionError("source triangle normals differ")
+    if triangle_count != model["triangleCount"]:
+        raise AssertionError("declared triangle count differs")
+    dimensions = [b - a for a, b in zip(model["bounds"][:3], model["bounds"][3:])]
+    if any(abs(a - b) > 1e-6 for a, b in zip(dimensions, expected["dimensions"])):
+        raise AssertionError("source bounds differ")
 
 
 class ModelBakeTests(unittest.TestCase):
     def test_tiny_negative_uv_modulo_rounding_stays_in_image(self):
         from redline_model import build_glb
         from test_redline_model import source_fixture
+
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             index, car = source_fixture(root)
-            data, _, _, _ = build_glb(root, index, car, 'base/test')
+            data, _, _, _ = build_glb(root, index, car, "base/test")
             doc, binary = read_glb(data)
             changed = bytearray(binary)
-            for mesh in doc['meshes']:
-                for primitive in mesh['primitives']:
-                    a = doc['accessors'][primitive['attributes']['TEXCOORD_0']]
-                    view = doc['bufferViews'][a['bufferView']]
-                    struct.pack_into('<2f', changed, view['byteOffset'] + a.get('byteOffset', 0), -2.0**-80, -2.0**-80)
-            self.assertEqual((-2.0**-80) % 1, 1.0)
-            original = bake_car('TEST', data, source_mode=False)
-            edited = bake_car('TEST', data[:-len(binary)] + changed, source_mode=False)
-            self.assertEqual(edited['triangleCount'], original['triangleCount'])
-            self.assertEqual(edited['parts'], original['parts'])
+            for mesh in doc["meshes"]:
+                for primitive in mesh["primitives"]:
+                    a = doc["accessors"][primitive["attributes"]["TEXCOORD_0"]]
+                    view = doc["bufferViews"][a["bufferView"]]
+                    struct.pack_into(
+                        "<2f",
+                        changed,
+                        view["byteOffset"] + a.get("byteOffset", 0),
+                        -(2.0**-80),
+                        -(2.0**-80),
+                    )
+            self.assertEqual((-(2.0**-80)) % 1, 1.0)
+            original = bake_car("TEST", data, source_mode=False)
+            edited = bake_car("TEST", data[: -len(binary)] + changed, source_mode=False)
+            self.assertEqual(edited["triangleCount"], original["triangleCount"])
+            self.assertEqual(edited["parts"], original["parts"])
 
     @classmethod
     def setUpClass(cls):
-        cls.cars = [{'code':p.stem,'model':load_source_model(p.stem)} for p in sorted((ROOT / 'dealership/public/ford-racing-2').glob('*.glb'))]
+        cls.cars = [
+            {"code": p.stem, "model": load_source_model(p.stem)}
+            for p in sorted((ROOT / "dealership/public/ford-racing-2").glob("*.glb"))
+        ]
 
     def test_all_source_triangles_transforms_normals_and_hubs(self):
         self.assertEqual(len(self.cars), 35)
         for car in self.cars:
-            with self.subTest(car=car['code']):
-                check_bake(car['code'], car['model'])
+            with self.subTest(car=car["code"]):
+                check_bake(car["code"], car["model"])
 
     def test_in_bounds_position_and_in_range_index_controls(self):
-        code, source = self.cars[0]['code'], self.cars[0]['model']
+        code, source = self.cars[0]["code"], self.cars[0]["model"]
         changed = copy.deepcopy(source)
-        raw = bytearray(base64.b64decode(changed['parts'][0]['vertices']))
-        x = struct.unpack_from('<f', raw)[0]
-        struct.pack_into('<f', raw, 0, x + 0.01)
-        changed['parts'][0]['vertices'] = base64.b64encode(raw).decode()
-        with self.assertRaisesRegex(AssertionError, 'source triangle coordinates differ'):
+        raw = bytearray(base64.b64decode(changed["parts"][0]["vertices"]))
+        x = struct.unpack_from("<f", raw)[0]
+        struct.pack_into("<f", raw, 0, x + 0.01)
+        changed["parts"][0]["vertices"] = base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(
+            AssertionError, "source triangle coordinates differ"
+        ):
             check_bake(code, changed)
         changed = copy.deepcopy(source)
-        raw = bytearray(base64.b64decode(changed['parts'][0]['indices']))
-        i = struct.unpack_from('<I', raw)[0]
-        struct.pack_into('<I', raw, 0, (i + 1) % changed['parts'][0]['vertexCount'])
-        changed['parts'][0]['indices'] = base64.b64encode(raw).decode()
-        with self.assertRaisesRegex(AssertionError, 'source triangle coordinates differ'):
+        raw = bytearray(base64.b64decode(changed["parts"][0]["indices"]))
+        i = struct.unpack_from("<I", raw)[0]
+        struct.pack_into("<I", raw, 0, (i + 1) % changed["parts"][0]["vertexCount"])
+        changed["parts"][0]["indices"] = base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(
+            AssertionError, "source triangle coordinates differ"
+        ):
             check_bake(code, changed)
 
     def test_pin_identity_and_wrong_scene_controls(self):
-        code = self.cars[0]['code']
-        data = (ROOT / f'dealership/public/ford-racing-2/{code}.glb').read_bytes()
+        code = self.cars[0]["code"]
+        data = (ROOT / f"dealership/public/ford-racing-2/{code}.glb").read_bytes()
         pin = hashlib.sha256(data).hexdigest()
-        with self.assertRaisesRegex(ValueError, 'differs from manifest pin'):
+        with self.assertRaisesRegex(ValueError, "differs from manifest pin"):
             bake_car(code, data[:-1], pin)
-        with self.assertRaisesRegex(ValueError, 'car identity differs'):
-            bake_car('OTHER', data, pin)
+        with self.assertRaisesRegex(ValueError, "car identity differs"):
+            bake_car("OTHER", data, pin)
         _, doc, binary = source_scene(code)
-        doc['scene'] = 1  # All alternative wheel/light states: must not become a model.
+        doc["scene"] = 1  # All alternative wheel/light states: must not become a model.
         encoded = json.dumps(doc).encode()
-        encoded += b' ' * (-len(encoded) % 4)
-        mutated = struct.pack('<3I', 0x46546C67, 2, 28 + len(encoded) + len(binary))
-        mutated += struct.pack('<2I', len(encoded), 0x4E4F534A) + encoded
-        mutated += struct.pack('<2I', len(binary), 0x004E4942) + binary
-        with self.assertRaisesRegex(ValueError, 'first-tree low-speed model scene'):
+        encoded += b" " * (-len(encoded) % 4)
+        mutated = struct.pack("<3I", 0x46546C67, 2, 28 + len(encoded) + len(binary))
+        mutated += struct.pack("<2I", len(encoded), 0x4E4F534A) + encoded
+        mutated += struct.pack("<2I", len(binary), 0x004E4942) + binary
+        with self.assertRaisesRegex(ValueError, "first-tree low-speed model scene"):
             bake_car(code, mutated, hashlib.sha256(mutated).hexdigest())
 
     def test_tone_is_illustrative_and_bounded(self):
         self.assertLess(texture_tone((0, 0, 0)), texture_tone((220, 220, 220)))
         self.assertEqual(texture_tone((255, 0, 0)), texture_tone((0, 255, 0)))
-        self.assertNotEqual(texture_tone((255, 0, 0), wheel=True), texture_tone((0, 255, 0), wheel=True))
+        self.assertNotEqual(
+            texture_tone((255, 0, 0), wheel=True), texture_tone((0, 255, 0), wheel=True)
+        )
 
 
 class IndexCapacityTests(unittest.TestCase):
     def test_affine_cancellation_retains_float_sum_accuracy(self):
         # Ordinary chained addition loses the middle term; the baker's sum must retain it.
         from gt4_glb import Builder
+
         builder = Builder()
-        positions = builder.accessor([(1, 0, 1), (1, 1, 1), (1, 2, 1)], 'position')
-        normals = builder.accessor([(0, 0, 1)] * 3, 'normal')
-        indices = builder.accessor([0, 1, 2], 'index')
-        builder.doc['meshes'] = [{'primitives': [{'attributes': {'POSITION': positions, 'NORMAL': normals},
-                                                  'indices': indices}]}]
-        builder.doc['nodes'] = [{'mesh': 0, 'matrix': [1e30, 0, 0, 0, 1, 1, 0, 0,
-                                                      -1e30, 0, 1, 0, 0, 0, 0, 1]}]
-        builder.doc['scenes'] = [{'nodes': [0]}]
-        baked = bake_car('CANCELLATION', builder.finish(), source_mode=False)
-        vertices = list(struct.iter_unpack('<6fB', base64.b64decode(baked['parts'][0]['vertices'])))
+        positions = builder.accessor([(1, 0, 1), (1, 1, 1), (1, 2, 1)], "position")
+        normals = builder.accessor([(0, 0, 1)] * 3, "normal")
+        indices = builder.accessor([0, 1, 2], "index")
+        builder.doc["meshes"] = [
+            {
+                "primitives": [
+                    {
+                        "attributes": {"POSITION": positions, "NORMAL": normals},
+                        "indices": indices,
+                    }
+                ]
+            }
+        ]
+        builder.doc["nodes"] = [
+            {
+                "mesh": 0,
+                "matrix": [1e30, 0, 0, 0, 1, 1, 0, 0, -1e30, 0, 1, 0, 0, 0, 0, 1],
+            }
+        ]
+        builder.doc["scenes"] = [{"nodes": [0]}]
+        baked = bake_car("CANCELLATION", builder.finish(), source_mode=False)
+        vertices = list(
+            struct.iter_unpack("<6fB", base64.b64decode(baked["parts"][0]["vertices"]))
+        )
         self.assertEqual([v[:3] for v in vertices], [(0, 0, 1), (0, 1, 0), (0, 2, -1)])
 
     def test_large_scene_uses_u32_and_keeps_strict_geometry_checks(self):
         from gt4_glb import Builder
+
         b = Builder()
         count = 65538
-        positions = b.accessor([(float(i), float(i % 3), 0.) for i in range(count)], 'position')
-        normals = b.accessor([(0., 0., 1.)] * count, 'normal')
-        indices = b.accessor(list(range(count)), 'index')
-        b.doc['meshes'] = [{'primitives': [{'attributes': {'POSITION': positions, 'NORMAL': normals},
-                                          'indices': indices}]}]
-        b.doc['nodes'] = [{'mesh': 0}]; b.doc['scenes'] = [{'nodes': [0]}]
+        positions = b.accessor(
+            [(float(i), float(i % 3), 0.0) for i in range(count)], "position"
+        )
+        normals = b.accessor([(0.0, 0.0, 1.0)] * count, "normal")
+        indices = b.accessor(list(range(count)), "index")
+        b.doc["meshes"] = [
+            {
+                "primitives": [
+                    {
+                        "attributes": {"POSITION": positions, "NORMAL": normals},
+                        "indices": indices,
+                    }
+                ]
+            }
+        ]
+        b.doc["nodes"] = [{"mesh": 0}]
+        b.doc["scenes"] = [{"nodes": [0]}]
         data = b.finish()
-        descriptor = bake_car('LARGE', data, source_mode=False)
-        self.assertEqual(descriptor['schema'], 4)
-        self.assertEqual(descriptor['triangleCount'], count // 3)
-        part = descriptor['parts'][0]
-        self.assertEqual(part['vertexCount'], count)
-        encoded_indices = base64.b64decode(part['indices'])
+        descriptor = bake_car("LARGE", data, source_mode=False)
+        self.assertEqual(descriptor["schema"], 4)
+        self.assertEqual(descriptor["triangleCount"], count // 3)
+        part = descriptor["parts"][0]
+        self.assertEqual(part["vertexCount"], count)
+        encoded_indices = base64.b64decode(part["indices"])
         self.assertEqual(len(encoded_indices), count * 4)
-        self.assertEqual(struct.unpack_from('<I', encoded_indices, (count - 1) * 4)[0], count - 1)
-        view = b.doc['bufferViews'][b.doc['accessors'][indices]['bufferView']]
-        struct.pack_into('<I', b.blob, view['byteOffset'], count)
-        with self.assertRaisesRegex(ValueError, 'triangle index exceeds vertices'):
-            bake_car('LARGE', b.finish(), source_mode=False)
+        self.assertEqual(
+            struct.unpack_from("<I", encoded_indices, (count - 1) * 4)[0], count - 1
+        )
+        view = b.doc["bufferViews"][b.doc["accessors"][indices]["bufferView"]]
+        struct.pack_into("<I", b.blob, view["byteOffset"], count)
+        with self.assertRaisesRegex(ValueError, "triangle index exceeds vertices"):
+            bake_car("LARGE", b.finish(), source_mode=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)

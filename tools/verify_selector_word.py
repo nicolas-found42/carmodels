@@ -24,6 +24,7 @@ cursor recorded OPEN if the pass names nothing.
 Receipt: research/evidence/vehicle-completeness/selector-word-isolation.json
 Exit 0 + "PASS (definite outcome recorded)" when the outcome is recorded with controls held.
 """
+
 import hashlib
 import json
 import struct
@@ -55,8 +56,8 @@ DERIVED = {
 
 CURSOR_VA = 0x241B40
 CURSOR_SPAN = 0x150 * 64
-FLAG_LO = 0x23C1        # bits that must be clear
-FLAG_HI = 0x1CD0        # bits that must be set
+FLAG_LO = 0x23C1  # bits that must be clear
+FLAG_HI = 0x1CD0  # bits that must be set
 
 
 def load(cap):
@@ -103,7 +104,9 @@ def scan_entity_flag(mem):
         w = struct.unpack_from("<Q", mem, i)[0]
         hi = (w >> 32) & 0xFFFFFFFF
         if (hi & FLAG_LO) == 0 and (hi & FLAG_HI) == FLAG_HI:
-            cands.append({"entity_plus_60": hex(i), "word": hex(w), "entity_base": hex(i - 0x60)})
+            cands.append(
+                {"entity_plus_60": hex(i), "word": hex(w), "entity_base": hex(i - 0x60)}
+            )
     return cands
 
 
@@ -115,7 +118,10 @@ def check():
             raise ValueError(f"{c}: EE image is {len(m)} bytes, expected 32 MiB")
 
     # all three captures are at DEFAULT livery -> the livery selector is identical by construction
-    liveries = {s["capture"]: s.get("cardata_livery_basename_default") for s in bridge["screens"]}
+    liveries = {
+        s["capture"]: s.get("cardata_livery_basename_default")
+        for s in bridge["screens"]
+    }
 
     # ---- bounded pass -------------------------------------------------------
     referrers = {c: find_referrers(mems[c]) for c in CAPTURES}
@@ -123,10 +129,14 @@ def check():
     flag_cands = {c: scan_entity_flag(mems[c]) for c in CAPTURES}
 
     # per-screen highlight positions (from the bridge), for the record only
-    highlight = {s["capture"]: s["highlight_position_1based"] for s in bridge["screens"]}
+    highlight = {
+        s["capture"]: s["highlight_position_1based"] for s in bridge["screens"]
+    }
 
     named_store_reachable = bool(DERIVED["store_offset"] == "entity+0x64")
-    store_readable = False  # entity is not rooted in a paused savestate (see reason below)
+    store_readable = (
+        False  # entity is not rooted in a paused savestate (see reason below)
+    )
 
     result = {
         "derived": DERIVED,
@@ -140,18 +150,24 @@ def check():
             "cursor_table_span_words": CURSOR_SPAN // 4,
             "referrers_into_cursor_table": {c: referrers[c] for c in CAPTURES},
             "referrer_count": {c: len(referrers[c]) for c in CAPTURES},
-            "referrer_distinct_values": {c: sorted({h["value"] for h in referrers[c]}) for c in CAPTURES},
+            "referrer_distinct_values": {
+                c: sorted({h["value"] for h in referrers[c]}) for c in CAPTURES
+            },
             "exact_base_pointer_hits": {c: exact_base[c] for c in CAPTURES},
             "entity_flag_sigscan_candidates": {c: flag_cands[c] for c in CAPTURES},
-            "entity_flag_sigscan_candidate_count": {c: len(flag_cands[c]) for c in CAPTURES},
+            "entity_flag_sigscan_candidate_count": {
+                c: len(flag_cands[c]) for c in CAPTURES
+            },
         },
         "named_livery_store_entity64": {
             "reachable": named_store_reachable,
             "read_from_savestate": store_readable,
-            "reason": ("entity+0x64 is reached only through the dynamic gameflow chain "
-                       "(outer+4 -> +0x14c -> +0x174); a paused savestate exposes no live pointer "
-                       "to the heap entity, and the bounded sig-scan fallback for the entity flag "
-                       "(+0x60 == ...1cd0) found 0 candidates, so the store cannot be addressed."),
+            "reason": (
+                "entity+0x64 is reached only through the dynamic gameflow chain "
+                "(outer+4 -> +0x14c -> +0x174); a paused savestate exposes no live pointer "
+                "to the heap entity, and the bounded sig-scan fallback for the entity flag "
+                "(+0x60 == ...1cd0) found 0 candidates, so the store cannot be addressed."
+            ),
             "expected_value_at_default_livery": "identical across the three captures (all DEFAULT livery) -> non-distinguishing by construction",
         },
         "outcome": "named_store_confirmed; per-screen_highlight_cursor_recorded_open",
@@ -162,31 +178,41 @@ def check():
             "savestate: the region scan yields a broad population of numerically-in-range words "
             "(value-match noise, ~320 per capture, not a single pointer) and NO word points exactly "
             "at the cursor-table base (0 exact-base pointers), while the entity-flag sig-scan found "
-            "0 candidates across all three captures. Recorded OPEN. No value-only match is claimed."),
+            "0 candidates across all three captures. Recorded OPEN. No value-only match is claimed."
+        ),
     }
 
     # ---- controls -----------------------------------------------------------
     # NC1 all three captures are DEFAULT livery (so the named store is non-distinguishing)
-    result["control_all_default_livery"] = all(v is not None for v in liveries.values()) and len(set(liveries.values())) == 3
+    result["control_all_default_livery"] = (
+        all(v is not None for v in liveries.values())
+        and len(set(liveries.values())) == 3
+    )
     # NC2 no 4-aligned word points exactly at the cursor-table base (no real direct pointer)
-    result["control_no_exact_base_pointer"] = all(len(exact_base[c]) == 0 for c in CAPTURES)
+    result["control_no_exact_base_pointer"] = all(
+        len(exact_base[c]) == 0 for c in CAPTURES
+    )
     # NC3 the region scan is value-match noise, not a pointer: a broad population (not one word)
-    result["control_region_scan_is_broad_noise"] = all(len(referrers[c]) > 100 for c in CAPTURES)
+    result["control_region_scan_is_broad_noise"] = all(
+        len(referrers[c]) > 100 for c in CAPTURES
+    )
     # NC4 the entity-flag sig-scan genuinely found nothing (the finding)
     result["control_flag_scan_empty"] = all(len(flag_cands[c]) == 0 for c in CAPTURES)
     # NC5 a fabricated highlight word is NOT claimed as the selector
-    result["control_no_value_match_claimed"] = ("value-only" in result["outcome_detail"])
+    result["control_no_value_match_claimed"] = "value-only" in result["outcome_detail"]
     return result
 
 
 def main() -> int:
     result = check()
-    ok = (result["named_livery_store_entity64"]["reachable"]
-          and result["control_all_default_livery"]
-          and result["control_no_exact_base_pointer"]
-          and result["control_region_scan_is_broad_noise"]
-          and result["control_flag_scan_empty"]
-          and result["control_no_value_match_claimed"])
+    ok = (
+        result["named_livery_store_entity64"]["reachable"]
+        and result["control_all_default_livery"]
+        and result["control_no_exact_base_pointer"]
+        and result["control_region_scan_is_broad_noise"]
+        and result["control_flag_scan_empty"]
+        and result["control_no_value_match_claimed"]
+    )
     result["render_fidelity_complete"] = False
     result["result"] = "PASS (definite outcome recorded)" if ok else "FAILED"
     OUT.write_text(json.dumps(result, indent=2) + "\n")

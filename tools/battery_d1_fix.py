@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """D1 fixes: re-run decide (string requirements), verify + gate (single-string evidence)."""
+
 import json, os, sys
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from jev_mcp_call import call
 
@@ -42,10 +44,22 @@ decide_args = {
     "evidence": EVIDENCE_DOC[:12000],
     "priorities": "Stay headless (no desktop window, no focus theft). Ordinary controller input only: no guest-memory writes, cheats, patches, or memory cards. Bounded effort: stop after ~30 observed key presses without verified indicator response. Preserve slot 100; new saves to slots 101+.",
     "candidates": [
-        {"id": "browser_keys", "description": "Send toggled key presses (M/N/I/K/J/L/O/Space) via hidden Playwright press_key to the connected noVNC canvas; observe via noVNC screenshots and input indicators."},
-        {"id": "jev_act_clicks", "description": "Use Jev-driven browser act/click on noVNC UI controls only (Connect, fullscreen). No game input possible this way."},
-        {"id": "container_xlib", "description": "Install a key-injection helper (python-xlib/XTEST) inside the container. Needs image change and user approval; not currently allowed."},
-        {"id": "static_only", "description": "No input at all: analyse slot 98/99 EE images already on disk and abandon the ordinary-capture goal."},
+        {
+            "id": "browser_keys",
+            "description": "Send toggled key presses (M/N/I/K/J/L/O/Space) via hidden Playwright press_key to the connected noVNC canvas; observe via noVNC screenshots and input indicators.",
+        },
+        {
+            "id": "jev_act_clicks",
+            "description": "Use Jev-driven browser act/click on noVNC UI controls only (Connect, fullscreen). No game input possible this way.",
+        },
+        {
+            "id": "container_xlib",
+            "description": "Install a key-injection helper (python-xlib/XTEST) inside the container. Needs image change and user approval; not currently allowed.",
+        },
+        {
+            "id": "static_only",
+            "description": "No input at all: analyse slot 98/99 EE images already on disk and abandon the ordinary-capture goal.",
+        },
     ],
     "requirements": [
         "Keeps PCSX2 headless with no native window or desktop focus theft",
@@ -64,8 +78,10 @@ verify_args = {
     "evidence": EVIDENCE_DOC,
 }
 
-for name, tool, args in [("d1-06-decide", "jev_decide", decide_args),
-                         ("d1-09-verify", "jev_verify", verify_args)]:
+for name, tool, args in [
+    ("d1-06-decide", "jev_decide", decide_args),
+    ("d1-09-verify", "jev_verify", verify_args),
+]:
     res = call(tool, args)
     content = res.get("result", res)
     if isinstance(content, dict) and "content" in content:
@@ -73,7 +89,11 @@ for name, tool, args in [("d1-06-decide", "jev_decide", decide_args),
             content = json.loads(content["content"][0]["text"])
         except Exception as ex:
             content = {"parse_error": str(ex), "raw": content}
-    json.dump({"args": args, "result": content}, open(os.path.join(OUT, name + ".json"), "w"), indent=2)
+    json.dump(
+        {"args": args, "result": content},
+        open(os.path.join(OUT, name + ".json"), "w"),
+        indent=2,
+    )
     print("---", tool)
     print(json.dumps(content, indent=1)[:2000])
 
@@ -81,10 +101,15 @@ decide = json.load(open(os.path.join(OUT, "d1-06-decide.json")))["result"]
 sel = (decide.get("recommendation", {}) or {}).get("selected", "unknown")
 gate_args = {
     "request": "Decide the input path and starting slot for the ordinary car-selection capture.",
-    "diff": json.dumps({"decision": "d1-input-path-and-start",
-                        "selected_input_path": sel,
-                        "starting_slot": "98",
-                        "preserve_slot": "100 untouched; new saves to 101+"}, indent=1),
+    "diff": json.dumps(
+        {
+            "decision": "d1-input-path-and-start",
+            "selected_input_path": sel,
+            "starting_slot": "98",
+            "preserve_slot": "100 untouched; new saves to 101+",
+        },
+        indent=1,
+    ),
     "claims": [
         "The selected input path keeps PCSX2 headless with no desktop focus theft.",
         "The selected input path uses only ordinary controller input plus read-only/capture APIs.",
@@ -99,6 +124,10 @@ if isinstance(content, dict) and "content" in content:
         content = json.loads(content["content"][0]["text"])
     except Exception as ex:
         content = {"parse_error": str(ex), "raw": content}
-json.dump({"args": gate_args, "result": content}, open(os.path.join(OUT, "d1-12-gate-input-path-decision.json"), "w"), indent=2)
+json.dump(
+    {"args": gate_args, "result": content},
+    open(os.path.join(OUT, "d1-12-gate-input-path-decision.json"), "w"),
+    indent=2,
+)
 print("--- jev_gate")
 print(json.dumps(content, indent=1)[:2500])

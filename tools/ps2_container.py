@@ -52,7 +52,9 @@ def parse(data: bytes) -> dict:
 
     def need(pos: int, size: int, what: str) -> None:
         if pos < 0 or size < 0 or pos + size > len(data):
-            raise Invalid(f"{what} at {pos:#x} (+{size}) exceeds the {len(data)}-byte file")
+            raise Invalid(
+                f"{what} at {pos:#x} (+{size}) exceeds the {len(data)}-byte file"
+            )
 
     need(start, 12, "texture section header")
     a, b, c = struct.unpack_from("<3I", data, start)
@@ -85,7 +87,9 @@ def parse(data: bytes) -> dict:
             raise Invalid(f"texture {i}: name is not a printable NUL-terminated string")
         pos += length
         if flags & 1:
-            raise Invalid(f"texture {i}: items without image data are outside the measured profile")
+            raise Invalid(
+                f"texture {i}: items without image data are outside the measured profile"
+            )
         pos = align16(pos)
         need(pos, 0x40, f"texture {i} descriptor")
         struct_at = pos
@@ -96,11 +100,17 @@ def parse(data: bytes) -> dict:
         if fmt not in FORMATS:
             raise Invalid(f"texture {i}: unknown format {fmt}")
         if mips > MAX_MIPS or width > MAX_DIM or height > MAX_DIM:
-            raise Invalid(f"texture {i}: mips {mips} or size {width}x{height} outside the measured profile")
+            raise Invalid(
+                f"texture {i}: mips {mips} or size {width}x{height} outside the measured profile"
+            )
         if mips >= min(width, height).bit_length():
-            raise Invalid(f"texture {i}: {mips} mips exceed the {min(width, height).bit_length() - 1} halvings a {width}x{height} image supports")
+            raise Invalid(
+                f"texture {i}: {mips} mips exceed the {min(width, height).bit_length() - 1} halvings a {width}x{height} image supports"
+            )
         if fmt in (3, 4) and palette_index >= total:
-            raise Invalid(f"texture {i}: palette index {palette_index} outside the {total}-entry table")
+            raise Invalid(
+                f"texture {i}: palette index {palette_index} outside the {total}-entry table"
+            )
         pos += 0x40 + 0x10 * mips
         need(struct_at, pos - struct_at, f"texture {i} descriptor and mip records")
         items.append(
@@ -114,8 +124,12 @@ def parse(data: bytes) -> dict:
                 "width": width,
                 "height": height,
                 "palette_index": palette_index,
-                "palette_offset": block_at[palette_index] if palette_index < total else None,
-                "palette_bytes": block_size[palette_index] if palette_index < total else None,
+                "palette_offset": block_at[palette_index]
+                if palette_index < total
+                else None,
+                "palette_bytes": block_size[palette_index]
+                if palette_index < total
+                else None,
                 "descriptor_field": f"{field:#018x}",
                 "levels": [],
             }
@@ -126,14 +140,18 @@ def parse(data: bytes) -> dict:
             pos = align16(pos)
             size = level_bytes(it["format"], w, h)
             need(pos, size, f"texture {it['index']} level {level} image data")
-            it["levels"].append({"level": level, "offset": pos, "size": size, "width": w, "height": h})
+            it["levels"].append(
+                {"level": level, "offset": pos, "size": size, "width": w, "height": h}
+            )
             pos += size
             w, h = w >> 1, h >> 1
     end = align16(pos)
     need(end, 4, "record count of the next section")
     (records,) = struct.unpack_from("<I", data, end)
     if 4 + NEXT_RECORD * records > len(data) - end:
-        raise Invalid(f"next section announces {records} records of {NEXT_RECORD} bytes, which do not fit after {end:#x}")
+        raise Invalid(
+            f"next section announces {records} records of {NEXT_RECORD} bytes, which do not fit after {end:#x}"
+        )
     return {
         "tree": {"name_pool_end": pool_end, "next_section_offset": start},
         "textures": {
@@ -146,7 +164,11 @@ def parse(data: bytes) -> dict:
             "items": items,
             "section_end": end,
         },
-        "next_section": {"offset": end, "record_count": records, "record_bytes": NEXT_RECORD},
+        "next_section": {
+            "offset": end,
+            "record_count": records,
+            "record_bytes": NEXT_RECORD,
+        },
     }
 
 
@@ -181,15 +203,20 @@ def decode_rgba(data: bytes, item: dict) -> bytes:
         return plane
     if item["format"] in (3, 4):
         from ps2_texture_indices import decode_indices
+
         count = 256 if item["format"] == 3 else 16
         palette_size = count * 4
-        allowed_sizes = (0x400,) if item['format'] == 3 else (0x40, 0x400)
+        allowed_sizes = (0x400,) if item["format"] == 3 else (0x40, 0x400)
         if item["palette_bytes"] not in allowed_sizes:
-            raise Unsupported(f"format {item['format']} palette block is outside the measured profile")
+            raise Unsupported(
+                f"format {item['format']} palette block is outside the measured profile"
+            )
         pixels = decode_indices(data, item)
-        palette_block = data[item["palette_offset"] : item["palette_offset"] + item['palette_bytes']]
-        if len(palette_block) != item['palette_bytes']:
-            raise Invalid('palette bytes are outside the input')
+        palette_block = data[
+            item["palette_offset"] : item["palette_offset"] + item["palette_bytes"]
+        ]
+        if len(palette_block) != item["palette_bytes"]:
+            raise Invalid("palette bytes are outside the input")
         # The 16x16 PSMCT32 upload of a 256-color A/C block follows the
         # loader's bit3/4 permutation; CSM0/CSA0 then restores raw indices
         # 0..15 for PSMT4, as does the unpermuted 8x2 sixteen-color upload.

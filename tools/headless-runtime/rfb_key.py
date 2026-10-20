@@ -7,6 +7,7 @@ Connects to the container's x11vnc (localhost:5900, -nopw) and sends X key event
 Usage: rfb_key.py KEYSYM [KEYSYM ...]   (hex or decimal keysyms)
   space=0x20  j=0x6a  l=0x6c  Return=0xff0d  Escape=0xff1b
 """
+
 import socket
 import struct
 import sys
@@ -38,7 +39,7 @@ def main():
     types = recvn(ntypes)
     if 1 not in types:
         raise SystemExit(f"VNC requires auth (types {types}); -nopw expected")
-    s.sendall(b"\x01")           # choose None
+    s.sendall(b"\x01")  # choose None
     secres = recvn(4)
     if struct.unpack(">I", secres)[0] != 0:
         raise SystemExit("VNC security result failed")
@@ -50,10 +51,10 @@ def main():
     recvn(namelen)
     # 5. send KeyEvent down+up per keysym
     for ks in keysyms:
-        msg = struct.pack(">BBHI", 4, 1, 0, ks)   # down
+        msg = struct.pack(">BBHI", 4, 1, 0, ks)  # down
         s.sendall(msg)
         time.sleep(0.05)
-        msg = struct.pack(">BBHI", 4, 0, 0, ks)   # up
+        msg = struct.pack(">BBHI", 4, 0, 0, ks)  # up
         s.sendall(msg)
         time.sleep(0.2)
     s.close()

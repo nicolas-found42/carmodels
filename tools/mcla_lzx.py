@@ -13,9 +13,10 @@ Raskulk/MCLA-Tools `xrsc2obj.py` (68419cee) and checked here on every resource o
   the decoder state (window, trees, offset registers, a block in progress) carries over.
 - The window is 2**17 bytes. The output must equal the virtual plus physical size of the flag word.
 """
+
 import struct
 
-RSC5 = b'\x05CSR'
+RSC5 = b"\x05CSR"
 HEADER = 20
 WINDOW_BITS = 17
 FRAME = 0x8000
@@ -56,7 +57,7 @@ def decode_table(lengths, name):
     if not any(lengths):
         return None
     if max(lengths) > TABLE_BITS:
-        raise LzxError(name + ' tree code longer than 16 bits')
+        raise LzxError(name + " tree code longer than 16 bits")
     table = [0] * (1 << TABLE_BITS)
     code = 0
     for length in range(1, TABLE_BITS + 1):
@@ -65,12 +66,12 @@ def decode_table(lengths, name):
             if size == length:
                 start = code * span
                 if start + span > len(table):
-                    raise LzxError(name + ' tree over-subscribed')
-                table[start:start + span] = [symbol << 5 | length] * span
+                    raise LzxError(name + " tree over-subscribed")
+                table[start : start + span] = [symbol << 5 | length] * span
                 code += 1
         code <<= 1
     if code != 1 << (TABLE_BITS + 1):
-        raise LzxError(name + ' tree incomplete')
+        raise LzxError(name + " tree incomplete")
     return table
 
 
@@ -90,26 +91,29 @@ class Bits:
     def peek16(self):
         pos = self.pos
         b = pos >> 3
-        return ((self.buf[b] << 16 | self.buf[b + 1] << 8 | self.buf[b + 2]) >> (8 - (pos & 7))) & 0xFFFF
+        return (
+            (self.buf[b] << 16 | self.buf[b + 1] << 8 | self.buf[b + 2])
+            >> (8 - (pos & 7))
+        ) & 0xFFFF
 
     def read(self, count):
         if count == 0:
             return 0
         pos = self.pos
         b = pos >> 3
-        value = int.from_bytes(self.buf[b:b + 4], 'big')
+        value = int.from_bytes(self.buf[b : b + 4], "big")
         self.pos = pos + count
         if self.pos > self.limit:
-            raise LzxError('LZX chunk truncated')
+            raise LzxError("LZX chunk truncated")
         return (value >> (32 - (pos & 7) - count)) & ((1 << count) - 1)
 
     def symbol(self, table, name):
         if table is None:
-            raise LzxError(name + ' tree empty but used')
+            raise LzxError(name + " tree empty but used")
         entry = table[self.peek16()]
         self.pos += entry & 31
         if self.pos > self.limit:
-            raise LzxError('LZX chunk truncated')
+            raise LzxError("LZX chunk truncated")
         return entry >> 5
 
 
@@ -118,7 +122,7 @@ class LzxDecoder:
 
     def __init__(self, window_bits=WINDOW_BITS):
         if window_bits not in POSITION_SLOTS:
-            raise LzxError('unsupported LZX window')
+            raise LzxError("unsupported LZX window")
         self.window = 1 << window_bits
         self.main_elements = NUM_CHARS + POSITION_SLOTS[window_bits] * 8
         self.main_lengths = [0] * self.main_elements
@@ -132,41 +136,43 @@ class LzxDecoder:
         self.out = bytearray()
 
     def read_lengths(self, bits, lengths, first, last):
-        pre = decode_table([bits.read(4) for _ in range(PRETREE)], 'pretree')
+        pre = decode_table([bits.read(4) for _ in range(PRETREE)], "pretree")
         x = first
         while x < last:
-            z = bits.symbol(pre, 'pretree')
+            z = bits.symbol(pre, "pretree")
             if z == 17:
                 run, value = bits.read(4) + 4, 0
             elif z == 18:
                 run, value = bits.read(5) + 20, 0
             elif z == 19:
                 run = bits.read(1) + 4
-                value = (lengths[x] - bits.symbol(pre, 'pretree') + 17) % 17
+                value = (lengths[x] - bits.symbol(pre, "pretree") + 17) % 17
             else:
                 run, value = 1, (lengths[x] - z + 17) % 17
             if x + run > last:
-                raise LzxError('LZX length run past its tree')
-            lengths[x:x + run] = [value] * run
+                raise LzxError("LZX length run past its tree")
+            lengths[x : x + run] = [value] * run
             x += run
 
     def block_header(self, bits):
         self.block_type = bits.read(3)
         size = bits.read(16) << 8 | bits.read(8)
         if size == 0:
-            raise LzxError('LZX empty block')
+            raise LzxError("LZX empty block")
         self.block_remaining = size
         if self.block_type == ALIGNED_BLOCK:
-            self.aligned = decode_table([bits.read(3) for _ in range(ALIGNED)], 'aligned')
+            self.aligned = decode_table(
+                [bits.read(3) for _ in range(ALIGNED)], "aligned"
+            )
         if self.block_type in (VERBATIM, ALIGNED_BLOCK):
             self.read_lengths(bits, self.main_lengths, 0, NUM_CHARS)
             self.read_lengths(bits, self.main_lengths, NUM_CHARS, self.main_elements)
-            self.main = decode_table(self.main_lengths, 'main')
+            self.main = decode_table(self.main_lengths, "main")
             self.read_lengths(bits, self.length_lengths, 0, LENGTH_SYMBOLS)
-            self.length = decode_table(self.length_lengths, 'length')
+            self.length = decode_table(self.length_lengths, "length")
             return None
         if self.block_type != UNCOMPRESSED:
-            raise LzxError('LZX block type %d' % self.block_type)
+            raise LzxError("LZX block type %d" % self.block_type)
         self.block_odd = bool(size & 1)
         # Align to the next 16-bit word (a whole word is skipped when already aligned), then R0-R2.
         at = (bits.pos // 16 + 1) * 2
@@ -180,7 +186,7 @@ class LzxDecoder:
         raw = None  # byte offset into data while inside an uncompressed block
         if not self.header_read:
             if bits.read(1):
-                raise LzxError('LZX Intel E8 translation not supported')
+                raise LzxError("LZX Intel E8 translation not supported")
             self.header_read = True
         if self.block_type == UNCOMPRESSED and self.block_remaining:
             raw = start
@@ -195,25 +201,25 @@ class LzxDecoder:
                 if at is not None:
                     raw = bits.base + at
                     if raw + 12 > end:
-                        raise LzxError('LZX chunk truncated')
-                    self.r0, self.r1, self.r2 = struct.unpack_from('<III', data, raw)
+                        raise LzxError("LZX chunk truncated")
+                    self.r0, self.r1, self.r2 = struct.unpack_from("<III", data, raw)
                     raw += 12
             room = target - len(out)
             if raw is not None:
                 run = min(self.block_remaining, room)
                 if raw + run > end:
-                    raise LzxError('LZX chunk truncated')
-                out += data[raw:raw + run]
+                    raise LzxError("LZX chunk truncated")
+                out += data[raw : raw + run]
                 raw += run
                 self.block_remaining -= run
                 continue
             try:
                 produced = self.decode_compressed(bits, min(self.block_remaining, room))
             except IndexError:
-                raise LzxError('LZX chunk truncated') from None
+                raise LzxError("LZX chunk truncated") from None
             self.block_remaining -= produced
         if len(out) != target:
-            raise LzxError('LZX match ran past its chunk')
+            raise LzxError("LZX match ran past its chunk")
         if raw is not None:
             # An odd stored block is padded to a word, except where the padding would be the chunk's last byte.
             if self.block_remaining == 0 and self.block_odd and raw < end:
@@ -223,8 +229,10 @@ class LzxDecoder:
         else:
             used, expected = bits.base - start + (bits.pos + 15) // 16 * 2, end - start
         if used != expected:
-            raise LzxError('LZX chunk size mismatch: used %d of %d bytes' % (used, end - start))
-        return out[target - size:target]
+            raise LzxError(
+                "LZX chunk size mismatch: used %d of %d bytes" % (used, end - start)
+            )
+        return out[target - size : target]
 
     def decode_compressed(self, bits, want):
         """Decode symbols until at least `want` bytes are produced; returns the count produced."""
@@ -235,12 +243,15 @@ class LzxDecoder:
         is_aligned = self.block_type == ALIGNED_BLOCK
         r0, r1, r2 = self.r0, self.r1, self.r2
         if main is None:
-            raise LzxError('main tree empty but used')
+            raise LzxError("main tree empty but used")
         buf, limit = bits.buf, bits.limit
         pos = bits.pos
         while len(out) < stop:
             b = pos >> 3
-            entry = main[((buf[b] << 16 | buf[b + 1] << 8 | buf[b + 2]) >> (8 - (pos & 7))) & 0xFFFF]
+            entry = main[
+                ((buf[b] << 16 | buf[b + 1] << 8 | buf[b + 2]) >> (8 - (pos & 7)))
+                & 0xFFFF
+            ]
             pos += entry & 31
             symbol = entry >> 5
             if symbol < NUM_CHARS:
@@ -251,7 +262,7 @@ class LzxDecoder:
             slot = symbol >> 3
             bits.pos = pos
             if match == 7:
-                match += bits.symbol(length, 'length')
+                match += bits.symbol(length, "length")
             match += MIN_MATCH
             if slot == 0:
                 offset = r0
@@ -267,23 +278,25 @@ class LzxDecoder:
                 extra = EXTRA_BITS[slot]
                 offset = POSITION_BASE[slot] - 2
                 if is_aligned and extra >= 3:
-                    offset += (bits.read(extra - 3) << 3) + bits.symbol(aligned, 'aligned')
+                    offset += (bits.read(extra - 3) << 3) + bits.symbol(
+                        aligned, "aligned"
+                    )
                 else:
                     offset += bits.read(extra)
                 r2, r1, r0 = r1, r0, offset
             pos = bits.pos
             if pos > limit:
-                raise LzxError('LZX chunk truncated')
+                raise LzxError("LZX chunk truncated")
             start = len(out) - offset
             if offset > self.window or start < 0:
-                raise LzxError('LZX match before start of output')
+                raise LzxError("LZX match before start of output")
             if offset >= match:
-                out += out[start:start + match]
+                out += out[start : start + match]
             else:
                 pattern = out[start:]
                 out += (pattern * (match // offset + 1))[:match]
         if pos > limit:
-            raise LzxError('LZX chunk truncated')
+            raise LzxError("LZX chunk truncated")
         bits.pos = pos
         self.r0, self.r1, self.r2 = r0, r1, r2
         return len(out) - begin
@@ -291,40 +304,48 @@ class LzxDecoder:
 
 def parse_header(data):
     if len(data) < HEADER or data[:4] != RSC5:
-        raise LzxError('not an RSC5 resource')
-    _magic, kind, flag, constant, length = struct.unpack_from('>4sIIII', data, 0)
-    return {'type': kind, 'flag': flag, 'constant': constant, 'body_bytes': length,
-            'virtual': virtual_size(flag), 'physical': physical_size(flag)}
+        raise LzxError("not an RSC5 resource")
+    _magic, kind, flag, constant, length = struct.unpack_from(">4sIIII", data, 0)
+    return {
+        "type": kind,
+        "flag": flag,
+        "constant": constant,
+        "body_bytes": length,
+        "virtual": virtual_size(flag),
+        "physical": physical_size(flag),
+    }
 
 
 def decompress(data, window_bits=WINDOW_BITS, expected=None):
     """RSC5 resource bytes -> decompressed bytes (virtual segment then physical segment)."""
     header = parse_header(data)
-    if HEADER + header['body_bytes'] != len(data):
-        raise LzxError('RSC5 body length differs from stored size')
+    if HEADER + header["body_bytes"] != len(data):
+        raise LzxError("RSC5 body length differs from stored size")
     if expected is None:
-        expected = header['virtual'] + header['physical']
+        expected = header["virtual"] + header["physical"]
     decoder = LzxDecoder(window_bits)
     at, end = HEADER, len(data)
-    header['chunks'] = 0
+    header["chunks"] = 0
     while at < end:
         if data[at] == 0xFF:
             if at + 5 > end:
-                raise LzxError('LZX chunk header truncated')
-            size, length = struct.unpack_from('>HH', data, at + 1)
+                raise LzxError("LZX chunk header truncated")
+            size, length = struct.unpack_from(">HH", data, at + 1)
             at += 5
         else:
             if at + 2 > end:
-                raise LzxError('LZX chunk header truncated')
-            size, length = FRAME, struct.unpack_from('>H', data, at)[0]
+                raise LzxError("LZX chunk header truncated")
+            size, length = FRAME, struct.unpack_from(">H", data, at)[0]
             at += 2
         if length == 0 or at + length > end:
-            raise LzxError('LZX chunk outside resource')
+            raise LzxError("LZX chunk outside resource")
         if len(decoder.out) + size > expected:
-            raise LzxError('LZX output exceeds declared size')
+            raise LzxError("LZX output exceeds declared size")
         decoder.chunk(data, at, at + length, size)
-        header['chunks'] += 1
+        header["chunks"] += 1
         at += length
     if len(decoder.out) != expected:
-        raise LzxError('LZX output %d bytes, declared %d' % (len(decoder.out), expected))
+        raise LzxError(
+            "LZX output %d bytes, declared %d" % (len(decoder.out), expected)
+        )
     return bytes(decoder.out), header

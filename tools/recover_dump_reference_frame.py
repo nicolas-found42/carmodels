@@ -19,6 +19,7 @@ savestates during replay, the screenshot hotkey needs a GUI session, and
 pcsx2-gsrunner is not shipped in the pinned builds). The replay cross-check
 remains open and is recorded in `claim_limits`.
 """
+
 from pathlib import Path
 import shutil
 import struct
@@ -49,12 +50,12 @@ need = common.make_need(FrameError)
 DUMPS = [
     {
         "path": ROOT / "research/evidence/continuation/runtime/snaps/"
-                       "Ford Racing 2_SLES-51705_20261004182459.gs.zst",
+        "Ford Racing 2_SLES-51705_20261004182459.gs.zst",
         "compressed_sha256": "fe3cad806c831b6db5577a336a1f92cfc1ac007d0004f3efb99117ae0eb77e88",
     },
     {
         "path": ROOT / "research/evidence/continuation/runtime/linux/snaps/"
-                       "Ford Racing 2_SLES-51705_20261005010217.gs.zst",
+        "Ford Racing 2_SLES-51705_20261005010217.gs.zst",
         "compressed_sha256": "126c9a909501d157d5bab5359a66c63cbb6966bf70504e3f671a9ede5ee01ae9",
     },
 ]
@@ -69,27 +70,48 @@ def png_bytes(width, height, rgba):
         raise FrameError("RGBA byte count does not match dimensions")
 
     def chunk(kind, payload):
-        return struct.pack(">I", len(payload)) + kind + payload + struct.pack(">I", zlib.crc32(kind + payload))
+        return (
+            struct.pack(">I", len(payload))
+            + kind
+            + payload
+            + struct.pack(">I", zlib.crc32(kind + payload))
+        )
 
-    scanlines = b"".join(b"\0" + rgba[y * width * 4:(y + 1) * width * 4] for y in range(height))
-    return (b"\x89PNG\r\n\x1a\n" +
-            chunk(b"IHDR", struct.pack(">2I5B", width, height, 8, 6, 0, 0, 0)) +
-            chunk(b"IDAT", zlib.compress(scanlines)) +
-            chunk(b"IEND", b""))
+    scanlines = b"".join(
+        b"\0" + rgba[y * width * 4 : (y + 1) * width * 4] for y in range(height)
+    )
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", struct.pack(">2I5B", width, height, 8, 6, 0, 0, 0))
+        + chunk(b"IDAT", zlib.compress(scanlines))
+        + chunk(b"IEND", b"")
+    )
 
 
 def load_inputs():
     for dump in DUMPS:
         if not dump["path"].is_file():
-            raise SystemExit("runtime input missing: %s (see docs/static-inputs.md)" % dump["path"].name)
+            raise SystemExit(
+                "runtime input missing: %s (see docs/static-inputs.md)"
+                % dump["path"].name
+            )
     dumps = []
     for dump in DUMPS:
         raw = dump["path"].read_bytes()
-        need(common.sha256(raw) == dump["compressed_sha256"],
-             "dump bytes differ from the compressed pin: " + dump["path"].name)
-        decompressed = subprocess.check_output([zstd_binary(), "-d", "-c", str(dump["path"])])
-        dumps.append({"name": dump["path"].name, "compressed_pin": dump["compressed_sha256"],
-                      "data": decompressed})
+        need(
+            common.sha256(raw) == dump["compressed_sha256"],
+            "dump bytes differ from the compressed pin: " + dump["path"].name,
+        )
+        decompressed = subprocess.check_output(
+            [zstd_binary(), "-d", "-c", str(dump["path"])]
+        )
+        dumps.append(
+            {
+                "name": dump["path"].name,
+                "compressed_pin": dump["compressed_sha256"],
+                "data": decompressed,
+            }
+        )
     return {"dumps": dumps}
 
 
@@ -98,21 +120,37 @@ def parse_dump(entry):
     data = entry["data"]
     marker, header_size = struct.unpack_from("<II", data, 0)
     need(marker == MARKER, "GSDump marker differs")
-    (state_version, state_size, serial_offset, serial_size, crc,
-     screenshot_width, screenshot_height, screenshot_offset, screenshot_size) = struct.unpack_from(HEADER_STRUCT, data, 8)
+    (
+        state_version,
+        state_size,
+        serial_offset,
+        serial_size,
+        crc,
+        screenshot_width,
+        screenshot_height,
+        screenshot_offset,
+        screenshot_size,
+    ) = struct.unpack_from(HEADER_STRUCT, data, 8)
     need(state_version == 9, "unexpected state version")
     need(state_size > 0, "state size is empty")
     serial_start = 8 + serial_offset
     serial_end = serial_start + serial_size
-    need(0 < serial_size <= 64 and serial_end <= header_size, "serial size out of bounds")
+    need(
+        0 < serial_size <= 64 and serial_end <= header_size, "serial size out of bounds"
+    )
     serial = data[serial_start:serial_end].decode("ascii", errors="replace")
-    need(serial and serial.replace("-", "").isalnum(), "serial is not an alphanumeric product code")
+    need(
+        serial and serial.replace("-", "").isalnum(),
+        "serial is not an alphanumeric product code",
+    )
     need(crc != 0, "disc CRC is zero")
     shot_start = 8 + screenshot_offset
     shot_end = shot_start + screenshot_size
     need(shot_end <= 8 + header_size, "screenshot extends past the header")
-    need(screenshot_width * screenshot_height * 4 == screenshot_size,
-         "screenshot size differs from width*height*4")
+    need(
+        screenshot_width * screenshot_height * 4 == screenshot_size,
+        "screenshot size differs from width*height*4",
+    )
     screenshot = data[shot_start:shot_end]
     return {
         "dump": entry["name"],
@@ -130,8 +168,14 @@ def parse_dump(entry):
 
 
 def frame_png(entry, row):
-    return png_bytes(row["width"], row["height"],
-                     entry["data"][row["screenshot_offset"]:row["screenshot_offset"] + row["screenshot_bytes"]])
+    return png_bytes(
+        row["width"],
+        row["height"],
+        entry["data"][
+            row["screenshot_offset"] : row["screenshot_offset"]
+            + row["screenshot_bytes"]
+        ],
+    )
 
 
 def derive(inputs):
@@ -140,13 +184,15 @@ def derive(inputs):
         row = parse_dump(entry)
         png = frame_png(entry, row)
         row["png_sha256"] = common.sha256(png)
-        row["png_path"] = str(FRAMES.relative_to(ROOT) / (Path(row["dump"]).stem + ".png"))
+        row["png_path"] = str(
+            FRAMES.relative_to(ROOT) / (Path(row["dump"]).stem + ".png")
+        )
         rows.append(row)
     need(len(rows) == len(DUMPS), "reference-frame population differs")
     return {
         "schema": "fr2-dump-reference-frames/v1",
         "scope": "Embedded capture-time screenshots of the two pinned GSDumps; raw *-GS.bin "
-                 "savestate memory images carry no screenshot and are excluded.",
+        "savestate memory images carry no screenshot and are excluded.",
         "rows": rows,
         "render_fidelity_complete": False,
         "claim_limits": [
@@ -166,7 +212,9 @@ def derive(inputs):
 
 def controls(inputs):
     def mutate_compressed(i):
-        i["dumps"][0]["data"] = i["dumps"][0]["data"][:-1] + bytes([i["dumps"][0]["data"][-1] ^ 0xFF])
+        i["dumps"][0]["data"] = i["dumps"][0]["data"][:-1] + bytes(
+            [i["dumps"][0]["data"][-1] ^ 0xFF]
+        )
 
     def mutate_screenshot(i):
         row = parse_dump(i["dumps"][0])
@@ -182,12 +230,16 @@ def controls(inputs):
     def mutate_serial(i):
         mutated = bytearray(i["dumps"][0]["data"])
         serial_start = 8 + struct.calcsize(HEADER_STRUCT)
-        mutated[serial_start] = ord("X") if mutated[serial_start] != ord("X") else ord("Y")
+        mutated[serial_start] = (
+            ord("X") if mutated[serial_start] != ord("X") else ord("Y")
+        )
         i["dumps"][0]["data"] = bytes(mutated)
 
     def truncate_screenshot(i):
         row = parse_dump(i["dumps"][0])
-        i["dumps"][0]["data"] = i["dumps"][0]["data"][:row["screenshot_offset"] + row["screenshot_bytes"] - 4]
+        i["dumps"][0]["data"] = i["dumps"][0]["data"][
+            : row["screenshot_offset"] + row["screenshot_bytes"] - 4
+        ]
 
     tests = [
         ("decompressed dump byte changed", mutate_compressed),
@@ -197,8 +249,12 @@ def controls(inputs):
         ("screenshot truncated", truncate_screenshot),
     ]
     results = common.run_controls(
-        inputs, [(label, mutate) for label, mutate in tests], derive, FrameError,
-        baseline=derive(inputs))
+        inputs,
+        [(label, mutate) for label, mutate in tests],
+        derive,
+        FrameError,
+        baseline=derive(inputs),
+    )
     for result in results:
         need(result["rejected"], "a mutation escaped: " + result["mutation"])
     return results
@@ -223,7 +279,13 @@ def main(argv):
     if "--write" in argv:
         written = write_frames(inputs, result)
         print("wrote frames: " + ", ".join(written))
-    return common.finish(result, OUT, argv, ROOT, {"rows": len(result["rows"]), "controls": len(result["controls"])})
+    return common.finish(
+        result,
+        OUT,
+        argv,
+        ROOT,
+        {"rows": len(result["rows"]), "controls": len(result["controls"])},
+    )
 
 
 if __name__ == "__main__":

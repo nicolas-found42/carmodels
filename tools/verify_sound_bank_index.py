@@ -12,6 +12,7 @@ Verdict recorded: consistent | off_by_one | undecidable.
 Receipt: research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json
 Exit 0 + VERIFY OK only when the executable and the corpus agree.
 """
+
 import hashlib
 import json
 import re
@@ -24,13 +25,15 @@ sys.path.insert(0, str(ROOT / "tools"))
 import build_reference as B
 
 SRC = B.SRC
-ELF = SRC.parent / "SLES_517.05"          # games/ford-racing-2/extracted/SLES_517.05
+ELF = SRC.parent / "SLES_517.05"  # games/ford-racing-2/extracted/SLES_517.05
 CORPUS = ROOT / "games/ford-racing-2"
-OUT = ROOT / "research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json"
+OUT = (
+    ROOT / "research/evidence/vehicle-completeness/sound-bank-index-reconciliation.json"
+)
 
 CONFIG_TABLE_VA = 0x24AF68
 DESC_TABLE_VA = 0x24AFE8
-SEG_BASE = 0xFF000                        # VA - file_off for the 0x100000 LOAD segment
+SEG_BASE = 0xFF000  # VA - file_off for the 0x100000 LOAD segment
 
 
 def file_off(va):
@@ -61,11 +64,13 @@ def parse_tables(data):
 def exe_mapping(keys, desc):
     """CAR_SND_CARn -> carN_snd as the EXECUTABLE encodes it (paired by index)."""
     out = {}
-    for i in range(8):                       # CAR1..CAR8 at indices 0..7
+    for i in range(8):  # CAR1..CAR8 at indices 0..7
         m = re.match(r"CAR(\d+)_SOUND_FILE$", keys[i])
         d = re.match(r"sounds\\(car\d+_snd):", desc[i])
         if not m or not d:
-            raise ValueError(f"unexpected table entry at index {i}: {keys[i]!r} / {desc[i]!r}")
+            raise ValueError(
+                f"unexpected table entry at index {i}: {keys[i]!r} / {desc[i]!r}"
+            )
         out[f"CAR_SND_CAR{m.group(1)}"] = d.group(1)
     return out
 
@@ -74,8 +79,10 @@ def corpus_mapping():
     """CAR_SND_CARn -> bank as build_reference.py builds it (name-based rule)."""
     sdata = (SRC / B.BLOCK_SOURCES["sound"][0]).read_bytes()
     base_bank = {}
-    for m in re.finditer(rb"(?m)^:TYPE[ \t]+(CAR_SND_CAR\d+)[ \t]*\r?$([\s\S]{0,400}?):SOUNDBANK_TYPE[ \t]+(CAR\d+_SOUND_FILE)",
-                         sdata):
+    for m in re.finditer(
+        rb"(?m)^:TYPE[ \t]+(CAR_SND_CAR\d+)[ \t]*\r?$([\s\S]{0,400}?):SOUNDBANK_TYPE[ \t]+(CAR\d+_SOUND_FILE)",
+        sdata,
+    ):
         base_bank[m.group(1).decode()] = "car" + m.group(3).decode()[3] + "_snd"
     return base_bank
 
@@ -95,7 +102,9 @@ def check(elf_bytes=None, corpus_map=None):
         inherit = man["sound"]["inherits"]
         bank = man["sound"]["shared_bank_hint"].split(".msb")[0]
         if exe.get(inherit) != bank:
-            raise ValueError(f"{code}: manifest bank {bank} != executable {exe.get(inherit)}")
+            raise ValueError(
+                f"{code}: manifest bank {bank} != executable {exe.get(inherit)}"
+            )
         chains += 1
     return {
         "elf_path": "static-input:executable",
@@ -134,7 +143,7 @@ def main() -> int:
         m1 = exe_mapping(keys, desc_swap)["CAR_SND_CAR1"]
         if m1 == "car1_snd":
             raise ValueError("control: swapped descriptor table accepted")
-        result["control_swapped_table_rejected"] = (m1 == "car2_snd")
+        result["control_swapped_table_rejected"] = m1 == "car2_snd"
     except ValueError as e:
         if "swapped descriptor" not in str(e):
             raise
@@ -144,16 +153,22 @@ def main() -> int:
     # coincident with the table index; the bank filename is taken from the literal carN_snd stem.
     ordinals = [int(re.search(r":(\d+):", d).group(1)) for d in desc[:8]]
     result["descriptor_bank_ordinals"] = ordinals
-    result["descriptor_ordinals_sequential_car1_to_car8"] = (ordinals == list(range(8)))
-    result["bank_name_source"] = ("literal descriptor stem 'sounds\\\\carN_snd'; the numeric fields "
-                                  "(:B:O:C) are not used to build the filename")
+    result["descriptor_ordinals_sequential_car1_to_car8"] = ordinals == list(range(8))
+    result["bank_name_source"] = (
+        "literal descriptor stem 'sounds\\\\carN_snd'; the numeric fields "
+        "(:B:O:C) are not used to build the filename"
+    )
 
-    ok = (result["mappings_equal"]
-          and result.get("control_off_by_one_mapping_rejected")
-          and result.get("control_swapped_table_rejected")
-          and result["descriptor_ordinals_sequential_car1_to_car8"])
+    ok = (
+        result["mappings_equal"]
+        and result.get("control_off_by_one_mapping_rejected")
+        and result.get("control_swapped_table_rejected")
+        and result["descriptor_ordinals_sequential_car1_to_car8"]
+    )
     result["render_fidelity_complete"] = False
-    result["scope"] = "sound-bank index reconciliation only; no change to the green T2 verifier"
+    result["scope"] = (
+        "sound-bank index reconciliation only; no change to the green T2 verifier"
+    )
     result["result"] = "VERIFY OK" if ok else "VERIFY FAILED"
     OUT.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

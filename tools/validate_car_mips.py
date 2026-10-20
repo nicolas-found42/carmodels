@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Independently validate archive-backed mip planes and decoded PNG pixels."""
+
 from __future__ import annotations
 
 import static_inputs
@@ -32,16 +33,18 @@ def parse_png(data: bytes) -> tuple[int, int, bytes]:
         if len(data) - pos < 12:
             raise AssertionError("truncated PNG chunk")
         size = struct.unpack_from(">I", data, pos)[0]
-        kind = data[pos + 4:pos + 8]
+        kind = data[pos + 4 : pos + 8]
         end = pos + 12 + size
         if end > len(data):
             raise AssertionError("PNG chunk exceeds file")
-        payload = data[pos + 8:pos + 8 + size]
+        payload = data[pos + 8 : pos + 8 + size]
         crc = struct.unpack_from(">I", data, pos + 8 + size)[0]
         if zlib.crc32(kind + payload) != crc:
             raise AssertionError(f"PNG CRC mismatch for {kind!r}")
         if kind == b"IHDR":
-            width, height, depth, color, comp, filt, interlace = struct.unpack(">2I5B", payload)
+            width, height, depth, color, comp, filt, interlace = struct.unpack(
+                ">2I5B", payload
+            )
             if (depth, color, comp, filt, interlace) != (8, 6, 0, 0, 0):
                 raise AssertionError("PNG is outside RGBA8/non-interlaced profile")
         elif kind == b"IDAT":
@@ -59,7 +62,7 @@ def parse_png(data: bytes) -> tuple[int, int, bytes]:
     if len(raw) != height * (stride + 1):
         raise AssertionError("PNG decompressed size differs from dimensions")
     for y in range(height):
-        line = raw[y * (stride + 1):(y + 1) * (stride + 1)]
+        line = raw[y * (stride + 1) : (y + 1) * (stride + 1)]
         if line[0] != 0:
             raise AssertionError("unexpected PNG filter")
         pixels.extend(line[1:])
@@ -78,7 +81,11 @@ def order8(width: int, height: int) -> list[int]:
             row = (((y & ~3) >> 1) + (y & 1)) & 7
             column = row * width * 2 + ((x + row_swap) & 7) * 4
             out.append(base + column + ((y >> 1) & 1) + ((x >> 2) & 2))
-    if len(set(out)) != width * height or min(out) != 0 or max(out) != width * height - 1:
+    if (
+        len(set(out)) != width * height
+        or min(out) != 0
+        or max(out) != width * height - 1
+    ):
         raise AssertionError("packed T8 addresses are not a complete plane permutation")
     return out
 
@@ -95,18 +102,22 @@ def order4(width: int, height: int, dbw: int, tbw: int) -> list[int]:
     """Independent PSMT4-to-CT16 address inversion, including profile bounds."""
     if width % 2 or height % 2 or dbw <= 0 or tbw <= 0:
         raise AssertionError("packed T4 profile has invalid dimensions/strides")
-    inverse_block = {xor(x | (y << 2), (2, 8, 1, 4, 16)): (x, y)
-                     for y in range(8) for x in range(4)}
-    inverse_column = {xor(x | (y << 4), (2, 8, 16, 1, 4, 32, 64)): (x, y)
-                      for y in range(8) for x in range(16)}
+    inverse_block = {
+        xor(x | (y << 2), (2, 8, 1, 4, 16)): (x, y) for y in range(8) for x in range(4)
+    }
+    inverse_column = {
+        xor(x | (y << 4), (2, 8, 16, 1, 4, 32, 64)): (x, y)
+        for y in range(8)
+        for x in range(16)
+    }
     out = []
     for y in range(height):
         for x in range(width):
             page = (y // 128) * ((tbw * 64) // 128) + x // 128
-            block = xor(((x % 128) // 32) | (((y % 128) // 16) << 2),
-                        (2, 8, 1, 4, 16))
-            column = xor((x % 32) | ((y % 16) << 5),
-                         (8, 32, 64, 2, 4, 16, 65, 192, 256))
+            block = xor(((x % 128) // 32) | (((y % 128) // 16) << 2), (2, 8, 1, 4, 16))
+            column = xor(
+                (x % 32) | ((y % 16) << 5), (8, 32, 64, 2, 4, 16, 65, 192, 256)
+            )
             nibble = page * 16384 + block * 512 + column
             halfword = nibble // 4
             upload_page, in_page = divmod(halfword, 4096)
@@ -115,10 +126,18 @@ def order4(width: int, height: int, dbw: int, tbw: int) -> list[int]:
             ux = (upload_page % dbw) * 64 + bx * 16 + cx
             uy = (upload_page // dbw) * 64 + by * 8 + cy
             if ux >= width // 2 or uy >= height // 2:
-                raise AssertionError("packed T4 read address is outside the corresponding CT16 upload")
+                raise AssertionError(
+                    "packed T4 read address is outside the corresponding CT16 upload"
+                )
             out.append((uy * (width // 2) + ux) * 4 + (nibble & 3))
-    if len(set(out)) != width * height or min(out) != 0 or max(out) != width * height - 1:
-        raise AssertionError("packed T4 addresses are not a complete source nibble permutation")
+    if (
+        len(set(out)) != width * height
+        or min(out) != 0
+        or max(out) != width * height - 1
+    ):
+        raise AssertionError(
+            "packed T4 addresses are not a complete source nibble permutation"
+        )
     return out
 
 
@@ -133,18 +152,19 @@ def decode(item: dict, mip: dict, raw: bytes, model: bytes) -> bytes:
         else:
             indices = raw
         paloff, palsize = mip["palette_file_offset"], mip["palette_bytes"]
-        palette = model[paloff:paloff + palsize]
-        return b"".join(palette[index * 4:index * 4 + 4] for index in indices)
+        palette = model[paloff : paloff + palsize]
+        return b"".join(palette[index * 4 : index * 4 + 4] for index in indices)
     if fmt == 4:
         if packed:
-            source_nibbles = order4(width, height, mip["bitbltbuf_dbw_low16"],
-                                    mip["miptbp_tbw_low16"])
+            source_nibbles = order4(
+                width, height, mip["bitbltbuf_dbw_low16"], mip["miptbp_tbw_low16"]
+            )
             indices = bytes((raw[n // 2] >> ((n & 1) * 4)) & 15 for n in source_nibbles)
         else:
             indices = bytes(n for b in raw for n in (b & 15, b >> 4))
         paloff, palsize = mip["palette_file_offset"], mip["palette_bytes"]
-        palette = model[paloff:paloff + palsize]
-        return b"".join(palette[index * 4:index * 4 + 4] for index in indices)
+        palette = model[paloff : paloff + palsize]
+        return b"".join(palette[index * 4 : index * 4 + 4] for index in indices)
     raise AssertionError(f"unsupported format {fmt}")
 
 
@@ -154,20 +174,34 @@ def read_gs_tables() -> dict:
     if sha(source) != GS_TABLES_SHA256:
         raise AssertionError("PCSX2 GS table source differs from the pinned evidence")
     text = source.decode("utf-8")
-    shapes = {32: (8, 8, 64, 32), 16: (16, 8, 64, 64),
-              8: (16, 16, 128, 64), 4: (32, 16, 128, 128)}
+    shapes = {
+        32: (8, 8, 64, 32),
+        16: (16, 8, 64, 64),
+        8: (16, 16, 128, 64),
+        4: (32, 16, 128, 128),
+    }
     tables = {}
     for bits, (bw, bh, pw, ph) in shapes.items():
         tables[bits] = []
-        for name, rows, cols in ((f"_blockTable{bits}", ph // bh, pw // bw),
-                                 (f"columnTable{bits}", bh, bw)):
-            match = re.search(r"\b" + name + rf"\[{rows}\]\[{cols}\]\s*=\s*\{{(.*?)\}};", text, re.S)
+        for name, rows, cols in (
+            (f"_blockTable{bits}", ph // bh, pw // bw),
+            (f"columnTable{bits}", bh, bw),
+        ):
+            match = re.search(
+                r"\b" + name + rf"\[{rows}\]\[{cols}\]\s*=\s*\{{(.*?)\}};", text, re.S
+            )
             if not match:
                 raise AssertionError(f"pinned GS table {name} is missing")
-            values = list(map(int, re.findall(r"\d+", re.sub(r"//[^\n]*", "", match.group(1)))))
+            values = list(
+                map(int, re.findall(r"\d+", re.sub(r"//[^\n]*", "", match.group(1))))
+            )
             if len(values) != rows * cols:
-                raise AssertionError(f"pinned GS table {name} has an unexpected cell count")
-            tables[bits].append([values[y * cols:(y + 1) * cols] for y in range(rows)])
+                raise AssertionError(
+                    f"pinned GS table {name} has an unexpected cell count"
+                )
+            tables[bits].append(
+                [values[y * cols : (y + 1) * cols] for y in range(rows)]
+            )
     return {"shapes": shapes, "tables": tables}
 
 
@@ -175,9 +209,11 @@ def gs_address(oracle: dict, bits: int, x: int, y: int, buffer_width: int) -> in
     bw, bh, page_w, page_h = oracle["shapes"][bits]
     blocks, columns = oracle["tables"][bits]
     page = (y // page_h) * (buffer_width * 64 // page_w) + x // page_w
-    address = (page * page_w * page_h +
-               blocks[(y % page_h) // bh][(x % page_w) // bw] * bw * bh +
-               columns[y % bh][x % bw])
+    address = (
+        page * page_w * page_h
+        + blocks[(y % page_h) // bh][(x % page_w) // bw] * bw * bh
+        + columns[y % bh][x % bw]
+    )
     return address * (bits // 4)
 
 
@@ -202,31 +238,48 @@ def verify_table_order(mip: dict, record: tuple[int, ...], oracle: dict) -> None
         for x in range(width):
             vram_nibble = gs_address(oracle, sample_bits, x, y, tbw)
             if fmt == 3:
-                if vram_nibble not in source_nibbles or vram_nibble + 1 not in source_nibbles:
-                    raise AssertionError("packed T8 read references bytes not written by the CT32 upload")
+                if (
+                    vram_nibble not in source_nibbles
+                    or vram_nibble + 1 not in source_nibbles
+                ):
+                    raise AssertionError(
+                        "packed T8 read references bytes not written by the CT32 upload"
+                    )
                 lo, hi = source_nibbles[vram_nibble], source_nibbles[vram_nibble + 1]
                 if hi != lo + 1 or lo & 1:
-                    raise AssertionError("packed T8 table address does not recover one aligned source byte")
+                    raise AssertionError(
+                        "packed T8 table address does not recover one aligned source byte"
+                    )
                 measured.append(lo // 2)
             else:
                 if vram_nibble not in source_nibbles:
-                    raise AssertionError("packed T4 read references an unwritten source nibble")
+                    raise AssertionError(
+                        "packed T4 read references an unwritten source nibble"
+                    )
                 measured.append(source_nibbles[vram_nibble])
     expected = order8(width, height) if fmt == 3 else order4(width, height, dbw, tbw)
     if measured != expected:
-        raise AssertionError("exported decoder permutation differs from pinned PCSX2 table address mapping")
+        raise AssertionError(
+            "exported decoder permutation differs from pinned PCSX2 table address mapping"
+        )
 
 
 def main() -> None:
     import argparse
+
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-dir", type=Path, default=OUT,
-                        help="mip evidence directory containing mip-index.json and extracted levels")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OUT,
+        help="mip evidence directory containing mip-index.json and extracted levels",
+    )
     args = parser.parse_args()
     output_dir = args.output_dir
-    sys.path.insert(0, str(ROOT/'tools'))
+    sys.path.insert(0, str(ROOT / "tools"))
     import ps2_sections
     from corpus_binding import Baseline
+
     index = json.loads((output_dir / "mip-index.json").read_text())
     gs_oracle = read_gs_tables()
     baseline = Baseline(SOURCE / "games/ford-racing-2")
@@ -245,7 +298,9 @@ def main() -> None:
         entry = archive[src["src"]]
         model = model_path.read_bytes()
         if model != entry.load() or sha(model) != src["sha256"]:
-            raise AssertionError(f"{folder.name}: model bytes differ from manifest/archive")
+            raise AssertionError(
+                f"{folder.name}: model bytes differ from manifest/archive"
+            )
         parsed = ps2_sections.parse(model)
         source_levels = []
         for item in parsed["textures"]["items"]:
@@ -257,50 +312,100 @@ def main() -> None:
         rows = cars[folder.name]["extra_mip_levels"]
         if len(rows) != len(source_levels):
             raise AssertionError(f"{folder.name}: mip inventory cardinality differs")
-        for (item, field, mip_no, level, record_at, words), row in zip(source_levels, rows):
+        for (item, field, mip_no, level, record_at, words), row in zip(
+            source_levels, rows
+        ):
             width, height = level["width"], level["height"]
             if row["level"] != mip_no or row["logical_dimensions"] != [width, height]:
-                raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: identity mismatch")
-            if row["source_file_offset"] != level["offset"] or row["source_byte_count"] != level["size"]:
-                raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: source span mismatch")
+                raise AssertionError(
+                    f"{folder.name}/{item['name']} L{mip_no}: identity mismatch"
+                )
+            if (
+                row["source_file_offset"] != level["offset"]
+                or row["source_byte_count"] != level["size"]
+            ):
+                raise AssertionError(
+                    f"{folder.name}/{item['name']} L{mip_no}: source span mismatch"
+                )
             if row["mip_record_file_offset"] != record_at:
-                raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: record offset mismatch")
+                raise AssertionError(
+                    f"{folder.name}/{item['name']} L{mip_no}: record offset mismatch"
+                )
             if row["mip_record_words"] != [f"0x{x:08x}" for x in words]:
-                raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: raw record mismatch")
+                raise AssertionError(
+                    f"{folder.name}/{item['name']} L{mip_no}: raw record mismatch"
+                )
             if bool(field & 0x100) and item["format"] in (3, 4):
-                verify_table_order({"format": item["format"],
-                                    "logical_dimensions": [width, height]}, words, gs_oracle)
-            raw = model[level["offset"]:level["offset"] + level["size"]]
+                verify_table_order(
+                    {"format": item["format"], "logical_dimensions": [width, height]},
+                    words,
+                    gs_oracle,
+                )
+            raw = model[level["offset"] : level["offset"] + level["size"]]
             raw_path = output_dir / row["raw_plane"]
             if raw_path.read_bytes() != raw or sha(raw) != row["source_sha256"]:
-                raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: exported plane differs")
+                raise AssertionError(
+                    f"{folder.name}/{item['name']} L{mip_no}: exported plane differs"
+                )
             raw_bytes += len(raw)
             if row["decode_status"] == "decoded_static_mapping":
-                if bool(field & 0x100) != row["packed_upload"] or item["format"] != row["format"]:
-                    raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: descriptor mapping differs")
+                if (
+                    bool(field & 0x100) != row["packed_upload"]
+                    or item["format"] != row["format"]
+                ):
+                    raise AssertionError(
+                        f"{folder.name}/{item['name']} L{mip_no}: descriptor mapping differs"
+                    )
                 expected_rgba = decode(row, row, raw, model)
                 png_path = output_dir / row["png"]
                 png = png_path.read_bytes()
                 png_width, png_height, actual_rgba = parse_png(png)
-                if (png_width, png_height) != (width, height) or actual_rgba != expected_rgba:
-                    raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: decoded PNG pixel mismatch")
-                if sha(actual_rgba) != row["rgba_sha256"] or sha(png) != row["png_sha256"]:
-                    raise AssertionError(f"{folder.name}/{item['name']} L{mip_no}: decoded hash mismatch")
+                if (png_width, png_height) != (
+                    width,
+                    height,
+                ) or actual_rgba != expected_rgba:
+                    raise AssertionError(
+                        f"{folder.name}/{item['name']} L{mip_no}: decoded PNG pixel mismatch"
+                    )
+                if (
+                    sha(actual_rgba) != row["rgba_sha256"]
+                    or sha(png) != row["png_sha256"]
+                ):
+                    raise AssertionError(
+                        f"{folder.name}/{item['name']} L{mip_no}: decoded hash mismatch"
+                    )
                 decoded += 1
             elif row["decode_status"] != "unresolved":
                 raise AssertionError("unknown decoder disposition")
             checked += 1
     if checked != 94 or decoded != 94 or raw_bytes != 75_520:
-        raise AssertionError(f"unexpected coverage: levels={checked}, decoded={decoded}, raw_bytes={raw_bytes}")
-    result = {"schema_version": 1, "status": "pass",
-              "scope": "Independent archive/manifest byte, source-span, mip-record, PNG CRC/pixel, dimension and hash checks for the 35 car subset.",
-              "corpus_id": baseline.provenance["corpus_id"],
-              "checked_cars": 35, "checked_extra_mip_levels": checked,
-              "checked_raw_plane_bytes": raw_bytes, "independently_decoded_pngs": decoded,
-              "pcsx2_gs_tables_sha256": GS_TABLES_SHA256,
-              "validator_tool_sha256": sha(Path(__file__).read_bytes()),
-              "independent_methods": ["archive+manifest exact bytes", "raw mip offsets from parsed source", "PNG CRC and decompression", "separately implemented packed T8/T4 address permutations compared pixel-for-pixel against pinned PCSX2 page/block/column tables", "direct format pixel conversion", "source/output hashes"],
-              "limits": ["Confirms the emitted static mapping and exact bytes; does not execute game, GS, emulator, or silicon.", "The source/GS base-allocation and sampler-selector behavior remains unobserved."]}
+        raise AssertionError(
+            f"unexpected coverage: levels={checked}, decoded={decoded}, raw_bytes={raw_bytes}"
+        )
+    result = {
+        "schema_version": 1,
+        "status": "pass",
+        "scope": "Independent archive/manifest byte, source-span, mip-record, PNG CRC/pixel, dimension and hash checks for the 35 car subset.",
+        "corpus_id": baseline.provenance["corpus_id"],
+        "checked_cars": 35,
+        "checked_extra_mip_levels": checked,
+        "checked_raw_plane_bytes": raw_bytes,
+        "independently_decoded_pngs": decoded,
+        "pcsx2_gs_tables_sha256": GS_TABLES_SHA256,
+        "validator_tool_sha256": sha(Path(__file__).read_bytes()),
+        "independent_methods": [
+            "archive+manifest exact bytes",
+            "raw mip offsets from parsed source",
+            "PNG CRC and decompression",
+            "separately implemented packed T8/T4 address permutations compared pixel-for-pixel against pinned PCSX2 page/block/column tables",
+            "direct format pixel conversion",
+            "source/output hashes",
+        ],
+        "limits": [
+            "Confirms the emitted static mapping and exact bytes; does not execute game, GS, emulator, or silicon.",
+            "The source/GS base-allocation and sampler-selector behavior remains unobserved.",
+        ],
+    }
     (output_dir / "validation.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))
 

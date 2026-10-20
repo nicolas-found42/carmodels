@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Serve both local car libraries, with an optional server-side semantic filter API."""
+
 import argparse
 import functools
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -10,10 +11,12 @@ from urllib.parse import urlparse
 
 from library_filter import live_interpret, model_status
 
-ROOT = Path(__file__).resolve().parents[1] / 'dealership'
-STARTUP = {'available': 'uses the TypeSafe model.',
-           'sdk_unavailable': 'needs the TypeSafe SDK (typesafe-sdk), which this Python cannot import.',
-           'credentials_missing': 'needs OPENROUTER_API_KEY in the server environment.'}
+ROOT = Path(__file__).resolve().parents[1] / "dealership"
+STARTUP = {
+    "available": "uses the TypeSafe model.",
+    "sdk_unavailable": "needs the TypeSafe SDK (typesafe-sdk), which this Python cannot import.",
+    "credentials_missing": "needs OPENROUTER_API_KEY in the server environment.",
+}
 
 
 class LibraryHandler(SimpleHTTPRequestHandler):
@@ -21,68 +24,117 @@ class LibraryHandler(SimpleHTTPRequestHandler):
     api_lock = threading.Lock()
 
     def end_headers(self):
-        self.send_header('Cache-Control', 'no-store')
+        self.send_header("Cache-Control", "no-store")
         super().end_headers()
 
     def reply(self, status, payload):
         data = json.dumps(payload, allow_nan=False).encode()
         self.send_response(status)
-        self.send_header('Content-Type', 'application/json')
-        self.send_header('Content-Length', str(len(data)))
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
         self.end_headers()
         self.wfile.write(data)
 
     def do_POST(self):
-        if self.path != '/api/library-filter':
-            self.reply(404, {'status': 'error', 'message': 'Unknown endpoint.'})
+        if self.path != "/api/library-filter":
+            self.reply(404, {"status": "error", "message": "Unknown endpoint."})
             return
-        allowed_hosts = {f'localhost:{self.server.server_port}', f'127.0.0.1:{self.server.server_port}'}
-        if self.headers.get('Host') not in allowed_hosts:
-            self.reply(403, {'status': 'error', 'message': 'Use the local library address.'})
+        allowed_hosts = {
+            f"localhost:{self.server.server_port}",
+            f"127.0.0.1:{self.server.server_port}",
+        }
+        if self.headers.get("Host") not in allowed_hosts:
+            self.reply(
+                403, {"status": "error", "message": "Use the local library address."}
+            )
             return
         self.connection.settimeout(5)
-        origin = self.headers.get('Origin')
-        expected = f'http://{self.headers.get("Host", "")}'
+        origin = self.headers.get("Origin")
+        expected = f"http://{self.headers.get('Host', '')}"
         if origin is not None and origin != expected:
-            self.reply(403, {'status': 'error', 'message': 'Use the local library page.'})
+            self.reply(
+                403, {"status": "error", "message": "Use the local library page."}
+            )
             return
         try:
-            length = int(self.headers.get('Content-Length', '0'))
-            if not 0 < length <= 2048 or self.headers.get('Content-Type', '').split(';')[0] != 'application/json':
-                raise ValueError('Invalid request')
+            length = int(self.headers.get("Content-Length", "0"))
+            if (
+                not 0 < length <= 2048
+                or self.headers.get("Content-Type", "").split(";")[0]
+                != "application/json"
+            ):
+                raise ValueError("Invalid request")
             payload = json.loads(self.rfile.read(length))
-            if not isinstance(payload, dict) or set(payload) not in ({'query'}, {'query', 'catalog'}):
-                raise ValueError('Invalid payload')
-            catalog = payload.get('catalog', 'source')
-            if catalog not in ('source', 'dealership'):
-                raise ValueError('Invalid catalog')
-            query = payload['query']
-            if not isinstance(query, str) or not 1 <= len(query.strip()) <= 500 or any(ord(c) < 32 for c in query):
-                raise ValueError('Invalid query')
+            if not isinstance(payload, dict) or set(payload) not in (
+                {"query"},
+                {"query", "catalog"},
+            ):
+                raise ValueError("Invalid payload")
+            catalog = payload.get("catalog", "source")
+            if catalog not in ("source", "dealership"):
+                raise ValueError("Invalid catalog")
+            query = payload["query"]
+            if (
+                not isinstance(query, str)
+                or not 1 <= len(query.strip()) <= 500
+                or any(ord(c) < 32 for c in query)
+            ):
+                raise ValueError("Invalid query")
         except (ValueError, UnicodeError, OSError):
-            self.reply(400, {'status': 'error', 'message': 'Enter a query of 1 to 500 printable characters.'})
+            self.reply(
+                400,
+                {
+                    "status": "error",
+                    "message": "Enter a query of 1 to 500 printable characters.",
+                },
+            )
             return
         if not self.api_lock.acquire(blocking=False):
-            self.reply(429, {'status': 'error', 'message': 'A filter request is already running.'})
+            self.reply(
+                429,
+                {"status": "error", "message": "A filter request is already running."},
+            )
             return
         status = 200
         try:
-            path = 'public/models.json' if catalog == 'source' else 'public/dealership/cars.json'
+            path = (
+                "public/models.json"
+                if catalog == "source"
+                else "public/dealership/cars.json"
+            )
             data = json.loads((Path(self.directory) / path).read_text())
-            cars = data['cars'] if catalog == 'source' else data
+            cars = data["cars"] if catalog == "source" else data
             receipt = self.judgment(query, cars, catalog=catalog)
             # Do not expose raw provider envelopes in the UI; local experiments retain those separately.
-            response = {key: receipt.get(key) for key in ('status', 'filters', 'message', 'decided_by', 'reason',
-                                                         'signals', 'usage', 'latency_seconds')}
+            response = {
+                key: receipt.get(key)
+                for key in (
+                    "status",
+                    "filters",
+                    "message",
+                    "decided_by",
+                    "reason",
+                    "signals",
+                    "usage",
+                    "latency_seconds",
+                )
+            }
             # Validate before leaving the error boundary; reply serializes before
             # sending headers too, so malformed receipts still produce one 503.
             json.dumps(response, allow_nan=False)
             # The outcome, never the query text, goes to the server log.
-            self.log_message('library filter: %s by %s%s', receipt.get('status'), receipt.get('decided_by') or 'nothing',
-                             f" ({receipt['reason']})" if receipt.get('reason') else '')
+            self.log_message(
+                "library filter: %s by %s%s",
+                receipt.get("status"),
+                receipt.get("decided_by") or "nothing",
+                f" ({receipt['reason']})" if receipt.get("reason") else "",
+            )
         except Exception:
             status = 503
-            response = {'status': 'error', 'message': 'The model catalog is unavailable.'}
+            response = {
+                "status": "error",
+                "message": "The model catalog is unavailable.",
+            }
         finally:
             self.api_lock.release()
         # The filter work is complete before a client can receive its response
@@ -90,20 +142,25 @@ class LibraryHandler(SimpleHTTPRequestHandler):
         self.reply(status, response)
 
     def do_GET(self):
-        if urlparse(self.path).path == '/':
+        if urlparse(self.path).path == "/":
             self.send_response(302)
-            self.send_header('Location', '/dealership.html')
+            self.send_header("Location", "/dealership.html")
             self.end_headers()
             return
         super().do_GET()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--port', type=int, default=8081)
+    parser.add_argument("--port", type=int, default=8081)
     args = parser.parse_args()
-    with ThreadingHTTPServer(('127.0.0.1', args.port), functools.partial(LibraryHandler, directory=str(ROOT))) as server:
-        print(f'Car library: http://localhost:{args.port}/dealership.html', flush=True)
-        print('Natural-language filter: exact game/variant phrases work offline; other wording ' +
-              STARTUP[model_status()], flush=True)
+    with ThreadingHTTPServer(
+        ("127.0.0.1", args.port), functools.partial(LibraryHandler, directory=str(ROOT))
+    ) as server:
+        print(f"Car library: http://localhost:{args.port}/dealership.html", flush=True)
+        print(
+            "Natural-language filter: exact game/variant phrases work offline; other wording "
+            + STARTUP[model_status()],
+            flush=True,
+        )
         server.serve_forever()
