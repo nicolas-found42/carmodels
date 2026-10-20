@@ -1,17 +1,19 @@
 {
-  // Shared VS Code settings. Deliberately conservative: nothing here may
-  // reformat a file on save in a way `tools/check.sh` would flag or that
-  // produces unrelated diffs. Formatting is on-demand (Format Document);
-  // only safe, check-aligned fixes run on save.
+  // Shared VS Code settings. Format-on-save is ON for every language with a
+  // configured default formatter below (JS via Prettier, Markdown, JSON/JSONC,
+  // TOML). Python is explicitly excluded (see [python]): `ruff format` would
+  // reformat most of tools/ while tools/check.sh only enforces `ruff check`.
+  "editor.formatOnSave": true,
   "python.defaultInterpreterPath": "python3",
   "python.languageServer": "Pylance",
   // Type checking reads pyrightconfig.json (include: tools/, Python 3.12);
   // nothing to duplicate here.
   "[python]": {
-    // Ruff is the formatter AND the linter (charliermarsh.ruff), but
-    // format-on-save stays OFF: `ruff format` would reformat most of tools/
-    // while tools/check.sh only enforces `ruff check` (rules F, E9).
+    // Excluded from the global format-on-save above: `ruff format` would
+    // reformat most of tools/ while tools/check.sh only enforces
+    // `ruff check` (rules F, E9). Format Python files on demand instead.
     "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": false,
     // Mirrors `ruff check tools`: safe auto-fixes only (e.g. unused imports).
     // Import sorting is NOT enabled (ruff.toml selects F and E9 only).
     "editor.codeActionsOnSave": {
