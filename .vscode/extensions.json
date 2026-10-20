@@ -1,0 +1,18 @@
+{
+  // Shared VS Code setup. Extension IDs must match the Marketplace;
+  // each entry maps to repo tooling (see settings.json comments).
+  "recommendations": [
+    // Python + Pylance: CONTRIBUTING.md requires Python 3.12+ as `python3`;
+    // pyrightconfig.json (tools/) is picked up automatically.
+    "ms-python.python",
+    // Ruff: tools/check.sh runs `ruff check tools` (rules F, E9 in ruff.toml).
+    "charliermarsh.ruff",
+    // Prettier: on-demand formatter for the .mjs viewer/tools sources,
+    // Markdown docs, and JSON (singleQuote matches the .mjs style).
+    "esbenp.prettier-vscode",
+    // TOML: schema-aware editing of ruff.toml / pyrightconfig-adjacent files.
+    "tamasfe.even-better-toml",
+    // GitHub Actions: validates .github/workflows/ci.yml locally.
+    "github.vscode-github-actions"
+  ]
+}
