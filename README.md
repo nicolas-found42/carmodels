@@ -33,7 +33,9 @@ Optional dev environment: `pyproject.toml` pins the guarded extras (Pillow, nump
 
 ```sh
 uv sync --all-groups   # creates .venv/ with every group
-uv sync --group pillow --group lint   # or a subset
+source .venv/bin/activate   # uv sync does not activate; without this,
+                             # python3 resolves from PATH, not .venv
+python tools/serve_library.py --port 8081   # uses the venv python
 ```
 
 ## Repository layout
