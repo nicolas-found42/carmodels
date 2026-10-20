@@ -28,6 +28,14 @@ network access. Other wording is sent, with the catalog's game/variant counts, t
 OpenRouter, which needs `typesafe-sdk` importable by that Python and `OPENROUTER_API_KEY` in its environment;
 without them the server says so at startup and in the page. Uncertain answers never change the filters.
 
+Optional dev environment: `pyproject.toml` pins the guarded extras (Pillow, numpy, ruff,
+`typesafe-sdk`) as uv dependency groups; checks run on stdlib only and never need it.
+
+```sh
+uv sync --all-groups   # creates .venv/ with every group
+uv sync --group pillow --group lint   # or a subset
+```
+
 ## Repository layout
 
 - `dealership/` — both app entry points, shared vendor libraries and compiled browser data. See [the app guide](dealership/README.md).
