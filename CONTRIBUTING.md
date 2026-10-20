@@ -106,8 +106,13 @@ when checks fail. Optional private-input skips remain visible and do not count a
 Completion messages appear as checks finish; manifest rows retain registry order. The coordinator
 atomically replaces the manifest after each completion. `jobs` and total `elapsed_seconds`
 record the run configuration and wall time; each row includes `parallel` and `started_seconds`
-relative to run start. `pending` lists selected checks still running or waiting, so an interrupted
-run remains distinguishable from a completed run. `not_run` lists checks excluded by selection.
+relative to run start. `created_utc`, `git_sha`, `branch` and `runner` (python version, node
+presence, platform) stamp every manifest so a stale evidence dir maps to its commit.
+`run-index.json` beside it carries the same stamp with pass/fail/skip totals for listing CI runs.
+Every CLI run also appends one JSONL line to `.scratch/check-history.jsonl` (local only) with
+per-check statuses and durations for timing trends and flake counts. `pending` lists selected
+checks still running or waiting, so an interrupted run remains distinguishable from a completed
+run. `not_run` lists checks excluded by selection.
 The review bundle builder refuses manifests with pending checks; older completed manifests remain usable.
 
 Optional profiling advice is available with
