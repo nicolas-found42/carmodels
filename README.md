@@ -64,11 +64,11 @@ python tools/serve_library.py --port 8081   # uses the venv python
 | Ford Racing 2 (PS2, SLES-51705) | 35 | `games/ford-racing-2/` — verbatim extraction + hash-verified `recovered/` manifests |
 | Gran Turismo (PS1, SCUS-94194) | 342 | `games/gran-turismo/` — `model.car`/`textures.tex` day/night/arcade pairs, `CARINF.DAT` metadata |
 | Gran Turismo 4 (PS2, SCES-51719) | 730 | `games/gran-turismo-4/` — RoFS `GT4.VOL` volume, SpecDB joins, preview renders |
-| Redline (PS2) | 128 | `games/redline/` — mesh + texture recovery with tamper-controlled decoders |
+| Redline (Mac) | 128 | `games/redline/` — mesh + texture recovery with tamper-controlled decoders |
 | Midnight Club 3: Remix (PS2) | 94 | `games/midnight-club-3-remix/` — decoded models with preview geometry |
 | Midnight Club: Los Angeles (X360) | 106 | `games/midnight-club-los-angeles/` — RPF3/LZX resources, RSC5 decoding, catalog names |
 
-Each game tree keeps the same shape: `cars/` source tree, per-game README indexing tools/notes/evidence, `research/evidence/<game>/` receipts, and hash-pinned manifests. Disc images and private inputs stay local and ignored; receipts pin their SHA-256 so a verifier refuses the wrong input. See [ADR 0003](docs/adr/0003-game-sources-live-under-games.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+Each game tree keeps the same shape: `cars/` source tree, per-game README indexing tools/notes/evidence, and hash-pinned manifests. Evidence locations vary by game — GT4 keeps source identity under `cars/provenance/`, Redline under `research/evidence/redline-extraction/` and `research/evidence/redline-library/`; each game's README names its exact paths. Disc images and private inputs stay local and ignored; receipts pin their SHA-256 so a verifier refuses the wrong input. See [ADR 0003](docs/adr/0003-game-sources-live-under-games.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Repository layout
 
