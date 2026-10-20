@@ -18,8 +18,10 @@ python3 -m http.server 8080 --directory dealership
 
 [`dealership.html`](dealership/dealership.html) is the default app: 1,435 cars across six games, each an independent editable GLB with catalog metadata, in-game performance bars, native paint presets where recovered, and a Blender-tested edit/export roundtrip. Search by name/year/code, filter by game and variant, orbit/zoom/pan, download any car as `.glb`.
 
-![Preset camera views](docs/screenshots/dealership-views-light.gif#gh-light-mode-only)
-![Preset camera views](docs/screenshots/dealership-views-dark.gif#gh-dark-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dealership-views-dark.gif">
+  <img alt="Preset camera views" src="docs/screenshots/dealership-views-light.gif">
+</picture>
 
 Edits live in `dealership/dealership/` (models + `catalog.json`); `python3 tools/build_dealership.py` recompiles only the display data and preserves edits. Source recovery never touches dealership copies — the fork history is in `origins.json`.
 
