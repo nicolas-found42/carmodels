@@ -44,6 +44,18 @@ class CheckRunnerTests(unittest.TestCase):
             self.assertEqual((out / 'a.log').read_text(), 'a failed\n')
             self.assertEqual((out / 'b.log').read_text(), 'b passed\n')
             self.assertEqual((out / 'c.log').read_text(), 'c passed\n')
+    def test_manifest_carries_run_identity_for_later_diagnosis(self):
+        checks = [self.probe('only', 'print("ok")')]
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / 'out'
+            self.assertEqual(run_checks(checks, temp, out, jobs=1), 0)
+            receipt = json.loads((out / 'results.json').read_text())
+            self.assertRegex(receipt['created_utc'], r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')
+            self.assertIn('git_sha', receipt)
+            self.assertIn('branch', receipt)
+            self.assertIn('runner', receipt)
+            self.assertIn('python', receipt['runner'])
+            self.assertIn('platform', receipt['runner'])
 
     def test_exclusive_checks_are_barriers_in_both_directions(self):
         wait = ('deadline = time.monotonic() + 15\n'
@@ -134,6 +146,32 @@ class CheckRunnerTests(unittest.TestCase):
             self.assertEqual((out / 'broken.log').read_text(), 'first line\nlast line\n')
             with self.assertRaisesRegex(ValueError, 'must be empty'):
                 run_checks(checks, Path(temp), out)
+    def test_completed_run_appends_one_jsonl_line_to_history_ledger(self):
+        checks = [self.probe('only', 'print("ok")')]
+        with tempfile.TemporaryDirectory() as temp:
+            root, ledger = Path(temp), Path(temp) / 'history.jsonl'
+            self.assertEqual(run_checks(checks, root, Path(temp) / 'first', jobs=1, ledger=ledger), 0)
+            self.assertEqual(run_checks(checks, root, Path(temp) / 'second', jobs=1, ledger=ledger), 0)
+            lines = ledger.read_text().splitlines()
+            self.assertEqual(len(lines), 2)
+            first, second = (json.loads(line) for line in lines)
+            for entry in (first, second):
+                self.assertEqual(entry['checks'], {'only': 'pass'})
+                self.assertIn('created_utc', entry)
+                self.assertIn('git_sha', entry)
+                self.assertIn('elapsed_seconds', entry)
+            self.assertNotEqual(first['evidence'], second['evidence'])
+    def test_evidence_dir_carries_small_run_index_for_ci_listing(self):
+        checks = [self.probe('only', 'print("ok")')]
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / 'out'
+            self.assertEqual(run_checks(checks, temp, out, jobs=1), 0)
+            index = json.loads((out / 'run-index.json').read_text())
+            self.assertEqual(index['exit_code'], 0)
+            self.assertEqual(index['total'], 1)
+            self.assertEqual(index['passed'], 1)
+            self.assertIn('git_sha', index)
+            self.assertIn('created_utc', index)
 
     def test_older_python_is_refused_before_any_check(self):
         with patch.object(runner.sys, 'version_info', (3, 11, 9)), patch('builtins.print') as shown, \

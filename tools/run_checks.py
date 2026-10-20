@@ -80,6 +80,25 @@ PARALLEL_SAFE = {
 }
 
 
+def _git_field(root, *args):
+    """One git lookup, trimmed; None when git is missing or the checkout has no value."""
+    try:
+        found = subprocess.run(['git', *args], cwd=root, capture_output=True, text=True, timeout=10)
+    except OSError:
+        return None
+    return found.stdout.strip() or None if found.returncode == 0 else None
+
+
+def run_identity(root):
+    """Self-describing stamp for results.json so a stale evidence dir maps to its commit."""
+    from datetime import datetime, timezone
+    return {'created_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'),
+            'git_sha': _git_field(root, 'rev-parse', 'HEAD'),
+            'branch': _git_field(root, 'rev-parse', '--abbrev-ref', 'HEAD'),
+            'runner': {'python': '%d.%d.%d' % sys.version_info[:3], 'node': shutil.which('node') is not None,
+                       'platform': sys.platform}}
+
+
 def registry():
     checks = [{'name': 'ruff', 'command': ['ruff', 'check', 'tools'], 'requires': 'ruff'}]
     checks += [{'name': n, 'command': ['node', f'tools/{n.removesuffix("_js")}.mjs'], 'requires': 'node'} for n in
@@ -222,7 +241,35 @@ def _run_check(check, root, evidence, ci, started):
     return row
 
 
-def run_checks(checks, root, evidence, ci=False, not_run=(), jobs=1):
+def write_run_index(evidence, status, ordered, not_run, identity):
+    """Small listing record beside results.json so CI artifacts answer 'runs for commit X'."""
+    counts = {'pass': 0, 'fail': 0, 'skip': 0}
+    for row in ordered:
+        counts[row['status']] = counts.get(row['status'], 0) + 1
+    index = {'schema': 1, 'exit_code': status, 'total': len(ordered),
+             'passed': counts.get('pass', 0), 'failed': counts.get('fail', 0),
+             'skipped': counts.get('skip', 0), 'not_run': list(not_run),
+             'failed_checks': [row['name'] for row in ordered if row['status'] == 'fail'],
+             **identity}
+    (Path(evidence) / 'run-index.json').write_text(json.dumps(index, indent=2) + '\n')
+    return index
+
+
+def append_history(ledger, root, evidence, status, ordered, elapsed_seconds, not_run, identity):
+    """One JSONL line per completed run: trends and flake counts without touching receipts."""
+    line = {'schema': 1, 'exit_code': status, 'evidence': Path(evidence).name,
+            'checks': {row['name']: row['status'] for row in ordered},
+            'elapsed': {row['name']: row.get('elapsed_seconds') for row in ordered},
+            'elapsed_seconds': round(elapsed_seconds, 3), 'not_run': list(not_run),
+            **identity}
+    ledger = Path(ledger)
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    with ledger.open('a') as stream:
+        stream.write(json.dumps(line) + '\n')
+    return line
+
+
+def run_checks(checks, root, evidence, ci=False, not_run=(), jobs=1, ledger=None):
     """Bound subprocess concurrency within each audited group; other checks run alone."""
     if type(jobs) is not int or jobs < 1:
         raise ValueError('jobs must be a positive integer')
@@ -233,8 +280,8 @@ def run_checks(checks, root, evidence, ci=False, not_run=(), jobs=1):
     if any(evidence.iterdir()):
         raise ValueError('Evidence directory must be empty; previous logs are preserved')
     started = time.monotonic()
+    identity = run_identity(root)
     rows = {}
-
     def manifest():
         ordered = [rows[c['name']] for c in checks if c['name'] in rows]
         status = 1 if any(r['status'] == 'fail' for r in ordered) else 0
@@ -243,6 +290,7 @@ def run_checks(checks, root, evidence, ci=False, not_run=(), jobs=1):
         temporary.write_text(json.dumps({'schema': 1, 'exit_code': status, 'checks': ordered,
             'jobs': jobs, 'elapsed_seconds': round(time.monotonic() - started, 3),
             'pending': [c['name'] for c in checks if c['name'] not in rows], 'not_run': list(not_run),
+            **identity,
             'claim_limits': ['Only listed checks ran; skips are not passes. Logs record execution, not shader fidelity.']}, indent=2) + '\n')
         temporary.replace(evidence / 'results.json')
         return status
@@ -274,7 +322,12 @@ def run_checks(checks, root, evidence, ci=False, not_run=(), jobs=1):
                     done, pending = wait(pending, return_when=FIRST_COMPLETED)
                     for future in done:
                         record(future.result())
-    return manifest()
+    status = manifest()
+    ordered = [rows[c['name']] for c in checks if c['name'] in rows]
+    write_run_index(evidence, status, ordered, not_run, identity)
+    if ledger is not None:
+        append_history(ledger, root, evidence, status, ordered, time.monotonic() - started, not_run, identity)
+    return status
 
 
 def main():
@@ -321,7 +374,9 @@ def main():
         if not_run and not args.only:
             print(f'{len(not_run)} checks not run (tools/check.sh --full runs every check)', flush=True)
         print(f'Jobs: {args.jobs} (exclusive checks run alone)', flush=True)
-        return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')), not_run=not_run, jobs=args.jobs)
+        ledger = ROOT / '.scratch/check-history.jsonl'
+        return run_checks(checks, ROOT, evidence, ci=bool(os.environ.get('CI')), not_run=not_run, jobs=args.jobs,
+                          ledger=ledger)
     except ValueError as error:
         parser.error(str(error))
 

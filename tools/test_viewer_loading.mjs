@@ -45,6 +45,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  presentation:createPresentation(renderer,scene,{studio:{setEnabled(){},dispose(){}}}),
  prepareMC3Environment:active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:!environmentFailure,status:404,json:async()=>nativeEnvironment})}),
  rememberCar(car){remembered.push(car);},showRecord(){status.textContent=context.selected.code;},updateDescription(){},
+ diagnoses:[],recordDiagnosis(event){context.diagnoses.push(event);},
  async fetchModel(url,signal){
   requests.push(url);
   if(mode==='failure')throw Error('Geometry file unavailable (HTTP 404)');
@@ -72,6 +73,9 @@ assert.equal(elements.record.disabled,true);
 assert.equal(context.colourControls.enabled,false,'failed loads disable preview-colour editing');
 assert.equal(elements.retry.hidden,false);
 assert.match(elements.error.textContent,/COBRA.*HTTP 404/);
+assert.equal(context.diagnoses.at(-1).kind,'load');
+assert.match(context.diagnoses.at(-1).car,/COBRA/);
+assert.match(context.diagnoses.at(-1).detail,/HTTP 404/);
 const failureStatus=status.textContent;context.showRecord=()=>{};
 assert.equal(status.textContent,failureStatus);
 mode='success';await context.loadCar();
@@ -275,5 +279,21 @@ for(const extension of ['.dat','.zip']) {
  assert.equal(elements['native-download'].download,'vp_test-native'+extension);
  assert.equal(elements['native-download'].textContent,'Native files ('+extension+')');
  index.cars.pop();context.dispose();
+}
+// The diagnostics recorder keeps recent viewer failures beside the error text so a pasted
+// report names the car, the failure and the viewer state without opening the console.
+{
+ const slice=html.slice(html.indexOf('const diagnoses=[];'),html.indexOf('}\nscene.add(new THREE.HemisphereLight')+1);
+ assert.notEqual(html.indexOf('function recordDiagnosis('),-1,'page defines a diagnostics recorder');
+ const elements={diagnostics:{textContent:''},error:{textContent:''}};
+ const recorder={document:{querySelector(selector){return elements[selector.slice(1)];}},diagnoses:[],
+  renderer:{getContext(){return{getParameter(){return'MOCK-WEBGL';}};}},selected:null,carSelect:{value:'ford-racing-2/COBRA'}};
+ vm.createContext(recorder);vm.runInContext(slice,recorder);
+ recorder.recordDiagnosis({kind:'load',detail:'Geometry file unavailable (HTTP 404)',car:'ford-racing-2/COBRA'});
+ assert.match(elements.diagnostics.textContent,/COBRA/);
+ assert.match(elements.diagnostics.textContent,/HTTP 404/);
+ recorder.recordDiagnosis({kind:'webgl',detail:'WebGL context lost'});
+ assert.match(elements.diagnostics.textContent,/context lost/);
+ assert(recorder.diagnoses.length<=8,'the recorder keeps a bounded history');
 }
 console.log('PASS test_viewer_loading: actual callback, success, native tire normal guard/binding, 404 clears geometry/download, retry, pending controls, obsolete selection cancellation, resource cleanup');
