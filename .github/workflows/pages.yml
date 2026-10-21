@@ -64,6 +64,13 @@ jobs:
           (site / 'asset-config.mjs').write_text(
               'export const assetBaseURL = ' + json.dumps(os.environ['ASSET_BASE']) + ';\n'
           )
+          (site / 'build-info.mjs').write_text(
+              'export const buildInfo = ' + json.dumps({
+                  'git_sha': os.environ['GITHUB_SHA'],
+                  'working_tree_sha256': None,
+                  'edition': 'pages',
+              }) + ';\n'
+          )
           (site / '.nojekyll').touch()
           size = sum(path.stat().st_size for path in site.rglob('*') if path.is_file())
           if size >= 1_000_000_000:

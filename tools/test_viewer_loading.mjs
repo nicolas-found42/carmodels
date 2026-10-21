@@ -11,6 +11,7 @@ import {requiresNativeTireNormal} from '../dealership/mc3-tire-material.mjs';
 import {prepareMC3Environment,disposeMC3Environment} from '../dealership/mc3-environment.mjs';
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
 import {isNativePackage,resolveCarAlias,createCarSearch} from '../dealership/dealership.mjs';
+import {createDiagnostics,createLoadTimeline} from '../dealership/diagnostics.mjs';
 
 const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
@@ -56,6 +57,9 @@ const context={THREE:{...THREE,TextureLoader:class {
   return raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength);
  },
 };
+const flightRecorder=createDiagnostics({app:'source',storage:()=>null});
+context.__carDiagnostics={...flightRecorder,capture(){}};
+context.__carLoadTimeline=createLoadTimeline(flightRecorder);
 vm.createContext(context);vm.runInContext(shadowHelpers+callback,context);
 elements.car.value='ford-racing-2/GRAN_TORINO';await context.loadCar();
 assert(context.selected,elements.error.textContent);

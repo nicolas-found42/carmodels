@@ -339,7 +339,9 @@
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.js" } }
 </script>
+<script type="module" src="./diagnostics-ui.mjs"></script>
 <script type="module">
+import './diagnostics-ui.mjs';
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { loadCar, disposeCar, fetchCars, gameId, gameLabel, matchesVariant, createCarSearch, isNativePackage, dealershipDownload, resolveCarAlias, sourceCarId, rememberCar } from './dealership.mjs';
@@ -359,6 +361,7 @@ let current = null;
 let carMesh = null;
 const paintDownload=createPaintDownload($('download-model'));
 const colourControls=createColourControls({presetSelect:$('colour-variant'),onChange:session=>{
+  globalThis.__carDiagnostics?.capture('paint.change');
   if(!carMesh?.userData.setPaintSession)return;
   carMesh.userData.setPaintSession(session);
   paintDownload.update(carMesh.userData.paintBuffer,session,current.code+'-dealership.glb');
@@ -516,7 +519,8 @@ $('semantic-form').onsubmit=async event=>{
   const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),35000);
   semanticController = controller;
   try {
-    const response=await fetch('/api/library-filter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,catalog:'dealership'}),signal:controller.signal});
+    const response=await fetch('/api/library-filter',{method:'POST',headers:globalThis.__carDiagnostics?.filterHeaders()??{'Content-Type':'application/json'},body:JSON.stringify({query,catalog:'dealership'}),signal:controller.signal});
+    globalThis.__carDiagnostics?.filterResponse(response);
     if(!response.ok){const failure=await response.json().catch(()=>null);throw Error(failure?.message||'Natural-language filtering needs the library server (python3 tools/serve_library.py). Use the game and variant selectors.');}
     const result=await response.json();if(id!==semanticId)return;
     const game=result.filters?.game, variant=result.filters?.variant??'';
@@ -628,6 +632,7 @@ resize();
 /* ---------- selection ---------- */
 async function select(c) {
   const id=++selectionId;selectionController?.abort();selectionController=new AbortController();
+  const attempt=globalThis.__carLoadTimeline?.begin(sourceCarId(c),selectionController.signal);
   colourControls.setEnabled(false);
   paintDownload.clear();
   current = c;
@@ -684,15 +689,16 @@ async function select(c) {
   if(isNativePackage(c)) {
     $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';
     $('loading').textContent='3D preview unavailable. The native vehicle package is available to download.';
-    applyFilters();return;
+    attempt?.publish({preview:false});globalThis.__carDiagnostics?.capture('load.visible');applyFilters();return;
   }
   $('loading').hidden=false;$('loading').classList.remove('error');$('loading').style.opacity='1';$('loading').textContent='Loading '+c.name+'…';
   try {
-    if(gameId(c)==='midnight-club-3-remix')await prepareMC3Environment(renderer);
+    if(gameId(c)==='midnight-club-3-remix'){attempt?.phase('environment');await prepareMC3Environment(renderer);}
     if(id!==selectionId)return;
-    const model=await loadCar(c,{signal:selectionController.signal,enhance:$('gt4-enhance').checked});
+    const model=await loadCar(c,{signal:selectionController.signal,enhance:$('gt4-enhance').checked,attempt});
     await paletteReady;
-    if(id!==selectionId){disposeCar(model);return;}
+    if(id!==selectionId){disposeCar(model);attempt?.publish();return;}
+    const publish=()=>{
     carMesh=model;scene.add(carMesh);showColourVariants(carMesh);colourControls.setEnabled(true);
     const enhancement=carMesh.userData.gt4Enhancement;
     if(enhancement) {
@@ -705,7 +711,11 @@ async function select(c) {
     if(materialRepair){$('model-limits').textContent+=' '+materialRepair.claimLimits.join(' ');if(materialRepair.glass.length)$('gt4-enhance-status').textContent+=' · neutral glass fallback';}
     colourControls.bind({model:carMesh.userData.paintDoc,game:gameId(c),carId:c.code,colors:gamePalette,error:paletteError});
     setView('reset');$('loading').hidden=true;
+    };
+    if(attempt){if(!attempt.publish({sha256:c.model.source?.sha256,textures:model.userData.textures?.length},publish)){disposeCar(model);return;}}else publish();
+    globalThis.__carDiagnostics?.capture('load.visible');
   } catch(error){
+    attempt?.fail(error);globalThis.__carDiagnostics?.capture('load.failed');
     if(id!==selectionId)return;
     if(carMesh){scene.remove(carMesh);disposeCar(carMesh);carMesh=null;}
     paintDownload.clear();colourControls.setEnabled(false);showColourVariants();$('download-model').removeAttribute('href');
@@ -825,6 +835,16 @@ function tick() {
   renderer.render(scene, camera);
 }
 tick();
+globalThis.__carDiagnostics?.attachViewer({renderer,camera,controls,getState:()=>({
+  game:current&&gameId(current),car:current&&sourceCarId(current),working_sha256:current?.model.source?.sha256,
+  variant:$('colour-variant').value,paint:colourControls.session?.state,
+  controls:{enhance:$('gt4-enhance').checked,auto_rotate:$('auto-rotate').checked,game:$('game-filter').value,variant:$('variant-filter').value},
+}),restoreState:async saved=>{
+  const entry=CARS.find(car=>sourceCarId(car)===saved.car);if(!entry)throw Error('Recorded dealership car is absent from this catalog.');
+  $('gt4-enhance').checked=saved.controls?.enhance!==false;setRotation(false);await select(entry);
+  if(!carMesh)throw Error('Recorded working model could not load.');
+  if(saved.paint)colourControls.restore(saved.paint);
+}});
 loadCorpus();
 </script>
 </body>

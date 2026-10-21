@@ -426,11 +426,22 @@ class Tests(unittest.TestCase):
             def system_one(self, **kwargs):
                 raise RuntimeError("SECRET AUTHORIZATION")
 
-        receipt = interpret("nocturnal GT machines", CARS, Broken())
+        events = []
+        token = library_filter.diagnostic_observer.set(
+            lambda kind, **fields: events.append({"kind": kind, **fields})
+        )
+        try:
+            receipt = interpret("nocturnal GT machines", CARS, Broken())
+        finally:
+            library_filter.diagnostic_observer.reset(token)
         self.assertEqual(
             (receipt["status"], receipt["reason"]), ("error", "provider_error")
         )
         self.assertNotIn("SECRET", str(receipt))
+        self.assertNotIn("SECRET", str(events))
+        self.assertEqual(events[0]["phase"], "provider")
+        self.assertEqual(events[0]["error_type"], "RuntimeError")
+        self.assertEqual(events[0]["frames"][-1]["function"], "system_one")
 
     def test_score_confidence_and_rounding(self):
         raw = answer()

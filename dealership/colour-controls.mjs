@@ -82,6 +82,7 @@ export function createColourControls({root=document,scope='dealership',onChange=
       onChange(session);render();return session;
     },
     setPreset(index){if(enabled&&session){session.setPreset(index);changed();}},
+    restore(state){if(enabled&&session){session.restore(state);if(presetSelect)presetSelect.value=session.state.preset===null?'':String(session.state.preset);changed();}},
     setEnabled(value){enabled=!!value;if(!enabled){session=null;limits.textContent='';}render();}
   };
   controls.setEnabled(false);return controls;
