@@ -82,6 +82,10 @@ class CheckRunnerTests(unittest.TestCase):
             self.assertIn("runner", receipt)
             self.assertIn("python", receipt["runner"])
             self.assertIn("platform", receipt["runner"])
+            self.assertIn("node_version", receipt["runner"])
+            self.assertRegex(receipt["working_tree_sha256"], r"^[a-f0-9]{64}$")
+            self.assertIn("run_id", receipt)
+            self.assertIn("catalog_sha256", receipt)
 
     def test_exclusive_checks_are_barriers_in_both_directions(self):
         wait = (
@@ -275,6 +279,7 @@ class CheckRunnerTests(unittest.TestCase):
                 self.assertIn("created_utc", entry)
                 self.assertIn("git_sha", entry)
                 self.assertIn("elapsed_seconds", entry)
+                self.assertTrue(Path(entry["evidence"]).is_absolute())
             self.assertNotEqual(first["evidence"], second["evidence"])
 
     def test_evidence_dir_carries_small_run_index_for_ci_listing(self):
@@ -467,6 +472,7 @@ class CheckRunnerTests(unittest.TestCase):
                 "test_under_car_shadow",
                 "test_viewer_materials",
                 "test_model_load",
+                "test_diagnostics",
                 "test_viewer_loading",
                 "test_dealership",
                 "test_editable_glb",

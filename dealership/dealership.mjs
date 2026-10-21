@@ -207,6 +207,7 @@ export async function fetchCars(url, {timeoutMs = 15000, fetchImpl = fetch} = {}
   try {
     const response = await fetchImpl(url, {signal: controller.signal});
     if (!response.ok) throw Error(`Vehicle data unavailable (HTTP ${response.status}).`);
+    await globalThis.__carDiagnostics?.catalog(response);
     return validateCars(await response.json());
   } catch (error) {
     if (controller.signal.aborted) throw Error('Vehicle data timed out. Retry when the local server responds.');

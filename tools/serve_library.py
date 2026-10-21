@@ -7,9 +7,19 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import threading
+import time
+import uuid
 from urllib.parse import urlparse
 
-from library_filter import live_interpret, model_status
+from library_filter import diagnostic_observer, live_interpret, model_status
+from diagnostics import (
+    DEFAULT_STORE,
+    MAX_BUNDLE,
+    SESSION_ID,
+    DiagnosticStore,
+    failure_details,
+    git_identity,
+)
 
 ROOT = Path(__file__).resolve().parents[1] / "dealership"
 STARTUP = {
@@ -22,9 +32,56 @@ STARTUP = {
 class LibraryHandler(SimpleHTTPRequestHandler):
     judgment = staticmethod(live_interpret)
     api_lock = threading.Lock()
+    diagnostic_store = None
+    build_identity = None
+
+    def handle_one_request(self):
+        self.request_id = str(uuid.uuid4())
+        self.request_started = time.monotonic()
+        return super().handle_one_request()
+
+    def event(self, kind, **fields):
+        if self.diagnostic_store is not None:
+            session_id = getattr(self, "headers", {}).get("X-Car-Session", "")
+            self.diagnostic_store.log(
+                kind,
+                request_id=self.request_id,
+                session_id=session_id if SESSION_ID.fullmatch(session_id) else None,
+                **fields,
+            )
+
+    def log_request(self, code="-", size="-"):
+        self.event(
+            "http.response",
+            method=self.command,
+            route=urlparse(self.path).path
+            if self.path.startswith("/api/")
+            else "static",
+            status=code,
+            elapsed_ms=round((time.monotonic() - self.request_started) * 1000, 3),
+        )
+        # Never put request query strings in stderr either.
+        self.log_message(
+            "%s %s %s",
+            self.command,
+            "api" if self.path.startswith("/api/") else "static",
+            code,
+        )
+
+    def local_request(self):
+        allowed = {
+            f"localhost:{self.server.server_port}",
+            f"127.0.0.1:{self.server.server_port}",
+        }
+        host = self.headers.get("Host")
+        return host in allowed and self.headers.get("Origin") in (
+            None,
+            "http://" + host,
+        )
 
     def end_headers(self):
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Request-ID", self.request_id)
         super().end_headers()
 
     def reply(self, status, payload):
@@ -36,6 +93,9 @@ class LibraryHandler(SimpleHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_POST(self):
+        if self.path == "/api/diagnostics":
+            self.receive_incident()
+            return
         if self.path != "/api/library-filter":
             self.reply(404, {"status": "error", "message": "Unknown endpoint."})
             return
@@ -96,6 +156,7 @@ class LibraryHandler(SimpleHTTPRequestHandler):
             )
             return
         status = 200
+        token = diagnostic_observer.set(self.event)
         try:
             path = (
                 "public/models.json"
@@ -129,19 +190,80 @@ class LibraryHandler(SimpleHTTPRequestHandler):
                 receipt.get("decided_by") or "nothing",
                 f" ({receipt['reason']})" if receipt.get("reason") else "",
             )
-        except Exception:
+            self.event(
+                "filter.result",
+                phase="complete",
+                status=receipt.get("status"),
+                reason=receipt.get("reason"),
+                decided_by=receipt.get("decided_by"),
+                latency_seconds=receipt.get("latency_seconds"),
+                usage=receipt.get("usage"),
+                model=receipt.get("model"),
+                request_sha256=receipt.get("request_sha256"),
+            )
+        except Exception as error:
+            self.event("filter.failure", phase="handler", **failure_details(error))
             status = 503
             response = {
                 "status": "error",
                 "message": "The model catalog is unavailable.",
             }
         finally:
+            diagnostic_observer.reset(token)
             self.api_lock.release()
         # The filter work is complete before a client can receive its response
         # and send the next request. Slow response writes must not hold the slot.
         self.reply(status, response)
 
+    def receive_incident(self):
+        if not self.local_request() or self.headers.get("X-Car-Diagnostics") != "1":
+            self.reply(
+                403, {"status": "error", "message": "Use the local diagnostic client."}
+            )
+            return
+        if self.diagnostic_store is None:
+            self.reply(
+                503, {"status": "error", "message": "Diagnostic store unavailable."}
+            )
+            return
+        self.connection.settimeout(5)
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if (
+                not 0 < length <= MAX_BUNDLE
+                or self.headers.get("Content-Type") != "application/json"
+            ):
+                raise ValueError("Invalid incident request")
+            value = json.loads(self.rfile.read(length))
+            session_id = self.diagnostic_store.put(value)
+            self.event("incident.stored", incident_id=session_id)
+            self.reply(201, {"schema": 1, "session_id": session_id})
+        except (ValueError, UnicodeError, OSError):
+            self.reply(
+                400, {"status": "error", "message": "Invalid diagnostic bundle."}
+            )
+
     def do_GET(self):
+        if urlparse(self.path).path.startswith("/api/diagnostics"):
+            self.read_incident()
+            return
+        if (
+            urlparse(self.path).path == "/build-info.mjs"
+            and self.build_identity is not None
+        ):
+            # Source edits take effect without restarting the local server.
+            self.server.diagnostic_identity = git_identity()
+            data = (
+                "export const buildInfo = "
+                + json.dumps(self.server.diagnostic_identity)
+                + ";\n"
+            ).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/javascript")
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+            return
         if urlparse(self.path).path == "/":
             self.send_response(302)
             self.send_header("Location", "/dealership.html")
@@ -149,11 +271,45 @@ class LibraryHandler(SimpleHTTPRequestHandler):
             return
         super().do_GET()
 
+    def read_incident(self):
+        if not self.local_request():
+            self.reply(
+                403, {"status": "error", "message": "Use the local library address."}
+            )
+            return
+        if self.diagnostic_store is None:
+            self.reply(503, {"status": "error"})
+            return
+        path = urlparse(self.path).path
+        if path == "/api/diagnostics/capabilities":
+            self.reply(
+                200,
+                {
+                    "schema": 1,
+                    "identity": getattr(
+                        self.server, "diagnostic_identity", self.build_identity
+                    ),
+                },
+            )
+        elif path == "/api/diagnostics":
+            self.reply(200, {"schema": 1, "incidents": self.diagnostic_store.list()})
+        else:
+            try:
+                self.reply(
+                    200,
+                    self.diagnostic_store.get(path.removeprefix("/api/diagnostics/")),
+                )
+            except (ValueError, FileNotFoundError):
+                self.reply(404, {"status": "error"})
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8081)
+    parser.add_argument("--diagnostics-dir", type=Path, default=DEFAULT_STORE)
     args = parser.parse_args()
+    LibraryHandler.diagnostic_store = DiagnosticStore(args.diagnostics_dir)
+    LibraryHandler.build_identity = git_identity()
     with ThreadingHTTPServer(
         ("127.0.0.1", args.port), functools.partial(LibraryHandler, directory=str(ROOT))
     ) as server:
@@ -163,4 +319,7 @@ if __name__ == "__main__":
             + STARTUP[model_status()],
             flush=True,
         )
-        server.serve_forever()
+        try:
+            server.serve_forever()
+        finally:
+            LibraryHandler.diagnostic_store.close()

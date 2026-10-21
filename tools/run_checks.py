@@ -1,6 +1,7 @@
 """Named offline checks with retained per-command logs and a machine-readable manifest."""
 
 import argparse
+import hashlib
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from itertools import groupby
 import json
@@ -11,6 +12,9 @@ import subprocess
 import sys
 import tempfile
 import time
+import uuid
+
+from diagnostics import git_identity
 
 ROOT = Path(__file__).resolve().parents[1]
 MIN_PYTHON = (
@@ -27,6 +31,8 @@ SHOWCASE = {
     "test_under_car_shadow",
     "test_viewer_materials",
     "test_model_load",
+    "test_diagnostics",
+    "test_diagnostics_store",
     "test_viewer_loading",
     "test_dealership",
     "test_editable_glb",
@@ -427,7 +433,7 @@ def _git_field(root, *args):
         found = subprocess.run(
             ["git", *args], cwd=root, capture_output=True, text=True, timeout=10
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     return found.stdout.strip() or None if found.returncode == 0 else None
 
@@ -436,13 +442,37 @@ def run_identity(root):
     """Self-describing stamp for results.json so a stale evidence dir maps to its commit."""
     from datetime import datetime, timezone
 
+    try:
+        node_version = (
+            subprocess.run(
+                ["node", "--version"], capture_output=True, text=True, timeout=10
+            ).stdout.strip()
+            or None
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        node_version = None
+    identity = git_identity(root)
+    catalogs = {}
+    for name in (
+        "dealership/public/models.json",
+        "dealership/public/dealership/cars.json",
+    ):
+        path = Path(root) / name
+        if path.is_file():
+            catalogs[name] = hashlib.sha256(path.read_bytes()).hexdigest()
     return {
+        "run_id": str(uuid.uuid4()),
         "created_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S"),
         "git_sha": _git_field(root, "rev-parse", "HEAD"),
         "branch": _git_field(root, "rev-parse", "--abbrev-ref", "HEAD"),
+        "working_tree_sha256": identity["working_tree_sha256"],
+        "dirty": identity["dirty"],
+        "catalog_sha256": catalogs,
+        "incident_id": os.environ.get("CARMODELS_INCIDENT_ID"),
         "runner": {
             "python": "%d.%d.%d" % sys.version_info[:3],
             "node": shutil.which("node") is not None,
+            "node_version": node_version,
             "platform": sys.platform,
         },
     }
@@ -463,6 +493,7 @@ def registry():
             "test_under_car_shadow",
             "test_viewer_materials",
             "test_model_load",
+            "test_diagnostics",
             "test_viewer_loading",
             "test_dealership",
             "test_editable_glb",
@@ -524,6 +555,7 @@ def registry():
         "test_model_catalog",
         "test_model_png",
         "test_run_checks",
+        "test_diagnostics_store",
         "test_review_payload",
         "test_audit_stranded_worktrees",
         "test_check_advice",
@@ -1045,7 +1077,7 @@ def append_history(
     line = {
         "schema": 1,
         "exit_code": status,
-        "evidence": Path(evidence).name,
+        "evidence": str(Path(evidence).resolve()),
         "checks": {row["name"]: row["status"] for row in ordered},
         "elapsed": {row["name"]: row.get("elapsed_seconds") for row in ordered},
         "elapsed_seconds": round(elapsed_seconds, 3),
