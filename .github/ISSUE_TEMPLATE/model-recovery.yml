@@ -1,0 +1,79 @@
+name: Model or recovery request
+description: Request a missing car, a new game, native metadata, or a recovery investigation.
+title: "[Recovery]: "
+labels: ["needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the [library and supported games](https://github.com/nicolas-found42/carmodels/blob/main/README.md),
+        [research open items](https://github.com/nicolas-found42/carmodels/blob/main/research/README.md),
+        and [existing issues](https://github.com/nicolas-found42/carmodels/issues) first.
+        Use **Bug report** when an existing model or tool behaves incorrectly.
+
+        Unknown details are welcome: separate observations, references, and hypotheses.
+        Disc images, executable dumps, and other private inputs stay local; do not upload them.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What are you requesting?
+      options:
+        - Missing car or variant from a supported game
+        - Recovery from a new game
+        - Native names / specifications / paints / metadata
+        - Investigation of an unresolved format or fidelity question
+    validations:
+      required: true
+
+  - type: textarea
+    id: target
+    attributes:
+      label: Game and target asset
+      description: Name the game, platform, edition/region or serial if known, and car/variant/code or resource. For a new game, identify the exact release you mean. Write Unknown for details you do not have.
+      placeholder: |
+        Game / platform / release:
+        Car / variant / code or resource:
+        Existing catalog entry or repo path, if any:
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Desired result and why it matters
+      description: Describe what should become available and to whom. Specify a browsable preview, editable GLB, native download, metadata, or research result. For rendering work, distinguish a static preview from original game-render fidelity.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What have you found or checked?
+      description: Link public references, a relevant per-game README, research notes/receipts, or a genuine in-game screenshot. Identify which claim each supports and what remains unknown. If you have no evidence yet, say so; a visual resemblance alone does not establish a native identity.
+    validations:
+      required: true
+
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Input availability and investigation so far (optional)
+      description: State whether the relevant inputs are available locally, without uploading or linking private files. Include safe paths/hashes, commands tried, and pass/fail/skip results if known. Do not guess missing hashes or runtime results.
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Success criteria and limits
+      description: Give a bounded outcome that can be checked and anything it would not establish. An unresolved research question may be answered by a documented limitation; do not require a claim of complete game fidelity.
+      placeholder: |
+        - [ ] The requested car is identifiable by game plus native code in the source catalog.
+        - [ ] The car loads in the source inspector and its GLB can be downloaded.
+        Out of scope: animated effects and original game lighting.
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related work and contribution (optional)
+      description: Link related issues or prior investigations and say what you could help check. Tool contributors can follow CONTRIBUTING.md for input provisioning, check tiers, and tamper-control evidence.
