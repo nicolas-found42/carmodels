@@ -24,7 +24,7 @@
 <script type="module">
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
-import {fetchModel,readGLB} from './model-load.mjs';
+import {fetchModel,readGLB,assetURL} from './model-load.mjs';
 import {createMaterial,applyMaterial,isRecoveredUnderShadow} from './materials.mjs';
 import {createPresentation,ENHANCED_PRESENTATION} from './enhanced-presentation.mjs';
 import {parseEditableGLB} from './editable-glb.mjs';
@@ -82,13 +82,13 @@ async function loadCar(){
  document.querySelector('#dealership-link').href='dealership.html?'+new URLSearchParams({game:entry.game,car:entry.id});
  const download=document.querySelector('#download');
  const nativeLink=document.querySelector('#native-download'),nativePackage=entry.native_package;
- document.querySelector('#native-download-wrap').hidden=!nativePackage;if(nativePackage){const extension=nativePackage.file.slice(nativePackage.file.lastIndexOf('.'));nativeLink.href=encodeURI('public/'+nativePackage.file);nativeLink.download=entry.code.replaceAll('/','_')+'-native'+extension;nativeLink.textContent=`Native files (${extension})`;}else nativeLink.removeAttribute('href');
+ document.querySelector('#native-download-wrap').hidden=!nativePackage;if(nativePackage){const extension=nativePackage.file.slice(nativePackage.file.lastIndexOf('.'));nativeLink.href=assetURL(encodeURI('public/'+nativePackage.file));nativeLink.download=entry.code.replaceAll('/','_')+'-native'+extension;nativeLink.textContent=`Native files (${extension})`;}else nativeLink.removeAttribute('href');
  const nativeExtension=isNativePackage(entry)?entry.file.slice(entry.file.lastIndexOf('.')):'';
  download.textContent=isNativePackage(entry)?`Download native package (${nativeExtension})`:'Download source model (.glb)';
  download.title=isNativePackage(entry)?'Recovered native vehicle package; shared external resources are separate.':'Source GLB with exported scenes and textures. Selected paint is the default appearance; native variants remain selectable.';
  if(isNativePackage(entry)) {
    recordSelect.replaceChildren();document.querySelector('#variant').replaceChildren();
-   download.href=encodeURI('public/'+entry.file);download.download=entry.code+nativeExtension;selected=entry;
+   download.href=assetURL(encodeURI('public/'+entry.file));download.download=entry.code+nativeExtension;selected=entry;
    setLoading(false);updateDescription(entry);
    status.textContent=`${entry.code} · ${entry.native_members} native files · 3D preview unavailable. Download the native vehicle package above.`;
    return;
@@ -126,7 +126,7 @@ async function loadCar(){
  state.shadow=shadow?{material:doc.materials[shadow.primitive.material].name,record:shadowRecord,triangles:shadow.primitive.indices===undefined?0:doc.accessors[shadow.primitive.indices].count/3,referencedByDefaultScene:shadowReferenced,view:recordSelect.value}:null;
  if(shadow&&!shadowReferenced){const overlay=new THREE.Group();overlay.add(meshFor(shadow.primitive));overlay.userData.shadow=true;overlay.userData.overlay=recordSelect.value;overlay.userData.record='under-car shadow';overlay.visible=false;if(shadow.node.matrix){overlay.matrix.fromArray(shadow.node.matrix);overlay.matrixAutoUpdate=false;}else{overlay.position.fromArray(shadow.node.translation||[0,0,0]);overlay.quaternion.fromArray(shadow.node.rotation||[0,0,0,1]);overlay.scale.fromArray(shadow.node.scale||[1,1,1]);}scene.add(overlay);state.groups.push(overlay);}
  const variantSelect=document.querySelector('#variant');variantSelect.replaceChildren();const baseOption=document.createElement('option');baseOption.value='';baseOption.textContent='Original / default colour';variantSelect.append(baseOption);for(const [i,v] of (doc.extensions?.KHR_materials_variants?.variants||[]).entries()){const o=document.createElement('option');o.value=String(i);o.textContent=v.name;variantSelect.append(o);}variantSelect.disabled=variantSelect.options.length===1;
- document.querySelector('#download').href=encodeURI('public/'+entry.file);setLoading(false);
+ document.querySelector('#download').href=assetURL(encodeURI('public/'+entry.file));setLoading(false);
  colourControls.bind({model:doc,game:entry.game,carId:entry.id,colors:gamePalette,error:paletteError});
  showRecord();updateDescription(entry);
  }catch(e){disposeState(state);if(id===requestId){paintDownload.clear();loaded=null;selected=null;setLoading(false);recordDiagnosis({kind:'load',car:carSelect.value,detail:e.message});document.querySelector('#download').removeAttribute('href');document.querySelector('#retry').hidden=false;status.textContent='This model could not be loaded.';document.querySelector('#error').textContent='The geometry file for '+carSelect.value.replaceAll('_',' ')+' did not load ('+e.message+'). Confirm the files exist under the game folder in public/, or try another car above.';}}

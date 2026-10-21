@@ -24,6 +24,8 @@ body{margin:0;background:#151a22;color:#eef2f8;font:15px system-ui}header{paddin
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {loadEditableGLB} from './editable-glb.mjs';
+import {assetURL} from './model-load.mjs';
+for(const link of document.querySelectorAll('a[download]'))link.href=assetURL(link.getAttribute('href'));
 const status=document.querySelector('#status'),stage=document.querySelector('#stage');
 try {
  const responses=await Promise.all(['receipt.json','receipt-8x.json','receipt-133120.json'].map(name=>fetch(`./public/gran-turismo-enhanced/${name}`)));

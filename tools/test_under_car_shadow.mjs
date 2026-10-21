@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import zlib from 'node:zlib';
 import {fileURLToPath} from 'node:url';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {readGLB} from '../dealership/model-load.mjs';
+import {readGLB,assetURL} from '../dealership/model-load.mjs';
 import {applyMaterial,createMaterial,isRecoveredUnderShadow} from '../dealership/materials.mjs';
 import {createPresentation} from '../dealership/enhanced-presentation.mjs';
 import {createContactShadow,CONTACT_SHADOW} from '../dealership/contact-shadow.mjs';
@@ -93,7 +93,7 @@ function loadedByTheInspector(code,file,bytes,records) {
   gamePalette:[],paletteError:'',paletteReady:Promise.resolve(),loaded:null,selected:null,requestId:0,pendingRequest:null,
   AbortController,Blob,URLSearchParams,
   URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
-  readGLB,parseEditableGLB,loadNativeVehicleResources:async()=>null,bindNativeVehicleResources(){},
+  assetURL,readGLB,parseEditableGLB,loadNativeVehicleResources:async()=>null,bindNativeVehicleResources(){},
   createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,
   correctGT4Materials:async()=>{throw Error('not a GT4 car');},renderer:{},prepareMC3Environment:async()=>{},
   rememberCar(){},updateDescription(){},fetch:async()=>({ok:true,json:async()=>[]}),

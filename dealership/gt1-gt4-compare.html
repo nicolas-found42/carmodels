@@ -26,6 +26,7 @@ body{margin:0;background:#151a22;color:#eef2f8;font:15px system-ui}header{paddin
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {loadEditableGLB} from './editable-glb.mjs';
+import {assetURL} from './model-load.mjs';
 const $=id=>document.getElementById(id),status=$('status'),stage=$('stage');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setScissorTest(true);stage.prepend(renderer.domElement);
 const scenes=[0,1].map(()=>{const s=new THREE.Scene();s.background=new THREE.Color('#151a22');s.add(new THREE.HemisphereLight(0xe9f2ff,0x555263,2));const light=new THREE.DirectionalLight(0xffffff,2.4);light.position.set(3,5,4);s.add(light);return s;});
@@ -55,7 +56,7 @@ async function load(){const token=++serial;request?.abort();request=new AbortCon
  const sizes=groups.map(g=>new THREE.Box3().setFromObject(g).getSize(new THREE.Vector3()));radius=Math.max(...sizes.map(s=>s.length()/2));controls.target.set(0,Math.max(...sizes.map(s=>s.y))/2,0);controls.minDistance=radius*.65;controls.maxDistance=radius*8;
  $('label1').textContent=`GT1 · ${left.name}`;$('label4').textContent=`${right.editionLabel??'GT4'} · ${right.name}`;
  $('download4').textContent=right.editionLabel?'Download counterpart study GLB':'Download GT4 GLB';
- [left,right].forEach((s,i)=>{const a=$(i===0?'download1':'download4');a.href=s.file;a.hidden=false;});metrics(left,right);wire();view('three');status.textContent=`Ready · GT1 ${left.triangles.toLocaleString()} triangles · GT4 ${right.triangles.toLocaleString()} triangles. Same camera and exported metre scale.`;
+ [left,right].forEach((s,i)=>{const a=$(i===0?'download1':'download4');a.href=assetURL(s.file);a.hidden=false;});metrics(left,right);wire();view('three');status.textContent=`Ready · GT1 ${left.triangles.toLocaleString()} triangles · GT4 ${right.triangles.toLocaleString()} triangles. Same camera and exported metre scale.`;
 }
 function choosePair(){const pair=data.pairs[Number($('pair').value)];$('edition').replaceChildren();pair.left.forEach((s,i)=>$('edition').add(new Option(s.name,String(i))));$('edition').value=String(pair.left.length-1);$('edition').disabled=pair.left.length===1;load().catch(e=>{status.textContent=`Comparison failed: ${e.message}`;});}
 controls.addEventListener('change',draw);window.addEventListener('resize',draw);$('wire').addEventListener('change',wire);document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));

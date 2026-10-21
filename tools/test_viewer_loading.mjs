@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import * as THREE from '../dealership/vendor/three.module.js';
-import {readGLB} from '../dealership/model-load.mjs';
+import {readGLB,assetURL} from '../dealership/model-load.mjs';
 import {createMaterial,isRecoveredUnderShadow} from '../dealership/materials.mjs';
 import {createPresentation} from '../dealership/enhanced-presentation.mjs';
 import {parseEditableGLB} from '../dealership/editable-glb.mjs';
@@ -40,7 +40,7 @@ const context={THREE:{...THREE,TextureLoader:class {
  paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
  URL:{createObjectURL(){const id='blob:'+urls.size;urls.add(id);return id;},revokeObjectURL(id){urls.delete(id);}},
- readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,
+ assetURL,readGLB,parseEditableGLB,loadNativeVehicleResources,bindNativeVehicleResources,createMaterial,isRecoveredUnderShadow,requiresNativeTireNormal,geometryOptions,defaultGeometryValue,isNativePackage,renderer,
  // The page's presentation starts in Original; the studio is stubbed so no WebGL is needed here.
  presentation:createPresentation(renderer,scene,{studio:{setEnabled(){},dispose(){}}}),
  prepareMC3Environment:active=>prepareMC3Environment(active,{fetchImpl:async()=>({ok:!environmentFailure,status:404,json:async()=>nativeEnvironment})}),

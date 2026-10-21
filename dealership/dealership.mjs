@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {loadEditableGLB} from './editable-glb.mjs';
+import {assetURL} from './model-load.mjs';
 import {normaliseColourTint} from './materials.mjs';
 
 export const gameId = c => c.game || 'ford-racing-2';
@@ -32,8 +33,8 @@ export function resolveCarAlias(cars, requested, key='id') {
     (key==='id'?car.aliases:car.sourceAliases)?.includes(requested));
 }
 export function dealershipDownload(c) {
-  return isNativePackage(c) ? {href:'./'+c.model.source.package, filename:c.code+'-dealership.dat', label:'Download native package (.dat)'} :
-    {href:`./dealership/models/${c.code}.glb`, filename:c.code+'-dealership.glb', label:'Download dealership model (.glb)'};
+  return isNativePackage(c) ? {href:assetURL('./'+c.model.source.package), filename:c.code+'-dealership.dat', label:'Download native package (.dat)'} :
+    {href:assetURL(`./dealership/models/${c.code}.glb`), filename:c.code+'-dealership.glb', label:'Download dealership model (.glb)'};
 }
 export function matchesVariant(c, variant) {
   return !variant || (variant==='arcade' ? c.sourceCollection==='arcade' : c.sourceVariant===variant);

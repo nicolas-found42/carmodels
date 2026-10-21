@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {createMaterial} from '../dealership/materials.mjs';
-import {readGLB} from '../dealership/model-load.mjs';
+import {readGLB,assetURL} from '../dealership/model-load.mjs';
 import {createPresentation,isTexturedOpaque,presentationMode,ENHANCED_PRESENTATION} from '../dealership/enhanced-presentation.mjs';
 import {createContactShadow,CONTACT_SHADOW} from '../dealership/contact-shadow.mjs';
 
@@ -432,6 +432,6 @@ assert.match(pageSource,/function underCarShadowFloor\(\)\{[^\n]*mesh\.userData\
 assert.match(pageSource,/presentation\.follow\(null\)/,'and they are cleared when the preview is disposed');
 assert.match(pageSource,/presentation\.prepare\(\);renderer\.render\(scene,camera\)/,'the shadow pass runs before the page\'s own render, beside the other per-frame hooks');
 assert.match(pageSource,/title="Original renders the recovered materials[^"]*soft contact shadow under the car/,'the control says what Enhanced adds');
-assert.match(pageSource,/download\.href=encodeURI\('public\/'\+entry\.file\)/,'the download still serves the unmodified source file');
+assert.match(pageSource,/download\.href=assetURL\(encodeURI\('public\/'\+entry\.file\)\)/,'the download still serves the unmodified source file');
 assert.doesNotMatch(pageSource,/presentation[^\n]{0,80}buffer[^\n]{0,40}=[^\n]{0,40}(gloss|enhanc|finish)/i,'the presentation never rewrites the download buffer');
 console.log('PASS test_enhanced_presentation: original default and exact restore, enhanced environment and neutral mapping, label, mode and material-type controls, clearcoat only on textured opaque coverage, real Gran Torino and Ford GT materials, ground and contact shadow built, placed and drawn in enhanced only and following car, geometry, empty tree and dispose, the shadow plane\'s floor taken from the lower of the framing box and the drawn under-car shadow quad, blur tap structure and texture-pixel reach of the generated offsets, depth material released on dispose, asset-free in-repo studio and shadow reused, unchanged download path');

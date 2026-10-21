@@ -1,10 +1,19 @@
 # carmodels
 
+[**Open the live car showroom →**](https://nicolas-found42.github.io/carmodels/)
+Browse the cars, choose a game, and drag to look around each model. No installation or GitHub knowledge needed.
+
 1,435 recovered cars from six racing games — browsable as an editable dealership, inspectable as source geometry, and reproducible from disc by pinned, self-checking verifiers. Everything runs offline: models, three.js r182, and catalogs are committed, no npm install, no CDN.
 
 ![Dealership showroom](docs/screenshots/dealership.png)
 
 ## The apps
+
+The [live showroom](https://nicolas-found42.github.io/carmodels/) runs on GitHub Pages.
+The app and catalogs are hosted on Pages; larger models and native downloads load from the same
+public GitHub commit. Updates to `main` publish automatically. Name search, game/variant filters,
+camera controls and model downloads work on the live site; the optional natural-language search
+below requires a local library server.
 
 From the repository root:
 
