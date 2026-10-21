@@ -1,67 +1,55 @@
 name: Bug report
-description: A defect with a reproducible path, real evidence, and testable acceptance criteria.
+description: Report a problem with the showroom, a recovered car, a download, or the tools.
 title: "[Bug]: "
 labels: ["needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Fill in every field. If a field does not apply, write **Not applicable — reason**.
-        If you could not determine it, write **Unknown — reason and how to obtain it**.
-        Never invent a fact to fill a field.
+        Search [existing issues](https://github.com/nicolas-found42/carmodels/issues) first.
+        Describe what you observed; **Unknown** is fine when you cannot determine a detail.
+        You do not need to run the recovery tools to report a showroom problem.
 
-        For a visual defect, attach a **genuine** screenshot in Evidence — never a mockup or a
-        re-rendered illustration of what you think the failure looked like.
+        Keep disc images, executable dumps, private inputs, and API keys out of the issue.
+        Attach only the relevant screenshots or small, redacted logs.
 
-  - type: textarea
-    id: summary
+  - type: dropdown
+    id: area
     attributes:
-      label: Summary
-      description: Affected component, trigger, and observable outcome, in one or two sentences.
-      placeholder: |
-        e.g. tools/recover_car_ptg.py emits a 4-bit car texture whose alpha plane is fully
-        opaque for LIGHTNING_SVT, where the disc's own plane is not.
+      label: Where does the problem happen?
+      options:
+        - Dealership / live showroom
+        - Recovered source inspector
+        - GT comparison / ledger / refinement pages
+        - Model or native download / Blender editing
+        - Local library search
+        - Extraction / conversion / verification tools
+        - Documentation / other / unsure
     validations:
       required: true
 
-  - type: textarea
-    id: impact
+  - type: input
+    id: location
     attributes:
-      label: Impact
-      description: |
-        Task blocked or degraded, user harm, severity and proposed priority with reasons,
-        occurrence evidence, any workaround, and whether this is a regression.
-      placeholder: |
-        Blocks dealership/public/ford-racing-2 rebuild for this car; downstream GLB shows wrong
-        alpha. Severity: minor visual. No workaround. Not a regression — never correct.
+      label: Page URL or command
+      description: Copy the affected page URL or exact command. For a local page, include the HTML filename.
+      placeholder: https://nicolas-found42.github.io/carmodels/dealership.html
     validations:
       required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Game, car, and selected variant (if applicable)
+      description: Include the game plus car name/code, paint preset, and Original/Enhanced setting if relevant. A code alone may identify cars in different games.
+      placeholder: Gran Turismo 4 — car name/code — factory preset — Enhanced GT4 edition on
 
   - type: textarea
     id: environment
     attributes:
-      label: Environment
-      description: |
-        Tested commit SHA and date, platform/OS, toolchain versions (Python, Blender, PINE/
-        PCSX2), the input artifact and its sha256, and whether the run was live capture or a
-        replay of an existing dump. Record unknown versions honestly.
-      placeholder: |
-        commit 65111a8, 2026-10-05. macOS 26.4.1 arm64, python 3.14.
-        Input: games/ford-racing-2/cars/LIGHTNING_SVT/model/*.PS2;1 (sha256 ...)
-        Mode: offline decode of the extracted disc tree (no live capture).
-    validations:
-      required: true
-
-  - type: textarea
-    id: preconditions
-    attributes:
-      label: Preconditions
-      description: |
-        Starting state, required corpus files, access or configuration, and the exact synthetic
-        input. Include setup commands or a stable setup reference when needed.
-      placeholder: |
-        From projects/carmodels/: python3 tools/build_reference.py must have run so that
-        ford-racing-2/ is populated. No credentials required.
+      label: How are you using the project?
+      description: Browser/version and OS/device; live site, local static server, or tools/serve_library.py. Include the commit if known. For an edited GLB, say whether you rebuilt the display data.
+      placeholder: Live showroom, Firefox on Windows 11; unedited model. Commit unknown.
     validations:
       required: true
 
@@ -69,14 +57,12 @@ body:
     id: steps
     attributes:
       label: Steps to reproduce
-      description: |
-        Numbered, shortest complete path from the stated preconditions, with exact commands and
-        the point at which the defect becomes visible. One numbered list per distinct variant.
+      description: Shortest numbered steps, including search/filter text, selected car and view settings, or exact commands. State whether it happens every time.
       placeholder: |
-        1. cd projects/carmodels
-        2. python3 tools/recover_car_ptg.py --car LIGHTNING_SVT
-        3. Inspect recovered/cars/LIGHTNING_SVT/graphics/liveries/*.png
-        4. Observe the alpha plane is opaque where the disc's is not.
+        1. Open the page above.
+        2. Select the game and car named above.
+        3. Choose the factory preset, then download the GLB.
+        4. Open the download and describe where the problem appears.
     validations:
       required: true
 
@@ -84,7 +70,7 @@ body:
     id: expected
     attributes:
       label: Expected behavior
-      description: What the user or caller should observe, stated as product behavior — not your proposed fix.
+      description: What should you be able to see or do? For fidelity reports, link a reference for the same car, game version, and view when available.
     validations:
       required: true
 
@@ -92,51 +78,39 @@ body:
     id: actual
     attributes:
       label: Actual behavior
-      description: |
-        What was observed, with any error text quoted verbatim, the state after waiting for
-        asynchronous completion, and the scope of reproduction (how many times, which inputs).
+      description: What happened instead? Quote error text exactly. Say whether the problem affects the preview, download, source model, or edited dealership copy.
     validations:
       required: true
 
   - type: textarea
     id: evidence
     attributes:
-      label: Evidence
-      description: |
-        For visual defects: the minimum set of screenshots that proves the complaint, each with a
-        meaningful alt text and a caption naming the step and the visible symptom. For nonvisual
-        defects: the smallest useful log, request/response, or executable reproduction, and say why
-        a screenshot is inapplicable. State the coverage and any gap explicitly.
-      placeholder: |
-        ![Opaque alpha plane in the recovered livery PNG after step 3](./evidence/alpha.png)
+      label: Screenshots, logs, or a small reproduction
+      description: Attach genuine screenshots for visual defects, with a caption naming the car, settings, and symptom. For other failures, paste the relevant error/log. State what you have not checked; label proposed mockups clearly.
 
-        Caption: step 3 — recovered livery renders opaque over the glass region.
-        Coverage: alpha plane inspected; the colour plane was not compared.
-    validations:
-      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and workaround
+      description: What task is blocked? Does it affect other cars or games? Include a workaround or last working version if known.
 
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance criteria
-      description: |
-        Unchecked, externally observable pass/fail conditions. Cover the defect, the correction or
-        recovery path, and relevant adjacent behavior. Every bullet must be reachable through the
-        product's own interface — do not describe the implementation you have in mind.
+      label: Success criteria (optional)
+      description: If you can, add unchecked, observable pass/fail conditions for the fix and adjacent behavior. Maintainers can help refine these; no need to choose an implementation or verifier command.
       placeholder: |
-        - [ ] Recovered livery PNG for LIGHTNING_SVT has a non-opaque alpha plane matching the disc's plane
-        - [ ] python3 tools/validate_car_mips.py passes for all 35 cars
-        - [ ] dealership/public/ford-racing-2 GLB for this car still loads in the viewer
-    validations:
-      required: true
+        - [ ] The affected car loads with the selected factory preset.
+        - [ ] The downloaded GLB keeps that preset and still opens.
 
   - type: textarea
-    id: notes
+    id: technical
     attributes:
-      label: Scope and developer notes
-      description: |
-        Observed facts separated from hypotheses, pinned code leads (file:line), constraints and
-        exclusions, related issues, and anything still unknown. Source inspection is a lead, not
-        proof of runtime causality — label it as such.
-    validations:
-      required: true
+      label: Recovery or developer details (optional)
+      description: For tool failures, include relevant runtime versions, game platform/edition/region, input path/hash, and live capture versus replay. Link receipts or check logs/results.json when available; distinguish pass, fail, skip, and not run. Separate observations from hypotheses.
+      placeholder: |
+        Command and commit:
+        Input identity (no private file upload):
+        Relevant runtime versions:
+        Check command, result, and log:
+        Observed facts / suspected cause / remaining unknowns:
