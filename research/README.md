@@ -6,6 +6,7 @@ single list of what is not yet established; update it when a note closes or open
 
 | Note | Holds |
 | --- | --- |
+| `similar-projects-2026-10-21.md` | Twelve primary-source comparisons of recovered-model museums, racing engines, native car editors and asset converters; strengths, weaknesses, upstream relationships and lessons for this showroom |
 | `gran-turismo-4-model-fidelity.md` | Automatic modern dealership remaster with unchanged source reference, native-normal/seam-aware geometry, evidence-based real-car corrections, conservative missing-reference refinement and failed-part fallback |
 | `gif-rounded-corners-2026-10-20.md` | Blurred rounded corners on README GIFs: GIF89a 1-bit transparency, Pillow encoder limits, GitHub theme-image methods, and the adopted dual pre-matted GIF swap |
 | `gran-turismo-gt4-guided-upgrades-2026-10-16.md` | Evidence-backed GT4 geometry/artwork transfer, identity and part compatibility, RX-7 trim boundaries, proposed pipeline and unresolved coverage |
