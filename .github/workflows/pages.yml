@@ -1,0 +1,92 @@
+name: Deploy showroom to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ["dealership/**", ".github/workflows/pages.yml"]
+  pull_request:
+    paths: ["dealership/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Package tracked app files with commit-pinned model URLs
+        env:
+          ASSET_BASE: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/dealership/
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import shutil
+          import subprocess
+          from pathlib import Path
+
+          site = Path('_site')
+          site.mkdir()
+          paths = subprocess.check_output(['git', 'ls-files', '-z', 'dealership/']).decode().split('\0')
+          tracked = set(filter(None, paths))
+          for name in sorted(tracked):
+              source = Path(name)
+              if source.is_symlink():
+                  raise ValueError(f'Pages cannot publish symlinks: {source}')
+              if source.suffix.lower() in {'.glb', '.dat', '.zip'}:
+                  continue
+              target = site / source.relative_to('dealership')
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, target)
+          catalog_path = site / 'public/models.json'
+          catalog = json.loads(catalog_path.read_text())
+          for car in catalog['cars']:
+              if 'dealership/public/' + car['file'] not in tracked:
+                  raise ValueError(f'Missing committed preview: {car["file"]}')
+              native = car.get('native_package')
+              if native and 'dealership/public/' + native['file'] not in tracked:
+                  del car['native_package']
+          catalog_path.write_text(json.dumps(catalog) + '\n')
+          # Hide optional server-only search on the public static edition.
+          for page in site.glob('*.html'):
+              page.write_text(page.read_text().replace(
+                  '<style>', '<style>#semantic-form, #interpret { display: none !important; }', 1
+              ))
+          (site / 'asset-config.mjs').write_text(
+              'export const assetBaseURL = ' + json.dumps(os.environ['ASSET_BASE']) + ';\n'
+          )
+          (site / '.nojekyll').touch()
+          size = sum(path.stat().st_size for path in site.rglob('*') if path.is_file())
+          if size >= 1_000_000_000:
+              raise ValueError(f'Pages site exceeds the 1 GB limit: {size} bytes')
+          print(f'Packaged {size:,} bytes; models load from {os.environ["ASSET_BASE"]}')
+          PY
+      - uses: actions/upload-pages-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: _site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy showroom
+        id: deployment
+        uses: actions/deploy-pages@v4

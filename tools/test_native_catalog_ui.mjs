@@ -1,3 +1,4 @@
+import {assetURL} from '../dealership/model-load.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {isNativePackage, dealershipDownload, loadCar, validateCars, gameId, sourceCarId, createCarSearch} from '../dealership/dealership.mjs';
@@ -32,11 +33,11 @@ const entry={id:'midnight-club-3-remix/vp_test_04',code:'vp_test_04',game:'midni
 node('#car').value=entry.id;node('#retry').hidden=false;
 let fetches=0,disposals=0;const rememberedSources=[];
 const runSource=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
-  'readGLB','dispose','setLoading','updateDescription','rememberCar',
+  'readGLB','dispose','setLoading','updateDescription','rememberCar','assetURL',
   `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
   {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[entry]},isNativePackage,
   async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
-  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},car=>rememberedSources.push(car));
+  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},car=>rememberedSources.push(car),assetURL);
 await runSource();assert.deepEqual(rememberedSources,[entry]);
 assert.equal(fetches,0);assert.equal(disposals,1);assert(node('#record').disabled);assert(node('#retry').hidden);
 assert.equal(node('#download').href,'public/midnight-club-3-remix/native/vp_test_04.dat');
@@ -49,11 +50,11 @@ const gt4={id:'gran-turismo-4/test0001',code:'test0001',game:'gran-turismo-4',as
   file:'gran-turismo-4/native/test0001.zip',native_members:5};
 node('#car').value=gt4.id;
 const runGt4=new Function('document','carSelect','recordSelect','status','index','isNativePackage','fetchModel',
-  'readGLB','dispose','setLoading','updateDescription','rememberCar',
+  'readGLB','dispose','setLoading','updateDescription','rememberCar','assetURL',
   `let requestId=0,pendingRequest=null,selected=null;${sourcePage.slice(start,end)}return loadCar;`)(
   {querySelector:node},node('#car'),node('#record'),node('#status'),{cars:[gt4]},isNativePackage,
   async()=>{fetches++;throw Error('fixture GLB unavailable');},()=>assert.fail('native data was parsed as GLB'),
-  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},car=>rememberedSources.push(car));
+  ()=>disposals++,busy=>{node('#record').disabled=busy||true;},()=>{},car=>rememberedSources.push(car),assetURL);
 await runGt4();assert.deepEqual(rememberedSources,[entry,gt4]);
 assert.equal(fetches,0);assert.equal(node('#download').href,'public/gran-turismo-4/native/test0001.zip');
 assert.equal(node('#download').download,'test0001.zip');assert.match(node('#download').textContent,/native package \(\.zip\)/);
@@ -67,7 +68,7 @@ const dealerElements=new Map();const $=id=>{if(!dealerElements.has(id))dealerEle
 // Start enabled, as after a loaded 3D preview, so native selection must disable the controls.
 const colourControls={enabled:true,clears:0,setEnabled(value){this.enabled=value;},clear(){this.clears++;}};
 const select=new Function('$','document','gameLabel','isNativePackage','dealershipDownload','scene','disposeCar',
-  'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId','rememberCar',
+  'loadCar','applyFilters','fmt','colourControls','gameId','sourceCarId','rememberCar','assetURL',
   `const gt4Studio={setEnabled(){}},floor={material:{}};const paintDownload={clear(){}};let selectionId=0,selectionController=null,current=null,carMesh={};${page.slice(selectStart,selectEnd)}return select;`)(
   $,{querySelectorAll:()=>[],createElement:element},()=>native.gameLabel,isNativePackage,dealershipDownload,{remove(){removed++;}},
   ()=>disposed++,()=>{modelLoads++;assert.fail('native preview tried to allocate geometry');},()=>filters++,String,colourControls,gameId,sourceCarId,car=>rememberedDealership.push(car));
@@ -89,7 +90,7 @@ await select(native);assert.equal(removed,1);assert.equal(modelLoads,0);
   const model={userData:{colourVariants:[],paintDoc:{}}};let active=false,freed=0,cleared=0;
   const paintControls={enabled:false,setEnabled(v){this.enabled=v;},bind(){throw Error('Invalid recovered paint metadata');}};
   const run=new Function('$','document','gameLabel','gameId','isNativePackage','dealershipDownload','scene','disposeCar',
-    'loadCar','applyFilters','fmt','colourControls','paintDownload','paletteReady','gamePalette','paletteError','renderer','prepareMC3Environment','sourceCarId','rememberCar',
+    'loadCar','applyFilters','fmt','colourControls','paintDownload','paletteReady','gamePalette','paletteError','renderer','prepareMC3Environment','sourceCarId','rememberCar','assetURL',
     `const gt4Studio={setEnabled(){}},floor={material:{}};let selectionId=0,selectionController=null,current=null,carMesh=null;${page.slice(selectStart,selectEnd)}return select;`)(
     $,{querySelectorAll:()=>[],createElement:element},()=>preview.gameLabel,c=>c.game,isNativePackage,dealershipDownload,
     {add(){active=true;},remove(){active=false;}},()=>freed++,async()=>model,()=>{},String,paintControls,

@@ -1,3 +1,14 @@
+import {assetBaseURL} from './asset-config.mjs';
+
+// Keep large model/download payloads outside the size-limited Pages artifact.
+// Catalog paths and hashes stay identical to the local edition.
+export function assetURL(path, base=assetBaseURL) {
+ if(!base)return path;
+ const root=new URL('.',import.meta.url),url=new URL(path,root);
+ if(!url.href.startsWith(root.href)||!/\.(glb|zip|dat)$/i.test(url.pathname))return path;
+ return new URL(url.href.slice(root.href.length),base).href;
+}
+
 // Bound network/body reads and cancel obsolete selections without extra dependencies.
 export async function fetchModel(url, signal, timeoutMs=15000) {
  const controller=new AbortController();
@@ -7,7 +18,7 @@ export async function fetchModel(url, signal, timeoutMs=15000) {
  let timedOut=false;
  const timer=setTimeout(()=>{timedOut=true;controller.abort();},timeoutMs);
  try {
-  const response=await fetch(url,{signal:controller.signal});
+  const response=await fetch(assetURL(url),{signal:controller.signal});
   if(!response.ok)throw Error(`Geometry file unavailable (HTTP ${response.status})`);
   return await response.arrayBuffer();
  } catch(error) {
