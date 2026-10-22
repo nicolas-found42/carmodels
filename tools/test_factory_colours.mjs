@@ -4,6 +4,7 @@ import zlib from 'node:zlib';
 import * as THREE from '../dealership/vendor/three.module.js';
 import {readGLB} from '../dealership/model-load.mjs';
 import {loadCar,disposeCar} from '../dealership/dealership.mjs';
+import {isGT4OverlayPass} from '../dealership/materials.mjs';
 
 // MC3's alpha shader needs real decoded pixels, including during preset changes.
 // These producer PNGs use RGBA8 and filter0; unrelated games retain their stubs.
@@ -57,14 +58,20 @@ for(const car of cars) {
     }
     for(const index of doc.scenes[doc.scene??0].nodes)visit(index);
     const meshes=[];model.traverse(node=>{if(node.isMesh)meshes.push(node);});
-    assert.equal(meshes.length,primitives.length,`${car.code}: visible default assembly`);
-    assert.equal(meshes.reduce((n,m)=>n+m.geometry.index.count/3,0),car.model.triangleCount,
-      `${car.code}: factory materials retain the compiled visible geometry`);
+    // GT4 previews committed before the overlay omission still store the no-material, depth-off
+    // body pass; the loader skips it, so the visible assembly excludes exactly those primitives.
+    const visible=game==='gran-turismo-4'?primitives.filter(p=>!isGT4OverlayPass(doc.materials[p.material])):primitives;
+    assert.equal(meshes.length,visible.length,`${car.code}: visible default assembly`);
+    const triangles=ps=>ps.reduce((n,p)=>n+doc.accessors[p.indices].count/3,0);
+    assert.equal(triangles(primitives),car.model.triangleCount,
+      `${car.code}: compiled count covers every stored primitive`);
+    assert.equal(meshes.reduce((n,m)=>n+m.geometry.index.count/3,0),triangles(visible),
+      `${car.code}: factory materials retain the visible geometry`);
     const geometry=meshes.map(m=>m.geometry);
     for(const index of [null,...variants.map((_,i)=>i),null]) {
       model.userData.setColourVariant(index);
       for(let i=0;i<meshes.length;i++) {
-        const p=primitives[i],mapping=p.extensions?.KHR_materials_variants?.mappings?.find(m=>m.variants.includes(index));
+        const p=visible[i],mapping=p.extensions?.KHR_materials_variants?.mappings?.find(m=>m.variants.includes(index));
         const material=doc.materials[index===null?p.material:mapping?.material??p.material];
         const pbr=material.pbrMetallicRoughness??{};
         assert.equal(meshes[i].material.map,pbr.baseColorTexture?textures[doc.textures[pbr.baseColorTexture.index].source]:null,

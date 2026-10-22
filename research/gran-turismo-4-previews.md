@@ -125,3 +125,28 @@ do not establish original-game shader fidelity or a full visual review of the co
 
 [Before/after screenshots and validation receipt](evidence/gt4-material-fix/validation.json)
 record representative comparisons; the corpus counts remain executable material checks.
+
+## Viewer defect fixes (2026-10-22)
+
+Reported defects were reproduced in `dealership.html` against the committed previews with a
+deterministic camera sweep (12 angles per car) and fixed in the viewer, because the preview corpus
+cannot be rebuilt here: the disc extraction (`games/gran-turismo-4/game-files/`) is absent and only
+the `acra0001` fixture is committed.
+
+| Defect | Cause | Fix |
+| --- | --- | --- |
+| Duplicated/greyed window and roof art tiled across roofs and pillars (user screenshot) | `editable-glb.mjs` forces `RepeatWrapping` on every decoded texture; 77,823 of the 94,221 texture entries across the 730 committed previews declare `CLAMP_TO_EDGE`, and repeat samples the painted border into the negative/over-one UVs the menu model stores | `applyMaterial` applies the sampler's `wrapS`/`wrapT`, as glTF requires |
+| Dark/blue blotches over roof edges, C-pillars and window surrounds (851–137,693 changed pixels on 15 of 20 sampled cars) | Committed previews still contain the no-MDLS-material, depth-writes-off body pass (`body/setN/texN/mat-1[+vc]/BLEND/paintN`). It re-draws geometry the same frame already drew | `isGT4OverlayPass` skips exactly those primitives; `model_mesh` now omits the same `kind 0` + depth-off shapes so regenerated previews match |
+| Headliner/interior backfaces punching through the roof as a black hole (`alfa0010`) | GT4 body shells are closed; double-sided body materials z-fight the inner panels | body/ materials render `FrontSide` |
+
+Evidence for the overlay selector: rebuilding 29 previews from their committed native packages
+with the patched exporter and subtracting the selector's primitives from the committed GLBs gives
+identical per-material triangle counts, so the runtime skip reproduces the exporter's omission
+rather than approximating it. `test_factory_colours` now asserts the invariant across all 730 GT4
+cars; `test_viewer_materials` covers the sampler wrap, the body culling rule and the selector.
+
+Still visible after these fixes, not addressed: a dotted bright seam along glass edges (the
+window-trim texel line aliases at preview resolution), the baked dark paint gradient on some lower
+bodies (for example the `chev0011` rocker, present in the authored texture), and blown-out
+headlight and chrome highlights under the studio environment. Native pass ordering and blending
+remain unverified.

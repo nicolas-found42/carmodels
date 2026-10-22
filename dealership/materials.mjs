@@ -30,6 +30,15 @@ export function applyRecoveredUnderShadow(material, source) {
  return true;
 }
 
+// GT4 also draws a body "overlay" pass: a shape the render model hands to the GS with no MDLS
+// material and depth writes off, which the exporter names body/setN/texN/mat-1[+vc]/BLEND/paintN.
+// The native walk shows it re-draws body geometry the same frame already drew (the shape kinds the
+// preview profile omits), so over the paint it reads as dark blotches on roof edges, pillars and
+// window surrounds. Previews committed before that omission still carry the pass; skip it here too.
+export function isGT4OverlayPass(source) {
+ return typeof source?.name==='string' && /\/mat-1(?:\+vc)?\/BLEND\//.test(source.name);
+}
+
 // Material, texture and image indices are separate glTF namespaces.
 export function applyMaterial(material, doc, images, materialIndex, options={}) {
  const tint=normaliseColourTint(options.colourTint);
@@ -44,6 +53,9 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
   material.map.magFilter=options.sharp?THREE.NearestFilter:filters[sampler.magFilter??9729];
   material.map.minFilter=options.sharp?THREE.NearestFilter:filters[sampler.minFilter??9729];
   material.map.generateMipmaps=![THREE.NearestFilter,THREE.LinearFilter].includes(material.map.minFilter);
+  const wraps={33071:THREE.ClampToEdgeWrapping,10497:THREE.RepeatWrapping,33648:THREE.MirroredRepeatWrapping};
+  if(sampler.wrapS)material.map.wrapS=wraps[sampler.wrapS]??THREE.RepeatWrapping;
+  if(sampler.wrapT)material.map.wrapT=wraps[sampler.wrapT]??THREE.RepeatWrapping;
   material.map.needsUpdate=true;
  }
  material.color.fromArray(factor); // glTF factors already use linear RGB.
@@ -61,7 +73,7 @@ export function applyMaterial(material, doc, images, materialIndex, options={}) 
   material.clearcoat=coat?.clearcoatFactor??0;
   material.clearcoatRoughness=coat?.clearcoatRoughnessFactor??0;
  }
- material.side=source.doubleSided?THREE.DoubleSide:THREE.FrontSide;
+ material.side=(source.doubleSided&&!source.name?.startsWith('body/'))?THREE.DoubleSide:THREE.FrontSide;
  material.wireframe=options.wireframe===true;
  applyMC3TireMaterial(material,doc,source);
  material.needsUpdate=true;
