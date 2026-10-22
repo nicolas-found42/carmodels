@@ -158,14 +158,50 @@ export function enhanceGT4GLB(buffer,parsed,{sourceHash,...options}={}) {
   if(!index&&width===3){a.min=[Infinity,Infinity,Infinity];a.max=[-Infinity,-Infinity,-Infinity];for(let i=0;i<array.length;i++) {const k=i%3;a.min[k]=Math.min(a.min[k],array[i]);a.max[k]=Math.max(a.max[k],array[i]);}}
   doc.accessors.push(a);return doc.accessors.length-1;
  }
+ const windowPrimitives=new Set();
+ parsed.meshes.forEach((primitives,mesh)=>{
+  const blendBoxes=[];
+  primitives.forEach((p,primitive)=>{
+   const mat=doc.materials[doc.meshes[mesh].primitives[primitive].material];
+   if(mat?.alphaMode==='BLEND') {
+    windowPrimitives.add(`${mesh}:${primitive}`);
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity,minZ=Infinity,maxZ=-Infinity;
+    for(let i=0;i<p.positions.length;i+=3) {
+     const x=p.positions[i],y=p.positions[i+1],z=p.positions[i+2];
+     if(x<minX)minX=x;if(x>maxX)maxX=x;
+     if(y<minY)minY=y;if(y>maxY)maxY=y;
+     if(z<minZ)minZ=z;if(z>maxZ)maxZ=z;
+    }
+    blendBoxes.push({minX,maxX,minY,maxY,minZ,maxZ});
+   }
+  });
+  primitives.forEach((p,primitive)=>{
+   const key=`${mesh}:${primitive}`;
+   if(windowPrimitives.has(key))return;
+   let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity,minZ=Infinity,maxZ=-Infinity;
+   for(let i=0;i<p.positions.length;i+=3) {
+    const x=p.positions[i],y=p.positions[i+1],z=p.positions[i+2];
+    if(x<minX)minX=x;if(x>maxX)maxX=x;
+    if(y<minY)minY=y;if(y>maxY)maxY=y;
+    if(z<minZ)minZ=z;if(z>maxZ)maxZ=z;
+   }
+   for(const b of blendBoxes) {
+    if(Math.hypot(minX-b.minX,maxX-b.maxX,minY-b.minY,maxY-b.maxY,minZ-b.minZ,maxZ-b.maxZ)<0.02) {
+     windowPrimitives.add(key);break;
+    }
+   }
+  });
+ });
  parsed.meshes.forEach((primitives,mesh)=>primitives.forEach((p,primitive)=>{
-  // No remeshing of unknown attributes or alpha-cutout silhouettes (grilles,
-  // badges and billboards). Their original geometry remains the fallback.
+  // No remeshing of unknown attributes, alpha-cutout silhouettes (grilles,
+  // badges and billboards), or multi-layer window glass assemblies. Their original
+  // geometry remains the fallback.
   const source=doc.meshes[mesh].primitives[primitive],material=doc.materials[source.material];
   const unknown=Object.keys(source.attributes).some(k=>!['POSITION','NORMAL','TEXCOORD_0','COLOR_0'].includes(k));
+  const isBoundary=material.alphaMode==='MASK'||windowPrimitives.has(`${mesh}:${primitive}`);
   const remaining=o.maxVertices-vertices;
-  const result=unknown||material.alphaMode==='MASK'||remaining<3?
-   {primitive:p,report:{status:'retained',reason:unknown?'unknown-attribute':material.alphaMode==='MASK'?'cutout-boundary':'vertex-budget',sourceTriangles:p.indices.length/3,triangles:p.indices.length/3,maxDisplacement:0}}:
+  const result=unknown||isBoundary||remaining<3?
+   {primitive:p,report:{status:'retained',reason:unknown?'unknown-attribute':isBoundary?'cutout-boundary':'vertex-budget',sourceTriangles:p.indices.length/3,triangles:p.indices.length/3,maxDisplacement:0}}:
    refineGT4Primitive(p,{...o,maxVertices:remaining});
   reports.push({mesh,primitive,...result.report});
   if(result.report.status!=='refined')return;

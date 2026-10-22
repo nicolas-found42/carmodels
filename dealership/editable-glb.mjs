@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {fetchModel, readGLB} from './model-load.mjs';
-import {createMaterial, applyMaterial, normaliseColourTint} from './materials.mjs';
+import {createMaterial, applyMaterial, isGT4OverlayPass, normaliseColourTint} from './materials.mjs';
 import {applyPaintMaterial} from './game-paint.mjs';
 import {requiresNativeTireNormal} from './mc3-tire-material.mjs';
 import {loadNativeVehicleResources,bindNativeVehicleResources} from './mc3-vehicle-resources.mjs';
@@ -201,6 +201,7 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
       else {g.position.fromArray(source.translation??[0,0,0]);g.quaternion.fromArray(source.rotation??[0,0,0,1]);g.scale.fromArray(source.scale??[1,1,1]);}
       for(const p of source.mesh===undefined?[]:meshes[source.mesh]) {
         if(ford && doc.materials[p.material].name==='UNDER_SHADOW')continue;
+        if(car.game==='gran-turismo-4' && isGT4OverlayPass(doc.materials[p.material]))continue;
         const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(p.positions,3));geometry.setAttribute('normal',new THREE.BufferAttribute(p.normals,3));
         if(p.uv)geometry.setAttribute('uv',new THREE.BufferAttribute(p.uv,2));geometry.setIndex(new THREE.BufferAttribute(p.indices,1));
         if(p.mc3NativeNormals)geometry.setAttribute('mc3NativeNormal',new THREE.BufferAttribute(p.mc3NativeNormals,3));

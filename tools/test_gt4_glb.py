@@ -43,7 +43,7 @@ class GlbTests(unittest.TestCase):
         )
         body = self.record["parts"]["body"]
         self.assertGreater(body["omitted_overlay_shapes"], 0)
-        self.assertEqual(body["triangles"], 3857)
+        self.assertEqual(body["triangles"], 3669)
         self.assertEqual(len(self.doc["images"]), self.record["textures"])
 
     def test_native_factory_paints_are_switchable(self):

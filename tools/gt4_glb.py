@@ -246,7 +246,11 @@ def model_mesh(
             ms, model, 0, callback_matrices=callbacks
         ):
             shape = ms.shape(shape_index)
-            if shape["kind"] in OVERLAY_KINDS:
+            # Kind-0 shapes drawn with depth writes off carry no MDLS material: they redraw body
+            # geometry the same frame already drew, which reads as dark blotches over the paint.
+            if shape["kind"] in OVERLAY_KINDS or (
+                shape["kind"] == 0 and not state["depth_mask"]
+            ):
                 stats["omitted_overlay_shapes"] += 1
                 continue
             world = [
