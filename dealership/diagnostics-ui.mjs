@@ -22,6 +22,8 @@ function capture(reason='state.change'){try {diagnostics.snapshot(snapshot(),rea
 diagnostics.attachViewer=({renderer,camera,controls,getState,restoreState})=>{
   snapshot=()=>({...getState(),camera:{position:camera.position.toArray(),target:controls.target.toArray(),near:camera.near,far:camera.far,fov:camera.fov},
     renderer:{geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles}});
+  // Read live state even when diagnostic history recording is disabled.
+  diagnostics.viewerState=()=>snapshot();
   const gl=renderer.getContext();
   diagnostics.environment({browser:navigator.userAgent,viewport:[innerWidth,innerHeight],pixel_ratio:devicePixelRatio,webgl:gl.getParameter(gl.VERSION)});
   for(const type of ['webglcontextlost','webglcontextrestored'])renderer.domElement.addEventListener(type,()=>{capture('context.change');diagnostics.record(type);});

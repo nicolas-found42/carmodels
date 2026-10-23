@@ -12,6 +12,7 @@ import {prepareMC3Environment,disposeMC3Environment} from '../dealership/mc3-env
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
 import {isNativePackage,resolveCarAlias,createCarSearch} from '../dealership/dealership.mjs';
 import {createDiagnostics,createLoadTimeline} from '../dealership/diagnostics.mjs';
+import {PILOT,decodeInspectionState} from '../dealership/inspection-state.mjs';
 
 const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
 const index=JSON.parse(fs.readFileSync(new URL('../dealership/public/models.json',import.meta.url)));
@@ -20,7 +21,7 @@ const callback=html.slice(html.indexOf('function disposeState('),html.indexOf('f
 // The under-car shadow helpers the callback slice calls live further down the page. Run them with it so
 // the slice exercises the shipped code instead of a stub; isRecoveredUnderShadow is the page's own import.
 const shadowHelpers=html.slice(html.indexOf('function underCarShadowPrimitive('),html.indexOf('function updateDescription('));
-const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','game-shading','game-shading-note','presentation','download','native-download','native-download-wrap','retry','error','dealership-link'].map(id=>[id,{
+const elements=Object.fromEntries(['car','record','variant','textures','sharp','wire','flip','game-shading','game-shading-note','presentation','download','native-download','native-download-wrap','retry','error','dealership-link','share-inspection','inspection-link'].map(id=>[id,{
  value:'',disabled:false,hidden:false,options:[],textContent:'',
  removeAttribute(name){delete this[name];},
  replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},
@@ -36,7 +37,7 @@ const renderer={};let environmentFailure=false;
 const context={THREE:{...THREE,TextureLoader:class {
  async loadAsync(){const t=new THREE.Texture();t.addEventListener('dispose',()=>disposals++);return t;}
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
- carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,
+ carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,PILOT,
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){}},
  paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,
@@ -263,6 +264,7 @@ for(const event of [{key:'Escape'},{key:'Enter',isComposing:true},{key:'Enter',r
 // Run the actual startup sequence with an empty native select and a non-first ID.
 const startup=html.slice(html.indexOf('const parameters='),html.indexOf('new ResizeObserver('));
 filterContext.resolveCarAlias=resolveCarAlias;
+filterContext.decodeInspectionState=decodeInspectionState;filterContext.PILOT=PILOT;
 carSelect.replaceChildren();filterContext.location.search='?game=gran-turismo&variant=day&car=gran-turismo%2Fsimulation%2Fother%2Fday';
 vm.runInContext(startup,filterContext);assert.equal(carSelect.value,'gran-turismo/simulation/other/day');assert.equal(gameSelect.value,'gran-turismo');assert.equal(sourceVariant.value,'day');
 filterContext.location.search='?game=gran-turismo&variant=day&car=missing';

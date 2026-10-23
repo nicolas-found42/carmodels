@@ -79,3 +79,32 @@ working-tree content fingerprint, catalog hashes, incident ID and absolute evide
 path in the local ledger. CI artifacts retain the manifest, index and individual logs
 for a requested 90 days; inspect GitHub's actual expiration when investigating older
 runs. Check history proves automated execution, not visitor behavior or game fidelity.
+
+## Shared inspection pilot
+
+In the source viewer, `gran-turismo-4/acra0001` offers **Copy inspection link**.
+The link restores a version-1 inspection snapshot: car, geometry, native preset and
+supported paint channels, camera position/orbit target and projection, display controls,
+and Original/Enhanced presentation. It uses the diagnostics live snapshot and replay paths,
+even when diagnostic history is disabled. No model bytes or credentials enter the snapshot.
+The URL-encoded snapshot value is limited to 8 KiB; the full URL also contains the page
+address and legacy game/car parameters. Legacy links continue to work.
+
+The pilot's exported showroom scene remains the default. Its additional **Source part**
+geometry choices show actual named root nodes (body, wheels and tires) from that scene;
+they are inspection views, not additional recovered LODs. Other cars' geometry choices
+and sharing behavior are unchanged. Loading a link validates choices against the currently
+served pilot and reports rejected fields visibly. Unsupported versions, malformed/oversized
+snapshots and unavailable cars fall back to the legacy car choice or the pilot. Invalid
+appearance or camera fields preserve a valid car and use its defaults, including clearing
+remembered paint. A link is applied once at startup; later car switches do not replay it.
+Restoration changes viewer state and normal browser paint preferences. It does not modify source/native files,
+working GLBs, or the catalog, and does not reproduce original-game lighting or GPU behavior.
+
+Run `node tools/test_inspection_state.mjs` for the bounded codec and malformed-field
+controls (also in `tools/check.sh`). The separate real-browser acceptance harness is
+served by `python3 tools/verify_inspection_browser.py --output <new-evidence.json>`; open its printed URL with the Jev browser. It uses new
+iframe documents and cleared browser storage, blocks external connections by CSP,
+checks all issue criteria, and hashes the pinned source/native/working files before
+and after. Missing or changed pinned inputs block the run; an incomplete browser
+report is not a pass. The harness does not launch a browser or run in the offline suite.

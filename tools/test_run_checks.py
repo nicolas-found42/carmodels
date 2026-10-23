@@ -473,6 +473,7 @@ class CheckRunnerTests(unittest.TestCase):
                 "test_viewer_materials",
                 "test_model_load",
                 "test_diagnostics",
+                "test_inspection_state",
                 "test_viewer_loading",
                 "test_dealership",
                 "test_editable_glb",
