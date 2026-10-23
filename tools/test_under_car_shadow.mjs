@@ -13,6 +13,7 @@ import {parseEditableGLB} from '../dealership/editable-glb.mjs';
 import {geometryOptions,defaultGeometryValue,sceneLabel} from '../dealership/scene-options.mjs';
 import {requiresNativeTireNormal} from '../dealership/mc3-tire-material.mjs';
 import {isNativePackage} from '../dealership/dealership.mjs';
+import {MC3_INSPECTION_MODEL} from '../dealership/mc3-record-inspection.mjs';
 import {PILOT} from '../dealership/inspection-state.mjs';
 
 // The recovered under-car shadow is authored opaque: a 64x64 white texture with graded alpha on a record
@@ -85,7 +86,7 @@ function loadedByTheInspector(code,file,bytes,records) {
  const context={
   THREE:{...THREE,TextureLoader:class {async loadAsync(){const texture=new THREE.Texture();texture.dispose=()=>{};return texture;}}},
   document:{querySelector(selector){return elements[selector.slice(1)]??null;},createElement(){return {};}},
-  carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,PILOT,
+  carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,PILOT,MC3_INSPECTION_MODEL,recordInspector:{clear(){},bind(){},refresh(){}},
   index:{cars:[{id:'ford-racing-2/'+code,game:'ford-racing-2',code,file:'ford-racing-2/'+file,display_name:code,records}]},
   colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){},session:null},
   // showRecord() and dispose() offer the framing box and the drawn under-car shadow quad's floor to the

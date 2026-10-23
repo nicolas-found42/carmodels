@@ -474,6 +474,8 @@ class CheckRunnerTests(unittest.TestCase):
                 "test_model_load",
                 "test_diagnostics",
                 "test_inspection_state",
+                "test_mc3_record_inspection",
+                "test_mc3_record_ui",
                 "test_viewer_loading",
                 "test_dealership",
                 "test_editable_glb",

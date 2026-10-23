@@ -12,6 +12,7 @@ import {prepareMC3Environment,disposeMC3Environment} from '../dealership/mc3-env
 import {geometryOptions,defaultGeometryValue} from '../dealership/scene-options.mjs';
 import {isNativePackage,resolveCarAlias,createCarSearch} from '../dealership/dealership.mjs';
 import {createDiagnostics,createLoadTimeline} from '../dealership/diagnostics.mjs';
+import {MC3_INSPECTION_MODEL} from '../dealership/mc3-record-inspection.mjs';
 import {PILOT,decodeInspectionState} from '../dealership/inspection-state.mjs';
 
 const corpus=new URL('../dealership/public/ford-racing-2/',import.meta.url);
@@ -37,7 +38,7 @@ const renderer={};let environmentFailure=false;
 const context={THREE:{...THREE,TextureLoader:class {
  async loadAsync(){const t=new THREE.Texture();t.addEventListener('dispose',()=>disposals++);return t;}
 }},document:{querySelector(selector){return elements[selector.slice(1)];},createElement(){return {};}},
- carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,PILOT,
+ carSelect:elements.car,recordSelect:elements.record,stage,status,scene,index,PILOT,MC3_INSPECTION_MODEL,recordInspector:{clear(){},bind(){},refresh(){}},
  colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){}},
  paintDownload:{clear(){}},gamePalette:[],paletteError:"",paletteReady:Promise.resolve(),
  loaded:null,selected:null,requestId:0,pendingRequest:null,AbortController,Blob,URLSearchParams,

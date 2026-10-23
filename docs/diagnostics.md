@@ -108,3 +108,38 @@ iframe documents and cleared browser storage, blocks external connections by CSP
 checks all issue criteria, and hashes the pinned source/native/working files before
 and after. Missing or changed pinned inputs block the run; an incomplete browser
 report is not a pass. The harness does not launch a browser or run in the offline suite.
+
+## MC3 native record inspection pilot
+
+The source viewer offers a read-only **Pilot native records** list for
+`midnight-club-3-remix/vp_350z_04`: its named body and left-front suspension records.
+List selection and clicking visible geometry share one native identity. Arrow keys and
+Enter provide the keyboard path. A gold edge overlay highlights only the selected
+record's visible meshes; selecting a hidden record leaves every geometry visibility
+choice intact. Pilot-only source-part geometry views can isolate either existing node;
+the default assembled scene and unrelated cars retain their existing choices.
+
+The details show native source occurrence and carrier hash, parent identity, and local
+and parent-chain world rest matrices in column-major order. Missing optional evidence
+shows **Unknown**. Both records share a PCK carrier: occurrence includes the native
+part/mesh/packet offsets, so the shared carrier hash cannot substitute one record for
+the other. `mc3-record-evidence.json` pins the native source inputs and separately
+retains the relevant native joints/record identities. Unit tests independently read
+those PCK bytes and compose their parent chain; they reject ownership rebinding,
+changed parent/display placement, and reparenting with the intended mismatch reason.
+The served pilot GLB must match its pinned source hash before inspection is enabled.
+
+These are static native rest frames, not recovered gameplay animation or runtime
+customization. Selection owns disposable line overlays only; materials, source geometry,
+native packages, working copies and catalogs are not edited. Source/dealership links
+retain the car identity; #85 does not add MC3 URL-state sharing.
+
+`tools/check.sh` includes the record, UI and browser-runner control tests. For the
+separate real-browser acceptance run, use `python3 tools/verify_mc3_inspection_browser.py
+--output <new-evidence.json>` and open its printed URL with the Jev browser. The harness
+uses the shipped viewer, actual canvas event handlers and independent retained triangle
+projections, plus overlapping-triangle fixtures for nearest-hit and native-identity ties.
+Every served document blocks external connections with CSP. The runner requires all
+named assertions and unchanged initial source/native/working/catalog file pins; absent
+or changed inputs and incomplete reports do not count as passes. Browser assertions do
+not establish original-game rasterization, animation or full rendering fidelity.
