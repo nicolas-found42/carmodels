@@ -101,4 +101,5 @@ const importControl=nodes.find(n=>n.tag==='input'&&n.type==='file');
 importControl.files=[{size:100,text:async()=>JSON.stringify(uiBundle)}];await importControl.listeners.change();assert.equal(restored.car,'fixture');
 const toggle=nodes.find(n=>n.tag==='input'&&n.type==='checkbox');toggle.checked=false;toggle.listeners.change();
 assert.equal(ui.__carDiagnostics.enabled,false);assert.equal(uiStorage.getItem(DIAGNOSTICS_KEY),null);
+assert.equal(ui.__carDiagnostics.viewerState().car,'fixture','sharing reads live state even with diagnostic recording disabled');
 console.log('PASS actual diagnostics UI: global errors/rejections, context loss/restoration, clipboard/download export, imported state replay, local upload, redaction and opt-out effects');
