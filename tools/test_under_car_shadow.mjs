@@ -13,6 +13,7 @@ import {parseEditableGLB} from '../dealership/editable-glb.mjs';
 import {geometryOptions,defaultGeometryValue,sceneLabel} from '../dealership/scene-options.mjs';
 import {requiresNativeTireNormal} from '../dealership/mc3-tire-material.mjs';
 import {isNativePackage} from '../dealership/dealership.mjs';
+import {PILOT} from '../dealership/inspection-state.mjs';
 
 // The recovered under-car shadow is authored opaque: a 64x64 white texture with graded alpha on a record
 // no exported tree references. This test pins the authored facts, the candidate blend the viewer applies
@@ -70,7 +71,7 @@ const selectors=vm.runInNewContext(html.match(/function underCarShadowPrimitive\
 // it built, so every overlay claim below is about the group loadCar actually created.
 function loadedByTheInspector(code,file,bytes,records) {
  const ids=['car','record','variant','presentation','presentation-label','textures','sharp','wire','flip','game-shading','game-shading-note','download',
-  'native-download','native-download-wrap','retry','error','dealership-link'];
+  'native-download','native-download-wrap','retry','error','dealership-link','share-inspection','inspection-link'];
  const elements=Object.fromEntries(ids.map(id=>[id,{value:'',disabled:false,hidden:false,options:[],textContent:'',
   removeAttribute(name){delete this[name];},replaceChildren(...options){this.options=options;},append(option){this.options.push(option);},addEventListener(){}}]));
  const scene=new THREE.Scene(),urls=new Set(),status={textContent:''};
@@ -84,7 +85,7 @@ function loadedByTheInspector(code,file,bytes,records) {
  const context={
   THREE:{...THREE,TextureLoader:class {async loadAsync(){const texture=new THREE.Texture();texture.dispose=()=>{};return texture;}}},
   document:{querySelector(selector){return elements[selector.slice(1)]??null;},createElement(){return {};}},
-  carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,
+  carSelect:elements.car,recordSelect:elements.record,stage:{setAttribute(){}},status,scene,sceneLabel,PILOT,
   index:{cars:[{id:'ford-racing-2/'+code,game:'ford-racing-2',code,file:'ford-racing-2/'+file,display_name:code,records}]},
   colourControls:{enabled:false,setEnabled(value){this.enabled=value;},bind(){},session:null},
   // showRecord() and dispose() offer the framing box and the drawn under-car shadow quad's floor to the

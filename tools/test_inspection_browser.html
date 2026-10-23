@@ -1,0 +1,118 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Issue 84 real browser acceptance</title>
+<style>body{font:15px system-ui;margin:20px}iframe{width:1100px;height:760px;border:1px solid #aaa}pre{white-space:pre-wrap}</style>
+<h1>Issue 84 real browser acceptance</h1>
+<p>Every assertion below exercises the shipped source viewer in a newly created iframe. The test server blocks external network requests in every document.</p>
+<pre id="results">Starting…</pre><div id="frames"></div>
+<script type="module">
+const pilot='gran-turismo-4/acra0001',other='midnight-club-3-remix/vp_350z_04';
+const checks=[],details={},output=document.querySelector('#results');
+let frame,win,doc;
+const pause=()=>new Promise(resolve=>setTimeout(resolve,50));
+function assert(value,message){if(!value)throw Error(message);}
+function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])]));return value;}
+function equal(actual,expected,label){assert(JSON.stringify(canonical(actual))===JSON.stringify(canonical(expected)),`${label}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);}
+async function until(predicate,label){
+ const start=performance.now();
+ while(performance.now()-start<45000){try{if(predicate())return;}catch{}await pause();}
+ throw Error('Timed out: '+label);
+}
+function state(){return win.__carDiagnostics.viewerState();}
+async function loaded(car){
+ await until(()=>doc.querySelector('#stage')?.getAttribute('aria-busy')==='false'&&state().car===car&&doc.querySelector('#record').options.length>0,'loaded '+car);
+ await pause();
+}
+async function open(query){
+ frame?.remove();localStorage.clear();
+ frame=document.createElement('iframe');frame.title='Real source viewer under test';
+ frame.src='/dealership/recovered.html?'+query;
+ document.querySelector('#frames').append(frame);
+ await until(()=>frame.contentWindow.__carDiagnostics?.viewerState,'viewer state bridge');
+ win=frame.contentWindow;doc=frame.contentDocument;
+ await loaded(pilot);
+ return state();
+}
+function legacy(car=pilot){return new URLSearchParams({game:car.split('/')[0],car});}
+function query(saved){const params=legacy();params.set('inspection',JSON.stringify(saved));return params;}
+function change(id,value){const node=doc.querySelector('#'+id);node.value=value;node.dispatchEvent(new win.Event('change',{bubbles:true}));}
+async function run(name,task){
+ try{await task();checks.push({name,status:'pass'});}
+ catch(error){checks.push({name,status:'fail',reason:error.message});}
+ output.textContent=JSON.stringify({checks,details},null,2);
+}
+function near(actual,expected,label){assert(actual.length===expected.length,label+' dimension');actual.forEach((n,i)=>assert(Math.abs(n-expected[i])<=1e-6,`${label}[${i}]: ${n} != ${expected[i]}`));}
+function reason(){const text=doc.querySelector('#inspection-status')?.textContent??'';assert(text.trim(),'Invalid snapshot needs a visible reason');assert(!doc.querySelector('#inspection-status').hidden,'Invalid reason must be visible');return text;}
+let saved,baseline,shared,bodyFit;
+await run('pilot legacy identity and available nondefault source-root geometry',async()=>{
+ baseline=await open(legacy());equal(state().car,pilot,'pilot identity');
+ const choices=[...doc.querySelector('#record').options].filter(o=>!o.disabled).map(o=>o.value);
+ assert(choices.includes('node0'),'Pinned native body node must be selectable');
+ assert(choices.includes('scene0'),'Default scene must remain available');
+ details.geometry_choices=choices;
+});
+await run('save nondefault body geometry, native preset, camera and Enhanced',async()=>{
+ await open(legacy());change('record','node0');change('variant','1');change('presentation','enhanced');
+ const current=state();bodyFit=structuredClone(current.camera);
+ const camera={position:[8.123456789,4.234567891,7.345678912],target:[.123456789,.234567891,.345678912],near:current.camera.near,far:current.camera.far,fov:current.camera.fov};
+ await win.__carDiagnostics.restore({schema:1,app:'source',state:{...current,camera}});
+ const chosen=state();equal(chosen.record,'node0','nondefault geometry');equal(chosen.variant,'1','native preset');equal(chosen.paint.preset,1,'paint preset');equal(chosen.controls.presentation,'enhanced','presentation');
+ near(chosen.camera.position,camera.position,'save camera');near(chosen.camera.target,camera.target,'save target');
+ doc.querySelector('#share-inspection').click();
+ await until(()=>doc.querySelector('#inspection-link')?.value,'share URL');
+ shared=doc.querySelector('#inspection-link').value;saved=JSON.parse(new URL(shared).searchParams.get('inspection'));
+ equal(saved.version,1,'schema version');
+ details.saved_state=saved;details.shared_url_bytes=new TextEncoder().encode(new URL(shared).searchParams.toString().split('inspection=')[1].split('&')[0]).length;
+ assert(details.shared_url_bytes<=8192,'Snapshot exceeds 8 KiB');
+});
+await run('clean frame restores every discrete setting and camera within 1e-6',async()=>{
+ assert(saved,'Save prerequisite failed');await open(new URL(shared).searchParams);
+ const restored=state();
+ for(const key of ['game','car','record','variant','paint','controls'])equal(restored[key],saved[key],key);
+ near(restored.camera.position,saved.camera.position,'restored position');near(restored.camera.target,saved.camera.target,'restored target');
+ details.restored_state=restored;
+});
+async function invalid(name,mutate,verify){
+ await run(name,async()=>{
+  assert(saved,'Save prerequisite failed');const value=structuredClone(saved);mutate(value);await open(query(value));
+  equal(state().car,pilot,'valid car retained');const message=reason();verify(state());details[name]={reason:message,state:state()};
+ });
+}
+await invalid('unknown car rejects identity and keeps usable legacy pilot',s=>s.car='gran-turismo-4/absent-pilot',s=>equal(s.car,pilot,'fallback identity'));
+await invalid('unsupported native preset is rejected with default paint',s=>{s.variant='99999';s.paint.preset=99999;},s=>{equal(s.variant,'','default variant');equal(s.paint.preset,null,'default paint');});
+await invalid('unsupported geometry is rejected with default scene',s=>s.record='scene99999',s=>equal(s.record,'scene0','default geometry'));
+await invalid('version 99 rejected with usable defaults',s=>s.version=99,s=>{equal(s.record,'scene0','default geometry');equal(s.variant,'','default variant');});
+for(const bad of ['NaN','Infinity'])await invalid(bad+' camera component rejected with fitted camera',s=>s.camera.position[0]=bad,s=>{
+ assert(s.camera.position.every(Number.isFinite)&&s.camera.target.every(Number.isFinite),'Finite default camera required');
+ equal(s.camera.position,bodyFit.position,'default fitted position');equal(s.camera.target,bodyFit.target,'default fitted target');
+});
+await run('JSON NaN token rejected with visible reason and usable car',async()=>{
+ assert(saved,'Save prerequisite failed');const p=legacy();p.set('inspection',JSON.stringify(saved).replace(/"position":\[[^,]+/,'"position":[NaN'));await open(p);reason();equal(state().car,pilot,'valid identity');assert(state().camera.position.every(Number.isFinite),'usable camera');
+});
+await run('snapshot over 8 KiB rejected before parsing',async()=>{
+ const p=legacy();p.set('inspection',' '.repeat(8193));await open(p);reason();equal(state().car,pilot,'valid identity');equal(state().record,'scene0','default geometry');
+});
+await run('legacy link still selects MC3 350Z and repeated switches discard rejected camera and paint',async()=>{
+ assert(saved,'Save prerequisite failed');const bad=structuredClone(saved);bad.camera.position[0]='NaN';bad.paint.preset=99999;bad.variant='99999';await open(query(bad));reason();
+ for(let i=0;i<2;i++){
+  change('game','midnight-club-3-remix');change('car',other);await loaded(other);
+  const mc3=state();equal(mc3.car,other,'MC3 identity');assert(mc3.camera.position.every(Number.isFinite),'MC3 finite camera');assert(mc3.paint.preset!==99999,'MC3 no rejected paint');
+  change('game','gran-turismo-4');change('car',pilot);await loaded(pilot);
+  equal(state().record,'scene0','return default geometry');equal(state().variant,'','return default preset');equal(state().paint.preset,null,'return default paint');
+  equal(state().camera.position,baseline.camera.position,'return fitted camera');
+ }
+ // Reopen the actual legacy URL, without a snapshot, rather than only changing selects.
+ frame.remove();localStorage.clear();frame=document.createElement('iframe');frame.src='/dealership/recovered.html?'+legacy(other);document.querySelector('#frames').append(frame);
+ await until(()=>frame.contentWindow.__carDiagnostics?.viewerState,'legacy MC3 bridge');win=frame.contentWindow;doc=frame.contentDocument;await loaded(other);equal(state().car,other,'legacy MC3 URL');
+});
+await run('external requests blocked and saved snapshot restores locally again',async()=>{
+ await open(new URL(shared).searchParams);
+ let blocked=false;try{await win.fetch('https://example.com/inspection-network-probe');}catch{blocked=true;}
+ assert(blocked,'External request must be blocked');equal(state().record,'node0','offline geometry');equal(state().variant,'1','offline paint');equal(state().controls.presentation,'enhanced','offline presentation');near(state().camera.position,saved.camera.position,'offline camera');
+ details.external_probe_blocked=blocked;
+});
+const report={checks,details,browser:navigator.userAgent};
+output.textContent=JSON.stringify(report,null,2);
+const response=await fetch('/inspection-test-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});
+const result=await response.json();document.title=result.ok?'PASS issue 84 browser acceptance':'FAIL issue 84 browser acceptance';
+</script>
