@@ -1,0 +1,109 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Issue 85 real browser acceptance</title>
+<style>body{font:15px system-ui;margin:20px}iframe{width:1100px;height:900px;border:1px solid #aaa}pre{white-space:pre-wrap}</style>
+<h1>Issue 85 real browser acceptance</h1>
+<p>The shipped source viewer runs in a fresh iframe. Independent retained native frames and source geometry supply the assertions. Every document blocks external requests.</p>
+<pre id="results">Starting…</pre><div id="frames"></div>
+<script type="importmap">{"imports":{"three":"../dealership/vendor/three.module.js"}}</script>
+<script type="module">
+import * as THREE from '../dealership/vendor/three.module.js';
+import {readGLB} from '../dealership/model-load.mjs';
+import {inspectMC3Records,pickRecord} from '../dealership/mc3-record-inspection.mjs';
+import {createMC3RecordInspector} from '../dealership/mc3-record-ui.mjs';
+const pilot='midnight-club-3-remix/vp_350z_04';
+const checks=[],details={},output=document.querySelector('#results');
+let frame,win,doc,evidence,source,bin;
+const pause=()=>new Promise(resolve=>setTimeout(resolve,50));
+function assert(value,message){if(!value)throw Error(message);}
+function equal(actual,expected,label){assert(JSON.stringify(actual)===JSON.stringify(expected),`${label}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);}
+function near(actual,expected,label){assert(actual?.length===expected.length,label+' dimensions');actual.forEach((value,i)=>assert(Number.isFinite(value)&&Math.abs(value-expected[i])<=1e-6,`${label}[${i}]: ${value} != ${expected[i]}`));}
+async function until(predicate,label){const start=performance.now();while(performance.now()-start<45000){try{if(predicate())return;}catch{}await pause();}throw Error('Timed out: '+label);}
+async function run(name,task){try{await task();checks.push({name,status:'pass'});}catch(error){checks.push({name,status:'fail',reason:error.message});}output.textContent=JSON.stringify({checks,details},null,2);}
+function state(){return win.__carDiagnostics.viewerState();}
+function inspector(){return state().inspector;}
+function change(id,value){const element=doc.querySelector('#'+id);assert(element,'Missing '+id);element.value=value;element.dispatchEvent(new win.Event('change',{bubbles:true}));}
+function select(identity){change('source-record-list',identity);equal(inspector().selected,identity,'diagnostic selection');equal(doc.querySelector('#source-record-list').value,identity,'list selection');}
+async function open(url='/dealership/recovered.html?'+new URLSearchParams({game:'midnight-club-3-remix',car:pilot})){
+ frame?.remove();localStorage.clear();frame=document.createElement('iframe');frame.title='Real MC3 source viewer under test';frame.src=url;document.querySelector('#frames').append(frame);
+ await until(()=>frame.contentWindow.__carDiagnostics?.viewerState,'diagnostics bridge');win=frame.contentWindow;doc=frame.contentDocument;
+ await until(()=>doc.querySelector('#stage')?.getAttribute('aria-busy')==='false'&&state().car===pilot&&inspector()?.records?.length===2,'MC3 pilot inspector');await pause();
+}
+function text(field){const element=doc.querySelector(`#source-record-details [data-field="${field}"]`);assert(element,'Missing details field '+field);return element.textContent.trim();}
+function numbers(field){return (text(field).match(/[-+]?(?:\d*\.)?\d+(?:[eE][-+]?\d+)?/g)??[]).map(Number);}
+function local(joint){return new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(...joint.rotation_raw,'ZYX')).setPosition(...joint.local_position);}
+function world(index){const joint=evidence.joints.find(row=>row.index===index);assert(joint,'Missing retained joint '+index);return joint.parent===null?local(joint):world(joint.parent).multiply(local(joint));}
+function accessor(index){const a=source.accessors[index],v=source.bufferViews[a.bufferView],width={SCALAR:1,VEC3:3}[a.type],Type={5121:Uint8Array,5123:Uint16Array,5125:Uint32Array,5126:Float32Array}[a.componentType];assert(width&&Type&&!v.byteStride,'Unsupported independent triangle accessor');return new Type(bin,(v.byteOffset??0)+(a.byteOffset??0),a.count*width);}
+function nodeMatrix(index){const node=source.nodes[index];if(node.matrix)return new THREE.Matrix4().fromArray(node.matrix);return new THREE.Matrix4().compose(new THREE.Vector3(...(node.translation??[0,0,0])),new THREE.Quaternion(...(node.rotation??[0,0,0,1])),new THREE.Vector3(...(node.scale??[1,1,1])));}
+async function pointerRecord(expected){
+ change('record','node'+expected.nodeIndex);await pause();
+ // Deselect through the other authoritative list entry; a successful pointer
+ // must change both native identity and list selection through the real handler.
+ select(evidence.records.find(row=>row.identity!==expected.identity).identity);
+ const cameraState=state().camera,canvas=doc.querySelector('#stage canvas'),rect=canvas.getBoundingClientRect();
+ const camera=new THREE.PerspectiveCamera(cameraState.fov,rect.width/rect.height,cameraState.near,cameraState.far);camera.position.fromArray(cameraState.position);camera.lookAt(new THREE.Vector3(...cameraState.target));camera.updateMatrixWorld();camera.updateProjectionMatrix();
+ const matrix=nodeMatrix(expected.nodeIndex),node=source.nodes[expected.nodeIndex];let attempts=0;
+ for(const primitive of source.meshes[node.mesh].primitives){
+  const positions=accessor(primitive.attributes.POSITION),indices=primitive.indices===undefined?Array.from({length:positions.length/3},(_,i)=>i):accessor(primitive.indices);
+  for(let i=0;i<indices.length;i+=3){
+   const point=new THREE.Vector3();for(let k=0;k<3;k++)point.add(new THREE.Vector3().fromArray(positions,indices[i+k]*3));point.multiplyScalar(1/3).applyMatrix4(matrix).project(camera);
+   if(Math.abs(point.x)>=.98||Math.abs(point.y)>=.98||point.z<=-1||point.z>=1)continue;
+   const clientX=rect.left+(point.x+1)*rect.width/2,clientY=rect.top+(1-point.y)*rect.height/2;
+   const options={bubbles:true,clientX,clientY,pointerId:1,pointerType:'mouse',isPrimary:true,button:0};
+   canvas.dispatchEvent(new win.PointerEvent('pointerdown',{...options,buttons:1}));canvas.dispatchEvent(new win.PointerEvent('pointerup',{...options,buttons:0}));canvas.dispatchEvent(new win.MouseEvent('click',options));attempts++;
+   if(inspector().selected===expected.identity){equal(doc.querySelector('#source-record-list').value,expected.identity,'pointer synchronizes list');assert(inspector().records.find(row=>row.identity===expected.identity).visibleMeshes>0,'pointer target visible');details['pointer '+expected.identity]={attempts,clientX,clientY};return;}
+  }
+ }
+ throw Error('No projected retained triangle selected '+expected.identity+' after '+attempts+' clicks');
+}
+await run('named pilot records exist in authoritative list',async()=>{
+ evidence=await (await fetch('../dealership/mc3-record-evidence.json')).json();({doc:source,bin}=readGLB(await(await fetch('../dealership/public/midnight-club-3-remix/previews/vp_350z_04.glb')).arrayBuffer()));await open();
+ equal([...doc.querySelector('#source-record-list').options].map(option=>option.value).sort(),evidence.records.map(row=>row.identity).sort(),'authoritative identities');assert(!doc.querySelector('#source-record-list').disabled,'list usable');
+});
+await run('list selection highlights only visible selected geometry',async()=>{
+ for(const expected of evidence.records){change('record','scene0');select(expected.identity);const rows=inspector().records;for(const row of rows)equal(row.highlightedMeshes,row.identity===expected.identity?row.visibleMeshes:0,'highlight count '+row.identity);assert(rows.find(row=>row.identity===expected.identity).highlightedMeshes>0,'selected visible geometry highlighted');}
+});
+await run('details match independent ownership and parent-chain matrices',async()=>{
+ for(const expected of evidence.records){select(expected.identity);for(const key of ['identity','sourceOccurrence','sourceHash'])equal(text(key),expected[key],key);equal(text('parentIdentity'),expected.parentIdentity??'None (native root)','parent identity');near(numbers('localMatrix'),local(evidence.joints.find(row=>row.index===expected.bone)).elements,'local frame');near(numbers('worldMatrix'),world(expected.bone).elements,'independent parent chain');}details.independent_joint_offsets=evidence.joints.map(joint=>joint.offset);
+});
+await run('keyboard arrows and Enter reach both named records',async()=>{
+ const list=doc.querySelector('#source-record-list');list.focus();equal(doc.activeElement,list,'keyboard focus');
+ for(const [key,index] of [['ArrowUp',0],['ArrowDown',1]]){list.dispatchEvent(new win.KeyboardEvent('keydown',{key,bubbles:true}));list.dispatchEvent(new win.KeyboardEvent('keydown',{key:'Enter',bubbles:true}));equal(list.selectedIndex,index,'arrow index');equal(inspector().selected,list.options[index].value,'keyboard synchronization');}
+});
+await run('canvas pointer selection selects both native identities',async()=>{for(const expected of evidence.records)await pointerRecord(expected);});
+await run('hidden record selection preserves unrelated visibility',async()=>{
+ const [left,body]=evidence.records;change('record','node'+body.nodeIndex);select(body.identity);const before=inspector().records.map(row=>[row.identity,row.visibleMeshes]);select(left.identity);equal(inspector().records.map(row=>[row.identity,row.visibleMeshes]),before,'visibility unchanged');equal(inspector().records.find(row=>row.identity===left.identity).highlightedMeshes,0,'hidden selection has no highlight');equal(inspector().records.find(row=>row.identity===left.identity).visibleMeshes,0,'selected record remains hidden');
+});
+await run('nearest positive ray hit and native identity ties',async()=>{
+ const identities=evidence.records.map(row=>row.identity).sort();equal(pickRecord([{identity:identities[1],distance:1},{identity:identities[0],distance:2},{identity:identities[0],distance:-1},{identity:identities[0],distance:0},{identity:identities[0],distance:.5,visible:false}]),identities[1],'nearest positive visible');for(const order of [identities,[...identities].reverse()])equal(pickRecord(order.map(identity=>({identity,distance:1}))),identities[0],'stable identity tie');equal(pickRecord([{identity:identities[0],distance:NaN}]),null,'nonfinite rejected');
+ // Exercise the actual canvas ray handler with overlapping visible triangles,
+ // including reversed group traversal. This also checks identity attribution.
+ const container=document.createElement('section'),canvas=document.createElement('canvas');canvas.style.cssText='width:300px;height:200px';document.body.append(container,canvas);
+ const camera=new THREE.PerspectiveCamera(40,1.5,.01,100);camera.position.set(0,0,5);camera.lookAt(0,0,0);camera.updateMatrixWorld();camera.updateProjectionMatrix();
+ const groups=evidence.records.map(record=>{const group=new THREE.Group();group.userData.sourceNodeIndex=record.nodeIndex;const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute([-1,-1,0,1,-1,0,0,1,0],3));group.add(new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({side:THREE.DoubleSide})));return group;});
+ const fixture=createMC3RecordInspector({container,canvas,camera});
+ function click(){const rect=canvas.getBoundingClientRect(),options={bubbles:true,clientX:rect.left+rect.width/2,clientY:rect.top+rect.height/2,button:0};canvas.dispatchEvent(new PointerEvent('pointerdown',options));canvas.dispatchEvent(new PointerEvent('pointerup',options));}
+ groups[1].position.z=1;fixture.bind(inspectMC3Records(source,evidence),groups);click();equal(fixture.snapshot().selected,evidence.records[1].identity,'actual nearest overlapping triangle');
+ groups[1].position.z=0;for(const order of [groups,[...groups].reverse()]){fixture.bind(inspectMC3Records(source,evidence),order);click();equal(fixture.snapshot().selected,identities[0],'actual equal-distance native identity tie');}
+ fixture.clear();for(const group of groups)group.traverse(node=>{if(node.isMesh){node.geometry.dispose();node.material.dispose();}});container.remove();canvas.remove();
+});
+await run('ownership rebind and parent translation controls reject specifically',async()=>{
+ const [left,body]=evidence.records,ownership=structuredClone(source);ownership.meshes[ownership.nodes[left.nodeIndex].mesh].primitives[0].extras.native_vif.source_packet_offset=body.firstPacketOffset;
+ const moved=structuredClone(source);moved.extras.nativeSkeleton.bones[1].local_position[0]+=.1;
+ for(const [input,reason] of [[ownership,'ownership mismatch: source occurrence'],[moved,'transform mismatch: parent-chain world frame']]){let message='';try{inspectMC3Records(input,evidence);}catch(error){message=error.message;}assert(message.includes(reason),'Expected '+reason+', got '+message);details[reason]=message;}
+});
+await run('missing optional metadata displays Unknown',async()=>{
+ const missing=structuredClone(source),expected=evidence.records[0];delete missing.extras.records.find(row=>row.role===expected.identity).native_sha256;
+ const records=inspectMC3Records(missing,evidence),container=document.createElement('section');container.setAttribute('aria-label','Missing optional metadata fixture');document.body.append(container);
+ const fixture=createMC3RecordInspector({container,canvas:document.createElement('canvas'),camera:new THREE.PerspectiveCamera()});fixture.bind(records,[]);
+ const list=container.querySelector('#source-record-list');list.value=expected.identity;list.dispatchEvent(new Event('change',{bubbles:true}));
+ equal(container.querySelector('[data-field="sourceHash"]').textContent.trim(),'Unknown','missing source hash');equal(container.querySelector('[data-field="sourceOccurrence"]').textContent.trim(),'Unknown','missing occurrence is not guessed');fixture.clear();container.remove();
+});
+await run('source and dealership link navigation stays local and usable',async()=>{
+ await open();select(evidence.records[0].identity);const href=doc.querySelector('#dealership-link').href;equal(new URL(href).searchParams.get('car'),pilot,'dealership native identity');frame.src=href;
+ await until(()=>frame.contentDocument.querySelector('#source-link')?.href.includes('vp_350z_04'),'dealership backlink');const back=frame.contentDocument.querySelector('#source-link').href;equal(new URL(back).searchParams.get('car'),pilot,'source backlink identity');await open(back);select(evidence.records[1].identity);
+ let blocked=false;try{await win.fetch('https://example.com/mc3-inspection-network-probe');}catch{blocked=true;}assert(blocked,'external fetch blocked');details.external_probe_blocked=blocked;details.selected_after_navigation=inspector().selected;
+});
+const report={checks,details,browser:navigator.userAgent};output.textContent=JSON.stringify(report,null,2);
+const response=await fetch('/mc3-inspection-test-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});const result=await response.json();document.title=result.ok?'PASS issue 85 browser acceptance':'FAIL issue 85 browser acceptance';
+</script>
