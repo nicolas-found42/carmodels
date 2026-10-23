@@ -60,7 +60,7 @@ const initial=camera.position.clone();
 const followCalls=[];
 const presentation={follow(box){followCalls.push(box);}};
 const context={loaded:{groups:[emptyGroup]},recordSelect:{value:'scene5'},selected:{code:'GRAN_TORINO'},
- status,THREE,camera,presentation,sceneLabel,controls:{update(){throw Error('empty scene reached camera controls');}},
+ status,THREE,camera,presentation,sceneLabel,recordInspector:{refresh(){}},controls:{update(){throw Error('empty scene reached camera controls');}},
  updateMaterials(){throw Error('empty scene reached material update');}};
 const html=fs.readFileSync(path.join(root,'dealership/recovered.html'),'utf8');
 const showRecord=html.match(/function showRecord\(\).*\n/)[0];
