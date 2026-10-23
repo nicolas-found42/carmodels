@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {fetchModel, readGLB} from './model-load.mjs';
-import {createMaterial, applyMaterial, normaliseColourTint} from './materials.mjs';
+import {createMaterial, applyMaterial, isGT4OverlayPass, normaliseColourTint} from './materials.mjs';
 import {applyPaintMaterial} from './game-paint.mjs';
 import {requiresNativeTireNormal} from './mc3-tire-material.mjs';
 import {loadNativeVehicleResources,bindNativeVehicleResources} from './mc3-vehicle-resources.mjs';
@@ -142,19 +142,22 @@ async function loadTexture(bytes, signal) {
   } finally {URL.revokeObjectURL(url);}
 }
 
-export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureImpl=loadTexture,enhance=true,correctMaterials=true}={}) {
-  let buffer=await fetchImpl('./'+car.model.source.glb,signal);
+export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureImpl=loadTexture,enhance=true,correctMaterials=true,attempt}={}) {
+  let buffer=await fetchImpl('./'+car.model.source.glb,signal,15000,attempt);
+  attempt?.phase('hash');
   const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer)),v=>v.toString(16).padStart(2,'0')).join('');
   if(hash!==car.model.source.sha256)throw Error('Editable model changed; rebuild the dealership data.');
+  attempt?.phase('parse',{sha256:hash});
   if(signal?.aborted)throw Error('Model selection cancelled.');
   let parsed=parseEditableGLB(buffer),enhancement=null;
   if(car.game==='gran-turismo-4'&&enhance) {
+    attempt?.phase('refinement');
     if(car.sourceCode&&car.sourceCode!==parsed.doc.extras?.car)throw Error('GT4 working model identity differs from its catalog.');
     const result=enhanceGT4GLB(buffer,parsed,{sourceHash:hash});
     buffer=result.buffer;enhancement=result.report;parsed=parseEditableGLB(buffer);
   }
   let materialRepair=null;
-  if(correctMaterials&&car.game==='gran-turismo-4'){const corrected=await correctGT4Materials(buffer,parsed);buffer=corrected.buffer;materialRepair=corrected.report;parsed=parseEditableGLB(buffer);}
+  if(correctMaterials&&car.game==='gran-turismo-4'){attempt?.phase('material-repair');const corrected=await correctGT4Materials(buffer,parsed);buffer=corrected.buffer;materialRepair=corrected.report;parsed=parseEditableGLB(buffer);}
   if(signal?.aborted)throw Error('Model selection cancelled.');
  const {doc,images,meshes,colourVariants}=parsed, textures=[], group=new THREE.Group(), variantMeshes=[];
   group.userData.gt4Enhancement=enhancement;group.userData.gt4MaterialRepair=materialRepair;
@@ -185,7 +188,9 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
   };
   group.userData.setColourTint=(value=null)=>{group.userData.colourTint=normaliseColourTint(value);updateColours();};
   try {
+    attempt?.phase('textures',{count:images.length});
     for(const image of images)textures.push(await textureImpl(image,signal));
+    attempt?.phase('geometry');
     if(signal?.aborted)throw Error('Model selection cancelled.');
     function node(index) {
       const source=doc.nodes[index], g=new THREE.Group();
@@ -196,6 +201,7 @@ export async function loadEditableGLB(car, {signal,fetchImpl=fetchModel,textureI
       else {g.position.fromArray(source.translation??[0,0,0]);g.quaternion.fromArray(source.rotation??[0,0,0,1]);g.scale.fromArray(source.scale??[1,1,1]);}
       for(const p of source.mesh===undefined?[]:meshes[source.mesh]) {
         if(ford && doc.materials[p.material].name==='UNDER_SHADOW')continue;
+        if(car.game==='gran-turismo-4' && isGT4OverlayPass(doc.materials[p.material]))continue;
         const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(p.positions,3));geometry.setAttribute('normal',new THREE.BufferAttribute(p.normals,3));
         if(p.uv)geometry.setAttribute('uv',new THREE.BufferAttribute(p.uv,2));geometry.setIndex(new THREE.BufferAttribute(p.indices,1));
         if(p.mc3NativeNormals)geometry.setAttribute('mc3NativeNormal',new THREE.BufferAttribute(p.mc3NativeNormals,3));

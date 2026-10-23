@@ -12,6 +12,18 @@ import math
 import os
 import re
 import time
+from contextvars import ContextVar
+
+from diagnostics import failure_details
+
+diagnostic_observer = ContextVar("library_filter_diagnostic_observer", default=None)
+
+
+def report_diagnostic(kind, **fields):
+    observer = diagnostic_observer.get()
+    if observer is not None:
+        observer(kind, **fields)
+
 
 from gt_asset_judgments import (
     MODEL,
@@ -750,7 +762,8 @@ def _decide(query, cars, client, wording, catalog, unavailable, phrases):
         options = options_for(cars)
         state = state_for(query, cars, options, catalog)
         phrase = phrase_filter(query, options, state) if phrases else None
-    except Exception:
+    except Exception as error:
+        report_diagnostic("filter.failure", phase="catalog", **failure_details(error))
         return _failure("catalog_unavailable")
     if phrase:
         return {**phrase, "reason": None, "catalog": catalog}
@@ -766,13 +779,15 @@ def _decide(query, cars, client, wording, catalog, unavailable, phrases):
             if response.raw_http_response.status_code != 200:
                 raise ValueError("Provider HTTP failure")
             raw = response.raw_http_response.json()
-    except Exception:
+    except Exception as error:
+        report_diagnostic("filter.failure", phase="provider", **failure_details(error))
         return _failure("provider_error")
     try:
         json.dumps(raw, allow_nan=False)
         composed = compose(raw, options, questions, state=state)
         usage, model = raw["usage"], raw["model"]
-    except Exception:
+    except Exception as error:
+        report_diagnostic("filter.failure", phase="compose", **failure_details(error))
         return _failure("invalid_response")
     return {
         **composed,

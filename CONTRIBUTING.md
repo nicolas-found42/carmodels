@@ -107,13 +107,20 @@ Completion messages appear as checks finish; manifest rows retain registry order
 atomically replaces the manifest after each completion. `jobs` and total `elapsed_seconds`
 record the run configuration and wall time; each row includes `parallel` and `started_seconds`
 relative to run start. `created_utc`, `git_sha`, `branch` and `runner` (python version, node
-presence, platform) stamp every manifest so a stale evidence dir maps to its commit.
+presence and exact version, platform) stamp every manifest so a stale evidence dir maps to its commit.
+`run_id`, `working_tree_sha256`, `dirty`, catalog hashes and the optional
+`CARMODELS_INCIDENT_ID` also identify the tested working state. The history ledger
+records the absolute evidence directory to avoid ambiguous basenames.
 `run-index.json` beside it carries the same stamp with pass/fail/skip totals for listing CI runs.
 Every CLI run also appends one JSONL line to `.scratch/check-history.jsonl` (local only) with
 per-check statuses and durations for timing trends and flake counts. `pending` lists selected
 checks still running or waiting, so an interrupted run remains distinguishable from a completed
 run. `not_run` lists checks excluded by selection.
 The review bundle builder refuses manifests with pending checks; older completed manifests remain usable.
+
+Both viewers retain bounded incident history and expose export/state replay controls.
+The local server mirrors reports for agent access and writes rotating structured service logs.
+See [incident diagnostics](docs/diagnostics.md) for collection, privacy, retrieval and replay.
 
 Optional profiling advice is available with
 `python3 tools/check_advice.py diagnostics.json --live --output new-receipt.json`. It uses the existing

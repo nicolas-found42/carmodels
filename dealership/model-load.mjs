@@ -10,7 +10,10 @@ export function assetURL(path, base=assetBaseURL) {
 }
 
 // Bound network/body reads and cancel obsolete selections without extra dependencies.
-export async function fetchModel(url, signal, timeoutMs=15000) {
+export async function fetchModel(url, signal, timeoutMs=15000, attempt=null) {
+ const diagnostics=globalThis.__carDiagnostics,started=performance.now();
+ const resource=assetURL(url);const detail={resource,load_id:attempt?.id};
+ diagnostics?.record('fetch.begin',detail);
  const controller=new AbortController();
  const cancel=()=>controller.abort();
  signal?.addEventListener('abort',cancel,{once:true});
@@ -18,10 +21,15 @@ export async function fetchModel(url, signal, timeoutMs=15000) {
  let timedOut=false;
  const timer=setTimeout(()=>{timedOut=true;controller.abort();},timeoutMs);
  try {
-  const response=await fetch(assetURL(url),{signal:controller.signal});
+  const response=await fetch(resource,{signal:controller.signal});
+  diagnostics?.record('fetch.headers',{...detail,status:response.status,elapsed_ms:performance.now()-started});
   if(!response.ok)throw Error(`Geometry file unavailable (HTTP ${response.status})`);
-  return await response.arrayBuffer();
+  const buffer=await response.arrayBuffer();
+  const sha256=diagnostics&&globalThis.crypto?.subtle?Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer)),v=>v.toString(16).padStart(2,'0')).join(''):undefined;
+  diagnostics?.record('fetch.success',{...detail,bytes:buffer.byteLength,sha256,elapsed_ms:performance.now()-started});
+  return buffer;
  } catch(error) {
+  diagnostics?.record(timedOut?'fetch.timeout':signal?.aborted?'fetch.cancelled':'fetch.failure',{...detail,elapsed_ms:performance.now()-started,error:{name:error.name,message:error.message}});
   if(timedOut)throw Error('Request timed out; retry or choose another car');
   throw error;
  } finally {

@@ -1,23 +1,36 @@
 name: Feature request
-description: A capability this project does not have yet, with its user problem and acceptance criteria.
+description: Suggest an improvement to browsing, editing, exporting, or working with the library.
 title: "[Feature]: "
 labels: ["needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        A feature request describes a capability that does not exist yet, so there is no
-        reproduction path. Describe the **current workflow** and its friction instead of inventing
-        steps to reproduce a feature that isn't there. If a field does not apply, write
-        **Not applicable — reason**.
+        Search [existing issues](https://github.com/nicolas-found42/carmodels/issues) first.
+        Use **Bug report** for broken behavior and **Model or recovery request** for missing cars,
+        new games, or native-data research. Describe your current workflow; a feature that does
+        not exist does not need invented reproduction steps.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part would improve?
+      options:
+        - Dealership / live showroom
+        - Recovered source inspector
+        - GT comparison / ledger / refinement pages
+        - Model downloads / Blender editing
+        - Search / filters / catalog
+        - Extraction / conversion / verification tools
+        - Documentation / accessibility / other
+    validations:
+      required: true
 
   - type: textarea
     id: problem
     attributes:
       label: User problem and current workflow
-      description: |
-        Who needs this, the task they are trying to complete, and exactly how they do it today
-        (including any manual workaround) — with the friction that motivates the request.
+      description: What are you trying to do, how do you do it today, and where does it become difficult? Include any workaround.
     validations:
       required: true
 
@@ -25,7 +38,7 @@ body:
     id: desired
     attributes:
       label: Desired behavior
-      description: What the user should be able to observe or do once this exists, stated as observable behavior.
+      description: What should a user be able to see or do? Mention the affected page/tool and game/car if relevant; distinguish source originals from editable dealership copies.
     validations:
       required: true
 
@@ -33,54 +46,30 @@ body:
     id: example
     attributes:
       label: Concrete example
-      description: A specific real invocation, input, or scenario and the result it should produce.
-      placeholder: |
-        e.g. tools/verify_recovered_asset_index.py --car COBRA should print one line per
-        verified artifact and exit non-zero if any sha256 pin disagrees.
+      description: Give a specific scenario and its desired result. Label any proposed UI or command as a proposal.
+      placeholder: When comparing a GT1 car with its GT4 counterpart, I want to save both selected views so I can return to the same comparison later. Proposed behavior, not an existing feature.
     validations:
       required: true
 
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives considered
-      description: Other approaches you weighed, and why this one. Include "do nothing" when relevant.
-    validations:
-      required: true
-
-  - type: textarea
-    id: scope
-    attributes:
-      label: Scope and exclusions
-      description: What is in scope, what is explicitly out of scope, and any constraints on the implementation.
-    validations:
-      required: true
+      label: Alternatives and scope
+      description: What other approach or workaround could help? What can stay out of scope? Include constraints on offline use, source preservation, or edited models if relevant.
 
   - type: textarea
     id: evidence
     attributes:
-      label: Evidence
-      description: |
-        Screenshots of the existing friction are useful; label any proposed mockup clearly as a
-        mockup. Link the research note or receipt that motivates the request. State gaps.
-    validations:
-      required: true
+      label: Supporting references (optional)
+      description: Link related issues, research notes, or examples. Screenshots of current friction help; mark design mockups as proposals. State any uncertainty. Do not include private inputs or API keys.
 
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance criteria
-      description: Unchecked, externally observable pass/fail conditions that define "done".
+      label: Success criteria
+      description: How would you tell that this solves the problem? Use observable outcomes rather than implementation instructions; no need to choose verifier commands.
       placeholder: |
-        - [ ] <observable end state reachable through the tool or viewer>
-        - [ ] <adjacent behavior that must not regress>
-    validations:
-      required: true
-
-  - type: textarea
-    id: notes
-    attributes:
-      label: Developer notes
-      description: Evidence-backed leads (file:line), labelled hypotheses, related issues, and remaining unknowns.
+        - [ ] I can return to the same pair of cars and selected views from a saved link.
+        - [ ] Opening the link does not change either stored model.
     validations:
       required: true
